@@ -1,0 +1,345 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #211336;
+    font-family: "IBM Plex Sans", sans-serif;
+    overflow: hidden;
+}
+
+.page {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.navbar {
+    color: white;
+    height: 50px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 10px;
+}
+
+.navbar .logo img {
+    width: 90px;
+}
+
+.navbar .logo {
+    width: 190px;
+    display: flex;
+    padding-left: 20px;
+}
+
+.search-bar {
+    width: 50%;
+    padding-left: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.search-bar input {
+    width: 90%;
+    height: 40px;
+    border: 2px solid white;
+    border-radius: 30px;
+    background-color: transparent;
+    background-image: url("./icons/search.svg");
+    background-repeat: no-repeat;
+    background-position: 20px center;
+    background-size: 15px;
+    text-indent: 50px;
+    color: white;
+    font-size: 15px;
+    transition: height .1s;
+}
+
+.search-bar input::placeholder {
+    color: white;
+    opacity: 0.7;
+    text-indent: 50px;
+}
+
+.search-bar input:focus {
+    height: 42px;
+    outline: none;
+    border-color: #913DCE;
+    color: white;
+    text-indent: 50px;
+}
+
+.profile-notifications {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100px;
+    margin-right: 30px;
+}
+
+.profile-notifications #profile-icon img {
+    width: 45px;
+}
+
+.profile-notifications #notifications-icon {
+    padding-right: 15px;
+}
+
+.profile-notifications #notifications-icon img {
+    width: 35px;
+}
+
+
+
+
+
+
+.sidebar a {
+    text-decoration: none;
+    color: white;
+}
+
+.sidebar img {
+    width: 30px;
+}
+
+.sidebar {
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+}
+
+.sidebar #sidebar-dashboard-image  {
+    text-align: center;
+}
+
+
+.sidebar #sidebar-friends-image  {
+    text-align: center;
+}
+
+.sidebar #sidebar-game-image  {
+    text-align: center;
+}
+
+.sidebar #sidebar-chat-image  {
+    text-align: center;
+}
+
+.sidebar #sidebar-channels-image  {
+    text-align: center;
+}
+
+.sidebar .sidebar-navigations {
+    padding: 8px 8px 8px 5px;
+}
+
+.sidebar #sidebar-dashboard {
+    padding-top: 30px;
+}
+
+.sidebar #sidebar-dashboard-text {
+    font-size: 0.7em;
+}
+
+.sidebar #sidebar-friends-text {
+    font-size: 0.7em;
+}
+
+.sidebar #sidebar-chat-text {
+    font-size: 0.7em;
+}
+
+.sidebar #sidebar-game-text {
+    font-size: 0.7em;
+}
+
+.sidebar #sidebar-channels-text {
+    font-size: 0.7em;
+}
+
+.profile-dropdown {
+    position: absolute;
+    background-color: #D9D9D9;
+    width: 180px;
+    left: -130px;
+    border-radius: 20px;
+}
+
+
+.navbar .profile-notifications #profile-icon {
+    position: relative;
+}
+
+.dropdown-profile-name {
+    display: flex;
+    flex-direction: row;
+}
+
+
+#dropdown-profile-name {
+    color: #1E0934;
+    font-size: 15px;
+    padding-left: 6px;
+}
+
+.profile-dropdown .dropdown-profile-name {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#profile-icon .profile-dropdown #dropdown-profile-name a {
+    text-decoration: none;
+    color: #1E0934;
+}
+
+#profile-icon .profile-dropdown #dropdown-profile-pic a img {
+    width: 40px;
+}
+
+#profile-icon .profile-dropdown {
+    padding-top: 10px;
+}
+
+.separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 15px;
+}
+
+#line-break {
+    width: 130px;
+    height: 0.5px;
+    background-color:black;
+}
+
+.profile-dropdown .settings-symbol-text {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 17px;
+    height: 45px;
+}
+
+.profile-dropdown .settings-symbol-text #settings-symbol a img {
+    width: 35px;
+}
+
+.profile-dropdown .settings-symbol-text #settings-text {
+    padding-left: 8px;
+}
+
+.profile-dropdown .settings-symbol-text #settings-text a {
+    text-decoration: none;
+    color: #4D4EA6;
+}
+
+.profile-dropdown .logout-symbol-text {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 17px;
+    height: 45px;
+    padding-bottom: 5px;
+}
+
+.profile-dropdown .logout-symbol-text #logout-symbol a img {
+    width: 35px;
+}
+
+.profile-dropdown .logout-symbol-text #logout-text {
+    padding-left: 8px;
+}
+
+.profile-dropdown .logout-symbol-text #logout-text a {
+    text-decoration: none;
+    color: #4D4EA6;
+}
+
+
+
+
+
+/* .extendedSidebar {
+    width: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    height: 100vh;
+    background-color: black;
+}
+
+.extendedSidebar a {
+    text-decoration: none;
+    color: white;
+}
+
+.extendedSidebar img {
+    width: 30px;
+}
+
+.extendedSidebar #sidebar-dashboard {
+    display: flex;
+    flex-direction: row;
+    background-color: brown;
+}
+
+.extendedSidebar #sidebar-dashboard #sidebar-dashboard-text {
+    padding-left: 15px;
+}
+
+.extendedSidebar #sidebar-friends {
+    display: flex;
+    flex-direction: row;
+    background-color: rgb(84, 19, 19);
+}
+
+.extendedSidebar #sidebar-friends #sidebar-friends-text {
+    padding-left: 15px;
+}
+
+.extendedSidebar #game {
+    display: flex;
+    flex-direction: row;
+    background-color: rgb(84, 19, 19);
+}
+
+.extendedSidebar #game #sidebar-game-text {
+    padding-left: 15px;
+}
+
+.extendedSidebar #chat {
+    display: flex;
+    flex-direction: row;
+    background-color: rgb(84, 19, 19);
+}
+
+.extendedSidebar #chat #sidebar-chat-text {
+    padding-left: 15px;
+}
+
+.extendedSidebar #channels {
+    display: flex;
+    flex-direction: row;
+    background-color: rgb(84, 19, 19);
+}
+
+.extendedSidebar #channels #sidebar-channels-text {
+    padding-left: 15px;
+}
+
+.extendedSidebar .sidebar-navigations {
+    padding: 15px 15px 15px 32px;
+}
+
+.extendedSidebar #sidebar-dashboard {
+    padding-top: 30px;
+} */
