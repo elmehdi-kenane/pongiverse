@@ -1,79 +1,45 @@
+import Navbar from './Navbar';
 import * as Icons from './icons';
 import { useState } from 'react';
 
 function App() {
-  const [expand, setExpand] = new useState(false);
+    const [expand, setExpand] = new useState(false);
+    const [profileDropDownisOpen, setProfileDropDownisOpen] = new useState(false);
+    const [notificationsDropDownisOpen, setNotificationsDropDownisOpen] = new useState(false);
+    const [notifications, setNotifications] = new useState([]);
 
-  const handleExpand = () => {
-    setExpand(!expand);
-  }
+    const handleExpand = () => {
+        setExpand(!expand);
+    };
+
+    const profileHandleDropDown = () => {
+        if (notificationsDropDownisOpen)
+            setNotificationsDropDownisOpen(!notificationsDropDownisOpen);
+        setProfileDropDownisOpen(!profileDropDownisOpen);
+        console.log("in the profile handler", notificationsDropDownisOpen, profileDropDownisOpen);
+    };
+    
+    const notificationsHandleDropDown = () => {
+        if (profileDropDownisOpen)
+            setProfileDropDownisOpen(!profileDropDownisOpen);
+        setNotificationsDropDownisOpen(!notificationsDropDownisOpen);
+        console.log("in the notifications handler", notificationsDropDownisOpen, profileDropDownisOpen);
+    };
 
   return (
     <div className="page">
-        <div className="navbar">
-            <div className="logo">
-                <a>
-                    <img src={Icons.pingpong} alt="ping pong" />
-                </a>
-            </div>
-            <div className="search-bar">
-                <input type="text" placeholder="Search" />
-            </div>
-            <div className="profile-notifications">
-                <div id="notifications-icon">
-                    <a href="#">
-                        <img src={Icons.notification} alt="notifications-icon" />
-                    </a>
-                </div>
-                <div id="profile-icon">
-                    <a href="#">
-                        <img src={Icons.profilepic} alt="" />
-                    </a>
-                    <div className='profile-dropdown'>
-                          <div className='dropdown-profile-name'>
-                            <div id='dropdown-profile-pic'>
-                              <a href='#'>
-                                <img src={Icons.profilepic} />
-                              </a>
-                            </div>
-                            <div id='dropdown-profile-name'>
-                              <a href='#'>
-                                Simo maqbour
-                              </a>
-                            </div>
-                       </div>
-                       <div className='separator'>
-                            <div id='line-break'></div>
-                       </div>
-                       <div className='settings-symbol-text'>
-                            <div id='settings-symbol'>
-                                <a href="#">
-                                    <img src={Icons.settings} alt="" />
-                                </a>
-                            </div>
-                            <div id='settings-text'>
-                                <a href="#">
-                                    Settings
-                                </a>
-                            </div>
-                       </div>
-                       <div className='logout-symbol-text'>
-                            <div id='logout-symbol'>
-                                <a href="#">
-                                    <img src={Icons.logout} alt="" />
-                                </a>
-                            </div>
-                            <div id='logout-text'>
-                                <a href="#">
-                                    Logout
-                                </a>
-                            </div>
-                       </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div className={!expand ? "sidebar" : "extendedSidebar"}>
+        <Navbar 
+            profileDropDownisOpen={profileDropDownisOpen}
+            setProfileDropDownisOpen={setProfileDropDownisOpen}
+            notificationsDropDownisOpen={notificationsDropDownisOpen}
+            setNotificationsDropDownisOpen={setNotificationsDropDownisOpen}
+            notifications={notifications}
+            setNotifications={setNotifications}
+            Icons={Icons}
+            profileHandleDropDown={profileHandleDropDown}
+            notificationsHandleDropDown={notificationsHandleDropDown}
+        />
+        <div className="sidebar">
             <div className="sidebar-navigations" id="sidebar-dashboard">
                 <div id="sidebar-dashboard-image">
                     <a href="#">
