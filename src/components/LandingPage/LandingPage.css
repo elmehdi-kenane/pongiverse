@@ -1,0 +1,218 @@
+body {
+	font-family: IBM Plex Sans, sans-serif;
+	background-color: #250939;
+	margin: 0 550px;
+}
+
+.page {
+	display: flex;
+	flex-direction: column;
+	gap: 100px;
+}
+
+.sections {
+	color: white;
+	display: flex;
+	gap: 10px;
+}
+
+.navbar {
+	display: flex;
+	justify-content: space-between;
+	margin: 30px 0 0 0;
+}
+
+.PingLogo {
+	height: 50px;
+}
+
+.sections-btns {
+	align-self: center;
+	border: none;
+	padding: 10px 20px;
+	background-color: transparent;
+	font-size: larger;
+	color: white;
+	border-radius: 5px;
+}
+
+.login-btn {
+	background-color: transparent;
+	border: 2px solid white;
+	color: white;
+	align-self: center;
+	font-weight: 600;
+	font-size: 20px;
+	padding: 10px 30px;
+	border-radius: 25px;
+}
+
+.header {
+	display: flex;
+	margin-top: 100px;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.header-text {
+	display: flex;
+	margin-left: 50px;
+	flex-direction: column;
+	gap: 20px;
+	flex-grow: 1;
+	/* position: absolute; */
+	width: 35%;
+}
+
+.header-img {
+	margin: 20px 30px 0 0;
+}
+
+.title {
+	color: white;
+	font-size: 60px;
+	font-weight: 900;
+}
+
+.sub-title {
+	color: white;
+	font-size: 20px;
+	font-weight: 400;
+	font-style: italic;
+	width: 100%;
+}
+
+.sign-up-btn {
+	align-self: flex-start;
+	background-color: #913DCE;
+	border: none;
+	border-radius: 10px;
+	padding: 12px 19px;
+	font-size: 20px;
+	font-weight: 600;
+	color: white;
+}
+
+#About {
+	color: white;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 30px;
+}
+
+.AboutCards {
+	color: white;
+	font-weight: 600;
+	font-style: italic;
+	font-size: large;
+	display: flex;
+	gap: 40px;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.Description {
+	background-color: #334568;
+	border-radius: 10px;
+	padding: 20px;
+	width: 400px;
+	height: 400px;
+}
+
+.Description h1 {
+	margin-top: -45px;
+}
+
+.Description h1,
+.Description div {
+	padding: 0 20px;
+}
+
+.Team {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	color: white;
+	gap: 30px;
+}
+
+.TeamList {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 20px;
+}
+
+.TeamCard {
+	color: #334568;
+	background: rgba(255, 255, 255, 0.43);
+	border: 1px solid rgba(255, 255, 255, 0.81);
+	height: 230px;
+	width: 200px;
+	border-radius: 10px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 20px;
+	font-weight: 600;
+}
+
+.TeamCard img {
+	margin: 15px 0 0 0;
+	height: 100px;
+	width: 100px;
+}
+
+.TeamCard span {
+	display: flex;
+	gap: 20px;
+	color: transparent;
+}
+
+.TeamCard span a img {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: transparent;
+	height: 30px;
+	border: none;
+	/* border-color: #334568; */
+	/* border-radius: 5px; */
+	width: 30px;
+}
+
+.TeamCard span button img {
+	height: 30px;
+	width: 30px;
+	margin: 0;
+}
+
+.cta {
+	background-color: white;
+	border-radius: 15px;
+	padding: 3px 15px;
+	display: flex;
+	color: #334568;
+	justify-content: space-between;
+	width: 700px;
+	align-items: center;
+}
+
+.cta p {
+	font-size: larger;
+	font-weight: 600;
+}
+
+.cta button {
+	align-self: center;
+	width: 200px;
+}
+
+.footer {
+	background-color: #334568;
+	color: white;
+	padding: 5px 0;
+	display: flex;
+	justify-content: center;
+}

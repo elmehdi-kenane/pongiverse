@@ -8,8 +8,8 @@
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
-      "type": "image/png",
+      "src": "../src/assets/PingLogoIcon.ico",
+      "type": "image/ico",
       "sizes": "192x192"
     },
     {
