@@ -1,22 +1,39 @@
 import React from "react";
 import { useState } from "react";
 
-function Navbar({ profileDropDownisOpen, setProfileDropDownisOpen, notificationsDropDownisOpen,setNotificationsDropDownisOpen, notifications,
-    setNotifications,
-    Icons,
-    profileHandleDropDown,
-    notificationsHandleDropDown }) {
+function Navbar({ profileDropDownisOpen, setProfileDropDownisOpen, notificationsDropDownisOpen,
+    setNotificationsDropDownisOpen, notifications, setNotifications,
+    Icons, profileHandleDropDown, notificationsHandleDropDown,
+    handleExapandSidebar, searchbar, setSearchBar}) {
+
+    const handleSearchBar = () => {
+        setSearchBar(!searchbar);
+    }
+
     return (
         <div className="navbar">
             <div className="logo">
-                <a>
+                <a href="#">
                     <img src={Icons.pingpong} alt="ping pong" />
+                </a>
+            </div>
+            <div className="sidebar-menu" onClick={handleExapandSidebar}>
+                <a href="#">
+                    <img src={Icons.menu} alt="sidebar menu" />
                 </a>
             </div>
             <div className="search-bar">
                 <input type="text" placeholder="Search" />
             </div>
+            { searchbar && (<div className="search-bar-mobile">
+                <input type="text" placeholder="Search" onBlur={handleSearchBar} autoFocus/>
+            </div>)}
             <div className="profile-notifications">
+                <div className="search-icon-mobile" onClick={handleSearchBar}>
+                    <a href="#">
+                        <img src={Icons.searchMobile} alt="" />
+                    </a>
+                </div>
                 <div id="notifications-icon" onClick={notificationsHandleDropDown}>
                     <a href="#">
                         <img src={Icons.notification} alt="notifications-icon" />

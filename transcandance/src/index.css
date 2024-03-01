@@ -33,11 +33,24 @@ body {
     width: 190px;
     display: flex;
     padding-left: 18px;
+    align-items: center;
+}
+
+.navbar .sidebar-menu {
+    display: none;
+    position: absolute;
+    top: 63px;
+    left: 14px;
+}
+
+.navbar .sidebar-menu img {
+    width: 25px;
+    padding-left: 5px;
 }
 
 .search-bar {
     width: 50%;
-    padding-left: 20px;
+    margin-left: -40px;
     display: flex;
     align-items: center;
 }
@@ -72,12 +85,56 @@ body {
     text-indent: 50px;
 }
 
+.search-bar-mobile {
+    display: none;
+    position: fixed;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+.search-bar-mobile input {
+    width: 96%;
+    height: 40px;
+    border: 2px solid #4D4EA6;
+    border-radius: 10px;
+    background-size: 15px;
+    text-indent: 15px;
+    color: black;
+    font-size: 15px;
+    outline: none;
+}
+
+.search-bar-mobile input::placeholder {
+    color: black;
+    opacity: 0.5;
+    text-indent: 15px;
+}
+
+.search-bar-mobile input:focus {
+    outline: none;
+    border-color: #913DCE;
+    color: black;
+    text-indent: 15px;
+}
+
 .profile-notifications {
     display: flex;
     flex-direction: row;
     align-items: center;
     width: 80px;
     margin-right: 10px;
+}
+
+.profile-notifications .search-icon-mobile {
+    display: none;
+    padding-right: 5px;
+}
+
+.profile-notifications .search-icon-mobile a img {
+    width: 20px;
+    color: black;
 }
 
 .profile-notifications #profile-icon img {
@@ -107,60 +164,124 @@ body {
 }
 
 .sidebar {
-    width: 100px;
+    width: 85px;
     display: flex;
     flex-direction: column;
     align-items: center;
     height: 100vh;
+    background-color: rgba(58,25,82,0.5);
+    border-radius: 0 15px 0 0;
+    margin-top: 20px;
 }
 
-.sidebar #sidebar-dashboard-image  {
+.sidebar #sidebar-dashboard-image,
+.sidebar #sidebar-friends-image,
+.sidebar #sidebar-game-image,
+.sidebar #sidebar-chat-image,
+.sidebar #sidebar-channels-image {
     text-align: center;
-}
-
-
-.sidebar #sidebar-friends-image  {
-    text-align: center;
-}
-
-.sidebar #sidebar-game-image  {
-    text-align: center;
-}
-
-.sidebar #sidebar-chat-image  {
-    text-align: center;
-}
-
-.sidebar #sidebar-channels-image  {
-    text-align: center;
+    padding: 0 0 2px 0;
 }
 
 .sidebar .sidebar-navigations {
-    padding: 8px 8px 8px 5px;
+    padding: 8px 0 25px 0;
+    margin-left: 0px;
+    width: 100%;
 }
 
 .sidebar #sidebar-dashboard {
-    padding-top: 30px;
+    padding-top: 20px;
 }
 
-.sidebar #sidebar-dashboard-text {
-    font-size: 0.7em;
-}
-
-.sidebar #sidebar-friends-text {
-    font-size: 0.7em;
-}
-
-.sidebar #sidebar-chat-text {
-    font-size: 0.7em;
-}
-
-.sidebar #sidebar-game-text {
-    font-size: 0.7em;
-}
-
+.sidebar #sidebar-dashboard-text,
+.sidebar #sidebar-friends-text,
+.sidebar #sidebar-chat-text,
+.sidebar #sidebar-game-text,
 .sidebar #sidebar-channels-text {
     font-size: 0.7em;
+    text-align: center;
+}
+
+.sidebar-mobile a {
+    text-decoration: none;
+    color: white;
+}
+
+.sidebar-mobile img {
+    width: 30px;
+}
+
+.sidebar-mobile {
+    width: 85px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    background-color: rgba(58,25,82,0.5);
+    border-radius: 0 15px 0 0;
+    margin-top: 20px;
+}
+
+.sidebar-mobile #sidebar-dashboard-image,
+.sidebar-mobile #sidebar-friends-image,
+.sidebar-mobile #sidebar-game-image,
+.sidebar-mobile #sidebar-chat-image,
+.sidebar-mobile #sidebar-channels-image {
+    text-align: center;
+    padding: 0 0 2px 0;
+}
+
+.sidebar-mobile .sidebar-navigations {
+    padding: 8px 0 25px 0;
+    margin-left: 0px;
+    width: 100%;
+}
+
+.sidebar-mobile #sidebar-dashboard {
+    padding-top: 20px;
+}
+
+.sidebar-mobile #sidebar-dashboard-text,
+.sidebar-mobile #sidebar-friends-text,
+.sidebar-mobile #sidebar-chat-text,
+.sidebar-mobile #sidebar-game-text,
+.sidebar-mobile #sidebar-channels-text {
+    font-size: 0.7em;
+    text-align: center;
+}
+
+@media screen and (max-width: 768px){
+    .navbar .sidebar-menu {
+        display: inline;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .sidebar-mobile {
+        display: flex;
+    }
+
+    .navbar .logo img {
+        width: 67px;
+    }
+
+    .search-bar {
+        display: none;
+    }
+
+    .profile-notifications .search-icon-mobile {
+        display: inline;
+    }
+
+    .profile-notifications {
+        margin-right: 30px;
+    }
+
+    .search-bar-mobile {
+        display: flex;
+    }
 }
 
 .profile-dropdown {
@@ -344,166 +465,3 @@ body {
     color: black;
     font-size: 15px;
 }
-
-/*
-#dropdown-notifications-name {
-    color: #1E0934;
-    font-size: 15px;
-    padding-left: 6px;
-}
-
-.notifications-dropdown .dropdown-notifications-name {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#notifications-icon .notifications-dropdown #dropdown-notifications-name a {
-    text-decoration: none;
-    color: #1E0934;
-}
-
-#notifications-icon .notifications-dropdown #dropdown-notifications-pic a img {
-    width: 40px;
-}
-
-#notifications-icon .notifications-dropdown {
-    padding-top: 10px;
-}
-
-.separator {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 15px;
-}
-
-#line-break {
-    width: 130px;
-    height: 0.5px;
-    background-color:black;
-}
-
-.notifications-dropdown .settings-symbol-text {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding-left: 17px;
-    height: 45px;
-}
-
-.notifications-dropdown .settings-symbol-text #settings-symbol a img {
-    width: 35px;
-}
-
-.notifications-dropdown .settings-symbol-text #settings-text {
-    padding-left: 8px;
-}
-
-.notifications-dropdown .settings-symbol-text #settings-text a {
-    text-decoration: none;
-    color: #4D4EA6;
-}
-
-.notifications-dropdown .logout-symbol-text {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding-left: 17px;
-    height: 45px;
-    padding-bottom: 5px;
-}
-
-.notifications-dropdown .logout-symbol-text #logout-symbol a img {
-    width: 35px;
-}
-
-.notifications-dropdown .logout-symbol-text #logout-text {
-    padding-left: 8px;
-}
-
-.notifications-dropdown .logout-symbol-text #logout-text a {
-    text-decoration: none;
-    color: #4D4EA6;
-} */
-
-
-
-
-
-/* .extendedSidebar {
-    width: 180px;
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-    height: 100vh;
-    background-color: black;
-}
-
-.extendedSidebar a {
-    text-decoration: none;
-    color: white;
-}
-
-.extendedSidebar img {
-    width: 30px;
-}
-
-.extendedSidebar #sidebar-dashboard {
-    display: flex;
-    flex-direction: row;
-    background-color: brown;
-}
-
-.extendedSidebar #sidebar-dashboard #sidebar-dashboard-text {
-    padding-left: 15px;
-}
-
-.extendedSidebar #sidebar-friends {
-    display: flex;
-    flex-direction: row;
-    background-color: rgb(84, 19, 19);
-}
-
-.extendedSidebar #sidebar-friends #sidebar-friends-text {
-    padding-left: 15px;
-}
-
-.extendedSidebar #game {
-    display: flex;
-    flex-direction: row;
-    background-color: rgb(84, 19, 19);
-}
-
-.extendedSidebar #game #sidebar-game-text {
-    padding-left: 15px;
-}
-
-.extendedSidebar #chat {
-    display: flex;
-    flex-direction: row;
-    background-color: rgb(84, 19, 19);
-}
-
-.extendedSidebar #chat #sidebar-chat-text {
-    padding-left: 15px;
-}
-
-.extendedSidebar #channels {
-    display: flex;
-    flex-direction: row;
-    background-color: rgb(84, 19, 19);
-}
-
-.extendedSidebar #channels #sidebar-channels-text {
-    padding-left: 15px;
-}
-
-.extendedSidebar .sidebar-navigations {
-    padding: 15px 15px 15px 32px;
-}
-
-.extendedSidebar #sidebar-dashboard {
-    padding-top: 30px;
-} */
