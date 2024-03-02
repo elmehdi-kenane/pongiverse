@@ -5,10 +5,9 @@ const HomeSection = () => {
 	const handleLogoClick = () => {
         window.location.reload();
     };
-	
+
 	return (
-		<div>
-			<div id="Home">
+			<div className="home">
 				<div className="navbar">
 					<img src={PingLogo} alt="logo" className="PingLogo" onClick={handleLogoClick}/>
 					<div className="sections">
@@ -33,7 +32,6 @@ const HomeSection = () => {
 					<img src={twoRacketsDrawing} alt="two-rackets-drawing.svg" className="header-img" />
 				</div>
 			</div>
-		</div>
 	)
 }
 

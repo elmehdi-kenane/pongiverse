@@ -7,6 +7,7 @@ body {
 .page {
 	display: flex;
 	flex-direction: column;
+	align-items: center;
 	gap: 100px;
 }
 
@@ -18,8 +19,8 @@ body {
 
 .navbar {
 	display: flex;
-	justify-content: space-between;
 	margin: 30px 0 0 0;
+	justify-content: space-between;
 }
 
 .PingLogo {
@@ -195,7 +196,7 @@ body {
 	display: flex;
 	color: #334568;
 	justify-content: space-between;
-	width: 700px;
+	width: 900px;
 	align-items: center;
 }
 
@@ -212,7 +213,10 @@ body {
 .footer {
 	background-color: #334568;
 	color: white;
-	padding: 5px 0;
 	display: flex;
 	justify-content: center;
+	position: absolute;
+	bottom: -1;
+	left: 0;
+	right: 0;
 }

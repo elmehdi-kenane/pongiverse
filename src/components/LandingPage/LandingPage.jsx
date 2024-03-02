@@ -1,7 +1,6 @@
 import HomeSection from './HomeSection.jsx';
 import DescriptionCard from './DescriptionCard.jsx';
-import CTASection from './CtaFooterSections.jsx';
-import FooterSection from './CtaFooterSections.jsx';
+import {CTASection, FooterSection} from './CtaFooterSections.jsx';
 import TeamSection from './TeamSection.jsx';
 
 import './LandingPage.css'
@@ -34,8 +33,8 @@ const LandingPage = () => {
 				</div>
 			</div>
 			<div id="Team"> <TeamSection></TeamSection> </div>
-			<div id="cta"> <CTASection></CTASection> </div>
-			<div id="footer"> <FooterSection></FooterSection> </div>
+			<div> <CTASection></CTASection> </div>
+			<div> <FooterSection></FooterSection> </div>
 		</div>
 	)
 }
