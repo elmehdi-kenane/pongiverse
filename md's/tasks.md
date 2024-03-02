@@ -1,0 +1,4 @@
+- landing page
+	- add responsive
+	- add other teammates
+	- add some animation to the buttons

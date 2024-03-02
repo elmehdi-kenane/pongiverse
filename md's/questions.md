@@ -1,0 +1,2 @@
+- using switch in routing
+- react app works fine without exact keyword in the routing part?
