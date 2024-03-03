@@ -2,6 +2,8 @@
 	- add responsive
 	- add other teammates
 	- add some animation to the buttons
+	- linkedin link of el mehdi kenane
+	- this array of objects should be in a .json file
 
 - about whole project
 	- design database models
