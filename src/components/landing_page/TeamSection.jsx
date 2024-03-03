@@ -1,6 +1,8 @@
-import EkenanePicture from '../../assets/EkenanePicture.svg';
-import IdabligiPicture from '../../assets/IdabligiPicture.svg';
-import AagouzoulPicture from '../../assets/AagouzouPicture.svg';
+import EkenanePicture from '../../assets/landing_page/EkenanePicture.svg';
+import IdabligiPicture from '../../assets/landing_page/IdabligiPicture.svg';
+import AagouzoulPicture from '../../assets/landing_page/AagouzouPicture.svg';
+import RennacirPicture from '../../assets/landing_page/RennacirPicture.svg';
+import MmaqbourPicture from '../../assets/landing_page/MmaqbourPicture.svg';
 
 import TeamCard from './TeamCard.jsx';
 
@@ -10,7 +12,7 @@ const Team = [
 		FullName: "El Mehdi Kenane",
 		PictureProfile: EkenanePicture,
 		GithubLink: "https://github.com/elmehdi-kenane",
-		LinkedinLink: "https://profile.intra.42.fr/users/ekenane", // replace it with linkedin link of el mehdi kenane
+		LinkedinLink: "https://profile.intra.42.fr/users/ekenane",
 	}
 	,{
 		id:	2,
@@ -23,6 +25,20 @@ const Team = [
 		id:	3,
 		FullName: "Abdellah Agouzoul",
 		PictureProfile: AagouzoulPicture,
+	}
+	,{
+		id:	4,
+		FullName: "Rida Ennaciri",
+		PictureProfile: RennacirPicture,
+		GithubLink: "https://github.com/ennaciririda",
+		LinkedinLink: "https://www.linkedin.com/in/rida-ennaciri-89782b19a/",
+	}
+	,{
+		id:	5,
+		FullName: "Mohamed Maqbour",
+		PictureProfile: MmaqbourPicture,
+		GithubLink: "https://github.com/MohamedMQ",
+		LinkedinLink: "https://www.linkedin.com/in/mohamed-maqbour-65792a233/",
 	}
 ]
 
