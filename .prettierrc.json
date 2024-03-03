@@ -1,0 +1,6 @@
+// https://prettier.io/docs/en/options
+// add semi-colon, ===, double quotes
+{
+  "singleQuote": false,
+  "semi": true
+}

@@ -10,7 +10,6 @@
 	- create pre commit hooks for formatting and linting
 	- add commit message checker in pre commit hook
 	- Learn how git branches and merging works
-	- Learn how to make proper commits/commit messages
 	- add tests
 	- search about ci (related to git hooks)
 	- search about commit squashing

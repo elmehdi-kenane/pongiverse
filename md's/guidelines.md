@@ -34,6 +34,7 @@
 - __PS: use (.jsx) extension instead of (.js)__
 
 # git guidelines/conventions
+
 * naming branches using underscore (landing_page, sign_up, ...).
 * make your changes as small and “atomic” as possible.
 

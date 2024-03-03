@@ -1,0 +1,2 @@
+# Use .prettierignore to ignore (i.e. not reformat) certain files and folders completely.
+# Use “prettier-ignore” comments to ignore parts of files.
