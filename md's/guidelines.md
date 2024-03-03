@@ -7,35 +7,20 @@
 			* landing_page
 				* LandingPage.css         
 				* AagouzouPicture.svg
-				* EkenanePicture.svg
-				* IdabligiPicture.svg
-				* github-icon.svg
-				* linkedin-icon.svg
-				* two-rackets-drawing.svg
 		* components (contains only .jsx files)
 			* landing_page
 				* CtaFooterSections.jsx
 				* DescriptionCard.jsx
-				* HomeSection.jsx
-				* LandingPage.jsx
-				* TeamCard.jsx
-				* TeamSection.jsx
 			* Authentication
 				* sign_up
 				* sign_in
 		* App.css
 		* App.js
-		* App.test.js
-		* index.css
-		* index.js
-		* reportWebVitals.js
-		* setupTests.js
-	* other files/dirs
 - __PS: use (.jsx) extension instead of (.js)__
 
 # git guidelines/conventions
 
-* naming branches using underscore (landing_page, sign_up, ...).
+* naming branches using underscore (landing_page, sign_up, ...) like the name of feature in the components dir.
 * make your changes as small and “atomic” as possible.
 
 	## Commit Message
@@ -44,7 +29,7 @@
 	- type
 		* __feat__: introduces a new feature to the codebase
 		* __fix__: patches a bug in your codebase
-		* __refactor__: rewrite/restructure your code, however does not change any behaviour
+		* __refactor__: rewrite/restructure your code, however does not change any behavior
 		* __style__: do not affect the meaning (white-space, formatting, missing semi-colons, etc)
 		* __test__: add missing tests or correcting existing tests
 		* __docs__: affect documentation only
