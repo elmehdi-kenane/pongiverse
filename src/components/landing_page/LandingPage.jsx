@@ -3,7 +3,7 @@ import DescriptionCard from './DescriptionCard.jsx';
 import {CTASection, FooterSection} from './CtaFooterSections.jsx';
 import TeamSection from './TeamSection.jsx';
 
-import './LandingPage.css'
+import '../../assets/landing_page/LandingPage.css'
 
 const Description = [
 	{

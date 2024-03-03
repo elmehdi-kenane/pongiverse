@@ -1,5 +1,5 @@
-import GithubIcon from '../../assets/github-icon.svg';
-import LinkedinIcon from '../../assets/linkedin-icon.svg';
+import GithubIcon from '../../assets/landing_page/github-icon.svg';
+import LinkedinIcon from '../../assets/landing_page/linkedin-icon.svg';
 
 const TeamCard = ({picture, name, GithubLink, LinkedinLink}) => {
 	return (

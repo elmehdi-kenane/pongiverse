@@ -7,7 +7,6 @@ const CTASection = () => {
 	)
 }
 
-
 const FooterSection = () => {
 	return (
 		<div className="footer">

@@ -1,5 +1,5 @@
 import PingLogo from '../../assets/PingLogo.svg';
-import twoRacketsDrawing from '../../assets/two-rackets-drawing.svg';
+import twoRacketsDrawing from '../../assets/landing_page/two-rackets-drawing.svg';
 
 const HomeSection = () => {
 	const handleLogoClick = () => {
