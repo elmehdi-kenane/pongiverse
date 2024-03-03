@@ -1,6 +1,7 @@
 import HomeSection from './HomeSection.jsx';
 import DescriptionCard from './DescriptionCard.jsx';
-import {CTASection, FooterSection} from './CtaFooterSections.jsx';
+import CTASection from './CtaSection.jsx';
+import FooterSection from './FooterSection.jsx';
 import TeamSection from './TeamSection.jsx';
 
 import '../../assets/landing_page/LandingPage.css'
