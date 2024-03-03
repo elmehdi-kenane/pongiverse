@@ -1,7 +1,7 @@
 // import { useState } from 'react'
 import React from 'react';
 
-import LandingPage from './components/LandingPage/LandingPage.jsx';
+import LandingPage from './components/landing_page/LandingPage.jsx';
 
 function App() {
 	return (
