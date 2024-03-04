@@ -4,6 +4,13 @@
 	- add some animation to the buttons
 	- linkedin link of el mehdi kenane
 	- this array of objects should be in a .json file
+	- use variables in css 
+	```
+		:root {
+  		--primary-color: #007bff; /* Define a variable for the primary color */
+  		--secondary-color: #6c757d; /* Define a variable for the secondary color */
+		}
+	```
 
 - about whole project
 	- design database models
@@ -15,3 +22,4 @@
 	- add tests
 	- search about ci (related to git hooks)
 	- search about commit squashing
+    - search about position in css / transform (translate())
