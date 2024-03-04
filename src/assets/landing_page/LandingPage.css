@@ -1,10 +1,25 @@
+:root {
+	--mobile-size: 425px;
+	--tablet-size: 768px;
+	--laptop-size: 1440px;
+	--desktop-size: 2560px;
+}
+
 body {
 	font-family: IBM Plex Sans, sans-serif;
 	background-color: #250939;
-	margin: 0 550px;
 }
 
 .page {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	gap: 100px;
+}
+
+.home {
+	width: 80%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -17,17 +32,108 @@ body {
 	gap: 10px;
 }
 
-.navbar {
-	display: flex;
-	margin: 30px 0 0 0;
-	justify-content: space-between;
+/* var func doesn't works with min-width func :( idk */
+/* @media screen and (min-width: var(--desktop-size)) 
+{
+} */
+
+@media screen and (max-width: 2560px) {
+	.sidebar {
+		display: none;
+	}
 }
 
-.PingLogo {
+@media screen and (max-width: 1440px) {
+}
+
+@media screen and (max-width: 768px) {
+	ol,
+	ul,
+	li,
+	a {
+        margin: 0;
+		padding: 0;
+	}
+	.loginbBtn,
+	.sectionsBtns {
+        display: none;
+	}
+	.navbar {
+		position: relative;
+	}
+	.sidebar {
+        display: flex;
+		flex-direction: column;
+		position: absolute;
+        top: 100%;
+		gap: 20px;
+        width: 100%;
+        background-color: #334568;
+	}
+	.sidebar img {
+        width: 20px;
+	}
+	.sidebar img.cross {
+        align-self: center;
+        margin-top: 20px;
+	}
+    
+	.sidebar img.menu {
+        align-self: flex-end;
+        position: absolute;
+        top: -45px;
+        margin-right: 20px;
+	}
+    
+	.sidebarSections {
+        display: flex;
+		flex-direction: column;
+        align-items: center;
+		gap: 10px;
+		background-color: #334568;
+		position: absolute;
+        width: 100%;
+		top: 100%;
+	}
+    .sidebarSections a button {
+        background-color: transparent;
+        border: 2px solid white;
+        color: white;
+        align-self: center;
+        font-weight: 600;
+        font-size: 20px;
+        padding: 10px 80px;
+        border-radius: 25px;        
+    }
+    .sidebarSections a {
+        padding: 10px;
+        color: white;
+        text-decoration: none;
+    }
+	/* .sidebarIcon .hidden {
+        
+    } */
+}
+
+@media screen and (max-width: 425px) {
+}
+
+/* navbar should be fixed */
+.navbar {
+	position: fixed;
+	width: 100%;
+	display: flex;
+	padding: 10px 0;
+	justify-content: space-around;
+	background-color: #250939;
+	box-shadow: -3px -2px 20px 6px rgb(21 17 17 / 63%);
+}
+
+.pingLogo {
 	height: 50px;
 }
 
-.sections-btns {
+.sectionsBtns {
 	align-self: center;
 	border: none;
 	padding: 10px 20px;
@@ -37,7 +143,7 @@ body {
 	border-radius: 5px;
 }
 
-.login-btn {
+.loginbBtn {
 	background-color: transparent;
 	border: 2px solid white;
 	color: white;
@@ -50,23 +156,18 @@ body {
 
 .header {
 	display: flex;
-	margin-top: 100px;
 	justify-content: space-between;
 	align-items: center;
+	width: 80%;
+	margin-top: 120px;
 }
 
-.header-text {
+.headerText {
 	display: flex;
-	margin-left: 50px;
 	flex-direction: column;
 	gap: 20px;
-	flex-grow: 1;
-	/* position: absolute; */
-	width: 35%;
-}
-
-.header-img {
-	margin: 20px 30px 0 0;
+	min-width: 500px;
+	width: 60%;
 }
 
 .title {
@@ -75,7 +176,7 @@ body {
 	font-weight: 900;
 }
 
-.sub-title {
+.subTitle {
 	color: white;
 	font-size: 20px;
 	font-weight: 400;
@@ -83,9 +184,9 @@ body {
 	width: 100%;
 }
 
-.sign-up-btn {
+.signUpBtn {
 	align-self: flex-start;
-	background-color: #913DCE;
+	background-color: #913dce;
 	border: none;
 	border-radius: 10px;
 	padding: 12px 19px;
@@ -94,7 +195,7 @@ body {
 	color: white;
 }
 
-#About {
+.about {
 	color: white;
 	display: flex;
 	flex-direction: column;
@@ -102,7 +203,7 @@ body {
 	gap: 30px;
 }
 
-.AboutCards {
+.aboutCards {
 	color: white;
 	font-weight: 600;
 	font-style: italic;
@@ -130,7 +231,7 @@ body {
 	padding: 0 20px;
 }
 
-.Team {
+.team {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -138,14 +239,14 @@ body {
 	gap: 30px;
 }
 
-.TeamList {
+.teamList {
 	display: flex;
 	justify-content: center;
 	flex-wrap: wrap;
 	gap: 20px;
 }
 
-.TeamCard {
+.teamCard {
 	color: #334568;
 	background: rgba(255, 255, 255, 0.43);
 	border: 1px solid rgba(255, 255, 255, 0.81);
@@ -159,19 +260,19 @@ body {
 	font-weight: 600;
 }
 
-.TeamCard img {
+.teamCard img {
 	margin: 15px 0 0 0;
 	height: 100px;
 	width: 100px;
 }
 
-.TeamCard span {
+.teamCard span {
 	display: flex;
 	gap: 20px;
 	color: transparent;
 }
 
-.TeamCard span a img {
+.teamCard span a img {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -183,7 +284,7 @@ body {
 	width: 30px;
 }
 
-.TeamCard span button img {
+.teamCard span button img {
 	height: 30px;
 	width: 30px;
 	margin: 0;
@@ -192,11 +293,11 @@ body {
 .cta {
 	background-color: white;
 	border-radius: 15px;
-	padding: 3px 15px;
+	padding: 15px 15px;
 	display: flex;
 	color: #334568;
 	justify-content: space-between;
-	width: 900px;
+	width: 100%;
 	align-items: center;
 }
 
@@ -216,7 +317,6 @@ body {
 	display: flex;
 	justify-content: center;
 	position: absolute;
-	bottom: -1;
 	left: 0;
 	right: 0;
 }

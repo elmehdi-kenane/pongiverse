@@ -1,8 +1,11 @@
 const CTASection = () => {
 	return (
 		<div className="cta">
-			<p> Play now and level up your ping pong game! Join Ping Pong Palace for matches, tournaments, and chat with enthusiasts. Let's play! </p>
-			<button className="sign-up-btn"> Sign up </button>
+			<div>
+				<div> Play now and level up your ping pong game! </div>
+				<div> Join Ping Pong Palace for matches, tournaments, and chat with enthusiasts. </div>
+			</div>
+			<button className="signUpBtn"> Let's play! </button>
 		</div>
 	)
 }

@@ -22,22 +22,30 @@ const Description = [
 const LandingPage = () => {
 	return (
 		<div className="page">
-			<div id="Home"> <HomeSection></HomeSection> </div>
-			<div id="About">
+			<HomeSection></HomeSection>
+			<div className="about" id="About">
 				<h1>About</h1>
-				<div className='AboutCards'>
-					{
-						Description.map((e) => (
-						<DescriptionCard key={e.id} title={e.title} text={e.text}></DescriptionCard>
-						)
-					)}
+				<div className="aboutCards">
+					{Description.map((e) => (
+						<DescriptionCard
+							key={e.id}
+							title={e.title}
+							text={e.text}
+						></DescriptionCard>
+					))}
 				</div>
 			</div>
-			<div id="Team"> <TeamSection></TeamSection> </div>
-			<div> <CTASection></CTASection> </div>
-			<div> <FooterSection></FooterSection> </div>
+			<TeamSection></TeamSection>
+			<div>
+				{" "}
+				<CTASection></CTASection>{" "}
+			</div>
+			<div>
+				{" "}
+				<FooterSection></FooterSection>{" "}
+			</div>
 		</div>
-	)
+	);
 }
 
 export default LandingPage;

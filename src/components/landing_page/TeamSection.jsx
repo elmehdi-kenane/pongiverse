@@ -44,9 +44,9 @@ const Team = [
 
 const TeamSection = () => {
 	return (
-		<div className='Team'>
+		<div className='team' id='Team'>
 			<h1>Team</h1>
-			<div className="TeamList">
+			<div className="teamList">
 				{
 					Team.map((member) => (
 						<TeamCard key={member.id} picture={member.PictureProfile} name={member.FullName} GithubLink={member.GithubLink} LinkedinLink={member.LinkedinLink}></TeamCard>

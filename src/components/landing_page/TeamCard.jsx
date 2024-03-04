@@ -1,9 +1,9 @@
 import GithubIcon from '../../assets/landing_page/github-icon.svg';
 import LinkedinIcon from '../../assets/landing_page/linkedin-icon.svg';
 
-const TeamCard = ({picture, name, GithubLink, LinkedinLink}) => {
+const teamCard = ({picture, name, GithubLink, LinkedinLink}) => {
 	return (
-		<div className="TeamCard">
+		<div className="teamCard">
 			<img src={picture} alt="profile"/>
 			{name}
 			<span>
@@ -22,4 +22,4 @@ const TeamCard = ({picture, name, GithubLink, LinkedinLink}) => {
 	)
 }
 
-export default TeamCard;
+export default teamCard;
