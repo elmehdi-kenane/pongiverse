@@ -1,7 +1,10 @@
+import React from 'react';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
-import * as Icons from './assets';
 import { useState } from 'react';
+import '../assets/navbar-sidebar/index.css';
+import * as Icons from '../assets/navbar-sidebar';
+
 
 function App() {
     const [sidebarIsOpen, setSidebarIsOpen] = new useState(false);

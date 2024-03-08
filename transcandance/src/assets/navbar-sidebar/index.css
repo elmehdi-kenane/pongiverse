@@ -61,7 +61,7 @@ body {
     border: 2px solid white;
     border-radius: 30px;
     background-color: transparent;
-    background-image: url("./assets/search.svg");
+    background-image: url("./search.svg");
     background-repeat: no-repeat;
     background-position: 20px center;
     background-size: 15px;
