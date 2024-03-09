@@ -3,7 +3,7 @@
 	* will be make it soon...
 * frontend
 	* src
-		* assets
+		* assets (contains only images, icons and .css files)
 			* landing_page
 				* LandingPage.css         
 				* AagouzouPicture.svg
@@ -11,7 +11,7 @@
 			* landing_page
 				* CtaFooterSections.jsx
 				* DescriptionCard.jsx
-			* Authentication
+			* authentication
 				* sign_up
 				* sign_in
 		* App.css
@@ -24,7 +24,7 @@
 * make your changes as small and “atomic” as possible.
 
 	## Commit Message
-	* format: __type__(__scope__): __subject__ __body__
+	* FORMAT: __type__(__scope__): __subject__ __body__
 		* example: git commit -m "feat(landing page): Add the login button"
 	- type
 		* __feat__: introduces a new feature to the codebase
@@ -44,7 +44,7 @@
 		* Use the imperative, present tense: “change” not “changed” nor “changes”. Think of This commit will {subject}
 		* Don’t capitalize the first letter
 		* No dot (.) at the end (you have only 50 chars)
-	- body (Is an optional part of the format)
+	- body (is an optional part of the format)
 		* Use a blank line between the subject and the body.
 		* Includes motivation for the change and contrasts with previous behavior.
 	

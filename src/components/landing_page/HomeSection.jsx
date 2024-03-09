@@ -32,22 +32,20 @@ const HomeSection = () => {
 					<div className="subTitle">
 						<div> Play, Compete, Win! </div>
 						<div>
-							Join global ping pong matches for endless fun and
-							competition.
+							Join global ping pong matches for endless fun and competition.
 						</div>
 						<div> Ready to smash your way to victory? </div>
 					</div>
 					<button className="signUpBtn"> Sign up </button>
 				</div>
-				<div className="header-img">
-					<img
-						src={twoRacketsDrawing}
-						alt="two-rackets-drawing.svg"
-					/>
-				</div>
+				<img
+					src={twoRacketsDrawing}
+					alt="two-rackets-drawing.svg"
+					className="header-img"
+				/>
 			</div>
 		</div>
-  );
+	);
 };
 
 export default HomeSection;
