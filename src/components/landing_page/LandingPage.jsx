@@ -24,7 +24,7 @@ const LandingPage = () => {
 		<div className="page">
 			<HomeSection></HomeSection>
 			<div className="about" id="About">
-				<h1>About</h1>
+				<div className="title" >About</div>
 				<div className="aboutCards">
 					{Description.map((e) => (
 						<DescriptionCard
@@ -36,14 +36,8 @@ const LandingPage = () => {
 				</div>
 			</div>
 			<TeamSection></TeamSection>
-			<div>
-				{" "}
-				<CTASection></CTASection>{" "}
-			</div>
-			<div>
-				{" "}
-				<FooterSection></FooterSection>{" "}
-			</div>
+			<CTASection></CTASection>
+			<FooterSection></FooterSection>
 		</div>
 	);
 }

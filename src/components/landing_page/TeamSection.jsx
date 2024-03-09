@@ -45,7 +45,7 @@ const Team = [
 const TeamSection = () => {
 	return (
 		<div className='team' id='Team'>
-			<h1>Team</h1>
+			<h1 className="title">Team</h1>
 			<div className="teamList">
 				{
 					Team.map((member) => (

@@ -22,9 +22,15 @@ const Sidebar = () => {
 						onClick={toggleMenu}
 					/>
 					<ol className="sidebarSections">
-						<a href="#Home" onClick={toggleMenu}> Home </a>
-						<a href="#About" onClick={toggleMenu}> About </a>
-						<a href="#Team" onClick={toggleMenu}> Team </a>
+						<a href="#Home" onClick={toggleMenu}>
+							Home
+						</a>
+						<a href="#About" onClick={toggleMenu}>
+							About
+						</a>
+						<a href="#Team" onClick={toggleMenu}>
+							Team
+						</a>
 						<a href="login">
 							<button> Login </button>
 						</a>
