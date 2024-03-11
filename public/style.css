@@ -1,0 +1,556 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+:root {
+	--hmed: #EAD3D6;
+	--white: #ffffff;
+	--blak: #211336;
+	--gri: #716365;
+}
+
+.body {
+	height: 100vh;
+	width: 100%;
+	display: flex;
+	font-family: "IBM Plex Sans", sans-serif;
+	background-color: #250939;
+	overflow:auto;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+.global-flex-container
+{
+	display: flex;
+	/* background-color: #913DCE; */
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+	width: 100%;
+}
+
+.page {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.nav-container
+{
+	width: 100%;
+	/* flex-wrap: wrap; */
+	display: flex;
+	justify-content: space-between;
+}
+
+.nav-container .logo
+{
+	margin-left: 10px;
+	margin-top: 5px;
+}
+
+.nav-container .logo-home button
+{
+	cursor: pointer;
+	margin-right: 30px;
+	background: transparent;
+	border: none;
+	margin-top: 15px;
+}
+
+
+.flex_container {
+	border-radius: 20px;
+	width: 536px;
+	padding: 0 20px;
+	align-items: center;
+	justify-content: center;
+	display: flex;
+	flex-direction: column;
+	background-color: white;
+}
+
+.flex_container .sign-in h2 {
+	font-weight: bold;
+	color: black;
+	font-size: 35px;
+	width: 100%;
+}
+.flex_container .signpways .intra, .flex_container .signpways .google
+{
+	margin-top: 10px;
+	width: 100%;
+	display: flex;
+}
+
+.flex_container .signpways
+{
+	width: 100%;
+}
+
+.flex_container .signpways .google button {
+	font-size: 20px;
+	display: flex;
+	background: transparent;
+	border: 1.5px solid var(--blak);
+	cursor: pointer;
+	margin-top: 10px;
+	border-radius: 10px;
+	width: 100%;
+	justify-content: center;
+}
+
+.flex_container .signpways .intra button {
+	border: 1.5px solid var(--blak);
+	border-radius: 10px;
+	font-size: 20px;
+	display: flex;
+	background: transparent;
+	margin-top: 10px;
+	cursor: pointer;
+	width: 100%;
+	justify-content: center;
+}
+
+.flex_container .signpways .intra button:active,  .flex_container .signpways .google button:active
+{
+	background-color: #913DCE;
+}
+
+.flex_container .signpways .google button .google-icon img {
+	padding: 15px 10px 0 10px;
+	width: 35px;
+	height: 35px;
+	margin-left: 20px;
+}
+
+.flex_container .signpways .intra button .intra-icon img {
+	padding: 15px 10px 0 10px;
+	width: 35px;
+	height: 35px;
+}
+
+.flex_container .signpways .intra button .intra-p
+{
+	padding-right: 20px;
+}
+.flex_container .signpways .intra button .intra-p p
+{
+	padding: 0 0 0 8px;
+}
+
+.flex_container .signpways .google button .google-p
+{
+	padding-right: 20px;
+}
+.flex_container .signpways .google button .google-p p
+{
+	padding: 0 0 0 6px;
+}
+
+.flex_container	.with_email
+{
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	position: relative;
+}
+
+.flex_container	.with_email p
+{
+	color: var(--gri);
+	text-align: center;
+	font-size: 17px;
+}
+
+.flex_container	.with_email::before, .flex_container	.with_email::after
+{
+	content: "";
+ 	position: absolute;
+  	top: 50%;
+  	width: 25%;
+  	height: 1px;
+  	background-color: #D0D0D0;
+}
+
+.flex_container	.with_email::before
+{
+	margin-left: 35px;
+}
+.flex_container	.with_email::after
+{
+	right: 0;
+	margin-right: 35px;
+}
+.flex_container .form_c
+{
+	width: 100%;
+}
+
+.flex_container .form_c .items
+{
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	width: 100%;
+	margin-left: 20px;
+}
+
+.flex_container .enter-email, .pass, .repass
+{
+	margin-bottom: 15px;
+	margin-right: 22px;
+	padding-right: 40px;
+	width: 95%;
+}
+
+.flex_container  input {
+	width: 100%;
+	height: 40px;
+	border: 1.5px solid var(--blak);
+	padding: 20px 10px 0 0;
+	border-radius: 10px;
+	font-size: 15px;
+	background: transparent;
+	padding: 12px 10px;
+}
+
+.flex_container .but
+{
+	width: 100%;
+}
+
+.flex_container .but button {
+	border: 0.5px solid var(--blak);
+	border-radius: 10px;
+	font-size: 23px;
+	font-weight: bold;
+	color: var(--white);
+	background-color: #913DCE;
+	margin-top: 10px;
+	padding: 12px 50px;
+	cursor: pointer;
+	width: 100%;
+}
+
+.flex_container .but button:active
+{
+	background-color: var(--blak);
+}
+
+.flex_container .already
+{
+	margin-bottom: 25px;
+
+}
+.flex_container .already a
+{
+	font-weight: bold;
+}
+
+::placeholder {
+	opacity: 1;
+	font-size: 18px;
+	text-align: left;
+	padding: 10px 0 10px 0;
+  }
+
+  @media (max-width: 580px)
+  {
+	/* body {
+		overflow: hidden;
+	} */
+	.nav-container .logo
+	{
+		margin-left: 0.9rem;
+		margin-top: 0.9rem;
+		width: 0.9rem;
+		height: 0.9rem;
+	}
+
+	.nav-container .logo-home button
+	{
+		margin-right: 0.9rem;
+		background: transparent;
+		border: none;
+		margin-top: 0.9rem;
+	}
+	.flex_container .sign-in
+	{
+		margin-top: 20px;
+	}
+	.flex_container .sign-in h2 {
+		font-weight: bold;
+		color: black;
+		font-size: 1rem;
+		width: 100%;
+	}
+
+	.flex_container .signpways .google button .google-icon img {
+		padding: 15px 10px 0 10px;
+		width: 0.9rem;
+		height: 0.9rem;
+		margin-left: 20px;
+	}
+
+	.flex_container .signpways .intra button .intra-icon img {
+		padding: 15px 10px 0 10px;
+		width: 0.9rem;
+		height: 0.9rem;
+	}
+
+	.flex_container .signpways .google button .google-p
+	{
+		font-weight: bold;
+		padding-right: 20px;
+	}
+
+	.flex_container .signpways .intra button .intra-p
+	{
+		font-weight: bold;
+		padding-right: 20px;
+	}
+	.flex_container .signpways .google button {
+		font-size: 20px;
+		display: flex;
+		background: transparent;
+		margin-top: 0.9rem;
+		font-size: 0.9rem;
+		width: 100%;
+		justify-content: center;
+	}
+
+	.flex_container .signpways .intra button {
+		border: 1.5px solid var(--blak);
+		border-radius: 0.9rem;
+		font-size: 0.9rem;
+		display: flex;
+		background: transparent;
+		margin-top: 0.9rem;
+		width: 100%;
+		justify-content: center;
+	}
+
+	.flex_container  input {
+		width: 100%;
+		height: 0.9rem;
+		border: 1.5px solid var(--blak);
+		padding: 20px 10px 0 0;
+		border-radius: 10px;
+		font-size: 0.8rem;
+		background: transparent;
+		margin-top: 0px;
+		padding: 12px 10px;
+	}
+	::placeholder
+	{
+		opacity: 1;
+		font-size: 0.9rem;
+		text-align: left;
+		padding: 10px 0 10px 0;
+	}
+
+	.flex_container	.with_email p
+{
+	color: var(--gri);
+	text-align: center;
+	font-size: 0.9rem;
+}
+
+	.flex_container	.with_email::before, .flex_container	.with_email::after
+	{
+		content: "";
+		position: absolute;
+		top: 50%;
+		width: 25%;
+		height: 1px;
+		background-color: #D0D0D0;
+	}
+
+	.flex_container	.with_email::before
+	{
+		left: 0;
+		transform: translateY(-50%);
+		margin-left: 0.9rem;
+	}
+
+	.flex_container	.with_email::after
+	{
+		right: 0;
+		transform: translateY(-50%);
+		margin-right: 0.9rem;
+	}
+
+	.flex_container .but button {
+		border: 0.5px solid var(--blak);
+		border-radius: 10px;
+		font-size: 0.9rem;
+		font-weight: bold;
+		color: var(--white);
+		background-color: #913DCE;
+		margin-top: 10px;
+		padding: 12px 50px;
+		width: 100%;
+	}
+
+	.flex_container .already
+	{
+		margin-bottom: 25px;
+	}
+	.flex_container .already p
+	{
+		font-size: 11px;
+	}
+  }
+
+
+  @media (max-width: 304px)
+  {
+	.nav-container .logo
+	{
+		margin-left: 0.7rem;
+		margin-top: 0.7rem;
+		width: 0.7rem;
+		height: 0.7rem;
+	}
+
+	.nav-container .logo-home button
+	{
+		margin-right: 0.8rem;
+		background: transparent;
+		border: none;
+		margin-top: 0.8rem;
+	}
+	.flex_container .sign-in
+	{
+		margin-top: 20px;
+	}
+	.flex_container .sign-in h2 {
+		font-weight: bold;
+		color: black;
+		font-size: 0.9rem;
+		width: 100%;
+	}
+
+	.flex_container .signpways .google button .google-icon img {
+		padding: 0.5rem 0.2rem 0 0.8rem;
+		width: 0.7rem;
+		height: 0.7rem;
+		margin-left: 0.8rem;
+	}
+
+	.flex_container .signpways .intra button .intra-icon img {
+		padding: 0.5rem 0.2rem 0 0.8rem;
+		width: 0.8rem;
+		height: 0.8rem;
+	}
+
+	.flex_container .signpways .google button .google-p
+	{
+		font-weight: bold;
+		font-size: 9px;
+		padding-right: 20px;
+	}
+
+	.flex_container .signpways .intra button .intra-p
+	{
+		font-weight: bold;
+		font-size: 9px;
+		padding-right: 20px;
+	}
+	.flex_container .signpways .google button {
+		font-size: 20px;
+		display: flex;
+		background: transparent;
+		margin-top: 0.8rem;
+		font-size: 0.8rem;
+		width: 100%;
+		justify-content: center;
+	}
+
+	.flex_container .signpways .intra button {
+		border: 1.5px solid var(--blak);
+		border-radius: 0.8rem;
+		font-size: 0.8rem;
+		display: flex;
+		background: transparent;
+		margin-top: 0.8rem;
+		width: 100%;
+		justify-content: center;
+	}
+
+	.flex_container  input {
+		width: 100%;
+		height: 0.8rem;
+		border: 1.5px solid var(--blak);
+		padding: 20px 10px 0 0;
+		border-radius: 10px;
+		font-size: 0.8rem;
+		background: transparent;
+		margin-top: 0px;
+		padding: 12px 10px;
+	}
+	::placeholder
+	{
+		opacity: 1;
+		font-size: 0.8rem;
+		text-align: left;
+		padding: 10px 0 10px 0;
+	}
+
+	.flex_container	.with_email p
+{
+	color: var(--gri);
+	text-align: center;
+	font-size: 0.7rem;
+}
+
+	.flex_container	.with_email::before, .flex_container	.with_email::after
+	{
+		content: "";
+		position: absolute;
+		top: 50%;
+		width: 20%;
+		height: 1px;
+		background-color: #D0D0D0;
+	}
+
+	.flex_container	.with_email::before
+	{
+		left: 0;
+		transform: translateY(-50%);
+		margin-left: 0.7rem;
+	}
+
+	.flex_container	.with_email::after
+	{
+		right: 0;
+		transform: translateY(-50%);
+		margin-right: 0.7rem;
+	}
+	.flex_container .form_c .but
+	{
+		width: 95%;
+	}
+	.flex_container .but button {
+		border: 0.5px solid var(--blak);
+		border-radius: 10px;
+		font-size: 0.8rem;
+		font-weight: bold;
+		color: var(--white);
+		background-color: #913DCE;
+		margin-top: 2px;
+		margin-left: 11px;
+		padding: 12px 50px;
+		width: 100%;
+	}
+
+	.flex_container .already
+	{
+		margin-bottom: 25px;
+	}
+	.flex_container .already p
+	{
+		font-size: 11px;
+	}
+  }
