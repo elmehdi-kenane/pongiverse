@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../assets/SignUp/style.css'
+import '../../assets/SignUp/style.css'
 
 function SignUpForm() {
 	const [formData, SetFromData] = useState({
@@ -42,24 +42,15 @@ function SignUpForm() {
 		}
 	}
 	return (
-	<form action="" className="formC" onSubmit={handleSubmit} noValidate>
-		<div className="items">
-			<div className="enterEmail">
-				<input type="email" name='email' placeholder="Enter your Email" onChange={handleChange} />
-				{errors.email && <span>{errors.email}</span>}
-			</div>
-			<div className="password">
-				<input type="password" name='password' placeholder="Enter your Password" onChange={handleChange} />
-				{errors.password && <span>{errors.password}</span>}
-			</div>
-			<div className="rePassword">
-				<input type="password" name='confirmPassword' placeholder="Confirm your Password" onChange={handleChange} />
-				{errors.confirmPassword && <span>{errors.confirmPassword}</span>}
-			</div>
-			<div className="submitBut">
-				<button type='submit'>Sign up</button>
-			</div>
-		</div>
+
+	<form className="signUpForm" action="" onSubmit={handleSubmit} noValidate>
+		<input className="firstInput" type="email" name='email' placeholder="enter your email" onChange={handleChange} />
+		{errors.email && <span>{errors.email}</span>}
+		<input className="inputs" type="password" name='password' placeholder="enter your password" onChange={handleChange} />
+		{errors.password && <span>{errors.password}</span>}
+		<input className="inputs" type="password" name='confirmPassword' placeholder="confirm your password" onChange={handleChange} />
+		{errors.confirmPassword && <span>{errors.confirmPassword}</span>}
+		<button type="submit" className="submitButton">Sign Up</button>
 	</form>
   );
 }

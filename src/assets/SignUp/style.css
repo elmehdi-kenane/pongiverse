@@ -9,702 +9,249 @@
 
 body
 {
-	height: 100vh;
-	width: 100%;
+	background-color: #250939;
 	font-family: "IBM Plex Sans", sans-serif;
-	overflow: hidden;
-	margin: 0;
+	margin: 0 auto;
 	padding: 0;
-	box-sizing: border-box;
+	overflow: hidden;
+	width: 70%;
+	/* min-width: 200px; */
+	height: 100vh;
 }
 
-.globalFlexContainer
+.mainPage
 {
 	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 100vh;
+	flex-direction: column;
 	width: 100%;
-	overflow: hidden;
+	height: 100vh;
 }
 
-.SignUpPage {
+.navBar
+{
 	background-color: #250939;
 	display: flex;
-	flex-direction: column;
-	width: 100%;
-	overflow: hidden;
+	justify-content: space-between;
 }
-.flexContainer {
-	border-radius: 20px;
-	width: 500px;
-	padding: 0 20px;
+
+.homeLogo , .logo
+{
+	background: transparent;
+	border: none;
+	cursor: pointer;
+}
+
+.logo
+{
+	margin-top: 3px;
+}
+
+.bodyPage
+{
+	display: flex;
+	height: 100vh;
+	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+}
+
+.signUpContainer
+{
 	display: flex;
 	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	max-width: 500px;
+	border-radius: 10px;
 	background-color: white;
 }
 
-
-.navContainer
+.Google
 {
-	width: 100%;
 	display: flex;
-	justify-content: space-between;
+	width: 85%;
+	height: 50px;
+	justify-content: center;
+	align-items: center;
+	border: 1.5px solid black;
+	box-sizing: border-box;
+	border-radius: 10px;
+}
+.Intra
+{
+	display: flex;
+	width: 85%;
+	height: 50px;
+	justify-content: center;
+	align-items: center;
+	border: 1.5px solid black;
+	box-sizing: border-box;
+	border-radius: 10px;
+	margin-bottom: 10px;
 }
 
-.navContainer .logo
+.signUpContainer .GoogleButton
 {
-	margin-left: 10px;
-	margin-top: 5px;
-}
-
-.navContainer .logo img
-{
-	width: 92px;
-	height: 61px;
-}
-
-.navContainer .logoHome button
-{
-	cursor: pointer;
-	margin-right: 30px;
+	font-size: 18px;
+	height: 50px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 	background: transparent;
-	border: none;
-	margin-top: 15px;
-}
-
-
-.flexContainer .signIn h2 {
-	font-weight: bold;
 	color: black;
-	font-size: 30px;
-	width: 100%;
+	border: none;
 }
-.flexContainer .signUpWays .intra, .flexContainer .signUpWays .google
+
+.signUpContainer .IntraButton
 {
-	margin-top: 5px;
-	width: 100%;
-	display: flex;
-	justify-content: center;
+	height: 50px;
+	font-size: 18px;
+	margin-bottom: -5px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	background: transparent;
+	color: black;
+	border: none;
+	margin-right: 20px;
 }
 
-.flexContainer .signUpWays
+.googleLogo
 {
-	width: 100%;
+	width: 35px;
+	height: 35px;
+}
+.intraLogo
+{
+	width: 35px;
+	height: 35px;
 }
 
-.flexContainer .signUpWays .google button {
-	font-size: 17px;
-	display: flex;
-	background: transparent;
-	border: 1.5px solid var(--blak);
-	cursor: pointer;
-	margin-top: 10px;
-	border-radius: 10px;
-	width: 90%;
-	height: 50px;
-	justify-content: center;
-}
-
-.flexContainer .signUpWays .intra button {
-	border: 1.5px solid var(--blak);
-	border-radius: 10px;
-	font-size: 17px;
-	display: flex;
-	background: transparent;
-	margin-top: 10px;
-	cursor: pointer;
-	width: 90%;
-	height: 50px;
-	justify-content: center;
-}
-
-.flexContainer .signUpWays .intra button:active,  .flexContainer .signUpWays .google button:active
+.Google:active , .Intra:active
 {
 	background-color: #913DCE;
 }
 
-.flexContainer .signUpWays .google button .googleIcon img {
-	padding: 10px 6px 0px 10px;
-	width: 30px;
-	height: 30px;
-	margin-left: 20px;
-}
-
-.flexContainer .signUpWays .intra button .intraIcon img {
-	padding: 11px 6px 0px 10px;
-	width: 32px;
-	height: 32px;
-}
-
-.flexContainer .signUpWays .intra button .intraTitle
-{
-	padding-right: 20px;
-}
-.flexContainer .signUpWays .intra button .intraTitle p
-{
-	padding: 0 0 0 4px;
-}
-
-.flexContainer .signUpWays .google button .googleTitle
-{
-	padding-right: 20px;
-}
-.flexContainer .signUpWays .google button .googleTitle p
-{
-	padding-left: 4px;
-}
-
-.flexContainer	.withEmail
+.withEmail
 {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	width: 90%;
+	width: 85%;
 }
-
-.flexContainer	.withEmail .orSign
+.withEmailP
 {
-	width: 100%;
-}
-
-.flexContainer	.withEmail .lineBefAft
-{
-	margin-left: 10px;
-	margin-right: 10px;
-	height: 1px;
-	width: 80%;
-	background-color: var(--gri);
-}
-.flexContainer	.withEmail .orSign p
-{
-	color: var(--gri);
 	text-align: center;
 	font-size: 15px;
+	color: var(--gri);
 }
-
-.flexContainer .formC
+.lineBef
 {
-	width: 100%;
-	justify-content: center;
-	align-items: center;
-	display: flex;
-	align-items: center;
-}
-
-
-.flexContainer .formC .items
-{
-	display: flex;
-	align-items: center;
-	flex-direction: column;
-	width: 100%;
-	gap: 18px;
-}
-
-.flexContainer .enterEmail, .password, .rePassword
-{
-	width: 90%;
-}
-span
-{
-	color: red;
-	font-size: 16px;
+	height: 1px;
+	width: 30%;
 	margin-left: 10px;
+	background-color: var(--gri);
 }
-
-.flexContainer  input {
-	width: 100%;
-	height: 25px;
-	border: 1.5px solid var(--blak);
-	border-radius: 10px;
-	font-size: 15px;
-	background: transparent;
-	padding: 12px 0;
-}
-
-.flexContainer .submitBut
+.lineAf
 {
-	justify-content: center;
-	width: 90.5%;
+	margin-right: 10px;
+	height: 1px;
+	width: 30%;
+	background-color: var(--gri);
 }
 
-.flexContainer .submitBut button {
+.signUpForm
+{
+	display:flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+}
+
+.signUpContainer .firstInput
+{
+	width: 85%;
+	height: 50px;
+	padding-top: 10px;
+	margin-top: -5px;
+	padding-bottom: 10px;
+	border: 1.5px solid black;
+	border-radius: 10px;
+	box-sizing: border-box;
+	text-indent: 10px;
+}
+
+.signUpContainer .inputs
+{
+	width: 85%;
+	height: 50px;
+	padding-top: 10px;
+	margin-top: 10px;
+	padding-bottom: 10px;
+	border: 1.5px solid black;
+	border-radius: 10px;
+	box-sizing: border-box;
+	text-indent: 10px;
+}
+
+.inputs::placeholder, .firstInput::placeholder
+{
+	opacity: 1;
+	font-size: 15px;
+	text-indent: 10px;
+}
+
+.submitButton
+{
+	border-radius: 10px;
+	margin-top: 20px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 	border: 0.5px solid var(--blak);
 	border-radius: 10px;
-	font-size: 23px;
+	font-size: 20px;
 	font-weight: bold;
 	color: var(--white);
 	background-color: #913DCE;
-	margin-top: 10px;
-	padding: 12px 0px;
 	cursor: pointer;
-	width: 100%;
+	width: 85%;
 }
 
-.flexContainer .submitBut button:active
+.submitButton:active
 {
 	background-color: var(--blak);
 }
 
-.flexContainer .already
+.alradyHave
 {
-	margin-bottom: 25px;
-
-}
-.flexContainer .already a
-{
-	font-weight: bold;
+	font-size: 15px;
 }
 
-.flexContainer  input::placeholder
-{
-	opacity: 1;
-	font-size: 18px;
-}
-
-
-@media (max-width: 580px)
-{
-	.SignUpPage
-	{
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		width: 100%;
-	}
-	.globalFlexContainer
-	{
-		width: 80%;
-	}
-	.flexContainer
-	{
-		border-radius: 20px;
-		width: 100%;
-		padding: 0 20px;
-		align-items: center;
-		justify-content: center;
-		display: flex;
-		flex-direction: column;
-		background-color: white;
-	}
-	.navContainer .logo
-	{
-		margin-left: 0.9em;
-		margin-top: 10px;
-	}
-
-	.flexContainer .enterEmail, .password, .rePassword
-	{
-		width: 100%;
-	}
-
-	.flexContainer	.withEmail
-	{
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		width: 100%;
-	}
-
-	span
-	{
-		color: red;
-		font-size: 11px;
-		margin-left: 10px;
-	}
-
-	.flexContainer	.withEmail .orSign
-	{
-		width: 100%;
-	}
-
-	.flexContainer	.withEmail .lineBefAft
-	{
-		height: 1px;
-		width: 90%;
-		background-color: var(--gri);
-	}
-	.flexContainer	.withEmail .orSign p
-	{
-		color: var(--gri);
-		text-align: center;
-		font-size: 0.7em;
-	}
-	.navContainer .logo img
-	{
-		width: 73.6px;
-		height: 48.8px;
-	}
-
-	.navContainer .logoHome button
-	{
-		margin-right: 0.9em;
-		background: transparent;
-		border: none;
-		margin-top: 25px;
-	}
-	.navContainer .logoHome button img
-	{
-		width: 24.8px;
-		height: 27.2px;
-	}
-	.flexContainer .signIn
-	{
-		margin-top: 10px;
-	}
-	.flexContainer .signIn h2 {
-		font-weight: bold;
-		color: black;
-		font-size: 1em;
-		width: 100%;
-	}
-
-	.flexContainer .signUpWays .google button .googleIcon img {
-		padding: 15px 10px 0 10px;
-		width: 20px;
-		height: 20px;
-		margin-left: 20px;
-	}
-
-	.flexContainer .signUpWays .intra button .intraIcon img {
-		padding: 15px 10px 0 10px;
-		width: 20px;
-		height: 20px;
-	}
-
-	.flexContainer .signUpWays .google button .googleTitle
-	{
-		padding-right: 20px;
-	}
-
-	.flexContainer .signUpWays .intra button .intraTitle
-	{
-		padding-right: 20px;
-	}
-	.flexContainer .signUpWays .google button {
-		font-size: 20px;
-		display: flex;
-		background: transparent;
-		margin-top: 0.9em;
-		font-size: 0.9em;
-		width: 100%;
-		justify-content: center;
-	}
-
-	.flexContainer .signUpWays .intra button {
-		border: 1.5px solid var(--blak);
-		border-radius: 0.9em;
-		font-size: 0.9em;
-		display: flex;
-		background: transparent;
-		margin-top: 0.9em;
-		width: 100%;
-		justify-content: center;
-	}
-
-	.flexContainer  input {
-		width: 100%;
-		height: 20px;
-		border: 1.5px solid var(--blak);
-		border-radius: 10px;
-		font-size: 0.8em;
-		background: transparent;
-	}
-	.flexContainer  input::placeholder
-	{
-		opacity: 1;
-		font-size: 15px;
-		text-align: left;
-	}
-	.flexContainer .submitBut
-	{
-		width: 100%;
-	}
-	.flexContainer .submitBut button {
-		border: 0.5px solid var(--blak);
-		border-radius: 10px;
-		font-size: 0.9em;
-		font-weight: bold;
-		color: var(--white);
-		background-color: #913DCE;
-		margin-top: 7px;
-		width: 100%;
-	}
-
-	.flexContainer .already
-	{
-		margin-bottom: 25px;
-	}
-	.flexContainer .already p
-	{
-		font-size: 11px;
-	}
-}
-
-
-@media (max-width: 378px)
-{
-	.globalFlexContainer
-	{
-		width: 96%;
-	}
-	span
-	{
-		color: red;
-		font-size: 9px;
-		margin-left: 10px;
-	}
-	.navContainer .logo
-	{
-		margin-left: 0.7em;
-		margin-top: 0.7em;
-		width: 0.7em;
-		height: 0.7em;
-	}
-	.navContainer .logo img
-	{
-		width: 64.4px;
-		height: 42.7px;
-	}
-	.navContainer .logoHome button img
-	{
-		width: 24.8px;
-		height: 27.2px;
-	}
-	.navContainer .logoHome button
-	{
-		margin-right: 0.8em;
-		background: transparent;
-		border: none;
-		margin-top: 18px;
-	}
-	.flexContainer .signIn
-	{
-		margin-top: 20px;
-	}
-	.flexContainer .signIn h2 {
-		font-weight: bold;
-		color: black;
-		font-size: 0.9em;
-		width: 100%;
-	}
-
-	.flexContainer .signUpWays .google button .googleIcon img {
-		width: 18px;
-		height: 18px;
-		margin-left: 0.8em;
-	}
-
-	.flexContainer .signUpWays .intra button .intraIcon img {
-		width: 18px;
-		height: 18px;
-	}
-
-	.flexContainer .signUpWays .google button .googleTitle
-	{
-		font-weight: bold;
-		font-size: 9px;
-		padding-top: 9px;
-	}
-
-	.flexContainer .signUpWays .intra button .intraTitle
-	{
-		font-weight: bold;
-		font-size: 9px;
-		padding-top: 9px;
-	}
-	.flexContainer .signUpWays .google button {
-		margin-top: 0.8em;
-	}
-
-	.flexContainer	.withEmail
-	{
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		width: 100%;
-	}
-
-	.flexContainer	.withEmail .orSign
-	{
-		width: 100%;
-	}
-
-	.flexContainer	.withEmail .lineBefAft
-	{
-		height: 1px;
-		width: 50%;
-		background-color: var(--gri);
-	}
-	.flexContainer	.withEmail .orSign p
-	{
-		color: var(--gri);
-		text-align: center;
-		font-size: 0.6em;;
-	}
-
-	.flexContainer  input {
-		width: 100%;
-		height: 18px;
-		border: 1.5px solid var(--blak);
-		/* padding: 20px 10px 0 0; */
-		border-radius: 10px;
-		font-size: 0.8em;
-		background: transparent;
-		margin-top: 0px;
-		/* padding: 12px 10px; */
-	}
-	.flexContainer input::placeholder
-	{
-		opacity: 1;
-		font-size: 13px;
-		text-align: left;
-	}
-
-	.flexContainer	.withEmail p
-	{
-		color: var(--gri);
-		text-align: center;
-		font-size: 0.7em;
-	}
-
-	.flexContainer .formC .submitBut
-	{
-		width: 100%;
-	}
-	.flexContainer .submitBut button {
-		border: 0.5px solid var(--blak);
-		border-radius: 10px;
-		font-size: 0.8em;
-		font-weight: bold;
-		color: var(--white);
-		background-color: #913DCE;
-		margin-top: 2px;
-		padding: 12px 50px;
-		width: 100%;
-	}
-
-	.flexContainer .already
-	{
-		margin-bottom: 25px;
-	}
-	.flexContainer .already p
-	{
-		font-size: 11px;
-	}
-}
-
-@media screen and (max-width: 190px)
+@media (max-width: 500px)
 {
 	body
 	{
-		height: 500vh;
-		min-width: 170px;
-		width: 100%;
+		background-color: #250939;
 		font-family: "IBM Plex Sans", sans-serif;
-		background-color: #250939;
 		margin: 0 auto;
+		padding: 0;
 		overflow: hidden;
+		width: 95%;
+		min-width: 200px;
+		height: 100vh;
 	}
-	.globalFlexContainer
-	{
-		display: flex;
-		overflow-x: hidden;
-		overflow-y: hidden;
-		background-color: #250939;
-	}
-	.SignUpPage
-	{
-		overflow: hidden;
-	}
-	.flexContainer .formC
-	{
-		width: 100%;
-		justify-content: center;
-		align-items: center;
-		display: flex;
-		align-items: center;
-	}
-	.flexContainer .formC .submitBut
+	.signUpContainer
 	{
 		width: 100%;
 	}
-	.flexContainer .formC .submitBut button {
-		border: 0.5px solid var(--blak);
-		border-radius: 10px;
-		font-size: 10px;
-		font-weight: bold;
-		color: var(--white);
-		background-color: #913DCE;
-		padding: 12px 0;
-		width: 100%;
-
-	}
-	.flexContainer .signUpWays .google button .googleTitle
+	.signUpContainer .GoogleButton, .signUpContainer .IntraButton
 	{
+		font-size: 12px;
 		font-weight: bold;
-		padding-right: 20px;
-		display: none;
 	}
 
-	.flexContainer .signUpWays .intra button .intraTitle
+	.signUpContainer .GoogleButton
 	{
-		font-weight: bold;
-		padding-right: 20px;
-		display: none;
-	}
-
-	.flexContainer .signUpWays .google button .googleIcon img {
-		width: 30px;
-		height: 30px;
 		margin-right: 10px;
-		padding: 9px 10px 0 10px;
-	}
-
-	.flexContainer .signUpWays .intra button .intraIcon img {
-		margin-right: 6px;
-		width: 30px;
-		height: 30px;
-		padding: 9px 10px 0 10px;
-	}
-
-	.flexContainer	.withEmail .lineBefAft
-	{
-		display: none;
-	}
-
-	.flexContainer .already a
-	{
-		font-weight: bold;
-		font-size: 10px;
-	}
-	.flexContainer .already p
-	{
-		font-size: 10px;
-	}
-
-	.flexContainer input {
-    width: 90%;
-    height: 15px;
-    border: 1.5px solid var(--blak);
-    padding: 20px 10px 0 0;
-    border-radius: 10px;
-    font-size: 0.8em;
-    background: transparent;
-    margin-top: 0px;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	padding-left: 5px;
-	}
-
-	.flexContainer input::placeholder
-	{
-		opacity: 1;
-		font-size: 10px;
-		text-align: left;
-		padding: 10px 0 10px 0;
 	}
 }
+
