@@ -1,4 +1,5 @@
 # React.js
+* [react-developer-roadmap-2024](https://github.com/cosdensolutions/code/blob/master/videos/long/react-developer-roadmap-2024/roadmap.md)
 * [top javascript concepts to know before learning react](https://www.freecodecamp.org/news/top-javascript-concepts-to-know-before-learning-react/)
 * [react.js examples](https://reactjsexample.com/)
 * [daisyui.com](https://daisyui.com/)
