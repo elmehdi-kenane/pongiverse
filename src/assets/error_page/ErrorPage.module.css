@@ -1,0 +1,172 @@
+/* * {
+    outline: 2px solid red;
+  } */
+
+  body {
+    background-color: #250939;
+    margin: 0px;
+    font-family: "IBM Plex Sans", sans-serif;
+}
+
+/* -------------------------------------------------------- */
+/* --------------------------HEAD-------------------------- */
+/* -------------------------------------------------------- */
+
+.nav-bar {
+    display: flex;
+    margin-top: 20px;
+    margin-left: -50px;
+}
+
+.nav-bar img {
+    width: 50px;
+}
+
+/* -------------------------------------------------------- */
+/* --------------------------error-page-------------------- */
+/* -------------------------------------------------------- */
+
+
+.error-page {
+    display: flex;
+    flex-direction: column;
+    padding: 0px 100px;
+    /* border: solid white 5px; */
+}
+
+/* -------------------------------------------------------- */
+/* --------------------------Header------------------------- */
+/* -------------------------------------------------------- */
+
+.header {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 80px;
+    /* border: darkred solid 5px; */
+}
+
+.header .box-page-not-found {
+    display: flex;
+    width: 665px;
+    align-items: center;
+    color: #913DCE;
+    font-size: 55px;
+    /* border: white solid 2px; */
+}
+
+.header .box-404 {
+    display: flex;
+    align-items: center;
+    color: #7E57C2;
+    font-size: 140px;
+    font-family: "Iceberg", "IBM Plex Sans", sans-serif;
+    gap: 5px;
+    /* border: white solid 2px; */
+}
+
+.header .box-404 img {
+    width: 110px;
+}
+
+/* -------------------------------------------------------- */
+/* -------------------------Sub-Header--------------------- */
+/* -------------------------------------------------------- */
+
+.sub-header {
+    display: flex;
+    margin-top: 50px;
+    justify-content: center;
+    gap: 30px;
+    /* border: darkred solid 5px; */
+}
+
+.sub-header .err-msg {
+    color: white;
+    font-size: 40px;
+    width: 735px;
+    flex-shrink: 1;
+    /* border: white solid 2px; */
+}
+
+.sub-header .space {
+    width: 188px;
+    flex-shrink: 5;
+    /* border: white solid 2px; */
+}
+
+/* -------------------------------------------------------- */
+/* -------------------------Buttuon------------------------ */
+/* -------------------------------------------------------- */
+
+.button {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    /* border: white solid 2px; */
+}
+
+.button a {
+    display: flex;
+    text-decoration: none;
+    padding: 10px 15px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    background: rgba( 255, 255, 255, 0.25 );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+}
+
+/* -------------------------------------------------------- */
+/* -------------------------Responsive---------------------- */
+/* -------------------------------------------------------- */
+
+@media (max-width:830px) {
+    .header {
+        /* flex-wrap: wrap-reverse; */
+        flex-direction: column-reverse;
+        align-items: center;
+        margin-top: 20px;
+        gap: 10px;
+    }
+
+    .header .box-page-not-found {
+        text-align: center;
+        font-size: 22px;
+        width: auto;
+    }
+    
+    .header .box-404 {
+        font-size: 80px;
+        gap: 5px;
+    }
+    
+    .header .box-404 img {
+        width: 68px;
+    }
+    
+    .sub-header {
+        gap: 0px;
+        margin-top: 120px;
+    }
+    
+    .sub-header .err-msg {
+        text-align: center;
+        font-size: 19px;
+        width: auto;
+    }
+
+    .sub-header .space {
+        width: 0px;
+    }
+
+    .button a {
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+}
