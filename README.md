@@ -1,1 +1,0 @@
-will be use to introduce the project (the stack used...)
