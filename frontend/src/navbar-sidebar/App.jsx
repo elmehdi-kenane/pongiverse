@@ -15,27 +15,32 @@ import Groups from '../Groups/Groups';
 import Friends from '../Friends/Friends';
 import Dashboard from '../Dashboard/Dashboard';
 import { Navigate } from 'react-router-dom';
+import Game from '../Game/Game';
+import PlayMatch from '../Game/PlayMatch';
+import SocketContext, { SocketProvider } from '../Groups/SocketContext'
 
 const App = () => {
   return (
     <div className="page">
         <Router>
           <AuthProvider>
-            <Routes>
-                <Route path="/" element={<HomePage />} exact />
-                <Route path="/signup" element={<SignUp />} />
-                <Route path="/signin" element={<SignIn />} />
-                <Route path="/mainpage" element={<NavbarSidebar />} >
-                  <Route path="dashboard" element={<Dashboard />} />
-                  <Route path="chat" element={<Chat />} />
-                  <Route path="friends" element={<Friends />} />
-                  <Route path="groups" element={<Groups />} />
-                  <Route path="game" element={<Modes />} />
-                  <Route path="game/solo" element={<Solo />} />
-                  <Route path="game/solo/1vs1" element={<OneVersusOne />} />
-                  <Route path="play/1vs1/:roomID" element={<PlayMatch />} />
-                </Route>
-            </Routes>
+            <SocketProvider>
+                <Routes>
+                    <Route path="/" element={<HomePage />} exact />
+                    <Route path="/signup" element={<SignUp />} />
+                    <Route path="/signin" element={<SignIn />} />
+                    <Route path="/mainpage" element={<NavbarSidebar />} >
+                      <Route path="dashboard" element={<Dashboard />} />
+                      <Route path="chat" element={<Chat />} />
+                      <Route path="friends" element={<Friends />} />
+                      <Route path="groups" element={<Groups />} />
+                      <Route path="game" element={<Modes />} />
+                      <Route path="game/solo" element={<Solo />} />
+                      <Route path="game/solo/1vs1" element={<OneVersusOne />} />
+                      <Route path="play/1vs1/:roomID" element={<PlayMatch />} />
+                    </Route>
+                </Routes>
+              </SocketProvider>
           </AuthProvider>
         </Router>
     </div>
