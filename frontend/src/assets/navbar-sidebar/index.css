@@ -1,0 +1,873 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+html, body {
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #211336;
+    font-family: "IBM Plex Sans", sans-serif;
+    overflow: hidden;
+    /* box-shadow:0px 0px 0px 10px black inset; */
+}
+
+.page {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    /* border: 2px solid red; */
+}
+
+.navbar {
+    color: white;
+    height: 50px;
+    width: 98%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+.navbar .logo img {
+    width: 80px;
+}
+
+.navbar .logo {
+    width: 190px;
+    display: flex;
+    align-items: center;
+}
+
+.search-bar {
+    width: 50%;
+    margin-left: -40px;
+    display: flex;
+    align-items: center;
+}
+
+.search-bar input {
+    width: 90%;
+    height: 40px;
+    border: 2px solid white;
+    border-radius: 30px;
+    background-color: transparent;
+    background-image: url("./search.svg");
+    background-repeat: no-repeat;
+    background-position: 20px center;
+    background-size: 15px;
+    text-indent: 50px;
+    color: white;
+    font-size: 15px;
+    transition: height .1s;
+}
+
+.search-bar input::placeholder {
+    color: white;
+    opacity: 0.7;
+    text-indent: 50px;
+}
+
+.search-bar input:focus {
+    height: 42px;
+    outline: none;
+    border-color: #913DCE;
+    color: white;
+    text-indent: 50px;
+}
+
+.search-bar-mobile {
+    width: 100%;
+    margin: 0 auto;
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+.search-bar-mobile input {
+    width: 98%;
+    height: 40px;
+    border: 2px solid #4D4EA6;
+    border-radius: 10px;
+    background-size: 15px;
+    text-indent: 15px;
+    color: black;
+    font-size: 15px;
+    outline: none;
+}
+
+.search-bar-mobile input::placeholder {
+    color: black;
+    opacity: 0.5;
+    text-indent: 15px;
+}
+
+.search-bar-mobile input:focus {
+    outline: none;
+    border-color: #913DCE;
+    color: black;
+    text-indent: 15px;
+}
+
+.profile-notifications {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
+}
+
+.profile-notifications .search-icon-mobile {
+    display: none;
+}
+
+.profile-notifications .search-icon-mobile a img {
+    width: 19px;
+    color: black;
+}
+
+.profile-notifications #profile-icon img {
+    width: 35px;
+}
+
+.profile-notifications #notifications-icon img {
+    width: 30px;
+}
+
+
+
+
+
+
+.sidebarWrapper {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    width: 100%;
+    /* overflow-y: auto; */
+}
+
+.sidebar a {
+    text-decoration: none;
+    color: white;
+}
+
+.sidebar img {
+    width: 30px;
+}
+
+.sidebar {
+    width: 85px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    background-color: rgba(58,25,82,0.5);
+    border-radius: 0 15px 0 0;
+    overflow-y: auto;
+}
+
+.sidebar .sidebar-navigations .sidebar-icons {
+    text-align: center;
+    padding: 0 0 2px 0;
+}
+
+.sidebar .sidebar-navigations {
+    padding: 8px 0 25px 0;
+    margin-left: 0px;
+    width: 100%;
+}
+
+.sidebar #sidebar-dashboard {
+    padding-top: 20px;
+}
+
+.sidebar #channels {
+    margin-bottom: 80px;
+}
+
+.sidebar .sidebar-navigations .sidebar-titles {
+    font-size: 0.7em;
+    text-align: center;
+    display: block;
+}
+
+.profile-dropdown {
+    position: absolute;
+    background-color: #D9D9D9;
+    width: 180px;
+    left: -140px;
+    border-radius: 20px;
+}
+
+
+.navbar .profile-notifications #profile-icon {
+    position: relative;
+}
+
+.dropdown-profile-name {
+    display: flex;
+    flex-direction: row;
+}
+
+
+#dropdown-profile-name {
+    color: #1E0934;
+    font-size: 15px;
+    padding-left: 6px;
+}
+
+.profile-dropdown .dropdown-profile-name {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#profile-icon .profile-dropdown #dropdown-profile-name a {
+    text-decoration: none;
+    color: #1E0934;
+}
+
+#profile-icon .profile-dropdown #dropdown-profile-pic a img {
+    width: 40px;
+}
+
+#profile-icon .profile-dropdown {
+    padding-top: 10px;
+}
+
+.separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 15px;
+}
+
+#line-break {
+    width: 130px;
+    height: 0.5px;
+    background-color:black;
+}
+
+.profile-dropdown .settings-symbol-text {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 17px;
+    height: 45px;
+}
+
+.profile-dropdown .settings-symbol-text #settings-symbol a img {
+    width: 35px;
+}
+
+.profile-dropdown .settings-symbol-text #settings-text {
+    padding-left: 8px;
+}
+
+.profile-dropdown .settings-symbol-text #settings-text a {
+    text-decoration: none;
+    color: #4D4EA6;
+}
+
+.profile-dropdown .logout-symbol-text {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 17px;
+    height: 45px;
+    padding-bottom: 5px;
+}
+
+.profile-dropdown .logout-symbol-text #logout-symbol a img {
+    width: 35px;
+}
+
+.profile-dropdown .logout-symbol-text #logout-text {
+    padding-left: 8px;
+}
+
+.profile-dropdown .logout-symbol-text #logout-text a {
+    text-decoration: none;
+    color: #4D4EA6;
+}
+
+
+
+
+
+
+#notifications-icon {
+    position: relative;
+}
+
+.no-notifications-dropdown {
+    position: absolute;
+    background-color: #D9D9D9;
+    width: 320px;
+    left: -285px;
+    top: 40px;
+    border-radius: 20px;
+    display: flex;
+}
+
+#notifications-icon .no-notifications-dropdown {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#notifications-icon .no-notifications-dropdown #dropdown-notifications-title {
+    color: #1E0934;
+    font-size: 15px;
+    padding-top: 10px;
+}
+
+#notifications-icon .no-notifications-dropdown #dropdown-notifications-separator {
+    height: 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#notifications-icon .no-notifications-dropdown #dropdown-notifications-separator #notifications-line-break {
+    height: 0.5px;
+    width: 200px;
+    background-color: black;
+}
+
+#notifications-icon .no-notifications-dropdown #dropdown-notifications-body {
+    color: #1E0934;
+    font-size: 12px;
+    padding-bottom: 10px;
+}
+
+.notifications-container {
+    position: absolute;
+    background-color: #D9D9D9;
+    width: 320px;
+    left: -285px;
+    top: 40px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.notifications-dropdown .notifications-pic-text {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px 0 10px 15px;
+}
+
+.notifications-dropdown .notifications-pic-text #notifications-text {
+    padding-left: 10px;
+    overflow: auto;
+    line-break: auto;
+}
+
+.notifications-dropdown .notifications-pic-text #notifications-text a {
+    text-decoration: none;
+    color: black;
+    font-size: 15px;
+}
+
+@media screen and (max-width: 768px) {
+
+    .navbar {
+        margin-top: 2px;
+    }
+
+    .sidebarWrapper {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        max-height: 30px;
+        min-height: 30px;
+        /* padding: 15px 0; */
+        flex-direction: row;
+        background-color: transparent;
+        border-radius: 0;
+        overflow: hidden;
+        margin: 0 0;
+        /* background-color:aquamarine; */
+    }
+
+    .sidebar .sidebar-navigations .sidebar-titles {
+        display: none;
+    }
+
+    .sidebar #sidebar-dashboard {
+        padding-top: 0;
+    }
+
+    .sidebar .sidebar-navigations {
+        padding: 0;
+        display: flex;
+        justify-content: space-evenly;
+    }
+
+    .sidebar .sidebar-navigations .sidebar-icons img {
+        text-align: center;
+        padding: 0;
+        width: 25px;
+    }
+
+    .navbar .logo img {
+        width: 67px;
+    }
+
+    .search-bar {
+        display: none;
+    }
+
+    .profile-notifications .search-icon-mobile {
+        display: inline;
+    }
+
+    .profile-notifications #profile-icon img {
+        width: 32px;
+    }
+
+    .profile-notifications #notifications-icon img {
+        width: 27px;
+    }
+
+    .search-bar-mobile {
+        display: flex;
+    }
+
+    .no-notifications-dropdown {
+        width: 230px;
+        left: -180px;
+    }
+
+    #notifications-icon .no-notifications-dropdown #dropdown-notifications-separator #notifications-line-break {
+        width: 120px;
+    }
+
+    #notifications-icon .no-notifications-dropdown #dropdown-notifications-body {
+        font-size: 9px;
+    }
+
+    .notifications-container {
+        width: 150px;
+        left: -110px;
+    }
+
+    .sidebar #channels {
+        margin-bottom: 0;
+    }
+}
+
+@media screen and (max-width: 280px) {
+    .no-notifications-dropdown {
+        position: fixed;
+        top: 50px;
+        width: 80%;
+        left: 20%;
+    }
+    
+    .notifications-container {
+        position: fixed;
+        top: 50px;
+        width: 80%;
+        left: 20%;
+    }
+
+    .profile-dropdown {
+        position: fixed;
+        top: 50px;
+        width: 60%;
+        left: 40%;
+    }
+
+    .profile-dropdown .dropdown-profile-name {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+
+/* OneVersusOne.jsx */
+
+.onevsone {
+    width: 100%;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.onevsone-dashboard {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 35px;
+    margin-top: 200px;
+}
+
+.onevsone-dashboard-opponents {
+    width: 70%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    background: linear-gradient(120deg, rgba(126,87,194,1), rgba(126,87,194,0.5) 50%, rgba(126,87,194,0.7) 50%, rgba(126,87,194,1));
+    padding: 130px 0
+}
+
+.onevsone-dashboard-selection {
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+}
+
+.onevsone-dashboard-possibilities {
+    background: linear-gradient(to right, rgba(126,87,194,1), rgba(126,87,194,0.5));
+    padding: 20px;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.onevsone-dashboard-possibilities > span:first-child {
+    display: block;
+}
+
+#onevsone-dashboard-friends,
+#onevsone-dashboard-joining,
+#onevsone-dashboard-creation,
+#onevsone-dashboard-matchmaking {
+    margin-bottom: 5px;
+    border-radius: 5px;
+    position: relative;
+    /* text-align: center; */
+}
+
+.onevsone-dashboard-opponent {
+    display: flex;
+    flex-direction: column;
+    align-items: center
+}
+
+.onevsone-dashboard-opponents img {
+    width: 150px;
+}
+
+.onevsone-opponent-infos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center
+}
+
+.onevsone-opponent-infos p:nth-child(2n + 1) {
+    font-weight: bold;
+    font-size: 20px;
+    margin: 10px 0 -10px 0;
+}
+
+.onevsone-opponent-infos p:nth-child(2n) {
+    color: white;
+    font-size: 16px;
+    opacity: 0.6;
+}
+
+.onevsone-dashboard-logo {
+    display: flex;
+    justify-content: center
+}
+
+.onevsone-cancel:hover {
+    background-color: white;
+    color: #1E1E1E;
+    font-weight: bolder;
+    transition: all 0.5s ease;
+}
+
+.onevsone-cancel {
+    margin: 80px 50px 100px 4%;
+    text-align: center;
+    width: 150px;
+    padding: 12px 0;
+    background: transparent;
+    outline: 2px solid white;
+    outline-offset: -2px;
+}
+
+.expand-friends {
+    position: absolute;
+    left: 102%;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #4D4EA6;
+    width: 260px;
+    height: 400px;
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 5px;
+    font-size: 15px;
+    overflow-y: auto;
+}
+
+.game-friend-list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px 10px 0;
+}
+
+.game-friend-profile {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.game-friend-profile div img {
+    width: 35px;
+}
+
+.game-friend-profile div p {
+    margin: 0;
+    font-size: 13px;
+}
+
+.game-friend-profile div p:nth-child(2n) {
+    font-weight: 100;
+    font-size: 10px;
+}
+
+.game-friend-invite {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 80px;
+    height: 20px;
+    background-color: #4D4EA6;
+    font-size: 10px;
+    border-radius: 5px;
+}
+
+.game-friend-invite img {
+    width: 15px;
+}
+
+.game-friend-waiting img {
+    width: 20px;
+}
+
+.expand-joining {
+    position: absolute;
+    left: 102%;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #4D4EA6;
+    width: 260px;
+    height: 150px;
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.expand-joining * {
+    margin: 0 8px;
+}
+
+.expand-joining input {
+    outline: none;
+    border: 1px solid #EAD3D6;
+    background-color: transparent;
+    padding: 6px;
+    border-radius: 5px;
+    text-indent: 8px;
+    color: white;
+}
+
+.expand-joining div {
+    text-align: center;
+    background-color: #913DCE;
+    padding: 6px;
+    /* border-radius: 5px; */
+}
+
+.expand-creating {
+    position: absolute;
+    left: 102%;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #4D4EA6;
+    width: 260px;
+    height: 150px;
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.expand-creating * {
+    margin: 0 8px;
+}
+
+.expand-creating div {
+    text-align: center;
+    background-color: #913DCE;
+    padding: 6px;
+    border-radius: 5px;
+    height: 20px;
+}
+
+.expand-creating div:nth-child(3) {
+    display: flex;
+    align-items: center;
+    background-color: #EAD3D6;
+    color: black;
+}
+
+.expand-creating span {
+    display: block;
+    text-align: left;
+    width: 100%;
+    margin-left: 0;
+}
+
+.expand-creating img {
+    margin-right: 0;
+}
+
+@media screen and (min-width: 1444px) {
+    .onevsone {
+        width: 1360px;
+        margin: 0 auto;
+    }
+}
+
+@media screen and (max-width: 1070px) {
+    .onevsone-dashboard-possibilities {
+        font-size: 15px;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .onevsone-dashboard {
+        flex-direction: column;
+        flex-flow: column-reverse;
+        margin-top: 50px;
+        gap: 20px;
+    }
+
+    .onevsone-dashboard-opponents {
+        width: 90%;
+        height: 100px;
+        margin: auto;
+    }
+    
+    .onevsone-dashboard-selection {
+        width: 90%;
+        margin: auto;
+    }
+    
+    .onevsone-cancel {
+        width: 90%;
+        margin: 20px auto 100px;
+    }
+
+    .onevsone-dashboard-opponents img, .onevsone-dashboard-logo img {
+        width: 100px;
+    }
+
+    .onevsone-dashboard-opponent .onevsone-opponent-infos p {
+        font-size: 15px;
+    }
+
+    .expand-friends {
+        height: 320px;
+        width: 240px;
+        left: calc(50% - 120px);
+        top: -320px;
+    }
+
+    .expand-joining,
+    .expand-creating {
+        width: 240px;
+        left: calc(50% - 120px);
+        top: -150px;
+    }
+
+    #onevsone-dashboard-friends,
+    #onevsone-dashboard-joining,
+    #onevsone-dashboard-creation,
+    #onevsone-dashboard-matchmaking {
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .onevsone-dashboard-opponents {
+        width: 90%;
+        height: 1vw;
+    }
+    
+    .onevsone-dashboard-selection {
+        width: 90%;
+    }
+    
+    .onevsone-cancel {
+        width: 90%;
+    }
+
+    .onevsone-dashboard-opponents img, .onevsone-dashboard-logo img {
+        width: 25vw;
+    }
+
+    .onevsone-dashboard-opponent .onevsone-opponent-infos p {
+        font-size: 0.8em;
+    }
+}
+
+@media screen and (max-width: 280px) {
+    .onevsone-dashboard-opponent .onevsone-opponent-infos p {
+        font-size: 0.5em;
+    }
+
+    .expand-friends {
+        width: 100%;
+        left: 0;
+        top: -320px;
+    }
+
+    .expand-joining,
+    .expand-creating {
+        width: 100%;
+        left: 0;
+        top: -150px;
+    }
+}
