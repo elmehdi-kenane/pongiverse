@@ -22,7 +22,6 @@ const App = () => {
     <div className="page">
         <Router>
           <AuthProvider>
-            <SocketProvider>
                 <Routes>
                     <Route path="/" element={<HomePage />} exact />
                     <Route path="/signup" element={<SignUp />} />
@@ -38,7 +37,6 @@ const App = () => {
                       <Route path="play/1vs1/:roomID" element={<PlayMatch />} />
                     </Route>
                 </Routes>
-              </SocketProvider>
           </AuthProvider>
         </Router>
     </div>

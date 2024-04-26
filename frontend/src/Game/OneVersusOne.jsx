@@ -183,20 +183,8 @@ const OneVersusOne = () => {
     }
 
     useEffect(() => {
-        window.addEventListener('click', (e) => {
+        const closeAllSections = (e) => {
             if (!friendsSection.current.contains(e.target)
-            && !joinMatchSection.current.contains(e.target)
-            && !createMatchSection.current.contains(e.target)
-            && !quickMatchSection.current.contains(e.target)) {
-                setExpandQuick(false)
-                setExpandCreate(false)
-                setExpandFriends(false)
-                setExpandJoin(false)
-            }
-        })
-        return () => {
-            window.removeEventListener('click', (e) => {
-                if (!friendsSection.current.contains(e.target)
                 && !joinMatchSection.current.contains(e.target)
                 && !createMatchSection.current.contains(e.target)
                 && !quickMatchSection.current.contains(e.target)) {
@@ -204,8 +192,11 @@ const OneVersusOne = () => {
                     setExpandCreate(false)
                     setExpandFriends(false)
                     setExpandJoin(false)
-                }
-            })
+            }
+        }
+        window.addEventListener('click', closeAllSections)
+        return () => {
+            window.removeEventListener('click', closeAllSections)
         }
     }, [])
 
