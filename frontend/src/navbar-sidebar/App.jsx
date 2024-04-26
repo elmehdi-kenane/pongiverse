@@ -8,7 +8,6 @@ import HomePage from '../homepage/HomePage';
 import Modes from '../Game/Modes';
 import Solo from '../Game/Solo';
 import OneVersusOne from '../Game/OneVersusOne';
-import Game from '../Game/Game';
 import PlayMatch from '../Game/PlayMatch';
 import Chat from '../Chat/Chat';
 import Groups from '../Groups/Groups';
@@ -16,7 +15,6 @@ import Friends from '../Friends/Friends';
 import Dashboard from '../Dashboard/Dashboard';
 import { Navigate } from 'react-router-dom';
 import Game from '../Game/Game';
-import PlayMatch from '../Game/PlayMatch';
 import SocketContext, { SocketProvider } from '../Groups/SocketContext'
 
 const App = () => {

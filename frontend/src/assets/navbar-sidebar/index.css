@@ -871,3 +871,44 @@ html, body {
         top: -150px;
     }
 }
+
+/* Groups styles*/
+
+.channels {    
+    width: 100%;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    /* overflow-y: auto; */
+}
+
+.channels__container-holder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction:column;
+    /* justify-content: center; */
+    align-items: center;
+    margin-top: 100px;
+    /**/
+    /* height: 50px; */
+    background-color: red;
+}
+
+.channels__actions {
+    background-color: green;
+}
+
+.channels__cards {
+    width: 80%;
+    /* height: 50px; */
+    display: flex;
+    gap: 20px;
+    background-color: beige;
+}
+
+.cards__your-channels, .cards__suggested-channels {
+    width: 50%;
+    /* height: 60px; */
+    background-color: aqua;
+}

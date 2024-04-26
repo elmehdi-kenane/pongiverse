@@ -5,7 +5,7 @@ import ChannelName from "./ChannelName";
 import CreateChannel from "./CreateChannel";
 import JoinChannel from "./JoinChannel";
 
-import "./Groups.css";
+// import "./Groups.css";
 
 const Groups = () => {
   const [channels, setChannels] = useState([]);
@@ -41,35 +41,37 @@ const Groups = () => {
 
   return (
     <>
-      <div className={createCh || joinCh ? "blur main_page" : "main_page"}>
-        <div className="container-holder">
-          <div className="join-n-create">
+      <div className="channels">
+        <div className="channels__container-holder">
+          <div className="channels__actions">
             <button onClick={() => setJoinCh(true)}>join a channel</button>
             <button onClick={() => setCreateCh(true)}>create a channel</button>
           </div>
-          <div className="channels-space">
-            <div className="your-channels">
+          <div className="channels__cards">
+            <div className="cards__your-channels">
               <h2 className="title">Your Channels</h2>
               <div className="line"></div>
               <div className="channels-list">
-                {/* {channels.map((channel) => (
-                  <ChannelName name={channel.name} key={channel.id} />
-                  ))} */}
-                {
-                  Array(15).fill().map((_, i) => (
-                  <ChannelName key={i} name="Random" />
-                ))
-}
+                {Array(1)
+                  .fill()
+                  .map((_, i) => (
+                    <ChannelName key={i} name="Random" />
+                  ))}
               </div>
             </div>
-            <div className="suggested-channels">
+            <div className="cards__suggested-channels">
               <h2 className="title">Public Suggested Channel </h2>
               <div className="line"></div>
             </div>
           </div>
         </div>
       </div>
-      {createCh && <CreateChannel onClose={() => setCreateCh(false)} setNewRoom = {setNewRoom}/>}
+      {createCh && (
+        <CreateChannel
+          onClose={() => setCreateCh(false)}
+          setNewRoom={setNewRoom}
+        />
+      )}
       {joinCh && <JoinChannel onClose={() => setJoinCh(false)} />}
     </>
   );

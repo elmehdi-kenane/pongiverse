@@ -16,4 +16,3 @@ export { default as versus } from './Versus.svg';
 export { default as copy } from './copy.svg';
 export { default as copied } from './copied.svg';
 export { default as waitClock } from './wait-clock.svg';
-export { default as searchMobile } from './search-mobile.svg';

@@ -5,19 +5,6 @@ import * as Icons from '../assets/navbar-sidebar'
 import { useNavigate } from 'react-router-dom'
 import AuthContext from '../navbar-sidebar/Authcontext'
 import { Outlet } from 'react-router-dom'
-import Navbar from './Navbar';
-import Sidebar from './Sidebar';
-import * as Icons from '../assets/navbar-sidebar';
-import { Navigate, useNavigate } from 'react-router-dom'
-import AuthContext from '../navbar-sidebar/Authcontext'
-import { Routes, Route, Link } from 'react-router-dom'
-import Dashboard from '../Dashboard/Dashboard';
-import Chat from '../Chat/Chat';
-import Groups from '../Groups/Groups';
-import Game from '../Game/Game';
-import Friends from '../Friends/Friends';
-import ChatMessages from '../Groups/ChatMessages';
-import { AuthProvider } from '../navbar-sidebar/Authcontext';
 
 function NavbarSidebar() {
     const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
