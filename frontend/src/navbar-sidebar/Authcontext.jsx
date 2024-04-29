@@ -111,6 +111,8 @@ export const AuthProvider = ({children}) => {
         setSocket: setSocket,
         socketRecreated: socketRecreated,
         setSocketRecreated: setSocketRecreated,
+        chatSocket : chatSocket,
+        setChatSocket : setChatSocket,
     }
 
     return (

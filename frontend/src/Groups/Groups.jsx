@@ -5,7 +5,7 @@ import ChannelName from "./ChannelName";
 import CreateChannel from "./CreateChannel";
 import JoinChannel from "./JoinChannel";
 
-// import "./Groups.css";
+import "./Groups.css";
 
 const Groups = () => {
   const [channels, setChannels] = useState([]);
@@ -41,38 +41,37 @@ const Groups = () => {
 
   return (
     <>
-      <div className="channels">
-        <div className="channels__container-holder">
-          <div className="channels__actions">
-            <button onClick={() => setJoinCh(true)}>join a channel</button>
-            <button onClick={() => setCreateCh(true)}>create a channel</button>
-          </div>
-          <div className="channels__cards">
-            <div className="cards__your-channels">
-              <h2 className="title">Your Channels</h2>
-              <div className="line"></div>
-              <div className="channels-list">
-                {Array(1)
-                  .fill()
-                  .map((_, i) => (
-                    <ChannelName key={i} name="Random" />
-                  ))}
-              </div>
-            </div>
-            <div className="cards__suggested-channels">
-              <h2 className="title">Public Suggested Channel </h2>
-              <div className="line"></div>
-            </div>
-          </div>
+      <div className="channels-page blur">
+              {createCh && <CreateChannel onClose={() => setCreateCh(false)} setNewRoom = {setNewRoom}/>}
+        <div className="buttons blur">
+          <div className="buttons__join" onClick={()=> setCreateCh(true)}>Join a Channel</div>
+          <div className="buttons__create">Create a Channel</div>
         </div>
+        <div className="container blur">
+          <div className="mychannels">
+            <h1 className="mychannels__tittle">Your Channels</h1>
+            <div className="mychannels__line"></div> 
+            <div className="mychannels__list">
+              {Array(30)
+                .fill()
+                .map((_, i) => (
+                  <ChannelName key={i} name="Random" />
+                ))}
+            </div>
+          </div>
+          <div className="suggested">
+            <h1 className="suggested__tittle">Suggested Channels</h1>
+            <div className="suggested__line"></div>
+            <div className="suggested__list">
+              {Array(30)
+                .fill()
+                .map((_, i) => (
+                  <ChannelName key={i} name="Random" />
+                ))}
+            </div>
+          </div>
+        </div> 
       </div>
-      {createCh && (
-        <CreateChannel
-          onClose={() => setCreateCh(false)}
-          setNewRoom={setNewRoom}
-        />
-      )}
-      {joinCh && <JoinChannel onClose={() => setJoinCh(false)} />}
     </>
   );
 };

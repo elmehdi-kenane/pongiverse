@@ -17,7 +17,7 @@ const ChannelName = (props) => {
             <div className="channel">
                 <div className="channel-details">
                     <img src={avatar} alt="" />
-                    <div className="div">
+                    <div className="name-container">
                         <div className="channel-name">{props.name}</div>
                         <div className="members-number">12 Members</div>
                     </div>
