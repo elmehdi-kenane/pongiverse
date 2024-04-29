@@ -5,7 +5,10 @@ import * as Icons from '../assets/navbar-sidebar'
 
 const OneVersusOne = () => {
     let { privateCheckAuth, socket, setSocket, user, socketRecreated, setSocketRecreated } = useContext(AuthContext)
+    const inviteFriend = useRef(null)
     const textCopied = useRef(null)
+    const inputRoomId = useRef(null)
+    const incorrectRoomId = useRef(null)
     const friendsSection = useRef(null)
     const joinMatchSection = useRef(null)
     const createMatchSection = useRef(null)
@@ -23,6 +26,8 @@ const OneVersusOne = () => {
     const [isCopied, setIsCopied] = useState(false)
     const navigate = useNavigate()
     const [selectedFriends, setSelectedFriends] = useState([]);
+    const [gameStarted, setGameStared] = useState(false)
+    const [chosenOne, setChosenOne] = useState('')
     const allUsers =[
         {
             id: 1,
@@ -76,7 +81,6 @@ const OneVersusOne = () => {
                             user: user
                         }
                     }))
-                    // setSearchDisable(false)
                 }
             }
         }
@@ -89,12 +93,14 @@ const OneVersusOne = () => {
                 let type = data.type
                 let message = data.message
                 if (type === 'roomAlreadyStarted') {
+                    setAllSet(true)
+                    console.log("INSIDE THE ROOMALREADYSTARTED")
                     navigate(`../play/1vs1/${message.roomID}`)
                 } else if (type === "gameReady") {
                     console.log("inside gameReady")
                     setRoomID(message.id)
                     setAllSet(true)
-                    // setStartDisable(false)
+                    // navigate(`../play/1vs1/${message.roomID}`)
                 } else if (type === "playersReady") {
                     console.log("inside playersReady")
                     setAllSet(true)
@@ -102,6 +108,8 @@ const OneVersusOne = () => {
                     console.log("inside playerNo")
                     setPlayerNo(message.playerNo)
                     setTmpRoomID(message.id)
+                    setChosenOne('quickMatch')
+                    setGameStared(true)
                 } else if (type === "removeRoom") {
                     console.log("inside removeRoom")
                     if (socket && socket.readyState === WebSocket.OPEN) {
@@ -122,69 +130,66 @@ const OneVersusOne = () => {
         }
 
         if (allSet && roomID) {
-            setTimeout(() => {
-                console.log("navigating to the game page")
-                navigate(`../play/1vs1/${roomID}`)
-            }, 250);
+            console.log("INSIDE THE ALLSET && ROOMID")
+            navigate(`../play/1vs1/${roomID}`)
         }
+
     }, [socket, start, allSet, roomID, tmpRoomID])
 
-    const startSearch = async () => {
-        if (socket && socket.readyState === WebSocket.OPEN && !start) {
-            console.log("inside join")
-            socket.send(JSON.stringify({
-                type: 'join',
-                message: {
-                    user: user,
-                }
-            }))
-            setStart(!start)
-        } else if (socket && socket.readyState === WebSocket.OPEN && start) {
-            console.log("inside join")
-            socket.send(JSON.stringify({
-                type: 'quit',
-                message: {
-                    user: user,
-                    id: tmpRoomID
-                }
-            }))
-            setTmpRoomID(false)
-            setStart(!start)
-        } else
-            console.log('socket is null or not open, refresh')
-    }
-
     const expandFriendsList = () => {
-        setExpandFriends(!expandFriends)
-        setExpandJoin(false)
-        setExpandCreate(false)
-        setExpandQuick(false)
+        if (chosenOne === '' || chosenOne === 'friends') {
+            // console.log("inside expandFriendsList")
+            setExpandFriends(!expandFriends)
+            setExpandJoin(false)
+            setExpandCreate(false)
+            setExpandQuick(false)
+        }
     }
     
     const expandJoinRoom = () => {
-        setExpandJoin(!expandJoin)
-        setExpandFriends(false)
-        setExpandCreate(false)
-        setExpandQuick(false)
+        if (chosenOne === '' || chosenOne === 'joinMatch') {
+            setExpandJoin(!expandJoin)
+            setExpandFriends(false)
+            setExpandCreate(false)
+            setExpandQuick(false)
+        }
     }
     
     const expandCreateRoom = () => {
-        setExpandCreate(!expandCreate)
-        setExpandFriends(false)
-        setExpandJoin(false)
-        setExpandQuick(false)
+        if (chosenOne === '' || chosenOne === 'createMatch') {
+            setExpandCreate(!expandCreate)
+            setExpandFriends(false)
+            setExpandJoin(false)
+            setExpandQuick(false)
+        }
     }
     
     const expandQuickMatch = () => {
-        setExpandQuick(!expandQuick)
-        setExpandCreate(false)
-        setExpandFriends(false)
-        setExpandJoin(false)
+        if (chosenOne === '') {
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                console.log("inside join")
+                socket.send(JSON.stringify({
+                    type: 'join',
+                    message: {
+                        user: user,
+                    }
+                }))
+                setExpandQuick(!expandQuick)
+                setExpandCreate(false)
+                setExpandFriends(false)
+                setExpandJoin(false)
+                setChosenOne('quickMatch')
+                setGameStared(true)
+                // setStart(!start)
+            } else
+                console.log('socket is null or not open, refresh')
+        }
     }
 
     useEffect(() => {
         const closeAllSections = (e) => {
-            if (!friendsSection.current.contains(e.target)
+            // if (e.target && friendsSection.current && inviteFriend.current && joinMatchSection.current && createMatchSection.current && quickMatchSection.current) {
+                if (!friendsSection.current.contains(e.target)
                 && !joinMatchSection.current.contains(e.target)
                 && !createMatchSection.current.contains(e.target)
                 && !quickMatchSection.current.contains(e.target)) {
@@ -192,7 +197,8 @@ const OneVersusOne = () => {
                     setExpandCreate(false)
                     setExpandFriends(false)
                     setExpandJoin(false)
-            }
+                }
+            // }
         }
         window.addEventListener('click', closeAllSections)
         return () => {
@@ -212,13 +218,58 @@ const OneVersusOne = () => {
         setIsCopied(true)
     }
 
-    const handleClick = (friend) => {
+    const inviteNewFriend = (friend) => {
         if (selectedFriends.includes(friend)) {
-          setSelectedFriends(selectedFriends.filter((selectedFriend) => selectedFriend !== friend));
+            setSelectedFriends(selectedFriends.filter((selectedFriend) => selectedFriend !== friend));
         } else {
-          setSelectedFriends([...selectedFriends, friend]);
+            setSelectedFriends([...selectedFriends, friend]);
+            setChosenOne('friends')
+            setGameStared(true)
         }
-      };
+    };
+
+    const cancelTheGame = () => {
+        setSelectedFriends([])
+        if (chosenOne === 'quickMatch') {
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                console.log("inside join")
+                socket.send(JSON.stringify({
+                    type: 'quit',
+                    message: {
+                        user: user,
+                        id: tmpRoomID
+                    }
+                }))
+                setGameStared(false)
+                setChosenOne('')
+                setTmpRoomID(false)
+            } else
+                console.log('socket is null or not open, refresh')
+        }
+    }
+
+    const joinToNewMatch = () => {
+        const regex = /^\d{7,}$/;
+        if (regex.test(inputRoomId.current.value)) {
+            // send to the server to check if exist
+            inputRoomId.current.value = ''
+            setGameStared(true)
+            setChosenOne('joinMatch')
+        } else {
+            inputRoomId.current.style.border = '1px solid red';
+            incorrectRoomId.current.style.display = 'block'
+            setTimeout(() => {
+                inputRoomId.current.style.border = '1px solid white';
+                incorrectRoomId.current.style.display = 'none'
+            }, 2000);
+        }
+    }
+
+    const createNewMatch = () => {
+        // send to the server to create a new room
+        setGameStared(true)
+        setChosenOne('createMatch')
+    }
 
     return (
         <div className='onevsone'>
@@ -238,21 +289,17 @@ const OneVersusOne = () => {
                                             <p>level {user.level}</p>
                                         </div>
                                     </div>
-                                    {selectedFriends.includes(user.name) && (
+                                    {/* {selectedFriends.includes(user.name) && (
                                         <div className='game-friend-waiting'>
                                             <img src={Icons.waitClock} alt="game"/>
                                         </div>
-                                    )}
-                                    {!selectedFriends.includes(user.name) && (
-                                        <div className='game-friend-invite' onClick={() => handleClick(user.name)}>
+                                    )} */}
+                                    <div ref={inviteFriend} className={(!selectedFriends.includes(user.name)) ? 'game-friend-invite' : 'game-friend-waiting'} onClick={() => ((!selectedFriends.includes(user.name)) ? inviteNewFriend(user.name) : '')}>
+                                        {(!selectedFriends.includes(user.name) && (<>
                                             <img src={Icons.console} alt="game"/>
-                                            <span>Invite</span>
-                                        </div>
-                                    )}
-                                    {/* <div className='game-friend-invite' onClick={sendInviteRequest}>
-                                        <img src={Icons.console} alt="game"/>
-                                        <span>Invite</span>
-                                    </div> */}
+                                            Invite
+                                        </>)) || (selectedFriends.includes(user.name) && (<img src={Icons.waitClock} alt="game"/>))}
+                                    </div>
                                 </div>)
                             })}
                         </div>)}
@@ -261,15 +308,16 @@ const OneVersusOne = () => {
                         <span onClick={expandJoinRoom}>Join Match</span>
                         {expandJoin && (<div className='expand-joining'>
                             <p>Enter the code below to join the match</p>
-                            <input type="text" placeholder='enter the code' required />
-                            <div>Confirm</div>
+                            <input ref={inputRoomId} type="text" placeholder='enter the code' required />
+                            <span ref={incorrectRoomId} id='incorrect-id'>Must be 7 or more numbers</span>
+                            <div onClick={joinToNewMatch}>Confirm</div>
                         </div>)}
                     </div>
                     <div className='onevsone-dashboard-possibilities' id='onevsone-dashboard-creation' ref={createMatchSection}>
                         <span onClick={expandCreateRoom}>Create match</span>
                         {expandCreate && <div className='expand-creating'>
                             <p>Generate and share the code with others to play together</p>
-                            <div>Generate</div>
+                            <div onClick={createNewMatch}>Generate</div>
                             <div>
                                 <span ref={textCopied}>1859336542</span>
                                 <img src={image} alt="copy" onClick={changeIfTextCopied} />
@@ -304,7 +352,7 @@ const OneVersusOne = () => {
                     </div>
                 </div>
             </div>
-            <div className='onevsone-cancel'>Cancel</div>
+            {gameStarted && (<div className='onevsone-cancel' onClick={cancelTheGame}>Cancel</div>)}
         </div>
     )
 }

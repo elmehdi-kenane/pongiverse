@@ -742,7 +742,7 @@ html, body {
     background-color: #913DCE;
     padding: 6px;
     border-radius: 5px;
-    height: 20px;
+    /* height: 25px; */
 }
 
 .expand-creating div:nth-child(3) {
@@ -761,6 +761,14 @@ html, body {
 
 .expand-creating img {
     margin-right: 0;
+    width: 18px;
+}
+
+#incorrect-id {
+    margin-top: -5px;
+    font-weight: 500;
+    color: red;
+    display: none;
 }
 
 @media screen and (min-width: 1444px) {
