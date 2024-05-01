@@ -7,7 +7,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 const client = axios.create({
-baseURL: "http://127.0.0.1:8000",
+baseURL: "http://localhost:8000",
 });
 
 function ChangePassword() {
@@ -41,7 +41,7 @@ function ChangePassword() {
         setErrors(validationErrors)
         if (Object.keys(validationErrors).length === 0){
             mydata.password = data.password
-            client.post('/ChangePassword/', mydata, {
+            client.post('/auth/ChangePassword/', mydata, {
                 headers: {
                     'Content-Type': 'application/json',
                 }

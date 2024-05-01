@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 const client = axios.create({
-baseURL: "http://127.0.0.1:8000",
+baseURL: "http://localhost:8000",
 });
 
 function PrivateRoute({ children }) {
@@ -19,7 +19,7 @@ useEffect(() => {
   const formData = new FormData();
   formData.append('token', token);
 
-  client.post('/verifytoken/', formData, {
+  client.post('/auth/verifytoken/', formData, {
   headers: {
   'Content-Type': 'application/json',
   },

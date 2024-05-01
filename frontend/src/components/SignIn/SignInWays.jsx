@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 const client = axios.create({
-	baseURL: "http://127.0.0.1:8000",
+	baseURL: "http://localhost:8000",
 });
 
 function SignInWays() {
@@ -46,14 +46,14 @@ function SignInWays() {
 			}
 		}).then(response => {
 			const user_data = response.data
-			axios.post('http://127.0.0.1:8000/googleLogin/', user_data, {
+			client.post('/auth/googleLogin/', user_data, {
 				headers: {
 					'Content-Type': 'application/json',
-				}
+				}, 
+				withCredentials: true
 			}).then(response => {
 				if (response.data.Case === "Login successfully") {
-					Cookies.set('token', response.data.data.access, { expires: 7, secure: true });
-					navigate('/home');
+					navigate('/mainpage');
 				} else if (response.data.Case === "Invalid username or password!!") {
 					Swal.fire({
 						text: 'No account exist with this email',
@@ -85,14 +85,13 @@ function SignInWays() {
 		const data = {
 			email: decoded.email,
 		};
-		client.post('/googleLogin/', data, {
+		client.post('/auth/googleLogin/', data, {
 			headers: {
 				'Content-Type': 'application/json',
 			}
 		}).then(response => {
 			if (response.data.Case === "Login successfully") {
-				Cookies.set('token', response.data.data.access, { expires: 7, secure: true });
-				navigate('/home');
+				navigate('/mainpage');
 			} else if (response.data.Case === "Invalid username or password!!") {
 				alert("there is no account")
 			}

@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 const client = axios.create({
-baseURL: "http://127.0.0.1:8000",
+baseURL: "http://localhost:8000",	
 });
 
 function SecondStep() {
@@ -32,7 +32,7 @@ function SecondStep() {
 	};
 
 	useEffect(() => {
-		client.post('checkusername/', nextdata, {
+		client.post('/auth/checkusername/', nextdata, {
 			headers: {
 				'Content-Type': 'application/json',
 			}
@@ -64,7 +64,7 @@ function SecondStep() {
 		formData.append('password', nextdata.password);
 		formData.append('avatar', nextdata.avatar);
 		formData.append('is_active', true);
-		client.post('/signup/', formData, {
+		client.post('/auth/signup/', formData, {
 			headers: {
 				'Content-Type': 'multipart/form-data',
 			}

@@ -1,14 +1,9 @@
 import React, { useState } from 'react';
 import styles from '../../assets/SignUp/SignUpPage.module.css'
 import  { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+
 import Cookies from 'js-cookie';
 import { Link } from 'react-router-dom';
-axios.defaults.xsrfCookieName = "csrftoken";
-axios.defaults.xsrfHeaderName = "X-CSRFToken";
-const client = axios.create({
-	baseURL: "http://127.0.0.1:8000",
-	});
 
 function SignInForm() {
 
@@ -24,11 +19,12 @@ function SignInForm() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		fetch('http://127.0.0.1:8000/login/', {
+		fetch('http://localhost:8000/auth/login/', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 			},
+			credentials: 'include',
 			body: JSON.stringify(data),
 		})
 			.then(response => {
@@ -39,8 +35,7 @@ function SignInForm() {
 			})
 			.then(data => {
 				if (data.Case === "Login successfully") {
-					Cookies.set('token', data.data.access, { expires: 7, secure: true });
-					navigate('/home');
+					navigate('/mainpage');
 				} else if (data.Case === "Invalid username or password!!") {
 					alert(data.Case);
 				}

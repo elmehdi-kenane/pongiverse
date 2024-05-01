@@ -8,7 +8,7 @@ import axios from 'axios';
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 const client = axios.create({
-	baseURL: "http://127.0.0.1:8000",
+	baseURL: "http://localhost:8000",
 });
 
 function ForgotPassword() {
@@ -39,7 +39,7 @@ function ForgotPassword() {
 		setErrors(validationErrors)
 		if (Object.keys(validationErrors).length === 0)
 		{
-			client.post('/checkemail/', data, {
+			client.post('/auth/checkemail/', data, {
 				headers: {
 					'Content-Type': 'application/json',
 				}

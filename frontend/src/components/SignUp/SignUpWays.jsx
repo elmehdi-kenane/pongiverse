@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 const client = axios.create({
-  baseURL: "http://127.0.0.1:8000",
+  baseURL: "http://localhost:8000",
 });
 
 function SignUpWays(props) {
@@ -45,7 +45,7 @@ function SignUpWays(props) {
 			}
 		}).then(response => {
 			const user_data = response.data
-			axios.post('http://127.0.0.1:8000/checkemail/', user_data, {
+			client.post('/auth/checkemail/', user_data, {
 				headers: {
 					'Content-Type': 'application/json',
 				}
@@ -89,7 +89,7 @@ function SignUpWays(props) {
 			email: decoded.email,
 			avatar: decoded.picture,
 		};
-		client.post('http://127.0.0.1:8000/checkemail/', data, {
+		client.post('/auth/checkemail/', data, {
 			headers: {
 				'Content-Type': 'application/json',
 			}

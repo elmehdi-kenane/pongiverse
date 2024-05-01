@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 const client = axios.create({
-baseURL: "http://127.0.0.1:8000",
+baseURL: "http://localhost:8000",
 });
 
 function WaysSecondStep() {
@@ -30,7 +30,7 @@ function WaysSecondStep() {
 	};
 
 	useEffect(() => {
-		client.post('checkusername/', nextdata, {
+		client.post('/auth/checkusername/', nextdata, {
 			headers: {
 				'Content-Type': 'application/json',
 			}
@@ -82,15 +82,14 @@ function WaysSecondStep() {
 			.then(response => {
 				const image = new File([response.data], 'profile_picture.jpg', { type: 'image/jpeg' });
 				formData.append('avatar', image, image.name);
-				client.post('/signup/', formData, {
+				client.post('/auth/signup/', formData, {
 					headers: {
 						'Content-Type': 'multipart/form-data',
 					}
 				})
 				.then(response => {
 					if (response.data.Case === "Sign up successfully") {
-						Cookies.set('token', response.data.data.access, { expires: 7, secure: true });
-						navigate('/home');
+						navigate('/mainpage');
 					}
 				})
 				.catch(error => {
