@@ -33,9 +33,9 @@ html, body {
     margin-bottom: 30px;
 }
 
-.blur {
+/* .blur {
     filter: blur(2px);
-}
+} */
 
 .navbar .logo img {
     width: 80px;

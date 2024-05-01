@@ -4,14 +4,16 @@ import AuthContext from "../navbar-sidebar/Authcontext";
 import ChannelName from "./ChannelName";
 import CreateChannel from "./CreateChannel";
 import JoinChannel from "./JoinChannel";
-
+import JoinIcon from "./join.svg"
+import CreateIcon from "./create.svg"
 import "./Groups.css";
+
 
 const Groups = () => {
   const [channels, setChannels] = useState([]);
   const [newRoom, setNewRoom] = useState(null);
   const [createCh, setCreateCh] = useState(false);
-  const [joinCh, setJoinCh] = useState(false);
+  const [joinCh, setJoinCh] = useState(true);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -41,13 +43,14 @@ const Groups = () => {
 
   return (
     <>
-      <div className="channels-page blur">
-              {createCh && <CreateChannel onClose={() => setCreateCh(false)} setNewRoom = {setNewRoom}/>}
-        <div className="buttons blur">
-          <div className="buttons__join" onClick={()=> setCreateCh(true)}>Join a Channel</div>
-          <div className="buttons__create">Create a Channel</div>
+      <div className="channels-page">
+        {createCh && <CreateChannel onClose={() => setCreateCh(false)} setNewRoom = {setNewRoom}/>}
+        {joinCh && <JoinChannel onClose={() => setJoinCh(false)} />}
+        {/* <div className="buttons">
+          <img className="buttons__join"  onClick={()=> setJoinCh(true)} src={JoinIcon}/>
+          <img className="buttons__create" onClick={()=> setCreateCh(true)} src={CreateIcon}/>
         </div>
-        <div className="container blur">
+        <div className="container">
           <div className="mychannels">
             <h1 className="mychannels__tittle">Your Channels</h1>
             <div className="mychannels__line"></div> 
@@ -70,7 +73,7 @@ const Groups = () => {
                 ))}
             </div>
           </div>
-        </div> 
+        </div>  */}
       </div>
     </>
   );
