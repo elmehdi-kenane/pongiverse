@@ -13,7 +13,7 @@ const Groups = () => {
   const [channels, setChannels] = useState([]);
   const [newRoom, setNewRoom] = useState(null);
   const [createCh, setCreateCh] = useState(false);
-  const [joinCh, setJoinCh] = useState(true);
+  const [joinCh, setJoinCh] = useState(false);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -46,7 +46,7 @@ const Groups = () => {
       <div className="channels-page">
         {createCh && <CreateChannel onClose={() => setCreateCh(false)} setNewRoom = {setNewRoom}/>}
         {joinCh && <JoinChannel onClose={() => setJoinCh(false)} />}
-        {/* <div className="buttons">
+        <div className="buttons">
           <img className="buttons__join"  onClick={()=> setJoinCh(true)} src={JoinIcon}/>
           <img className="buttons__create" onClick={()=> setCreateCh(true)} src={CreateIcon}/>
         </div>
@@ -55,11 +55,14 @@ const Groups = () => {
             <h1 className="mychannels__tittle">Your Channels</h1>
             <div className="mychannels__line"></div> 
             <div className="mychannels__list">
-              {Array(30)
+                {channels.map((channel) => (
+                  <ChannelName name={channel.name} key={channel.id} roomId={channel.id} />
+                  ))}
+              {/* {Array(30)
                 .fill()
                 .map((_, i) => (
                   <ChannelName key={i} name="Random" />
-                ))}
+                ))} */}
             </div>
           </div>
           <div className="suggested">
@@ -73,7 +76,7 @@ const Groups = () => {
                 ))}
             </div>
           </div>
-        </div>  */}
+        </div> 
       </div>
     </>
   );

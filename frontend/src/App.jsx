@@ -22,6 +22,7 @@ import ChangePassword from './components/SignIn/ChangePassword';
 import SignInPage from './components/SignIn/SignInPage';
 import SignUpPage from './components/SignUp/SignUpPage';
 import SecondStep from './components/SignUp/SecondStep';
+import ChatMessages from './Groups/ChatMessages';
 
 const App = () => {
   return (
@@ -41,6 +42,7 @@ const App = () => {
                       <Route path="chat" element={<Chat />} />
                       <Route path="friends" element={<Friends />} />
                       <Route path="groups" element={<Groups />} />
+                      <Route path="groups/:roomId" element={<ChatMessages />} />
                       <Route path="game" element={<Modes />} />
                       <Route path="game/solo" element={<Solo />} />
                       <Route path="game/solo/1vs1" element={<OneVersusOne />} />

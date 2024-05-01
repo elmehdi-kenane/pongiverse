@@ -9,8 +9,8 @@ const JoinChannel = (props) => {
                     <input type="text" placeholder="Channel Name" />
                     <input type="text" placeholder="Channel Password" />
                     <div className="join-modal__buttons join-modal__buttons--active">
-                        <button>JOIN</button>
-                        <button onClick={props.onClose}>CANCEL</button>
+                        <button className="join">JOIN</button>
+                        <button onClick={props.onClose} className="cancel">CANCEL</button>
                     </div>
                 </form>
             </div>
