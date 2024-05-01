@@ -65,14 +65,14 @@ export const AuthProvider = ({children}) => {
 
     async function publicCheckAuth() {
         try {
-            let response = await fetch('http://localhost:8000/api/get', {  // 10.12.7.3   localhost   127.0.0.1
+            let response = await fetch('http://localhost:8000/auth/verifytoken', {  // 10.12.7.3   localhost   127.0.0.1
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 credentials: 'include',
             })
             response = await response.json()
-            if (response.detail !== "Unauthenticated")
+            if (response.Case !== "Invalid token")
                 navigate('/mainpage')
             else {
                 if (user)
@@ -85,16 +85,17 @@ export const AuthProvider = ({children}) => {
 
     async function privateCheckAuth() {
         try {
-            let response = await fetch('http://localhost:8000/api/get', {  // 10.12.7.3   localhost   127.0.0.1
+            let response = await fetch('http://localhost:8000/auth/verifytoken', {  // 10.12.7.3   localhost   127.0.0.1
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 credentials: 'include',
             })
             response = await response.json()
-            if (response.detail !== "Unauthenticated") {
+            if (response.Case !== "Invalid token") {
+                console.log(response.data.username)
                 if (!user)
-                    setUser(response.name)
+                    setUser(response.data.username)
             }
             else
                 navigate('/signin')

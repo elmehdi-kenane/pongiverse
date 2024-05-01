@@ -8,6 +8,11 @@ import asyncio
 import math
 import time
 
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+from django.core.signals import request_finished
+from django.dispatch import receiver
+
 rooms = {}
 friendRooms = {}
 
@@ -22,10 +27,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
 
-        # cookies = self.scope["cookies"]
-        # # # Access a specific cookie value
-        # my_cookie_value = cookies.get("jwt")
-        # print(my_cookie_value)
         if data['type'] == 'isPlayerInAnyRoom':
             await self.isPlayerInAnyRoom(data)
         if data['type'] == 'dataBackUp':
@@ -52,8 +53,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.move_paddle(data)
         elif data['type'] == 'moveMouse':
             await self.move_mouse(data)
-        # elif data['type'] == 'leave':
-        #     await self.leave_room(data)
 
     async def isPlayerInAnyRoom(self, data):
         message = data['message']
@@ -61,20 +60,33 @@ class ChatConsumer(AsyncWebsocketConsumer):
             key: value
             for key, value in rooms.items()
             if (
-                len(value.get('players', [])) >= 2 and
+                (len(value.get('players', [])) == 2 and
                 (value['players'][0].get('user') == message['user'] or
                 value['players'][1].get('user') == message['user']) and
-                value.get('status') == 'started'
+                value.get('status') == 'started') or
+                (len(value.get('players', [])) == 1 and
+                value['players'][0].get('user') == message['user'] and
+                value.get('status') == 'notStarted')
+                # and value.get('status') == 'started'
             )
         }
         if userRoom:
             value = list(userRoom.values())[0]
-            await self.send(text_data=json.dumps({
-                'type': 'roomAlreadyStarted',
-                'message': {
-                    'roomID': value['id']
-                }
-            }))
+            if len(value['players']) == 2 and value['status'] == 'started':
+                await self.send(text_data=json.dumps({
+                    'type': 'roomAlreadyStarted',
+                    'message': {
+                        'roomID': value['id']
+                    }
+                }))
+            elif len(value['players']) == 1 and value['status'] == 'notStarted':
+                await self.send(text_data=json.dumps({
+                    'type': 'playerNo',
+                    'message': {
+                        'id': value['id'],
+                        'playerNo': value['players'][0]['playerNo']
+                    }
+                }))
 
     ##### when the game already started and some or all players getout from the playing page ##### =====> /play/:id
     async def changedPage(self, data):
@@ -193,8 +205,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }))
 
     async def quitRoom(self, data):
+        print("INSIDE QUIT ROOM")
         if data['message']['id'] in rooms:
-            del rooms[data['message']['id']]
+            if len(rooms[data['message']['id']]['players']) == 1:
+                del rooms[data['message']['id']]
         # print(rooms)
 
     ##### Set ready for player or starting match if all are ready ##### =====> /game

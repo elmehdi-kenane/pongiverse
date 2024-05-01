@@ -251,6 +251,8 @@ const PlayMatch = () => {
                     ball.y = message.ballY;
                     update()
                     draw()
+                } else if (type === "serverEnded") {
+                    console.log(message)
                 }
             }
         }
