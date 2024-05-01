@@ -1,5 +1,5 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
-from mainApp.models import User
+from myapp.models import customuser ###########
 from asgiref.sync import sync_to_async
 from .models import Room, Membership, Message
 import json
@@ -22,7 +22,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             print("room name:",room_name)
             try:
                 user = await self.get_user_by_name(user_name)
-            except User.DoesNotExist:
+            except customuser.DoesNotExist:
                 print("User not found:", user_name)
             room = await sync_to_async(Room.objects.filter(name=room_name).first)()
             if not room:
@@ -72,4 +72,4 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @sync_to_async
     def get_user_by_name(self, user_name):
-        return User.objects.get(name=user_name)
+        return customuser.objects.get(name=user_name)
