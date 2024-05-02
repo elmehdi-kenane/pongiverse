@@ -14,7 +14,6 @@ from django.core.signals import request_finished
 from django.dispatch import receiver
 
 rooms = {}
-friendRooms = {}
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):

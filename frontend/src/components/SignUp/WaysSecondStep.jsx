@@ -47,11 +47,14 @@ function WaysSecondStep() {
 		});
 	}, [nextdata])
 
-	useEffect(() => setNextdata(prevNextdata => ({
-		...prevNextdata,
-		email: data.email,
-		avatar: data.avatar
-	})), [data.email, data.avatar]);
+	useEffect(() => {
+		setNextdata(prevNextdata => ({
+			...prevNextdata,
+			email: data.email,
+			avatar: data.avatar
+		}))
+		console.log(data.avatar)
+	} , [data.email, data.avatar]);
 
 	const handleSubmit = (e) => {
 		e.preventDefault();

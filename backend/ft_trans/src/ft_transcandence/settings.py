@@ -34,9 +34,11 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'chat',
+    'myapp',
+    'mainApp',
     'daphne',
     'channels_redis',
-    'mainApp',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,8 +47,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     "corsheaders",
-    'chat',
-    'myapp',
     'rest_framework_simplejwt.token_blacklist',
 ]
 
@@ -115,7 +115,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 SIMPLE_JWT = {
-  'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+  'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
   'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
   'ROTATE_REFRESH_TOKENS': False,
   'BLACKLIST_AFTER_ROTATION': True,
@@ -198,12 +198,12 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://10.12.7.3:3000",
+    # 'https://lh3.googleusercontent.com:443',
 ]
 
 # CORS_ALLOW_ALL_ORIGINS: True
 CORS_ALLOW_CREDENTIALS = True
 
-# AUTH_USER_MODEL = 'mainApp.User'
 AUTH_USER_MODEL = 'myapp.customuser'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
