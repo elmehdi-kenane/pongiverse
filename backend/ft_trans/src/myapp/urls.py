@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import SignUpView
+from .views import WaysSignUpView
 from .views import LoginView
+from .views import SignUpView
 from .views import CheckEmailView
 from .views import CheckUsernameView
 from .views import GoogleLoginView
@@ -11,7 +12,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('signup/', SignUpView.as_view(), name='my-model'),
+    path('signup/', SignUpView.as_view(), name='signup'),
+    path('wayssignup/', WaysSignUpView.as_view(), name='my-model'),
     path('login/', LoginView.as_view(), name='login'),
     path('googleLogin/', GoogleLoginView.as_view(), name='loginGoogle'),
     path('checkemail/', CheckEmailView.as_view(), name='checkemail'),

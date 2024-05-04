@@ -14,11 +14,18 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from .serializers import MyModelSerializer
+import requests
+from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 class SignUpView(APIView) :
     parser_classes = (MultiPartParser, FormParser)
     def post(self, request, *args, **kwargs):
-        serializer = MyModelSerializer(data=request.data)
+        if request.data.get('avatar') == 'null':
+            my_dict = dict(username=request.data.get('username'), email=request.data.get('email'), password=request.data.get('password'), is_active=request.data.get('is_active'))
+        else:
+            my_dict = dict(username=request.data.get('username'), email=request.data.get('email'), password=request.data.get('password'), is_active=request.data.get('is_active'), avatar=request.data.get('avatar'))
+        serializer = MyModelSerializer(data=my_dict)
         if serializer.is_valid():
             user = serializer.save()
             response = Response()
@@ -28,10 +35,29 @@ class SignUpView(APIView) :
             return response
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    def get(self, request, format=None):
-        queryset = customuser.objects.all()
-        serializer = MyModelSerializer(queryset, many=True)
-        return Response(serializer.data)
+        
+class WaysSignUpView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+    def post(self, request, *args, **kwargs):
+        my_data = {}
+        my_data['username'] = request.data.get('username')
+        my_data['email'] = request.data.get('email')
+        my_data['password'] = request.data.get('password')
+        my_data['is_active'] = request.data.get('is_active')
+        image_response = requests.get(request.data.get('avatar'))
+        if image_response.status_code == 200:
+            image_content = image_response.content
+            if image_content:
+                image_file = InMemoryUploadedFile(ContentFile(image_content), None, 'image.jpg', 'image/jpeg', len(image_content), None)
+                my_data['avatar'] = image_file
+        serializer = MyModelSerializer(data=my_data)
+        if serializer.is_valid():
+            user = serializer.save()
+            response = Response()
+            response.data = {"Case" : "Sign up successfully"}
+            return response
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)

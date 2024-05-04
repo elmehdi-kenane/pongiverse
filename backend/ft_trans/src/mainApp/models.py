@@ -3,15 +3,14 @@ from django.contrib.auth.models import AbstractUser
 from datetime import datetime
 from django.utils import timezone
 from myapp.models import customuser
+import random
 
-# class User(AbstractUser):
-#     name = models.CharField(max_length=255)
-#     email = models.CharField(max_length=255, unique=True)
-#     password = models.CharField(max_length=255)
-#     username = None
-
-#     USERNAME_FIELD = 'email'
-#     REQUIRED_FIELDS = []
+# class RoomIDManager(models.Manager):
+#     def generate_unique_room_id(self):
+#         while True:
+#             room_id = random.randint(1000, 9999)  # Adjust the range as needed
+#             if not ActiveMatch.objects.filter(room_id=room_id).exists() and not Match.objects.filter(room_id=room_id).exists():
+#                 return room_id
 
 class Match(models.Model):
     mode = models.CharField(max_length=255)
@@ -31,8 +30,6 @@ class ActiveMatch(models.Model):
     winner = models.PositiveIntegerField(default=0)
     ballX = models.IntegerField(default=0)
     ballY = models.IntegerField(default=0)
-    date_started = models.DateTimeField(default=timezone.now)
-    date_ended = models.DateTimeField(null=True)
 
 class PlayerState(models.Model):
     active_match = models.ForeignKey(ActiveMatch, on_delete=models.CASCADE, related_name='player_state')
@@ -42,3 +39,5 @@ class PlayerState(models.Model):
     paddleX = models.IntegerField(default=0)
     paddleY = models.IntegerField(default=0)
     score = models.PositiveIntegerField(default=0)
+
+# room_id_manager = RoomIDManager()

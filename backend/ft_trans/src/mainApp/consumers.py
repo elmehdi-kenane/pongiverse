@@ -7,11 +7,10 @@ import random
 import asyncio
 import math
 import time
-
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
-from django.core.signals import request_finished
-from django.dispatch import receiver
+import datetime
+from .models import Match, ActiveMatch, PlayerState
+from myapp.models import customuser
+from asgiref.sync import sync_to_async
 
 rooms = {}
 
@@ -59,13 +58,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
             key: value
             for key, value in rooms.items()
             if (
-                (len(value.get('players', [])) == 2 and
+                (len(value.get('players')) == 2 and
                 (value['players'][0].get('user') == message['user'] or
                 value['players'][1].get('user') == message['user']) and
-                value.get('status') == 'started') or
-                (len(value.get('players', [])) == 1 and
-                value['players'][0].get('user') == message['user'] and
-                value.get('status') == 'notStarted')
+                value.get('status') == 'started')
+                #   or
+                # (len(value.get('players', [])) == 1 and
+                # value['players'][0].get('user') == message['user'] and
+                # value.get('status') == 'notStarted')
                 # and value.get('status') == 'started'
             )
         }
@@ -78,29 +78,37 @@ class ChatConsumer(AsyncWebsocketConsumer):
                         'roomID': value['id']
                     }
                 }))
-            elif len(value['players']) == 1 and value['status'] == 'notStarted':
-                await self.send(text_data=json.dumps({
-                    'type': 'playerNo',
-                    'message': {
-                        'id': value['id'],
-                        'playerNo': value['players'][0]['playerNo']
-                    }
-                }))
+            # elif len(value['players']) == 1 and value['status'] == 'notStarted':
+            #     await self.send(text_data=json.dumps({
+            #         'type': 'playerNo',
+            #         'message': {
+            #             'id': value['id'],
+            #             'playerNo': value['players'][0]['playerNo']
+            #         }
+            #     }))
+        # else:
+        #     active_matches = await sync_to_async(list)(ActiveMatch.objects.all())
+        #     for active_match in active_matches:
+
 
     ##### when the game already started and some or all players getout from the playing page ##### =====> /play/:id
     async def changedPage(self, data):
         message = data['message']
-        room = rooms.get(message['roomID'])
+        room = rooms.get(str(message['roomID']))
         inactivePlayers = 0
 
         if room:
             if room['status'] == 'started':
                 for player in room['players']:
                     if player['user'] == message['user']:
+                        # print(f"USERNAME THAT GETTED OUT : {player['user']}")
+                        # print("GAME ABORTED WELL BROTHER")
                         player['state'] = 'inactive'
                     if player['state'] == 'inactive':
+                        # print("GAME ABORTED WELL BROTHER")
                         inactivePlayers += 1
                 if inactivePlayers == 2:
+                    # print("PLAYERS BOTH ARE OUT")
                     room['status'] = 'aborted'
                     for player in room['players']:
                         player['state'] = 'finished'
@@ -108,15 +116,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     asyncio.create_task(self.cdBeforeEndingGame(message['roomID']))
 
     async def cdBeforeEndingGame(self, roomID):
-        room = rooms.get(roomID)
+        room = rooms.get(str(roomID))
         countdown = 10
         if room:
             for i in range(60):
                 await asyncio.sleep(1)
                 countdown -= 1
                 if room['status'] == 'started' and (room['players'][0]['state'] == 'inactive' or room['players'][1]['state'] == 'inactive'):
+                    # print(countdown)
                     if countdown == 0:
-                        print('KEEP CHECKING')
+                        # print('KEEP CHECKING')
                         room['status'] = 'finished'
                         await asyncio.create_task(self.gameFinished(room))
                         break
@@ -124,7 +133,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     break
 
     async def gameFinished(self, room):
-        await self.channel_layer.group_send(room['id'], {
+        await self.channel_layer.group_send(str(room['id']), {
                 'type': 'finishedGame',
                 'message': {
                     'user1' : room['players'][0]['user'],
@@ -143,72 +152,111 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     ##### adding the user to any room he is already join to if his socket changed ##### =====> /play/:id
     async def backUpData(self, data):
+        # print(f"I REACH THE DESTINATION : ${rooms}")
         if rooms:
             for key, roomValue in rooms.items():
                 if len(roomValue['players']) == 2 and (roomValue['players'][0]['user'] == data['message']['user'] or roomValue['players'][1]['user'] == data['message']['user']) and roomValue['status'] == 'started':
-                    await self.channel_layer.group_add(roomValue['id'], self.channel_name)
+                    print("FOUND THE ROOM")
+                    await self.channel_layer.group_add(str(roomValue['id']), self.channel_name)
 
     ##### join to a an existing room or a new one ##### =====> /game
+    @sync_to_async
+    def generate_unique_room_id(self):
+        while True:
+            room_id = random.randint(1000, 10000)  # Adjust the range as needed
+            if not ActiveMatch.objects.filter(room_id=room_id).exists() and not Match.objects.filter(id=room_id).exists():
+                return room_id
+
     async def joinRoom(self, data):
         room = None
+        isEmpty = True
+        global rooms
 
         print("inside join")
-        if rooms and len(rooms) > 0:
-            last_room_key = list(rooms.keys())[-1]
-            if len(rooms[last_room_key]['players']) == 1:
-                room = rooms[last_room_key]
-        if room:
-            await self.channel_layer.group_add(str(room['id']), self.channel_name)
-            await self.send(text_data=json.dumps({
-                'type': 'playerNo',
-                'message': {
-                    'playerNo': 2,
-                    'id': room['id']
+        active_matches = await sync_to_async(list)(ActiveMatch.objects.all())
+        for active_match in active_matches:
+            player_state_count = await sync_to_async(PlayerState.objects.filter(active_match=active_match).count)()
+            if player_state_count == 1:
+                isEmpty = False
+                user = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
+                await sync_to_async(PlayerState.objects.create)(
+                    active_match = active_match,
+                    player = user,
+                    state = 'Ready',
+                    playerNo = 2,
+                    paddleX = 585,
+                    paddleY = 150,
+                    score = 0
+                )
+                player_states = await sync_to_async(list)(PlayerState.objects.filter(active_match=active_match))
+                players = []
+                for player_state in player_states:
+                    player = await sync_to_async(customuser.objects.get)(id=player_state.player_id)
+                    players.append({
+                        'user': player.username,
+                        'state': player_state.state,
+                        'playerNo': player_state.playerNo,
+                        'paddleX': player_state.paddleX,
+                        'paddleY': player_state.paddleY,
+                        'score': player_state.score
+                    })
+                room = {
+                    'id': active_match.room_id,
+                    'players': players,
+                    'ball': {
+                        'ballX': active_match.ballX,
+                        'ballY': active_match.ballY
+                    },
+                    'winner': 0,
+                    'status': active_match.status,
+                    'date_started': 0,
+                    'date_ended': 0
                 }
-            }))
-            room['players'].append({
-                'user': data['message']['user'],
-                'state': 'Ready',
-                'playerNo': 2,
-                'paddleX': 585,
-                'paddleY': 150,
-                'score': 0,
-            })
-            asyncio.create_task(self.set_game(room))
-        else:
-            room = {
-                'id': f'room_{str(len(rooms) + 1)}',
-                'players': [{
-                    'user': data['message']['user'],
-                    'state': 'Ready',
-                    'playerNo': 1,
-                    'paddleX': 5,
-                    'paddleY': 150,
-                    'score': 0,
-                }],
-                'ball': {
-                    'ballX': 300,
-                    'ballY': 200,
-                },
-                'winner': 0,
-                'status': 'notStarted'
-            }
-            rooms.update({f'room_{str(len(rooms) + 1)}': room})
-            await self.channel_layer.group_add(str(room['id']), self.channel_name)
+                rooms[str(room['id'])] = room
+                await self.channel_layer.group_add(str(room['id']), self.channel_name)
+                await self.send(text_data=json.dumps({
+                    'type': 'playerNo',
+                    'message': {
+                        'playerNo': 2,
+                        'id': room['id']
+                    }
+                }))
+                sync_to_async(active_match.delete)()
+                # print(rooms)
+                # await asyncio.sleep(3)
+                asyncio.create_task(self.set_game(room))
+        if isEmpty:
+            room_id = await self.generate_unique_room_id()
+            active_match = await sync_to_async(ActiveMatch.objects.create)(
+                room_id= room_id,
+                status= 'notStarted',
+                ballX = 300,
+                ballY = 200
+            )
+            user = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
+            await sync_to_async(PlayerState.objects.create)(
+                active_match = active_match,
+                player = user,
+                state = 'Ready',
+                playerNo = 1,
+                paddleX = 5,
+                paddleY = 150,
+                score = 0
+            )
+            await self.channel_layer.group_add(str(room_id), self.channel_name)
             await self.send(text_data=json.dumps({
                 'type': 'playerNo',
                 'message': {
                     'playerNo': 1,
-                    'id': room['id']
+                    'id': room_id
                 }
             }))
 
     async def quitRoom(self, data):
         print("INSIDE QUIT ROOM")
-        if data['message']['id'] in rooms:
-            if len(rooms[data['message']['id']]['players']) == 1:
-                del rooms[data['message']['id']]
-        # print(rooms)
+        room = await sync_to_async(ActiveMatch.objects.get)(room_id=data['message']['id'])
+        if room:
+            await sync_to_async(room.delete)()
 
     ##### Set ready for player or starting match if all are ready ##### =====> /game
     async def startPlayer(self, data):
@@ -287,12 +335,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
     ##### check if player is in this room provided by id ##### =====> /play/:id
     async def validatePlayer(self, data):
         message = data['message']
-        room = rooms.get(message['roomID'])
+        room = rooms.get(str(message['roomID']))
+        # print(f"ROOM ID TO SEARCH IS : {rooms}")
         playersReady = 0
         playerIsIn = False
         playerNo = 0
 
-        print(rooms)
         if room:
             for player in room['players']:
                 if player['user'] == message['user']:
@@ -300,6 +348,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     if room['status'] == 'started':
                         if player['state'] == 'inactive':
                             player['state'] = 'playing'
+                        # print(room)
                         await self.send(text_data=json.dumps({
                             'type': 'setupGame',
                             'message': {
@@ -312,6 +361,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                         }))
                         return
                     elif room['status'] == 'aborted':
+                        print("GAME IS ALREADY ABORTED")
                         await self.send(text_data=json.dumps({
                             'type': 'abortedGame',
                             'message': {
@@ -334,7 +384,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                         }))
                         return
             if playerIsIn == False:
-                print("PLAYER IS NOT INSIDE THE ROOM")
                 await self.send(text_data=json.dumps({
                     'type': 'notAuthorized',
                     'message': 'notAuthorized'
@@ -346,7 +395,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     playerNo = player['playerNo']
                 if player['state'] == 'Ready':
                     playersReady += 1
-            print(playerNo)
+            # print(playerNo)
             await self.send(text_data=json.dumps({
                 'type': 'setupGame',
                 'message': {
@@ -356,7 +405,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 }
             }))
             if playersReady == 2:
-                rooms[room['id']]['status'] = 'started'
+                rooms[str(room['id'])]['status'] = 'started'
                 for player in room['players']:
                     player['state'] = 'playing'
                 asyncio.create_task(self.startGame(data))
@@ -435,7 +484,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.runOverGame(room, ballProps)
 
     async def startGame(self, data):
-        room = rooms.get(data['message']['roomID'])
+        room = rooms.get(str(data['message']['roomID']))
         if room:
             ballProps = {
                 "velocityX": 5,
@@ -474,12 +523,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def leave_room(self, data):
         await self.channel_layer.group_discard(
-            data['message']['roomID'],
+            str(data['message']['roomID']),
             self.channel_name
         )
 
     async def startingGameSignal(self, room):
-        await self.channel_layer.group_send(room['id'], {
+        await self.channel_layer.group_send(str(room['id']), {
                 'type': 'startingGame',
                 'message':'startingGame'
             }
@@ -492,7 +541,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         }))
 
     async def startedGameSignal(self, room):
-        await self.channel_layer.group_send(room['id'], {
+        await self.channel_layer.group_send(str(room['id']), {
                 'type': 'gameReady',
                 'message': room
             }
@@ -505,7 +554,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         }))
 
     async def endingGame(self, room):
-        await self.channel_layer.group_send(room['id'], {
+        await self.channel_layer.group_send(str(room['id']), {
             'type': 'endGame',
             'message': room
         })
@@ -517,7 +566,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         }))
 
     async def updatingGame(self, room):
-        await self.channel_layer.group_send(room['id'], {
+        await self.channel_layer.group_send(str(room['id']), {
             'type': 'updateGame',
             'message': {
                 'playerY1': room['players'][0]['paddleY'],
