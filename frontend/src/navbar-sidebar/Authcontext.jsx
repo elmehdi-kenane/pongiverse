@@ -13,7 +13,7 @@ export const AuthProvider = ({children}) => {
     let [socket, setSocket] = useState(null)
     let [chatSocket, setChatSocket] = useState(null)
     let [socketRecreated, setSocketRecreated] = useState(false)
-    const idRegex = /^\/mainpage\/play\/1vs1\/room_\d+$/
+    const idRegex = /^\/mainpage\/play\/1vs1\/\d+$/
 
     useEffect(() => {
         if (location.pathname === '/mainpage/groups' || location.pathname === '/mainpage/chat' && !chatSocket) {
@@ -26,7 +26,8 @@ export const AuthProvider = ({children}) => {
                 chatSocket.close()
                 setChatSocket(null)
             }
-        } else if (location.pathname !== '/mainpage/game/solo/1vs1' && !idRegex.test(location.pathname) && socket) {
+        }
+        if (location.pathname !== '/mainpage/game/solo/1vs1' && !idRegex.test(location.pathname) && socket) {
             console.log("pathname", location.pathname, socket)
             if (socket) {
                 console.log("Socket closed succefully")

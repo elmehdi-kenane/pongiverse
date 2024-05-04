@@ -66,6 +66,7 @@ const PlayMatch = () => {
     const navigate = useNavigate()
     const { roomID } = useParams()
     let canvasRef = useRef(null);
+    let isOut = false
     // const [playerNo, setPlayerNo] = useState(0)
 
     let isGameStarted = false
@@ -256,18 +257,18 @@ const PlayMatch = () => {
                 }
             }
         }
-        return () => {
-            if (socket && socket.readyState === WebSocket.OPEN) {
-                console.log("PLAYER CHANGED PAGE")
-                socket.send(JSON.stringify({
-                    type: 'playerChangedPage',
-                    message: {
-                        user: user,
-                        roomID: roomID
-                    }
-                }))
-            }
-        }
+        // return () => {
+        //     if (socket && socket.readyState === WebSocket.OPEN) {
+        //         console.log("PLAYER CHANGED PAGE")
+        //         socket.send(JSON.stringify({
+        //             type: 'playerChangedPage',
+        //             message: {
+        //                 user: user,
+        //                 roomID: roomID
+        //             }
+        //         }))
+        //     }
+        // }
         // const refRemoveRoomFromBack = () => {
         //     if (socket && socket.readyState === WebSocket.OPEN) {
         //         console.log("BEFORE GETTING OUT OF THE PAGE : BEFORE UNLOAD")
@@ -280,6 +281,24 @@ const PlayMatch = () => {
         //     window.addEventListener("beforeunload", refRemoveRoomFromBack)
         // }
     }, [socket, user])
+
+    useEffect(() => {
+        return () => {
+            if (isOut) {
+                if (socket && socket.readyState === WebSocket.OPEN) {
+                    window.alert(user, roomID)
+                    socket.send(JSON.stringify({
+                        type: 'playerChangedPage',
+                        message: {
+                            user: user,
+                            roomID: roomID
+                        }
+                    }))
+                }
+            } else
+                isOut = true
+        }
+    }, [])
 
     useEffect(() => {
         if (canvasDrawing && !socketRecreated && user) {
