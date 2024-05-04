@@ -55,7 +55,6 @@ function SignUpWays(props) {
 						text: 'Email already used',
 						icon: 'error',
 					});
-					alert("Already Used");
 				}else{
 				const collect = {
 					email: user_data.email,

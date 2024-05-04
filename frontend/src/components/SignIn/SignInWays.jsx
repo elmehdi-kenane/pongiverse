@@ -49,7 +49,7 @@ function SignInWays() {
 			client.post('/auth/googleLogin/', user_data, {
 				headers: {
 					'Content-Type': 'application/json',
-				}, 
+				},
 				withCredentials: true
 			}).then(response => {
 				if (response.data.Case === "Login successfully") {
@@ -88,7 +88,8 @@ function SignInWays() {
 		client.post('/auth/googleLogin/', data, {
 			headers: {
 				'Content-Type': 'application/json',
-			}
+			},
+			withCredentials: true
 		}).then(response => {
 			if (response.data.Case === "Login successfully") {
 				navigate('/mainpage');

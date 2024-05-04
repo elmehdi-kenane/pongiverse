@@ -90,7 +90,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         #     active_matches = await sync_to_async(list)(ActiveMatch.objects.all())
         #     for active_match in active_matches:
 
-
     ##### when the game already started and some or all players getout from the playing page ##### =====> /play/:id
     async def changedPage(self, data):
         message = data['message']

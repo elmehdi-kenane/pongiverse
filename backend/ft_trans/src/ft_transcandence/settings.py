@@ -199,7 +199,6 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://10.12.7.3:3000",
     "https://lh3.googleusercontent.com"
-    # 'https://lh3.googleusercontent.com:443',
 ]
 
 # CORS_ALLOW_ALL_ORIGINS: True
