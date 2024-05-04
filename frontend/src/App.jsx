@@ -22,6 +22,7 @@ import ChangePassword from './components/SignIn/ChangePassword';
 import SignInPage from './components/SignIn/SignInPage';
 import SignUpPage from './components/SignUp/SignUpPage';
 import SecondStep from './components/SignUp/SecondStep';
+import Test from './components/test'
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
           <AuthProvider>
                 <Routes>
                     <Route path="/" element={<HomePage />} exact />
+                    <Route path="/test" element={<Test />} exact />
                     <Route path="/signup" element={<SignUpPage />} />
                     <Route path="/Signin" element={<SignInPage />} />
                     <Route path="/SecondStep" element={<SecondStep />} />
