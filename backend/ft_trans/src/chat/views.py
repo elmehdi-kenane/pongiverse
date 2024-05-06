@@ -5,7 +5,7 @@ from .models import Room, Membership, Message
 @api_view(['GET'])
 def channel_list(request, username):
     if request.method == 'GET':
-        memberships = Membership.objects.filter(user__name=username)  # Filter memberships by username
+        memberships = Membership.objects.filter(user__username=username)  # Filter memberships by username
         channel_ids = memberships.values_list('room_id', flat=True)  # Get the room IDs
 
         channels = Room.objects.filter(id__in=channel_ids)
@@ -31,7 +31,7 @@ def channel_messages(request, room_id):
             message_data = {
                 'id':message.id,
                 'content': message.content,
-                'sender' : message.sender.name,
+                'sender' : message.sender.username,
                 'date' : message.timestamp
             }
             data.append(message_data)

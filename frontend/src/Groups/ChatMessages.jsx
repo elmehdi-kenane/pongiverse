@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { json, useParams } from "react-router-dom"
-import SocketContext from './SocketContext';
 import AuthContext from '../navbar-sidebar/Authcontext';
 
 
@@ -11,8 +10,8 @@ const ChatMessages = () => {
     const [message , setMessage] = useState('');
     const [messages, setMessages] = useState([])
     const [newMessage, setnewMessage] = useState('')
-    const {chatSocket} = useContext(SocketContext)
     const {user} = useContext(AuthContext)
+    const {chatSocket} = useContext(AuthContext)
 
     useEffect(() => {
         const fetchMessages = async () => {
@@ -20,6 +19,7 @@ const ChatMessages = () => {
             const response = await fetch(`http://localhost:8000/chatAPI/channels/messages/${roomId}`);
             const data = await response.json();
             setMessages(data)
+            console.log(data)
           } catch (error) {
             console.log(error);
           }
@@ -32,14 +32,17 @@ const ChatMessages = () => {
         e.preventDefault();
         document.getElementById("message").value = ""
         console.log("Message is:",message)
-        chatSocket.send(JSON.stringify({
-            type: 'message',
-            data : {
-                room_id: roomId,
-                sender: user,
-                message: message,
-            }
-        }))
+        if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
+            console.log("OPENED")
+            chatSocket.send(JSON.stringify({
+                type: 'message',
+                data : {
+                    room_id: roomId,
+                    sender: user,
+                    message: message,
+                }
+            }))
+        }
     }
 
     useEffect (() => {
@@ -48,7 +51,9 @@ const ChatMessages = () => {
                 let data = JSON.parse(e.data)
                 console.log("recived messages: ",data.message)
                 if(data.type === "newMessage")
-                    setnewMessage(data.message)
+                {
+                    setnewMessage(data.data)
+                }
             }
         }
     }, [chatSocket])
@@ -65,14 +70,14 @@ const ChatMessages = () => {
     }
 
     return (
-        <div className="full-page">
+        <div className="full-page" style={{color:'white'}}>
             <div className="conversation-list">
-                Here will be list of Rooms
+                {/* Here will be list of Rooms */}
             </div>
             <div className="conversations">
                 <div className="messages-space">
-                    {messages.map( mess => (
-                            <div key={mess.id}>{mess.content}</div>
+                    {messages.map( (mess, index) => (
+                            <div key={index}>{mess.content}</div>
                         )
                     )}
                 </div>

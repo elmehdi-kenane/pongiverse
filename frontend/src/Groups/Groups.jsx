@@ -4,8 +4,10 @@ import AuthContext from "../navbar-sidebar/Authcontext";
 import ChannelName from "./ChannelName";
 import CreateChannel from "./CreateChannel";
 import JoinChannel from "./JoinChannel";
+import JoinIcon from "./join.svg"
+import CreateIcon from "./create.svg"
+import "./Groups.css";
 
-// import "./Groups.css";
 
 const Groups = () => {
   const [channels, setChannels] = useState([]);
@@ -41,38 +43,41 @@ const Groups = () => {
 
   return (
     <>
-      <div className="channels">
-        <div className="channels__container-holder">
-          <div className="channels__actions">
-            <button onClick={() => setJoinCh(true)}>join a channel</button>
-            <button onClick={() => setCreateCh(true)}>create a channel</button>
-          </div>
-          <div className="channels__cards">
-            <div className="cards__your-channels">
-              <h2 className="title">Your Channels</h2>
-              <div className="line"></div>
-              <div className="channels-list">
-                {Array(1)
-                  .fill()
-                  .map((_, i) => (
-                    <ChannelName key={i} name="Random" />
-                  ))}
-              </div>
-            </div>
-            <div className="cards__suggested-channels">
-              <h2 className="title">Public Suggested Channel </h2>
-              <div className="line"></div>
-            </div>
-          </div>
+      <div className="channels-page">
+        {createCh && <CreateChannel onClose={() => setCreateCh(false)} setNewRoom = {setNewRoom}/>}
+        {joinCh && <JoinChannel onClose={() => setJoinCh(false)} />}
+        <div className="buttons">
+          <img className="buttons__join"  onClick={()=> setJoinCh(true)} src={JoinIcon}/>
+          <img className="buttons__create" onClick={()=> setCreateCh(true)} src={CreateIcon}/>
         </div>
+        <div className="container">
+          <div className="mychannels">
+            <h1 className="mychannels__tittle">Your Channels</h1>
+            <div className="mychannels__line"></div> 
+            <div className="mychannels__list">
+                {channels.map((channel) => (
+                  <ChannelName name={channel.name} key={channel.id} roomId={channel.id} />
+                  ))}
+              {/* {Array(30)
+                .fill()
+                .map((_, i) => (
+                  <ChannelName key={i} name="Random" />
+                ))} */}
+            </div>
+          </div>
+          <div className="suggested">
+            <h1 className="suggested__tittle">Suggested Channels</h1>
+            <div className="suggested__line"></div>
+            <div className="suggested__list">
+              {Array(30)
+                .fill()
+                .map((_, i) => (
+                  <ChannelName key={i} name="Random" />
+                ))}
+            </div>
+          </div>
+        </div> 
       </div>
-      {createCh && (
-        <CreateChannel
-          onClose={() => setCreateCh(false)}
-          setNewRoom={setNewRoom}
-        />
-      )}
-      {joinCh && <JoinChannel onClose={() => setJoinCh(false)} />}
     </>
   );
 };

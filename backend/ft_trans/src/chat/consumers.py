@@ -2,6 +2,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from myapp.models import customuser ###########
 from asgiref.sync import sync_to_async
 from .models import Room, Membership, Message
+from django.utils import timezone
 import json
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -52,24 +53,32 @@ class ChatConsumer(AsyncWebsocketConsumer):
             message = data['data']['message']
             room  = await sync_to_async(Room.objects.filter(id=room_id).get)()
             sender = await self.get_user_by_name(user_name)
-            await sync_to_async(Message.objects.create)(sender=sender,room=room, content=message)
+            newMessage = await sync_to_async(Message.objects.create)(sender=sender,room=room, content=message)
             event = {
                 'type': 'send_message',
-                'message': message,
+                'message': newMessage,
             }
             await self.channel_layer.group_add(room.name, self.channel_name)
             await self.channel_layer.group_send(room.name, event)
-            # print(self.channel_layer.group)
 
     async def send_message(self, event):
         data = event['message']
-        print("message: ",data)
+        print("id: ",data.id)
+        print("content: ",data.content)
+        print("sender: ",data.sender.username)
+        timestamp = data.timestamp.isoformat()
+        print("time: ",timestamp)
         message  = {
             'type':'newMessage',
-            'message': data
+            'data': {
+                'id':data.id,
+                'content':data.content,
+                'sender' : data.sender.username,
+                'date' : timestamp,
+            }
         }
         await self.send(text_data=json.dumps(message))
 
     @sync_to_async
     def get_user_by_name(self, user_name):
-        return customuser.objects.get(name=user_name)
+        return customuser.objects.get(username=user_name)
