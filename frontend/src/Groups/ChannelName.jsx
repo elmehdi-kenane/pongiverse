@@ -18,7 +18,7 @@ const ChannelName = (props) => {
 
     const onClickhandler = () => {
         console.log(props.roomId)
-        navigate(`../groups/${props.roomId}`)
+        navigate(`../Chat/${props.roomId}`)
     }
 
     return (

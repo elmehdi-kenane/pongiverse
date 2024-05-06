@@ -9,20 +9,20 @@ import Modes from './Game/Modes';
 import Solo from './Game/Solo';
 import OneVersusOne from './Game/OneVersusOne';
 import PlayMatch from './Game/PlayMatch';
-import Chat from './Chat/Chat';
 import Groups from './Groups/Groups';
 import Friends from './Friends/Friends';
 import Dashboard from './Dashboard/Dashboard';
 import { Navigate } from 'react-router-dom';
 import Game from './Game/Game';
-import SocketContext, { SocketProvider } from './Groups/SocketContext'
+import Chat from './Chat/Chat';
 import WaysSecondStep from './components/SignUp/WaysSecondStep';
 import ForgotPassword from './components/SignIn/ForgotPassword';
 import ChangePassword from './components/SignIn/ChangePassword';
 import SignInPage from './components/SignIn/SignInPage';
 import SignUpPage from './components/SignUp/SignUpPage';
 import SecondStep from './components/SignUp/SecondStep';
-import ChatMessages from './Groups/ChatMessages';
+// import ChatMessages from './Groups/ChatMessages';
+import MessagesContainer from './Chat/MessagesPage';
 
 const App = () => {
   return (
@@ -40,9 +40,9 @@ const App = () => {
                     <Route path="/mainpage" element={<NavbarSidebar />} >
                       <Route path="dashboard" element={<Dashboard />} />
                       <Route path="chat" element={<Chat />} />
+                      {/* <Route path="chat/:roomId" element={<MessagesContainer />} /> */}
                       <Route path="friends" element={<Friends />} />
                       <Route path="groups" element={<Groups />} />
-                      <Route path="groups/:roomId" element={<ChatMessages />} />
                       <Route path="game" element={<Modes />} />
                       <Route path="game/solo" element={<Solo />} />
                       <Route path="game/solo/1vs1" element={<OneVersusOne />} />

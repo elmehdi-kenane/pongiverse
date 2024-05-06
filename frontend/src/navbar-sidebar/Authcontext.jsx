@@ -12,11 +12,37 @@ export const AuthProvider = ({children}) => {
     let [user, setUser] = useState('')
     let [socket, setSocket] = useState(null)
     let [chatSocket, setChatSocket] = useState(null)
+    let [notifSocket, setNotifSocket] = useState(null)
     let [socketRecreated, setSocketRecreated] = useState(false)
     const idRegex = /^\/mainpage\/play\/1vs1\/room_\d+$/
-    const messageIdRegex = /^\/mainpage\/groups\/\d+$/
+    const messageIdRegex = /^\/mainpage\/Chat\/\d+$/
 
     useEffect(() => {
+        if ((location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/Signin' && location.pathname !== '/SecondStep' &&  location.pathname !== 'WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && !notifSocket)) {
+            const newNotifSocket = new WebSocket(`ws://localhost:8000/ws/notification`)
+            newNotifSocket.onopen = () => {
+                console.log("Socket opened succefully")
+                newNotifSocket.onmessage = (event) => {
+                    let data = JSON.parse(event.data)
+                    let type = data.type
+                    if (type === 'connection_established') {
+                        console.log('connection established buddy')
+                        // setSocketRecreated(true)
+                    }
+                }
+                console.log(newNotifSocket)
+                setNotifSocket(newNotifSocket)
+            }
+            newNotifSocket.onclose = () => {
+                console.log("chatSocket closed")
+            }
+        } else if ((location.pathname === '/' || location.pathname === '/signup' || location.pathname === '/Signin' || location.pathname === '/SecondStep' ||  location.pathname === 'WaysSecondStep' || location.pathname === '/ForgotPassword' || location.pathname === '/ChangePassword') && notifSocket){
+            if (chatSocket) {
+                console.log("chatSocket closed succefully")
+                chatSocket.close()
+                setNotifSocket(null)
+            }
+        } 
         if ((location.pathname === '/mainpage/groups' || location.pathname === '/mainpage/chat' || messageIdRegex.test(location.pathname)) && !chatSocket) {
             const newChatSocket = new WebSocket(`ws://localhost:8000/ws/chat`)
             newChatSocket.onopen = () => {
@@ -26,7 +52,7 @@ export const AuthProvider = ({children}) => {
                     let type = data.type
                     if (type === 'connection_established') {
                         console.log('connection established buddy')
-                        setSocketRecreated(true)
+                        // setSocketRecreated(true)
                     }
                 }
                 console.log(newChatSocket)

@@ -51,7 +51,9 @@ const ChatMessages = () => {
                 let data = JSON.parse(e.data)
                 console.log("recived messages: ",data.message)
                 if(data.type === "newMessage")
-                    setnewMessage(data.message)
+                {
+                    setnewMessage(data.data)
+                }
             }
         }
     }, [chatSocket])

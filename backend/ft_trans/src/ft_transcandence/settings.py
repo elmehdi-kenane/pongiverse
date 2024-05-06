@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "corsheaders",
     'chat',
     'myapp',
+    'Profile',
     'rest_framework_simplejwt.token_blacklist',
 ]
 

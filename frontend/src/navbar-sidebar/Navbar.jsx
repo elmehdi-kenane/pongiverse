@@ -4,7 +4,7 @@ import NavbarprofNotifs from "./NavbarProfNotifs";
 function Navbar({ Icons, handleExapandSidebar, searchbar, handleSearchBar }) {
 
     return (
-        <div className="navbar blur">
+        <div className="navbar">
             <NavbarIconSearch
                 Icons={Icons}
                 handleExapandSidebar={handleExapandSidebar}

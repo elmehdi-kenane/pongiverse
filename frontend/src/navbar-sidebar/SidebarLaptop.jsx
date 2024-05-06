@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 function SidebarLaptop({ Icons }) {
     return (
-        <div className="sidebar blur">
+        <div className="sidebar">
             <div className="sidebar-navigations" id="sidebar-dashboard">
                 <div className="sidebar-icons">
                     <Link to="dashboard">
