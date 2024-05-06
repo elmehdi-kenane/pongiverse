@@ -14,7 +14,7 @@ export const AuthProvider = ({children}) => {
     let [chatSocket, setChatSocket] = useState(null)
     let [notifSocket, setNotifSocket] = useState(null)
     let [socketRecreated, setSocketRecreated] = useState(false)
-    const idRegex = /^\/mainpage\/play\/1vs1\/room_\d+$/
+    const idRegex = /^\/mainpage\/play\/1vs1\/\d+$/
     const messageIdRegex = /^\/mainpage\/Chat\/\d+$/
 
     useEffect(() => {
@@ -37,9 +37,9 @@ export const AuthProvider = ({children}) => {
                 console.log("chatSocket closed")
             }
         } else if ((location.pathname === '/' || location.pathname === '/signup' || location.pathname === '/Signin' || location.pathname === '/SecondStep' ||  location.pathname === 'WaysSecondStep' || location.pathname === '/ForgotPassword' || location.pathname === '/ChangePassword') && notifSocket){
-            if (chatSocket) {
-                console.log("chatSocket closed succefully")
-                chatSocket.close()
+            if (notifSocket) {
+                console.log("notifSocket closed succefully")
+                notifSocket.close()
                 setNotifSocket(null)
             }
         } 
@@ -51,7 +51,7 @@ export const AuthProvider = ({children}) => {
                     let data = JSON.parse(event.data)
                     let type = data.type
                     if (type === 'connection_established') {
-                        console.log('connection established buddy')
+                        console.log('connection established cdbuddy')
                         // setSocketRecreated(true)
                     }
                 }
