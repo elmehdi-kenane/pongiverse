@@ -1,0 +1,6 @@
+venv
+backend/ft_trans/src/chat/__pycache__
+backend/ft_trans/src/ft_transcandence/__pycache__
+backend/ft_trans/src/mainApp/__pycache__
+backend/ft_trans/src/myapp/__pycache__
+backend/ft_trans/src/Profile/__pycache__

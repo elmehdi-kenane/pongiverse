@@ -49,9 +49,9 @@ class Net {
         this.height = height;
         this.color = color
     }
-    draw(ctx, cvx) {
+    draw(ctx) {
         ctx.fillStyle = this.color;
-        for (let i = 0; i <= cvx.height; i += 15)
+        for (let i = 0; i <= ctx.canvas.height; i += 15)
             ctx.fillRect(this.x, this.y + i, this.width, this.height);
     }
 }
@@ -97,10 +97,13 @@ const PlayMatch = () => {
         ctx.clearRect(0, 0, 600, 400);
         ctx.fillStyle = 'black';
         ctx.fillRect(0, 0, 600, 400);
-        net.draw(ctx, canvasRef.current)
-        player1.draw(ctx);
-        player2.draw(ctx);
-        ball.draw(ctx);
+        if (ctx) {
+            console.log("ctx object is : ", net)
+            net.draw(ctx)
+            player1.draw(ctx);
+            player2.draw(ctx);
+            ball.draw(ctx);
+        }
     }
 
     const update = () => {
@@ -257,29 +260,6 @@ const PlayMatch = () => {
                 }
             }
         }
-        // return () => {
-        //     if (socket && socket.readyState === WebSocket.OPEN) {
-        //         console.log("PLAYER CHANGED PAGE")
-        //         socket.send(JSON.stringify({
-        //             type: 'playerChangedPage',
-        //             message: {
-        //                 user: user,
-        //                 roomID: roomID
-        //             }
-        //         }))
-        //     }
-        // }
-        // const refRemoveRoomFromBack = () => {
-        //     if (socket && socket.readyState === WebSocket.OPEN) {
-        //         console.log("BEFORE GETTING OUT OF THE PAGE : BEFORE UNLOAD")
-        //         socket.close()
-        //         setSocket(null)
-        //     }
-        // }
-        // window.addEventListener("beforeunload", refRemoveRoomFromBack)
-        // return () => {
-        //     window.addEventListener("beforeunload", refRemoveRoomFromBack)
-        // }
     }, [socket, user])
 
     useEffect(() => {
@@ -316,8 +296,25 @@ const PlayMatch = () => {
         }
     }, [canvasDrawing, socket, socketRecreated, user])
 
+    const exitTheGame = () => {
+        if (user) {
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({
+                    type: 'userExited',
+                    message: {
+                        user: user,
+                        roomID: roomID
+                    }
+                }))
+                navigate('../game/solo/1vs1')
+            } else {
+                console.log("socket is closed, refresh the page")
+            }
+        }
+    }
+
     return (
-        <div style={{display:'flex', flexDirection:'column', alignItems: 'center', justifyContent:'center', width:'100%', height:'100%'}}>
+        <div style={{position:"relative", display:'flex', flexDirection:'column', alignItems: 'center', justifyContent:'center', width:'100%', height:'100%'}}>
             {gameFinished ? (<div style={{fontWeight:"bolder", textAlign:"center", color:"white"}}><p>GAME FINISHED</p></div>) : gameAborted ? (<div style={{fontWeight:"bolder", textAlign:"center", color:"white"}}><p>GAME ABORTED</p></div>) : ''}
             <div style={{backgroundColor:"rgba(255,255,255,0.3)", color:"white", fontSize:"30px", display:"flex", textAlign:"center", justifyContent:"space-between", marginBottom:"100px", width:"40%", height:"100px"}}>
                 <div style={{textAlign:"center"}}><p>{userName1}</p></div>
@@ -325,6 +322,7 @@ const PlayMatch = () => {
                 <div style={{textAlign:"center"}}><p>{userName2}</p></div>
             </div>
             <canvas ref={canvasRef} style={{marginTop: '-30px'}}></canvas>
+            {(!gameFinished && !gameAborted) && (<button onClick={exitTheGame} style={{position:'absolute', top:"250px", right:"50%", color:"black", padding:"10px"}}>exit</button>)}
         </div>
     );
 };

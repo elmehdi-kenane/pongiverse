@@ -65,16 +65,21 @@ export const AuthProvider = ({children}) => {
 
     async function publicCheckAuth() {
         try {
-            let response = await fetch('http://localhost:8000/auth/verifytoken', {  // 10.12.7.3   localhost   127.0.0.1
+            let response = await fetch('http://localhost:8000/auth/verifytoken/', {  // 10.12.7.3   localhost   127.0.0.1
+                method : 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 credentials: 'include',
+                body: JSON.stringify({
+                    user : user
+                }),
             })
             response = await response.json()
-            if (response.Case !== "Invalid token")
+            if (response.Case !== "Invalid token") {
+                console.log("USERRR :" + user);
                 navigate('/mainpage')
-            else {
+            } else {
                 if (user)
                     setUser('')
             }
@@ -85,19 +90,22 @@ export const AuthProvider = ({children}) => {
 
     async function privateCheckAuth() {
         try {
-            let response = await fetch('http://localhost:8000/auth/verifytoken', {  // 10.12.7.3   localhost   127.0.0.1
+            let response = await fetch('http://localhost:8000/auth/verifytoken/', {  // 10.12.7.3   localhost   127.0.0.1
+                method : 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 credentials: 'include',
+                body: JSON.stringify({
+                    user : user
+                }),
             })
             response = await response.json()
             if (response.Case !== "Invalid token") {
-                console.log(response.data.username)
+                console.log("USERRR :" + response.data.username);
                 if (!user)
                     setUser(response.data.username)
-            }
-            else
+            } else
                 navigate('/signin')
         } catch (e) {
             console.log("something wrong with fetch")

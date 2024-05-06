@@ -51,6 +51,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.move_paddle(data)
         elif data['type'] == 'moveMouse':
             await self.move_mouse(data)
+        elif data['type'] == 'userExited':
+            await self.user_exited(data)
 
     async def isPlayerInAnyRoom(self, data):
         message = data['message']
@@ -62,11 +64,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 (value['players'][0].get('user') == message['user'] or
                 value['players'][1].get('user') == message['user']) and
                 value.get('status') == 'started')
-                #   or
-                # (len(value.get('players', [])) == 1 and
-                # value['players'][0].get('user') == message['user'] and
-                # value.get('status') == 'notStarted')
-                # and value.get('status') == 'started'
             )
         }
         if userRoom:
@@ -78,17 +75,35 @@ class ChatConsumer(AsyncWebsocketConsumer):
                         'roomID': value['id']
                     }
                 }))
-            # elif len(value['players']) == 1 and value['status'] == 'notStarted':
-            #     await self.send(text_data=json.dumps({
-            #         'type': 'playerNo',
-            #         'message': {
-            #             'id': value['id'],
-            #             'playerNo': value['players'][0]['playerNo']
-            #         }
-            #     }))
-        # else:
-        #     active_matches = await sync_to_async(list)(ActiveMatch.objects.all())
-        #     for active_match in active_matches:
+        else:
+            player = await sync_to_async(customuser.objects.get)(username=message['user'])
+            active_matches = await sync_to_async(list)(ActiveMatch.objects.all())
+            for active_match in active_matches:
+                playerInRoom = await sync_to_async(PlayerState.objects.filter(active_match=active_match, player=player).first)()
+                if playerInRoom:
+                    print("PLAYER FOUND IN A ROOM OF ONE (1) PLAYER")
+                    await self.send(text_data=json.dumps({
+                        'type': 'playerNo',
+                        'message': {
+                            'id': active_match.room_id,
+                            'playerNo': playerInRoom.playerNo
+                        }
+                    }))
+                    return
+
+    ##### when one player exited the game pressing the cross ##### =====> /play/:id
+    async def user_exited(self, data):
+        message = data['message']
+        room = rooms.get(str(message['roomID']))
+
+        if room:
+            room['status'] = 'finished'
+            if room['players'][0]['user'] == message['user']:
+                room['players'][0]['status'] = 'loser'
+                room['players'][1]['status'] = 'winner'
+            elif room['players'][1]['user'] == message['user']:
+                room['players'][1]['status'] = 'loser'
+                room['players'][0]['status'] = 'winner'
 
     ##### when the game already started and some or all players getout from the playing page ##### =====> /play/:id
     async def changedPage(self, data):
@@ -100,14 +115,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
             if room['status'] == 'started':
                 for player in room['players']:
                     if player['user'] == message['user']:
-                        # print(f"USERNAME THAT GETTED OUT : {player['user']}")
-                        # print("GAME ABORTED WELL BROTHER")
                         player['state'] = 'inactive'
                     if player['state'] == 'inactive':
-                        # print("GAME ABORTED WELL BROTHER")
                         inactivePlayers += 1
                 if inactivePlayers == 2:
-                    # print("PLAYERS BOTH ARE OUT")
                     room['status'] = 'aborted'
                     for player in room['players']:
                         player['state'] = 'finished'
@@ -122,10 +133,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 await asyncio.sleep(1)
                 countdown -= 1
                 if room['status'] == 'started' and (room['players'][0]['state'] == 'inactive' or room['players'][1]['state'] == 'inactive'):
-                    # print(countdown)
                     if countdown == 0:
-                        # print('KEEP CHECKING')
                         room['status'] = 'finished'
+                        if room['players'][0]['state'] == 'inactive':
+                            room['players'][0]['status'] = 'loser'
+                            room['players'][1]['status'] = 'winner'
+                        elif room['players'][1]['state'] == 'inactive':
+                            room['players'][1]['status'] = 'loser'
+                            room['players'][0]['status'] = 'winner'
                         await asyncio.create_task(self.gameFinished(room))
                         break
                 else:
@@ -134,6 +149,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def gameFinished(self, room):
         await self.channel_layer.group_send(str(room['id']), {
                 'type': 'finishedGame',
+                'message': {
+                    'user1' : room['players'][0]['user'],
+                    'user2' : room['players'][1]['user'],
+                    'playerScore1' : room['players'][0]['score'],
+                    'playerScore2' : room['players'][1]['score']
+                }
+            }
+        )
+
+    async def gameAborted(self, room):
+        await self.channel_layer.group_send(str(room['id']), {
+                'type': 'abortedGame',
                 'message': {
                     'user1' : room['players'][0]['user'],
                     'user2' : room['players'][1]['user'],
@@ -157,6 +184,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 if len(roomValue['players']) == 2 and (roomValue['players'][0]['user'] == data['message']['user'] or roomValue['players'][1]['user'] == data['message']['user']) and roomValue['status'] == 'started':
                     print("FOUND THE ROOM")
                     await self.channel_layer.group_add(str(roomValue['id']), self.channel_name)
+                    return
+        player = await sync_to_async(customuser.objects.get)(username=data['message']['user'])
+        active_matches = await sync_to_async(list)(ActiveMatch.objects.all())
+        for active_match in active_matches:
+            player_ready = await sync_to_async(PlayerState.objects.filter(active_match=active_match, player=player).first)()
+            if player_ready:
+                await self.channel_layer.group_add(str(active_match.room_id), self.channel_name)
+                return
 
     ##### join to a an existing room or a new one ##### =====> /game
     @sync_to_async
@@ -197,7 +232,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
                         'playerNo': player_state.playerNo,
                         'paddleX': player_state.paddleX,
                         'paddleY': player_state.paddleY,
-                        'score': player_state.score
+                        'score': player_state.score,
+                        'status': ''
                     })
                 room = {
                     'id': active_match.room_id,
@@ -208,8 +244,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     },
                     'winner': 0,
                     'status': active_match.status,
-                    'date_started': 0,
-                    'date_ended': 0
+                    'mode': active_match.mode,
+                    'type': active_match.room_type,
+                    'date_started': datetime.datetime.now().isoformat()
                 }
                 rooms[str(room['id'])] = room
                 await self.channel_layer.group_add(str(room['id']), self.channel_name)
@@ -220,15 +257,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
                         'id': room['id']
                     }
                 }))
-                sync_to_async(active_match.delete)()
+                await sync_to_async(active_match.delete)()
                 # print(rooms)
                 # await asyncio.sleep(3)
                 asyncio.create_task(self.set_game(room))
         if isEmpty:
             room_id = await self.generate_unique_room_id()
             active_match = await sync_to_async(ActiveMatch.objects.create)(
-                room_id= room_id,
-                status= 'notStarted',
+                mode = '1vs1',
+                room_type = 'random',
+                room_id = room_id,
+                status = 'notStarted',
                 ballX = 300,
                 ballY = 200
             )
@@ -252,9 +291,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }))
 
     async def quitRoom(self, data):
-        print("INSIDE QUIT ROOM")
         room = await sync_to_async(ActiveMatch.objects.get)(room_id=data['message']['id'])
         if room:
+            print("INSIDE QUIT ROOM")
             await sync_to_async(room.delete)()
 
     ##### Set ready for player or starting match if all are ready ##### =====> /game
@@ -409,11 +448,35 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     player['state'] = 'playing'
                 asyncio.create_task(self.startGame(data))
         else:
-            print("ROOM NOT EXIST")
-            await self.send(text_data=json.dumps({
-                'type': 'roomNotExist',
-                'message': 'roomNotExist'
-            }))
+            match_played = await sync_to_async(Match.objects.get)(room_id=message['roomID'])
+            if match_played:
+                player1 = await sync_to_async(lambda:match_played.team1_player1.username)()
+                player2 = await sync_to_async(lambda:match_played.team2_player1.username)()
+                if match_played.match_status == 'aborted':
+                    await self.send(text_data=json.dumps({
+                        'type': 'abortedGame',
+                        'message': {
+                            'user1' : player1,
+                            'user2' : player2,
+                            'playerScore1' : match_played.team1_score,
+                            'playerScore2' : match_played.team2_score
+                        }
+                    }))
+                elif match_played.match_status == 'finished':
+                    await self.send(text_data=json.dumps({
+                        'type': 'finishedGame',
+                        'message': {
+                            'user1' : player1,
+                            'user2' : player2,
+                            'playerScore1' : match_played.team1_score,
+                            'playerScore2' : match_played.team2_score
+                        }
+                    }))
+                else:
+                    await self.send(text_data=json.dumps({
+                        'type': 'roomNotExist',
+                        'message': 'roomNotExist'
+                    }))
 
 ########################################################################
 
@@ -439,7 +502,31 @@ class ChatConsumer(AsyncWebsocketConsumer):
             if room['status'] == 'finished' or room['status'] == 'aborted':
                 room["ball"]["ballX"] = 300
                 room["ball"]["ballY"] = 200
+                room['players'][0]['paddleX'] = 5
+                room['players'][0]['paddleY'] = 150
+                room['players'][1]['paddleX'] = 585
+                room['players'][1]['paddleY'] = 150
                 await asyncio.create_task(self.updatingGame(room))
+                if room['status'] == 'finished':
+                    await self.gameFinished(room)
+                else:
+                    await self.gameAborted(room)
+                rooms = {key: value for key, value in rooms.items() if key != str(room['id'])}
+                player1 = await sync_to_async(customuser.objects.get)(username=room['players'][0]['user'])
+                player2 = await sync_to_async(customuser.objects.get)(username=room['players'][1]['user'])
+                await sync_to_async(Match.objects.create)(
+                    mode = room['mode'],
+                    room_id = room['id'],
+                    team1_player1 = player1,
+                    team2_player1 = player2,
+                    team1_score = room['players'][0]['score'],
+                    team2_score =  room['players'][1]['score'],
+                    team1_status = room['players'][0]['status'],
+                    team2_status = room['players'][1]['status'],
+                    date_started = room['date_started'],
+                    date_ended = datetime.datetime.now().isoformat(),
+                    match_status = room['status']
+                )
                 return
             if room["ball"]["ballY"] + 10 > 400 or room["ball"]["ballY"] - 10 < 0: ## was 10 now 11 just for the stucking
                 ballProps["velocityY"] *= -1
@@ -468,14 +555,48 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 if room['players'][0]['score'] == 11:
                     room['winner'] = 1
                     room['status'] = 'finished'
-                    # rooms = {key: value for key, value in rooms.items() if key != room['id']}
+                    room['players'][0]['status'] = 'winner'
+                    room['players'][1]['status'] = 'loser'
                     await self.gameFinished(room)
+                    rooms = {key: value for key, value in rooms.items() if key != str(room['id'])}
+                    player1 = await sync_to_async(customuser.objects.get)(username=room['players'][0]['user'])
+                    player2 = await sync_to_async(customuser.objects.get)(username=room['players'][1]['user'])
+                    await sync_to_async(Match.objects.create)(
+                        mode = room['mode'],
+                        room_id = room['id'],
+                        team1_player1 = player1,
+                        team2_player1 = player2,
+                        team1_score = room['players'][0]['score'],
+                        team2_score =  room['players'][1]['score'],
+                        team1_status = room['players'][0]['status'],
+                        team2_status = room['players'][1]['status'],
+                        date_started = room['date_started'],
+                        date_ended = datetime.datetime.now().isoformat(),
+                        match_status = room['status']
+                    )
                     return
                 elif room['players'][1]['score'] == 11:
                     room['winner'] = 2
                     room['status'] = 'finished'
-                    # rooms = {key: value for key, value in rooms.items() if key != room['id']}
+                    room['players'][1]['status'] = 'winner'
+                    room['players'][0]['status'] = 'loser'
                     await self.gameFinished(room)
+                    rooms = {key: value for key, value in rooms.items() if key != str(room['id'])}
+                    player1 = await sync_to_async(customuser.objects.get)(username=room['players'][0]['user'])
+                    player2 = await sync_to_async(customuser.objects.get)(username=room['players'][1]['user'])
+                    await sync_to_async(Match.objects.create)(
+                        mode = room['mode'],
+                        room_id = room['id'],
+                        team1_player1 = player1,
+                        team2_player1 = player2,
+                        team1_score = room['players'][0]['score'],
+                        team2_score =  room['players'][1]['score'],
+                        team1_status = room['players'][0]['status'],
+                        team2_status = room['players'][1]['status'],
+                        date_started = room['date_started'],
+                        date_ended = datetime.datetime.now().isoformat(),
+                        match_status = room['status']
+                    )
                     return
                 break
             await asyncio.create_task(self.updatingGame(room))
