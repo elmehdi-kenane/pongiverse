@@ -1,0 +1,292 @@
+.full_page {
+	margin-top: 7%;
+	width: 100%;
+	display: flex;
+	height: 100%;
+	flex-direction: column;
+}
+
+.title {
+	margin-left: 8%;
+	color: white;
+	font-weight: bold;
+}
+
+.line {
+	margin-top: 1%;
+	width: 85%;
+	height: 1px;
+	background-color: white;
+	opacity: 40%;
+	margin-left: 8%;
+}
+
+.tournament-infos {
+	display: flex;
+	flex-direction: row;
+	gap: 1.5%;
+	margin-top: 3%;
+	margin-left: 8%;
+}
+
+.little-line {
+	width: 1px;
+	height: 60%;
+	background-color: white;
+}
+
+.h4-title {
+	font-size: 90%;
+	color: white;
+}
+
+.h5-title {
+	color: white;
+	font-size: 90%;
+}
+
+.up-buttons{
+	display: none;
+	margin-top: 3%;
+	margin-left: 8%;
+	column-gap: 30px;
+}
+
+.up-button {
+	background-color: #913dce;
+	border-radius: 7px;
+	color: white;
+	border: none;
+	height: 40px;
+	width: 130px;
+	padding: 0 5px;
+	font-size: 20px;
+}
+
+.tournament-members {
+	display: flex;
+	flex-wrap: wrap;
+	width: 90%;
+	margin: 0 auto;
+	align-content: center;
+	justify-content: center;
+	gap: 20px;
+	padding-top: 2%;
+}
+
+.player {
+	width: calc(90% / 4);
+	max-width: 380px;
+	height: 120px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: linear-gradient(to right,
+			rgba(126, 87, 194, 1),
+			rgba(126, 87, 194, 0.5));
+	border-radius: 10px;
+	column-gap: 20px;
+}
+
+.avatar {
+	margin-top: 5%;
+	height: 100px;
+	width: 100px;
+	border-radius: 10px;
+}
+
+.user-info {
+	display: flex;
+	flex-direction: column;
+	row-gap: 3px;
+}
+
+.user-info-name,
+.user-info-level {
+	color: white;
+}
+
+.buttons {
+	display: flex;
+	justify-content: space-around;
+	width: 100%;
+	column-gap: 10px;
+	margin-top: 40px;
+}
+
+.button {
+	background-color: #913dce;
+	border-radius: 7px;
+	color: white;
+	border: none;
+	height: 50px;
+	width: 150px;
+	padding: 0 5px;
+	font-size: 20px;
+}
+
+@media (max-width: 1170px) {
+	.tournament-members {
+		height: 50%;
+		width: 80%;
+		display: flex;
+		flex-wrap: wrap;
+		margin-top: 1%;
+		align-content: flex-start;
+		justify-content: center;
+		row-gap: 20px;
+		column-gap: 20px;
+		padding-top: 2%;
+	}
+
+	.player {
+		width: 300px;
+		height: 120px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 10px;
+		column-gap: 20px;
+	}
+
+	.buttons {
+		display: none;
+		justify-content: space-around;
+		width: 100%;
+		column-gap: 10px;
+		margin-top: 20%;
+	}
+
+	.up-buttons{
+		display: flex;
+		margin-top: 3%;
+		margin-left: 8%;
+		column-gap: 30px;
+	}
+
+	.up-button {
+		background-color: #913dce;
+		border-radius: 7px;
+		color: white;
+		border: none;
+		height: 40px;
+		width: 130px;
+		padding: 0 5px;
+		font-size: 20px;
+	}
+}
+
+
+
+@media (max-width: 575px) {
+	.player {
+		width: 300px;
+	}
+
+	.buttons
+	{
+		margin-top: 20%;
+	}
+}
+
+@media (max-width: 400px) {
+	.full_page {
+		margin: 0 auto;
+		align-items: center;
+		margin-top: 7%;
+		width: 100%;
+		display: flex;
+		height: 100vh;
+		flex-direction: column;
+	}
+
+	.player {
+		width: 300px;
+	}
+
+	.avatar {
+		margin-top: 5%;
+		height: 75px;
+		width: 75px;
+		border-radius: 10px;
+	}
+
+	.tournament-members {
+		margin: 0 auto;
+		align-items: center;
+	}
+
+	.buttons
+	{
+		margin-top: 20%;
+	}
+
+	.tournament-infos {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		margin-top: 3%;
+		align-items: flex-start;
+	}
+
+	.little-line {
+		display: none;
+	}
+
+	.id {
+		display: flex;
+		column-gap: 10px;
+	}
+
+
+
+	.players-number {
+		display: flex;
+		column-gap: 10px;
+	}
+
+	.title {
+		margin-top: 5%;
+		font-size: 25px;
+	}
+}
+
+@media (max-width: 261px) {
+	.tournament-infos {
+		margin-top: 10px;
+	}
+
+	.title {
+		font-size: 20px;
+	}
+
+	.h4-title,
+	.h5-title {
+		font-size: 70%;
+		color: white;
+	}
+
+	.player {
+		padding: 0 2px;
+		height: 90px;
+		column-gap: 10px;
+	}
+
+
+	.up-buttons{
+		display: flex;
+		margin: 3% auto;
+		column-gap: 10px;
+	}
+
+	.up-button {
+		background-color: #913dce;
+		border-radius: 7px;
+		color: white;
+		border: none;
+		height: 30px;
+		width: 85px;
+		padding: 0 5px;
+		font-size: 10px;
+	}
+}

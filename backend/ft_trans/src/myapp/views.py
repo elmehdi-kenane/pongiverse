@@ -149,9 +149,13 @@ class VerifyTokenView(APIView):
 				response.data = {"Case" : "Invalid token"}
 				return response
 			user = customuser.objects.filter(id=data['user_id']).first()
-			serializer = MyModelSerializer(user)
-			response.data = {"Case" : "valid token", "data" : serializer.data}
-			return response
+			if user is not None:
+				serializer = MyModelSerializer(user)
+				response.data = {"Case" : "valid token", "data" : serializer.data}
+				return response
+			else:
+				response.data = {"Case" : "Invalid token"}
+				return response
 		except TokenError as e:
 			print(username)
 			if username == '':
@@ -159,10 +163,14 @@ class VerifyTokenView(APIView):
 				return response
 			else:
 				user = customuser.objects.filter(username=username).first()
-				tokens = get_tokens_for_user(user)
-				response.set_cookie('token', tokens['access'], httponly=True)
-				print(tokens['access'])
-				return response
+				if user is not None:
+					tokens = get_tokens_for_user(user)
+					response.set_cookie('token', tokens['access'], httponly=True)
+					print(tokens['access'])
+					return response
+				else:
+					response.data = {"Case" : "Invalid token"}
+					return response
 
 class ForgetPasswordView(APIView):
 	def post(self, request, format=None):

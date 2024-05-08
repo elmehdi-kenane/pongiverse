@@ -22,37 +22,39 @@ import ChangePassword from './components/SignIn/ChangePassword';
 import SignInPage from './components/SignIn/SignInPage';
 import SignUpPage from './components/SignUp/SignUpPage';
 import SecondStep from './components/SignUp/SecondStep';
-import Test from './components/test'
+import WebSocketComponent from './components/SocketTest'
+import CreateTournament from './Tournament/CreateTournament';
 
 const App = () => {
-  return (
-    <div className="page">
-        <Router>
-          <AuthProvider>
-                <Routes>
-                    <Route path="/" element={<HomePage />} exact />
-                    <Route path="/test" element={<Test />} exact />
-                    <Route path="/signup" element={<SignUpPage />} />
-                    <Route path="/Signin" element={<SignInPage />} />
-                    <Route path="/SecondStep" element={<SecondStep />} />
-                    <Route path="/WaysSecondStep" element={<WaysSecondStep />} />
-                    <Route path="/ForgotPassword" element={<ForgotPassword />} />
-                    <Route path="/ChangePassword" element={<ChangePassword />} />
-                    <Route path="/mainpage" element={<NavbarSidebar />} >
-                      <Route path="dashboard" element={<Dashboard />} />
-                      <Route path="chat" element={<Chat />} />
-                      <Route path="friends" element={<Friends />} />
-                      <Route path="groups" element={<Groups />} />
-                      <Route path="game" element={<Modes />} />
-                      <Route path="game/solo" element={<Solo />} />
-                      <Route path="game/solo/1vs1" element={<OneVersusOne />} />
-                      <Route path="play/1vs1/:roomID" element={<PlayMatch />} />
-                    </Route>
-                </Routes>
-          </AuthProvider>
-        </Router>
-    </div>
-  )
+	return (
+		<div className="page">
+			<Router>
+				<AuthProvider>
+					<Routes>
+						<Route path="/" element={<HomePage />} exact />
+						<Route path="/signup" element={<SignUpPage />} />
+						<Route path="/Signin" element={<SignInPage />} />
+						<Route path="/SecondStep" element={<SecondStep />} />
+						<Route path="/WaysSecondStep" element={<WaysSecondStep />} />
+						<Route path="/ForgotPassword" element={<ForgotPassword />} />
+						<Route path="/ChangePassword" element={<ChangePassword />} />
+						<Route path="/SocketTest" element={<WebSocketComponent />} />
+						<Route path="/mainpage" element={<NavbarSidebar />} >
+							<Route path="dashboard" element={<Dashboard />} />
+							<Route path="chat" element={<Chat />} />
+							<Route path="friends" element={<Friends />} />
+							<Route path="groups" element={<Groups />} />
+							<Route path="game" element={<Modes />} />
+							<Route path="game/solo" element={<Solo />} />
+							<Route path="game/solo/1vs1" element={<OneVersusOne />} />
+							<Route path="play/1vs1/:roomID" element={<PlayMatch />} />
+							<Route path="createtournament" element={<CreateTournament />} />
+						</Route>
+					</Routes>
+				</AuthProvider>
+			</Router>
+		</div>
+	)
 }
 
 export default App

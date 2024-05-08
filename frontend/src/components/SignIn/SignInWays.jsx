@@ -3,7 +3,7 @@ import logo42 from '../../assets/SignUp/42_logo.svg'
 import { useEffect } from 'react';
 import googleIcon from '../../assets/SignUp/googleIcon.png'
 import styles from '../../assets/SignUp/SignUpPage.module.css'
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import { GoogleOAuthProvider, useGoogleLogin, GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -80,6 +80,7 @@ function SignInWays() {
 		}
 	}, []);
 
+
 	const handleSuccess = (credentialResponse) => {
 		const decoded = jwtDecode(credentialResponse.credential);
 		const data = {
@@ -106,6 +107,20 @@ function SignInWays() {
 		console.log('Google login failed');
 	};
 
+
+	function CustomGoogleButton() {
+
+		const login = useGoogleLogin({
+			onSuccess: handleSuccess,
+			onError: handleError,
+		  });
+		return (
+		<button  onClick={login}>
+		Sign in with Google
+		</button>
+		);
+		}
+
 	return (
 		<>
 			<div className={styles["Intra"]}>
@@ -118,6 +133,7 @@ function SignInWays() {
 						onSuccess={handleSuccess}
 						onError={handleError}
 					/>
+					{/* <CustomGoogleButton /> */}
 				</GoogleOAuthProvider>
 			</div>
 		</>
