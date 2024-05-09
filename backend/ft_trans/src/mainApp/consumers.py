@@ -383,6 +383,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             for player in room['players']:
                 if player['user'] == message['user']:
                     playerIsIn = True
+                    await self.channel_layer.group_add(str(room['id']), self.channel_name)
                     if room['status'] == 'started':
                         if player['state'] == 'inactive':
                             player['state'] = 'playing'
@@ -448,8 +449,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     player['state'] = 'playing'
                 asyncio.create_task(self.startGame(data))
         else:
-            match_played = await sync_to_async(Match.objects.get)(room_id=message['roomID'])
-            if match_played:
+            try:
+                match_played = await sync_to_async(Match.objects.get)(room_id=message['roomID'])
                 player1 = await sync_to_async(lambda:match_played.team1_player1.username)()
                 player2 = await sync_to_async(lambda:match_played.team2_player1.username)()
                 if match_played.match_status == 'aborted':
@@ -472,11 +473,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
                             'playerScore2' : match_played.team2_score
                         }
                     }))
-                else:
-                    await self.send(text_data=json.dumps({
-                        'type': 'roomNotExist',
-                        'message': 'roomNotExist'
-                    }))
+            except Match.DoesNotExist:
+                await self.send(text_data=json.dumps({
+                    'type': 'roomNotExist',
+                    'message': 'roomNotExist'
+                }))
 
 ########################################################################
 

@@ -63,10 +63,12 @@ const PlayMatch = () => {
     const [gameFinished, setGameFinished] = useState(false)
     const [userName1, setUserName1] = useState(null)
     const [userName2, setUserName2] = useState(null)
+    // const [allSet, setAllSet] = useState(false)
     const navigate = useNavigate()
     const { roomID } = useParams()
     let canvasRef = useRef(null);
     let isOut = false
+    let drawingFirstTime = false
     // const [playerNo, setPlayerNo] = useState(0)
 
     let isGameStarted = false
@@ -98,7 +100,6 @@ const PlayMatch = () => {
         ctx.fillStyle = 'black';
         ctx.fillRect(0, 0, 600, 400);
         if (ctx) {
-            console.log("ctx object is : ", net)
             net.draw(ctx)
             player1.draw(ctx);
             player2.draw(ctx);
@@ -158,21 +159,23 @@ const PlayMatch = () => {
     const handleMouseMove = (e) => {
         if (!isGameStarted)
             return;
-        console.log(rect)
         if (playerNo === 1) {
-            player1.y = e.clientY - rect.top - 50;
-            console.log(player1.y)
-            if (player1.y < 0)
-                player1.y = 0;
-            else if (player1.y + 100 > 400)
-                player1.y = 300
+            if (player1) {
+                player1.y = e.clientY - rect.top - 50;
+                if (player1.y < 0)
+                    player1.y = 0;
+                else if (player1.y + 100 > 400)
+                    player1.y = 300
+            }
         }
         if (playerNo === 2) {
-            player2.y = e.clientY - rect.top - 50;
-            if (player2.y < 0)
-                player2.y = 0
-            else if (player2.y + 100 > 400)
-                player2.y = 300
+            if (player2) {
+                player2.y = e.clientY - rect.top - 50;
+                if (player2.y < 0)
+                    player2.y = 0
+                else if (player2.y + 100 > 400)
+                    player2.y = 300
+            }
         }
         socket.send(JSON.stringify({
             type: 'moveMouse',
@@ -201,19 +204,26 @@ const PlayMatch = () => {
     }, [socketRecreated, user])
 
     useEffect(() => {
-        ctx = canvasRef.current.getContext('2d');
-        rect = canvasRef.current.getBoundingClientRect();
-        ctx.canvas.width = 600;
-        ctx.canvas.height = 400;
-        window.addEventListener("keydown", handleKeyDown);
-        window.addEventListener("keyup", handleKeyUp);
+        ctx = canvasRef.current.getContext('2d')
+        ctx.canvas.width = 600
+        ctx.canvas.height = 400
+        rect = canvasRef.current.getBoundingClientRect()
+        window.addEventListener("keydown", handleKeyDown)
+        window.addEventListener("keyup", handleKeyUp)
         canvasRef.current.addEventListener("mousemove", handleMouseMove)
-        if (!canvasDrawing && socket && user) {
-            player1 = new Player(5, 150, 10, 100, 'white', 0);
-            player2 = new Player(585, 150, 10, 100, 'white', 0);
-            ball = new Ball(300, 200, 10, 'red');
-            net = new Net(300, 0, 2, 10, 'white');
-            draw()
+        if (!canvasDrawing && socket) {
+            player1 = new Player(5, 150, 10, 100, 'white', 0)
+            player2 = new Player(585, 150, 10, 100, 'white', 0)
+            ball = new Ball(300, 200, 10, 'red')
+            net = new Net(300, 0, 2, 10, 'white')
+            // draw()
+            ctx.fillStyle = 'black'
+            ctx.fillRect(0, 0, 600, 400);
+            console.log("ctx is : ", ctx)
+            net.draw(ctx)
+            player1.draw(ctx)
+            player2.draw(ctx)
+            ball.draw(ctx)
             setCanvasDrawing(true)
         }
         if (socket && socket.readyState === WebSocket.OPEN && user) {
@@ -221,12 +231,33 @@ const PlayMatch = () => {
                 let data = JSON.parse(event.data)
                 let type = data.type
                 let message = data.message
+                // console.log("THE TYPE IS : ",type)
                 if (type === "setupGame") {
                     console.log("INSIDE SETUPGAME")
                     playerNo = message.playerNo
                     isGameStarted = true
                     setUserName1(message.user1)
                     setUserName2(message.user2)
+                    console.log(socket)
+                } else if (type === "updateGame") {
+                    // console.log("INSIDE UPDATEGAME")
+                    if (player1 && player2 && ball) {
+                        player1.y = message.playerY1;
+                        player2.y = message.playerY2;
+                        player1.score = message.playerScore1;
+                        player2.score = message.playerScore2;
+                        ball.x = message.ballX;
+                        ball.y = message.ballY;
+                        update()
+                        draw()
+                        ctx.clearRect(0, 0, 600, 400);
+                        ctx.fillStyle = 'black';
+                        ctx.fillRect(0, 0, 600, 400);
+                        net.draw(ctx)
+                        player1.draw(ctx)
+                        player2.draw(ctx)
+                        ball.draw(ctx)
+                    }
                 } else if (type === "notAuthorized") {
                     console.log("INSIDE LEAVEGAME")
                     console.log("navigating from the playing page")
@@ -245,16 +276,6 @@ const PlayMatch = () => {
                     setScore1(message.playerScore1)
                     setScore2(message.playerScore2)
                     setGameAborted(true)
-                } else if (type === "updateGame") {
-                    console.log("INSIDE UPDATEGAME")
-                    player1.y = message.playerY1;
-                    player2.y = message.playerY2;
-                    player1.score = message.playerScore1;
-                    player2.score = message.playerScore2;
-                    ball.x = message.ballX;
-                    ball.y = message.ballY;
-                    update()
-                    draw()
                 } else if (type === "serverEnded") {
                     console.log(message)
                 }
@@ -266,7 +287,7 @@ const PlayMatch = () => {
         return () => {
             if (isOut) {
                 if (socket && socket.readyState === WebSocket.OPEN) {
-                    window.alert(user, roomID)
+                    // window.alert(user, roomID)
                     socket.send(JSON.stringify({
                         type: 'playerChangedPage',
                         message: {
@@ -282,7 +303,6 @@ const PlayMatch = () => {
 
     useEffect(() => {
         if (canvasDrawing && !socketRecreated && user) {
-            console.log("Canvas drawed succefully", socket)
             if (socket && socket.readyState === WebSocket.OPEN && user) {
                 console.log("CHECKING IF PLAYER IN ROOM")
                 socket.send(JSON.stringify({

@@ -1,6 +1,9 @@
 # from django.shortcuts import render
-# from rest_framework.decorators import api_view
-# from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from myapp.models import customuser
+from chat.models import Friends
+from myapp.serializers import MyModelSerializer
 # from rest_framework.exceptions import AuthenticationFailed
 # from .serializers import UserSerializer
 # from .models import User
@@ -66,3 +69,20 @@
 #         'message': 'success'
 #     }
 #     return response
+
+import base64
+
+@api_view(['POST'])
+def friends(request):
+    username = request.data['user']
+    print(f'user is {username}')
+    user = customuser.objects.get(username=username)
+    allFriends = []
+    for user_id in Friends.objects.filter(user=user):
+        if user_id.friend.is_online: ####################  and user_id.friend.is_playing
+            image_path = user_id.friend.avatar.path
+            with open(image_path, 'rb') as image_file:
+                encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
+                allFriends.append({'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': encoded_image})
+        # print(f'friends are {friends}')
+    return Response({'message': allFriends})

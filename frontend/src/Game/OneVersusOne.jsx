@@ -28,37 +28,40 @@ const OneVersusOne = () => {
     const [selectedFriends, setSelectedFriends] = useState([]);
     const [gameStarted, setGameStared] = useState(false)
     const [chosenOne, setChosenOne] = useState('')
-    const allUsers =[
-        {
-            id: 1,
-            name: 'mmaqbour',
-            level: 2,
-        },
-        {
-            id: 2,
-            name: 'ekenane',
-            level: 2,
-        },
-        {
-            id: 3,
-            name: 'rennaciri',
-            level: 2,
-        },
-        {
-            id: 4,
-            name: 'aagouzou',
-            level: 2,
-        },
-        {
-            id: 5,
-            name: 'idabligi',
-            level: 2,
-        }
-    ]
+    const [allUsers, setallUsers] = useState([])
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         privateCheckAuth()
     }, [])
+    
+    useEffect(() => {
+        const getAllFriends = async () => {
+            try {
+                let response = await fetch('http://localhost:8000/api/allFriends', {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user: user
+                    })
+                })
+                let friends = await response.json()
+                console.log(friends.message)
+                if (friends.message.length) {
+                    setallUsers(friends.message)
+                    setLoading(false)
+                } else
+                    setLoading(false)
+
+            } catch (e) {
+                console.log("something wrong with fetch")
+            }
+        }
+        if (user)
+            getAllFriends()
+    }, [user])
 
     useEffect(() => {
         if (socket) {
@@ -278,11 +281,12 @@ const OneVersusOne = () => {
                     <div className='onevsone-dashboard-possibilities' id='onevsone-dashboard-friends' ref={friendsSection}>
                         <span onClick={expandFriendsList}>Friends</span>
                         {expandFriends && (<div className='expand-friends'>
-                            {allUsers.map((user) => {
+                            {(allUsers.length && !loading) ? allUsers.map((user) => {
                                 return (<div key={user.id} className='game-friend-list'>
                                     <div className='game-friend-profile'>
+                                    {/* src={`data:image/jpeg;base64,${userData.profile_picture_base64}`} */}
                                         <div>
-                                            <img src={Icons.profilepic} alt="profile_pic" />
+                                            <img src={`data:image/jpeg;base64,${user.image}`} alt="profile_pic" />
                                         </div>
                                         <div>
                                             <p>{user.name}</p>
@@ -301,7 +305,15 @@ const OneVersusOne = () => {
                                         </>)) || (selectedFriends.includes(user.name) && (<img src={Icons.waitClock} alt="game"/>))}
                                     </div>
                                 </div>)
-                            })}
+                            }) : (!allUsers.length && !loading) ? (
+                                <div className='game-friend-loading'>
+                                    <span>there is no friend available</span>
+                                </div>
+                            ) : (
+                                <div className='game-friend-loading'>
+                                    <img src={Icons.loading} alt="game"/>
+                                </div>
+                            )}
                         </div>)}
                     </div>
                     <div className='onevsone-dashboard-possibilities' id='onevsone-dashboard-joining' ref={joinMatchSection}>

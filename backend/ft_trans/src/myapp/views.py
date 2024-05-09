@@ -56,6 +56,7 @@ class WaysSignUpView(APIView) :
 			image_content = image_response.content
 			if image_content:
 				image_file = InMemoryUploadedFile(ContentFile(image_content), None, 'image.jpg', 'image/jpeg', len(image_content), None)
+				print(f'IMAGE CONTENT IS : {image_file}')
 				my_data['avatar'] = image_file
 		# else:
 			# response.data = {"Case" : "Error"}
@@ -139,18 +140,25 @@ class VerifyTokenView(APIView):
 	def post(self, request, format=None):
 		response = Response()
 		username = request.data['user']
-		print(username)
+		print(f"THE USERNAME OF THE USER IS : {username}")
 		try:
 			token = request.COOKIES.get('token')
 			decoded_token = AccessToken(token)
 			print("CHI L33IYBAAAAAA")
 			data = decoded_token.payload
 			if not data.get('user_id'):
+				if username:
+					user = customuser.objects.filter(username=username).first()
+					if user:
+						print(f"THIS SPECIFIC USER IS HEREEEEEEE !!!!!!!!!!")
+						user.is_online = False
+						user.save()
 				response.data = {"Case" : "Invalid token"}
 				return response
-			
 			user = customuser.objects.filter(id=data['user_id']).first()
 			if user is not None:
+				user.is_online = True
+				user.save()
 				serializer = MyModelSerializer(user)
 				response.data = {"Case" : "valid token", "data" : serializer.data}
 				return response
@@ -165,6 +173,8 @@ class VerifyTokenView(APIView):
 			else:
 				user = customuser.objects.filter(username=username).first()
 				if user is not None:
+					user.is_online = True
+					user.save()
 					tokens = get_tokens_for_user(user)
 					response.set_cookie('token', tokens['access'], httponly=True)
 					print(tokens['access'])
