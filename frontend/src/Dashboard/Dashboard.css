@@ -4,6 +4,7 @@
     width: 100%;
     flex-direction: column;
     /* border: white solid 1px; */
+    overflow-y: scroll;
     gap : 20px;
     padding-top:40px;
 }
@@ -15,35 +16,6 @@
 .dash--bkborder {
     border-radius: 3px;
     background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
-}
-
-.rank--winners {
-    height: 30px;
-    padding: 5px;
-    font-weight: 500;
-}
-
-.rank--1 {
-    background-color: gold;
-    color: black;
-    border-radius: 3px;
-}
-
-.rank--2 {
-    background-color: silver;
-    color: black;
-    border-radius: 3px;
-}
-
-.rank--3 {
-    background-color: #CD7F32; /* Bronze Color*/
-    color: black;
-    border-radius: 3px;
-}
-
-.rank__champion{
-    font-weight: 550;
-    font-size: 17px;
 }
 
 /* -------HEAD------ */
@@ -73,14 +45,14 @@
 .dashpage .dashpage__body {
     display: flex;
     width: 100%;
-    height: 550px;
+    height: 542px;
     /* border: purple solid 2px; */
 }
 
 /* -------statistics------- */
 
 .dashpage .dashpage__body .dashpage__body__statistics {
-    width: 100%;
+    width: 67%;
     padding: 20px 10px;
 }
 
@@ -97,7 +69,7 @@
 /* -------rank------- */
 
 .dashpage .dashpage__body .dashpage__body__rank{
-    width: 50%;
+    width: 32.8%;
 }
 .dashpage .dashpage__body .dashpage__body__rank h1{
     color: white;
@@ -135,7 +107,7 @@
     overflow-y: scroll;
 }
 
-.dashpage__body__rank__classment .classment{
+.dashpage__body__rank__classment .player__classment{
     display: flex;
     color: white;
     /* border: solid 1px white; */
@@ -143,7 +115,7 @@
     border-bottom: #250939 solid 3px;
 }
 
-.dashpage__body__rank__classment .classment .rank__pic_trp {
+.dashpage__body__rank__classment .player__classment .player__pos_pic{
     display: flex;
     width: 110px;
     align-items: center;
@@ -152,28 +124,62 @@
     margin-left: 5px;
 }
 
-.dashpage__body__rank__classment .classment img{
+.player__pos_pic .winners {
+    height: 30px;
+    padding: 5px;
+    font-weight: 500;
+    color: black;
+    border-radius: 3px;
+}
+
+.winner--1 {
+    background-color: gold;
+}
+
+.winner--2 {
+    background-color: silver;
+}
+
+.winner--3 {
+    background-color: #CD7F32; /* Bronze Color*/
+}
+
+
+.dashpage__body__rank__classment .player__classment .player__pos_pic img{
     border-radius: 50%;
     height: 35px;
     width: 40px;
     margin-left: 5px;
 }
 
-.dashpage__body__rank__classment .classment__level{
+.dashpage__body__rank__classment .player__classment .player__name_level{
     display: flex;
     padding: 10px;
     width: 100%;
     justify-content: space-between;
+    word-break: break-all;
 }
-.dashpage__body__rank__classment .classment:hover {
+
+.player__name_level--champions{
+    font-weight: 550;
+    font-size: 17px;
+}
+
+.dashpage__body__rank__classment .player__classment:hover {
     /* background-color: #775C9E; */
     background-color: #250939;
 }
 
-/* ------------ */
+/* ------FOOTER------ */
 
 .dashpage .dashpage__footer {
     width: 100%;
     height: 300px;
-    border: purple solid 2px;
+    display: flex;
+}
+
+.dashpage .dashpage__footer__element {
+    /* border: white solid 2px; */
+    width: 100%;
+    /* background-color: ; */
 }

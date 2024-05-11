@@ -65,22 +65,22 @@ const Dashboard = () => {
 
   const RankClassment = (position, player) => {
     let trophyClass = "";
-    let nameClass = "";
+    let championsClass = "";
     if (position <= 3){
-      trophyClass = `rank--winners rank--${position}`;
-      nameClass = `rank__champion`;
+      trophyClass = `winners winner--${position}`;
+      championsClass = `player__name_level--champions`;
     }
     
   
     return (
       <>
-        <div className='rank__pic_trp'>
+        <div className='player__pos_pic'>
           <p className={trophyClass}> #{position}</p>
-          <img src={img3} alt="Player" />
+          <img src={img2} alt="Player" />
         </div>
-        <div className="classment__level">
-          <p className={nameClass}> {player.name} </p>
-          <p className={nameClass}> {player.level} </p>
+        <div className="player__name_level">
+          <p className={championsClass}> {player.name} </p>
+          <p className={championsClass}> {player.level} </p>
         </div>
       </>
     );
@@ -88,6 +88,7 @@ const Dashboard = () => {
 
   return (
     <div className='dashpage'>
+      {/* Head */}
       <div className="dashpage__head dash--space"> 
         {headElements.map((item) => {
           return (
@@ -98,6 +99,7 @@ const Dashboard = () => {
           )
         })}
       </div>
+      {/* Body */}
       <div className="dashpage__body dash--space">
         <div className="dashpage__body__statistics dash--bkborder">
           <h1> Level Historics </h1>
@@ -113,7 +115,7 @@ const Dashboard = () => {
           <div className="dashpage__body__rank__classment">
             {rankData.map((player) => {
               return (
-                <div className='classment'>
+                <div className='player__classment'>
                   {RankClassment(i = i + 1, player)}
                 </div>
               )
@@ -121,7 +123,12 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-      <div className="dashpage__footer"> </div>
+      {/* Footer */}
+      <div className="dashpage__footer dash--space">
+        <div className="dashpage__footer__element dash--bkborder"></div>
+        <div className="dashpage__footer__element dash--bkborder"></div>
+        <div className="dashpage__footer__element dash--bkborder"></div>
+      </div>
     </div>
   )
 }
