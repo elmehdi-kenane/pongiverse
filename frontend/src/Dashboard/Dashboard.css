@@ -178,8 +178,40 @@
     display: flex;
 }
 
-.dashpage .dashpage__footer__element {
+.footer__single-match,
+.footer__multiplayer-match,
+.footer__tournament-match {
     /* border: white solid 2px; */
+    width: 33%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 10px;
+    gap: 10px;
+}
+
+.dashpage .footer__single-match h1{
+    color: white;
+    font-size: 25px;
+    margin-bottom: 8px;
+}
+
+.footer__single-match .single-match{
+    display: flex;
+    height: 70px;
     width: 100%;
-    /* background-color: ; */
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    color: white;
+    
+    background: rgba( 255, 255, 255, 0.25 );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+}
+.footer__single-match .single-match img {
+    width: 65px;
 }

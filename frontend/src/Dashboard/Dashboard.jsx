@@ -86,6 +86,17 @@ const Dashboard = () => {
     );
   };
 
+
+  const singleMatch = () => {
+    return (
+      <div className="single-match">
+        <img src={img2} alt="Player" />
+        <p> 5 - 3 </p>
+        <img src={img3} alt="Player" />
+      </div>
+    )
+  }
+
   return (
     <div className='dashpage'>
       {/* Head */}
@@ -125,9 +136,18 @@ const Dashboard = () => {
       </div>
       {/* Footer */}
       <div className="dashpage__footer dash--space">
-        <div className="dashpage__footer__element dash--bkborder"></div>
-        <div className="dashpage__footer__element dash--bkborder"></div>
-        <div className="dashpage__footer__element dash--bkborder"></div>
+        <div className="footer__single-match dash--bkborder">
+          <h1> Single Matches </h1>
+          {singleMatch()}
+          {singleMatch()}
+          {singleMatch()}
+        </div>
+        <div className="footer__multiplayer-match dash--bkborder">
+
+        </div>
+        <div className="footer__tournament-match dash--bkborder">
+
+        </div>
       </div>
     </div>
   )
