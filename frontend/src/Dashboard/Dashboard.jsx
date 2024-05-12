@@ -1,10 +1,15 @@
-import React, { useState } from 'react'
+// import React, { useState } from 'react'
+import { rankData } from "./rankData"
 import './Dashboard.css'
-import chart from "./chart.png"
-import statics from "./ss.png"
-import img from "../assets/SignUp/42_logo.svg"
-import img2 from "./Group2.svg"
-import img3 from "./Group3.svg"
+import chart from "./assets/chart.png"
+import statics from "./assets/ss.png"
+import ekenaneSvg from "./assets/Group1.svg"
+import idabligiSvg from "./assets/Group2.svg"
+import AgouzouSvg from "./assets/Group3.svg"
+import rennacirSvg from "./assets/Group4.svg"
+import mmaqbourSvg from "./assets/Group5.svg"
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 
 const Dashboard = () => {
@@ -12,56 +17,6 @@ const Dashboard = () => {
   let i = 0;
   const headElements = ["Matches : 15", "Wins: 9", "Loses: 6",
     "Win ratio: 2.4"]
-  const rankData = [
-    {
-      name: "rennacir",
-      level: "15.4 XP"
-    },
-    {
-      name: "idabligi",
-      level: "13.4 XP"
-    },
-    {
-      name: "mmaqbour",
-      level: "12.7 XP"
-    },
-    {
-      name: "aagouzou",
-      level: "9.3 XP"
-    },
-    {
-      name: "aagouzou",
-      level: "9.3 XP"
-    },
-    {
-      name: "aagouzou",
-      level: "9.3 XP"
-    },
-    {
-      name: "aagouzou",
-      level: "9.3 XP"
-    },
-    {
-      name: "aagouzou",
-      level: "9.3 XP"
-    },
-    {
-      name: "aagouzou",
-      level: "9.3 XP"
-    },
-    {
-      name: "aagouzou",
-      level: "9.3 XP"
-    },
-    {
-      name: "aagouzou",
-      level: "9.3 XP"
-    },
-    {
-      name: "aagouzou",
-      level: "9.3 XP"
-    }
-  ]
 
   const RankClassment = (position, player) => {
     let trophyClass = "";
@@ -70,13 +25,11 @@ const Dashboard = () => {
       trophyClass = `winners winner--${position}`;
       championsClass = `player__name_level--champions`;
     }
-    
-  
     return (
       <>
         <div className='player__pos_pic'>
           <p className={trophyClass}> #{position}</p>
-          <img src={img2} alt="Player" />
+          <img src={player.img} alt="Player" />
         </div>
         <div className="player__name_level">
           <p className={championsClass}> {player.name} </p>
@@ -86,17 +39,54 @@ const Dashboard = () => {
     );
   };
 
-
   const singleMatch = () => {
     return (
-      <div className="single-match">
-        <img src={img2} alt="Player" />
+      <div className="single-match__result">
+        <img src={idabligiSvg} alt="Player" />
         <p> 5 - 3 </p>
-        <img src={img3} alt="Player" />
+        <img src={AgouzouSvg} alt="Player" />
+      </div>
+    )
+  }
+  
+  const multiplayerMatch = () => {
+    return (
+      <div className="multiplayer-match__result">
+        <div className="multiplayer-pics">
+        <img src={idabligiSvg} alt="Player" />
+        <img src={rennacirSvg} alt="Player" />
+        </div>
+        <div className="middle-side">
+          <p> 5 - 3 </p>
+        </div>
+        <div className="multiplayer-pics">
+          <img src={ekenaneSvg} alt="Player" />
+          <img src={mmaqbourSvg} alt="Player" />
+        </div>
+      </div>
+    )
+  }
+  
+  
+  const tournamentMatch = () => {
+    return (
+      <div className="tournament-match__result">
+        <img src={mmaqbourSvg} alt="Player" />
+        <p> Semi-Final </p>
+        <p> 4th </p>
       </div>
     )
   }
 
+  const paginationIcons = () => {
+    return (
+      <div className="expand">
+        <ExpandLessIcon className='expand-less'/>
+        <ExpandMoreIcon className='expand-more'/>
+    </div>
+    )
+  }
+ 
   return (
     <div className='dashpage'>
       {/* Head */}
@@ -105,7 +95,7 @@ const Dashboard = () => {
           return (
             <div className='dashpage__head__element dash--bkborder'> 
               <p> {item} </p>
-              <img src={chart} />
+              <img src={chart} alt="pie-chart"/>
             </div>
           )
         })}
@@ -114,7 +104,7 @@ const Dashboard = () => {
       <div className="dashpage__body dash--space">
         <div className="dashpage__body__statistics dash--bkborder">
           <h1> Level Historics </h1>
-          <img src={statics} />
+          <img src={statics} alt="chart"/>
         </div>
         <div className="dashpage__body__rank dash--bkborder">
           <h1> Rank </h1>
@@ -137,16 +127,25 @@ const Dashboard = () => {
       {/* Footer */}
       <div className="dashpage__footer dash--space">
         <div className="footer__single-match dash--bkborder">
-          <h1> Single Matches </h1>
+          <h1> Single Match </h1>
           {singleMatch()}
           {singleMatch()}
           {singleMatch()}
+          {paginationIcons()}
         </div>
         <div className="footer__multiplayer-match dash--bkborder">
-
+          <h1> Multiplayer Match </h1>
+          {multiplayerMatch()}
+          {multiplayerMatch()}
+          {multiplayerMatch()}
+          {paginationIcons()}
         </div>
         <div className="footer__tournament-match dash--bkborder">
-
+          <h1> Tournament Match </h1>
+          {tournamentMatch()}
+          {tournamentMatch()}
+          {tournamentMatch()}
+          {paginationIcons()}
         </div>
       </div>
     </div>

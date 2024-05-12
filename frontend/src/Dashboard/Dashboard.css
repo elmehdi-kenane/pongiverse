@@ -23,7 +23,7 @@
 .dashpage .dashpage__head {
     display: flex;
     width: 100%;
-    height: 130px;
+    height: 100px;
     /* border: purple solid 2px; */
 }
 .dashpage .dashpage__head .dashpage__head__element {
@@ -107,6 +107,10 @@
     overflow-y: scroll;
 }
 
+.dashpage__body__rank__classment:hover {
+    cursor: pointer;
+}
+
 .dashpage__body__rank__classment .player__classment{
     display: flex;
     color: white;
@@ -168,6 +172,8 @@
 .dashpage__body__rank__classment .player__classment:hover {
     /* background-color: #775C9E; */
     background-color: #250939;
+    transition: ease-in 0.2s;
+    box-shadow: 0 2px 30px 0 #250939;
 }
 
 /* ------FOOTER------ */
@@ -190,15 +196,23 @@
     gap: 10px;
 }
 
-.dashpage .footer__single-match h1{
+/* Single Match */
+
+.dashpage__footer .footer__tournament-match h1,
+.dashpage__footer .footer__multiplayer-match h1,
+.dashpage__footer .footer__single-match h1{
     color: white;
     font-size: 25px;
     margin-bottom: 8px;
 }
 
-.footer__single-match .single-match{
+
+
+.footer__tournament-match .tournament-match__result,
+.footer__multiplayer-match .multiplayer-match__result,
+.footer__single-match .single-match__result{
     display: flex;
-    height: 70px;
+    height: 60px;
     width: 100%;
     align-items: center;
     justify-content: space-between;
@@ -208,10 +222,60 @@
     background: rgba( 255, 255, 255, 0.25 );
     border-radius: 10px;
     border: 1px solid rgba( 255, 255, 255, 0.18 );
-    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    box-shadow: 0 2px 30px 0 #250939;
     backdrop-filter: blur( 4px );
     -webkit-backdrop-filter: blur( 4px );
 }
-.footer__single-match .single-match img {
-    width: 65px;
+
+.footer__tournament-match .tournament-match__result:hover,
+.footer__multiplayer-match .multiplayer-match__result:hover,
+.footer__single-match .single-match__result:hover{
+    transition: ease-in 0.2s;
+    box-shadow: 0 2px 30px 0 #5f4582;
+    cursor: pointer;
+}
+
+.footer__single-match .single-match__result img {
+    width: 55px;
+}
+
+/* Multiplayer Match */
+
+.footer__multiplayer-match .multiplayer-match__result .multiplayer-pics {
+    display: flex;
+    gap : 3px;
+}
+
+.multiplayer-match__result .multiplayer-pics img:nth-child(1) {
+    margin-bottom: 15px;
+}
+
+.multiplayer-match__result .multiplayer-pics img:nth-child(2) {
+    margin-top: 15px;
+}
+
+.multiplayer-match__result .multiplayer-pics img{
+    width: 40px;
+}
+
+/* Tournament Match */
+
+.footer__tournament-match .tournament-match__result img {
+    width: 45px;
+}
+
+.dashpage__footer .expand-more {
+    color: white;
+    margin-top: -2px;
+}
+
+.dashpage__footer .expand-less {
+    color: #250939;
+    margin-top: -2px;
+}
+
+.dashpage__footer .expand-more:hover,
+.dashpage__footer .expand-less:hover {
+    color: #775C9E;
+    cursor: pointer;
 }
