@@ -166,7 +166,7 @@ class VerifyTokenView(APIView):
 				response.data = {"Case" : "Invalid token"}
 				return response
 		except TokenError as e:
-			print(username)
+			# print(username)
 			if username == '':
 				response.data = {"Case" : "Invalid token"}
 				return response
@@ -177,7 +177,7 @@ class VerifyTokenView(APIView):
 					user.save()
 					tokens = get_tokens_for_user(user)
 					response.set_cookie('token', tokens['access'], httponly=True)
-					print(tokens['access'])
+					# print(tokens['access'])
 					return response
 				else:
 					response.data = {"Case" : "Invalid token"}

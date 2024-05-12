@@ -17,3 +17,4 @@ export { default as copy } from './copy.svg';
 export { default as copied } from './copied.svg';
 export { default as waitClock } from './wait-clock.svg';
 export { default as loading } from './loading.svg';
+export { default as solidGrey } from './solidGrey.png';

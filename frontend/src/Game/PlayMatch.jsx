@@ -57,7 +57,8 @@ class Net {
 }
 
 const PlayMatch = () => {
-    let { privateCheckAuth, socket, setSocket, socketRecreated, setSocketRecreated, user, setUser } = useContext(AuthContext)
+    let { privateCheckAuth, socket,
+        socketRecreated, setSocketRecreated, user } = useContext(AuthContext)
     const [canvasDrawing, setCanvasDrawing] = useState(false)
     const [gameAborted, setGameAborted] = useState(false)
     const [gameFinished, setGameFinished] = useState(false)
@@ -91,9 +92,9 @@ const PlayMatch = () => {
         MouseMove: false,
         Event: null,
     }
-    // useEffect(() => {
-    //     privateCheckAuth()
-    // }, [])
+    useEffect(() => {
+        privateCheckAuth()
+    }, [])
 
     const draw = () => {
         ctx.clearRect(0, 0, 600, 400);

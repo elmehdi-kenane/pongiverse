@@ -1,6 +1,8 @@
 import { createContext, useState, useEffect } from "react";
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Navigate} from 'react-router-dom'
+import { friends } from "../assets/navbar-sidebar";
+import * as Icons from '../assets/navbar-sidebar'
 
 const AuthContext = createContext();
 
@@ -9,92 +11,96 @@ export default AuthContext;
 export const AuthProvider = ({children}) => {
     let navigate = useNavigate()
     let location = useLocation()
+    const [allGameFriends, setAllGameFriends] = useState([])
+    const [userImages, setUserImages] = useState([]);
+    const [loading, setLoading] = useState(true)
     let [user, setUser] = useState('')
     let [socket, setSocket] = useState(null)
-    let [chatSocket, setChatSocket] = useState(null)
-    let [notifSocket, setNotifSocket] = useState(null)
     let [socketRecreated, setSocketRecreated] = useState(false)
-    const idRegex = /^\/mainpage\/play\/1vs1\/\d+$/
-    const messageIdRegex = /^\/mainpage\/Chat\/\d+$/
 
     useEffect(() => {
-        if ((location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/Signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && !notifSocket)) {
-            const newNotifSocket = new WebSocket(`ws://localhost:8000/ws/notification`)
-            newNotifSocket.onopen = () => {
-                console.log("notifSocket opened succefully")
-                newNotifSocket.onmessage = (event) => {
+        const fetchImages = async () => {
+            const promises = allGameFriends.map(async (user) => {
+                const response = await fetch(`http://localhost:8000/api/getImage`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        image: user.image
+                    })
+                });
+                const blob = await response.blob();
+                return URL.createObjectURL(blob);
+            });
+            const images = await Promise.all(promises);
+            setUserImages(images);
+        };
+        if (allGameFriends) {
+            let loadingImage = []
+            for (let i = 0; i < allGameFriends.length; i++)
+                loadingImage.push(Icons.solidGrey)
+            setUserImages(loadingImage)
+            fetchImages()
+        }
+    }, [allGameFriends])
+
+    useEffect(() => {
+        const getAllGameFriends = async () => {
+            try {
+                let response = await fetch('http://localhost:8000/api/onlineFriends', {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user: user
+                    })
+                })
+                let friends = await response.json()
+                console.log(friends.message)
+                if (friends.message.length)
+                    setAllGameFriends(friends.message)
+                setLoading(false)
+            } catch (e) {
+                console.log("something wrong with fetch")
+            }
+        }
+        if (location.pathname === '/mainpage/game/solo/1vs1' && user)
+            getAllGameFriends()
+        else
+            setAllGameFriends([])
+    }, [location.pathname, user])
+
+    useEffect(() => {
+        if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/Signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && !socket && user) {
+            const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
+            newSocket.onopen = () => {
+                console.log("socket opened succefully")
+                console.log(user)
+                newSocket.onmessage = (event) => {
                     let data = JSON.parse(event.data)
                     let type = data.type
-                    // if (type === 'connection_established') {
-                    //     console.log('connection established buddy')
-                    //     // setSocketRecreated(true)
-                    // }
+                    if (type === 'connection_established')
+                        console.log('connection established buddy')
+                    else if (type === 'friendRequest') {
+                        
+                    }
                 }
-                // console.log(newNotifSocket)
-                setNotifSocket(newNotifSocket)
+                // console.log(newSocket)
+                setSocket(newSocket)
             }
             // newNotifSocket.onclose = () => {
             //     console.log("chatSocket closed")
             // }
-        } else if ((location.pathname === '/' || location.pathname === '/signup' || location.pathname === '/Signin' || location.pathname === '/SecondStep' ||  location.pathname === '/WaysSecondStep' || location.pathname === '/ForgotPassword' || location.pathname === '/ChangePassword') && notifSocket){
-            if (notifSocket) {
-                console.log("notifSocket closed succefully")
-                notifSocket.close()
-                setNotifSocket(null)
-            }
-        } 
-        if ((location.pathname === '/mainpage/groups' || location.pathname === '/mainpage/chat' || messageIdRegex.test(location.pathname)) && !chatSocket) {
-            const newChatSocket = new WebSocket(`ws://localhost:8000/ws/chat`)
-            newChatSocket.onopen = () => {
-                // console.log("Socket opened succefully")
-                newChatSocket.onmessage = (event) => {
-                    let data = JSON.parse(event.data)
-                    let type = data.type
-                    // if (type === 'connection_established') {
-                    //     console.log('connection established buddy')
-                    //     // setSocketRecreated(true)
-                    // }
-                }
-                // console.log(newChatSocket)
-                setChatSocket(newChatSocket)
-            }
-            // newChatSocket.onclose = () => {
-            //     console.log("chatSocket closed")
-            // }
-        } else if (location.pathname !== '/mainpage/groups' && location.pathname !== '/mainpage/chat' && !messageIdRegex.test(location.pathname) && chatSocket) {
-            // console.log("pathname", location.pathname, chatSocket)
-            if (chatSocket) {
-                // console.log("chatSocket closed succefully")
-                chatSocket.close()
-                setChatSocket(null)
-            }
-        }
-        if (location.pathname !== '/mainpage/game/solo/1vs1' && !idRegex.test(location.pathname) && socket) {
-            // console.log("pathname", location.pathname, socket)
+        } else if ((location.pathname === '/' || location.pathname === '/signup' || location.pathname === '/Signin' || location.pathname === '/SecondStep' ||  location.pathname === '/WaysSecondStep' || location.pathname === '/ForgotPassword' || location.pathname === '/ChangePassword') && socket) {
             if (socket) {
-                // console.log("Socket closed succefully")
+                console.log("socket closed succefully")
                 socket.close()
                 setSocket(null)
             }
-        } else if ((location.pathname === '/mainpage/game/solo/1vs1' || idRegex.test(location.pathname)) && !socket) {
-            const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
-            newSocket.onopen = () => {
-                // console.log("Socket opened succefully")
-                newSocket.onmessage = (event) => {
-                    let data = JSON.parse(event.data)
-                    let type = data.type
-                    if (type === 'connection_established') {
-                        // console.log('connection established buddy')
-                        setSocketRecreated(true)
-                    }
-                }
-                console.log(newSocket)
-                setSocket(newSocket)
-            }
-            newSocket.onclose = () => {
-                console.log("gameSocket closed")
-            }
         }
+
         const refRemoveRoomFromBack = () => {
             if (socket && socket.readyState === WebSocket.OPEN) {
                 console.log("BEFORE GETTING OUT OF THE PAGE : BEFORE UNLOAD")
@@ -107,7 +113,7 @@ export const AuthProvider = ({children}) => {
             //ma3eza said khass tkon clean up hana
             window.addEventListener("beforeunload", refRemoveRoomFromBack)
         }
-    }, [location.pathname])
+    }, [location.pathname, user])
 
     async function publicCheckAuth() {
         try {
@@ -165,8 +171,9 @@ export const AuthProvider = ({children}) => {
         setSocket: setSocket,
         socketRecreated: socketRecreated,
         setSocketRecreated: setSocketRecreated,
-        chatSocket : chatSocket,
-        setChatSocket : setChatSocket,
+        allGameFriends: allGameFriends,
+        loading: loading,
+        userImages: userImages
     }
 
     return (
