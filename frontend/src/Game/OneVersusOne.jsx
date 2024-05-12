@@ -4,7 +4,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import * as Icons from '../assets/navbar-sidebar'
 
 const OneVersusOne = () => {
-    let { privateCheckAuth, socket, setSocket, user, socketRecreated, setSocketRecreated } = useContext(AuthContext)
+    let { privateCheckAuth, socket, user,
+        socketRecreated, setSocketRecreated, allGameFriends,
+        loading, userImages, notifSocket } = useContext(AuthContext)
     const inviteFriend = useRef(null)
     const textCopied = useRef(null)
     const inputRoomId = useRef(null)
@@ -28,33 +30,8 @@ const OneVersusOne = () => {
     const [selectedFriends, setSelectedFriends] = useState([]);
     const [gameStarted, setGameStared] = useState(false)
     const [chosenOne, setChosenOne] = useState('')
-    const allUsers =[
-        {
-            id: 1,
-            name: 'mmaqbour',
-            level: 2,
-        },
-        {
-            id: 2,
-            name: 'ekenane',
-            level: 2,
-        },
-        {
-            id: 3,
-            name: 'rennaciri',
-            level: 2,
-        },
-        {
-            id: 4,
-            name: 'aagouzou',
-            level: 2,
-        },
-        {
-            id: 5,
-            name: 'idabligi',
-            level: 2,
-        }
-    ]
+    const [isInSearchMode, setIsInSearchMode] = useState(false)
+    const [isInPlayingMode, setIsInPlayingMode] = useState(false)
 
     useEffect(() => {
         privateCheckAuth()
@@ -125,6 +102,17 @@ const OneVersusOne = () => {
                     setPlayerNo(0)
                     setAllSet(false)
                     setRoomID(null)
+                } else if (type === "alreadySearching") {
+                    setIsInSearchMode(true)
+                    setTimeout(() => {
+                        setIsInSearchMode(false)
+                    }, 5000);
+                } else if (type === "alreadyPlaying") {
+                    console.log("in a match buddy")
+                    setIsInPlayingMode(true)
+                    setTimeout(() => {
+                        setIsInPlayingMode(false)
+                    }, 5000);
                 }
             }
         }
@@ -145,7 +133,7 @@ const OneVersusOne = () => {
             setExpandQuick(false)
         }
     }
-    
+
     const expandJoinRoom = () => {
         if (chosenOne === '' || chosenOne === 'joinMatch') {
             setExpandJoin(!expandJoin)
@@ -154,7 +142,7 @@ const OneVersusOne = () => {
             setExpandQuick(false)
         }
     }
-    
+
     const expandCreateRoom = () => {
         if (chosenOne === '' || chosenOne === 'createMatch') {
             setExpandCreate(!expandCreate)
@@ -163,7 +151,7 @@ const OneVersusOne = () => {
             setExpandQuick(false)
         }
     }
-    
+
     const expandQuickMatch = () => {
         if (chosenOne === '') {
             if (socket && socket.readyState === WebSocket.OPEN) {
@@ -222,9 +210,19 @@ const OneVersusOne = () => {
         if (selectedFriends.includes(friend)) {
             setSelectedFriends(selectedFriends.filter((selectedFriend) => selectedFriend !== friend));
         } else {
-            setSelectedFriends([...selectedFriends, friend]);
-            setChosenOne('friends')
-            setGameStared(true)
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                console.log("inside join")
+                socket.send(JSON.stringify({
+                    type: 'inviteFriend',
+                    message: {
+                        user: user,
+                        target: friend
+                    }
+                }))
+                setSelectedFriends([...selectedFriends, friend]);
+                setChosenOne('friends')
+                setGameStared(true)
+            }
         }
     };
 
@@ -278,22 +276,17 @@ const OneVersusOne = () => {
                     <div className='onevsone-dashboard-possibilities' id='onevsone-dashboard-friends' ref={friendsSection}>
                         <span onClick={expandFriendsList}>Friends</span>
                         {expandFriends && (<div className='expand-friends'>
-                            {allUsers.map((user) => {
+                            {(allGameFriends.length && !loading) ? allGameFriends.map((user, key) => {
                                 return (<div key={user.id} className='game-friend-list'>
                                     <div className='game-friend-profile'>
                                         <div>
-                                            <img src={Icons.profilepic} alt="profile_pic" />
+                                            <img src={userImages[key]}/>
                                         </div>
                                         <div>
                                             <p>{user.name}</p>
                                             <p>level {user.level}</p>
                                         </div>
                                     </div>
-                                    {/* {selectedFriends.includes(user.name) && (
-                                        <div className='game-friend-waiting'>
-                                            <img src={Icons.waitClock} alt="game"/>
-                                        </div>
-                                    )} */}
                                     <div ref={inviteFriend} className={(!selectedFriends.includes(user.name)) ? 'game-friend-invite' : 'game-friend-waiting'} onClick={() => ((!selectedFriends.includes(user.name)) ? inviteNewFriend(user.name) : '')}>
                                         {(!selectedFriends.includes(user.name) && (<>
                                             <img src={Icons.console} alt="game"/>
@@ -301,7 +294,15 @@ const OneVersusOne = () => {
                                         </>)) || (selectedFriends.includes(user.name) && (<img src={Icons.waitClock} alt="game"/>))}
                                     </div>
                                 </div>)
-                            })}
+                            }) : (!allGameFriends.length && !loading) ? (
+                                <div className='game-friend-loading'>
+                                    <span>there is no friend available</span>
+                                </div>
+                            ) : (
+                                <div className='game-friend-loading'>
+                                    <img src={Icons.loading} alt="game"/>
+                                </div>
+                            )}
                         </div>)}
                     </div>
                     <div className='onevsone-dashboard-possibilities' id='onevsone-dashboard-joining' ref={joinMatchSection}>
@@ -328,7 +329,7 @@ const OneVersusOne = () => {
                         <span onClick={expandQuickMatch}>Quick Match</span>
                     </div>
                 </div>
-                <div className='onevsone-dashboard-opponents'>
+                <div className='onevsone-dashboard-opponents' style={{position: "relative"}}>
                     <div className='onevsone-dashboard-opponent'>
                         <div>
                             <img src={Icons.profilepic} alt="profile-pic"/>
@@ -350,6 +351,8 @@ const OneVersusOne = () => {
                             <p>level 6.5</p>
                         </div>
                     </div>
+                    {isInSearchMode && (<div style={{backgroundColor: "black", color: "white", position: "absolute", top: "0", left: "50%", transform: "translate(-50%)", padding: "10px 30px"}}>Already searching for a Match</div>)}
+                    {isInPlayingMode && (<div style={{backgroundColor: "black", color: "white", position: "absolute", top: "0", left: "50%", transform: "translate(-50%)", padding: "10px 30px"}}>Already in a Match, refresh to continue</div>)}
                 </div>
             </div>
             {gameStarted && (<div className='onevsone-cancel' onClick={cancelTheGame}>Cancel</div>)}
