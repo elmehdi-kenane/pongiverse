@@ -77,14 +77,13 @@ const MessagesContainer = (props) => {
 
   useEffect(() => {
       if (messages) {
-        // messageEndRef.current?.scrollIntoView();
         let scrollView = document.getElementById('start')
         scrollView.scrollTop = scrollView.scrollHeight
       }
   }, [messages])
 
   return (
-    <div className="conversation conv-container">
+    <div className="conv-container">
       <div className="conversation__name">
         Hellow
       </div>

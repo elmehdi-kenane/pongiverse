@@ -136,33 +136,41 @@ class CheckUsernameView(APIView):
 
 
 class VerifyTokenView(APIView):
-    def post(self, request, format=None):
-        response = Response()
-        username = request.data['user']
-        print(username)
-        try:
-            token = request.COOKIES.get('token')
-            decoded_token = AccessToken(token)
-            print("CHI L33IYBAAAAAA")
-            data = decoded_token.payload
-            if not data.get('user_id'):
-                response.data = {"Case" : "Invalid token"}
-                return response
-            user = customuser.objects.filter(id=data['user_id']).first()
-            serializer = MyModelSerializer(user)
-            response.data = {"Case" : "valid token", "data" : serializer.data}
-            return response
-        except TokenError as e:
-            print(username)
-            if username == '':
-                response.data = {"Case" : "Invalid token"}
-                return response
-            else:
-                user = customuser.objects.filter(username=username).first()
-                tokens = get_tokens_for_user(user)
-                response.set_cookie('token', tokens['access'], httponly=True)
-                print(tokens['access'])
-                return response
+	def post(self, request, format=None):
+		response = Response()
+		username = request.data['user']
+		print(username)
+		try:
+			token = request.COOKIES.get('token')
+			decoded_token = AccessToken(token)
+			data = decoded_token.payload
+			if not data.get('user_id'):
+				response.data = {"Case" : "Invalid token"}
+				return response
+			
+			user = customuser.objects.filter(id=data['user_id']).first()
+			if user is not None:
+				serializer = MyModelSerializer(user)
+				response.data = {"Case" : "valid token", "data" : serializer.data}
+				return response
+			else:
+				response.data = {"Case" : "Invalid token"}
+				return response
+		except TokenError as e:
+			print(username)
+			if username == '':
+				response.data = {"Case" : "Invalid token"}
+				return response
+			else:
+				user = customuser.objects.filter(username=username).first()
+				if user is not None:
+					tokens = get_tokens_for_user(user)
+					response.set_cookie('token', tokens['access'], httponly=True)
+					print(tokens['access'])
+					return response
+				else:
+					response.data = {"Case" : "Invalid token"}
+					return response
 
 class ForgetPasswordView(APIView):
 	def post(self, request, format=None):

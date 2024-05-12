@@ -13,13 +13,14 @@ const Conversation = (props) => {
       };
     return (
         <div className={isActive ? "conversation-holder--active" : "conversation-holder"} onClick={handleClick}>
-            <img src={Avatar} alt="" />
+            <img src={Avatar} alt="" className='conversation-holder__avatar' />
             <div className="conversation-holder__deatils">
                 <div className="conversation-holder__deatils__name">
-                    {props.name}
+                    {/* {props.name} */}
+                    MyNameisMoooHammed
                 </div>
                 <div className="conversation-holder__deatils__status">
-                    14 Members
+                    online
                 </div>
             </div>
         </div>

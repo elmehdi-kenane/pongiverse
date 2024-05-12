@@ -175,7 +175,8 @@ span
 		margin: 0 auto;
 		padding: 0;
 		overflow: hidden;
-		width: 95%;
+		width: 100%;
+		/*badeelt hana abdellah*/
 		min-width: 200px;
 		height: 100vh;
 	}

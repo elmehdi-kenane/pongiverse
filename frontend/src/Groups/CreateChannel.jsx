@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import SocketContext from "./SocketContext";
-import "./Groups.css";
 
 const CreateChannel = (props) => {
   const { chatSocket } = useContext(AuthContext);

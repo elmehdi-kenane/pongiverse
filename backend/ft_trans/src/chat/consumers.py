@@ -12,6 +12,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'type': 'connected',
                 'message': 'connection established'
             }
+        self.channel_layer.group_add("tst",self.channel_layer)
         await self.send(json.dumps(message))
 
     async def receive(self, text_data):
@@ -40,7 +41,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_add(room_name, self.channel_name)
             message = {
                 'type': 'channel-created',
-                # 'channel_name': s
                 'room' : {
                     'id': room.id,
                     'name': room.name,
@@ -63,11 +63,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def send_message(self, event):
         data = event['message']
-        print("id: ",data.id)
-        print("content: ",data.content)
-        print("sender: ",data.sender.username)
         timestamp = data.timestamp.isoformat()
-        print("time: ",timestamp)
         message  = {
             'type':'newMessage',
             'data': {

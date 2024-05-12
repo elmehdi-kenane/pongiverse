@@ -81,7 +81,7 @@ export const AuthProvider = ({children}) => {
             newSocket.onopen = () => {
                 console.log("Socket opened succefully")
                 newSocket.onmessage = (event) => {
-                    let data = JSON.parse(event.data)
+                    let data = JSON.parse(event.data) 
                     let type = data.type
                     if (type === 'connection_established') {
                         console.log('connection established buddy')
