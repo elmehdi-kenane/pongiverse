@@ -7,7 +7,7 @@ import mmaqbourSvg from "./assets/Group5.svg"
 
 export const rankData = [
     {
-      name: "rennacir",
+      name: "RENNACIR",
       level: "15.4 XP",
       img: rennacirSvg
     },

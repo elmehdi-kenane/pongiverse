@@ -82,7 +82,6 @@
 .dashpage__body__rank .dashpage__body__rank__title{
     display: flex;
     color: white;
-    justify-content: space-around;
     border-bottom: #250939 solid 3px;
 }
 
@@ -99,7 +98,7 @@
     color: #5f4582;
 }
 
-.dashpage__body__rank__classment {
+.dashpage__body__rank .dashpage__body__rank__classment {
     display: flex;
     flex-direction: column;
     /* border: solid 1px white; */
@@ -107,7 +106,7 @@
     overflow-y: scroll;
 }
 
-.dashpage__body__rank__classment:hover {
+.dashpage__body__rank .dashpage__body__rank__classment:hover {
     cursor: pointer;
 }
 
@@ -119,17 +118,22 @@
     border-bottom: #250939 solid 3px;
 }
 
+.dashpage__body__rank__classment .player__classment:hover{
+    background-color: #250939;
+    transition: ease-in 0.2s;
+    box-shadow: 0 2px 30px 0 #250939;
+}
+
 .dashpage__body__rank__classment .player__classment .player__pos_pic{
     display: flex;
     width: 110px;
     align-items: center;
-    /* border: white solid 1px; */
     justify-content: space-between;
+    /* border: white solid 1px; */
     margin-left: 5px;
 }
 
 .player__pos_pic .winners {
-    height: 30px;
     padding: 5px;
     font-weight: 500;
     color: black;
@@ -151,8 +155,7 @@
 
 .dashpage__body__rank__classment .player__classment .player__pos_pic img{
     border-radius: 50%;
-    height: 35px;
-    width: 40px;
+    width: 35px;
     margin-left: 5px;
 }
 
@@ -162,18 +165,12 @@
     width: 100%;
     justify-content: space-between;
     word-break: break-all;
+    /* border: white 1px solid; */
 }
 
 .player__name_level--champions{
     font-weight: 550;
     font-size: 17px;
-}
-
-.dashpage__body__rank__classment .player__classment:hover {
-    /* background-color: #775C9E; */
-    background-color: #250939;
-    transition: ease-in 0.2s;
-    box-shadow: 0 2px 30px 0 #250939;
 }
 
 /* ------FOOTER------ */
@@ -194,23 +191,16 @@
     align-items: center;
     padding: 10px 10px;
     gap: 10px;
+    /* border: 1px solid rgba( 255, 255, 255, 0.18 ); */
 }
 
-/* Single Match */
-
-.dashpage__footer .footer__tournament-match h1,
-.dashpage__footer .footer__multiplayer-match h1,
-.dashpage__footer .footer__single-match h1{
+.footer__titles {
     color: white;
     font-size: 25px;
     margin-bottom: 8px;
 }
 
-
-
-.footer__tournament-match .tournament-match__result,
-.footer__multiplayer-match .multiplayer-match__result,
-.footer__single-match .single-match__result{
+.footer__result {   /* result of all footer matches */
     display: flex;
     height: 60px;
     width: 100%;
@@ -227,16 +217,16 @@
     -webkit-backdrop-filter: blur( 4px );
 }
 
-.footer__tournament-match .tournament-match__result:hover,
-.footer__multiplayer-match .multiplayer-match__result:hover,
-.footer__single-match .single-match__result:hover{
+.footer__result:hover{
     transition: ease-in 0.2s;
     box-shadow: 0 2px 30px 0 #5f4582;
     cursor: pointer;
 }
 
+/* Single Match */
+
 .footer__single-match .single-match__result img {
-    width: 55px;
+    width: 45px;
 }
 
 /* Multiplayer Match */
@@ -278,4 +268,52 @@
 .dashpage__footer .expand-less:hover {
     color: #775C9E;
     cursor: pointer;
+}
+
+@media (max-width: 950px) {
+
+    /* Body rank Classment */
+    .dashpage__body__rank__classment .player__classment .player__pos_pic{
+        width: 90px;
+    }
+    .player__pos_pic .winners {
+        padding: 2px;
+        font-weight:400;
+    }
+    .dashpage__body__rank__classment .player__classment .player__pos_pic img{
+        width: 32px;
+    }
+    
+    .dashpage__body__rank__classment .player__classment .player__name_level{
+        padding: 12px;
+        font-size: 13px;
+    }
+    .player__name_level--champions{
+        font-weight: 450;
+        font-size: 14px;
+    }
+    
+    /* Footer */
+
+    .footer__titles {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .footer__tournament-match .tournament-match__result img,
+    .footer__single-match .single-match__result img {
+        width: 40px;
+    }
+
+    .footer__multiplayer-match .multiplayer-match__result .multiplayer-pics {
+        gap : 0px;
+    }
+    
+    .multiplayer-match__result .multiplayer-pics img{
+        width: 30px;
+    }
+
+    .footer__result p{
+        font-size: 13px;
+    }
 }

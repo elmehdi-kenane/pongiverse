@@ -19,8 +19,8 @@ const Dashboard = () => {
     "Win ratio: 2.4"]
 
   const RankClassment = (position, player) => {
-    let trophyClass = "";
-    let championsClass = "";
+    let trophyClass = ""; // pos-pic
+    let championsClass = ""; // name-level
     if (position <= 3){
       trophyClass = `winners winner--${position}`;
       championsClass = `player__name_level--champions`;
@@ -39,9 +39,11 @@ const Dashboard = () => {
     );
   };
 
+// Footer -------------------
+
   const singleMatch = () => {
     return (
-      <div className="single-match__result">
+      <div className="single-match__result footer__result">
         <img src={idabligiSvg} alt="Player" />
         <p> 5 - 3 </p>
         <img src={AgouzouSvg} alt="Player" />
@@ -51,7 +53,7 @@ const Dashboard = () => {
   
   const multiplayerMatch = () => {
     return (
-      <div className="multiplayer-match__result">
+      <div className="multiplayer-match__result footer__result">
         <div className="multiplayer-pics">
         <img src={idabligiSvg} alt="Player" />
         <img src={rennacirSvg} alt="Player" />
@@ -67,10 +69,9 @@ const Dashboard = () => {
     )
   }
   
-  
   const tournamentMatch = () => {
     return (
-      <div className="tournament-match__result">
+      <div className="tournament-match__result footer__result">
         <img src={mmaqbourSvg} alt="Player" />
         <p> Semi-Final </p>
         <p> 4th </p>
@@ -127,21 +128,21 @@ const Dashboard = () => {
       {/* Footer */}
       <div className="dashpage__footer dash--space">
         <div className="footer__single-match dash--bkborder">
-          <h1> Single Match </h1>
+          <h1 className="footer__titles"> Single Match </h1>
           {singleMatch()}
           {singleMatch()}
           {singleMatch()}
           {paginationIcons()}
         </div>
         <div className="footer__multiplayer-match dash--bkborder">
-          <h1> Multiplayer Match </h1>
+          <h1 className="footer__titles"> Multiplayer Match </h1>
           {multiplayerMatch()}
           {multiplayerMatch()}
           {multiplayerMatch()}
           {paginationIcons()}
         </div>
         <div className="footer__tournament-match dash--bkborder">
-          <h1> Tournament Match </h1>
+          <h1 className="footer__titles"> Tournament Match </h1>
           {tournamentMatch()}
           {tournamentMatch()}
           {tournamentMatch()}
