@@ -16,8 +16,7 @@ const Conversation = (props) => {
             <img src={Avatar} alt="" className='conversation-holder__avatar' />
             <div className="conversation-holder__deatils">
                 <div className="conversation-holder__deatils__name">
-                    {/* {props.name} */}
-                    MyNameisMoooHammed
+                    {props.name}
                 </div>
                 <div className="conversation-holder__deatils__status">
                     online

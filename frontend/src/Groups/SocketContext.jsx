@@ -6,14 +6,14 @@ export default SocketContext;
 
 export const SocketProvider = ({children}) => {
     let url = `ws://localhost:8000/ws/chat`
-    let [chatSocket, setChatSocket] = useState(null)
+    let [socket, setsocket] = useState(null)
     useEffect(() => {
-        if (!chatSocket)
-            setChatSocket(new WebSocket(url))
-    }, [chatSocket])
+        if (!socket)
+            setsocket(new WebSocket(url))
+    }, [socket])
     let contextData = {
-        chatSocket: chatSocket,
-        setChatSocket: setChatSocket
+        socket: socket,
+        setsocket: setsocket
     }
 
     return (

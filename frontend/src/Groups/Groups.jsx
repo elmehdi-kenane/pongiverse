@@ -59,11 +59,11 @@ const Groups = () => {
                     {channels.map((channel) => (
                       <ChannelName name={channel.name} key={channel.id} roomId={channel.id} />
                       ))}
-                  {Array(15)
+                  {/* {Array(15)
                     .fill()
                     .map((_, i) => (
                       <ChannelName key={i} name="Random" />
-                    ))}
+                    ))} */}
                 </div>
               </div>
               <div className="suggested">

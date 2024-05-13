@@ -2,7 +2,6 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from myapp.models import customuser ###########
 from asgiref.sync import sync_to_async
 from .models import Room, Membership, Message
-from django.utils import timezone
 import json
 
 class ChatConsumer(AsyncWebsocketConsumer):
