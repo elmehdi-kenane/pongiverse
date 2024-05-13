@@ -1,12 +1,20 @@
-.full_page {
-	margin-top: 7%;
-	width: 100%;
-	display: flex;
+.tournament-page {
 	height: 100%;
-	flex-direction: column;
+	width: 100%;
+	overflow-y: auto;
 }
 
-.title {
+.tournament-page-content {
+	margin-top: 80px;
+	margin-bottom: 110px;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	overflow-y: auto;
+}
+
+
+.tournament-title {
 	margin-left: 8%;
 	color: white;
 	font-weight: bold;
@@ -35,17 +43,19 @@
 	background-color: white;
 }
 
-.h4-title {
+.tournament-id-title,
+.players-number-title {
 	font-size: 90%;
 	color: white;
 }
 
-.h5-title {
+.tournament-id-value,
+.players-number-value {
 	color: white;
 	font-size: 90%;
 }
 
-.up-buttons{
+.up-buttons {
 	display: none;
 	margin-top: 3%;
 	margin-left: 8%;
@@ -64,6 +74,7 @@
 }
 
 .tournament-members {
+	position: relative;
 	display: flex;
 	flex-wrap: wrap;
 	width: 90%;
@@ -72,6 +83,9 @@
 	justify-content: center;
 	gap: 20px;
 	padding-top: 2%;
+	overflow: auto;
+	scrollbar-color: transparent transparent;
+	height: 600px;
 }
 
 .player {
@@ -81,11 +95,88 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: linear-gradient(to right,
-			rgba(126, 87, 194, 1),
-			rgba(126, 87, 194, 0.5));
+	background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
 	border-radius: 10px;
 	column-gap: 20px;
+}
+
+.down-popup-button {
+	position: relative;
+}
+
+.Invite-friend-popup-up {
+	display: none;
+	border-radius: 10px;
+	top: 60%;
+	left: 50%;
+	height: 250px;
+	transform: translate(-50%, -50%);
+	width: 90%;
+	overflow: auto;
+	background-color: rgba(255, 255, 255, 0.7);
+}
+
+
+.Invite-friend-popup-down {
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	row-gap: 2px;
+	border-radius: 10px;
+	z-index: 1;
+	left: 117%;
+	bottom: -216px;
+	height: 531px;
+	transform: translate(-50%, -50%);
+	width: 350px;
+	overflow: auto;
+	background-color: rgba(255, 255, 255, 0.7);
+}
+
+.friend {
+	display: flex;
+	width: 350px;
+	height: 50px;
+	justify-content: space-between;
+	padding: 0 5px;
+	align-items: center;
+}
+
+.friend-data {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	column-gap: 10px;
+}
+
+.friend-avatar {
+	width: 40px;
+	height: 40px;
+	border-radius: 4px;
+}
+
+.friend-name-and-status {
+	display: flex;
+	flex-direction: column;
+	column-gap: 2px;
+}
+
+.friend-name {
+	color: black;
+	font-size: 14px;
+}
+
+.friend-status {
+	color: black;
+	font-size: 12px;
+	opacity: 0.7;
+}
+
+.friend-invite-button {
+	margin-top: 2px;
+	border: none;
+	width: 50px;
+	height: 50px;
 }
 
 .avatar {
@@ -125,10 +216,32 @@
 	font-size: 20px;
 }
 
+@media (min-width: 1440px) {
+
+	.tournament-page {
+		height: 100%;
+		width: 100%;
+		overflow-y: auto;
+		display: flex;
+		justify-content: center;
+	}
+
+	.tournament-page-content {
+		margin-top: 80px;
+		margin-bottom: 110px;
+		width: 1440px;
+		display: flex;
+		flex-direction: column;
+		overflow-y: auto;
+	}
+
+}
+
 @media (max-width: 1170px) {
+
 	.tournament-members {
-		height: 50%;
 		width: 80%;
+		height: 100%;
 		display: flex;
 		flex-wrap: wrap;
 		margin-top: 1%;
@@ -140,13 +253,37 @@
 	}
 
 	.player {
-		width: 300px;
+		width: 350px;
 		height: 120px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		border-radius: 10px;
 		column-gap: 20px;
+	}
+
+
+	.Invite-friend-popup-up {
+		display: flex;
+		flex-direction: column;
+		border-radius: 10px;
+		position: fixed;
+		top: 60%;
+		left: 50%;
+		height: 500px;
+		transform: translate(-50%, -50%);
+		width: 300px;
+		overflow: auto;
+		background-color: rgba(255, 255, 255, 0.7);
+	}
+
+	.friend {
+		display: flex;
+		width: 300px;
+		height: 50px;
+		justify-content: space-between;
+		padding: 0 5px;
+		align-items: center;
 	}
 
 	.buttons {
@@ -157,7 +294,7 @@
 		margin-top: 20%;
 	}
 
-	.up-buttons{
+	.up-buttons {
 		display: flex;
 		margin-top: 3%;
 		margin-left: 8%;
@@ -174,31 +311,39 @@
 		padding: 0 5px;
 		font-size: 20px;
 	}
+
 }
 
 
-
-@media (max-width: 575px) {
+@media (max-width: 978px) {
 	.player {
 		width: 300px;
 	}
+}
 
-	.buttons
-	{
+@media (max-width: 852px) {
+
+	.player {
+		width: 40%;
+		column-gap: 4px;
+	}
+}
+
+
+@media (max-width: 578px) {
+
+
+	.player {
+		width: 300px;
+		column-gap: 10px;
+	}
+
+	.buttons {
 		margin-top: 20%;
 	}
 }
 
 @media (max-width: 400px) {
-	.full_page {
-		margin: 0 auto;
-		align-items: center;
-		margin-top: 7%;
-		width: 100%;
-		display: flex;
-		height: 100vh;
-		flex-direction: column;
-	}
 
 	.player {
 		width: 300px;
@@ -214,12 +359,35 @@
 	.tournament-members {
 		margin: 0 auto;
 		align-items: center;
+		position: relative;
+		z-index: 0;
 	}
 
-	.buttons
-	{
+	.buttons {
 		margin-top: 20%;
 	}
+
+	.Invite-friend-popup-up {
+		border-radius: 10px;
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		height: 400px;
+		transform: translate(-50%, -50%);
+		width: 200px;
+		overflow: auto;
+		background-color: rgba(255, 255, 255, 0.7);
+	}
+
+	.friend {
+		display: flex;
+		width: 200px;
+		height: 50px;
+		justify-content: space-between;
+		padding: 0 5px;
+		align-items: center;
+	}
+
 
 	.tournament-infos {
 		display: flex;
@@ -233,7 +401,7 @@
 		display: none;
 	}
 
-	.id {
+	.tournament-id {
 		display: flex;
 		column-gap: 10px;
 	}
@@ -245,35 +413,88 @@
 		column-gap: 10px;
 	}
 
-	.title {
+	.tournament-title {
 		margin-top: 5%;
 		font-size: 25px;
+	}
+
+	.up-buttons {
+		position: sticky;
+		top: 0;
+		display: flex;
+		margin: 3% auto;
+		column-gap: 10px;
+		justify-content: flex-start;
+	}
+
+	.up-button {
+		background-color: #913dce;
+		border-radius: 7px;
+		color: white;
+		border: none;
+		height: 40px;
+		width: 85px;
+		padding: 0 5px;
+		font-size: 13px;
 	}
 }
 
 @media (max-width: 261px) {
+
+	.tournament-page-content {
+		margin-top: 10px;
+	}
+
 	.tournament-infos {
 		margin-top: 10px;
 	}
 
-	.title {
+	.tournament-title {
 		font-size: 20px;
 	}
 
-	.h4-title,
-	.h5-title {
+	.tournament-id-title,
+	.tournament-id-value,
+	.players-number-title,
+	.players-number-value {
 		font-size: 70%;
 		color: white;
 	}
 
+	.tournament-members {
+		width: 90%;
+		gap: 5px;
+		height: 800px;
+	}
+
 	.player {
-		padding: 0 2px;
-		height: 90px;
-		column-gap: 10px;
+		height: 70px;
+		column-gap: 5px;
 	}
 
 
-	.up-buttons{
+	.Invite-friend-popup-up {
+		border-radius: 10px;
+		top: 60%;
+		left: 50%;
+		height: 250px;
+		transform: translate(-50%, -50%);
+		width: 90%;
+		overflow: auto;
+		background-color: rgba(255, 255, 255, 0.7);
+	}
+
+	.friend-invite-button {
+		margin-top: 2px;
+		margin-right: 5px;
+		border: none;
+		width: 50px;
+		height: 50px;
+	}
+
+	.up-buttons {
+		position: sticky;
+		top: 0;
 		display: flex;
 		margin: 3% auto;
 		column-gap: 10px;

@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import AuthContext from '../navbar-sidebar/Authcontext'
+import { useContext } from 'react';
+
 
 const WebSocketComponent = () => {
+
+	const {user} = useContext(AuthContext)
 
 	const [mySocket, setMySocket] = useState(null);
 	let a = false
@@ -28,6 +33,8 @@ const WebSocketComponent = () => {
 		socket.onclose = () => {
 			console.log('WebSocket disconnected');
 		};
+		if(user)
+			console.log("USERRR" + user)
 		return () => {
 			console.log("here")
 			if (!a) {
@@ -35,7 +42,7 @@ const WebSocketComponent = () => {
 				a = true
 			}
 		};
-	}, []);
+	}, [user]);
 
 	return (
 		<div>

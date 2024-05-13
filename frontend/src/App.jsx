@@ -38,8 +38,8 @@ const App = () => {
 						<Route path="/WaysSecondStep" element={<WaysSecondStep />} />
 						<Route path="/ForgotPassword" element={<ForgotPassword />} />
 						<Route path="/ChangePassword" element={<ChangePassword />} />
-						<Route path="/SocketTest" element={<WebSocketComponent />} />
 						<Route path="/mainpage" element={<NavbarSidebar />} >
+							<Route path="SocketTest" element={<WebSocketComponent />} />
 							<Route path="dashboard" element={<Dashboard />} />
 							<Route path="chat" element={<Chat />} />
 							<Route path="friends" element={<Friends />} />
@@ -48,7 +48,7 @@ const App = () => {
 							<Route path="game/solo" element={<Solo />} />
 							<Route path="game/solo/1vs1" element={<OneVersusOne />} />
 							<Route path="play/1vs1/:roomID" element={<PlayMatch />} />
-							<Route path="createtournament" element={<CreateTournament />} />
+							<Route path="game/createtournament" element={<CreateTournament />} />
 						</Route>
 					</Routes>
 				</AuthProvider>

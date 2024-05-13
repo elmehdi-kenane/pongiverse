@@ -18,9 +18,11 @@ function SecondStep() {
 		password: '',
 		avatar: null
 	});
+
+	const [errors, setErrors] = useState({})
 	const location = useLocation();
 	const data = location.state || {};
-	const [exist, setExist] = useState(false);
+	const [exist, setExist] = useState(false);		
 	const handleInputChange = (e) => {
 		e.preventDefault();
 		if (e.target.name === 'avatar') {
@@ -58,40 +60,51 @@ function SecondStep() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		const formData = new FormData();
-		formData.append('username', nextdata.username);
-		formData.append('email', nextdata.email);
-		formData.append('password', nextdata.password);
-		formData.append('avatar', nextdata.avatar);
-		formData.append('is_active', true);
-		client.post('/auth/signup/', formData, {
-			headers: {
-				'Content-Type': 'multipart/form-data',
-			}
-		}).then(response => {
-				if (response.data.Case === "Sign up successfully"){
-					navigate('/signin');
+		const validationErrors = {}
+		if (!nextdata.username.trim()) {
+			validationErrors.username = "username is required"
+		} else if (nextdata.username.length > 10)
+		{
+			validationErrors.username = "username is too long"
+		}
+		setErrors(validationErrors)
+		if (Object.keys(validationErrors).length === 0) {
+			const formData = new FormData();
+			formData.append('username', nextdata.username);
+			formData.append('email', nextdata.email);
+			formData.append('password', nextdata.password);
+			formData.append('avatar', nextdata.avatar);
+			formData.append('is_active', true);
+			client.post('/auth/signup/', formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data',
 				}
-			})
-			.catch(error => {
-				console.error('There was an error!', error);
-			});
+			}).then(response => {
+					if (response.data.Case === "Sign up successfully"){
+						navigate('/signin');
+					}
+				})
+				.catch(error => {
+					console.error('There was an error!', error);
+				});
+		}
 	};
 	return (
 		<div className={styles["body_page"]}>
 			<div className={styles["mainPage"]}>
 				<Header/>
-				<div className={styles["bodyPage"]}>
-					<div className={styles["signUpContainer"]}>
-					<h1 className={styles["title"]}>Next Step</h1>
-					<form className={styles["signUpForm"]} onSubmit={handleSubmit} noValidate>
-						<input className={styles["inputs"]} type="text" name='username' value={nextdata.username} onChange={handleInputChange} placeholder="enter a username" />
-						{exist && <span>Username already used</span>}
-						<input type="file" name="avatar" id="image-upload" accept="image/*" onChange={handleInputChange} className={styles["image-upload"]} />
-						<label htmlFor="image-upload">Choose a file</label>
-						<button type="submit" className={styles["submitButton"]}>Sign Up</button>
-					</form>
-					</div>
+				<div className={styles["SecondStepContainer"]}>
+						<div className={styles["signUpContainer"]}>
+						<h1 className={styles["title"]}>Next Step</h1>
+						<form className={styles["signUpForm"]} onSubmit={handleSubmit} noValidate>
+							<input className={styles["inputs"]} type="text" name='username' value={nextdata.username} onChange={handleInputChange} placeholder="enter a username" />
+							{exist && <span>Username already used</span>}
+							{errors.username && <span>{errors.username}</span>}
+							<input type="file" name="avatar" id="image-upload" accept="image/*" onChange={handleInputChange} className={styles["image-upload"]} />
+							<label htmlFor="image-upload">Choose a file</label>
+							<button type="submit" className={styles["submitButton"]}>Sign Up</button>
+						</form>
+						</div>
 				</div>
 			</div>
 		</div>

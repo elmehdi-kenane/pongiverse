@@ -62,8 +62,9 @@ function WaysSecondStep() {
 		const validationErrors = {};
 		if (!nextdata.username.trim()) {
 			validationErrors.username = "username is required";
+		} else if (nextdata.username.length > 10){
+			validationErrors.username = "username is too long";
 		}
-
 		if (!nextdata.password.trim()) {
 			validationErrors.password = "password is required";
 		} else if (nextdata.password.length < 8) {
