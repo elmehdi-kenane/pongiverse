@@ -88,6 +88,22 @@ const Dashboard = () => {
     )
   }
  
+  const tournamentMatch2 = () => {
+    return (
+      <div className="footer__tournament-match2 dash--bkborder">
+        <h1 className="footer__titles"> Tournament Match </h1>
+              {tournamentMatch()}
+              {tournamentMatch()}
+              {tournamentMatch()}
+              {tournamentMatch()}
+              {tournamentMatch()}
+              {tournamentMatch()}
+              {paginationIcons()}
+      </div>
+    )
+  }
+
+
   return (
     <div className='dashpage'>
       {/* Head */}
@@ -102,28 +118,34 @@ const Dashboard = () => {
         })}
       </div>
       {/* Body */}
+          {/* Level */}
       <div className="dashpage__body dash--space">
         <div className="dashpage__body__statistics dash--bkborder">
           <h1> Level Historics </h1>
           <img src={statics} alt="chart"/>
         </div>
-        <div className="dashpage__body__rank dash--bkborder">
-          <h1> Rank </h1>
-          <div className='dashpage__body__rank__title'>
-            <div className='title'> Level </div>
-            <div className='title'> Win </div>
-            <div className='title'> Goal </div>
+          {/* Rank */}
+        <div className="rank-classment"> 
+          <div className="dashpage__body__rank dash--bkborder">
+            <h1> Rank </h1>
+            <div className='dashpage__body__rank__title'>
+              <div className='title'> Level </div>
+              <div className='title'> Win </div>
+              <div className='title'> Goal </div>
+            </div>
+            <div className="dashpage__body__rank__classment">
+              {rankData.map((player) => {
+                return (
+                  <div className='player__classment'>
+                    {RankClassment(i = i + 1, player)}
+                  </div>
+                )
+              })}
+            </div>
           </div>
-          <div className="dashpage__body__rank__classment">
-            {rankData.map((player) => {
-              return (
-                <div className='player__classment'>
-                  {RankClassment(i = i + 1, player)}
-                </div>
-              )
-            })}
-          </div>
+          {tournamentMatch2()}
         </div>
+
       </div>
       {/* Footer */}
       <div className="dashpage__footer dash--space">

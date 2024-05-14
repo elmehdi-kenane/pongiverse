@@ -29,9 +29,10 @@
 .dashpage .dashpage__head .dashpage__head__element {
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
     color: white;
     width: 100%;
+    padding: 0 7px;
 }
 
 .dashpage .dashpage__head .dashpage__head__element img{
@@ -58,6 +59,7 @@
 .dashpage .dashpage__body .dashpage__body__statistics h1 {
     color: white;
     font-weight: 600;
+    letter-spacing: 1px;
 }
 .dashpage .dashpage__body .dashpage__body__statistics img {
     margin: 20px 0 0 0;
@@ -67,12 +69,18 @@
 
 /* -------rank------- */
 
-.dashpage .dashpage__body .dashpage__body__rank{
+.rank-classment {
     width: 32.8%;
+    display: flex;
+}
+
+.dashpage .dashpage__body .dashpage__body__rank{
+    width: 100%;
 }
 .dashpage .dashpage__body .dashpage__body__rank h1{
     color: white;
     font-size: 25px;
+    letter-spacing: 1px;
     font-weight: 600;
     padding: 10px;
     border-bottom: #250939 solid 10px;
@@ -257,18 +265,18 @@
 
 /* Pagination */
 
-.dashpage__footer .expand-more {
+.expand-more {
     color: white;
     margin-top: -2px;
 }
 
-.dashpage__footer .expand-less {
+.expand-less {
     color: #250939;
     margin-top: -2px;
 }
 
-.dashpage__footer .expand-more:hover,
-.dashpage__footer .expand-less:hover {
+.expand-more:hover,
+.expand-less:hover {
     color: #775C9E;
     cursor: pointer;
 }
@@ -300,6 +308,7 @@
 
     .footer__titles {
         font-size: 19px;
+        font-weight: 500;
         margin-bottom: 10px;
     }
 
@@ -320,8 +329,18 @@
     }
 }
 
-@media (max-width:769px) {
+@media (min-width: 768px) {
+    .footer__tournament-match2{
+        display: none;
+    }
+}
 
+@media (max-width:768px) {
+    
+    .footer__tournament-match {
+        display: none;
+    }
+    
     .dashpage {
         gap : 15px;
         padding-top:20px;
@@ -332,19 +351,15 @@
         flex-shrink: 0;
     }
     .dashpage .dashpage__head .dashpage__head__element {
-        justify-content: space-around;
-        color: white;
-        width: 100%;
         font-size: 13px;
     }
-    
     .dashpage .dashpage__head .dashpage__head__element img{
         height: 25px;
         width: 25px;
     }
 
     .dashpage .dashpage__body {
-        height: 900px;
+        height: 820px;
         flex-direction: column;
     }
 
@@ -360,16 +375,77 @@
     .dashpage .dashpage__body .dashpage__body__statistics img {
         height: 200px;
     }
-
+    
     /* Rank */
-
-    .dashpage .dashpage__body .dashpage__body__rank{
+    
+    .rank-classment {
         width: 100%;
+        gap: 15px;
+    }
+    .dashpage .dashpage__body .dashpage__body__rank{
+        width: 60%;
     }
     .dashpage .dashpage__body .dashpage__body__rank h1{
         font-weight: 500;
         padding: 5px;
         border-bottom: #250939 solid 5px;
     }
+    .footer__tournament-match2 {
+        width: 40%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0 10px;
+        gap: 10px;
+        /* border: 1px solid rgba( 255, 255, 255, 0.18 ); */
+    }
+    .footer__tournament-match2 h1 {
+        margin-top: 25px;
+        margin-bottom: 15px;
+        font-size: 20px;
+    }
+    .footer__tournament-match2 .tournament-match__result img {
+        width: 45px;
+    }
+    
+    .footer__single-match,
+    .footer__multiplayer-match{
+        width: 50%;
+    }
+}
 
+@media (max-width: 550px) {
+    /* Head */
+    .dashpage .dashpage__head {
+        flex-wrap: wrap;
+        gap: 0.5%;
+    }
+    .dashpage .dashpage__head .dashpage__head__element {
+        font-size: 10px;
+        width: 49.75%;
+        height: 25px;
+        margin-bottom: 2px;
+    }
+    .dashpage .dashpage__head .dashpage__head__element img{
+        height: 20px;
+        width: 20px;
+    }
+
+    /* Body */
+    .dashpage .dashpage__body {
+        height: 1400px;
+    }
+    .rank-classment {
+        flex-direction: column;
+    }
+    .dashpage .dashpage__body .dashpage__body__rank,
+    .footer__tournament-match2,
+    .footer__single-match,
+    .footer__multiplayer-match{
+        width: 100%;
+    }
+    .dashpage .dashpage__footer {
+        flex-direction: column;
+        height: 700px;
+    }
 }
