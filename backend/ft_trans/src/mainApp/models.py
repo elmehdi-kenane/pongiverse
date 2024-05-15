@@ -5,13 +5,6 @@ from django.utils import timezone
 from myapp.models import customuser
 import random
 
-# class RoomIDManager(models.Manager):
-#     def generate_unique_room_id(self):
-#         while True:
-#             room_id = random.randint(1000, 9999)  # Adjust the range as needed
-#             if not ActiveMatch.objects.filter(room_id=room_id).exists() and not Match.objects.filter(room_id=room_id).exists():
-#                 return room_id
-
 class Match(models.Model):
     mode = models.CharField(max_length=255)
     room_id = models.PositiveBigIntegerField(unique=True)
@@ -44,5 +37,15 @@ class PlayerState(models.Model):
     paddleX = models.IntegerField(default=0)
     paddleY = models.IntegerField(default=0)
     score = models.PositiveIntegerField(default=0)
+
+class FriendMatch(models.Model):
+    creator = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='creator')
+    room_id = models.PositiveBigIntegerField(unique=True)
+    room_type = models.CharField(max_length=255)
+    mode = models.CharField(max_length=255)
+
+class ParticipatedFriends(models.Model):
+    friend_match = models.ForeignKey(FriendMatch, on_delete=models.CASCADE, related_name='participated_friends')
+    friend = models.ForeignKey(customuser, on_delete=models.CASCADE)
 
 # room_id_manager = RoomIDManager()

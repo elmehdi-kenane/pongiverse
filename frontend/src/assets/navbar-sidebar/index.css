@@ -599,7 +599,7 @@ html, body {
 }
 
 .onevsone-cancel {
-    margin: 80px 50px 100px 4%;
+    margin: 10px 50px 0 4%;
     text-align: center;
     width: 150px;
     padding: 12px 0;
@@ -898,4 +898,100 @@ html, body {
         left: 0;
         top: -150px;
     }
+}
+
+
+.cancel-game-invite-request {
+    margin: 30px 0 100px 0;
+}
+
+/* GAME INVITATION DESIGN */
+
+.game-invitations {
+    width: 400px;
+    margin: 0 0 30px 100%;
+    transform: translate(-100%);
+    max-height: 130px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column
+}
+
+.game-invitation {
+    display: flex;
+    flex-direction: row;
+    background: linear-gradient(to right, rgba(126,87,194,1), rgba(126,87,194,0.5) 55%);
+    height: 65px;
+    border-bottom: 3px solid #250939;
+    border-radius: 5px 5px 5px 8px;
+}
+
+.game-invitation > img:first-child {
+    height: 100%;
+    width: 16%;
+    border-radius: 5px 0 0 5px
+}
+
+.game-invitation .user-infos {
+    width: 49%;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    justify-content: center;
+    gap: 5px
+}
+
+.game-invitation .user-infos > span:first-child {
+    color: white;
+    margin-left: 15px;
+    font-weight: bolder
+}
+
+.game-invitation .user-infos > span:nth-child(2) {
+    color: rgba(255,255,255,0.7);
+    margin-left: 15px;
+    font-size: 10px;
+    font-weight: medium
+}
+
+.game-invitation .invitation-mode {
+    background: linear-gradient(90deg, rgba(140, 83, 180, 1), rgba(51, 22, 72, 0.8) 50%, rgba(51, 22, 72, 0.7) 50%, rgba(140, 83, 180, 1));
+    height: 100%;
+    width: 15%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin: 0 10px 0 0;
+    /* border-radius: 100px */
+}
+
+.game-invitation .invitation-mode span {
+    color: white;
+    font-weight: bolder
+}
+
+.game-invitation .accept-refuse {
+    height: 58%;
+    width: 21%;
+    display: flex;
+    margin: auto 0;
+    gap: 5px
+}
+
+.game-invitation .accept-refuse > div:first-child {
+    width: 42%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #19A519;
+    border-radius: 5px
+}
+
+.game-invitation .accept-refuse > div:nth-child(2) {
+    width: 42%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    border: 2px solid white
 }

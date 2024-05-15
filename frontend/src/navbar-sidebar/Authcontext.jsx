@@ -14,6 +14,7 @@ export const AuthProvider = ({children}) => {
     const [allGameFriends, setAllGameFriends] = useState([])
     const [userImages, setUserImages] = useState([]);
     const [loading, setLoading] = useState(true)
+    // const [gameNotif, setGameNotif] = useState(false)
     let [user, setUser] = useState('')
     let [socket, setSocket] = useState(null)
     let [socketRecreated, setSocketRecreated] = useState(false)
@@ -73,6 +74,7 @@ export const AuthProvider = ({children}) => {
     }, [location.pathname, user])
 
     useEffect(() => {
+        // setGameNotif(false)
         if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/Signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && !socket && user) {
             const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
             newSocket.onopen = () => {
@@ -81,18 +83,25 @@ export const AuthProvider = ({children}) => {
                 newSocket.onmessage = (event) => {
                     let data = JSON.parse(event.data)
                     let type = data.type
-                    if (type === 'connection_established')
+                    if (type === 'connection_established') {
                         console.log('connection established buddy')
-                    else if (type === 'friendRequest') {
-                        
-                    }
+                        newSocket.send(JSON.stringify({
+                            type: 'handShake',
+                            message: {
+                                user: user
+                            } 
+                        }))
+                    // } else if (type === 'receiveFriendGame') {
+                    //     console.log("RECEIVED A GAME REQUEST")
+                    //     setGameNotif(true)
+                    // }
                 }
                 // console.log(newSocket)
                 setSocket(newSocket)
             }
             // newNotifSocket.onclose = () => {
             //     console.log("chatSocket closed")
-            // }
+            }
         } else if ((location.pathname === '/' || location.pathname === '/signup' || location.pathname === '/Signin' || location.pathname === '/SecondStep' ||  location.pathname === '/WaysSecondStep' || location.pathname === '/ForgotPassword' || location.pathname === '/ChangePassword') && socket) {
             if (socket) {
                 console.log("socket closed succefully")
@@ -173,7 +182,8 @@ export const AuthProvider = ({children}) => {
         setSocketRecreated: setSocketRecreated,
         allGameFriends: allGameFriends,
         loading: loading,
-        userImages: userImages
+        userImages: userImages,
+        // gameNotif: gameNotif
     }
 
     return (

@@ -1,12 +1,12 @@
-import json
-from datetime import datetime
-import random
-import asyncio
 import math
+import json
+import random
+import base64
+import asyncio
 import datetime
-from .models import Match, ActiveMatch, PlayerState
 from myapp.models import customuser
 from asgiref.sync import sync_to_async
+from .models import Match, ActiveMatch, PlayerState, FriendMatch, ParticipatedFriends
 
 async def isPlayerInAnyRoom(self, data, rooms):
     message = data['message']
@@ -77,6 +77,7 @@ async def joinRoom(self, data, rooms):
     # global rooms
 
     print("inside join")
+    print(f"INSIDDDDE THE JOINNN ROOOM")
     active_matches = await sync_to_async(list)(ActiveMatch.objects.all())
     for active_match in active_matches:
         player_state_count = await sync_to_async(PlayerState.objects.filter(active_match=active_match).count)()
@@ -440,7 +441,8 @@ async def runOverGame(self, room, ballProps, rooms):
                 await gameFinished(self, room)
             else:
                 await gameAborted(self, room)
-            rooms = {key: value for key, value in rooms.items() if key != str(room['id'])}
+            del rooms[str(room['id'])]
+            print(f"GAME OVER AND THE UPDATED ROOMS ARE : {rooms}")
             player1 = await sync_to_async(customuser.objects.get)(username=room['players'][0]['user'])
             player2 = await sync_to_async(customuser.objects.get)(username=room['players'][1]['user'])
             player1.is_playing = False
@@ -491,7 +493,7 @@ async def runOverGame(self, room, ballProps, rooms):
                 room['players'][0]['status'] = 'winner'
                 room['players'][1]['status'] = 'loser'
                 await gameFinished(self, room)
-                rooms = {key: value for key, value in rooms.items() if key != str(room['id'])}
+                del rooms[str(room['id'])]
                 player1 = await sync_to_async(customuser.objects.get)(username=room['players'][0]['user'])
                 player2 = await sync_to_async(customuser.objects.get)(username=room['players'][1]['user'])
                 player1.is_playing = False
@@ -518,7 +520,7 @@ async def runOverGame(self, room, ballProps, rooms):
                 room['players'][1]['status'] = 'winner'
                 room['players'][0]['status'] = 'loser'
                 await gameFinished(self, room)
-                rooms = {key: value for key, value in rooms.items() if key != str(room['id'])}
+                del rooms[str(room['id'])]
                 player1 = await sync_to_async(customuser.objects.get)(username=room['players'][0]['user'])
                 player2 = await sync_to_async(customuser.objects.get)(username=room['players'][1]['user'])
                 player1.is_playing = False
@@ -634,7 +636,7 @@ async def user_exited(self, data, rooms):
             room['players'][0]['status'] = 'winner'
 
 ##### invite a friend from the friends to play with #####
-async def invite_friend(self, data, rooms, tmp_rooms):
+async def invite_friend(self, data, rooms, tmp_rooms, user_channels):
     active_matches = await sync_to_async(list)(ActiveMatch.objects.all())
     for active_match in active_matches:
         player_state = await sync_to_async(PlayerState.objects.filter(active_match=active_match).first)()
@@ -645,15 +647,147 @@ async def invite_friend(self, data, rooms, tmp_rooms):
                 'message': 'alreadySearching'
             }))
             return
+        if player_username == data['message']['target']:
+            await self.send(text_data=json.dumps({
+                'type': 'alreadySearching',
+                'message': 'alreadySearching'
+            }))
+            return
     for key, value in rooms.items():
-        print(f"values in the rooms are : {value}")
+        print(f"ROOMS ARE : {rooms}")
         if value['players'][0]['user'] == data['message']['user'] or value['players'][1]['user'] == data['message']['user']:
             await self.send(text_data=json.dumps({
                 'type': 'alreadyPlaying',
                 'message': 'alreadyPlaying'
             }))
             return
-    for key, value in tmp_rooms.items():
-        if value['players'][0]['user'] == data['message']['user']:
-            
+        if value['players'][0]['user'] == data['message']['target'] or value['players'][1]['user'] == data['message']['target']:
+            await self.send(text_data=json.dumps({
+                'type': 'alreadyPlaying',
+                'message': 'alreadyPlaying'
+            }))
             return
+    creator = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
+    friend_match = await sync_to_async(FriendMatch.objects.filter(creator=creator).first)()
+    if friend_match:
+        friend = await sync_to_async(customuser.objects.filter(username=data['message']['target']).first)()
+        already_invited = await sync_to_async(ParticipatedFriends.objects.filter(friend_match=friend_match, friend=friend).first)()
+        if not already_invited:
+            if friend and friend.is_online and not friend.is_playing:
+                friend_channel = user_channels.get(data['message']['target'])
+                if friend_channel:
+                    user = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
+                    with user.avatar.open('rb') as f:
+                        image_data = base64.b64encode(f.read()).decode('utf-8')
+                        await self.channel_layer.send(friend_channel, {
+                            'type': 'receiveFriendGame',
+                            'message': {
+                                'user': data['message']['user'],
+                                'avatar': image_data
+                            }
+                        })
+        return
+    room_id = await generate_unique_room_id(self)
+    creator = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
+    friend = await sync_to_async(customuser.objects.filter(username=data['message']['target']).first)()
+    friend_match = await sync_to_async(FriendMatch.objects.create)(
+        creator = creator,
+        room_id = room_id,
+        room_type = 'friend',
+        mode = '1vs1',
+    )
+    await sync_to_async(ParticipatedFriends.objects.create)(
+        friend_match = friend_match,
+        friend = friend
+    )
+    friend = await sync_to_async(customuser.objects.filter(username=data['message']['target']).first)()
+    if friend and friend.is_online and not friend.is_playing:
+        friend_channel = user_channels.get(data['message']['target'])
+        print(user_channels)
+        if friend_channel:
+            user = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
+            with user.avatar.open('rb') as f:
+                image_data = base64.b64encode(f.read()).decode('utf-8')
+                await self.channel_layer.send(friend_channel, {
+                    'type': 'receiveFriendGame',
+                    'message': {
+                        'user': data['message']['user'],
+                        'avatar': image_data
+                    }
+                })
+
+async def accept_game_invite(self, data, rooms, user_channels):
+    active_matches = await sync_to_async(list)(ActiveMatch.objects.all())
+    print(f"ACCEPTING A MATCH FRIEND")
+    for active_match in active_matches:
+        player_state = await sync_to_async(PlayerState.objects.filter(active_match=active_match).first)()
+        player_username = await sync_to_async(lambda: player_state.player.username)()
+        print(f"ROOM RUNNING NOW")
+        if player_username == data['message']['user']:
+            await self.send(text_data=json.dumps({
+                'type': 'alreadyPlaying',
+                'message': 'alreadyPlaying'
+            }))
+            return
+        if player_username == data['message']['target']:
+            await self.send(text_data=json.dumps({
+                'type': 'alreadyPlaying',
+                'message': 'alreadyPlaying'
+            }))
+            return
+    for key, value in rooms.items():
+        if value['players'][0]['user'] == data['message']['user'] or value['players'][1]['user'] == data['message']['user']:
+            await self.send(text_data=json.dumps({
+                'type': 'alreadyPlaying',
+                'message': 'alreadyPlaying'
+            }))
+            return
+        if value['players'][0]['user'] == data['message']['target'] or value['players'][1]['user'] == data['message']['target']:
+            await self.send(text_data=json.dumps({
+                'type': 'alreadyPlaying',
+                'message': 'alreadyPlaying'
+            }))
+            return
+    creator = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
+    friend = await sync_to_async(customuser.objects.filter(username=data['message']['target']).first)()
+    friend_match = await sync_to_async(FriendMatch.objects.filter(creator=creator).first)()
+    if friend_match:
+        room = {
+            'id': friend_match.room_id,
+            'players': [{
+                'user': creator.username,
+                'state': 'Ready',
+                'playerNo': 1,
+                'paddleX': 5,
+                'paddleY': 150,
+                'score': 0,
+                'status': ''
+            }, {
+                'user': friend.username,
+                'state': 'Ready',
+                'playerNo': 2,
+                'paddleX': 585,
+                'paddleY': 150,
+                'score': 0,
+                'status': ''
+            }],
+            'ball': {
+                'ballX': 300,
+                'ballY': 200
+            },
+            'winner': 0,
+            'status': 'notStarted',
+            'mode': '1vs1',
+            'type': 'friend',
+            'date_started': datetime.datetime.now().isoformat()
+        }
+        rooms[str(room['id'])] = room
+        await self.channel_layer.group_add(str(room['id']), self.channel_name)
+        await self.channel_layer.group_add(str(room['id']), user_channels[data['message']['user']])
+        await sync_to_async(friend_match.delete)()
+        await self.channel_layer.group_send(str(room['id']), {
+            'type': 'goToGamingPage',
+            'message': {
+                'roomID': room['id']
+            }
+        })
