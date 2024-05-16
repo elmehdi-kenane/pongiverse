@@ -10,6 +10,7 @@ import rennacirSvg from "./assets/Group4.svg"
 import mmaqbourSvg from "./assets/Group5.svg"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import LineGraph from "./LineGraph"
 
 
 const Dashboard = () => {
@@ -121,8 +122,11 @@ const Dashboard = () => {
           {/* Level */}
       <div className="dashpage__body dash--space">
         <div className="dashpage__body__statistics dash--bkborder">
-          <h1> Level Historics </h1>
-          <img src={statics} alt="chart"/>
+          <h1> Wins/Lost Historics </h1>
+          <div className="line-graph">
+            <LineGraph />
+          </div>
+          {/* <img src={statics} alt="chart"/> */}
         </div>
           {/* Rank */}
         <div className="rank-classment"> 

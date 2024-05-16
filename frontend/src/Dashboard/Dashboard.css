@@ -61,10 +61,11 @@
     font-weight: 600;
     letter-spacing: 1px;
 }
-.dashpage .dashpage__body .dashpage__body__statistics img {
+.dashpage .dashpage__body .dashpage__body__statistics .line-graph {
     margin: 20px 0 0 0;
-    height: 400px;
+    height: 450px;
     width: 100%;
+    /* border: white 1px solid; */
 }
 
 /* -------rank------- */
@@ -372,7 +373,7 @@
         font-size: 25px;
         font-weight: 500;
     }
-    .dashpage .dashpage__body .dashpage__body__statistics img {
+    .dashpage .dashpage__body .dashpage__body__statistics .line-graph {
         height: 200px;
     }
     
