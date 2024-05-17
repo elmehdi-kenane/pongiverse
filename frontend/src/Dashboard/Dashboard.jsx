@@ -1,8 +1,7 @@
 // import React, { useState } from 'react'
-import { rankData } from "./rankData"
+import { rankData } from "./helpers/rankData"
 import './Dashboard.css'
 import chart from "./assets/chart.png"
-import statics from "./assets/ss.png"
 import ekenaneSvg from "./assets/Group1.svg"
 import idabligiSvg from "./assets/Group2.svg"
 import AgouzouSvg from "./assets/Group3.svg"
@@ -10,7 +9,8 @@ import rennacirSvg from "./assets/Group4.svg"
 import mmaqbourSvg from "./assets/Group5.svg"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import LineGraph from "./LineGraph"
+import LineGraph from "./charts/LineGraph"
+import BarCharts from "./charts/BarChart"
 
 
 const Dashboard = () => {
@@ -124,7 +124,8 @@ const Dashboard = () => {
         <div className="dashpage__body__statistics dash--bkborder">
           <h1> Wins/Lost Historics </h1>
           <div className="line-graph">
-            <LineGraph />
+            {/* <LineGraph /> */}
+            <BarCharts />
           </div>
           {/* <img src={statics} alt="chart"/> */}
         </div>

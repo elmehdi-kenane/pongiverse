@@ -1,0 +1,21 @@
+.custom-tooltip {
+    background-color: #250939;
+    color: white;
+    padding: 15px;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .custom-tooltip .label {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .custom-tooltip .wins-label{
+    margin-bottom: 2px;
+    color: #8884d8;
+  }
+  .custom-tooltip .lost-label {
+    /* margin-bottom: 2px; */
+    color: purple;
+  }

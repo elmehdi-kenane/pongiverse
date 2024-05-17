@@ -1,8 +1,8 @@
-import ekenaneSvg from "./assets/Group1.svg"
-import idabligiSvg from "./assets/Group2.svg"
-import AgouzouSvg from "./assets/Group3.svg"
-import rennacirSvg from "./assets/Group4.svg"
-import mmaqbourSvg from "./assets/Group5.svg"
+import ekenaneSvg from "../assets/Group1.svg"
+import idabligiSvg from "../assets/Group2.svg"
+import AgouzouSvg from "../assets/Group3.svg"
+import rennacirSvg from "../assets/Group4.svg"
+import mmaqbourSvg from "../assets/Group5.svg"
 
 
 export const rankData = [
