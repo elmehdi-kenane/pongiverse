@@ -20,7 +20,7 @@ function LineGraph() {
           <YAxis stroke="#775C9E" />
           <CartesianGrid stroke="rgb(104, 104, 104, 0.3)" strokeDasharray="5 5" />
           <Tooltip content={<CustomToolTips/>} />
-          <Legend />
+          <Legend wrapperStyle={{left: 0}} />
         </AreaChart>
       </ResponsiveContainer>
     );

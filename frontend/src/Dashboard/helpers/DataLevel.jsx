@@ -132,21 +132,21 @@ export const dataLevel = [
     {
         day: "27",
         wins: 2,
-        lost: 0,
+        lost: 2,
     },
     {
         day: "28",
-        wins: null,
-        lost: null,
+        wins: 12,
+        lost: 1,
     },
     {
         day: "29",
-        wins: null,
-        lost: null,
+        wins: 5,
+        lost: 7,
     },
     {
         day: "30",
-        wins: null,
-        lost: null,
+        wins: 5,
+        lost: 3,
     },
 ]

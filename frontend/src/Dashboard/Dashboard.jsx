@@ -9,12 +9,17 @@ import rennacirSvg from "./assets/Group4.svg"
 import mmaqbourSvg from "./assets/Group5.svg"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
 import LineGraph from "./charts/LineGraph"
 import BarCharts from "./charts/BarChart"
+import { useState } from "react"
+
 
 
 const Dashboard = () => {
 
+  const [isLineChart, setIsLineChart] = useState(false);
   let i = 0;
   const headElements = ["Matches : 15", "Wins: 9", "Loses: 6",
     "Win ratio: 2.4"]
@@ -104,8 +109,14 @@ const Dashboard = () => {
     )
   }
 
+  const handleIconClick = () => {
+    setIsLineChart(!isLineChart);
+    console.log(isLineChart);
+  }
 
   return (
+
+
     <div className='dashpage'>
       {/* Head */}
       <div className="dashpage__head dash--space"> 
@@ -122,10 +133,14 @@ const Dashboard = () => {
           {/* Level */}
       <div className="dashpage__body dash--space">
         <div className="dashpage__body__statistics dash--bkborder">
-          <h1> Wins/Lost Historics </h1>
+          <div className="statistics-head-button">
+            <h1> Wins/Lost Historics </h1>
+            {isLineChart && <BarChartIcon className="chart-icon" onClick={handleIconClick}/>}
+            {!isLineChart && <ShowChartIcon className="chart-icon" onClick={handleIconClick}/>}
+          </div>
           <div className="line-graph">
+            {!isLineChart ? <BarCharts/>  : <LineGraph />}
             {/* <LineGraph /> */}
-            <BarCharts />
           </div>
           {/* <img src={statics} alt="chart"/> */}
         </div>
