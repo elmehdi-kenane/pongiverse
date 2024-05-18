@@ -22,8 +22,6 @@
 
 .dashpage .dashpage__head {
     display: flex;
-    height: 80px;
-    width: 100%;
     /* border: purple solid 2px; */
 }
 .dashpage .dashpage__head .dashpage__head__element {
@@ -32,7 +30,7 @@
     justify-content: space-between;
     color: white;
     width: 100%;
-    padding: 0 7px;
+    padding: 10px 7px;
 }
 
 .dashpage .dashpage__head .dashpage__head__element img{
@@ -45,7 +43,7 @@
 .dashpage .dashpage__body {
     display: flex;
     width: 100%;
-    height: 542px;
+    height: 535px;
     /* border: purple solid 2px; */
 }
 
@@ -111,7 +109,7 @@
     display: flex;
     flex-direction: column;
     /* border: solid 1px white; */
-    height: 440px;
+    height: 435px;
     overflow-y: scroll;
 }
 
@@ -123,6 +121,7 @@
     display: flex;
     color: white;
     /* border: solid 1px white; */
+    height: 44.2px;
     align-items: center;
     border-bottom: #250939 solid 3px;
 }
