@@ -1,4 +1,5 @@
 
+import "../assets/chat/Groups.css";
 
 const JoinChannel = (props) => {
     return (

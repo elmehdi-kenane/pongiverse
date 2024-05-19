@@ -1,16 +1,20 @@
 import { useEffect, useState, useContext, useRef } from "react";
-import Conversation from "./Conversation";
+import { useParams } from "react-router-dom";
 import MyMessage from "./MyMessage";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import OtherMessage from "./OtherMessage";
-import './Chat.css'
+import * as ChatIcons from "../assets/chat/media";
 
-const MessagesContainer = (props) => {
+import "../assets/chat/Chat.css";
+
+const MessagesContainer = () => {
+  const { roomId } = useParams();
   const [messages, setMessages] = useState([]);
   const [recivedMessages, setRecivedMessages] = useState({});
   const [newMessage, setNewMessage] = useState("");
   const { user } = useContext(AuthContext);
   const { socket } = useContext(AuthContext);
+  const { selectedChannel } = useContext(AuthContext);
   const messageEndRef = useRef(null);
   const sendMessage = (e) => {
     e.preventDefault();
@@ -23,7 +27,7 @@ const MessagesContainer = (props) => {
         JSON.stringify({
           type: "message",
           data: {
-            room_id: props.selectedChannel.roomId,
+            room_id : roomId,
             sender: user,
             message: newMessage,
           },
@@ -42,21 +46,20 @@ const MessagesContainer = (props) => {
       const fetchMessages = async () => {
         try {
           const response = await fetch(
-            `http://localhost:8000/chatAPI/channels/messages/${props.selectedChannel.roomId}`
+            `http://localhost:8000/chatAPI/channels/messages/${roomId}`
           );
           const data = await response.json();
           setMessages(data);
-          // messageEndRef.current?.scrollIntoView();
+          console.log("the data messages: ", data)
         } catch (error) {
           console.log(error);
         }
       };
-      if (props.selectedChannel.roomId) fetchMessages();
-      let scrollView = document.getElementById('start')
-    scrollView.scrollTop = scrollView.scrollHeight
+      if (roomId) fetchMessages();
+      let scrollView = document.getElementById("start");
+      scrollView.scrollTop = scrollView.scrollHeight;
     },
-    [props.selectedChannel.roomId],
-    [user,messages ]
+    [roomId]
   );
 
   useEffect(() => {
@@ -66,6 +69,7 @@ const MessagesContainer = (props) => {
         console.log("recived messages: ", data.data);
         if (data.type === "newMessage") setRecivedMessages(data.data);
       };
+      console.log(roomId)
     }
   }, [socket]);
 
@@ -73,29 +77,57 @@ const MessagesContainer = (props) => {
     if (recivedMessages) {
       setMessages((prev) => [...prev, recivedMessages]);
     }
-  }, [recivedMessages ]);
+  }, [recivedMessages]);
 
   useEffect(() => {
-      if (messages) {
-        let scrollView = document.getElementById('start')
-        scrollView.scrollTop = scrollView.scrollHeight
-      }
-  }, [messages])
+    if (messages) {
+      let scrollView = document.getElementById("start");
+      scrollView.scrollTop = scrollView.scrollHeight;
+    }
+  }, [messages]);
 
   return (
-    <div className="conv-container">
-      <div className="conversation__name">
-        Hellow
+    <>
+      <div className="name-container">
+        <div className="name-container__conv-infos">
+          <img
+            src={ChatIcons.DefaultAvatar}
+            alt="lol"
+            className="name-container__avatar"
+          />
+          <div className="name-container__name-and-members">
+            <div className="name-container__name">
+              {selectedChannel.name}
+            </div>
+            <div className="name-container__infos">14 Members</div>
+          </div>
+        </div>
+        <div className="name-container__icons">
+          <div className="name-container__invite-play">
+            <img
+              src={ChatIcons.InviteToPlay}
+              alt=""
+              className="name-container__invite-icon"
+            />
+          </div>
+          <div className="name-container__options">
+            <img
+              src={ChatIcons.ThreePoints}
+              alt=""
+              className="name-container__option-icon"
+            />
+          </div>
+        </div>
       </div>
       <div id="start" className="conversation__messages">
-        {messages.map((message) => (
-          (message.sender === user) ? <MyMessage key={message.id} content={message.content} /> : <OtherMessage key={message.id} content={message.content} />)
-          // <MyMessage key={message.id} content={message.content} />
+        {messages.map((message) =>
+          message.sender === user ? (
+            <MyMessage key={message.id} content={message.content} />
+          ) : (
+            <OtherMessage key={message.id} content={message.content} />
+          )
         )}
-      {/* <div className="tst"> */}
-
-        <div  ref={messageEndRef}></div>
-      {/* </div> */}
+        <div ref={messageEndRef}></div>
       </div>
       <form
         action="submit"
@@ -110,7 +142,7 @@ const MessagesContainer = (props) => {
           onChange={getMessage}
         />
       </form>
-    </div>
+    </>
   );
 };
 

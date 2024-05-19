@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
-import './Chat.css'
-import Avatar from './avatar.svg'
+import * as ChatIcons from '../assets/chat/media'
+
+import "../assets/chat/Chat.css";
 
 const MyMessage = (props) => {
     return (
@@ -8,7 +9,7 @@ const MyMessage = (props) => {
             <div className="message-row__mymessage__text my-message" >
                 {props.content}
             </div>
-            <img  className="message-row__mymessage__avatar" src={Avatar} alt="" />
+            <img  className="message-row__mymessage__avatar" src={ChatIcons.DefaultAvatar} alt="" />
         </div>
     )
 }

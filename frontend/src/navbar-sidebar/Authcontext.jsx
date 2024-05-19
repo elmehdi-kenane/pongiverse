@@ -17,7 +17,10 @@ export const AuthProvider = ({children}) => {
     let [user, setUser] = useState('')
     let [socket, setSocket] = useState(null)
     let [socketRecreated, setSocketRecreated] = useState(false)
-
+    const [selectedChannel, setSelectedChannel] = useState({
+        name: "",
+        roomId: "",
+      });
     useEffect(() => {
         const fetchImages = async () => {
             const promises = allGameFriends.map(async (user) => {
@@ -169,7 +172,10 @@ export const AuthProvider = ({children}) => {
         setSocketRecreated: setSocketRecreated,
         allGameFriends: allGameFriends,
         loading: loading,
-        userImages: userImages
+        userImages: userImages,
+        //chat
+        setSelectedChannel:setSelectedChannel,
+        selectedChannel:selectedChannel
     }
 
     return (

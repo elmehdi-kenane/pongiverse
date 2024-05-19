@@ -1,19 +1,23 @@
 import { useState } from 'react';
-import Avatar from './avatar.svg'
-import './Chat.css'
+import * as ChatIcons from '../assets/chat/media'
+
+import "../assets/chat/Chat.css";
+import { useNavigate } from 'react-router-dom';
 
 const Conversation = (props) => {
-    const [isActive, setIsActive] = useState(false)
+    const navigate = useNavigate();
+    const [isSelected, setIsSelected] = useState(false)
     const handleClick = () => {
-        setIsActive(true)
         props.setSelectedChannel({
             name: props.name,
             roomId: props.roomId,
         });
+        // setIsSelected(true)
+        navigate(`${props.roomId}`);
       };
     return (
-        <div className={isActive ? "conversation-holder--active" : "conversation-holder"} onClick={handleClick}>
-            <img src={Avatar} alt="" className='conversation-holder__avatar' />
+        <div id={props.roomId} className={ !isSelected ? "conversation-holder" : "conversation-holder--selected "} onClick={handleClick}>
+            <img src={ChatIcons.DefaultAvatar} alt="" className='conversation-holder__avatar' />
             <div className="conversation-holder__deatils">
                 <div className="conversation-holder__deatils__name">
                     {props.name}

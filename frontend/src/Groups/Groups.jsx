@@ -4,10 +4,9 @@ import AuthContext from "../navbar-sidebar/Authcontext";
 import ChannelName from "./ChannelName";
 import CreateChannel from "./CreateChannel";
 import JoinChannel from "./JoinChannel";
-import JoinIcon from "./join.svg"
-import CreateIcon from "./create.svg"
-import "./Groups.css";
+import * as ChatIcons from '../assets/chat/media'
 
+import "../assets/chat/Groups.css";
 
 const Groups = () => {
   const [channels, setChannels] = useState([]);
@@ -33,9 +32,7 @@ const Groups = () => {
     if (user) fetchData();
   }, [user]);
 
-  const handleChatButtonClick = (roomId) => {
-    navigate(`${roomId}`);
-  };
+
 
   useEffect(() => {
     if (newRoom) setChannels((prevChannels) => [...prevChannels, newRoom]);
@@ -48,8 +45,8 @@ const Groups = () => {
       <div className="channels-page blur">
         <div  className='middle-container'>
             <div className="buttons">
-              <img className="buttons__join"  onClick={()=> setJoinCh(true)} src={JoinIcon}/>
-              <img className="buttons__create" onClick={()=> setCreateCh(true)} src={CreateIcon} alt="create a channel"/>
+              <img className="buttons__join"  onClick={()=> setJoinCh(true)} src={ChatIcons.JoinChannel}/>
+              <img className="buttons__create" onClick={()=> setCreateCh(true)} src={ChatIcons.CreateChannel} alt="create a channel"/>
             </div>
             <div className="channels-container">
               <div className="mychannels">
@@ -59,11 +56,6 @@ const Groups = () => {
                     {channels.map((channel) => (
                       <ChannelName name={channel.name} key={channel.id} roomId={channel.id} />
                       ))}
-                  {/* {Array(15)
-                    .fill()
-                    .map((_, i) => (
-                      <ChannelName key={i} name="Random" />
-                    ))} */}
                 </div>
               </div>
               <div className="suggested">

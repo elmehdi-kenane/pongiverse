@@ -1,30 +1,23 @@
 import { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import Conversation from "./Conversation";
-import { useNavigate } from "react-router-dom";
-import MyMessage from "./MyMessage";
-import OtherMessage from "./OtherMessage";
-import Avatar from "./avatar.svg";
 import MessagesContainer from "./MessagesPage";
-import "./Chat.css";
-import FriendsIcon from "./FriendsIcon.svg";
-import ChannelsIcon from "./ChannelsIcon.svg";
+import * as ChatIcons from "../assets/chat/media";
+import { Outlet } from 'react-router-dom'
 
-import SearchIcon from "./SearchIcon.svg";
+import "../assets/chat/Chat.css";
 
 const Chat = () => {
   const [isHome, setIsHome] = useState(true);
   const [expandSearch, setExpandSearch] = useState(false);
-  const [selectedChannel, setSelectedChannel] = useState({
-    name: "",
-    roomId: "",
-  });
   const [channelsConversations, setChannelsConversations] = useState([]);
-  const { user } = useContext(AuthContext);
+  const { user, setSelectedChannel, selectedChannel } = useContext(AuthContext);
   const navigate = useNavigate();
+  const selectedElems = []
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchChannelsWithMessage = async () => {
       try {
         const response = await fetch(
           `http://localhost:8000/chatAPI/channels/${user}`
@@ -36,13 +29,15 @@ const Chat = () => {
         console.log(error);
       }
     };
-    if (user) fetchData();
+    if (user) {
+      fetchChannelsWithMessage();
+    }
   }, [user]);
 
-  useEffect(() => {
-    console.log("selected channel hereeeee");
-    console.log(selectedChannel);
-  }, [selectedChannel]);
+  const RenderConv = (roomId) => {
+    console.log("im here is RenderConv");
+    navigate(`../${roomId}`);
+  };
 
   return (
     <div className="chat-page">
@@ -50,7 +45,7 @@ const Chat = () => {
         <div className="conversations">
           <div className="conversations__search__mobile">
             <img
-              src={SearchIcon}
+              src={ChatIcons.SearchIcon}
               alt=""
               className="conversations__search__mobile--search"
               onClick={() => setExpandSearch(true)}
@@ -58,13 +53,13 @@ const Chat = () => {
           </div>
           <div className="conversations__switcher__mobile">
             <img
-              src={FriendsIcon}
+              src={ChatIcons.FriendsIcon}
               alt=""
               className="conversations__switcher__mobile--Friends"
               onClick={() => setIsHome(true)}
             />
             <img
-              src={ChannelsIcon}
+              src={ChatIcons.ChannelsIcon}
               alt=""
               className="conversations__switcher__mobile--channels"
               onClick={() => setIsHome(false)}
@@ -93,11 +88,15 @@ const Chat = () => {
           </div>
           {isHome ? (
             <div className="conversations__list">
-              {Array(112)
-                .fill()
-                .map((_, i) => (
-                  <Conversation key={i} name="Random" />
-                ))}
+              {channelsConversations.map((channel) => (
+                <Conversation
+                  name={channel.name}
+                  key={channel.id}
+                  roomId={channel.id}
+                  setSelectedChannel={setSelectedChannel}
+                  selectedElems={selectedElems}
+                />
+              ))}
             </div>
           ) : (
             <div className="conversations__list">
@@ -107,18 +106,23 @@ const Chat = () => {
                   key={channel.id}
                   roomId={channel.id}
                   setSelectedChannel={setSelectedChannel}
-                  selectedChannel={selectedChannel}
                 />
               ))}
-              {/* {Array(151)
-                .fill()
-                .map((_, i) => (
-                  <Conversation key={i} name="Random" />
-                ))} */}
             </div>
           )}
         </div>
-        {Object.values(selectedChannel).every((value) => value !== "") ? (
+        <div className="conv-container">
+        <Outlet />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Chat;
+
+{
+  /* {Object.values(selectedChannel).every((value) => value !== "") ? (
           <MessagesContainer selectedChannel={selectedChannel} />
         ) : (
           <div className="conv-container">
@@ -134,22 +138,5 @@ const Chat = () => {
               ""
             )}
           </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-export default Chat;
-
-{
-  /* {expandSearch ? (
-    <div className="conversations__search">
-      <input
-        type="text"
-        placeholder="Search"
-        className="conversations__search__input"
-      />
-    </div>
-  ) : ''} */
+        )} */
 }
