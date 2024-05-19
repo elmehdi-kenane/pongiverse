@@ -131,7 +131,7 @@
     display: flex;
     flex-direction: column;
     /* border: solid 1px white; */
-    height: 440px;
+    height: 438px;
     overflow-y: scroll;
 }
 
@@ -430,6 +430,9 @@
         width: 45px;
     }
     
+    .dashpage__footer {
+        margin-top: 10px;
+    }
     .footer__single-match,
     .footer__multiplayer-match{
         width: 50%;
@@ -469,5 +472,6 @@
     .dashpage .dashpage__footer {
         flex-direction: column;
         height: 700px;
+        margin-top: 0;
     }
 }
