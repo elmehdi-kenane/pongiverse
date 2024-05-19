@@ -12,12 +12,13 @@ def channel_list(request, username):
         data = []
 
         for channel in channels:
-            channel_data = {
-                'id': channel.id,
-                'name': channel.name,
-            }
-            data.append(channel_data)
-
+            messages = Message.objects.filter(room_id=channel.id)
+            if(messages):
+                channel_data = {
+                    'id': channel.id,
+                    'name': channel.name,
+                }
+                data.append(channel_data)
         return Response(data)
 
     return Response({'error': 'Invalid request method'}, status=400)

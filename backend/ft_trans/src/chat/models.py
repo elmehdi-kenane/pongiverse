@@ -24,3 +24,10 @@ class Friends(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_friends')
     friend = models.ForeignKey(User, on_delete=models.CASCADE)
     isBlocked = models.BooleanField(default=False)
+
+class Directs(models.Model):
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='direct_sender')
+    reciver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='direct_reciver')
+    message = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
