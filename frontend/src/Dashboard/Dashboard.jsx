@@ -1,29 +1,37 @@
-// import React, { useState } from 'react'
+import React, { useState } from 'react'
 import { rankData } from "./helpers/rankData"
 import './Dashboard.css'
-import chart from "./assets/chart.png"
+
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+
 import ekenaneSvg from "./assets/Group1.svg"
 import idabligiSvg from "./assets/Group2.svg"
 import AgouzouSvg from "./assets/Group3.svg"
 import rennacirSvg from "./assets/Group4.svg"
 import mmaqbourSvg from "./assets/Group5.svg"
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import ShowChartIcon from '@mui/icons-material/ShowChart';
+import racketSvg from "./assets/racket.svg"
+
 import LineGraph from "./charts/LineGraph"
 import BarGraph from "./charts/BarGraph"
-import { useState } from "react"
-import PieGraph from "./charts/PieGraph"
+
 
 
 
 const Dashboard = () => {
 
+  const games =20;
+  const win = 9;
+  const lost = 6;
+  const winPcnt = ((win * 100)/games).toFixed(0);
+  const lostPcnt = 100 - winPcnt;
+
   const [isLineChart, setIsLineChart] = useState(false);
   let i = 0;
-  const headElements = ["Wins: 9", "Loses: 6",
-    "Win ratio: 2.4"]
 
   const RankClassment = (position, player) => {
     let trophyClass = ""; // pos-pic
@@ -121,17 +129,35 @@ const Dashboard = () => {
     <div className='dashpage'>
       {/* Head */}
       <div className="dashpage__head dash--space"> 
-        {headElements.map((item) => {
-          return (
-            <div className='dashpage__head__element dash--bkborder'> 
-              <p> {item} </p>
-              <div className="piegraph">
-                <PieGraph />
-              </div>
-              {/* <img src={chart} alt="pie-chart"/> */}
+        <div className="head__game-stats dash--bkborder">
+          <p className='game'> Games </p>
+          <div className="head__games-value-pic">
+            <img src={racketSvg} />
+            <p> {games} </p> 
+          </div>
+          
+          <div className="head__game-stats__percentage">
+            <div className='pic-percentage dash--win-color'>
+              <AddCircleIcon />
+              <p> {winPcnt} %</p>
             </div>
-          )
-        })}
+            <div className='pic-percentage dash--lost-color'>
+              <RemoveCircleIcon />
+              <p> {lostPcnt} %</p>
+            </div>
+          </div>
+
+          <div className='head__game-stats__line'>
+            <div className="left-side" style={{width:`${winPcnt}%`}} ></div>
+            <div className="right-side" style={{width:`${lostPcnt}%`}}></div>
+          </div>
+
+          <div className='head__game-stats__statistics'>
+            <p className='dash--win-color'> {win} Won </p>
+            <p className='dash--lost-color'> {lost} Lost</p>
+          </div>
+
+        </div>
       </div>
       {/* Body */}
           {/* Level */}
@@ -144,9 +170,7 @@ const Dashboard = () => {
           </div>
           <div className="line-graph">
             {!isLineChart ? <BarGraph/>  : <LineGraph />}
-            {/* <LineGraph /> */}
           </div>
-          {/* <img src={statics} alt="chart"/> */}
         </div>
           {/* Rank */}
         <div className="rank-classment"> 

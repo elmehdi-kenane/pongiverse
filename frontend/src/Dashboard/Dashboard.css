@@ -6,7 +6,7 @@
     /* border: white solid 1px; */
     overflow-y: scroll;
     gap : 20px;
-    padding-top:30px;
+    padding-top:00px;
 }
 
 .dash--space{
@@ -18,33 +18,101 @@
     background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
 }
 
+.dash--win-color {
+    color: #f4effa;
+    font-weight: 550;
+}
+
+.dash--lost-color {
+    color: #8884d8;
+    font-weight: 550;
+}
 /* -------HEAD------ */
 
 .dashpage .dashpage__head {
     display: flex;
-    height: 70px;
+    height: 105px;
     /* border: purple solid 2px; */
 }
-.dashpage .dashpage__head .dashpage__head__element {
+
+.dashpage .dashpage__head .head__game-stats {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    flex-direction: column;
+    padding: 5px;
+}
+
+.dashpage .dashpage__head .head__game-stats .game { /* Games */
+    color: white;
+    font-size: 15px;
+    font-weight: 550;
+}
+.head__game-stats .head__games-value-pic {
     display: flex;
     align-items: center;
-    /* justify-content: space-between; */
+    gap: 5px;
     color: white;
-    width: 100%;
-    padding: 10px 5px 0;
+}
+.head__game-stats .head__games-value-pic img{
+    height: 17px;
+    width: 17px;
 }
 
-.dashpage .dashpage__head .dashpage__head__element p {
-    /* border : white 1px solid; */
-    width: 40%;
-    font-size: 0.7em;
+.head__game-stats .head__game-stats__percentage { /* Percentage Values */
+    display: flex;
+    justify-content: space-between;
+    margin: -11px 5px 0 5px; 
+    width: 80%;
+}
+.head__game-stats__percentage .pic-percentage {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.head__game-stats__percentage .pic-percentage svg{
+    height: 18px;
+    width: 18px;
 }
 
-.dashpage .dashpage__head .dashpage__head__element .piegraph{
-    /* border: white 1px solid; */
-    width: 60%;
-    height: 100%;
-    font-size: 7px;
+.head__game-stats .head__game-stats__line { /* Line Percentage */
+    /* border : white solid 1px; */
+    margin-top: 3px;
+    width: 80%;
+    display: flex;
+    height: 18px;
+    border-radius: 5px;
+    animation: moving 2s ease-in-out;
+}
+
+@keyframes moving {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 80%;
+    }
+}
+
+.head__game-stats .head__game-stats__line .left-side{
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    background-color: #f4effa;
+}
+.head__game-stats .head__game-stats__line .right-side{
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #8884d8;
+}
+
+.head__game-stats .head__game-stats__statistics {
+    display: flex;
+    justify-content: space-between;
+    /* margin: -5px 5px 0 5px;  */
+    width: 80%;
+    /* border: white solid 1px; */
+    height: 20px;
 }
 
 /* --------------------------BODY------------------------- */
@@ -79,13 +147,13 @@
     color: #775C9E;
     height: 30px;
     width: 30px;
-    background: rgb(247, 239, 255);
+    background: #f4effa;
     border-radius: 40%;
     margin: 35px 4px 0 0;
 }
 .dashpage .dashpage__body .dashpage__body__statistics .chart-icon:hover {
     background: #775C9E;
-    color: rgb(247, 239, 255);
+    color: #f4effa;
     cursor: pointer;
     transition: ease-in 0.2s;
 }
@@ -385,15 +453,8 @@
     }
 
     .dashpage .dashpage__head {
-        height: 50px;
+        height: 90px;
         flex-shrink: 0;
-    }
-    .dashpage .dashpage__head .dashpage__head__element {
-        font-size: 13px;
-    }
-    .dashpage .dashpage__head .dashpage__head__element img{
-        height: 25px;
-        width: 25px;
     }
 
     .dashpage .dashpage__body {
