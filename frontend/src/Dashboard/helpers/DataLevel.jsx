@@ -136,8 +136,8 @@ export const dataLevel = [
     },
     {
         day: "28",
-        wins: 12,
-        lost: 1,
+        wins: 11,
+        lost: 5,
     },
     {
         day: "29",

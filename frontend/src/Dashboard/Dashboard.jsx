@@ -12,8 +12,9 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 import LineGraph from "./charts/LineGraph"
-import BarCharts from "./charts/BarChart"
+import BarGraph from "./charts/BarGraph"
 import { useState } from "react"
+import PieGraph from "./charts/PieGraph"
 
 
 
@@ -21,7 +22,7 @@ const Dashboard = () => {
 
   const [isLineChart, setIsLineChart] = useState(false);
   let i = 0;
-  const headElements = ["Matches : 15", "Wins: 9", "Loses: 6",
+  const headElements = ["Wins: 9", "Loses: 6",
     "Win ratio: 2.4"]
 
   const RankClassment = (position, player) => {
@@ -124,7 +125,10 @@ const Dashboard = () => {
           return (
             <div className='dashpage__head__element dash--bkborder'> 
               <p> {item} </p>
-              <img src={chart} alt="pie-chart"/>
+              <div className="piegraph">
+                <PieGraph />
+              </div>
+              {/* <img src={chart} alt="pie-chart"/> */}
             </div>
           )
         })}
@@ -139,7 +143,7 @@ const Dashboard = () => {
             {!isLineChart && <ShowChartIcon className="chart-icon" onClick={handleIconClick}/>}
           </div>
           <div className="line-graph">
-            {!isLineChart ? <BarCharts/>  : <LineGraph />}
+            {!isLineChart ? <BarGraph/>  : <LineGraph />}
             {/* <LineGraph /> */}
           </div>
           {/* <img src={statics} alt="chart"/> */}

@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-        BarChart, Bar, Rectangle,
+        BarChart, Bar,
         XAxis, YAxis,
         CartesianGrid,
         Tooltip, Legend,
@@ -8,7 +8,7 @@ import {
 import { dataLevel } from '../helpers/DataLevel'
 import CustomToolTips from '../helpers/CustomToolTips'
 
-function BarCharts() {
+function BarGraph() {
   return (
     <ResponsiveContainer height="100%" width="100%">
         <BarChart width={500} height={500} data={dataLevel} margin={{ left: -30, right: 5 }}>
@@ -25,4 +25,4 @@ function BarCharts() {
   )
 }
 
-export default BarCharts
+export default BarGraph
