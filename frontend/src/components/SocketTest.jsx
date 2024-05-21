@@ -26,8 +26,8 @@ const WebSocketComponent = () => {
 			setMySocket(socket);
 		};
 
-		socket.onmessage = (event) => {
-			console.log('Received message:', event.data);
+			socket.onmessage = (event) => {
+				console.log('Received message:', event.data);
 		};
 
 		socket.onclose = () => {

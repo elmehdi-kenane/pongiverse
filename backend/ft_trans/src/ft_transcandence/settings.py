@@ -34,9 +34,11 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'chat',
+    'myapp',
+    'mainApp',
     'daphne',
     'channels_redis',
-    'mainApp',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,8 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     "corsheaders",
-    'chat',
-    'myapp',
+    'Profile',
     'rest_framework_simplejwt.token_blacklist',
 ]
 
@@ -198,12 +199,12 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://10.12.7.3:3000",
+    "https://lh3.googleusercontent.com"
 ]
 
 # CORS_ALLOW_ALL_ORIGINS: True
 CORS_ALLOW_CREDENTIALS = True
 
-# AUTH_USER_MODEL = 'mainApp.User'
 AUTH_USER_MODEL = 'myapp.customuser'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

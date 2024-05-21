@@ -1,58 +1,54 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useContext } from "react";
 import styles from '../assets/Tournament/tournament.module.css'
 import avatar from './cross.png'
 import av from './avatar.jpeg'
 import invitefriend from './friend_invite.svg'
+import AuthContext from '../navbar-sidebar/Authcontext'
 
-function CreateTournament()
-{
+function CreateTournament() {
 	const [open, setOpen] = useState(false);
-	const isOpen = () =>{
+	const [onlineFriends, setOnlineFriends] = useState([]);
+	const { socket } = useContext(AuthContext)
+	const { user, userImages, allGameFriends } = useContext(AuthContext)
+	const isOpen = () => {
 		setOpen(!open);
 	}
+	// if(socket)
+	// {
+	// 	socket.send(JSON.stringify({
+	// 		type: 'get-friends',
+	// 		message: {
+	// 			username: user
+	// 		}
+	// 	}))
+	// }
 
-	const InviteFriendComp = (props) =>
-	{
-		return(
+	const [activeDiv, setActiveDiv] = useState(-1);
+	const [content, setContent] = useState("");
+	const InviteFriendComp = (props) => {
+		return (
 			<div className={styles[props.class]}>
 				<h3 className={styles["pop-up-title"]}></h3>
-				<div className={styles["friend"]}>
-					<div className={styles["friend-data"]}>
-						<img className={styles["friend-avatar"]} src={av} alt="" />
-						<div className={styles["friend-name-and-status"]}>
-							<h3 className={styles["friend-name"]}>rennacir</h3>
-							<h3 className={styles["friend-status"]}>online</h3>
-							
-						</div>
-					</div>
-				<img className={styles["friend-invite-button"]} src={invitefriend} alt="" />
-				</div>
-				<div className={styles["friend"]}>
-					<div className={styles["friend-data"]}>
-						<img className={styles["friend-avatar"]} src={av} alt="" />
-						<div className={styles["friend-name-and-status"]}>
-							<h3 className={styles["friend-name"]}>rennacir</h3>
-							<h3 className={styles["friend-status"]}>online</h3>
-							
-						</div>
-					</div>
-				<img className={styles["friend-invite-button"]} src={invitefriend} alt="" />
-				</div>
-				<div className={styles["friend"]}>
-					<div className={styles["friend-data"]}>
-						<img className={styles["friend-avatar"]} src={av} alt="" />
-						<div className={styles["friend-name-and-status"]}>
-							<h3 className={styles["friend-name"]}>rennacir</h3>
-							<h3 className={styles["friend-status"]}>online</h3>
-							
-						</div>
-					</div>
-				<img className={styles["friend-invite-button"]} src={invitefriend} alt="" />
-				</div>
+				{
+					allGameFriends.length > 0 && allGameFriends.map((user, key) => {
+						return (
+							<div key={user.id} className={styles["friend"]}>
+								<div className={styles["friend-data"]}>
+									<img className={styles["friend-avatar"]} src={userImages[key]} alt="" />
+									<div className={styles["friend-name-and-status"]}>
+										<h3 className={styles["friend-name"]}>{user.name}</h3>
+										<h3 className={styles["friend-status"]}>online</h3>
+									</div>
+								</div>
+								<img className={styles["friend-invite-button"]} src={invitefriend} alt="" />
+							</div>
+						);
+					})
+				}
 			</div>
 		);
 	}
-	return(
+	return (
 		<>
 			<div className={styles["tournament-page"]}>
 				<div className={styles["tournament-page-content"]}>
@@ -70,7 +66,7 @@ function CreateTournament()
 						</div>
 					</div >
 					<div className={styles["up-buttons"]}>
-							<button className={styles["up-button"]} onClick={isOpen}>Invite Friend</button>
+						<button className={styles["up-button"]} onClick={isOpen}>Invite Friend</button>
 						<button className={styles["up-button"]}>Next</button>
 					</div>
 					<div className={styles["tournament-members"]}>
@@ -79,7 +75,7 @@ function CreateTournament()
 								<img className={styles["avatar"]} src={avatar} alt="" />
 							</div>
 							<div className={styles["user-info"]}>
-								<h4 className={styles["user-info-name"]}>mmaqbour</h4>
+								{activeDiv === 0 ? <h4 className={styles["user-info-name"]}>ILYASSSS</h4> : <h4 className={styles["user-info-name"]}>mmaqbour</h4>}
 								<h5 className={styles["user-info-level"]}>Level 6</h5>
 							</div>
 						</div>
@@ -88,7 +84,7 @@ function CreateTournament()
 								<img className={styles["avatar"]} src={avatar} alt="" />
 							</div>
 							<div className={styles["user-info"]}>
-								<h4 className={styles["user-info-name"]}>mmaqbour</h4>
+								{activeDiv === 1 ? <h4 className={styles["user-info-name"]}>WAHMEDD</h4> : <h4 className={styles["user-info-name"]}>mmaqbour</h4>}
 								<h5 className={styles["user-info-level"]}>Level 6</h5>
 							</div>
 						</div>
@@ -221,16 +217,15 @@ function CreateTournament()
 					</div>
 					<div className={styles["buttons"]}>
 						<div className={styles["down-popup-button"]}>
-							{open && <InviteFriendComp class="Invite-friend-popup-down"/>}
+							{open && <InviteFriendComp class="Invite-friend-popup-down" />}
 							<button className={styles["button"]} onClick={isOpen}>Invite Friend</button>
 						</div>
 						<button className={styles["button"]}>Next</button>
 					</div>
-					{open && <InviteFriendComp class="Invite-friend-popup-up"/>}
+					{open && <InviteFriendComp class="Invite-friend-popup-up" />}
 				</div>
 			</div>
 		</>
 	);
 }
-
 export default CreateTournament

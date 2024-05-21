@@ -9,7 +9,7 @@ const Modes = () => {
 	}
 
 	const goToTournamentPage = () => {
-		navigate("/createtournament")
+		navigate("createtournament")
 	}
 
 	return (

@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import SocketContext from "./SocketContext";
-import "./Groups.css";
 
 const CreateChannel = (props) => {
-  const { chatSocket } = useContext(SocketContext);
+  const { socket } = useContext(AuthContext);
   const { user } = useContext(AuthContext);
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
@@ -22,8 +21,8 @@ const CreateChannel = (props) => {
     setErrors({})
   };
   useEffect(() => {
-    if (chatSocket) {
-      chatSocket.onmessage = (event) => {
+    if (socket) {
+      socket.onmessage = (event) => {
         let data = JSON.parse(event.data);
         console.log("data:", data);
         if (data.type === "channel-created") {
@@ -33,7 +32,7 @@ const CreateChannel = (props) => {
         }
       };
     }
-  }, [chatSocket]);
+  }, [socket]);
 
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
@@ -58,7 +57,7 @@ const CreateChannel = (props) => {
       errorContainers.confirmPassword = "Password not match";
     setErrors(errorContainers);
     if (Object.keys(errorContainers).length === 0) {
-      chatSocket.send(
+      socket.send(
         JSON.stringify({
           type: "join-channel",
           message: {
@@ -74,72 +73,72 @@ const CreateChannel = (props) => {
   };
 
   return (
-    <div className="main_page">
       <div className="create-modal">
-        <h3 id="modal-header">Create a Channel</h3>
-        <div className="visibility">Visibility:</div>
-        <div className="visibility-buttons">
-          <button
-            className={visibility === "public" ? "selected" : "public"}
-            onClick={() => handleVisibilityChange("public")}
-          >
-            PUBLIC
-          </button>
-          <button
-            className={visibility === "private" ? "selected" : "private"}
-            onClick={() => handleVisibilityChange("private")}
-          >
-            PRIVATE
-          </button>
-          <button
-            className={visibility === "protected" ? "selected" : "protected"}
-            onClick={() => handleVisibilityChange("protected")}
-          >
-            PROTECTED
-          </button>
-        </div>
-        <form action="" className="creation-form" onSubmit={submitHandler}>
-          <input
-            type="text"
-            placeholder="Channel Name"
-            name="name"
-            onChange={onChangeHandler}
-          />
-          {errors.name && <span id="errors">{errors.name}</span>}
-          <input
-            type="text"
-            placeholder="Channel Topic"
-            name="topic"
-            onChange={onChangeHandler}
-          />
-          {errors.topic && <span id="errors">{errors.topic}</span>}
-          {visibility === "protected" && (
-            <>
-              <input
-                type="text"
-                placeholder="Channel Password"
-                name="password"
-                onChange={onChangeHandler}
-              />
-              {errors.password && <span id="errors">{errors.password}</span>}
-              <input
-                type="text"
-                placeholder="Confirm Channel Password"
-                name="confirmPassword"
-                onChange={onChangeHandler}
-              />
-              {errors.confirmPassword && (
-                <span id="errors">{errors.confirmPassword}</span>
-              )}
-            </>
-          )}
-          <div className="creation-buttons">
-            <button>CREATE</button>
-            <button onClick={props.onClose}>CANCEL</button>
+        <div className="create-modal__container">
+          <h3 id="create-modal__tittle">Create a Channel</h3>
+          <div className="visibility">Visibility:</div>
+          <div className="visibility__buttons">
+            <button
+              className={visibility === "public" ? "selected" : "public"}
+              onClick={() => handleVisibilityChange("public")}
+            >
+              PUBLIC
+            </button>
+            <button
+              className={visibility === "private" ? "selected" : "private"}
+              onClick={() => handleVisibilityChange("private")}
+            >
+              PRIVATE
+            </button>
+            <button
+              className={visibility === "protected" ? "selected" : "protected"}
+              onClick={() => handleVisibilityChange("protected")}
+            >
+              PROTECTED
+            </button>
           </div>
-        </form>
+          <form action="" className="create-modal__form" onSubmit={submitHandler}>
+            <input
+              type="text"
+              placeholder="Channel Name"
+              name="name"
+              onChange={onChangeHandler}
+            />
+            {errors.name && <span id="errors">{errors.name}</span>}
+            <input
+              type="text"
+              placeholder="Channel Topic"
+              name="topic"
+              onChange={onChangeHandler}
+            />
+            {errors.topic && <span id="errors">{errors.topic}</span>}
+            {visibility === "protected" && (
+              <>
+                <input
+                  type="text"
+                  placeholder="Channel Password"
+                  name="password"
+                  onChange={onChangeHandler}
+                />
+                {errors.password && <span id="errors">{errors.password}</span>}
+                <input
+                  type="text"
+                  placeholder="Confirm Channel Password"
+                  name="confirmPassword"
+                  onChange={onChangeHandler}
+                />
+                {errors.confirmPassword && (
+                  <span id="errors">{errors.confirmPassword}</span>
+                )}
+              </>
+            )}
+            <div className="create-modal__creation-btns">
+              <button className="create">CREATE</button>
+              <button onClick={props.onClose} className="cancel">CANCEL</button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
   );
 };
 

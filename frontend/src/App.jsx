@@ -9,13 +9,12 @@ import Modes from './Game/Modes';
 import Solo from './Game/Solo';
 import OneVersusOne from './Game/OneVersusOne';
 import PlayMatch from './Game/PlayMatch';
-import Chat from './Chat/Chat';
 import Groups from './Groups/Groups';
 import Friends from './Friends/Friends';
 import Dashboard from './Dashboard/Dashboard';
 import { Navigate } from 'react-router-dom';
 import Game from './Game/Game';
-import SocketContext, { SocketProvider } from './Groups/SocketContext'
+import Chat from './Chat/Chat';
 import WaysSecondStep from './components/SignUp/WaysSecondStep';
 import ForgotPassword from './components/SignIn/ForgotPassword';
 import ChangePassword from './components/SignIn/ChangePassword';
@@ -38,8 +37,8 @@ const App = () => {
 						<Route path="/WaysSecondStep" element={<WaysSecondStep />} />
 						<Route path="/ForgotPassword" element={<ForgotPassword />} />
 						<Route path="/ChangePassword" element={<ChangePassword />} />
+						<Route path="SocketTest" element={<WebSocketComponent />} />
 						<Route path="/mainpage" element={<NavbarSidebar />} >
-							<Route path="SocketTest" element={<WebSocketComponent />} />
 							<Route path="dashboard" element={<Dashboard />} />
 							<Route path="chat" element={<Chat />} />
 							<Route path="friends" element={<Friends />} />
@@ -56,5 +55,4 @@ const App = () => {
 		</div>
 	)
 }
-
 export default App
