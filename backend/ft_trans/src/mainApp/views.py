@@ -97,3 +97,20 @@ def serve_image(request):
     if (request.data).get('image'):
         with open(request.data['image'], 'rb') as image_file:
             return HttpResponse(image_file.read(), content_type='image/jpeg')
+
+@api_view(['POST'])
+def user_image(request):
+    # print(f"THE IMAGE PATH IS : {request.data['image']}")
+    # response = Response()
+    username = (request.data).get('user')
+    if not username:
+        print("no user is here")
+        return Response({'message': 'no username is here'})
+    user = customuser.objects.filter(username=username).first()
+    if user:
+        image_path = user.avatar.path
+        if image_path:
+            with open(image_path, 'rb') as image_file:
+                return HttpResponse(image_file.read(), content_type='image/jpeg')
+    else:
+        return Response({'message': 'user not exit in the database'})

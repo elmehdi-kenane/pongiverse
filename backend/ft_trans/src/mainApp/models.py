@@ -38,14 +38,11 @@ class PlayerState(models.Model):
     paddleY = models.IntegerField(default=0)
     score = models.PositiveIntegerField(default=0)
 
-class FriendMatch(models.Model):
-    creator = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='creator')
-    room_id = models.PositiveBigIntegerField(unique=True)
-    room_type = models.CharField(max_length=255)
-    mode = models.CharField(max_length=255)
+class NotifPlayer(models.Model):
+    active_match = models.ForeignKey(ActiveMatch, on_delete=models.CASCADE, related_name='notify_player')
+    player = models.ForeignKey(customuser, on_delete=models.CASCADE)
 
-class ParticipatedFriends(models.Model):
-    friend_match = models.ForeignKey(FriendMatch, on_delete=models.CASCADE, related_name='participated_friends')
-    friend = models.ForeignKey(customuser, on_delete=models.CASCADE)
+# class GameNotifications(models.Model):
+
 
 # room_id_manager = RoomIDManager()

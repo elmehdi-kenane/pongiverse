@@ -6,4 +6,5 @@ from . import views
 urlpatterns = [
     path('onlineFriends', views.online_friends, name='friends'),
     path('getImage', views.serve_image, name='image'),
+    path('getUserImage', views.user_image, name='image'),
 ]

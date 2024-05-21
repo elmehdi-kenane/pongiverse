@@ -395,7 +395,7 @@ const OneVersusOne = () => {
                     {isInPlayingMode && (<div style={{backgroundColor: "black", color: "white", position: "absolute", top: "0", left: "50%", transform: "translate(-50%)", padding: "10px 30px"}}>Already in a Match, refresh to continue</div>)}
                 </div>
             </div>
-            <div className='cancel-game-invite-request'>
+            {/* <div className='cancel-game-invite-request'>
                 {(gameNotif.length) ? (
                     <div className='game-invitations'>
                         {gameNotif.map((user, key) => {
@@ -426,7 +426,7 @@ const OneVersusOne = () => {
                     ) : ''
                 }
                 {gameStarted && (<div className='onevsone-cancel' onClick={cancelTheGame}>Cancel</div>)}
-            </div>
+            </div> */}
         </div>
     )
 }

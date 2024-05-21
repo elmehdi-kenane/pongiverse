@@ -23,6 +23,8 @@ import SignUpPage from './components/SignUp/SignUpPage';
 import SecondStep from './components/SignUp/SecondStep';
 // import ChatMessages from './Groups/ChatMessages';
 import MessagesContainer from './Chat/MessagesPage';
+import OneVsOneRandom from './Game/OneVsOneRandom';
+import OneVsOneFriends from './Game/OneVsOneFriends';
 
 const App = () => {
   return (
@@ -32,7 +34,7 @@ const App = () => {
                 <Routes>
                     <Route path="/" element={<HomePage />} exact />
                     <Route path="/signup" element={<SignUpPage />} />
-                    <Route path="/Signin" element={<SignInPage />} />
+                    <Route path="/signin" element={<SignInPage />} />
                     <Route path="/SecondStep" element={<SecondStep />} />
                     <Route path="/WaysSecondStep" element={<WaysSecondStep />} />
                     <Route path="/ForgotPassword" element={<ForgotPassword />} />
@@ -46,6 +48,8 @@ const App = () => {
                       <Route path="game" element={<Modes />} />
                       <Route path="game/solo" element={<Solo />} />
                       <Route path="game/solo/1vs1" element={<OneVersusOne />} />
+                      <Route path="game/solo/1vs1/random" element={<OneVsOneRandom />} />
+                      <Route path="game/solo/1vs1/friends" element={<OneVsOneFriends />} />
                       <Route path="play/1vs1/:roomID" element={<PlayMatch />} />
                     </Route>
                 </Routes>

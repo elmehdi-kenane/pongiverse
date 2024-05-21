@@ -22,7 +22,7 @@ function SignUpPage(props) {
 						<div className={styles["lineAf"]}></div>
 					</div>
 					<SignUpFrom/>
-					<p className={styles['alradyHave']}>Already have an account? <Link to="/SignIn">Sign in</Link></p>
+					<p className={styles['alradyHave']}>Already have an account? <Link to="/signin">Sign in</Link></p>
 				</div>
 			</div>
 		</div>

@@ -17,15 +17,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data)
 
         if data['type'] == 'handShake': user_channels[data['message']['user']] = self.channel_name
-        elif data['type'] == 'isPlayerInAnyRoom': await game_consumers.isPlayerInAnyRoom(self, data, rooms)
+        elif data['type'] == 'isPlayerInAnyRoom': await game_consumers.isPlayerInAnyRoom(self, data, rooms, user_channels)
         elif data['type'] == 'dataBackUp': await game_consumers.backUpData(self, data, rooms)
-        elif data['type'] == 'join': await game_consumers.joinRoom(self, data, rooms)
-        elif data['type'] == 'quit': await game_consumers.quitRoom(self, data, rooms)
+        elif data['type'] == 'join': await game_consumers.joinRoom(self, data, rooms, user_channels)
+        elif data['type'] == 'quit': await game_consumers.quitRoom(self, data, rooms, user_channels)
         elif data['type'] == 'start': await game_consumers.startPlayer(self, data, rooms)
         elif data['type'] == 'cancel': await game_consumers.cancelPlayer(self, data, rooms)
         elif data['type'] == 'getOut': await game_consumers.clearRoom1(self, data, rooms)
         elif data['type'] == 'OpponentIsOut': await game_consumers.clearRoom2(self, data, rooms)
-        elif data['type'] == 'isPlayerInRoom': await game_consumers.validatePlayer(self, data, rooms)
+        elif data['type'] == 'isPlayerInRoom': await game_consumers.validatePlayer(self, data, rooms, user_channels)
         elif data['type'] == 'playerChangedPage': await game_consumers.changedPage(self, data, rooms)
         elif data['type'] == 'moveKey': await game_consumers.move_paddle(self, data, rooms)
         elif data['type'] == 'moveMouse':await game_consumers.move_mouse(self, data, rooms)
@@ -105,6 +105,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receiveFriendGame(self, event):
         await self.send(text_data=json.dumps({
             'type': 'receiveFriendGame',
+            'message': event['message']
+        }))
+
+    async def sendPlayerNo(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'playerNo',
+            'message': event['message']
+        }))
+
+    async def playingStatus(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'playingStatus',
             'message': event['message']
         }))
 
