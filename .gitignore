@@ -9,5 +9,7 @@
 /backend/ft_trans/src/mainApp/migrations
 /backend/ft_trans/src/myapp/migrations
 /backend/ft_trans/src/Profile/migrations
+backend/ft_trans/src/uploads
+backend/ft_trans/src/db.sqlite3
 /.vscode
 uploads/*
