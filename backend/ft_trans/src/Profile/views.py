@@ -28,3 +28,17 @@ def show_friends(request, username):
     friends = [user_id.user.username for user_id in Friends.objects.filter(user=user)]
     print(friends)
     return Response({"friends": friends})
+
+@api_view(['GET'])
+def friends_with_directs(request, username):
+    user = customuser.objects.get(username=username)
+    friends = Friends.objects.filter(user=user)
+    data = []
+    for friend in friends:
+        friend_data = {
+            'name' : friend.username,
+            'is_online' : friend.is_online,
+            'is_playing' : friend.is_playing,
+        }
+        data.append(friend_data)
+    return Response(data)

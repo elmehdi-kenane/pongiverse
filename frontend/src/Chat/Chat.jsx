@@ -12,6 +12,7 @@ const Chat = () => {
   const [isHome, setIsHome] = useState(true);
   const [expandSearch, setExpandSearch] = useState(false);
   const [channelsConversations, setChannelsConversations] = useState([]);
+  const [ directsConversations, setDirectsConversations] = useState([]);
   const { user, setSelectedChannel, selectedChannel } = useContext(AuthContext);
   const navigate = useNavigate();
   const selectedElems = []
@@ -29,15 +30,23 @@ const Chat = () => {
         console.log(error);
       }
     };
+    const fetchDirectsWithMessage = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:8000/users/friends/${user}`
+        );
+        const data = await response.json();
+        setDirectsConversations(data.friends);
+        console.log("Friends: ",data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     if (user) {
       fetchChannelsWithMessage();
+      fetchDirectsWithMessage();
     }
   }, [user]);
-
-  const RenderConv = (roomId) => {
-    console.log("im here is RenderConv");
-    navigate(`../${roomId}`);
-  };
 
   return (
     <div className="chat-page">
@@ -88,7 +97,7 @@ const Chat = () => {
           </div>
           {isHome ? (
             <div className="conversations__list">
-              {channelsConversations.map((channel) => (
+              {directsConversations.map((channel) => (
                 <Conversation
                   name={channel.name}
                   key={channel.id}
