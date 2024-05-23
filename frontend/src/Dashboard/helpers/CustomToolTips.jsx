@@ -6,8 +6,8 @@ const CustomToolTips = ({ active, payload, label }) => {
     return (
       <div className="custom-tooltip">
         <p className="label">{`Day: ${label}`}</p>
-        <p className="wins-label">Wins: {payload[1].value}</p>
-        <p className="lost-label">Lost: {payload[0].value}</p>
+        <p className="wins-label">Wins: {payload[0].value}</p>
+        <p className="lost-label">Lost: {payload[1].value}</p>
       </div>
     );
   }

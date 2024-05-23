@@ -14,8 +14,8 @@ function LineGraph() {
     return (
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart width={500} height={500} data={dataLevel} margin={{ left: -30, right: 5 }}>
-          <Area  stackId="1" type="monotone" dataKey={"lost"} stroke="black" fill="#220142" />
-          <Area  stackId="1" type="monotone" dataKey={"wins"} stroke="#8884d8" fill="#8884d8" />
+          <Area  stackId="1" type="mono-tone" dataKey={"wins"} stroke="#f4effa" fill="#f4effa" />
+          <Area  stackId="1" type="mono-tone" dataKey={"lost"} stroke="#907ad6" fill="#826aed" />
           <XAxis dataKey="day" stroke="#775C9E" />
           <YAxis stroke="#775C9E" />
           <CartesianGrid stroke="rgb(104, 104, 104, 0.3)" strokeDasharray="5 5" />

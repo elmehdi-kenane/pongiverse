@@ -13,9 +13,9 @@
   
   .custom-tooltip .wins-label{
     margin-bottom: 2px;
-    color: #8884d8;
+    color: #f4effa;
   }
   .custom-tooltip .lost-label {
     /* margin-bottom: 2px; */
-    color: purple;
+    color: #826aed;
   }
