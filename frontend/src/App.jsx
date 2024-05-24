@@ -21,10 +21,10 @@ import ChangePassword from './components/SignIn/ChangePassword';
 import SignInPage from './components/SignIn/SignInPage';
 import SignUpPage from './components/SignUp/SignUpPage';
 import SecondStep from './components/SignUp/SecondStep';
-// import ChatMessages from './Groups/ChatMessages';
 import MessagesContainer from './Chat/MessagesPage';
 import OneVsOneRandom from './Game/OneVsOneRandom';
 import OneVsOneFriends from './Game/OneVsOneFriends';
+import OneVsOneCreateOrJoin from './Game/OneVsOneCreateOrJoin';
 
 const App = () => {
   return (
@@ -50,6 +50,7 @@ const App = () => {
                       <Route path="game/solo/1vs1" element={<OneVersusOne />} />
                       <Route path="game/solo/1vs1/random" element={<OneVsOneRandom />} />
                       <Route path="game/solo/1vs1/friends" element={<OneVsOneFriends />} />
+                      <Route path="game/solo/1vs1/create-or-join" element={<OneVsOneCreateOrJoin />} />
                       <Route path="play/1vs1/:roomID" element={<PlayMatch />} />
                     </Route>
                 </Routes>

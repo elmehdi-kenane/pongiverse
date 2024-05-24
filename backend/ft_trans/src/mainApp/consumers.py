@@ -32,6 +32,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         elif data['type'] == 'userExited': await game_consumers.user_exited(self, data, rooms)
         elif data['type'] == 'inviteFriendGame': await game_consumers.invite_friend(self, data, rooms, tmp_rooms, user_channels)
         elif data['type'] == 'acceptInvitation': await game_consumers.accept_game_invite(self, data, rooms, user_channels)
+        elif data['type'] == 'refuseInvitation': await game_consumers.refuse_game_invite(self, data, rooms, user_channels)
+        elif data['type'] == 'createRoom': await game_consumers.create_new_room(self, data, rooms, user_channels)
+        elif data['type'] == 'checkingRoomCode': await game_consumers.join_new_room(self, data, rooms, user_channels)
 
     ##################################### 1vs1 (GAME) #####################################
 

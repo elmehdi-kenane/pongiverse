@@ -217,6 +217,9 @@ const OneVsOneFriends = () => {
                 }
             }))
             setSelectedFriends([...selectedFriends, friend])
+            setTimeout(() => {
+                setSelectedFriends(selectedFriends.filter(selectedFriend => selectedFriend !== friend))
+            }, 2000);
             setGameStarted(true)
             // setGameStared(true)
         }

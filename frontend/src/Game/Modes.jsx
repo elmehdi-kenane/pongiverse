@@ -7,7 +7,8 @@ const Modes = () => {
   const navigate = useNavigate()
   const [gameNotif, setGameNotif] = useState([])
   const [roomID, setRoomID] = useState(null)
-  let { socket, user } = useContext(AuthContext)
+  let { socket, user, setAllGameNotifs,
+    allGameNotifs, notifsImgs } = useContext(AuthContext)
 
   const goToSoloPage = () => {
     navigate("../game/solo")
@@ -24,7 +25,7 @@ const Modes = () => {
                 navigate(`/mainpage/game/solo/1vs1/friends`)
             } else if (type === 'receiveFriendGame') {
               console.log("RECEIVED A GAME REQUEST")
-              setGameNotif((prevGameNotif) => [...prevGameNotif, message])
+              setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message])
               setRoomID(message.roomID)
             }
         }
@@ -32,30 +33,33 @@ const Modes = () => {
   }, [socket])
 
   const refuseInvitation = (creator) => {
-    setGameNotif(gameNotif.filter((user) => user.user !== creator))
+    let notifSelected = allGameNotifs.filter((user) => user.user === creator)
+    setAllGameNotifs(allGameNotifs.filter((user) => user.user !== creator))
     if (socket && socket.readyState === WebSocket.OPEN) {
         console.log("inside join")
         socket.send(JSON.stringify({
-            type: 'acceptInvitation',
+            type: 'refuseInvitation',
             message: {
-                user: creator,
+                user: notifSelected[0].user,
                 target: user,
-                roomID: roomID
+                roomID: notifSelected[0].roomID
             }
         }))
       }
   }
 
   const acceptInvitation = (creator) => {
-    setGameNotif(gameNotif.filter((user) => user.user !== creator))
+    let notifSelected = allGameNotifs.filter((user) => user.user === creator)
+    setAllGameNotifs(allGameNotifs.filter((user) => user.user !== creator))
+    console.log(creator, user, roomID)
     if (socket && socket.readyState === WebSocket.OPEN) {
         console.log("inside join")
         socket.send(JSON.stringify({
             type: 'acceptInvitation',
             message: {
-                user: creator,
+                user: notifSelected[0].user,
                 target: user,
-                roomID: roomID
+                roomID: notifSelected[0].roomID
             }
         }))
       }
@@ -64,12 +68,12 @@ const Modes = () => {
   return (
     <div className='onevsone'>
         <div className='cancel-game-invite-request'>
-            {(gameNotif.length) ? (
+            {(allGameNotifs.length) ? (
                 <div className='game-invitations'>
-                    {gameNotif.map((user, key) => {
+                    {allGameNotifs.map((user, key) => {
                         return ((
                             <div key={key} className='game-invitation'>
-                                <img src={`data:image/jpeg;base64,${user.avatar}`} alt="profile-pic" />
+                                <img src={notifsImgs[key]} alt="profile-pic" />
                                 <div className='user-infos'>
                                     <span>{user.user}</span>
                                     <span>level 2.5</span>

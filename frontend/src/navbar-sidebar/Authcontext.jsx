@@ -19,6 +19,8 @@ export const AuthProvider = ({children}) => {
     let [userImg, setUserImg] = useState('')
     let [socket, setSocket] = useState(null)
     let [socketRecreated, setSocketRecreated] = useState(false)
+    let [allGameNotifs, setAllGameNotifs] = useState([])
+    let [notifsImgs, setNotifsImgs] = useState([])
 
     useEffect(() => {
         const fetchImages = async () => {
@@ -46,6 +48,28 @@ export const AuthProvider = ({children}) => {
             fetchImages()
         }
     }, [allGameFriends])
+    
+    useEffect(() => {
+        const fetchNotifsImages = async () => {
+            const promises = allGameNotifs.map(async (user) => {
+                const response = await fetch(`http://localhost:8000/api/getImage`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        image: user.avatar
+                    })
+                });
+                const blob = await response.blob();
+                return URL.createObjectURL(blob);
+            });
+            const images = await Promise.all(promises);
+            setNotifsImgs(images);
+        };
+        if (allGameFriends)
+            fetchNotifsImages()
+    }, [allGameNotifs])
 
     useEffect(() => {
         const getAllGameFriends = async () => {
@@ -64,6 +88,26 @@ export const AuthProvider = ({children}) => {
                 if (friends.message.length)
                     setAllGameFriends(friends.message)
                 setLoading(false)
+            } catch (e) {
+                console.log("something wrong with fetch")
+            }
+        }
+
+        const getAllNotifsFriends = async () => {
+            try {
+                let response = await fetch('http://localhost:8000/api/notifsFriends', {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user: user
+                    })
+                })
+                let friends = await response.json()
+                console.log("ALL MY GAME NOTIFS ARE : ", friends.message)
+                if (friends.message.length)
+                    setAllGameNotifs(friends.message)
             } catch (e) {
                 console.log("something wrong with fetch")
             }
@@ -89,7 +133,12 @@ export const AuthProvider = ({children}) => {
             }
         }
 
-        if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/Signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && user && !userImg)
+        if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && location.pathname !== '/game/solo/1vs1/friends' && location.pathname !== '/game/solo/1vs1/random' && user && !allGameNotifs.length)
+            getAllNotifsFriends()
+        else
+            setAllGameNotifs([])
+
+        if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && user && !userImg)
             getUserImage()
 
         if (location.pathname === '/mainpage/game/solo/1vs1/friends' && user)
@@ -143,14 +192,6 @@ export const AuthProvider = ({children}) => {
                     //     console.log("RECEIVED A GAME REQUEST")
                     //     setGameNotif(true)
                     // }
-                } else if (type === 'playingStatus') {
-                    if (message.is_playing)
-                        setAllGameFriends(allGameFriends.filter(friend => friend.name != message.user))
-                    // else {
-                        // const userExists = users.some(user => user.name === newUser.name);
-                        // if (!userExists)
-                        //     setUsers([...users, newUser]);
-                    // }
                 }
                 // console.log(newSocket)
             }
@@ -162,18 +203,6 @@ export const AuthProvider = ({children}) => {
             }
         }
 
-        // const refRemoveRoomFromBack = () => {
-        //     if (socket && socket.readyState === WebSocket.OPEN) {
-        //         console.log("BEFORE GETTING OUT OF THE PAGE : BEFORE UNLOAD")
-        //         socket.close()
-        //         setSocket(null)
-        //     }
-        // }
-        // window.addEventListener("beforeunload", refRemoveRoomFromBack)
-        // return () => {
-        //     //ma3eza said khass tkon clean up hana
-        //     window.addEventListener("beforeunload", refRemoveRoomFromBack)
-        // }
     }, [location.pathname, user])
 
     async function publicCheckAuth() {
@@ -237,6 +266,9 @@ export const AuthProvider = ({children}) => {
         setAllGameFriends: setAllGameFriends,
         loading: loading,
         userImages: userImages,
+        setAllGameNotifs: setAllGameNotifs,
+        allGameNotifs: allGameNotifs,
+        notifsImgs: notifsImgs
         // gameNotif: gameNotif
     }
 

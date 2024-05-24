@@ -28,6 +28,7 @@ class ActiveMatch(models.Model):
     winner = models.PositiveIntegerField(default=0)
     ballX = models.IntegerField(default=0)
     ballY = models.IntegerField(default=0)
+    creator = models.ForeignKey(customuser, on_delete=models.CASCADE, null=True, blank=True)
 
 class PlayerState(models.Model):
     active_match = models.ForeignKey(ActiveMatch, on_delete=models.CASCADE, related_name='player_state')
@@ -42,7 +43,8 @@ class NotifPlayer(models.Model):
     active_match = models.ForeignKey(ActiveMatch, on_delete=models.CASCADE, related_name='notify_player')
     player = models.ForeignKey(customuser, on_delete=models.CASCADE)
 
-# class GameNotifications(models.Model):
-
-
+class GameNotifications(models.Model):
+    active_match = models.ForeignKey(ActiveMatch, on_delete=models.CASCADE, related_name='game_notify_active_match')
+    user = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='notify_user')
+    target = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='notify_target')
 # room_id_manager = RoomIDManager()
