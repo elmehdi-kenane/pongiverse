@@ -6,7 +6,7 @@ import * as Icons from '../assets/navbar-sidebar'
 const OneVersusOne = () => {
     let { privateCheckAuth, socket, user,
         socketRecreated, setSocketRecreated, allGameFriends,
-        loading, userImages, notifSocket } = useContext(AuthContext)
+        loading, userImages} = useContext(AuthContext)
     const inviteFriend = useRef(null)
     const textCopied = useRef(null)
     const inputRoomId = useRef(null)
@@ -19,7 +19,7 @@ const OneVersusOne = () => {
     const [playerNo, setPlayerNo] = useState(0)
     const [roomID, setRoomID] = useState(null)
     const [tmpRoomID, setTmpRoomID] = useState(null)
-    const [start, setStart] = useState(false)
+    // const [start, setStart] = useState(false)
     const [expandFriends, setExpandFriends] = useState(false)
     const [expandJoin, setExpandJoin] = useState(false)
     const [expandCreate, setExpandCreate] = useState(false)
@@ -32,6 +32,10 @@ const OneVersusOne = () => {
     const [chosenOne, setChosenOne] = useState('')
     const [isInSearchMode, setIsInSearchMode] = useState(false)
     const [isInPlayingMode, setIsInPlayingMode] = useState(false)
+    const [gameNotif, setGameNotif] = useState([])
+    
+    let inside = false
+    let allGood = false
 
     useEffect(() => {
         privateCheckAuth()
@@ -77,6 +81,7 @@ const OneVersusOne = () => {
                     console.log("inside gameReady")
                     setRoomID(message.id)
                     setAllSet(true)
+                    allGood = true
                     // navigate(`../play/1vs1/${message.roomID}`)
                 } else if (type === "playersReady") {
                     console.log("inside playersReady")
@@ -98,7 +103,7 @@ const OneVersusOne = () => {
                             }
                         }))
                     }
-                    setStart(false)
+                    // setStart(false)
                     setPlayerNo(0)
                     setAllSet(false)
                     setRoomID(null)
@@ -113,6 +118,11 @@ const OneVersusOne = () => {
                     setTimeout(() => {
                         setIsInPlayingMode(false)
                     }, 5000);
+                } else if (type === 'receiveFriendGame') {
+                    console.log("RECEIVED A GAME REQUEST")
+                    setGameNotif((prevGameNotif) => [...prevGameNotif, message]);
+                } else if (type === 'goToGamingPage') {
+                    navigate(`../play/1vs1/${message.roomID}`)
                 }
             }
         }
@@ -122,7 +132,13 @@ const OneVersusOne = () => {
             navigate(`../play/1vs1/${roomID}`)
         }
 
-    }, [socket, start, allSet, roomID, tmpRoomID])
+    }, [socket, allSet, roomID, tmpRoomID])
+
+    useEffect(() => {
+        return () => {
+            console.log(allSet, socket, user)
+        }
+    }, [socket, allSet, user])
 
     const expandFriendsList = () => {
         if (chosenOne === '' || chosenOne === 'friends') {
@@ -176,7 +192,7 @@ const OneVersusOne = () => {
 
     useEffect(() => {
         const closeAllSections = (e) => {
-            // if (e.target && friendsSection.current && inviteFriend.current && joinMatchSection.current && createMatchSection.current && quickMatchSection.current) {
+            if (e.target && friendsSection.current && inviteFriend.current && joinMatchSection.current && createMatchSection.current && quickMatchSection.current) {
                 if (!friendsSection.current.contains(e.target)
                 && !joinMatchSection.current.contains(e.target)
                 && !createMatchSection.current.contains(e.target)
@@ -186,7 +202,7 @@ const OneVersusOne = () => {
                     setExpandFriends(false)
                     setExpandJoin(false)
                 }
-            // }
+            }
         }
         window.addEventListener('click', closeAllSections)
         return () => {
@@ -207,22 +223,18 @@ const OneVersusOne = () => {
     }
 
     const inviteNewFriend = (friend) => {
-        if (selectedFriends.includes(friend)) {
-            setSelectedFriends(selectedFriends.filter((selectedFriend) => selectedFriend !== friend));
-        } else {
-            if (socket && socket.readyState === WebSocket.OPEN) {
-                console.log("inside join")
-                socket.send(JSON.stringify({
-                    type: 'inviteFriend',
-                    message: {
-                        user: user,
-                        target: friend
-                    }
-                }))
-                setSelectedFriends([...selectedFriends, friend]);
-                setChosenOne('friends')
-                setGameStared(true)
-            }
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            console.log("inside join")
+            socket.send(JSON.stringify({
+                type: 'inviteFriendGame',
+                message: {
+                    user: user,
+                    target: friend
+                }
+            }))
+            setSelectedFriends([...selectedFriends, friend])
+            setChosenOne('friends')
+            setGameStared(true)
         }
     };
 
@@ -267,6 +279,34 @@ const OneVersusOne = () => {
         // send to the server to create a new room
         setGameStared(true)
         setChosenOne('createMatch')
+    }
+
+    const acceptInvitation = (creator) => {
+        setGameNotif(gameNotif.filter((user) => user.user !== creator))
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            console.log("inside join")
+            socket.send(JSON.stringify({
+                type: 'acceptInvitation',
+                message: {
+                    user: creator,
+                    target: user
+                }
+            }))
+        }
+    }
+
+    const refuseInvitation = (creator) => {
+        setGameNotif(gameNotif.filter((user) => user.user !== creator))
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            console.log("inside join")
+            socket.send(JSON.stringify({
+                type: 'acceptInvitation',
+                message: {
+                    user: creator,
+                    target: user
+                }
+            }))
+        }
     }
 
     return (
@@ -355,7 +395,38 @@ const OneVersusOne = () => {
                     {isInPlayingMode && (<div style={{backgroundColor: "black", color: "white", position: "absolute", top: "0", left: "50%", transform: "translate(-50%)", padding: "10px 30px"}}>Already in a Match, refresh to continue</div>)}
                 </div>
             </div>
-            {gameStarted && (<div className='onevsone-cancel' onClick={cancelTheGame}>Cancel</div>)}
+            {/* <div className='cancel-game-invite-request'>
+                {(gameNotif.length) ? (
+                    <div className='game-invitations'>
+                        {gameNotif.map((user, key) => {
+                            return ((
+                                <div key={key} className='game-invitation'>
+                                    <img src={`data:image/jpeg;base64,${user.avatar}`} alt="profile-pic" />
+                                    <div className='user-infos'>
+                                        <span>{user.user}</span>
+                                        <span>level 2.5</span>
+                                    </div>
+                                    <div className='invitation-mode'>
+                                        <span>1</span>
+                                        <span>vs</span>
+                                        <span>1</span>
+                                    </div>
+                                    <div className='accept-refuse'>
+                                        <div onClick={() => acceptInvitation(user.user)}>
+                                            <img src={Icons.copied} alt="accept-icon" />
+                                        </div>
+                                        <div onClick={() => refuseInvitation(user.user)}>
+                                            <img src={Icons.cancel} alt="refuse-icon" />
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        })}
+                    </div>
+                    ) : ''
+                }
+                {gameStarted && (<div className='onevsone-cancel' onClick={cancelTheGame}>Cancel</div>)}
+            </div> */}
         </div>
     )
 }

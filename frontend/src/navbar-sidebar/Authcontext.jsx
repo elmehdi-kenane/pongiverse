@@ -14,9 +14,13 @@ export const AuthProvider = ({children}) => {
     const [allGameFriends, setAllGameFriends] = useState([])
     const [userImages, setUserImages] = useState([]);
     const [loading, setLoading] = useState(true)
+    // const [gameNotif, setGameNotif] = useState(false)
     let [user, setUser] = useState('')
+    let [userImg, setUserImg] = useState('')
     let [socket, setSocket] = useState(null)
     let [socketRecreated, setSocketRecreated] = useState(false)
+    let [allGameNotifs, setAllGameNotifs] = useState([])
+    let [notifsImgs, setNotifsImgs] = useState([])
 
     useEffect(() => {
         const fetchImages = async () => {
@@ -44,6 +48,28 @@ export const AuthProvider = ({children}) => {
             fetchImages()
         }
     }, [allGameFriends])
+    
+    useEffect(() => {
+        const fetchNotifsImages = async () => {
+            const promises = allGameNotifs.map(async (user) => {
+                const response = await fetch(`http://localhost:8000/api/getImage`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        image: user.avatar
+                    })
+                });
+                const blob = await response.blob();
+                return URL.createObjectURL(blob);
+            });
+            const images = await Promise.all(promises);
+            setNotifsImgs(images);
+        };
+        if (allGameFriends)
+            fetchNotifsImages()
+    }, [allGameNotifs])
 
     useEffect(() => {
         const getAllGameFriends = async () => {
@@ -58,7 +84,7 @@ export const AuthProvider = ({children}) => {
                     })
                 })
                 let friends = await response.json()
-                console.log(friends.message)
+                console.log("ALL MY FRIENDS ARE : ", friends.message)
                 if (friends.message.length)
                     setAllGameFriends(friends.message)
                 setLoading(false)
@@ -66,34 +92,110 @@ export const AuthProvider = ({children}) => {
                 console.log("something wrong with fetch")
             }
         }
-        if (location.pathname === '/mainpage/game/solo/1vs1' && user)
+
+        const getAllNotifsFriends = async () => {
+            try {
+                let response = await fetch('http://localhost:8000/api/notifsFriends', {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user: user
+                    })
+                })
+                let friends = await response.json()
+                console.log("ALL MY GAME NOTIFS ARE : ", friends.message)
+                if (friends.message.length)
+                    setAllGameNotifs(friends.message)
+            } catch (e) {
+                console.log("something wrong with fetch")
+            }
+        }
+
+        const getUserImage = async () => {
+            try {
+                let response = await fetch('http://localhost:8000/api/getUserImage', {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user: user
+                    })
+                })
+                const blob = await response.blob();
+                const image = URL.createObjectURL(blob)
+                setUserImg(image)
+                // console.log('USER IMAGE IS THIS : ', image)
+            } catch (e) {
+                console.log("something wrong with fetch")
+            }
+        }
+
+        if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && location.pathname !== '/game/solo/1vs1/friends' && location.pathname !== '/game/solo/1vs1/random' && user && !allGameNotifs.length)
+            getAllNotifsFriends()
+        else
+            setAllGameNotifs([])
+
+        if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && user && !userImg)
+            getUserImage()
+
+        if (location.pathname === '/mainpage/game/solo/1vs1/friends' && user)
             getAllGameFriends()
         else
             setAllGameFriends([])
     }, [location.pathname, user])
 
     useEffect(() => {
-        if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/Signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && !socket && user) {
+        // setGameNotif(false)
+        if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && !socket && user) {
             const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
             newSocket.onopen = () => {
-                console.log("socket opened succefully")
-                console.log(user)
-                newSocket.onmessage = (event) => {
-                    let data = JSON.parse(event.data)
-                    let type = data.type
-                    if (type === 'connection_established')
-                        console.log('connection established buddy')
-                    else if (type === 'friendRequest') {
-                        
-                    }
-                }
-                // console.log(newSocket)
+            //     console.log("socket opened succefully")
+            //     console.log(user)
+            //     newSocket.onmessage = (event) => {
+            //         let data = JSON.parse(event.data)
+            //         let type = data.type
+            //         if (type === 'connection_established') {
+            //             console.log('connection established buddy')
+            //             newSocket.send(JSON.stringify({
+            //                 type: 'handShake',
+            //                 message: {
+            //                     user: user
+            //                 }
+            //             }))
+            //         // } else if (type === 'receiveFriendGame') {
+            //         //     console.log("RECEIVED A GAME REQUEST")
+            //         //     setGameNotif(true)
+            //         // }
+            //     }
+            //     // console.log(newSocket)
+            // }
                 setSocket(newSocket)
-            }
             // newNotifSocket.onclose = () => {
             //     console.log("chatSocket closed")
-            // }
-        } else if ((location.pathname === '/' || location.pathname === '/signup' || location.pathname === '/Signin' || location.pathname === '/SecondStep' ||  location.pathname === '/WaysSecondStep' || location.pathname === '/ForgotPassword' || location.pathname === '/ChangePassword') && socket) {
+            }
+            newSocket.onmessage = (event) => {
+                let data = JSON.parse(event.data)
+                let type = data.type
+                let message = data.message
+                if (type === 'connection_established') {
+                    console.log('connection established buddy')
+                    newSocket.send(JSON.stringify({
+                        type: 'handShake',
+                        message: {
+                            user: user
+                        }
+                    }))
+                    // } else if (type === 'receiveFriendGame') {
+                    //     console.log("RECEIVED A GAME REQUEST")
+                    //     setGameNotif(true)
+                    // }
+                }
+                // console.log(newSocket)
+            }
+        } else if ((location.pathname === '/' || location.pathname === '/signup' || location.pathname === '/signin' || location.pathname === '/SecondStep' ||  location.pathname === '/WaysSecondStep' || location.pathname === '/ForgotPassword' || location.pathname === '/ChangePassword') && socket) {
             if (socket) {
                 console.log("socket closed succefully")
                 socket.close()
@@ -101,18 +203,6 @@ export const AuthProvider = ({children}) => {
             }
         }
 
-        const refRemoveRoomFromBack = () => {
-            if (socket && socket.readyState === WebSocket.OPEN) {
-                console.log("BEFORE GETTING OUT OF THE PAGE : BEFORE UNLOAD")
-                socket.close()
-                setSocket(null)
-            }
-        }
-        window.addEventListener("beforeunload", refRemoveRoomFromBack)
-        return () => {
-            //ma3eza said khass tkon clean up hana
-            window.addEventListener("beforeunload", refRemoveRoomFromBack)
-        }
     }, [location.pathname, user])
 
     async function publicCheckAuth() {
@@ -171,9 +261,15 @@ export const AuthProvider = ({children}) => {
         setSocket: setSocket,
         socketRecreated: socketRecreated,
         setSocketRecreated: setSocketRecreated,
+        userImg: userImg,
         allGameFriends: allGameFriends,
+        setAllGameFriends: setAllGameFriends,
         loading: loading,
-        userImages: userImages
+        userImages: userImages,
+        setAllGameNotifs: setAllGameNotifs,
+        allGameNotifs: allGameNotifs,
+        notifsImgs: notifsImgs
+        // gameNotif: gameNotif
     }
 
     return (

@@ -4,6 +4,8 @@ from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
-    path('onlineFriends', views.online_friends, name='friends'),
+    path('onlineFriends', views.online_friends, name='online_friends'),
+    path('notifsFriends', views.notifs_friends, name='notifs_friends'),
     path('getImage', views.serve_image, name='image'),
+    path('getUserImage', views.user_image, name='image'),
 ]
