@@ -5,7 +5,7 @@ import racketSvg from "./assets/racket.svg"
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 
-const games =12;
+const games = 12;
   const win = 6;
   const lost = games - win;
   const winPcnt = ((win * 100)/games).toFixed(0);
