@@ -73,7 +73,28 @@ export const AuthProvider = ({children}) => {
 	}, [location.pathname, user])
 
 	useEffect(() => {
-		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/Signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && !socket && user) {
+		const addUser = (newUser) => {
+			setAllGameFriends(prevFriends => [...prevFriends, newUser]);
+		  };
+		async function sendUserData(uname){
+			try {
+				let response = await fetch('http://localhost:8000/api/get_user', {
+					method: "POST",
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						uname: uname
+					})
+				});
+				let data = await response.json();
+				const newUser = {id: data.id, name: data.name, level : data.level, image: data.image}
+				addUser(newUser)
+			} catch (error) {
+				console.error('There has been a problem with your fetch operation:', error);
+			}
+		}
+		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && !socket && user) {
 			const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
 			newSocket.onopen = () => {
 				console.log("socket opened succefully")
@@ -83,20 +104,17 @@ export const AuthProvider = ({children}) => {
 					let type = data.type
 					let uname = data.username
 					if (type === 'connection_established') {
+						// console.log("uname: ", uname)
 						console.log('connection established buddy')
 						console.log("inside the sockete been created again : ",user)
-						const dataform = {
-							type : "connected",
-							message: {
-								user: user
-							}
-						};
-						console.log(dataform)
-						newSocket.send(JSON.stringify(dataform));
 					}
 					if (type === 'user_disconnected') {
-						console.log("EWAHAA:" , uname);
-						console.log(allGameFriends)
+						let uname = data.username
+						setAllGameFriends(prevFriends => prevFriends.filter(user => user.name !== uname));
+					}
+					if (type === 'connected_again') {
+						console.log("VISITED CONNECTED AGAIN")
+						sendUserData(uname)
 					}
 				}
 			setSocket(newSocket)

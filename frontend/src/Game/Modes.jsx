@@ -8,8 +8,20 @@ const Modes = () => {
 		navigate("../game/solo")
 	}
 
-	const goToTournamentPage = () => {
-		navigate("createtournament")
+	const goToTournamentPage = async () => {
+		try {
+			let response = await fetch(`http://localhost:8000/api/create_tournament`, {
+				method: "GET",
+				headers: {
+					'Content-Type': 'application/json',
+				}
+			});
+			let data = await response.json();
+			const tournamentId = data.tournament_id;
+			navigate("createtournament", {state: tournamentId});
+		} catch (error) {
+			console.error('There has been a problem with your fetch operation:', error);
+		}
 	}
 
 	return (

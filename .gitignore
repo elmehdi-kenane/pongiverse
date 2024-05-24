@@ -4,7 +4,14 @@
 /backend/ft_trans/src/mainApp/__pycache__
 /backend/ft_trans/src/myapp/__pycache__
 /backend/ft_trans/src/Profile/__pycache__
-.DS_Store
+/backend/ft_trans/src/chat/migrations
+/backend/ft_trans/src/ft_transcandence/migrations
+/backend/ft_trans/src/mainApp/migrations
+/backend/ft_trans/src/myapp/migrations
+/backend/ft_trans/src/Profile/migrations
+backend/ft_trans/src/uploads
+backend/ft_trans/src/db.sqlite3
+/.vscode
 .env.local
 .env.development.local
 .env.test.local

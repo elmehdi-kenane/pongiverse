@@ -1,7 +1,9 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
+from rest_framework_simplejwt.tokens import AccessToken
 from . import game_consumers
 from . import tournament_consumers
+from channels.layers import get_channel_layer
 from chat import chat_consumers
 from asgiref.sync import sync_to_async
 from myapp.models import customuser
@@ -11,13 +13,39 @@ from chat.models import Friends
 rooms = {}
 tmp_rooms = {}
 connected_channels = {}
+async def get_friends(username):
+	user = await sync_to_async(customuser.objects.filter(username=username).first)()
+	friends = await sync_to_async(list)(Friends.objects.filter(user=user))
+	return friends
 class ChatConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
 		await self.accept()
-		await self.send(text_data=json.dumps({
-			'type': 'connection_established',
-			'message': 'You are now connected!'
-		}))
+		cookiess = self.scope.get('cookies', {})
+		token = cookiess.get('token')
+		decoded_token = AccessToken(token)
+		payload_data = decoded_token.payload
+		user_id = payload_data.get('user_id')
+		user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
+		username = user.username
+		user.is_online = True
+		await sync_to_async(user.save)()
+		connected_channels[username] = self.channel_name
+		channel_layer = get_channel_layer()
+		friends = await sync_to_async(list)(Friends.objects.filter(user=user))
+		print(f"ALL THE USERS CHANNEL_NAMES : {connected_channels}")
+		for friend in friends:
+			friend_username = await sync_to_async(lambda: friend.friend.username)()
+			friend_is_online = await sync_to_async(lambda: friend.friend.is_online)()
+			channel_name = connected_channels.get(friend_username)
+			print(f'ON CONNECT : {friend_username} {channel_name}')
+			if channel_name and friend_is_online:
+				await self.channel_layer.send(
+					channel_name,
+					{
+						'type': 'connected_again',
+						'user': username
+					}
+				)
 
 	async def receive(self, text_data):
 		data = json.loads(text_data)
@@ -36,42 +64,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		elif data['type'] == 'moveMouse':await game_consumers.move_mouse(self, data, rooms)
 		elif data['type'] == 'userExited': await game_consumers.user_exited(self, data, rooms)
 		elif data['type'] == 'inviteFriend': await game_consumers.invite_friend(self, data, rooms, tmp_rooms)
-		#chat
 		elif data['type'] == 'join-channel': await chat_consumers.join_channel(self, data)
 		elif data['type'] == 'message': await chat_consumers.message(self, data)
-		#tournament
-		elif data['type'] == 'connected':
-			username = data["message"]["user"]
-			user = await sync_to_async(customuser.objects.filter(username=username).first)()
-			user_id = user.id
-			connected_channels[user_id] = self.channel_name
-			print(f"ALL THE USERS CHANNEL_NAMES : {connected_channels}")
 
 	async def disconnect(self, close_code):
-		# user_name = username
 		await tournament_consumers.disconnected(self, connected_channels)
-		# async def get_friends(username):
-		# 	user = await sync_to_async(customuser.objects.filter(username=username).first)()
-		# 	friends = await sync_to_async(list)(Friends.objects.filter(user=user))
-		# 	return friends
-		# print(username)
-		# friends = await get_friends(username)
-		# for friend in friends:
-		# 	namee = await sync_to_async(lambda:friend.friend.username)()
-		# 	print(namee)
-		# del user_sockets[user_id]
-		# 	socket = user_sockets.get(friend.friend.id)
-		# 	if socket:
-		# 		await self.channel_layer.send(
-		# 			socket,
-		# 			{
-		# 				'type': 'user_disconnected',
-		# 				'user_id': user_id
-		# 			}
-		# 		)
-		# await self.send(text_data=json.dumps({
-		# 	'type': 'disconnected'
-		# }))
 
 
 
@@ -83,6 +80,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			'type': 'user_disconnected',
 			'username': user
 		}))
+
+	async def connected_again(self, event):
+		user = event['user']
+		await self.send(text_data=json.dumps({
+			'type': 'connected_again',
+			'username': user
+		}))
+
 	##################################### 1vs1 (GAME) #####################################
 
 	async def gameReady(self, event):

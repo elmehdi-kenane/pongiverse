@@ -3,6 +3,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from myapp.models import customuser
 from chat.models import Friends
+from .models import Tournament
+import random
 from myapp.serializers import MyModelSerializer
 # from rest_framework.exceptions import AuthenticationFailed
 # from .serializers import UserSerializer
@@ -92,8 +94,27 @@ from django.http import HttpResponse
 
 @api_view(['POST'])
 def serve_image(request):
-	# print(f"THE IMAGE PATH IS : {request.data['image']}")
-	# response = Response()
 	if (request.data).get('image'):
 		with open(request.data['image'], 'rb') as image_file:
 			return HttpResponse(image_file.read(), content_type='image/jpeg')
+
+@api_view(['POST'])
+def get_user(request):
+	data = request.data
+	username = data.get('uname')
+	user = customuser.objects.filter(username=username).first()
+	if user is not None:
+		response = Response()
+		response.data = {'id' : user.id, 'name' : user.username, 'level' : 2, 'image' : user.avatar.path}
+		return response
+
+@api_view(['GET'])
+def create_tournament(request):
+	response = Response()
+	while True:
+		random_number = random.randint(1000000000, 10000000000)
+		tournament = Tournament.objects.filter(tournament_id=random_number).first()
+		if tournament is None:
+			break
+	response.data = {'tournament_id' : random_number}
+	return response
