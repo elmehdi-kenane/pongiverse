@@ -10,16 +10,16 @@ const MessagesContainer = (props) => {
   const [recivedMessages, setRecivedMessages] = useState({});
   const [newMessage, setNewMessage] = useState("");
   const { user } = useContext(AuthContext);
-  const { chatSocket } = useContext(AuthContext);
+  const { socket } = useContext(AuthContext);
   const messageEndRef = useRef(null);
   const sendMessage = (e) => {
     e.preventDefault();
     if (
-      chatSocket &&
-      chatSocket.readyState === WebSocket.OPEN &&
+      socket &&
+      socket.readyState === WebSocket.OPEN &&
       newMessage.trim() !== ""
     ) {
-      chatSocket.send(
+      socket.send(
         JSON.stringify({
           type: "message",
           data: {
@@ -60,14 +60,14 @@ const MessagesContainer = (props) => {
   );
 
   useEffect(() => {
-    if (chatSocket) {
-      chatSocket.onmessage = (e) => {
+    if (socket) {
+      socket.onmessage = (e) => {
         let data = JSON.parse(e.data);
         console.log("recived messages: ", data.data);
         if (data.type === "newMessage") setRecivedMessages(data.data);
       };
     }
-  }, [chatSocket]);
+  }, [socket]);
 
   useEffect(() => {
     if (recivedMessages) {
@@ -77,14 +77,13 @@ const MessagesContainer = (props) => {
 
   useEffect(() => {
       if (messages) {
-        // messageEndRef.current?.scrollIntoView();
         let scrollView = document.getElementById('start')
         scrollView.scrollTop = scrollView.scrollHeight
       }
   }, [messages])
 
   return (
-    <div className="conversation conv-container">
+    <div className="conv-container">
       <div className="conversation__name">
         Hellow
       </div>

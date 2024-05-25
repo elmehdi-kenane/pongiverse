@@ -11,7 +11,7 @@ const ChatMessages = () => {
     const [messages, setMessages] = useState([])
     const [newMessage, setnewMessage] = useState('')
     const {user} = useContext(AuthContext)
-    const {chatSocket} = useContext(AuthContext)
+    const {socket} = useContext(AuthContext)
 
     useEffect(() => {
         const fetchMessages = async () => {
@@ -32,9 +32,9 @@ const ChatMessages = () => {
         e.preventDefault();
         document.getElementById("message").value = ""
         console.log("Message is:",message)
-        if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
+        if (socket && socket.readyState === WebSocket.OPEN) {
             console.log("OPENED")
-            chatSocket.send(JSON.stringify({
+            socket.send(JSON.stringify({
                 type: 'message',
                 data : {
                     room_id: roomId,
@@ -46,8 +46,8 @@ const ChatMessages = () => {
     }
 
     useEffect (() => {
-        if(chatSocket){
-            chatSocket.onmessage = (e) =>{
+        if(socket){
+            socket.onmessage = (e) =>{
                 let data = JSON.parse(e.data)
                 console.log("recived messages: ",data.message)
                 if(data.type === "newMessage")
@@ -56,7 +56,7 @@ const ChatMessages = () => {
                 }
             }
         }
-    }, [chatSocket])
+    }, [socket])
 
     useEffect (() => {
         if(newMessage){

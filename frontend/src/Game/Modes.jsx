@@ -10,9 +10,25 @@ const Modes = () => {
   let { socket, user, setAllGameNotifs,
     allGameNotifs, notifsImgs } = useContext(AuthContext)
 
-  const goToSoloPage = () => {
-    navigate("../game/solo")
-  }
+	const goToSoloPage = () => {
+		navigate("../game/solo")
+	}
+
+	const goToTournamentPage = async () => {
+		try {
+			let response = await fetch(`http://localhost:8000/api/create_tournament`, {
+				method: "GET",
+				headers: {
+					'Content-Type': 'application/json',
+				}
+			});
+			let data = await response.json();
+			const tournamentId = data.tournament_id;
+			navigate("createtournament", {state: tournamentId});
+		} catch (error) {
+			console.error('There has been a problem with your fetch operation:', error);
+		}
+	}
 
   useEffect(() => {
     if (socket && socket.readyState === WebSocket.OPEN) {
@@ -100,6 +116,7 @@ const Modes = () => {
         </div>
         <div>Modes</div>
         <button onClick={goToSoloPage}>Play solo</button>
+		<button onClick={goToTournamentPage}>Create Tournament</button>
     </div>
   )
 }

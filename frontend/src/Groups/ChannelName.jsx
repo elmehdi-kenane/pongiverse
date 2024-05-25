@@ -25,7 +25,7 @@ const ChannelName = (props) => {
         <>
             <div className="channel" onClick={onClickhandler}>
                 <div className="channel-details">
-                    <img src={avatar} alt="" />
+                    <img src={avatar} alt="" className="channel__avatar"/>
                     <div className="name-container">
                         <div className="channel-name">{props.name}</div>
                         <div className="members-number">12 Members</div>
