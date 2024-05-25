@@ -19,6 +19,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from .serializers import MyModelSerializer
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 
 class SignUpView(APIView) :
@@ -174,7 +176,6 @@ class VerifyTokenView(APIView):
 					user.save()
 					tokens = get_tokens_for_user(user)
 					response.set_cookie('token', tokens['access'], httponly=True)
-					# print(tokens['access'])
 					return response
 				else:
 					response.data = {"Case" : "Invalid token"}

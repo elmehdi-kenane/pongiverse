@@ -178,7 +178,7 @@ async def backUpData(self, data, rooms):
             print(f'FOUND THIS PLAYER IN AN ACTIVE MATCH {player.username}')
             await self.channel_layer.group_add(str(active_match.room_id), self.channel_name)
             return
-        
+
 
 ##### join to a an existing room or a new one ##### =====> /game
 @sync_to_async
@@ -382,69 +382,69 @@ async def quitRoom(self, data, rooms, user_channels):
                                 }
                             }
                         })
-        
+
         await sync_to_async(room.delete)()
 
 async def startPlayer(self, data, rooms):
-    playersReady = 0
-    message = data['message']
-    room = rooms.get(message['roomID'])
+	playersReady = 0
+	message = data['message']
+	room = rooms.get(message['roomID'])
 
-    print("inside start_player")
-    if room:
-        for player in rooms[room['id']]['players']:
-            if player['user'] == message['user']:
-                player['status'] = 1
-            if player['status'] == 1:
-                playersReady += 1
-        if playersReady == 2:
-            asyncio.create_task(allPlayersReady(self, room['id']))
+	print("inside start_player")
+	if room:
+		for player in rooms[room['id']]['players']:
+			if player['user'] == message['user']:
+				player['status'] = 1
+			if player['status'] == 1:
+				playersReady += 1
+		if playersReady == 2:
+			asyncio.create_task(allPlayersReady(self, room['id']))
 
 async def allPlayersReady(self, roomID):
-    await self.channel_layer.group_send(roomID, {
-            'type': 'playersReady',
-            'message': 'playersReady'
-        }
-    )
+	await self.channel_layer.group_send(roomID, {
+			'type': 'playersReady',
+			'message': 'playersReady'
+		}
+	)
 
 ##### cancel ready for a player ##### =====> /game
 async def cancelPlayer(self, data, rooms):
-    message = data['message']
-    room = rooms.get(message['roomID'])
+	message = data['message']
+	room = rooms.get(message['roomID'])
 
-    print("inside cancel_player")
-    if room:
-        for player in rooms[room['id']]['players']:
-            if player['user'] == message['user']:
-                player['status'] = 0
+	print("inside cancel_player")
+	if room:
+		for player in rooms[room['id']]['players']:
+			if player['user'] == message['user']:
+				player['status'] = 0
 
 ##### remove the player from the room if he exit bofore it started ##### =====> /game
 async def clearRoom1(self, data, rooms):
-    message = data['message']
-    room = rooms.get(message['roomID'])
+	message = data['message']
+	room = rooms.get(message['roomID'])
 
-    print("inside clear_room1")
-    if room:
-        asyncio.create_task(clearRoom(self, room['id']))
-        self.channel_layer.group_discard(room['id'], self.channel_name)
+	print("inside clear_room1")
+	if room:
+		asyncio.create_task(clearRoom(self, room['id']))
+		self.channel_layer.group_discard(room['id'], self.channel_name)
 
 async def clearRoom(self, roomID):
-    await self.channel_layer.group_send(roomID, {
-            'type': 'removeRoom',
-            'message': 'removeRoom'
-        }
-    )
+	await self.channel_layer.group_send(roomID, {
+			'type': 'removeRoom',
+			'message': 'removeRoom'
+		}
+	)
 
 ##### remove the player from the room if he exit bofore it started ##### =====> /game
 async def clearRoom2(self, data, rooms):
-    message = data['message']
-    room = rooms.get(message['roomID'])
+	message = data['message']
+	room = rooms.get(message['roomID'])
 
-    print("inside clear_room2")
-    print(message)
-    if room:
-        self.channel_layer.group_discard(room['id'], self.channel_name)
-        rooms.pop(room['id'])
+	print("inside clear_room2")
+	print(message)
+	if room:
+		self.channel_layer.group_discard(room['id'], self.channel_name)
+		rooms.pop(room['id'])
 
 #### check if player is in this room provided by id ##### =====> /play/:id
 
@@ -557,53 +557,53 @@ async def validatePlayer(self, data, rooms, user_channels):
             }))
 
 def collision(self, ball, player):
-    ballTop = ball['ballY'] - 10
-    ballButtom = ball['ballY'] + 10
-    ballLeft = ball['ballX'] - 10
-    ballRight = ball['ballX'] + 10
-    playerTop = player['paddleY']
-    playerButtom = player['paddleY'] + 100
-    playerLeft = player['paddleX']
-    playerRight = player['paddleX'] + 10
-    return (ballRight > playerLeft and ballButtom > playerTop and
-            ballLeft < playerRight and ballTop < playerButtom)
+	ballTop = ball['ballY'] - 10
+	ballButtom = ball['ballY'] + 10
+	ballLeft = ball['ballX'] - 10
+	ballRight = ball['ballX'] + 10
+	playerTop = player['paddleY']
+	playerButtom = player['paddleY'] + 100
+	playerLeft = player['paddleX']
+	playerRight = player['paddleX'] + 10
+	return (ballRight > playerLeft and ballButtom > playerTop and
+			ballLeft < playerRight and ballTop < playerButtom)
 
 async def updatingGame(self, room):
-    await self.channel_layer.group_send(str(room['id']), {
-        'type': 'updateGame',
-        'message': {
-            'playerY1': room['players'][0]['paddleY'],
-            'playerY2': room['players'][1]['paddleY'],
-            'playerScore1': room['players'][0]['score'],
-            'playerScore2': room['players'][1]['score'],
-            'ballX': room['ball']['ballX'],
-            'ballY': room['ball']['ballY'],
-        }
-    })
+	await self.channel_layer.group_send(str(room['id']), {
+		'type': 'updateGame',
+		'message': {
+			'playerY1': room['players'][0]['paddleY'],
+			'playerY2': room['players'][1]['paddleY'],
+			'playerScore1': room['players'][0]['score'],
+			'playerScore2': room['players'][1]['score'],
+			'ballX': room['ball']['ballX'],
+			'ballY': room['ball']['ballY'],
+		}
+	})
 
 async def gameFinished(self, room):
-    await self.channel_layer.group_send(str(room['id']), {
-            'type': 'finishedGame',
-            'message': {
-                'user1' : room['players'][0]['user'],
-                'user2' : room['players'][1]['user'],
-                'playerScore1' : room['players'][0]['score'],
-                'playerScore2' : room['players'][1]['score']
-            }
-        }
-    )
+	await self.channel_layer.group_send(str(room['id']), {
+			'type': 'finishedGame',
+			'message': {
+				'user1' : room['players'][0]['user'],
+				'user2' : room['players'][1]['user'],
+				'playerScore1' : room['players'][0]['score'],
+				'playerScore2' : room['players'][1]['score']
+			}
+		}
+	)
 
 async def gameAborted(self, room):
-    await self.channel_layer.group_send(str(room['id']), {
-            'type': 'abortedGame',
-            'message': {
-                'user1' : room['players'][0]['user'],
-                'user2' : room['players'][1]['user'],
-                'playerScore1' : room['players'][0]['score'],
-                'playerScore2' : room['players'][1]['score']
-            }
-        }
-    )
+	await self.channel_layer.group_send(str(room['id']), {
+			'type': 'abortedGame',
+			'message': {
+				'user1' : room['players'][0]['user'],
+				'user2' : room['players'][1]['user'],
+				'playerScore1' : room['players'][0]['score'],
+				'playerScore2' : room['players'][1]['score']
+			}
+		}
+	)
 
 async def runOverGame(self, room, ballProps, rooms, user_channels):
     # global rooms
@@ -856,84 +856,84 @@ async def startGame(self, data, rooms, user_channels):
 ##### when the game already started and some or all players getout from the playing page ##### =====> /play/:id
 
 async def changedPage(self, data, rooms):
-    message = data['message']
-    room = rooms.get(str(message['roomID']))
-    inactivePlayers = 0
+	message = data['message']
+	room = rooms.get(str(message['roomID']))
+	inactivePlayers = 0
 
-    if room:
-        if room['status'] == 'started':
-            for player in room['players']:
-                if player['user'] == message['user']:
-                    player['state'] = 'inactive'
-                if player['state'] == 'inactive':
-                    inactivePlayers += 1
-            if inactivePlayers == 2:
-                room['status'] = 'aborted'
-                for player in room['players']:
-                    player['state'] = 'finished'
-            else:
-                asyncio.create_task(cdBeforeEndingGame(self, message['roomID'], rooms))
+	if room:
+		if room['status'] == 'started':
+			for player in room['players']:
+				if player['user'] == message['user']:
+					player['state'] = 'inactive'
+				if player['state'] == 'inactive':
+					inactivePlayers += 1
+			if inactivePlayers == 2:
+				room['status'] = 'aborted'
+				for player in room['players']:
+					player['state'] = 'finished'
+			else:
+				asyncio.create_task(cdBeforeEndingGame(self, message['roomID'], rooms))
 
 async def cdBeforeEndingGame(self, roomID, rooms):
-    room = rooms.get(str(roomID))
-    countdown = 10
-    if room:
-        for i in range(60):
-            await asyncio.sleep(1)
-            countdown -= 1
-            if room['status'] == 'started' and (room['players'][0]['state'] == 'inactive' or room['players'][1]['state'] == 'inactive'):
-                if countdown == 0:
-                    room['status'] = 'finished'
-                    if room['players'][0]['state'] == 'inactive':
-                        room['players'][0]['status'] = 'loser'
-                        room['players'][1]['status'] = 'winner'
-                    elif room['players'][1]['state'] == 'inactive':
-                        room['players'][1]['status'] = 'loser'
-                        room['players'][0]['status'] = 'winner'
-                    await asyncio.create_task(gameFinished(self, room))
-                    break
-            else:
-                break
+	room = rooms.get(str(roomID))
+	countdown = 10
+	if room:
+		for i in range(60):
+			await asyncio.sleep(1)
+			countdown -= 1
+			if room['status'] == 'started' and (room['players'][0]['state'] == 'inactive' or room['players'][1]['state'] == 'inactive'):
+				if countdown == 0:
+					room['status'] = 'finished'
+					if room['players'][0]['state'] == 'inactive':
+						room['players'][0]['status'] = 'loser'
+						room['players'][1]['status'] = 'winner'
+					elif room['players'][1]['state'] == 'inactive':
+						room['players'][1]['status'] = 'loser'
+						room['players'][0]['status'] = 'winner'
+					await asyncio.create_task(gameFinished(self, room))
+					break
+			else:
+				break
 
 
 async def move_paddle(self, data, rooms):
-    room = rooms.get(data['message']['roomID'])
-    if room:
-        player = room['players'][data['message']['playerNo'] - 1]
-        if data['message']['direction'] == 'up':
-            player['paddleY'] -= 8
-            if player['paddleY'] < 0:
-                player['paddleY'] = 0
-        elif data['message']['direction'] == 'down':
-            player['paddleY'] += 8
-            if player['paddleY'] + 100 > 400:
-                player['paddleY'] = 300
+	room = rooms.get(data['message']['roomID'])
+	if room:
+		player = room['players'][data['message']['playerNo'] - 1]
+		if data['message']['direction'] == 'up':
+			player['paddleY'] -= 8
+			if player['paddleY'] < 0:
+				player['paddleY'] = 0
+		elif data['message']['direction'] == 'down':
+			player['paddleY'] += 8
+			if player['paddleY'] + 100 > 400:
+				player['paddleY'] = 300
 
 async def move_mouse(self, data, rooms):
-    room = rooms.get(data['message']['roomID'])
-    if room:
-        player = room['players'][data['message']['playerNo'] - 1]
-        player['paddleY'] = data['message']['mousePos'] - data['message']['canvasTop'] - 50
-        if player['paddleY'] < 0:
-            player['paddleY'] = 0
-        elif player['paddleY'] + 100 > 400:
-            player['paddleY'] = 300
+	room = rooms.get(data['message']['roomID'])
+	if room:
+		player = room['players'][data['message']['playerNo'] - 1]
+		player['paddleY'] = data['message']['mousePos'] - data['message']['canvasTop'] - 50
+		if player['paddleY'] < 0:
+			player['paddleY'] = 0
+		elif player['paddleY'] + 100 > 400:
+			player['paddleY'] = 300
 
 async def user_exited(self, data, rooms):
-    message = data['message']
-    room = rooms.get(str(message['roomID']))
+	message = data['message']
+	room = rooms.get(str(message['roomID']))
 
-    if room:
-        room['status'] = 'finished'
-        if room['players'][0]['user'] == message['user']:
-            room['players'][0]['status'] = 'loser'
-            room['players'][1]['status'] = 'winner'
-        elif room['players'][1]['user'] == message['user']:
-            room['players'][1]['status'] = 'loser'
-            room['players'][0]['status'] = 'winner'
+	if room:
+		room['status'] = 'finished'
+		if room['players'][0]['user'] == message['user']:
+			room['players'][0]['status'] = 'loser'
+			room['players'][1]['status'] = 'winner'
+		elif room['players'][1]['user'] == message['user']:
+			room['players'][1]['status'] = 'loser'
+			room['players'][0]['status'] = 'winner'
 
 ##### invite a friend from the friends to play with #####
-async def invite_friend(self, data, rooms, tmp_rooms, user_channels):
+async def invite_friend(self, data, rooms, user_channels):
     # active_matches = await sync_to_async(list)(ActiveMatch.objects.all())
     # for active_match in active_matches:
     #     player_state = await sync_to_async(PlayerState.objects.filter(active_match=active_match).first)()
