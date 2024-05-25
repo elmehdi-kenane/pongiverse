@@ -72,8 +72,10 @@ from myapp.serializers import MyModelSerializer
 #     }
 #     return response
 
+from django.http import HttpResponse
 import base64
 import os
+from .models import GameNotifications
 
 @api_view(['POST'])
 def online_friends(request):
@@ -90,7 +92,17 @@ def online_friends(request):
 		# print(f'friends are {friends}')
 	return Response({'message': allFriends})
 
-from django.http import HttpResponse
+@api_view(['POST'])
+def notifs_friends(request):
+	username = request.data['user']
+	print(f'user is {username}')
+	target = customuser.objects.get(username=username)
+	allNotifs = []
+	for gameNotif in GameNotifications.objects.filter(target=target):
+		# print(f'ROOM_ID WHEN FETCHING IS : {gameNotif.room_id}')
+		allNotifs.append({'user': gameNotif.user.username, 'avatar': gameNotif.user.avatar.path, 'roomID': gameNotif.active_match.room_id})
+	return Response({'message': allNotifs})
+
 
 @api_view(['POST'])
 def serve_image(request):
@@ -118,3 +130,22 @@ def create_tournament(request):
 			break
 	response.data = {'tournament_id' : random_number}
 	return response
+
+	if (request.data).get('image'):
+		with open(request.data['image'], 'rb') as image_file:
+			return HttpResponse(image_file.read(), content_type='image/jpeg')
+
+@api_view(['POST'])
+def user_image(request):
+	username = (request.data).get('user')
+	if not username:
+		print("no user is here")
+		return Response({'message': 'no username is here'})
+	user = customuser.objects.filter(username=username).first()
+	if user:
+		image_path = user.avatar.path
+		if image_path:
+			with open(image_path, 'rb') as image_file:
+				return HttpResponse(image_file.read(), content_type='image/jpeg')
+	else:
+		return Response({'message': 'user not exit in the database'})

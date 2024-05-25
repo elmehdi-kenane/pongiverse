@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import styles from '../assets/Tournament/tournament.module.css'
 import avatar from './cross.png'
 import av from './avatar.jpeg'
@@ -15,9 +15,8 @@ function CreateTournament() {
 	if (tournament_id === 0){
 		navigate("/mainpage/game")
 	}
-	const [onlineFriends, setOnlineFriends] = useState([]);
-	const { user, userImages, allGameFriends } = useContext(AuthContext)
-	console.log("ALL GAME FRIENDS: ", allGameFriends);
+	const { user, userImages, allGameFriends, socket, setAllGameFriends } = useContext(AuthContext)
+	const allGameFriendsRef = useRef(allGameFriends);
 	const isOpen = () => {
 		setOpen(!open);
 	}
@@ -25,6 +24,31 @@ function CreateTournament() {
 	const handleInviteClick = (name) => {
 		console.log("Inviting user:", name);
 	};
+
+	useEffect(() => {
+		allGameFriendsRef.current = allGameFriends;
+	}, [allGameFriends]);
+
+	useEffect(() => {
+		if (socket && socket.readyState === WebSocket.OPEN) {
+			socket.onmessage = (event) => {
+				let data = JSON.parse(event.data)
+				let type = data.type
+				let message = data.message
+				if (type === 'user_disconnected') {
+					const currentAllGameFriends = allGameFriendsRef.current;
+					console.log("user disconnected : ", allGameFriends)
+					let uname = data.message.user
+					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname))
+				} else if (type === 'connected_again') {
+					const currentAllGameFriends = allGameFriendsRef.current;
+					const userExists = currentAllGameFriends.some(friend => friend.name === message.user)
+						if (!userExists)
+							setAllGameFriends([...currentAllGameFriends, message.userInfos])
+				}
+			}
+		}
+	},[socket])
 
 	const [activeDiv, setActiveDiv] = useState(-1);
 	const [content, setContent] = useState("");

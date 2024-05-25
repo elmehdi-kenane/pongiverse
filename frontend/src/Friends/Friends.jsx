@@ -24,7 +24,10 @@ const Friends = () => {
   }, [user])
 
   return (
-    <div style={{color:"white"}}>Friends</div>
+    <>
+      <div style={{color:"white"}}>Friends</div>
+      <button>Clicked</button>
+    </>
   )
 }
 

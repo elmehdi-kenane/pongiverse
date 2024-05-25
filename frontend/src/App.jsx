@@ -21,38 +21,44 @@ import ChangePassword from './components/SignIn/ChangePassword';
 import SignInPage from './components/SignIn/SignInPage';
 import SignUpPage from './components/SignUp/SignUpPage';
 import SecondStep from './components/SignUp/SecondStep';
-import WebSocketComponent from './components/SocketTest'
 import CreateTournament from './Tournament/CreateTournament';
+import MessagesContainer from './Chat/MessagesPage';
+import OneVsOneRandom from './Game/OneVsOneRandom';
+import OneVsOneFriends from './Game/OneVsOneFriends';
+import OneVsOneCreateOrJoin from './Game/OneVsOneCreateOrJoin';
 
 const App = () => {
-	return (
-		<div className="page">
-			<Router>
-				<AuthProvider>
-					<Routes>
-						<Route path="/" element={<HomePage />} exact />
-						<Route path="/signup" element={<SignUpPage />} />
-						<Route path="/Signin" element={<SignInPage />} />
-						<Route path="/SecondStep" element={<SecondStep />} />
-						<Route path="/WaysSecondStep" element={<WaysSecondStep />} />
-						<Route path="/ForgotPassword" element={<ForgotPassword />} />
-						<Route path="/ChangePassword" element={<ChangePassword />} />
-						<Route path="SocketTest" element={<WebSocketComponent />} />
-						<Route path="/mainpage" element={<NavbarSidebar />} >
-							<Route path="dashboard" element={<Dashboard />} />
-							<Route path="chat" element={<Chat />} />
-							<Route path="friends" element={<Friends />} />
-							<Route path="groups" element={<Groups />} />
-							<Route path="game" element={<Modes />} />
-							<Route path="game/solo" element={<Solo />} />
-							<Route path="game/solo/1vs1" element={<OneVersusOne />} />
-							<Route path="play/1vs1/:roomID" element={<PlayMatch />} />
-							<Route path="game/createtournament" element={<CreateTournament />} />
-						</Route>
-					</Routes>
-				</AuthProvider>
-			</Router>
-		</div>
-	)
+  return (
+    <div className="page">
+        <Router>
+          <AuthProvider>
+                <Routes>
+                    <Route path="/" element={<HomePage />} exact />
+                    <Route path="/signup" element={<SignUpPage />} />
+                    <Route path="/signin" element={<SignInPage />} />
+                    <Route path="/SecondStep" element={<SecondStep />} />
+                    <Route path="/WaysSecondStep" element={<WaysSecondStep />} />
+                    <Route path="/ForgotPassword" element={<ForgotPassword />} />
+                    <Route path="/ChangePassword" element={<ChangePassword />} />
+                    <Route path="/mainpage" element={<NavbarSidebar />} >
+                      <Route path="dashboard" element={<Dashboard />} />
+                      <Route path="chat" element={<Chat />} />
+                      {/* <Route path="chat/:roomId" element={<MessagesContainer />} /> */}
+                      <Route path="friends" element={<Friends />} />
+                      <Route path="groups" element={<Groups />} />
+                      <Route path="game" element={<Modes />} />
+                      <Route path="game/solo" element={<Solo />} />
+                      <Route path="game/solo/1vs1" element={<OneVersusOne />} />
+                      <Route path="game/solo/1vs1/random" element={<OneVsOneRandom />} />
+                      <Route path="game/solo/1vs1/friends" element={<OneVsOneFriends />} />
+                      <Route path="game/solo/1vs1/create-or-join" element={<OneVsOneCreateOrJoin />} />
+                      <Route path="play/1vs1/:roomID" element={<PlayMatch />} />
+					  <Route path="game/createtournament" element={<CreateTournament />} />
+                    </Route>
+                </Routes>
+          </AuthProvider>
+        </Router>
+    </div>
+  )
 }
 export default App

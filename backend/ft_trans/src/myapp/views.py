@@ -142,7 +142,6 @@ class VerifyTokenView(APIView):
 	def post(self, request, format=None):
 		response = Response()
 		username = request.data['user']
-		print(f"THE USERNAME OF THE USER IS : {username}")
 		try:
 			token = request.COOKIES.get('token')
 			decoded_token = AccessToken(token)
@@ -151,7 +150,6 @@ class VerifyTokenView(APIView):
 				if username:
 					user = customuser.objects.filter(username=username).first()
 					if user:
-						print(f"THIS SPECIFIC USER IS HEREEEEEEE !!!!!!!!!!")
 						user.is_online = False
 						user.save()
 				response.data = {"Case" : "Invalid token"}

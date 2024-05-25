@@ -8,4 +8,6 @@ urlpatterns = [
 	path('getImage', views.serve_image, name='image'),
 	path('get_user', views.get_user, name='get_user'),
 	path('create_tournament', views.create_tournament, name='create_tournament'),
+    path('notifsFriends', views.notifs_friends, name='notifs_friends'),
+    path('getUserImage', views.user_image, name='image'),
 ]

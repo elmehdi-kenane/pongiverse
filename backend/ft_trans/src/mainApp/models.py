@@ -5,13 +5,6 @@ from django.utils import timezone
 from myapp.models import customuser
 import random
 
-# class RoomIDManager(models.Manager):
-#     def generate_unique_room_id(self):
-#         while True:
-#             room_id = random.randint(1000, 9999)  # Adjust the range as needed
-#             if not ActiveMatch.objects.filter(room_id=room_id).exists() and not Match.objects.filter(room_id=room_id).exists():
-#                 return room_id
-
 class Match(models.Model):
 	mode = models.CharField(max_length=255)
 	room_id = models.PositiveBigIntegerField(unique=True)
@@ -28,22 +21,32 @@ class Match(models.Model):
 	match_status = models.CharField(max_length=255)
 
 class ActiveMatch(models.Model):
-	mode = models.CharField(max_length=255)
-	room_type = models.CharField(max_length=255)
-	room_id = models.PositiveBigIntegerField(unique=True)
-	status = models.CharField(max_length=255)
-	winner = models.PositiveIntegerField(default=0)
-	ballX = models.IntegerField(default=0)
-	ballY = models.IntegerField(default=0)
+    mode = models.CharField(max_length=255)
+    room_type = models.CharField(max_length=255)
+    room_id = models.PositiveBigIntegerField(unique=True)
+    status = models.CharField(max_length=255)
+    winner = models.PositiveIntegerField(default=0)
+    ballX = models.IntegerField(default=0)
+    ballY = models.IntegerField(default=0)
+    creator = models.ForeignKey(customuser, on_delete=models.CASCADE, null=True, blank=True)
 
 class PlayerState(models.Model):
-	active_match = models.ForeignKey(ActiveMatch, on_delete=models.CASCADE, related_name='player_state')
-	player = models.ForeignKey(customuser, on_delete=models.CASCADE)
-	state = models.CharField(max_length=255)
-	playerNo = models.PositiveIntegerField(default=0)
-	paddleX = models.IntegerField(default=0)
-	paddleY = models.IntegerField(default=0)
-	score = models.PositiveIntegerField(default=0)
+    active_match = models.ForeignKey(ActiveMatch, on_delete=models.CASCADE, related_name='player_state')
+    player = models.ForeignKey(customuser, on_delete=models.CASCADE)
+    state = models.CharField(max_length=255)
+    playerNo = models.PositiveIntegerField(default=0)
+    paddleX = models.IntegerField(default=0)
+    paddleY = models.IntegerField(default=0)
+    score = models.PositiveIntegerField(default=0)
+
+class NotifPlayer(models.Model):
+    active_match = models.ForeignKey(ActiveMatch, on_delete=models.CASCADE, related_name='notify_player')
+    player = models.ForeignKey(customuser, on_delete=models.CASCADE)
+
+class GameNotifications(models.Model):
+    active_match = models.ForeignKey(ActiveMatch, on_delete=models.CASCADE, related_name='game_notify_active_match')
+    user = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='notify_user')
+    target = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='notify_target')
 # room_id_manager = RoomIDManager()
 
 class Tournament(models.Model):
