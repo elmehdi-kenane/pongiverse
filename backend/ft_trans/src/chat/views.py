@@ -13,12 +13,12 @@ def channel_list(request, username):
 
         for channel in channels:
             messages = Message.objects.filter(room_id=channel.id)
-            if(messages):
-                channel_data = {
-                    'id': channel.id,
-                    'name': channel.name,
-                }
-                data.append(channel_data)
+            # if(messages):
+            channel_data = {
+                'id': channel.id,
+                'name': channel.name,
+            }
+            data.append(channel_data)
         return Response(data)
 
     return Response({'error': 'Invalid request method'}, status=400)
@@ -36,5 +36,23 @@ def channel_messages(request, room_id):
                 'date' : message.timestamp
             }
             data.append(message_data)
+        return Response (data)
+    return Response({'error': 'Invalid request method'}, status=400)
+
+@api_view (['POST'])
+def direct_messages(request):
+    if request.method == 'POST':
+        username = (request.data).get('user')
+        friend = (request.data).get('friend')
+        # messages = Message.objects.filter()
+        data = []
+        # for message in messages:
+        #     message_data = {
+        #         'id':message.id,
+        #         'content': message.content,
+        #         'sender' : message.sender.username,
+        #         'date' : message.timestamp
+        #     }
+        #     data.append(message_data)
         return Response (data)
     return Response({'error': 'Invalid request method'}, status=400)

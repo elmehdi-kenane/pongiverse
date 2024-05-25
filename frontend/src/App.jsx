@@ -21,34 +21,42 @@ import ChangePassword from "./components/SignIn/ChangePassword";
 import SignInPage from "./components/SignIn/SignInPage";
 import SignUpPage from "./components/SignUp/SignUpPage";
 import SecondStep from "./components/SignUp/SecondStep";
+// import ChatMessages from './Groups/ChatMessages';
 import MessagesContainer from "./Chat/MessagesPage";
+import OneVsOneRandom from "./Game/OneVsOneRandom";
+import OneVsOneFriends from "./Game/OneVsOneFriends";
+import { ChatProvider } from "./Groups/ChatContext";
 
 const App = () => {
   return (
     <div className="page">
       <Router>
         <AuthProvider>
-          <Routes>
-            <Route path="/" element={<HomePage />} exact />
-            <Route path="/signup" element={<SignUpPage />} />
-            <Route path="/Signin" element={<SignInPage />} />
-            <Route path="/SecondStep" element={<SecondStep />} />
-            <Route path="/WaysSecondStep" element={<WaysSecondStep />} />
-            <Route path="/ForgotPassword" element={<ForgotPassword />} />
-            <Route path="/ChangePassword" element={<ChangePassword />} />
-            <Route path="/mainpage" element={<NavbarSidebar />}>
-              <Route path="dashboard" element={<Dashboard />} />
-              <Route path="chat" element={<Chat />} >
-                <Route path=":roomId" element={<MessagesContainer />} />
+          <ChatProvider>
+            <Routes>
+              <Route path="/" element={<HomePage />} exact />
+              <Route path="/signup" element={<SignUpPage />} />
+              <Route path="/Signin" element={<SignInPage />} />
+              <Route path="/SecondStep" element={<SecondStep />} />
+              <Route path="/WaysSecondStep" element={<WaysSecondStep />} />
+              <Route path="/ForgotPassword" element={<ForgotPassword />} />
+              <Route path="/ChangePassword" element={<ChangePassword />} />
+              <Route path="/mainpage" element={<NavbarSidebar />}>
+                <Route path="dashboard" element={<Dashboard />} />
+                {/*  ChatProvider*/}
+                <Route path="chat" element={<Chat />}>
+                  <Route path=":roomId" element={<MessagesContainer />} />
+                </Route>
+                <Route path="groups" element={<Groups />} />
+                {/*  ChatProvider*/}
+                <Route path="friends" element={<Friends />} />
+                <Route path="game" element={<Modes />} />
+                <Route path="game/solo" element={<Solo />} />
+                <Route path="game/solo/1vs1" element={<OneVersusOne />} />
+                <Route path="play/1vs1/:roomID" element={<PlayMatch />} />
               </Route>
-              <Route path="friends" element={<Friends />} />
-              <Route path="groups" element={<Groups />} />
-              <Route path="game" element={<Modes />} />
-              <Route path="game/solo" element={<Solo />} />
-              <Route path="game/solo/1vs1" element={<OneVersusOne />} />
-              <Route path="play/1vs1/:roomID" element={<PlayMatch />} />
-            </Route>
-          </Routes>
+            </Routes>
+          </ChatProvider>
         </AuthProvider>
       </Router>
     </div>

@@ -6,15 +6,14 @@ import OtherMessage from "./OtherMessage";
 import * as ChatIcons from "../assets/chat/media";
 
 import "../assets/chat/Chat.css";
+import ChatContext from "../Groups/ChatContext";
 
 const MessagesContainer = () => {
-  const { roomId } = useParams();
   const [messages, setMessages] = useState([]);
-  const [recivedMessages, setRecivedMessages] = useState({});
+  const [recivedMessages, setRecivedMessages] = useState(null);
   const [newMessage, setNewMessage] = useState("");
-  const { user } = useContext(AuthContext);
-  const { socket } = useContext(AuthContext);
-  const { selectedChannel } = useContext(AuthContext);
+  const { user, socket } = useContext(AuthContext);
+  const { selectedChannel } = useContext(ChatContext);
   const messageEndRef = useRef(null);
   const sendMessage = (e) => {
     e.preventDefault();
@@ -27,7 +26,7 @@ const MessagesContainer = () => {
         JSON.stringify({
           type: "message",
           data: {
-            room_id : roomId,
+            room_id : selectedChannel.roomId,
             sender: user,
             message: newMessage,
           },
@@ -38,6 +37,7 @@ const MessagesContainer = () => {
   };
 
   const getMessage = (e) => {
+    console.log("recived message: ", e.target.target)
     setNewMessage(e.target.value);
   };
 
@@ -46,20 +46,21 @@ const MessagesContainer = () => {
       const fetchMessages = async () => {
         try {
           const response = await fetch(
-            `http://localhost:8000/chatAPI/channels/messages/${roomId}`
+            `http://localhost:8000/chatAPI/channels/messages/${selectedChannel.roomId}`
           );
           const data = await response.json();
-          setMessages(data);
+          if(data)
+            setMessages(data);
           console.log("the data messages: ", data)
         } catch (error) {
           console.log(error);
         }
       };
-      if (roomId) fetchMessages();
+      if (selectedChannel.roomId) fetchMessages();
       let scrollView = document.getElementById("start");
       scrollView.scrollTop = scrollView.scrollHeight;
     },
-    [roomId]
+    [selectedChannel.roomId]
   );
 
   useEffect(() => {
@@ -67,19 +68,24 @@ const MessagesContainer = () => {
       socket.onmessage = (e) => {
         let data = JSON.parse(e.data);
         console.log("recived messages: ", data.data);
-        if (data.type === "newMessage") setRecivedMessages(data.data);
+        if (data.type === "newMessage") {
+          setRecivedMessages(data.data);
+          console.log("new message recived: ", data.data)
+        }
       };
-      console.log(roomId)
+      console.log(selectedChannel.roomId)
     }
   }, [socket]);
 
   useEffect(() => {
-    if (recivedMessages) {
+    console.log("new message")
+    if (recivedMessages !== null) {
       setMessages((prev) => [...prev, recivedMessages]);
     }
   }, [recivedMessages]);
 
   useEffect(() => {
+    console.log("messages: ======> ",messages)
     if (messages) {
       let scrollView = document.getElementById("start");
       scrollView.scrollTop = scrollView.scrollHeight;
@@ -120,11 +126,11 @@ const MessagesContainer = () => {
         </div>
       </div>
       <div id="start" className="conversation__messages">
-        {messages.map((message) =>
+        { messages.length !== 0 && messages.map((message, index) =>
           message.sender === user ? (
-            <MyMessage key={message.id} content={message.content} />
+            <MyMessage key={index} content={message.content} />
           ) : (
-            <OtherMessage key={message.id} content={message.content} />
+            <OtherMessage key={index} content={message.content} />
           )
         )}
         <div ref={messageEndRef}></div>

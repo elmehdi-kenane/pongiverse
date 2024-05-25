@@ -7,6 +7,7 @@ class Room(models.Model):
     name = models.CharField(max_length=100)
     members = models.ManyToManyField(User, related_name='rooms', through='Membership')
     topic = models.TextField(blank=True)
+    icon = models.ImageField(upload_to='uploads/')
 
 
 class Message(models.Model):

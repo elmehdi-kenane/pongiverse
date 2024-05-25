@@ -1,52 +1,30 @@
 import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../navbar-sidebar/Authcontext";
+import ChatContext from "../Groups/ChatContext";
 import Conversation from "./Conversation";
 import MessagesContainer from "./MessagesPage";
 import * as ChatIcons from "../assets/chat/media";
-import { Outlet } from 'react-router-dom'
+import { Outlet } from "react-router-dom";
 
 import "../assets/chat/Chat.css";
+import DirectMessages from "./DirectMessages";
 
 const Chat = () => {
   const [isHome, setIsHome] = useState(true);
   const [expandSearch, setExpandSearch] = useState(false);
-  const [channelsConversations, setChannelsConversations] = useState([]);
-  const [ directsConversations, setDirectsConversations] = useState([]);
-  const { user, setSelectedChannel, selectedChannel } = useContext(AuthContext);
-  const navigate = useNavigate();
-  const selectedElems = []
+  const {
+    channelsConversations,
+    directsConversations,
+    setSelectedChannel,
+    selectedChannel,
+    setSelectedDirect,
+    selectedDirect,
+  } = useContext(ChatContext);
+  const { user } = useContext(AuthContext);
 
-  useEffect(() => {
-    const fetchChannelsWithMessage = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:8000/chatAPI/channels/${user}`
-        );
-        const data = await response.json();
-        setChannelsConversations(data);
-        console.log(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    const fetchDirectsWithMessage = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:8000/users/friends/${user}`
-        );
-        const data = await response.json();
-        setDirectsConversations(data.friends);
-        console.log("Friends: ",data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    if (user) {
-      fetchChannelsWithMessage();
-      fetchDirectsWithMessage();
-    }
-  }, [user]);
+  const navigate = useNavigate();
+  const selectedElems = [];
 
   return (
     <div className="chat-page">
@@ -97,31 +75,41 @@ const Chat = () => {
           </div>
           {isHome ? (
             <div className="conversations__list">
-              {directsConversations.map((channel) => (
+              {directsConversations.map((user, key) => (
                 <Conversation
-                  name={channel.name}
-                  key={channel.id}
-                  roomId={channel.id}
-                  setSelectedChannel={setSelectedChannel}
-                  selectedElems={selectedElems}
+                  name={user.name}
+                  key={user.id}
+                  status={user.is_online}
+                  imageIndex={key}
+                  isDirect={isHome}
+                  setSelectedDirect={setSelectedDirect}
                 />
               ))}
             </div>
           ) : (
             <div className="conversations__list">
-              {channelsConversations.map((channel) => (
+              {channelsConversations.map((channel, key) => (
                 <Conversation
                   name={channel.name}
                   key={channel.id}
                   roomId={channel.id}
+                  memebers={channel.memebers}
                   setSelectedChannel={setSelectedChannel}
+                  isDirect={isHome}
                 />
               ))}
             </div>
           )}
         </div>
         <div className="conv-container">
-        <Outlet />
+          {!isHome &&
+          Object.values(selectedChannel).every((value) => value !== "") ? (
+            <MessagesContainer/>
+          ) : (isHome && Object.values(selectedDirect).every((value) => value !== "")) ? (
+            <DirectMessages/>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </div>
@@ -130,22 +118,3 @@ const Chat = () => {
 
 export default Chat;
 
-{
-  /* {Object.values(selectedChannel).every((value) => value !== "") ? (
-          <MessagesContainer selectedChannel={selectedChannel} />
-        ) : (
-          <div className="conv-container">
-            {expandSearch ? (
-              <div className="chat-search-mobile">
-                <input
-                  type="text"
-                  placeholder="Search"
-                  className="chat-search-mobile__input"
-                />
-              </div>
-            ) : (
-              ""
-            )}
-          </div>
-        )} */
-}

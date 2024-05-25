@@ -3,9 +3,9 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from . import game_consumers
 from chat import chat_consumers
 
-
 rooms = {}
 tmp_rooms = {}
+user_channels = {}
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         await self.accept()
@@ -13,27 +13,31 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'type': 'connection_established',
             'message': 'You are now connected!'
         }))
-
+    
     async def receive(self, text_data):
         data = json.loads(text_data)
-        print('data recived: ',data)
-        if data['type'] == 'isPlayerInAnyRoom': await game_consumers.isPlayerInAnyRoom(self, data, rooms)
+
+        if data['type'] == 'handShake': user_channels[data['message']['user']] = self.channel_name
+        elif data['type'] == 'isPlayerInAnyRoom': await game_consumers.isPlayerInAnyRoom(self, data, rooms, user_channels)
         elif data['type'] == 'dataBackUp': await game_consumers.backUpData(self, data, rooms)
-        elif data['type'] == 'join': await game_consumers.joinRoom(self, data, rooms)
-        elif data['type'] == 'quit': await game_consumers.quitRoom(self, data, rooms)
+        elif data['type'] == 'join': await game_consumers.joinRoom(self, data, rooms, user_channels)
+        elif data['type'] == 'quit': await game_consumers.quitRoom(self, data, rooms, user_channels)
         elif data['type'] == 'start': await game_consumers.startPlayer(self, data, rooms)
         elif data['type'] == 'cancel': await game_consumers.cancelPlayer(self, data, rooms)
         elif data['type'] == 'getOut': await game_consumers.clearRoom1(self, data, rooms)
         elif data['type'] == 'OpponentIsOut': await game_consumers.clearRoom2(self, data, rooms)
-        elif data['type'] == 'isPlayerInRoom': await game_consumers.validatePlayer(self, data, rooms)
+        elif data['type'] == 'isPlayerInRoom': await game_consumers.validatePlayer(self, data, rooms, user_channels)
         elif data['type'] == 'playerChangedPage': await game_consumers.changedPage(self, data, rooms)
         elif data['type'] == 'moveKey': await game_consumers.move_paddle(self, data, rooms)
         elif data['type'] == 'moveMouse':await game_consumers.move_mouse(self, data, rooms)
         elif data['type'] == 'userExited': await game_consumers.user_exited(self, data, rooms)
         elif data['type'] == 'inviteFriend': await game_consumers.invite_friend(self, data, rooms, tmp_rooms)
+        elif data['type'] == 'acceptInvitation': await game_consumers.accept_game_invite(self, data, rooms, user_channels)
         #chat
         elif data['type'] == 'join-channel': await chat_consumers.join_channel(self, data)
         elif data['type'] == 'message': await chat_consumers.message(self, data)
+        elif data['type'] == 'inviteFriendGame': await game_consumers.invite_friend(self, data, rooms, tmp_rooms, user_channels)
+        elif data['type'] == 'directMessages': await game_consumers.invite_friend(self, data, rooms, tmp_rooms, user_channels)
 
     ##################################### 1vs1 (GAME) #####################################
 
@@ -119,3 +123,26 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }
         }
         await self.send(text_data=json.dumps(message))
+    async def receiveFriendGame(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'receiveFriendGame',
+            'message': event['message']
+        }))
+
+    async def sendPlayerNo(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'playerNo',
+            'message': event['message']
+        }))
+
+    async def playingStatus(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'playingStatus',
+            'message': event['message']
+        }))
+
+    async def goToGamingPage(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'goToGamingPage',
+            'message': event['message']
+        }))

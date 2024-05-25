@@ -134,6 +134,8 @@
 
 .conversation-holder__avatar {
     width: 35px;
+    border-radius: 45px;
+    border: 0.5px solid wheat;
 }
 
 .conversation-holder__deatils {
@@ -177,6 +179,8 @@
 
 .name-container__avatar {
     width: 50px;
+    border: 1px solid white;
+    border-radius: 35px
 }
 .name-container__icons {
     display: flex;
@@ -346,7 +350,7 @@ img.name-container__invite-icon {
     }
     .conversations {
         width: 100%;
-        height: 160px;
+        height: 165px;
         padding: 10px 5px;
     }
     .conv-container {
@@ -361,7 +365,7 @@ img.name-container__invite-icon {
     }
     .conversation-holder {
         width: 45px;
-        align-items: flex-start;
+        align-items: center;
         padding: 0px;
     }
 
