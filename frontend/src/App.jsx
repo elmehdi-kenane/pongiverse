@@ -21,11 +21,12 @@ import ChangePassword from "./components/SignIn/ChangePassword";
 import SignInPage from "./components/SignIn/SignInPage";
 import SignUpPage from "./components/SignUp/SignUpPage";
 import SecondStep from "./components/SignUp/SecondStep";
-// import ChatMessages from './Groups/ChatMessages';
 import MessagesContainer from "./Chat/MessagesPage";
 import OneVsOneRandom from "./Game/OneVsOneRandom";
 import OneVsOneFriends from "./Game/OneVsOneFriends";
 import { ChatProvider } from "./Groups/ChatContext";
+import CreateTournament from './Tournament/CreateTournament';
+import OneVsOneCreateOrJoin from './Game/OneVsOneCreateOrJoin';
 
 const App = () => {
   return (
@@ -54,6 +55,7 @@ const App = () => {
                 <Route path="game/solo" element={<Solo />} />
                 <Route path="game/solo/1vs1" element={<OneVersusOne />} />
                 <Route path="play/1vs1/:roomID" element={<PlayMatch />} />
+					      <Route path="game/createtournament" element={<CreateTournament />} />
               </Route>
             </Routes>
           </ChatProvider>

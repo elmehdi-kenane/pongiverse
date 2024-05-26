@@ -11,15 +11,15 @@ class Room(models.Model):
 
 
 class Message(models.Model):
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
-    content = models.TextField(blank=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
+	sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
+	room = models.ForeignKey(Room, on_delete=models.CASCADE)
+	content = models.TextField(blank=True)
+	timestamp = models.DateTimeField(auto_now_add=True)
 
 class Membership(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
-    room = models.ForeignKey(Room,on_delete=models.CASCADE)
-    joined_at = models.DateTimeField(auto_now_add=True)
+	user = models.ForeignKey(User,on_delete=models.CASCADE)
+	room = models.ForeignKey(Room,on_delete=models.CASCADE)
+	joined_at = models.DateTimeField(auto_now_add=True)
 
 class Friends(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_friends')

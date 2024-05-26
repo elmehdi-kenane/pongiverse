@@ -33,39 +33,39 @@ const OneVersusOne = () => {
     const [isInSearchMode, setIsInSearchMode] = useState(false)
     const [isInPlayingMode, setIsInPlayingMode] = useState(false)
     const [gameNotif, setGameNotif] = useState([])
-    
+
     let inside = false
     let allGood = false
 
-    useEffect(() => {
-        privateCheckAuth()
-    }, [])
+	useEffect(() => {
+		privateCheckAuth()
+	}, [])
 
-    useEffect(() => {
-        if (socket) {
-            if (socketRecreated && user) {
-                console.log("INSIDE RESTABISHMENT")
-                socket.send(JSON.stringify({
-                    type: 'dataBackUp',
-                    message: {
-                        user: user,
-                        roomID: roomID,
-                    }
-                }))
-                setSocketRecreated(false)
-            } else if (!socketRecreated && user) {
-                if (socket && socket.readyState === WebSocket.OPEN && user) {
-                    console.log("CHECKING IF PLAYER IN ROOM")
-                    socket.send(JSON.stringify({
-                        type: 'isPlayerInAnyRoom',
-                        message: {
-                            user: user
-                        }
-                    }))
-                }
-            }
-        }
-    }, [socketRecreated, socket, user])
+	useEffect(() => {
+		if (socket) {
+			if (socketRecreated && user) {
+				console.log("INSIDE RESTABISHMENT")
+				socket.send(JSON.stringify({
+					type: 'dataBackUp',
+					message: {
+						user: user,
+						roomID: roomID,
+					}
+				}))
+				setSocketRecreated(false)
+			} else if (!socketRecreated && user) {
+				if (socket && socket.readyState === WebSocket.OPEN && user) {
+					console.log("CHECKING IF PLAYER IN ROOM")
+					socket.send(JSON.stringify({
+						type: 'isPlayerInAnyRoom',
+						message: {
+							user: user
+						}
+					}))
+				}
+			}
+		}
+	}, [socketRecreated, socket, user])
 
     useEffect(() => {
         if (socket && socket.readyState === WebSocket.OPEN) {
@@ -127,10 +127,10 @@ const OneVersusOne = () => {
             }
         }
 
-        if (allSet && roomID) {
-            console.log("INSIDE THE ALLSET && ROOMID")
-            navigate(`../play/1vs1/${roomID}`)
-        }
+		if (allSet && roomID) {
+			console.log("INSIDE THE ALLSET && ROOMID")
+			navigate(`../play/1vs1/${roomID}`)
+		}
 
     }, [socket, allSet, roomID, tmpRoomID])
 
@@ -140,55 +140,55 @@ const OneVersusOne = () => {
         }
     }, [socket, allSet, user])
 
-    const expandFriendsList = () => {
-        if (chosenOne === '' || chosenOne === 'friends') {
-            // console.log("inside expandFriendsList")
-            setExpandFriends(!expandFriends)
-            setExpandJoin(false)
-            setExpandCreate(false)
-            setExpandQuick(false)
-        }
-    }
+	const expandFriendsList = () => {
+		if (chosenOne === '' || chosenOne === 'friends') {
+			// console.log("inside expandFriendsList")
+			setExpandFriends(!expandFriends)
+			setExpandJoin(false)
+			setExpandCreate(false)
+			setExpandQuick(false)
+		}
+	}
 
-    const expandJoinRoom = () => {
-        if (chosenOne === '' || chosenOne === 'joinMatch') {
-            setExpandJoin(!expandJoin)
-            setExpandFriends(false)
-            setExpandCreate(false)
-            setExpandQuick(false)
-        }
-    }
+	const expandJoinRoom = () => {
+		if (chosenOne === '' || chosenOne === 'joinMatch') {
+			setExpandJoin(!expandJoin)
+			setExpandFriends(false)
+			setExpandCreate(false)
+			setExpandQuick(false)
+		}
+	}
 
-    const expandCreateRoom = () => {
-        if (chosenOne === '' || chosenOne === 'createMatch') {
-            setExpandCreate(!expandCreate)
-            setExpandFriends(false)
-            setExpandJoin(false)
-            setExpandQuick(false)
-        }
-    }
+	const expandCreateRoom = () => {
+		if (chosenOne === '' || chosenOne === 'createMatch') {
+			setExpandCreate(!expandCreate)
+			setExpandFriends(false)
+			setExpandJoin(false)
+			setExpandQuick(false)
+		}
+	}
 
-    const expandQuickMatch = () => {
-        if (chosenOne === '') {
-            if (socket && socket.readyState === WebSocket.OPEN) {
-                console.log("inside join")
-                socket.send(JSON.stringify({
-                    type: 'join',
-                    message: {
-                        user: user,
-                    }
-                }))
-                setExpandQuick(!expandQuick)
-                setExpandCreate(false)
-                setExpandFriends(false)
-                setExpandJoin(false)
-                setChosenOne('quickMatch')
-                setGameStared(true)
-                // setStart(!start)
-            } else
-                console.log('socket is null or not open, refresh')
-        }
-    }
+	const expandQuickMatch = () => {
+		if (chosenOne === '') {
+			if (socket && socket.readyState === WebSocket.OPEN) {
+				console.log("inside join")
+				socket.send(JSON.stringify({
+					type: 'join',
+					message: {
+						user: user,
+					}
+				}))
+				setExpandQuick(!expandQuick)
+				setExpandCreate(false)
+				setExpandFriends(false)
+				setExpandJoin(false)
+				setChosenOne('quickMatch')
+				setGameStared(true)
+				// setStart(!start)
+			} else
+				console.log('socket is null or not open, refresh')
+		}
+	}
 
     useEffect(() => {
         const closeAllSections = (e) => {
@@ -210,17 +210,17 @@ const OneVersusOne = () => {
         }
     }, [])
 
-    const changeIfTextCopied = () => {
-        if (!isCopied) {
-            setImage(Icons.copied)
-            navigator.clipboard.writeText(textCopied.current.textContent)
-            setTimeout(() => {
-                setImage(Icons.copy)
-                setIsCopied(false)
-            }, 2000);
-        }
-        setIsCopied(true)
-    }
+	const changeIfTextCopied = () => {
+		if (!isCopied) {
+			setImage(Icons.copied)
+			navigator.clipboard.writeText(textCopied.current.textContent)
+			setTimeout(() => {
+				setImage(Icons.copy)
+				setIsCopied(false)
+			}, 2000);
+		}
+		setIsCopied(true)
+	}
 
     const inviteNewFriend = (friend) => {
         if (socket && socket.readyState === WebSocket.OPEN) {
@@ -238,48 +238,48 @@ const OneVersusOne = () => {
         }
     };
 
-    const cancelTheGame = () => {
-        setSelectedFriends([])
-        if (chosenOne === 'quickMatch') {
-            if (socket && socket.readyState === WebSocket.OPEN) {
-                console.log("inside join")
-                socket.send(JSON.stringify({
-                    type: 'quit',
-                    message: {
-                        user: user,
-                        id: tmpRoomID
-                    }
-                }))
-                setGameStared(false)
-                setChosenOne('')
-                setTmpRoomID(false)
-            } else
-                console.log('socket is null or not open, refresh')
-        }
-    }
+	const cancelTheGame = () => {
+		setSelectedFriends([])
+		if (chosenOne === 'quickMatch') {
+			if (socket && socket.readyState === WebSocket.OPEN) {
+				console.log("inside join")
+				socket.send(JSON.stringify({
+					type: 'quit',
+					message: {
+						user: user,
+						id: tmpRoomID
+					}
+				}))
+				setGameStared(false)
+				setChosenOne('')
+				setTmpRoomID(false)
+			} else
+				console.log('socket is null or not open, refresh')
+		}
+	}
 
-    const joinToNewMatch = () => {
-        const regex = /^\d{7,}$/;
-        if (regex.test(inputRoomId.current.value)) {
-            // send to the server to check if exist
-            inputRoomId.current.value = ''
-            setGameStared(true)
-            setChosenOne('joinMatch')
-        } else {
-            inputRoomId.current.style.border = '1px solid red';
-            incorrectRoomId.current.style.display = 'block'
-            setTimeout(() => {
-                inputRoomId.current.style.border = '1px solid white';
-                incorrectRoomId.current.style.display = 'none'
-            }, 2000);
-        }
-    }
+	const joinToNewMatch = () => {
+		const regex = /^\d{7,}$/;
+		if (regex.test(inputRoomId.current.value)) {
+			// send to the server to check if exist
+			inputRoomId.current.value = ''
+			setGameStared(true)
+			setChosenOne('joinMatch')
+		} else {
+			inputRoomId.current.style.border = '1px solid red';
+			incorrectRoomId.current.style.display = 'block'
+			setTimeout(() => {
+				inputRoomId.current.style.border = '1px solid white';
+				incorrectRoomId.current.style.display = 'none'
+			}, 2000);
+		}
+	}
 
-    const createNewMatch = () => {
-        // send to the server to create a new room
-        setGameStared(true)
-        setChosenOne('createMatch')
-    }
+	const createNewMatch = () => {
+		// send to the server to create a new room
+		setGameStared(true)
+		setChosenOne('createMatch')
+	}
 
     const acceptInvitation = (creator) => {
         setGameNotif(gameNotif.filter((user) => user.user !== creator))

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../../assets/SignUp/logo.svg'
 import home from '../../assets/SignUp/homee.svg'
-import signup from '../../assets/SignUp/SignUpPage.module.css'
+import signup from '../../assets/SignUp/Header.module.css'
 function Header() {
   return (
 	<div className={signup["navBar"]}>

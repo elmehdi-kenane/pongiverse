@@ -98,6 +98,11 @@ const Chat = () => {
                   isDirect={isHome}
                 />
               ))}
+              {/* {Array(151)
+                .fill()
+                .map((_, i) => (
+                  <Conversation key={i} name="Random" />
+                ))} */}
             </div>
           )}
         </div>

@@ -548,11 +548,54 @@ html, body {
     border-radius: 5px;
 }
 
+.onevsone-dashboard-opponents .onevsone-create-room {
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    transform: translate(0, -110%);
+    background-color: #4c1c90;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 130px;
+    border-radius: 5px;
+}
+
+.onevsone-dashboard-opponents .onevsone-join-room {
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    left: 100%;
+    transform: translate(-100%, -110%);
+    background-color: #4c1c90;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 130px;
+    border-radius: 5px;
+}
+
 .onevsone-dashboard-opponents .onevsone-invite-friends .invite-friends-button {
     padding: 12px 8px 12px;
     font-size: 0.9em;
 }
 
+.onevsone-dashboard-opponents .onevsone-create-room img,
+.onevsone-dashboard-opponents .onevsone-join-room img {
+    /* padding: 12px 20px 12px 8px;
+    font-size: 0.8em; */
+    width: 20%;
+    /* background-color: #775C9E; */
+}
+
+.onevsone-dashboard-opponents .onevsone-create-room .invite-friends-button,
+.onevsone-dashboard-opponents .onevsone-join-room .invite-friends-button {
+    padding: 12px 0px 12px 0px;
+    /* text-align: center; */
+    font-size: 0.9em;
+    /* width: 80%; */
+}
 
 .onevsone-dashboard-selection {
     width: 20%;
@@ -674,12 +717,45 @@ html, body {
 .expand-friends {
     position: absolute;
     left: 0;
-    top: 0%;
+    top: 0;
     display: flex;
     flex-direction: column;
     background-color: #4D4EA6;
     width: 265px;
     height: 400px;
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 5px;
+    font-size: 15px;
+    overflow-y: auto;
+}
+
+.expand-create-room {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #4D4EA6;
+    width: 280px;
+    height: 160px;
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 5px;
+    font-size: 15px;
+    overflow-y: auto;
+}
+
+.expand-join-room {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    transform: translate(-100%);
+    background-color: #4D4EA6;
+    width: 280px;
+    height: 160px;
     z-index: 100;
     background-color: rgba(0, 0, 0, 0.6);
     border-radius: 5px;
@@ -848,7 +924,7 @@ html, body {
 }
 
 #incorrect-id {
-    margin-top: -5px;
+    /* margin-top: -5px; */
     font-weight: 500;
     color: red;
     display: none;
@@ -1170,9 +1246,10 @@ html, body {
     margin: 0 0 30px 100%;
     transform: translate(-100%);
     max-height: 130px;
+    /* overflow-y: auto; */
     overflow-y: auto;
     display: flex;
-    flex-direction: column
+    flex-direction: column;
 }
 
 .game-invitation {
@@ -1182,6 +1259,18 @@ html, body {
     height: 65px;
     border-bottom: 3px solid #250939;
     border-radius: 5px 5px 5px 8px;
+    /* position: absolute; */
+    width: 100%;
+    animation: notifyAnimation 1s ease-in;
+}
+
+@keyframes notifyAnimation {
+    0% {
+        margin-left: 100%;
+    }
+    100% {
+        margin-left: 0;
+    }
 }
 
 .game-invitation > img:first-child {
