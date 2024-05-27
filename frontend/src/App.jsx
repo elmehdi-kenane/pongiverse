@@ -12,6 +12,7 @@ import PlayMatch from './Game/PlayMatch';
 import Groups from './Groups/Groups';
 import Friends from './Friends/Friends';
 import Dashboard from './Dashboard/Dashboard';
+import Profile from './Profile/Profile';
 import { Navigate } from 'react-router-dom';
 import Game from './Game/Game';
 import Chat from './Chat/Chat';
@@ -39,6 +40,7 @@ const App = () => {
                     <Route path="/ChangePassword" element={<ChangePassword />} />
                     <Route path="/mainpage" element={<NavbarSidebar />} >
                       <Route path="dashboard" element={<Dashboard />} />
+                      <Route path="profile" element={<Profile />} />
                       <Route path="chat" element={<Chat />} />
                       {/* <Route path="chat/:roomId" element={<MessagesContainer />} /> */}
                       <Route path="friends" element={<Friends />} />
