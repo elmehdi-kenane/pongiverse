@@ -1,0 +1,35 @@
+.profile-page {
+    border : white 1px solid;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 60px;
+    gap: 30px;
+}
+
+.profile-userinfo {
+    width: 65%;
+    height: 250px;
+    border: white solid 1px;
+}
+
+.profile-userlevel {
+    width: 65%;
+    height: 40px;
+}
+
+.profile-userlevel .custom-progress-bar {
+    height: 100%;
+    background-color: #f0f0f0;
+    background: rgba( 255, 255, 255, 0.25 );
+    backdrop-filter: blur( 4px );
+    font-weight: bold;
+    text-align: center;
+    color: white;
+}
+
+.custom-progress-bar .progress-bar {
+    background-color: #8884d8; 
+  }
