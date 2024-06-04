@@ -18,6 +18,10 @@
     border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
+h1, h3, p{
+    cursor: default;
+}
+
 
 /* User Info */
 
@@ -42,7 +46,7 @@
 .profile-userinfo .userinfo__pic img {
     height: 160px;
     border-radius: 50%;
-    /* border: cyan solid 1px; */
+    border: #826aed solid 2px;
 }
 
 
@@ -116,16 +120,18 @@
     align-items: center;
     padding: 0 20px;
     gap: 15px;
+    /* border: cyan solid 1px; */
 }
 
-.profile-userstats .userstate__userfriends,
+.profile-userstats .userstate__friends,
+.profile-userstats .userstate__achievements,
 .profile-userstats .userstate {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 33%;
-    height: 100%;
-    padding: 10px;
+    height: 424px;
+    padding: 10px 10px 0;
     gap: 10px;
 
     background: rgba( 255, 255, 255, 0.25 );
@@ -136,43 +142,45 @@
     border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
-.profile-userstats .userstate__userfriends h1 {
-    width: 70%;
+
+.profile-userstats .userstate__achievements h1 ,
+.profile-userstats .userstate__friends h1 {
+    width: 85%;
     color: white;
     text-align: center;
-    /* font-weight: 500; */
     border-bottom: 0.5px solid white;
     letter-spacing: 1px;
-    margin-top: -5px;
+    margin: 0px 0 10px;
+    font-size: 30px;
 }
 
-.userstate__userfriends .userfriends__classment {
+/* Friends */
+
+.userstate__friends .userfriends__classment {
     display: flex;
     flex-direction: column;
-    height: 370px;
+    height: 100%;
     width: 100%;
     overflow-y: scroll;
 }
-
 .userfriends__classment .classment__friend { /* Friend Player */
     display: flex;
     justify-content: space-between;
     border-bottom: 1px #826aed solid;
-    height: 50px;
+    height: 45px;
     align-items: center;
     padding: 0 5px;
+    flex-shrink: 0;
 }
 
 .classment__friend .friend__pic-name{
     display: flex;
     width: 50%;
-    height: 40px;
-    /* border: yellow 1px solid; */
     align-items: center;
     gap: 5px;
 }
 .classment__friend .friend__pic-name img {
-    height: 40px;
+    height: 35px;
 }
 .classment__friend .friend__pic-name p {
     color: white;
@@ -201,4 +209,44 @@
 }
 .friend__chat .chat__button p { 
     color: white;
+}
+
+/* Achievments */
+
+.userstate__achievements .achievements__container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    /* border: purple 1px solid; */
+}
+
+.achievements__container .achivement {
+    display: flex;
+    height: 85px;
+    /* border: 1px yellow solid; */
+    align-items: center;
+    padding: 0 3px;
+    gap: 5px;
+}
+.achievements__container .achivement:hover {
+    transition: ease-in 0.09s;
+    box-shadow: 0px 0px 20px 0 #250939 ;
+}
+.achievements__container .achivement img {
+    height: 80px;
+}
+
+.achievements__container .achivement .achivement__title-desc {
+    width: 100%;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.achievements__container .achivement .achivement__title-desc p {
+    color: rgb(163, 163, 163);
+    cursor: default;
 }

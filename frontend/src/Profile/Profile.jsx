@@ -1,93 +1,82 @@
 import React from 'react'
 import {Link} from "react-router-dom"
-import idabligiSvg from "../Dashboard/assets/Group2.svg"
-import rennacirSvg from "../Dashboard/assets/Group4.svg"
-import AgouzouSvg from "../Dashboard/assets/Group3.svg"
-import ekenaneSvg from "../Dashboard/assets/Group1.svg"
-import mmaqbourSvg from "../Dashboard/assets/Group5.svg"
-import mavSvg from "./Group.svg"
-import chatSvg from "../assets/navbar-sidebar/chat.svg"
-
 import EditIcon from '@mui/icons-material/Edit';
 
+import mavSvg from "./Group.svg"
+import chatSvg from "../assets/navbar-sidebar/chat.svg"
+import achvSvg from "./achv.svg"
+import { rankData } from '../Dashboard/helpers/rankData'
 import "./Profile.css"
+import Pagination from "../Dashboard/helpers/Pagination"
 
 const bio = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim."
 
-const friends = [
+const achv = [
   {
-    name: "rennacir",
-    level: "15.4 XP",
-    img: rennacirSvg
+    image : achvSvg,
+    title: "Triple Row ",
+    desc: "Get a triple wins in a row"
   },
   {
-    name: "idabligi",
-    level: "13.4 XP",
-    img: idabligiSvg
+    image : achvSvg,
+    title: "Table Killer",
+    desc: "Get a dominant shutout victory"
   },
   {
-    name: "aagouzou",
-    level: "10.3 XP",
-    img: AgouzouSvg
-  },
-  {
-    name: "mmaqbour",
-    level: "8.8 XP",
-    img: mmaqbourSvg
-  },
-  {
-    name: "Ekenane",
-    level: "8.7 XP",
-    img: ekenaneSvg
-  },
-  {
-    name: "Ekenane",
-    level: "8.7 XP",
-    img: ekenaneSvg
-  },
-  {
-    name: "Ekenane",
-    level: "8.7 XP",
-    img: ekenaneSvg
-  },  
-  {
-    name: "Ekenane",
-    level: "8.7 XP",
-    img: ekenaneSvg
-  },  
-  {
-    name: "Ekenane",
-    level: "8.7 XP",
-    img: ekenaneSvg
+    image : achvSvg,
+    title: "Tournament Master",
+    desc: "Win a tournament"
   },
 ]
-
 
 const profileUserFriends = () => {
   return (
     <>
       <h1> Friends </h1>
       <div className="userfriends__classment purple-glass">
-      {friends.map((player) => {
+      {rankData.map((player) => {
         return (
           <div className='classment__friend'>
             <div className="friend__pic-name">
-              <img src={player.img}/>
+              <img src={player.img} alt='playerImg'/>
               <p> {player.name} </p>
             </div>
-          <div className='friend__chat'>
-            <Link className='chat__button'>
-              <img src={chatSvg}/>
-              <p> message </p>
-            </Link>
+            <div className='friend__chat'>
+              <Link className='chat__button'>
+                <img src={chatSvg} alt='chatIcon'/>
+                <p style={{cursor: 'pointer'}}> message </p>
+              </Link>
+            </div>
           </div>
-        </div>
         )
       })}
       </div>
+      <Pagination />
     </>
   )
 } 
+
+const profileUserAchievement = () => {
+  return (
+    <>
+      <h1> Achievements </h1>
+      <div className="achievements__container">
+        { achv.map((ach) => {
+          return (
+            <div className="achivement purple-glass">
+              <img src={ach.image} alt='achievmentImg'/>
+              <div className="achivement__title-desc">
+                <h3> {ach.title} </h3>
+                <p> {ach.desc} </p>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+      <Pagination />
+    </>
+  )
+}
 
 
 function Profile() {
@@ -116,10 +105,12 @@ function Profile() {
 
       {/* User State */}
       <div className="profile-userstats">
-        <div className='userstate__userfriends'>
+        <div className='userstate__friends'>
           {profileUserFriends()}
         </div>
-        <div className='userstate'></div>
+        <div className='userstate__achievements'>
+          {profileUserAchievement()}
+        </div>
         <div className='userstate'></div>
       </div>
     </div>
