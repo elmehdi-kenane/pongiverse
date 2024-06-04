@@ -3,7 +3,7 @@ import AuthContext from '../navbar-sidebar/Authcontext'
 import { useNavigate } from 'react-router-dom';
 import * as Icons from '../assets/navbar-sidebar'
 
-const OneVersusOne = () => {
+const TwoVersusTwo = () => {
     let { privateCheckAuth, socket, user,
         socketRecreated, setSocketRecreated, allGameFriends,
         loading, userImages} = useContext(AuthContext)
@@ -29,13 +29,13 @@ const OneVersusOne = () => {
     const nextPage = () => {
         console.log(socket, socket.readyState === WebSocket.OPEN, user)
         if (selected === 1) {
-            navigate('../game/solo/1vs1/random')
+            navigate('../game/solo/2vs2/random')
         }
         if (selected === 2) {
-            navigate('../game/solo/1vs1/friends')
+            navigate('../game/solo/2vs2/friends')
         }
         if (selected === 3) {
-            navigate('../game/solo/1vs1/create-or-join')
+            navigate('../game/solo/2vs2/create-or-join')
         }
     }
 
@@ -47,14 +47,14 @@ const OneVersusOne = () => {
                         <img src={Icons.quickMatch} alt="quick-match" />
                     </div>
                     <h1>Play a Quick Match</h1>
-                    <p>Jump into action with a quick match mode where you are randomly paired with another player for a 1 vs 1 game. Enjoy a fast and exciting experience without the wait!</p>
+                    <p>Jump into action with a quick match mode where you are randomly paired with another players for a 2 vs 2 game. Enjoy a fast and exciting experience without the wait!</p>
                 </div>
                 <div className={(selected === 2) ? 'duelMode-modes-friendMatch duelMode-modes-friendMatch-selected' : 'duelMode-modes-friendMatch'} onClick={friendMatch} >
                     <div> 
                         <img src={Icons.friendMatch} alt="friend-match" />
                     </div>
                     <h1>Play with friends</h1>
-                    <p>Challenge your friend to a 1 vs 1 game in Friends Match mode. Invite a friend to join you for a competitive and fun-filled match,ensuring  a personalized gaming experience!</p>
+                    <p>Challenge your friends to a 2 vs 2 game in Friends Match mode. Invite friends to join you for a competitive and fun-filled match,ensuring  a personalized gaming experience!</p>
                 </div>
                 <div className={(selected === 3) ? 'duelMode-modes-createJoinMatch duelMode-modes-createJoinMatch-selected' : 'duelMode-modes-createJoinMatch'} onClick={createJoinMatch} >
                     <div className='createJoinMatch__icon' >
@@ -67,7 +67,7 @@ const OneVersusOne = () => {
                         </div>
                     </div>
                     <h1>Create or Join Match</h1>
-                    <p>Start a new game or join an existing one in Create/Join Match mode. Create a room and wait for other player to join, or jump into an available match for flexible and instant gameplay.</p>
+                    <p>Start a new game or join an existing one in Create/Join Match mode. Create a room and wait for others to join, or jump into an available match for flexible and instant gameplay.</p>
                 </div>
             </div>
             <div className='duelMode-cancel-next' >
@@ -78,4 +78,4 @@ const OneVersusOne = () => {
     )
 }
 
-export default OneVersusOne
+export default TwoVersusTwo

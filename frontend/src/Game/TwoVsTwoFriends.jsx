@@ -4,8 +4,8 @@ import '../assets/navbar-sidebar/index.css'
 import AuthContext from '../navbar-sidebar/Authcontext'
 import { Link, useNavigate } from 'react-router-dom';
 
-const OneVsOneFriends = () => {
-	const picsList = [Icons.profilepic1, Icons.profilepic2, Icons.profilepic3, Icons.profilepic4]
+const TwoVsTwoFriends = () => {
+    const picsList = [Icons.profilepic1, Icons.profilepic2, Icons.profilepic3, Icons.profilepic4]
 	const [randomPic, setRandomPic] = useState(Icons.profilepic)
 	const [gameStarted, setGameStarted] = useState(false)
 	const [enemyInfos, setEnemyInfos] = useState(null)
@@ -16,9 +16,13 @@ const OneVsOneFriends = () => {
 	const [roomID, setRoomID] = useState(null)
 	const [selectedFriends, setSelectedFriends] = useState([]);
 	const [expandFriends, setExpandFriends] = useState(false)
+	const [temmateInfos, setTemmateInfos] = useState(false)
+    const [enemy1Infos, setEnemy1Infos] = useState(false)
+    const [enemy2Infos, setEnemy2Infos] = useState(false)
 	const expandFriendList = useRef(null)
 	const friendsSection = useRef(null)
 	const inviteFriend = useRef(null)
+	const playerNoRef = useRef(playerNo)
 	const navigate = useNavigate()
 
 	let randomPics
@@ -55,8 +59,77 @@ const OneVsOneFriends = () => {
 				let message = data.message
 				if (type === 'roomAlreadyStarted') {
 					console.log("inside roomAlreadyStarted")
-					setAllSet(true)
-					navigate(`../play/1vs1/${message.roomID}`)
+                    setAllSet(true)
+                    if (message.mode === '1vs1')
+                        navigate(`../play/1vs1/${message.roomID}`)
+                    else
+                        navigate(`../play/2vs2/${message.roomID}`)
+				} else if (type === 'gameOnHold') {
+                    // console.log(message, playerNo)
+                    const playerNbr = playerNoRef.current;
+					console.log(message)
+                    if (playerNbr === 1 || playerNbr === 2) {
+                        if (playerNbr === 1 && message.users.length >= 2)
+                            setTemmateInfos({
+                                avatar: message.users[1].image,
+                                name: message.users[1].name,
+                                level: message.users[1].level
+                            })
+                        else if (playerNbr === 2)
+                            setTemmateInfos({
+                                avatar: message.users[0].image,
+                                name: message.users[0].name,
+                                level: message.users[0].level
+                            })
+                        else
+                            setTemmateInfos(false)
+                        if (message.users.length === 3)
+                            setEnemy1Infos({
+                                avatar: message.users[2].image,
+                                name: message.users[2].name,
+                                level: message.users[2].level
+                            })
+                        else if (message.users.length === 4) {
+                            setEnemy1Infos({
+                                avatar: message.users[2].image,
+                                name: message.users[2].name,
+                                level: message.users[2].level
+                            })
+                            setEnemy2Infos({
+                                avatar: message.users[3].image,
+                                name: message.users[3].name,
+                                level: message.users[3].level
+                            })
+                        } else {
+                            setEnemy1Infos(false)
+                            setEnemy2Infos(false)
+                        }
+                    } else if (playerNbr === 3 || playerNbr === 4) {
+                        if (playerNbr === 3 && message.users.length === 4)
+                            setTemmateInfos({
+                                avatar: message.users[3].image,
+                                name: message.users[3].name,
+                                level: message.users[3].level
+                            })
+                        else if (playerNo === 4)
+                            setTemmateInfos({
+                                avatar: message.users[2].image,
+                                name: message.users[2].name,
+                                level: message.users[2].level
+                            })
+                        else
+                            setTemmateInfos(false)
+                        setEnemy1Infos({
+                            avatar: message.users[0].image,
+                            name: message.users[0].name,
+                            level: message.users[0].level
+                        })
+                        setEnemy2Infos({
+                            avatar: message.users[1].image,
+                            name: message.users[1].name,
+                            level: message.users[1].level
+                        })
+                    }
 				} else if (type === "gameReady") {
 					console.log("inside gameReady")
 					console.log(message.avatars)
@@ -170,9 +243,9 @@ const OneVsOneFriends = () => {
 
 		if (allSet && roomID) {
 			console.log("inside allSet and roomID")
-			clearInterval(randomPics)
+			// clearInterval(randomPics)
 			setTimeout(() => {
-				navigate(`../play/1vs1/${roomID}`)
+				navigate(`../play/2vs2/${roomID}`)
 			}, 2000);
 		}
 
@@ -191,7 +264,7 @@ const OneVsOneFriends = () => {
 		if (socket && socket.readyState === WebSocket.OPEN && user) {
 			console.log("inside quit")
 			socket.send(JSON.stringify({
-				type: 'quit',
+				type: 'quitMp',
 				message: {
 					user: user,
 					id: tmpRoomID
@@ -208,7 +281,7 @@ const OneVsOneFriends = () => {
 		if (socket && socket.readyState === WebSocket.OPEN && user) {
 			console.log("inside join")
 			socket.send(JSON.stringify({
-				type: 'inviteFriendGame',
+				type: 'inviteFriendGameMp',
 				message: {
 					user: user,
 					target: friend
@@ -228,10 +301,10 @@ const OneVsOneFriends = () => {
 	}
 
 	return (
-		<div className='onevsone'>
-			<div className='onevsone-dashboard'>
-				<div className='onevsone-dashboard-opponents'>
-					<div className='onevsone-invite-friends' ref={friendsSection}>
+		<div className='twovstwo'>
+			<div className='twovstwo-dashboard'>
+				<div className='twovstwo-dashboard-opponents'>
+					<div className='twovstwo-invite-friends' ref={friendsSection}>
 						<div onClick={expandFriendsList} style={{display: 'flex', flexDirection: 'row', cursor: 'pointer', position: 'relative'}}>
 							<img src={Icons.gameInvite} alt="" style={{width: '20%', paddingLeft: '5px'}} />
 							<div className='invite-friends-button'>invite friend</div>
@@ -266,44 +339,62 @@ const OneVsOneFriends = () => {
 							</div>
 						)}
 					</div>)}
-					<div className='onevsone-dashboard-opponent'>
+					<div className='twovstwo-dashboard-opponent'>
 						<div>
-							<img src={userImg} alt="profile-pic" style={{borderRadius: '50%'}} />
+							<div><img src={userImg} alt="profile-pic" /></div>
+							<div className='twovstwo-opponent-infos'>
+								<p>mmaqbour</p>
+								<p>level 6.5</p>
+							</div>
 						</div>
-						{/* {enemyInfos && (<div className='onevsone-opponent-infos'>
-							<p>mmaqbour</p>
-							<p>level 6.5</p>
-						</div>)} */}
-						<div className='onevsone-opponent-infos'>
-							<p>mmaqbour</p>
-							<p>level 6.5</p>
-						</div>
+						{temmateInfos ? (
+							<div>
+								<div><img src={`data:image/jpeg;base64,${temmateInfos.avatar}`} alt="profile-pic" /></div>
+								<div className='twovstwo-opponent-infos' >
+									<p>{temmateInfos.name}</p>
+									<p>level {temmateInfos.level}</p>
+								</div>
+							</div>
+						) : (
+							<div>
+								<div><img src={randomPic} alt="profile-pic" /></div>
+								<div className='twovstwo-opponent-infos-none' ></div>
+							</div>
+						)}
 					</div>
-					<div className='onevsone-dashboard-logo-friends'>
+					<div className='twovstwo-dashboard-logo-friends'>
 						{(allSet) ? (
 							<img id='versus-logo' src={Icons.versus} alt="profile-pic" />
 						) : ''}
 					</div>
-					<div className='onevsone-dashboard-opponent'>
-						{enemyInfos ? (
-							<>
-								<div>
-									<img src={`data:image/jpeg;base64,${enemyInfos.avatar}`} alt="profile-pic" style={{borderRadius: '50%'}} />
+					<div className='twovstwo-dashboard-opponent'>
+						{enemy1Infos ? (
+							<div>
+								<div><img src={`data:image/jpeg;base64,${temmateInfos.avatar}`} alt="profile-pic" /></div>
+								<div className='twovstwo-opponent-infos' >
+									<p>{temmateInfos.name}</p>
+									<p>level {temmateInfos.level}</p>
 								</div>
-								<div className='onevsone-opponent-infos'>
-									<p>{enemyInfos.name}</p>
-									<p>level {enemyInfos.level}</p>
-								</div>
-							</>
+							</div>
 						) : (
-							<>
-								<div>
-									<img src={randomPic} alt="profile-pic"/>
-									{/* <img src={Icons.profilepic} alt="profile-pic"/> */}
+							<div>
+								<div><img src={randomPic} alt="profile-pic" /></div>
+								<div className='twovstwo-opponent-infos-none' ></div>
+							</div>
+						)}
+						{enemy2Infos ? (
+							<div>
+								<div><img src={`data:image/jpeg;base64,${temmateInfos.avatar}`} alt="profile-pic" /></div>
+								<div className='twovstwo-opponent-infos' >
+									<p>{temmateInfos.name}</p>
+									<p>level {temmateInfos.level}</p>
 								</div>
-								<div className={'onevsone-opponent-infos-none'}>
-								</div>
-							</>
+							</div>
+						) : (
+							<div>
+								<div><img src={randomPic} alt="profile-pic" /></div>
+								<div className='twovstwo-opponent-infos-none' ></div>
+							</div>
 						)}
 					</div>
 				</div>
@@ -317,4 +408,4 @@ const OneVsOneFriends = () => {
 	)
 }
 
-export default OneVsOneFriends
+export default TwoVsTwoFriends

@@ -12,14 +12,14 @@ import { Link } from 'react-router-dom';
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 const client = axios.create({
-  baseURL: "http://localhost:8000",
+  baseURL: "http://10.13.9.12:8000",
 });
 
 function SignUpWays(props) {
 	const navigate = useNavigate();
 	const MySwal = withReactContent(Swal);
 	const CLIENT_ID = 'u-s4t2ud-fdda8b756dc2c51a3af969273a6645675c0e962bac731ee65461f6d49cae3ae0';
-	const REDIRECT_URI = 'http://localhost:3000/signUp';
+	const REDIRECT_URI = 'http://10.13.9.12:3000/signUp';
 	const handleLogin = () => {
 		window.location.href = `https://api.intra.42.fr/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 	};

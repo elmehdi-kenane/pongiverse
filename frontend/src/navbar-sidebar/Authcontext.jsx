@@ -31,7 +31,7 @@ export const AuthProvider = ({children}) => {
 	useEffect(() => {
 		const fetchImages = async () => {
 			const promises = allGameFriends.map(async (user) => {
-				const response = await fetch(`http://localhost:8000/api/getImage`, {
+				const response = await fetch(`http://10.13.9.12:8000/api/getImage`, {
 					method: "POST",
 					headers: {
 						'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ export const AuthProvider = ({children}) => {
 	useEffect(() => {
 		const fetchNotifsImages = async () => {
 			const promises = allGameNotifs.map(async (user) => {
-				const response = await fetch(`http://localhost:8000/api/getImage`, {
+				const response = await fetch(`http://10.13.9.12:8000/api/getImage`, {
 					method: "POST",
 					headers: {
 						'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ export const AuthProvider = ({children}) => {
 	useEffect(() => {
 		const getAllGameFriends = async () => {
 			try {
-				let response = await fetch('http://localhost:8000/api/onlineFriends', {
+				let response = await fetch('http://10.13.9.12:8000/api/onlineFriends', {
 					method: "POST",
 					headers: {
 						'Content-Type': 'application/json',
@@ -90,7 +90,6 @@ export const AuthProvider = ({children}) => {
 					})
 				})
 				let friends = await response.json()
-				console.log("ALL MY FRIENDS ARE : ", friends.message)
 				if (friends.message.length)
 					setAllGameFriends(friends.message)
 				setLoading(false)
@@ -101,7 +100,7 @@ export const AuthProvider = ({children}) => {
 
 		const getAllNotifsFriends = async () => {
 			try {
-				let response = await fetch('http://localhost:8000/api/notifsFriends', {
+				let response = await fetch('http://10.13.9.12:8000/api/notifsFriends', {
 					method: "POST",
 					headers: {
 						'Content-Type': 'application/json',
@@ -111,7 +110,6 @@ export const AuthProvider = ({children}) => {
 					})
 				})
 				let friends = await response.json()
-				console.log("ALL MY GAME NOTIFS ARE : ", friends.message)
 				if (friends.message.length)
 					setAllGameNotifs(friends.message)
 			} catch (e) {
@@ -121,7 +119,7 @@ export const AuthProvider = ({children}) => {
 
 		const getUserImage = async () => {
 			try {
-				let response = await fetch('http://localhost:8000/api/getUserImage', {
+				let response = await fetch('http://10.13.9.12:8000/api/getUserImage', {
 					method: "POST",
 					headers: {
 						'Content-Type': 'application/json',
@@ -147,7 +145,7 @@ export const AuthProvider = ({children}) => {
 		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && user && !userImg)
 			getUserImage()
 
-		if ((location.pathname === '/mainpage/game/solo/1vs1/friends' || location.pathname === '/mainpage/game/createtournament') && user)
+		if ((location.pathname === '/mainpage/game/solo/1vs1/friends' || location.pathname === '/mainpage/game/createtournament' || location.pathname === '/mainpage/game/solo/2vs2/friends') && user)
 			getAllGameFriends()
 		else
 			setAllGameFriends([])
@@ -162,7 +160,7 @@ export const AuthProvider = ({children}) => {
 		  };
 		async function sendUserData(uname, currentAllGameFriends){
 			try {
-				let response = await fetch('http://localhost:8000/api/get_user', {
+				let response = await fetch('http://10.13.9.12:8000/api/get_user', {
 					method: "POST",
 					headers: {
 						'Content-Type': 'application/json',
@@ -179,7 +177,7 @@ export const AuthProvider = ({children}) => {
 			}
 		}
 		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && !socket && user) {
-			const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
+			const newSocket = new WebSocket(`ws://10.13.9.12:8000/ws/socket-server`)
 			newSocket.onopen = () => {
 				setSocket(newSocket)
 			}
@@ -188,7 +186,6 @@ export const AuthProvider = ({children}) => {
 				let type = data.type
 				// let message = data.message
 				let uname = data.username
-				console.log("THE TYPE IS : ", type)
 				// if (type === 'user_disconnected') {
 				// 	const currentAllGameFriends = allGameFriendsRef.current;
 				// 	console.log("user disconnected : ", allGameFriends)
@@ -214,7 +211,7 @@ export const AuthProvider = ({children}) => {
 
 	async function publicCheckAuth() {
 		try {
-			let response = await fetch('http://localhost:8000/auth/verifytoken/', {  // 10.12.7.3   localhost   127.0.0.1
+			let response = await fetch('http://10.13.9.12:8000/auth/verifytoken/', {  // 10.12.7.3   localhost   127.0.0.1
 				method : 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -238,7 +235,7 @@ export const AuthProvider = ({children}) => {
 
 	async function privateCheckAuth() {
 		try {
-			let response = await fetch('http://localhost:8000/auth/verifytoken/', {  // 10.12.7.3   localhost   127.0.0.1
+			let response = await fetch('http://10.13.9.12:8000/auth/verifytoken/', {  // 10.12.7.3   localhost   127.0.0.1
 				method : 'POST',
 				headers: {
 					'Content-Type': 'application/json',

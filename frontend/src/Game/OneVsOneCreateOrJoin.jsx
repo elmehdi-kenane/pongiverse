@@ -31,38 +31,24 @@ const OneVsOneCreateOrJoin = () => {
   let { privateCheckAuth, socket, user,
       socketRecreated, setSocketRecreated,
       userImg, loading } = useContext(AuthContext)
-  
-  useEffect(() => {
-      privateCheckAuth()
-  }, [])
 
-  useEffect(() => {
-      if (socket) {
-          if (socketRecreated && user) {
-              console.log("INSIDE RESTABISHMENT")
-              socket.send(JSON.stringify({
-                  type: 'dataBackUp',
-                  message: {
-                      user: user,
-                      roomID: roomID,
-                  }
-              }))
-              setSocketRecreated(false)
-          } else if (!socketRecreated && user) {
-              if (socket && socket.readyState === WebSocket.OPEN && user) {
-                  console.log("CHECKING IF PLAYER IN ROOM")
-                  socket.send(JSON.stringify({
-                      type: 'isPlayerInAnyRoom',
-                      message: {
-                          user: user,
-                          mode: '1vs1',
-                          type: 'create_join'
-                      }
-                  }))
-              }
-          }
-      }
-  }, [socketRecreated, socket, user])
+    useEffect(() => {
+        privateCheckAuth()
+    }, [])
+
+    useEffect(() => {
+        if (socket && socket.readyState === WebSocket.OPEN && user) {
+            console.log("CHECKING IF PLAYER IN ROOM")
+            socket.send(JSON.stringify({
+                type: 'isPlayerInAnyRoom',
+                message: {
+                    user: user,
+                    mode: '1vs1',
+                    type: 'create_join'
+                }
+            }))
+        }
+    }, [socket, user])
 
   useEffect(() => {
       if (socket && socket.readyState === WebSocket.OPEN) {
@@ -160,7 +146,7 @@ const OneVsOneCreateOrJoin = () => {
                   id: tmpRoomID
               }
           }))
-          navigate(`../game/solo`)  // CHANGE LATER TO THIS ROUTE "game/solo/1vs1" !!!!!!!! DO NOT FORGET
+          navigate(`../game/solo/1vs1`)  // CHANGE LATER TO THIS ROUTE "game/solo/1vs1" !!!!!!!! DO NOT FORGET
       } else
           console.log('socket is null or not open, refresh')
   }
