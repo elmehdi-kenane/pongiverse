@@ -5,8 +5,7 @@ import AgouzouSvg from "./assets/Group3.svg"
 import rennacirSvg from "./assets/Group4.svg"
 import mmaqbourSvg from "./assets/Group5.svg"
 
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import Pagination from './helpers/Pagination'
 
 const singleMatch = () => {
     return (
@@ -46,16 +45,6 @@ const singleMatch = () => {
     )
   }
 
-  const paginationIcons = () => {
-    return (
-      <div className="expand">
-        <ExpandLessIcon className='expand-less'/>
-        <ExpandMoreIcon className='expand-more'/>
-    </div>
-    )
-  }
-
-
 function DashboardFooter() {
   return (
     <div className="dashpage__footer dash--space">
@@ -64,21 +53,21 @@ function DashboardFooter() {
             {singleMatch()}
             {singleMatch()}
             {singleMatch()}
-            {paginationIcons()}
+            <Pagination />
         </div>
         <div className="footer__multiplayer-match dash--bkborder">
             <h1 className="footer__titles"> Multiplayer Match </h1>
             {multiplayerMatch()}
             {multiplayerMatch()}
             {multiplayerMatch()}
-            {paginationIcons()}
+            <Pagination />
         </div>
         <div className="footer__tournament-match dash--bkborder">
             <h1 className="footer__titles"> Tournament Match </h1>
             {tournamentMatch()}
             {tournamentMatch()}
             {tournamentMatch()}
-            {paginationIcons()}
+            <Pagination />
         </div>
     </div>
   )

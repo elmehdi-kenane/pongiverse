@@ -2,12 +2,11 @@ import {React, useState} from 'react'
 
 import BarChartIcon from '@mui/icons-material/BarChart';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 import { rankData } from "./helpers/rankData"
 import LineGraph from "./charts/LineGraph"
 import BarGraph from "./charts/BarGraph"
+import Pagination from './helpers/Pagination';
 import mmaqbourSvg from "./assets/Group5.svg"
 
 const RankClassment = (position, player) => {
@@ -52,20 +51,10 @@ const tournamentMatch = () => {
             {tournamentMatch()}
             {tournamentMatch()}
             {tournamentMatch()}
-            {paginationIcons()}
+            <Pagination />
       </div>
     )
 }
-
-
-    const paginationIcons = () => {
-        return (
-            <div className="expand">
-            <ExpandLessIcon className='expand-less'/>
-            <ExpandMoreIcon className='expand-more'/>
-            </div>
-            )
-    }
 
 function DashboardBody() {
   

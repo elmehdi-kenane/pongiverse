@@ -32,38 +32,38 @@ export const rankData = [
       img: ekenaneSvg
     },
     {
-      name: "Ekenane",
-      level: "8.7 XP",
-      img: ekenaneSvg
+      name: "idabligi",
+      level: "0 XP",
+      img: idabligiSvg
+    },
+    {
+      name: "aagouzou",
+      level: "0 XP",
+      img: AgouzouSvg
+    },
+    {
+      name: "mmaqbour",
+      level: "0 XP",
+      img: mmaqbourSvg
     },
     {
       name: "Ekenane",
-      level: "8.7 XP",
+      level: "0 XP",
       img: ekenaneSvg
     },
     {
-      name: "Ekenane",
-      level: "8.7 XP",
-      img: ekenaneSvg
+      name: "mmaqbour",
+      level: "0 XP",
+      img: mmaqbourSvg
     },
     {
       name: "Ekenane",
-      level: "8.7 XP",
+      level: "0 XP",
       img: ekenaneSvg
     },
     {
-      name: "Ekenane",
-      level: "8.7 XP",
-      img: ekenaneSvg
-    },
-    {
-      name: "Ekenane",
-      level: "8.7 XP",
-      img: ekenaneSvg
-    },
-    {
-      name: "Ekenane",
-      level: "8.7 XP",
-      img: ekenaneSvg
+      name: "rennacir",
+      level: "0 XP",
+      img: rennacirSvg
     },
   ]
