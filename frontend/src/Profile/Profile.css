@@ -31,10 +31,9 @@ h1, h3, p{
     height: 250px;
     gap : 20px;
     align-items: center;
-    padding: 0px 10px 0 5px;
+    padding: 0px 5px;
 
 }
-
 
 .profile-userinfo .userinfo__pic {
     display: flex;
@@ -125,7 +124,7 @@ h1, h3, p{
 
 .profile-userstats .userstate__friends,
 .profile-userstats .userstate__achievements,
-.profile-userstats .userstate {
+.profile-userstats .userstate_statistics {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -143,8 +142,9 @@ h1, h3, p{
 }
 
 
-.profile-userstats .userstate__achievements h1 ,
-.profile-userstats .userstate__friends h1 {
+.profile-userstats .userstate__friends h1,
+.profile-userstats .userstate__achievements h1,
+.profile-userstats .userstate_statistics h1 {
     width: 85%;
     color: white;
     text-align: center;
@@ -195,7 +195,7 @@ h1, h3, p{
     /* border: cyan 1px solid; */
     justify-content: flex-end;
 }
-.friend__chat .chat__button{
+.friend__chat .chat__button {
     display: flex;
     background-color: #250939;
     border-radius: 5px;
@@ -204,10 +204,14 @@ h1, h3, p{
     padding: 4px 6px;
     text-decoration: none;
 }
+.friend__chat .chat__button:hover {
+    padding: 6px 8px;
+    transition: ease-in 0.15s;
+}
 .friend__chat .chat__button img { 
     height: 20px;
 }
-.friend__chat .chat__button p { 
+.friend__chat .chat__button p {
     color: white;
 }
 
@@ -249,4 +253,17 @@ h1, h3, p{
 .achievements__container .achivement .achivement__title-desc p {
     color: rgb(163, 163, 163);
     cursor: default;
+}
+
+/* Statistics */
+
+.profile-userstats .userstate_statistics h1 {
+    width: 80%;
+}
+.profile-userstats .userstate_statistics {
+    padding: 10px 0px;
+}
+.userstate_statistics .statistics__container {
+    width: 100%;
+    height: 100%;
 }

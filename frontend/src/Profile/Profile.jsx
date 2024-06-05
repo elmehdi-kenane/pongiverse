@@ -6,8 +6,9 @@ import mavSvg from "./Group.svg"
 import chatSvg from "../assets/navbar-sidebar/chat.svg"
 import achvSvg from "./achv.svg"
 import { rankData } from '../Dashboard/helpers/rankData'
-import "./Profile.css"
 import Pagination from "../Dashboard/helpers/Pagination"
+import BarGraph from "../Dashboard/charts/BarGraph"
+import "./Profile.css"
 
 const bio = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim."
 
@@ -78,6 +79,17 @@ const profileUserAchievement = () => {
   )
 }
 
+function profileUserStatistics(){
+  return (
+    <>
+      <h1> Statistics </h1>
+      <div className="statistics__container">
+        <BarGraph marginLeft={-34} marginRight={8}/>
+      </div>
+    </>
+  )
+}
+
 
 function Profile() {
   const level = 8;
@@ -111,7 +123,9 @@ function Profile() {
         <div className='userstate__achievements'>
           {profileUserAchievement()}
         </div>
-        <div className='userstate'></div>
+        <div className='userstate_statistics'>
+          {profileUserStatistics()}
+        </div>
       </div>
     </div>
   )
