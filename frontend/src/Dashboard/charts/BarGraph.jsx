@@ -8,10 +8,10 @@ import {
 import { dataLevel } from '../helpers/DataLevel'
 import CustomToolTips from '../helpers/CustomToolTips'
 
-function BarGraph() {
+function BarGraph({marginLeft, marginRight}) {
   return (
     <ResponsiveContainer height="100%" width="100%">
-        <BarChart width={500} height={500} data={dataLevel} margin={{ left: -30, right: 5 }}>
+        <BarChart width={500} height={500} data={dataLevel} margin={{ left: marginLeft, right: marginRight }}>
             <Bar dataKey="wins" fill="#f4effa" barSize={10}/>
             <Bar dataKey="lost" fill="#826aed"  barSize={10}/>
             <XAxis dataKey="day" />

@@ -75,7 +75,7 @@ function DashboardBody() {
             {!isLineChart && <ShowChartIcon className="chart-icon" onClick={handleIconClick}/>}
           </div>
           <div className="line-graph">
-            {!isLineChart ? <BarGraph/>  : <LineGraph />}
+            {!isLineChart ? <BarGraph marginLeft={-30} marginRight={5} />  : <LineGraph />}
           </div>
         </div>
           {/* Rank */}
