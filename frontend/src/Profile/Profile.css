@@ -29,52 +29,124 @@ h1, h3, p{
     display: flex;
     width: 70%;
     height: 250px;
-    gap : 20px;
     align-items: center;
-    padding: 0px 5px;
-
-}
-
-.profile-userinfo .userinfo__pic {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 35%;
-    height: 200px;
-}
-.profile-userinfo .userinfo__pic img {
-    height: 160px;
-    border-radius: 50%;
-    border: #826aed solid 2px;
-}
-
-
-.profile-userinfo .userinfo__name-bio {
-    display: flex;
     flex-direction: column;
-    width: 65%;
-    /* border: cyan solid 1px; */
-    color: white;
-    gap: 20px;
-    padding-top: 20px;
+    position: relative;
 }
-.userinfo__name-bio .userinfo-edit {
+.profile-userinfo .userinfo__head {
+    display: flex;
+    width: 100%;
+    height: 50px;
+    /* border: #250939 solid 1px; */
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 10px;
+}
+.profile-userinfo .userinfo__body {
+    display: flex;
+    height: 200px;
+    align-items: center;
+    margin-top: -30px;
+    padding: 0 15px 0 25px;
+    gap: 25px;
+    /* border:wheat solid 1px; */
+}
+
+/* Info-Head */
+
+.userinfo__head img {
+    height: 70px;
+    margin-top: 20px;
+}
+
+.userinfo__head .userinfo__head__edit {
     height: 30px;
     width: 30px;
     padding: 3px;
-    border-radius: 40%;
-    align-self: flex-end;
-    margin: -55px 10px 0 0;
     background: white;
     color: #826aed;
     border-radius: 50%;
 }
-.userinfo__name-bio .userinfo-edit:hover {
+.userinfo__head__edit:hover {
     background:#826aed;
     color: white;
 }
 
+.userinfo__head .userinfo__addfriend {
+    display: flex;
+    padding: 5px;
+    background: #826aed;
+    border-radius: 10px;
+    color: white;
+    border: white 0.5px solid;
+    align-items: center;
+    margin: 20px 5px 0 0;
+    gap: 3px;
+}
+.userinfo__head .userinfo__addfriend p {
+    font-size: 14px;
+}
+.userinfo__head .userinfo__addfriend svg {
+    height: 18px;
+}
 
+/* Info-Body */
+
+.userinfo__body .userinfo__pic {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* width: 35%; */
+    height: 200px;
+    position: relative;
+    /* border: #8edf34 solid 1px; */
+}
+.userinfo__body .userinfo__pic img:nth-child(1) {
+    height: 160px;
+    border-radius: 50%;
+    border: #826aed solid 2px;
+}
+.userinfo__pic .is-online {
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    height: 26px;
+    width: 26px;
+    position: absolute;
+    bottom: 25px;
+    right: 12px;
+    background-color: #8edf34;
+    color: #8edf34;
+    clip-path: circle();
+}
+.userinfo__pic .is-online:hover {
+    color: black;
+    font-weight: 500;
+    transition: ease-out 0.3s;
+    clip-path: none;
+    border-radius: 10px;
+    width: 58px;
+    padding: 0 5px;
+}
+
+.userinfo__body .userinfo__name-bio {
+    display: flex;
+    flex-direction: column;
+    /* width: 65%; */
+    /* border: cyan solid 1px; */
+    color: white;
+    gap: 20px;
+}
+
+.userinfo__name-bio .userinfo__name-avatar {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.userinfo__name-bio .userinfo__name-avatar img {
+    height: 50px;
+}
 
 /* User Level */
 

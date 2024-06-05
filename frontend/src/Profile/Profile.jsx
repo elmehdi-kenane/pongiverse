@@ -1,6 +1,7 @@
-import React from 'react'
+import {React, useState} from 'react'
 import {Link} from "react-router-dom"
 import EditIcon from '@mui/icons-material/Edit';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 import mavSvg from "./Group.svg"
 import chatSvg from "../assets/navbar-sidebar/chat.svg"
@@ -8,7 +9,10 @@ import achvSvg from "./achv.svg"
 import { rankData } from '../Dashboard/helpers/rankData'
 import Pagination from "../Dashboard/helpers/Pagination"
 import BarGraph from "../Dashboard/charts/BarGraph"
+import clan from "./Frame.svg"
+import clan4 from "./Frame4.svg"
 import "./Profile.css"
+
 
 const bio = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim."
 
@@ -31,6 +35,7 @@ const achv = [
 ]
 
 const profileUserFriends = () => {
+  
   return (
     <>
       <h1> Friends </h1>
@@ -94,19 +99,36 @@ function profileUserStatistics(){
 function Profile() {
   const level = 8;
   const per = 55;
-
+  const [isOwnProfile, setIsOwnProfile] = useState(false);
+  
   return (
     <div className='profile-page'>
       {/* User Info */}
       <div className="profile-userinfo purple-glass">
-        <div className="userinfo__pic">
-          <img src={mavSvg} alt="Player" />
+        <div className="userinfo__head">
+            {isOwnProfile ? <EditIcon className='userinfo__head__edit'/> :
+              <div className="userinfo__addfriend">
+                <PersonAddIcon />
+                <p> Add Friend </p>
+              </div> 
+            }
         </div>
-        <div className="userinfo__name-bio">
-          <EditIcon className='userinfo-edit'/>
-          <h1 className="userinfo__name"> Maverick </h1>
-          <p className="userinfo__bio"> {bio} </p>
+
+        <div className="userinfo__body">
+          <div className="userinfo__pic">
+            <img src={mavSvg} alt="Player" />
+            <div className="is-online"> Online </div>
+
+          </div>
+          <div className="userinfo__name-bio">
+            <div className="userinfo__name-avatar">
+              <h1 className="userinfo__name"> Maverick </h1>
+              <img src={clan4} />
+            </div>
+            <p className="userinfo__bio"> {bio} </p>
+          </div>
         </div>
+
       </div>
 
       {/* User Level */}
