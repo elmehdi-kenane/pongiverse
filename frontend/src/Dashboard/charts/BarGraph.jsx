@@ -5,10 +5,9 @@ import {
         CartesianGrid,
         Tooltip, Legend,
         ResponsiveContainer} from 'recharts'
-import { dataLevel } from '../helpers/DataLevel'
 import CustomToolTips from '../helpers/CustomToolTips'
 
-function BarGraph({marginLeft, marginRight}) {
+function BarGraph({marginLeft, marginRight, dataLevel}) {
   return (
     <ResponsiveContainer height="100%" width="100%">
         <BarChart width={500} height={500} data={dataLevel} margin={{ left: marginLeft, right: marginRight }}>

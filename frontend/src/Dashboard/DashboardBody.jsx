@@ -3,6 +3,7 @@ import {React, useState} from 'react'
 import BarChartIcon from '@mui/icons-material/BarChart';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 
+import { dataLevel } from './helpers/DataLevel';
 import { rankData } from "./helpers/rankData"
 import LineGraph from "./charts/LineGraph"
 import BarGraph from "./charts/BarGraph"
@@ -75,7 +76,8 @@ function DashboardBody() {
             {!isLineChart && <ShowChartIcon className="chart-icon" onClick={handleIconClick}/>}
           </div>
           <div className="line-graph">
-            {!isLineChart ? <BarGraph marginLeft={-30} marginRight={5} />  : <LineGraph />}
+            {!isLineChart ? <BarGraph marginLeft={-30} marginRight={5} dataLevel={dataLevel}/>
+              : <LineGraph />}
           </div>
         </div>
           {/* Rank */}
