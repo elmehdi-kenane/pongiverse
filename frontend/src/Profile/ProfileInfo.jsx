@@ -13,29 +13,25 @@ function ProfileInfo() {
 
   return (
     <div className="profile-userinfo purple-glass">
-        <div className="userinfo__head">
-            {isOwnProfile ? <EditIcon className='userinfo__head__edit'/> :
-              <div className="userinfo__addfriend no-select">
-                <PersonAddIcon />
-                <p> Add Friend </p>
-              </div> 
-            }
+      {isOwnProfile ? <EditIcon className='userinfo__edit info-position'/> :
+        <div className="userinfo__addfriend no-select info-position">
+          <PersonAddIcon />
+          <p> Add Friend </p>
         </div>
-
-        <div className="userinfo__body">
-          <div className="userinfo__pic">
-            <img src={mavSvg} alt="Player" />
-            <div className="is-online no-select"> Online </div>
-          </div>
-          <div className="userinfo__name-bio">
-            <div className="userinfo__name-avatar">
-              <h1 className="userinfo__name"> Maverick </h1>
-              <img src={clan4} alt="Avatar" />
-            </div>
-            <p className="userinfo__bio"> {bio} </p>
-          </div>
-        </div>
+      }
+      
+      <div className="userinfo__pic">
+        <img src={mavSvg} alt="Player" />
+        <div className="is-online no-select"> Online </div>
       </div>
+      <div className="userinfo__name-bio">
+        <div className="userinfo__name-avatar">
+          <h1 className="userinfo__name"> Maverick </h1>
+          <img src={clan4} alt="Avatar" />
+        </div>
+        <p className="userinfo__bio"> {bio} </p>
+      </div>
+    </div>
   )
 }
 

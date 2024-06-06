@@ -30,37 +30,27 @@ h1, h3, p{
 
 /* User Info */
 
+
 .profile-userinfo {
     display: flex;
-    width: 70%;
     height: 250px;
+    width: 70%;
     align-items: center;
-    flex-direction: column;
-    position: relative;
-    flex-shrink: 0;
-}
-.profile-userinfo .userinfo__head {
-    display: flex;
-    width: 100%;
-    height: 50px;
-    /* border: #250939 solid 1px; */
-    justify-content: flex-end;
-    align-items: center;
+    justify-content: center;
+    gap: 20px;
     padding: 0 10px;
+    flex-shrink: 0;
+    position: relative;
 }
-.profile-userinfo .userinfo__body {
-    display: flex;
-    height: 200px;
-    align-items: center;
-    margin-top: -30px;
-    padding: 0 15px 0 25px;
-    gap: 25px;
-    /* border:wheat solid 1px; */
+.profile-userinfo .info-position {
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }
 
-/* Info-Head */
+/* Add Friend - Edit */
 
-.userinfo__head .userinfo__head__edit {
+.profile-userinfo .userinfo__edit {
     height: 30px;
     width: 30px;
     padding: 3px;
@@ -69,12 +59,12 @@ h1, h3, p{
     border-radius: 50%;
     position: absolute;
 }
-.userinfo__head__edit:hover {
+.profile-userinfo .userinfo__edit:hover {
     background:#826aed;
     color: white;
 }
 
-.userinfo__head .userinfo__addfriend {
+.profile-userinfo .userinfo__addfriend {
     display: flex;
     padding: 5px;
     background: #826aed;
@@ -82,32 +72,32 @@ h1, h3, p{
     color: white;
     border: white 0.5px solid;
     align-items: center;
-    margin: 20px 5px 0 0;
     gap: 3px;
     position: absolute;
+    margin-top: 20px;
+    margin-right: 10px;
 }
-.userinfo__head .userinfo__addfriend:active {
+.profile-userinfo .userinfo__addfriend:active {
     background: #250939;
 }
-.userinfo__head .userinfo__addfriend p {
+.profile-userinfo .userinfo__addfriend p {
     font-size: 14px;
 }
-.userinfo__head .userinfo__addfriend svg {
+.profile-userinfo .userinfo__addfriend svg {
     height: 18px;
 }
 
-/* Info-Body */
+/* Player Banner Info */
 
-.userinfo__body .userinfo__pic {
+.userinfo__pic {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* width: 35%; */
     height: 200px;
     position: relative;
     /* border: #8edf34 solid 1px; */
 }
-.userinfo__body .userinfo__pic img:nth-child(1) {
+.userinfo__pic img {
     height: 160px;
     border-radius: 50%;
     border: #826aed solid 2px;
@@ -136,10 +126,9 @@ h1, h3, p{
     padding: 0 5px;
 }
 
-.userinfo__body .userinfo__name-bio {
+.userinfo__name-bio {
     display: flex;
     flex-direction: column;
-    /* width: 65%; */
     /* border: cyan solid 1px; */
     color: white;
     gap: 20px;

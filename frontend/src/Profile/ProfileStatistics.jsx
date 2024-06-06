@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {Link} from "react-router-dom"
 
 import chatSvg from "../assets/navbar-sidebar/chat.svg"
@@ -26,7 +26,7 @@ const achv = [
     },
   ]
   
-  const profileUserFriends = () => {
+  const ProfileUserFriends = () => {
     
     return (
       <>
@@ -54,7 +54,7 @@ const achv = [
     )
   } 
   
-  const profileUserAchievement = () => {
+  const ProfileUserAchievement = () => {
     return (
       <>
         <h1> Achievements </h1>
@@ -76,28 +76,33 @@ const achv = [
     )
   }
   
-  function profileUserStatistics(){
+
+  
+  function ProfileUserStatistics(){
     return (
       <>
         <h1> Statistics </h1>
         <div className="statistics__container">
-          <BarGraph marginLeft={-30} marginRight={10} dataLevel={profileLevel}/>
+          <BarGraph marginLeft={-30} marginRight={10} dataLevel={profileLevel} barSize={15}/>
         </div>
       </>
     )
   }
 
+  
 function ProfileStatistics() {
+
+    
   return (
     <div className="profile-userstats">
         <div className='userstate__friends'>
-            {profileUserFriends()}
+            <ProfileUserFriends />
         </div>
         <div className='userstate__achievements'>
-            {profileUserAchievement()}
+            <ProfileUserAchievement />
         </div>
         <div className='userstate_statistics'>
-            {profileUserStatistics()}
+            <ProfileUserStatistics />
         </div>
     </div>
   )
