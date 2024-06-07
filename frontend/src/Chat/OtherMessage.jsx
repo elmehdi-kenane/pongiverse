@@ -5,7 +5,7 @@ import "../assets/chat/Chat.css";
 const OtherMessage = (props) => {
     return (
         <div className="message-row__other-message">
-            <img  className="message-row__other-message__avatar" src={ChatIcons.DefaultAvatar} alt="" />
+            <img  className="message-row__other-message__avatar" src={props.avatar} alt="" />
             <div className="message-row__other-message__text other-message" >
                 {props.content}
             </div>

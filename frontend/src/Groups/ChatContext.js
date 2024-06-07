@@ -11,6 +11,7 @@ export const ChatProvider = ({ children }) => {
   const [channelsConversations, setChannelsConversations] = useState([]);
   const [directsConversations, setDirectsConversations] = useState([]);
   const [directsImages, setDirectsImages] = useState([]);
+  let [isBlur, setIsBlur] = useState(false)
   const [selectedChannel, setSelectedChannel] = useState({
     name: "",
     roomId: "",
@@ -92,6 +93,8 @@ export const ChatProvider = ({ children }) => {
     setDirectsImages : setDirectsImages,
     selectedDirect : selectedDirect,
     setSelectedDirect: setSelectedDirect,
+    isBlur : isBlur,
+    setIsBlur: setIsBlur,
   };
   return (
     <ChatContext.Provider value={contextData}>{children}</ChatContext.Provider>

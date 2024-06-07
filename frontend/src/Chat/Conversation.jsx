@@ -10,12 +10,12 @@ const Conversation = (props) => {
     const {directsImages} = useContext(ChatContext);
 
     const handleClick = () => {
-        console.log("is_Direct", props.isDirect)
         if(props.isDirect && props.name) {
             props.setSelectedDirect ({
                 name: props.name,
                 avatar : directsImages[props.imageIndex],
                 status : props.status,
+                
             })
         }else if (!props.isDirect) {
             props.setSelectedChannel({

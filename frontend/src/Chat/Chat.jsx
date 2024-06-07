@@ -12,6 +12,7 @@ import DirectMessages from "./DirectMessages";
 
 const Chat = () => {
   const [isHome, setIsHome] = useState(true);
+  const [query, setQuery] = useState("");
   const [expandSearch, setExpandSearch] = useState(false);
   const {
     channelsConversations,
@@ -22,14 +23,15 @@ const Chat = () => {
     selectedDirect,
   } = useContext(ChatContext);
   const { user } = useContext(AuthContext);
-
-  const navigate = useNavigate();
-  const selectedElems = [];
+  const filteredConversation = directsConversations.filter( conversation => {
+    return conversation.name.includes(query)
+  })
 
   return (
     <div className="chat-page">
       <div className="chat-container">
         <div className="conversations">
+      {<h4> {user} </h4>}
           <div className="conversations__search__mobile">
             <img
               src={ChatIcons.SearchIcon}
@@ -55,8 +57,10 @@ const Chat = () => {
           <div className="conversations__search">
             <input
               type="text"
+              value={query}
               placeholder="Search"
               className="conversations__search__input"
+              onChange={(e) => setQuery(e.target.value)}
             />
           </div>
           <div className="conversations__switcher">
@@ -75,7 +79,7 @@ const Chat = () => {
           </div>
           {isHome ? (
             <div className="conversations__list">
-              {directsConversations.map((user, key) => (
+              {filteredConversation.map((user, key) => (
                 <Conversation
                   name={user.name}
                   key={user.id}
@@ -98,11 +102,6 @@ const Chat = () => {
                   isDirect={isHome}
                 />
               ))}
-              {/* {Array(151)
-                .fill()
-                .map((_, i) => (
-                  <Conversation key={i} name="Random" />
-                ))} */}
             </div>
           )}
         </div>

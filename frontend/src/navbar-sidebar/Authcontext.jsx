@@ -181,6 +181,7 @@ export const AuthProvider = ({children}) => {
 		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && !socket && user) {
 			const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
 			newSocket.onopen = () => {
+				console.log("Socket created and Opened")
 				setSocket(newSocket)
 			}
 			newSocket.onmessage = (event) => {

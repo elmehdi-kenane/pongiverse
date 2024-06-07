@@ -151,7 +151,6 @@
     font-size: 8px;
 }
 
-/**/
 
 .name-container {
     padding: 10px 15px;
@@ -239,11 +238,15 @@
 .message-row__mymessage__avatar,
 .message-row__other-message__avatar {
     width: 30px;
-    /* margin-bottom: 10px; */
+    border: 1px solid white;
+    border-radius: 35px;
 }
 
 img.name-container__invite-icon {
     width: 35px;
+}
+img.name-container__invite-icon:hover {
+    cursor: pointer;
 }
 
 @media screen and (min-width: 1444px) {

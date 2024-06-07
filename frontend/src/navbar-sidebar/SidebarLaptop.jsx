@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
+import ChatContext from "../Groups/ChatContext";
+import { useContext } from "react";
 
 function SidebarLaptop({ Icons }) {
+    const {isBlur} = useContext(ChatContext)
     return (
-        <div className="sidebar blur">
+        <div className= {isBlur ? "sidebar blur" : "sidebar" }>
             <div className="sidebar-navigations" id="sidebar-dashboard">
                 <div className="sidebar-icons">
                     <Link to="dashboard">

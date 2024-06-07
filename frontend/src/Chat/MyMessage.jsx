@@ -9,7 +9,7 @@ const MyMessage = (props) => {
             <div className="message-row__mymessage__text my-message" >
                 {props.content}
             </div>
-            <img  className="message-row__mymessage__avatar" src={ChatIcons.DefaultAvatar} alt="" />
+            <img  className="message-row__mymessage__avatar" src={props.avatar} alt="" />
         </div>
     )
 }

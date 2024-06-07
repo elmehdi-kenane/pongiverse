@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import MyMessage from "./MyMessage";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import OtherMessage from "./OtherMessage";
@@ -13,9 +13,12 @@ const DirectMessages = () => {
   const [messages, setMessages] = useState([]);
   const [recivedMessages, setRecivedMessages] = useState(null);
   const [newMessage, setNewMessage] = useState("");
-  const { user, socket } = useContext(AuthContext);
+  const { user, socket, userImg } = useContext(AuthContext);
   const { selectedDirect } = useContext(ChatContext);
   const messageEndRef = useRef(null);
+  const selectedDirectRef = useRef(null);
+  const navigate = useNavigate()
+
   const sendMessage = (e) => {
     e.preventDefault();
     if (
@@ -25,10 +28,10 @@ const DirectMessages = () => {
     ) {
       socket.send(
         JSON.stringify({
-          type: "direct-message",
+          type: "directMessage",
           data: {
             sender: user,
-            reciver : selectedDirect.name,
+            reciver: selectedDirect.name,
             message: newMessage,
           },
         })
@@ -41,57 +44,74 @@ const DirectMessages = () => {
     setNewMessage(e.target.value);
   };
 
-  // useEffect(
-  //   () => {
-  //     const fetchMessages = async () => {
-  //       try {
-  //         const response = await fetch(
-  //           `http://localhost:8000/chatAPI/Directs/messages`, {
-  //               method: 'POST',
-  //               headers: {
-  //                   "Content-Type": "application/json",
-  //                 },
-  //                 body: JSON.stringify({
-  //                   user: user,
-  //                   friend : selectedDirect.name,
-  //                 }),
-  //           }
-  //         );
-  //         const data = await response.json();
-  //         if(data)
-  //           setMessages(data);
-  //         console.log("the data messages: ", messages)
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     };
-  //     if (selectedDirect) fetchMessages();
-  //     let scrollView = document.getElementById("start");
-  //     scrollView.scrollTop = scrollView.scrollHeight;
-  //   },
-  //   [selectedDirect]
-  // );
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:8000/chatAPI/Directs/messages`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              user: user,
+              friend: selectedDirect.name,
+            }),
+          }
+        );
+        const data = await response.json();
+        if (data) {
+          setMessages(data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (selectedDirect) {
+      console.log("selected Direct: ", selectedDirect);
+      fetchMessages();
+    }
+
+    let scrollView = document.getElementById("start");
+    scrollView.scrollTop = scrollView.scrollHeight;
+  }, [selectedDirect]);
+
+  useEffect(() => {
+		selectedDirectRef.current = selectedDirect;
+	  }, [selectedDirect]);
 
   useEffect(() => {
     if (socket) {
       socket.onmessage = (e) => {
         let data = JSON.parse(e.data);
-        console.log("recived messages: ", data.data);
-        if (data.type === "newMessage") {
-          setRecivedMessages(data.data);
-        } 
+        if (data.type === "newDirect") {
+          const currentDirect = selectedDirectRef.current;
+          console.log(selectedDirect)
+          console.log("reciver: ",data.data.reciver)
+          console.log("sender: ", data.data.sender)
+          console.log("user: ",user)
+          console.log("selected: ",currentDirect.name)
+          if (
+            (currentDirect.name === data.data.sender &&
+              data.data.reciver === user) ||
+            (user === data.data.sender && data.data.reciver === user)
+          )
+            setRecivedMessages(data.data);
+        }
+        else if (data.type === 'goToGamingPage') {
+          console.log("navigating now")
+            navigate(`/mainpage/game/solo/1vs1/friends`)
+        }
       };
-      console.log(selectedDirect)
     }
   }, [socket]);
 
   useEffect(() => {
-    console.log("new message")
     if (recivedMessages !== null) {
       setMessages((prev) => [...prev, recivedMessages]);
     }
   }, [recivedMessages]);
-
 
   useEffect(() => {
     if (messages) {
@@ -99,6 +119,18 @@ const DirectMessages = () => {
       scrollView.scrollTop = scrollView.scrollHeight;
     }
   }, [messages]);
+
+const inviteFriend = () => {
+  if (socket && socket.readyState === WebSocket.OPEN) {
+    console.log("inside join")
+    socket.send(JSON.stringify({
+      type: 'inviteFriendGame',
+      message: {
+        user: user,
+        target: selectedDirect.name,
+      }
+    }))
+  }}
 
   return (
     <>
@@ -110,15 +142,16 @@ const DirectMessages = () => {
             className="name-container__avatar"
           />
           <div className="name-container__name-and-members">
-            <div className="name-container__name">
-              {selectedDirect.name}
+            <div className="name-container__name">{selectedDirect.name}</div>
+            <div className="name-container__infos">
+              {selectedDirect.status ? "online" : "offline"}
             </div>
-            <div className="name-container__infos">{selectedDirect.status ? "online" : "offline"}</div>
           </div>
         </div>
         <div className="name-container__icons">
           <div className="name-container__invite-play">
             <img
+              onClick={inviteFriend}
               src={ChatIcons.InviteToPlay}
               alt=""
               className="name-container__invite-icon"
@@ -134,13 +167,15 @@ const DirectMessages = () => {
         </div>
       </div>
       <div id="start" className="conversation__messages">
-        { messages.length !== 0 && messages &&  messages.map((message, index) =>
-          message.sender === user ? (
-            <MyMessage key={index} content={message.content} />
-          ) : (
-            <OtherMessage key={index} content={message.content} />
-          )
-        )}
+        {messages.length !== 0 &&
+          messages &&
+          messages.map((message, index) =>
+            message.sender === user ? (
+              <MyMessage key={index} content={message.content} avatar={userImg}/>
+            ) : (
+              <OtherMessage key={index} content={message.content} avatar = {selectedDirect.avatar}/>
+            )
+          )}
         <div ref={messageEndRef}></div>
       </div>
       <form

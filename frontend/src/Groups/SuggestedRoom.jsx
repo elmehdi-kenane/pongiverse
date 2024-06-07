@@ -1,6 +1,6 @@
 import * as ChatIcons from "../assets/chat/media";
 
-const MyRoom = () => {
+const SuggestedRoom = () => {
   return (
     <div className="room-box">
       <div className="room-details">
@@ -11,14 +11,13 @@ const MyRoom = () => {
         </div>
       </div>
       <div className="room-desc">
-        Lorem Ipsum is simply dummy text of the printing and
+        Lorem Ipsum is simply 
       </div>
       <div className="btn-and-settings">
-        <button className="leave-room">Leave Channel</button>
-        <img src={ChatIcons.RoomSettings} className="room-settings" />
+        <button className="leave-room">Join Channel</button>
       </div>
     </div>
   );
 };
 
-export default MyRoom;
+export default SuggestedRoom;
