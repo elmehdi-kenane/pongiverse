@@ -1,7 +1,7 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 from myapp.models import customuser ###########
 from asgiref.sync import sync_to_async
-from .models import Room, Membership, Message
+from .models import Room, Membership, Message, Directs
 import json
 
 
@@ -52,3 +52,32 @@ async def message(self, data):
 
 async def get_user_by_name(self, user_name):
     return await sync_to_async(customuser.objects.get)(username=user_name)
+
+async def direct_message(self, data, user_channels):
+    sender = await sync_to_async(customuser.objects.get)(username=data['data']['sender'])
+    reciver = await sync_to_async(customuser.objects.get)(username=data['data']['reciver'])
+    await sync_to_async(Directs.objects.create)(sender=sender, reciver=reciver, message = data['data']['message'])
+    channel_name = user_channels.get(data['data']['reciver'])
+    mychannel_name = user_channels.get(data['data']['sender'])
+    if(channel_name):
+        await self.channel_layer.send(
+            channel_name, {
+                'type' : 'send_direct',
+                'data' : {
+                    'sender' : data['data']['sender'],
+                    'reciver' : data['data']['reciver'],
+                    'message' : data['data']['message']
+                }
+            }
+        )
+    if(mychannel_name):
+        await self.channel_layer.send(
+            mychannel_name, {
+                'type' : 'send_direct',
+                'data' : {
+                    'sender' : data['data']['sender'],
+                    'reciver' : data['data']['sender'],
+                    'message' : data['data']['message']
+                }
+            }
+        )

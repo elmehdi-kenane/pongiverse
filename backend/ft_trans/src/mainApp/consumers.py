@@ -60,7 +60,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 	async def receive(self, text_data):
 		data = json.loads(text_data)
-
 		if data['type'] == 'isPlayerInAnyRoom': await game_consumers.isPlayerInAnyRoom(self, data, rooms, user_channels)
 		elif data['type'] == 'dataBackUp': await game_consumers.backUpData(self, data, rooms)
 		elif data['type'] == 'join': await game_consumers.joinRoom(self, data, rooms, user_channels)
@@ -82,6 +81,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		#chat
 		elif data['type'] == 'join-channel': await chat_consumers.join_channel(self, data)
 		elif data['type'] == 'message': await chat_consumers.message(self, data)
+		elif data['type'] == 'directMessage': await chat_consumers.direct_message(self, data, user_channels)
 
 	async def disconnect(self, close_code):
 		await tournament_consumers.disconnected(self, user_channels)
@@ -207,29 +207,45 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			}
 		}
 		await self.send(text_data=json.dumps(message))
-	async def receiveFriendGame(self, event):
-		await self.send(text_data=json.dumps({
-			'type': 'receiveFriendGame',
-			'message': event['message']
-		}))
+	async def send_direct(self, event):
+		data = event['data']
+		message = {
+			'type' : 'newDirect',
+			'data' : {
+				'sender': data['sender'],
+				'reciver': data['reciver'],
+				'content': data['message'],
+			}
+		}
+		print(message)
+		await self.send(text_data=json.dumps(message))
 
-	async def sendPlayerNo(self, event):
-		await self.send(text_data=json.dumps({
-			'type': 'playerNo',
-			'message': event['message']
-		}))
 
-	async def playingStatus(self, event):
-		await self.send(text_data=json.dumps({
-			'type': 'playingStatus',
-			'message': event['message']
-		}))
 
-	async def goToGamingPage(self, event):
-		await self.send(text_data=json.dumps({
-			'type': 'goToGamingPage',
-			'message': event['message']
-		}))
+
+	# async def receiveFriendGame(self, event):
+	# 	await self.send(text_data=json.dumps({
+	# 		'type': 'receiveFriendGame',
+	# 		'message': event['message']
+	# 	}))
+
+	# async def sendPlayerNo(self, event):
+	# 	await self.send(text_data=json.dumps({
+	# 		'type': 'playerNo',
+	# 		'message': event['message']
+	# 	}))
+
+	# async def playingStatus(self, event):
+	# 	await self.send(text_data=json.dumps({
+	# 		'type': 'playingStatus',
+	# 		'message': event['message']
+	# 	}))
+
+	# async def goToGamingPage(self, event):
+	# 	await self.send(text_data=json.dumps({
+	# 		'type': 'goToGamingPage',
+	# 		'message': event['message']
+	# 	}))
 
 
 

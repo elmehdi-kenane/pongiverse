@@ -1,6 +1,9 @@
+from django.db.models import Q
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Room, Membership, Message
+from .models import Room, Membership, Message, Directs
+from myapp.models import customuser ###########
+
 
 @api_view(['GET'])
 def channel_list(request, username):
@@ -42,17 +45,19 @@ def channel_messages(request, room_id):
 @api_view (['POST'])
 def direct_messages(request):
     if request.method == 'POST':
-        username = (request.data).get('user')
-        friend = (request.data).get('friend')
-        # messages = Message.objects.filter()
+        username = customuser.objects.get(username = (request.data).get('user'))
+        friend = customuser.objects.get(username = (request.data).get('friend'))
+        messages = Directs.objects.filter(Q(sender=username, reciver=friend) | Q(sender=friend, reciver=username))
         data = []
-        # for message in messages:
-        #     message_data = {
-        #         'id':message.id,
-        #         'content': message.content,
-        #         'sender' : message.sender.username,
-        #         'date' : message.timestamp
-        #     }
-        #     data.append(message_data)
-        return Response (data)
+        for message in messages:
+            message_data = {
+                'id':message.id,
+                'sender' : message.sender.username,
+                'reciver' : message.reciver.username,
+                'content': message.message,
+                'date' : message.timestamp
+            }
+            data.append(message_data)
+        sorted_by_date = sorted(data, key=lambda x: x['date'])
+        return Response (sorted_by_date)
     return Response({'error': 'Invalid request method'}, status=400)
