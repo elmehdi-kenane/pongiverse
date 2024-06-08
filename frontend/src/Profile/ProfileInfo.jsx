@@ -6,6 +6,8 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 // import clan4 from "./assets/Frame4.svg"
 import clan5 from "./assets/Frame5.svg"
 import mavSvg from "./assets/Group.svg"
+import bg1 from "./assets/bg1.jpg"
+import bg2 from "./assets/bg2.jpg"
 
 function ProfileInfo() {
 
@@ -13,7 +15,8 @@ function ProfileInfo() {
     const [isOwnProfile, setIsOwnProfile] = useState(false);
 
   return (
-    <div className="profile-userinfo purple-glass">
+    <div className="profile-userinfo purple-glass" style={{backgroundImage: `url(${bg1})`}}>
+     
       {isOwnProfile ? <EditIcon className='userinfo__edit info-position'/> :
         <div className="userinfo__addfriend no-select info-position">
           <PersonAddIcon />
@@ -28,7 +31,10 @@ function ProfileInfo() {
       <div className="userinfo__name-bio">
         <div className="userinfo__name-avatar">
           <h1 className="userinfo__name"> Maverick </h1>
-          <img src={clan5} alt="Avatar" />
+          <div className="userinfo__avatar">
+              <img src={clan5} alt="Avatar" />
+              <p className='avatar-desc filter-glass'> Avatar Level 5 </p>
+          </div>
         </div>
         <p className="userinfo__bio"> {bio} </p>
       </div>

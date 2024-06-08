@@ -29,16 +29,14 @@ import { achv } from './data/achvData'
         {rankData.map((player) => {
           return (
             <div className='classment__friend'>
-              <div className="friend__pic-name">
+              <Link className="friend__pic-name">
                 <img src={player.img} alt='playerImg'/>
                 <p> {player.name} </p>
-              </div>
-              <div className='friend__chat'>
-                <Link className='chat__button no-select'>
-                  <img src={chatSvg} alt='chatIcon'/>
-                  <p style={{cursor: 'pointer'}}> message </p>
-                </Link>
-              </div>
+              </Link>
+              <Link className='chat__button no-select'>
+                <img src={chatSvg} alt='chatIcon'/>
+                <p style={{cursor: 'pointer'}}> message </p>
+              </Link>
             </div>
           )
         })}

@@ -4,7 +4,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 80px 50px 0;
+    padding: 50px 50px 0;
     gap: 30px;
     overflow-y: scroll;
 }
@@ -24,22 +24,34 @@ img,
     border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
+.filter-glass {
+    background: rgba( 255, 255, 255, 0.05 );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    box-shadow: 0 2px 30px 0 #250939;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+}
+
 h1, h3, p{
     cursor: default;
 }
 
-/* User Info */
+/* ------------------- User Info ------------------- */
 
 .profile-userinfo {
     display: flex;
     height: 250px;
-    width: 80%;
+    width: 100%;
     align-items: center;
     justify-content: center;
     gap: 20px;
     padding: 0 10px;
     flex-shrink: 0;
     position: relative;
+
+    background-position: center;
+    background-size: cover;
 }
 .profile-userinfo .info-position {
     position: absolute;
@@ -138,16 +150,41 @@ h1, h3, p{
     gap: 20px;
     align-items: center;
 }
-.userinfo__name-bio .userinfo__name-avatar img {
+.userinfo__avatar {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+.userinfo__avatar img {
     height: 50px;
 }
 
-/* User Level */
+.avatar-desc {
+    position: absolute;
+    top: 0%;
+    left: 100%;
+    opacity: 0;
+    width: 65px;
+    text-align: center;
+    color: #826aed;
+    font-size: 13px;
+    font-weight: 450;
+    transition: opacity 0.5s ease;
+}
+.userinfo__avatar:hover .avatar-desc{
+    opacity: 1;
+}
+
+.userinfo__bio {
+    max-width: 650px;
+}
+
+/* ------------------- User Level ------------------- */
 
 .profile-userlevel {
     display: flex;
     flex-direction: column;
-    width: 90%;
+    width: 100%;
     height: 45px;
     border : white 1px solid;
     border-radius: 10px;
@@ -180,7 +217,7 @@ h1, h3, p{
 
 
 
-/* User Stats */
+/* ------------------- User Stats ------------------- */
 
 .profile-userstats {
     display: flex;
@@ -262,6 +299,10 @@ h1, h3, p{
     width: 100%;
     overflow-y: scroll;
     border-radius: 0;
+    cursor: pointer;
+}
+.userstate__friends .userfriends__classment p{
+    cursor: inherit;
 }
 .userfriends__classment .classment__friend { /* Friend Player */
     display: flex;
@@ -272,12 +313,23 @@ h1, h3, p{
     padding: 0 5px;
     flex-shrink: 0;
 }
+.userfriends__classment .classment__friend:hover {
+    background-color: #250939;
+    transition: ease-in 0.2s;
+    box-shadow: 0 2px 30px 0 #250939;
+}
+.userfriends__classment .classment__friend:hover .chat__button{
+    background-color: #826aed;
+    transition: ease-in 0.3s;
+}
 
 .classment__friend .friend__pic-name{
     display: flex;
-    width: 50%;
     align-items: center;
     gap: 5px;
+    height: 100%;
+    width: 100%;
+    /* border: #826aed solid */
 }
 .classment__friend .friend__pic-name img {
     height: 35px;
@@ -288,14 +340,7 @@ h1, h3, p{
     letter-spacing: 0.8px;
 }
 
-.classment__friend .friend__chat{
-    width: 50%;
-    display: flex;
-    align-items: center;
-    /* border: cyan 1px solid; */
-    justify-content: flex-end;
-}
-.friend__chat .chat__button {
+.chat__button {
     display: flex;
     background-color: #250939;
     border-radius: 5px;
@@ -304,14 +349,14 @@ h1, h3, p{
     padding: 4px 6px;
     text-decoration: none;
 }
-.friend__chat .chat__button:hover {
+.chat__button:hover {
     padding: 6px 8px;
-    transition: ease-in 0.15s;
+    transition: ease-in 0.3s;
 }
-.friend__chat .chat__button img { 
+.chat__button img { 
     height: 20px;
 }
-.friend__chat .chat__button p {
+.chat__button p {
     color: white;
 }
 
@@ -364,6 +409,13 @@ h1, h3, p{
 }
 
 /*   -------------------   */
+
+@media (min-width: 1440px) {
+    .profile-page {
+        width: 1400px;
+        margin: 0 auto;
+    }
+}
 
 @media (max-width: 1024px) {
     /* .profile-userstats {
