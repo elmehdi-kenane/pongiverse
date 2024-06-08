@@ -7,8 +7,8 @@ const JoinRoom = () => {
         <input type="text" placeholder="Password" />
       </form>
       <div className="join-btns">
-        <button className="cancel-room">Cancel</button>
-        <button className="join-room">Join</button>
+        <button className="cancel-room">CANCEL</button>
+        <button className="join-room">JOIN</button>
       </div>
     </div>
   );

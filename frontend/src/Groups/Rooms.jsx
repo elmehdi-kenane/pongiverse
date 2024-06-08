@@ -39,12 +39,11 @@ const Rooms = () => {
   };
 
   return (
-    <div className="room-page-and-popup">
-      {joinRoom && <JoinRoom />}
-      {createRoom && <CreateRoom />}
-      <div className= {isBlur ? "rooms-page blur" : "rooms-page"}>
-        <div className="page-middle-container">
-          <div className="rooms-container">
+      <div className="rooms-page">
+        <div className= "page-middle-container">
+        {joinRoom && <JoinRoom />}
+       {createRoom && <CreateRoom />}
+          <div className=  {isBlur ? "rooms-container blur" :"rooms-container"}>
             <div className="join-and-create">
               <div className="join-room-btn" onClick={() => {setJoinRoom(true); setIsBlur(true);}}>
                 <img src={ChatIcons.JoinChannel} alt="" className="join-icon" />
@@ -109,7 +108,6 @@ const Rooms = () => {
           </div>
         </div>
       </div>
-    </div>
   );
 };
 

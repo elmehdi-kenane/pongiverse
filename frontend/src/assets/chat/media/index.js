@@ -10,3 +10,4 @@ export { default as RoomIcon } from './RoomIcon.svg';
 export { default as RoomSettings } from './RoomSettings.svg';
 export { default as leftHand} from './leftHand.svg';
 export { default as rightHand} from './rightHand.svg';
+export { default as PlaceHolder} from './PlaceHolder.svg';

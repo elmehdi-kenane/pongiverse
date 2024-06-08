@@ -101,7 +101,7 @@ function SecondStep() {
 							{exist && <span>Username already used</span>}
 							{errors.username && <span>{errors.username}</span>}
 							<input type="file" name="avatar" id="image-upload" accept="image/*" onChange={handleInputChange} className={styles["image-upload"]} />
-							<label htmlFor="image-upload">Choose a file</label>
+							<label className='img-avatar-label' htmlFor="image-upload">Choose a file</label>
 							<button type="submit" className={styles["submitButton"]}>Sign Up</button>
 						</form>
 						</div>
