@@ -19,7 +19,7 @@ function SignInForm() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		fetch('http://10.13.9.12:8000/auth/login/', {
+		fetch('http://localhost:8000/auth/login/', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',

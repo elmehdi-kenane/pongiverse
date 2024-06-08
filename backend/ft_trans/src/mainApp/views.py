@@ -80,10 +80,12 @@ from .models import GameNotifications
 @api_view(['POST'])
 def online_friends(request):
 	username = request.data['user']
-	print(f'user is {username}')
+	# print(f'user is {username}')
 	user = customuser.objects.get(username=username)
 	allFriends = []
+	print(f"is_online {user.is_online}, is_playing {user.is_playing}, username {user.username}")
 	for user_id in Friends.objects.filter(user=user):
+		print(f"is_online {user_id.friend.is_online}, is_playing {user_id.friend.is_playing}, username {user_id.friend.username}")
 		if user_id.friend.is_online and not user_id.friend.is_playing: ####################  and user_id.friend.is_playing
 			image_path = user_id.friend.avatar.path
 			# with open(image_path, 'rb') as image_file:
@@ -95,12 +97,12 @@ def online_friends(request):
 @api_view(['POST'])
 def notifs_friends(request):
 	username = request.data['user']
-	print(f'user is {username}')
+	# print(f'user is {username}')
 	target = customuser.objects.get(username=username)
 	allNotifs = []
 	for gameNotif in GameNotifications.objects.filter(target=target):
 		# print(f'ROOM_ID WHEN FETCHING IS : {gameNotif.room_id}')
-		allNotifs.append({'user': gameNotif.user.username, 'avatar': gameNotif.user.avatar.path, 'roomID': gameNotif.active_match.room_id})
+		allNotifs.append({'user': gameNotif.user.username, 'avatar': gameNotif.user.avatar.path, 'roomID': gameNotif.active_match.room_id, 'mode': gameNotif.mode})
 	return Response({'message': allNotifs})
 
 

@@ -13,14 +13,14 @@ import { useNavigate } from 'react-router-dom';
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 const client = axios.create({
-	baseURL: "http://10.13.9.12:8000",
+	baseURL: "http://localhost:8000",
 });
 
 function SignInWays() {
 
 	const navigate = useNavigate();
 	const CLIENT_ID = 'u-s4t2ud-6b8170511374b774e9fd9a7f9074a092f0f154051627b71f1deca43eb732373e';
-	const REDIRECT_URI = 'http://10.13.9.12:3000/signin';
+	const REDIRECT_URI = 'http://localhost:3000/signin';
 	const handleLogin = () => {
 		window.location.href = `https://api.intra.42.fr/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 	};
@@ -29,7 +29,7 @@ function SignInWays() {
 		axios.post('https://api.intra.42.fr/oauth/token', {
 			grant_type: 'authorization_code',
 			client_id: CLIENT_ID,
-			client_secret: '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',
+			client_secret: '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',
 			code: code,
 			redirect_uri: REDIRECT_URI
 		}).then(response => {

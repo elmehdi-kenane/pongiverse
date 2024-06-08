@@ -44,7 +44,7 @@ const TwoVsTwoFriends = () => {
 				type: 'isPlayerInAnyRoom',
 				message: {
 					user: user,
-					mode: '1vs1',
+					mode: '2vs2',
 					type: 'friends'
 				}
 			}))
@@ -132,20 +132,70 @@ const TwoVsTwoFriends = () => {
                     }
 				} else if (type === "gameReady") {
 					console.log("inside gameReady")
-					console.log(message.avatars)
-					if (playerNo === 1) {
-						setEnemyInfos({
-							avatar: message.users[1].image,
-							name: message.room.players[1].user,
-							level: message.users[1].level
-						})
-					} else {
-						setEnemyInfos({
-							avatar: message.users[0].image,
-							name: message.room.players[0].user,
-							level: message.users[0].level
-						})
-					}
+					const playerNbr = playerNoRef.current;
+					console.log(message)
+                    if (playerNbr === 1 || playerNbr === 2) {
+                        if (playerNbr === 1 && message.users.length >= 2)
+                            setTemmateInfos({
+                                avatar: message.users[1].image,
+                                name: message.users[1].name,
+                                level: message.users[1].level
+                            })
+                        else if (playerNbr === 2)
+                            setTemmateInfos({
+                                avatar: message.users[0].image,
+                                name: message.users[0].name,
+                                level: message.users[0].level
+                            })
+                        else
+                            setTemmateInfos(false)
+                        if (message.users.length === 3)
+                            setEnemy1Infos({
+                                avatar: message.users[2].image,
+                                name: message.users[2].name,
+                                level: message.users[2].level
+                            })
+                        else if (message.users.length === 4) {
+                            setEnemy1Infos({
+                                avatar: message.users[2].image,
+                                name: message.users[2].name,
+                                level: message.users[2].level
+                            })
+                            setEnemy2Infos({
+                                avatar: message.users[3].image,
+                                name: message.users[3].name,
+                                level: message.users[3].level
+                            })
+                        } else {
+                            setEnemy1Infos(false)
+                            setEnemy2Infos(false)
+                        }
+                    } else if (playerNbr === 3 || playerNbr === 4) {
+                        if (playerNbr === 3 && message.users.length === 4)
+                            setTemmateInfos({
+                                avatar: message.users[3].image,
+                                name: message.users[3].name,
+                                level: message.users[3].level
+                            })
+                        else if (playerNo === 4)
+                            setTemmateInfos({
+                                avatar: message.users[2].image,
+                                name: message.users[2].name,
+                                level: message.users[2].level
+                            })
+                        else
+                            setTemmateInfos(false)
+                        setEnemy1Infos({
+                            avatar: message.users[0].image,
+                            name: message.users[0].name,
+                            level: message.users[0].level
+                        })
+                        setEnemy2Infos({
+                            avatar: message.users[1].image,
+                            name: message.users[1].name,
+                            level: message.users[1].level
+                        })
+                    }
 					friendsSection.current.remove()
 					setExpandFriends(false)
 					setGameStarted(false)
@@ -164,14 +214,16 @@ const TwoVsTwoFriends = () => {
 					// setChosenOne('quickMatch')
 				}
 				else if (type === 'user_disconnected') {
+					console.log("user disconnected")
 					const currentAllGameFriends = allGameFriendsRef.current;
 					console.log("user disconnected : ", allGameFriends)
 					let uname = data.message.user
 					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname))
 				} else if (type === 'connected_again') {
+					console.log("user connected")
 					const currentAllGameFriends = allGameFriendsRef.current;
 					const userExists = currentAllGameFriends.some(friend => friend.name === message.user)
-						if (!userExists)
+						if (!userExists && !message.userInfos.is_playing)
 							setAllGameFriends([...currentAllGameFriends, message.userInfos])
 				}
 				// else if (type === "noRoomFound") {
@@ -253,7 +305,8 @@ const TwoVsTwoFriends = () => {
 
 	useEffect(() => {
 		allGameFriendsRef.current = allGameFriends;
-	}, [allGameFriends]);
+		playerNoRef.current = playerNo;
+	}, [allGameFriends, playerNo]);
 
 	// useEffect(() => {
 	//     console.log(allGameFriends)
@@ -270,7 +323,7 @@ const TwoVsTwoFriends = () => {
 					id: tmpRoomID
 				}
 			}))
-			navigate(`../game/solo/1vs1`)  // CHANGE LATER TO THIS ROUTE "game/solo/1vs1" !!!!!!!! DO NOT FORGET
+			navigate(`../game/solo/2vs2`)  // CHANGE LATER TO THIS ROUTE "game/solo/1vs1" !!!!!!!! DO NOT FORGET
 			// setGameStarted(false)
 			// setTmpRoomID(false)
 		} else
@@ -370,10 +423,10 @@ const TwoVsTwoFriends = () => {
 					<div className='twovstwo-dashboard-opponent'>
 						{enemy1Infos ? (
 							<div>
-								<div><img src={`data:image/jpeg;base64,${temmateInfos.avatar}`} alt="profile-pic" /></div>
+								<div><img src={`data:image/jpeg;base64,${enemy1Infos.avatar}`} alt="profile-pic" /></div>
 								<div className='twovstwo-opponent-infos' >
-									<p>{temmateInfos.name}</p>
-									<p>level {temmateInfos.level}</p>
+									<p>{enemy1Infos.name}</p>
+									<p>level {enemy1Infos.level}</p>
 								</div>
 							</div>
 						) : (
@@ -384,10 +437,10 @@ const TwoVsTwoFriends = () => {
 						)}
 						{enemy2Infos ? (
 							<div>
-								<div><img src={`data:image/jpeg;base64,${temmateInfos.avatar}`} alt="profile-pic" /></div>
+								<div><img src={`data:image/jpeg;base64,${enemy2Infos.avatar}`} alt="profile-pic" /></div>
 								<div className='twovstwo-opponent-infos' >
-									<p>{temmateInfos.name}</p>
-									<p>level {temmateInfos.level}</p>
+									<p>{enemy2Infos.name}</p>
+									<p>level {enemy2Infos.level}</p>
 								</div>
 							</div>
 						) : (

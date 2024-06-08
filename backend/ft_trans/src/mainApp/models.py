@@ -47,6 +47,7 @@ class GameNotifications(models.Model):
     active_match = models.ForeignKey(ActiveMatch, on_delete=models.CASCADE, related_name='game_notify_active_match')
     user = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='notify_user')
     target = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='notify_target')
+    mode = models.CharField(max_length=255)
 # room_id_manager = RoomIDManager()
 
 class Tournament(models.Model):

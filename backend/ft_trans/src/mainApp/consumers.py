@@ -10,6 +10,18 @@ from asgiref.sync import sync_to_async
 from myapp.models import customuser
 from chat.models import Friends
 
+# from mainApp.models import Match
+# from mainApp.models import ActiveMatch
+# from mainApp.models import NotifPlayer
+# from mainApp.models import GameNotifications
+# -model- .objects.all().delete()
+
+# from myapp.models import customuser
+# all = customuser.objects.all()
+# for user in all:
+# 	user.is_playing = False
+# 	user.save()
+
 rooms = {}
 user_channels = {}
 
@@ -38,7 +50,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			friend_is_online = await sync_to_async(lambda: friend.friend.is_online)()
 			channel_name = user_channels.get(friend_username)
 			print(f"USER CHANNEL ON CONNECT IS : {channel_name}")
-			if channel_name and friend_is_online:
+			if channel_name and friend_is_online and not user.is_playing:
 				await self.channel_layer.send(
 					channel_name,
 					{
@@ -51,7 +63,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 									'id': user.id,
 									'name': user.username,
 									'level': 2,
-									'image': user.avatar.path
+									'image': user.avatar.path,
+									# 'is_playing': user.is_playing
 									# {'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path}
 								}
 							}
@@ -97,6 +110,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	async def gameReady(self, event):
 		await self.send(text_data=json.dumps({
 			'type': 'gameReady',
+			'message': event['message']
+		}))
+
+	async def playerOut(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'playerOut',
 			'message': event['message']
 		}))
 

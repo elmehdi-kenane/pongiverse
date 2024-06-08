@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useContext, useState } from 'react';
+import React, { useRef, useEffect, useContext, useState, useCallback } from 'react';
 import AuthContext from '../navbar-sidebar/Authcontext'
 import { useNavigate, useParams } from 'react-router-dom'
 import * as Icons from '../assets/navbar-sidebar'
@@ -58,7 +58,7 @@ class Net {
 
 const TwoVsTwoPlayMatch = () => {
     let { privateCheckAuth, socket,
-        socketRecreated, setSocketRecreated, user } = useContext(AuthContext)
+        socketRecreated, user } = useContext(AuthContext)
     const [canvasDrawing, setCanvasDrawing] = useState(false)
     const [gameAborted, setGameAborted] = useState(false)
     const [gameFinished, setGameFinished] = useState(false)
@@ -66,23 +66,16 @@ const TwoVsTwoPlayMatch = () => {
     const [userName2, setUserName2] = useState(null)
     const [userName3, setUserName3] = useState(null)
     const [userName4, setUserName4] = useState(null)
-    const [userImage1, setUserImage1] = useState(null)
-    const [userImage2, setUserImage2] = useState(null)
-    const [userImage3, setUserImage3] = useState(null)
-    const [userImage4, setUserImage4] = useState(null)
     const [playersPics, setPlayersPics] = useState([])
+    const [userOut, setUserOut] = useState([])
     // const [allSet, setAllSet] = useState(false)
     const navigate = useNavigate()
     const { roomID } = useParams()
     let canvasRef = useRef(null);
     let isOut = false
-    let drawingFirstTime = false
-    // const [playerNo, setPlayerNo] = useState(0)
 
     let isGameStarted = false
     let playerNo = 0
-    // let user1 = null
-    // let user2 = null
     let player1 = null
     let player2 = null
     let player3 = null
@@ -93,41 +86,116 @@ const TwoVsTwoPlayMatch = () => {
     let [score2, setScore2] = useState(0)
     let [score3, setScore3] = useState(0)
     let [score4, setScore4] = useState(0)
-    let ctx;
-    let rect;
+    // let ctx;
+    // let rect;
     let audio;
-    const SPEED = 5;
     let keys = {
         ArrowDown: false,
         ArrowUp: false,
         MouseMove: false,
         Event: null,
     }
-    useEffect(() => {
-        privateCheckAuth()
-    }, [])
+
+    const [canvasContext, setCanvasContext] = useState(null);
+    const canvasContextRef = useRef(canvasContext);
+    const userOutRef = useRef(userOut);
+	const [canvasDimensions, setCanvasDimensions] = useState(null);
+    const canvasDimensionsRef = useRef(canvasDimensions);
+	// const canvasRef = useRef(null);
 
     const draw = () => {
-        ctx.clearRect(0, 0, 600, 400);
-        ctx.fillStyle = 'black';
-        ctx.fillRect(0, 0, 600, 400);
+        const ctx = canvasContextRef.current;
+        if (!isGameStarted) {
+            player1.x = 5
+            player1.y = 50
+            player1.width = 10
+            player1.height = 100
+            player2.x = 5
+            player2.y = 250
+            player2.width = 10
+            player2.height = 100
+            player3.x = 585
+            player3.y = 50
+            player3.width = 10
+            player3.height = 100
+            player4.x = 585
+            player4.y = 250
+            player4.width = 10
+            player4.height = 100
+        }
         if (ctx) {
+            ctx.clearRect(0, 0, 600, 400);
+            ctx.fillStyle = 'black';
+            ctx.fillRect(0, 0, 600, 400);
             net.draw(ctx)
             player1.draw(ctx);
             player2.draw(ctx);
+            player3.draw(ctx)
+            player4.draw(ctx)
             ball.draw(ctx);
         }
     }
+
+    useEffect(() => {
+		canvasContextRef.current = canvasContext;
+		canvasDimensionsRef.current = canvasDimensions;
+		userOutRef.current = userOut;
+	}, [canvasContext, canvasDimensions, userOut]);
+
+	useEffect(() => {
+        if (canvasRef && !canvasDrawing) {
+            const canvas = canvasRef.current;
+            const context = canvas.getContext('2d')
+            canvas.width = 600;
+            canvas.height = 400;
+            const rectDim = canvas.getBoundingClientRect()
+            setCanvasContext(context);
+            setCanvasDimensions(rectDim)
+            window.addEventListener("keydown", handleKeyDown)
+            window.addEventListener("keyup", handleKeyUp)
+            canvas.addEventListener("mousemove", handleMouseMove)
+            if (!canvasDrawing && socket) {
+                console.log("DRAWING THE SHAPES")
+                player1 = new Player(5, 50, 10, 100, 'white', 0)
+                player2 = new Player(5, 250, 10, 100, 'white', 0)
+                player3 = new Player(585, 50, 10, 100, 'white', 0)
+                player4 = new Player(585, 250, 10, 100, 'white', 0)
+                ball = new Ball(300, 200, 10, 'red')
+                net = new Net(300, 0, 2, 10, 'white')
+
+                draw()
+                // context.fillStyle = 'black'
+                // context.fillRect(0, 0, 600, 400);
+                // net.draw(context)
+                // player1.draw(context)
+                // player2.draw(context)
+                // player3.draw(context)
+                // player4.draw(context)
+                // ball.draw(context)
+                setCanvasDrawing(true)
+            }
+        }
+	}, [canvasRef, canvasDrawing, socket]);
+
+
+
+
+    useEffect(() => {
+        privateCheckAuth()
+    }, [])
 
     const update = () => {
         if (!isGameStarted)
             return;
         if (playerNo) {
+            const userGotOut = userOutRef.current
             if (keys['ArrowUp']) {
+                const playerTop2 = (userGotOut.includes(1) ? 0 : 200)
+                const playerTop4 = (userGotOut.includes(3) ? 0 : 200)
                 if (!((playerNo === 1 && player1.y === 0)
-                    || (playerNo === 2 && player2.y === 200)
-                    || (playerNo === 3 && player2.y === 0)
-                    || (playerNo === 4 && player2.y === 200))) {
+                    || (playerNo === 2 && player2.y === playerTop2)
+                    || (playerNo === 3 && player3.y === 0)
+                    || (playerNo === 4 && player4.y === playerTop4))) {
                     if (socket && socket.readyState === WebSocket.OPEN) {
                         (playerNo === 1) ? player1.y -= 8 : (playerNo === 2) ? player2.y -= 8 : (playerNo === 3) ? player3.y -= 8 : player4.y -= 8
                         socket.send(JSON.stringify({
@@ -141,11 +209,13 @@ const TwoVsTwoPlayMatch = () => {
                     }
                 }
             }
-            if (keys['ArrowDown']) {
-                if (!((playerNo === 1 && player1.y + 100 === 200)
-                    || (playerNo === 2 && player2.y + 100 === 400)
-                    || (playerNo === 3 && player3.y + 100 === 200)
-                    || (playerNo === 4 && player4.y + 100 === 200))) {
+            else if (keys['ArrowDown']) {
+                const playerBottom1 = (userGotOut.includes(2) ? 400 : 200)
+                const playerBottom3 = (userGotOut.includes(4) ? 400 : 200)
+                if (!((playerNo === 1 && (player1.y + 100) === playerBottom1)
+                    || (playerNo === 2 && (player2.y + 100) === 400)
+                    || (playerNo === 3 && (player3.y + 100) === playerBottom3)
+                    || (playerNo === 4 && (player4.y + 100) === 200))) {
                     if (socket && socket.readyState === WebSocket.OPEN) {
                         (playerNo === 1) ? player1.y += 8 : (playerNo === 2) ? player2.y += 8 : (playerNo === 3) ? player3.y += 8 : player4.y += 8
                         socket.send(JSON.stringify({
@@ -177,6 +247,7 @@ const TwoVsTwoPlayMatch = () => {
     const handleMouseMove = (e) => {
         if (!isGameStarted)
             return;
+        const rect = canvasDimensionsRef.current
         if (playerNo === 1) {
             if (player1) {
                 player1.y = e.clientY - rect.top - 50;
@@ -224,54 +295,41 @@ const TwoVsTwoPlayMatch = () => {
         }))
     }
 
-    // useEffect(() => {
-    //     if (socketRecreated && user) {
-    //         console.log("INSIDE RESTABISHMENT")
-    //         socket.send(JSON.stringify({
-    //             type: 'dataBackUp',
-    //             message: {
-    //                 user: user,
-    //                 roomID: roomID,
-    //                 page: 'game',
-    //             }
-    //         }))
-    //         setSocketRecreated(false)
-    //     }
-    // }, [socketRecreated, user])
+    const playerGotOut = (message) => {
+        const ctx = canvasContextRef.current;
+        if (message.userNo === 1) {
+            ctx.clearRect(player1.x, player1.y, 10, 100);
+            player1.x = 0
+            player1.y = 0
+            player1.width = 0
+            player1.height = 0
+        } else if (message.userNo === 2) {
+            ctx.clearRect(player2.x, player2.y, 10, 100);
+            player2.x = 0
+            player2.y = 0
+            player2.width = 0
+            player2.height = 0
+        } else if (message.userNo === 3) {
+            ctx.clearRect(player3.x, player3.y, 10, 100);
+            player3.x = 0
+            player3.y = 0
+            player3.width = 0
+            player3.height = 0
+        } else if (message.userNo === 4) {
+            ctx.clearRect(player4.x, player4.y, 10, 100);
+            player4.x = 0
+            player4.y = 0
+            player4.width = 0
+            player4.height = 0
+        }
+    }
 
     useEffect(() => {
-        ctx = canvasRef.current.getContext('2d')
-        ctx.canvas.width = 600
-        ctx.canvas.height = 400
-        rect = canvasRef.current.getBoundingClientRect()
-        window.addEventListener("keydown", handleKeyDown)
-        window.addEventListener("keyup", handleKeyUp)
-        canvasRef.current.addEventListener("mousemove", handleMouseMove)
-        if (!canvasDrawing && socket) {
-            player1 = new Player(5, 50, 10, 100, 'white', 0)
-            player2 = new Player(5, 250, 10, 100, 'white', 0)
-            player3 = new Player(585, 50, 10, 100, 'white', 0)
-            player4 = new Player(585, 250, 10, 100, 'white', 0)
-            ball = new Ball(300, 200, 10, 'red')
-            net = new Net(300, 0, 2, 10, 'white')
-            // draw()
-            ctx.fillStyle = 'black'
-            ctx.fillRect(0, 0, 600, 400);
-            console.log("ctx is : ", ctx)
-            net.draw(ctx)
-            player1.draw(ctx)
-            player2.draw(ctx)
-            player3.draw(ctx)
-            player4.draw(ctx)
-            ball.draw(ctx)
-            setCanvasDrawing(true)
-        }
         if (socket && socket.readyState === WebSocket.OPEN && user) {
             socket.onmessage = (event) => {
                 let data = JSON.parse(event.data)
                 let type = data.type
                 let message = data.message
-                // console.log("THE TYPE IS : ",type)
                 if (type === "setupGame") {
                     console.log("INSIDE SETUPGAME")
                     playerNo = message.playerNo
@@ -280,10 +338,14 @@ const TwoVsTwoPlayMatch = () => {
                     setUserName2(message.user2)
                     setUserName3(message.user3)
                     setUserName4(message.user4)
-                    // setPlayersPics(message.users)
-                    console.log(socket)
+                    console.log("USER OUT IS : ", message.userOut)
+                    if (message.hasOwnProperty('userOut') && message.userOut.length) {
+                        setUserOut(message.userOut)
+                        playerGotOut(message)
+                        for (let i = 0; i < message.userOut.length; i++)
+                            playerGotOut({userNo: message.userOut[i]})
+                    }
                 } else if (type === "updateGame") {
-                    // console.log("INSIDE UPDATEGAME")
                     if (player1 && player2 && ball) {
                         player1.y = message.playerY1;
                         player2.y = message.playerY2;
@@ -297,15 +359,6 @@ const TwoVsTwoPlayMatch = () => {
                         ball.y = message.ballY;
                         update()
                         draw()
-                        ctx.clearRect(0, 0, 600, 400);
-                        ctx.fillStyle = 'black';
-                        ctx.fillRect(0, 0, 600, 400);
-                        net.draw(ctx)
-                        player1.draw(ctx)
-                        player2.draw(ctx)
-                        player3.draw(ctx)
-                        player4.draw(ctx)
-                        ball.draw(ctx)
                     }
                 } else if (type === "notAuthorized") {
                     console.log("INSIDE LEAVEGAME")
@@ -323,6 +376,9 @@ const TwoVsTwoPlayMatch = () => {
                     setScore3(message.playerScore3)
                     setScore4(message.playerScore4)
                     setGameFinished(true)
+                    setUserOut([])
+                    isGameStarted = false
+                    draw()
                 } else if (type === "abortedGame") {
                     setUserName1(message.user1)
                     setUserName2(message.user2)
@@ -333,8 +389,18 @@ const TwoVsTwoPlayMatch = () => {
                     setScore3(message.playerScore3)
                     setScore4(message.playerScore4)
                     setGameAborted(true)
+                    setUserOut([])
+                    isGameStarted = false
+                    draw()
                 } else if (type === "playersInfos")
                     setPlayersPics(message.users)
+                else if (type === "playerOut") {
+                    if (isGameStarted) {
+                        const userGotOut = userOutRef.current
+                        setUserOut([...userGotOut, message.userNo])
+                        playerGotOut(message)
+                    }
+                }
             }
         }
     }, [socket, user])
@@ -342,8 +408,8 @@ const TwoVsTwoPlayMatch = () => {
     useEffect(() => {
         return () => {
             if (isOut) {
+                console.log("USER IS GETTING OUT ", user, roomID)
                 if (socket && socket.readyState === WebSocket.OPEN) {
-                    // window.alert(user, roomID)
                     socket.send(JSON.stringify({
                         type: 'playerChangedPageMp',
                         message: {
@@ -373,20 +439,20 @@ const TwoVsTwoPlayMatch = () => {
     }, [canvasDrawing, socket, socketRecreated, user])
 
     const exitTheGame = () => {
-        // if (user) {
-        //     if (socket && socket.readyState === WebSocket.OPEN) {
-        //         socket.send(JSON.stringify({
-        //             type: 'userExitedMp',
-        //             message: {
-        //                 user: user,
-        //                 roomID: roomID
-        //             }
-        //         }))
-        //         navigate('../game/solo/1vs1')
-        //     } else {
-        //         console.log("socket is closed, refresh the page")
-        //     }
-        // }
+        if (user) {
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({
+                    type: 'userExitedMp',
+                    message: {
+                        user: user,
+                        roomID: roomID
+                    }
+                }))
+                navigate('../game/solo/2vs2')
+            } else {
+                console.log("socket is closed, refresh the page")
+            }
+        }
     }
 
     return (
@@ -394,22 +460,22 @@ const TwoVsTwoPlayMatch = () => {
             {gameFinished ? (<div style={{fontWeight:"bolder", textAlign:"center", color:"white"}}><p>GAME FINISHED</p></div>) : gameAborted ? (<div style={{fontWeight:"bolder", textAlign:"center", color:"white"}}><p>GAME ABORTED</p></div>) : ''}
             <div style={{backgroundColor:"rgba(255,255,255,0.3)", color:"white", fontSize:"30px", display:"flex", textAlign:"center", justifyContent:"space-between", marginBottom:"100px", width:"40%", height:"100px", alignItems: 'center'}}>
                 <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
-                    <div style={{display: 'flex', height: '50%'}}>
+                    <div style={{display: 'flex', height: '50%', opacity: (userOut.length && userOut.includes(1)) ? '0.5' : '1'}}>
                         {playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[0].avatar}`} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
                         <div style={{textAlign:"center"}}><p>{userName1}</p></div>
                     </div>
-                    <div style={{display: 'flex', height: '50%'}}>
+                    <div style={{display: 'flex', height: '50%', opacity: (userOut.length && userOut.includes(2)) ? '0.5' : '1'}}>
                         {playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[1].avatar}`} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
                         <div style={{textAlign:"center"}}><p>{userName2}</p></div>
                     </div>
                 </div>
                 <div style={{fontWeight:"bolder", textAlign:"center"}}><p>{score1}|{score3}</p></div>
                 <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
-                    <div style={{display: 'flex', height: '50%'}}>
+                    <div style={{display: 'flex', height: '50%', opacity: (userOut.length && userOut.includes(3)) ? '0.5' : '1'}}>
                         <div style={{textAlign:"center"}}><p>{userName3}</p></div>
                         {playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[2].avatar}`} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
                     </div>
-                    <div style={{display: 'flex', height: '50%'}}>
+                    <div style={{display: 'flex', height: '50%', opacity: (userOut.length && userOut.includes(4)) ? '0.5' : '1'}}>
                         <div style={{textAlign:"center"}}><p>{userName4}</p></div>
                         {playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[3].avatar}`} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
                     </div>

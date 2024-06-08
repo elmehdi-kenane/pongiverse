@@ -79,20 +79,25 @@ def get_tokens_for_user(user):
 	}
 
 class LoginView(APIView):
-	def post(self, request, format=None):
-		data = request.data
-		response = Response()
-		username = data.get('username', None)
-		password = data.get('password', None)
-		user = authenticate(username=username, password=password)
-		if user is not None:
-			data = get_tokens_for_user(user)
-			response.set_cookie('token', data['access'], httponly=True)
-			response.data = {"Case" : "Login successfully"}
-			return response
-		else:
-			response.data = {"Case" : "Invalid username or password!!"}
-			return response
+    def post(self, request, format=None):
+        data = request.data
+        response = Response()
+        username = data.get('username', None)
+        password = data.get('password', None)
+        print(f"   username : {username}, password : {password}")
+        try:
+            user = customuser.objects.get(username=username)
+            if user.check_password(password):
+                data = get_tokens_for_user(user)
+                response.set_cookie('token', data['access'], httponly=True)
+                response.data = {"Case": "Login successfully"}
+                return response
+            else:
+                response.data = {"Case": "Invalid username or password!!"}
+                return response
+        except customuser.DoesNotExist:
+            response.data = {"Case": "Invalid username or password!!"}
+            return response
 
 class GoogleLoginView(APIView):
 	def post(self, request, format=None):
@@ -147,17 +152,17 @@ class VerifyTokenView(APIView):
 			decoded_token = AccessToken(token)
 			data = decoded_token.payload
 			if not data.get('user_id'):
-				if username:
-					user = customuser.objects.filter(username=username).first()
-					if user:
-						user.is_online = False
-						user.save()
+				# if username:
+				# 	user = customuser.objects.filter(username=username).first()
+				# 	if user:
+				# 		user.is_online = False
+				# 		user.save()
 				response.data = {"Case" : "Invalid token"}
 				return response
 			user = customuser.objects.filter(id=data['user_id']).first()
 			if user is not None:
-				user.is_online = True
-				user.save()
+				# user.is_online = True
+				# user.save()
 				serializer = MyModelSerializer(user)
 				response.data = {"Case" : "valid token", "data" : serializer.data}
 				return response
@@ -172,8 +177,8 @@ class VerifyTokenView(APIView):
 			else:
 				user = customuser.objects.filter(username=username).first()
 				if user is not None:
-					user.is_online = True
-					user.save()
+					# user.is_online = True
+					# user.save()
 					tokens = get_tokens_for_user(user)
 					response.set_cookie('token', tokens['access'], httponly=True)
 					return response
