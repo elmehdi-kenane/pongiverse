@@ -4,8 +4,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 100px;
-    gap: 50px;
+    padding: 80px 50px 0;
+    gap: 30px;
     overflow-y: scroll;
 }
 
@@ -17,7 +17,7 @@ img,
 .purple-glass {
     background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
     box-shadow: 0 0px 20px 0 rgb(130, 106, 237, 0.5) ;
-    /* box-shadow: 0 0.5px 5px 0 #826aed; */
+    box-shadow: 0 0.5px 5px 0 #826aed;
     backdrop-filter: blur( 4px );
     -webkit-backdrop-filter: blur( 4px );
     border-radius: 10px;
@@ -30,11 +30,10 @@ h1, h3, p{
 
 /* User Info */
 
-
 .profile-userinfo {
     display: flex;
     height: 250px;
-    width: 70%;
+    width: 80%;
     align-items: center;
     justify-content: center;
     gap: 20px;
@@ -139,7 +138,6 @@ h1, h3, p{
     gap: 20px;
     align-items: center;
 }
-
 .userinfo__name-bio .userinfo__name-avatar img {
     height: 50px;
 }
@@ -149,7 +147,7 @@ h1, h3, p{
 .profile-userlevel {
     display: flex;
     flex-direction: column;
-    width: 75%;
+    width: 90%;
     height: 45px;
     border : white 1px solid;
     border-radius: 10px;
@@ -179,51 +177,83 @@ h1, h3, p{
     margin-top: -33px;
 }
 
+
+
+
 /* User Stats */
 
 .profile-userstats {
     display: flex;
-    height: 450px;
+    /* height: 850px; */
     width: 100%;
-    align-items: center;
-    padding: 0 20px;
-    gap: 15px;
-    margin-bottom: 150px;
-    /* border: cyan solid 1px; */
+    flex-direction: column;
+    gap: 25px;
+    margin-bottom: 130px;
+    /* border: yellow solid 1px; */
 }
 
-.profile-userstats .userstate__friends,
-.profile-userstats .userstate__achievements,
+.profile-userstats .userstate-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 0;
+    border-bottom: #250939 5px solid;
+    width: 100%;
+}
+
+.purple-glass-stats {
+    background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 7px 7px 0 0;
+}
+
+/* ---- Statistics ---- */
+
 .profile-userstats .userstate_statistics {
     display: flex;
     flex-direction: column;
+    width: 100%;
+    height: 400px;
     align-items: center;
-    width: 33%;
-    height: 424px;
-    padding: 10px 10px 0;
-    gap: 10px;
-
-    background: rgba( 255, 255, 255, 0.25 );
-    box-shadow: 0 0.5px 5px 0 #826aed;
-    backdrop-filter: blur( 4px );
-    -webkit-backdrop-filter: blur( 4px );
-    border-radius: 5px;
-    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    /* border: cyan solid 1px; */
 }
 
-.profile-userstats .userstate__friends h1,
-.profile-userstats .userstate__achievements h1,
+.userstate_statistics .statistics__container {
+    width: 100%;
+    height: 100%;
+    padding: 10px 5px 10px;
+}
+
+/* ---- Friends - Achievement ---- */
+
+.profile-userstats .userstate__friends-achievements {
+    /* border: cyan solid 1px; */
+    display: flex;
+    width: 100%;
+    height: 410px;
+    gap: 25px;
+}
+
+.profile-userstats .userstate__friends-achievements .userstate__friends,
+.profile-userstats .userstate__friends-achievements .userstate__achievements {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+    height: 100%;
+}
+
+.userstate__friends-achievements .userstate__friends h1,
+.userstate__friends-achievements .userstate__achievements h1,
 .profile-userstats .userstate_statistics h1 {
-    width: 85%;
     color: white;
     text-align: center;
-    border-bottom: 0.5px solid white;
     letter-spacing: 1px;
-    margin: 0px 0 10px;
     font-size: 30px;
 }
 
-/* Friends */
+/*------------ Friends ------------*/
 
 .userstate__friends .userfriends__classment {
     display: flex;
@@ -231,12 +261,13 @@ h1, h3, p{
     height: 100%;
     width: 100%;
     overflow-y: scroll;
+    border-radius: 0;
 }
 .userfriends__classment .classment__friend { /* Friend Player */
     display: flex;
     justify-content: space-between;
-    border-bottom: 1px #826aed solid;
-    height: 45px;
+    border-bottom: 3px #250939 solid;
+    height: 47px;
     align-items: center;
     padding: 0 5px;
     flex-shrink: 0;
@@ -284,7 +315,7 @@ h1, h3, p{
     color: white;
 }
 
-/* Achievments */
+/* ------------ Achievments ------------*/
 
 .userstate__achievements .achievements__container {
     height: 100%;
@@ -293,20 +324,28 @@ h1, h3, p{
     flex-direction: column;
     justify-content: center;
     gap: 20px;
+    padding: 0 10px;
     /* border: purple 1px solid; */
 }
 
 .achievements__container .achivement {
     display: flex;
     height: 85px;
-    /* border: 1px yellow solid; */
     align-items: center;
     padding: 0 3px;
     gap: 5px;
+
+    background: rgba( 255, 255, 255, 0.05 );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    box-shadow: 0 2px 30px 0 #250939;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
 }
 .achievements__container .achivement:hover {
     transition: ease-in 0.09s;
-    box-shadow: 0px 0px 20px 0 #250939 ;
+    height: 86px;
+    box-shadow: 0px 0px 10px 0 #826aed ;
 }
 .achievements__container .achivement img {
     height: 80px;
@@ -324,21 +363,10 @@ h1, h3, p{
     cursor: default;
 }
 
-/* Statistics */
-
-.profile-userstats .userstate_statistics h1 {
-    width: 80%;
-}
-.profile-userstats .userstate_statistics {
-    padding: 10px 0px;
-}
-.userstate_statistics .statistics__container {
-    width: 100%;
-    height: 100%;
-}
+/*   -------------------   */
 
 @media (max-width: 1024px) {
-    .profile-userstats {
+    /* .profile-userstats {
         flex-wrap: wrap-reverse;
         justify-content: center;
         margin-top: 410px;
@@ -350,5 +378,5 @@ h1, h3, p{
     }
     .profile-userstats .userstate_statistics {
         width: 92%;
-    }
+    } */
 }

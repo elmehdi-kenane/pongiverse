@@ -1,6 +1,5 @@
 import React from 'react'
 
-
 function ProfileLevel() {
     const level = 8;
     const per = 55;

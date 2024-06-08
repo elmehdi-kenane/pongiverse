@@ -1,37 +1,31 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {Link} from "react-router-dom"
 
 import chatSvg from "../assets/navbar-sidebar/chat.svg"
-import achvSvg from "./assets/achv.svg"
 import { rankData } from '../Dashboard/helpers/rankData'
 import Pagination from "../Dashboard/helpers/Pagination"
 import BarGraph from "../Dashboard/charts/BarGraph"
 import { profileLevel } from './data/ProfileDataLevel';
 
-const achv = [
-    {
-      image : achvSvg,
-      title: "Triple Row ",
-      desc: "Get a triple wins in a row"
-    },
-    {
-      image : achvSvg,
-      title: "Table Killer",
-      desc: "Get a dominant shutout victory"
-    },
-    {
-      image : achvSvg,
-      title: "Tournament Master",
-      desc: "Win a tournament"
-    },
-  ]
+import { achv } from './data/achvData'
+
+
+  function ProfileUserStatistics(){
+    return (
+      <div className='userstate_statistics purple-glass-stats'>
+        <div className='userstate-header'><h1> Statistics </h1> </div>
+        <div className="statistics__container">
+          <BarGraph marginLeft={-35} marginRight={10} dataLevel={profileLevel} barSize={15}/>
+        </div>
+      </div>
+    )
+  }
   
   const ProfileUserFriends = () => {
-    
     return (
-      <>
-        <h1> Friends </h1>
-        <div className="userfriends__classment purple-glass">
+      <div className='userstate__friends purple-glass-stats'>
+        <div className='userstate-header'><h1> Friends </h1> </div>
+        <div className="userfriends__classment">
         {rankData.map((player) => {
           return (
             <div className='classment__friend'>
@@ -50,18 +44,18 @@ const achv = [
         })}
         </div>
         <Pagination />
-      </>
+      </div>
     )
   } 
   
   const ProfileUserAchievement = () => {
     return (
-      <>
-        <h1> Achievements </h1>
+      <div className='userstate__achievements purple-glass-stats'>
+        <div className='userstate-header'> <h1> Achievements </h1> </div>
         <div className="achievements__container">
           { achv.map((ach) => {
             return (
-              <div className="achivement purple-glass">
+              <div className="achivement">
                 <img src={ach.image} alt='achievmentImg'/>
                 <div className="achivement__title-desc">
                   <h3> {ach.title} </h3>
@@ -72,38 +66,21 @@ const achv = [
           })}
         </div>
         <Pagination />
-      </>
+      </div>
     )
   }
-  
-
-  
-  function ProfileUserStatistics(){
-    return (
-      <>
-        <h1> Statistics </h1>
-        <div className="statistics__container">
-          <BarGraph marginLeft={-30} marginRight={10} dataLevel={profileLevel} barSize={15}/>
-        </div>
-      </>
-    )
-  }
-
   
 function ProfileStatistics() {
 
     
   return (
     <div className="profile-userstats">
-        <div className='userstate__friends'>
+        <ProfileUserStatistics />
+      <div className="userstate__friends-achievements">
             <ProfileUserFriends />
-        </div>
-        <div className='userstate__achievements'>
             <ProfileUserAchievement />
-        </div>
-        <div className='userstate_statistics'>
-            <ProfileUserStatistics />
-        </div>
+      </div>
+    
     </div>
   )
 }

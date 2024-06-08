@@ -3,7 +3,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 // import clan from "./assets/Frame.svg"
-import clan4 from "./assets/Frame4.svg"
+// import clan4 from "./assets/Frame4.svg"
+import clan5 from "./assets/Frame5.svg"
 import mavSvg from "./assets/Group.svg"
 
 function ProfileInfo() {
@@ -27,7 +28,7 @@ function ProfileInfo() {
       <div className="userinfo__name-bio">
         <div className="userinfo__name-avatar">
           <h1 className="userinfo__name"> Maverick </h1>
-          <img src={clan4} alt="Avatar" />
+          <img src={clan5} alt="Avatar" />
         </div>
         <p className="userinfo__bio"> {bio} </p>
       </div>
