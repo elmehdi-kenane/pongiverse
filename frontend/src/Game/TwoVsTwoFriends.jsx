@@ -205,6 +205,7 @@ const TwoVsTwoFriends = () => {
 					console.log("ALL SET BROTHER")
 				} else if (type === "playersReady") {
 					console.log("inside playersReady")
+					setLoadMatch(false)
 					setAllSet(true)
 				} else if (type === "playerNo") {
 					console.log("inside playerNo")
@@ -345,6 +346,7 @@ const TwoVsTwoFriends = () => {
 				setSelectedFriends(selectedFriends.filter(selectedFriend => selectedFriend !== friend))
 			}, 2000);
 			setGameStarted(true)
+			setLoadMatch(true)
 			// setGameStared(true)
 		}
 	};
@@ -393,7 +395,7 @@ const TwoVsTwoFriends = () => {
 						)}
 					</div>)}
 					<div className='twovstwo-dashboard-opponent'>
-						<div>
+						<div className='twovstwo-dashboard-player' >
 							<div><img src={userImg} alt="profile-pic" /></div>
 							<div className='twovstwo-opponent-infos'>
 								<p>mmaqbour</p>
@@ -401,7 +403,7 @@ const TwoVsTwoFriends = () => {
 							</div>
 						</div>
 						{temmateInfos ? (
-							<div>
+							<div className='twovstwo-dashboard-player' >
 								<div><img src={`data:image/jpeg;base64,${temmateInfos.avatar}`} alt="profile-pic" /></div>
 								<div className='twovstwo-opponent-infos' >
 									<p>{temmateInfos.name}</p>
@@ -409,20 +411,27 @@ const TwoVsTwoFriends = () => {
 								</div>
 							</div>
 						) : (
-							<div>
+							<div className='twovstwo-dashboard-player' >
 								<div><img src={randomPic} alt="profile-pic" /></div>
 								<div className='twovstwo-opponent-infos-none' ></div>
 							</div>
 						)}
 					</div>
-					<div className='twovstwo-dashboard-logo-friends'>
-						{(allSet) ? (
-							<img id='versus-logo' src={Icons.versus} alt="profile-pic" />
-						) : ''}
+					<div className={(!allSet && loadMatch) ? 'twovstwo-dashboard-logo twovstwo-dashboard-logo-loading' : 'twovstwo-dashboard-logo'} >
+					{(!loadMatch && allSet) ? (
+						<img id='versus-logo' src={Icons.versus} alt="profile-pic" />
+					) : (loadMatch && !allSet) ? (
+						<>
+							<div id='paddle-1' ></div>
+							<div id='net' ></div>
+							<div id='ball' ></div>
+							<div id='paddle-2' ></div>
+						</>
+					) : ''}
 					</div>
 					<div className='twovstwo-dashboard-opponent'>
 						{enemy1Infos ? (
-							<div>
+							<div className='twovstwo-dashboard-player' >
 								<div><img src={`data:image/jpeg;base64,${enemy1Infos.avatar}`} alt="profile-pic" /></div>
 								<div className='twovstwo-opponent-infos' >
 									<p>{enemy1Infos.name}</p>
@@ -430,13 +439,13 @@ const TwoVsTwoFriends = () => {
 								</div>
 							</div>
 						) : (
-							<div>
+							<div className='twovstwo-dashboard-player' >
 								<div><img src={randomPic} alt="profile-pic" /></div>
 								<div className='twovstwo-opponent-infos-none' ></div>
 							</div>
 						)}
 						{enemy2Infos ? (
-							<div>
+							<div className='twovstwo-dashboard-player' >
 								<div><img src={`data:image/jpeg;base64,${enemy2Infos.avatar}`} alt="profile-pic" /></div>
 								<div className='twovstwo-opponent-infos' >
 									<p>{enemy2Infos.name}</p>
@@ -444,7 +453,7 @@ const TwoVsTwoFriends = () => {
 								</div>
 							</div>
 						) : (
-							<div>
+							<div className='twovstwo-dashboard-player' >
 								<div><img src={randomPic} alt="profile-pic" /></div>
 								<div className='twovstwo-opponent-infos-none' ></div>
 							</div>

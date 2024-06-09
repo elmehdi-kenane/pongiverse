@@ -1164,17 +1164,39 @@ async def move_mouse_mp(self, data, rooms):
         if data['message']['playerNo'] == 1 or data['message']['playerNo'] == 3:
             if player['paddleY'] < 0:
                 player['paddleY'] = 0
-            elif player['paddleY'] + 100 > 200:
-                player['paddleY'] = 100
-        elif data['message']['playerNo'] == 2 or data['message']['playerNo'] == 4:
-            if player['paddleY'] < 200:
-                player['paddleY'] = 200
-            elif player['paddleY'] + 100 > 400:
-                    player['paddleY'] = 300
-		# if player['paddleY'] < 0:
-		# 	player['paddleY'] = 0
-		# elif player['paddleY'] + 100 > 400:
-		# 	player['paddleY'] = 300
+            else:
+                if data['message']['playerNo'] == 1:
+                    if room['players'][1]['inside']:
+                        if player['paddleY'] + 100 > 200:
+                            player['paddleY'] = 100
+                    else:
+                        if player['paddleY'] + 100 > 400:
+                            player['paddleY'] = 300
+                else:
+                    if room['players'][3]['inside']:
+                        if player['paddleY'] + 100 > 200:
+                            player['paddleY'] = 100
+                    else:
+                        if player['paddleY'] + 100 > 400:
+                            player['paddleY'] = 300
+        else:
+            if player['paddleY'] + 100 > 400:
+                player['paddleY'] = 300
+            else:
+                if data['message']['playerNo'] == 2:
+                    if room['players'][0]['inside']:
+                        if player['paddleY'] < 200:
+                            player['paddleY'] = 200
+                    else:
+                        if player['paddleY'] < 0:
+                            player['paddleY'] = 0
+                else:
+                    if room['players'][2]['inside']:
+                        if player['paddleY'] < 200:
+                            player['paddleY'] = 200
+                    else:
+                        if player['paddleY'] < 0:
+                            player['paddleY'] = 0
 
 async def changed_page_mp(self, data, rooms):
     message = data['message']

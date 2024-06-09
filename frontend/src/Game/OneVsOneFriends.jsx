@@ -82,6 +82,7 @@ const OneVsOneFriends = () => {
 					console.log("ALL SET BROTHER")
 				} else if (type === "playersReady") {
 					console.log("inside playersReady")
+					setLoadMatch(false)
 					setAllSet(true)
 				} else if (type === "playerNo") {
 					console.log("inside playerNo")
@@ -279,10 +280,15 @@ const OneVsOneFriends = () => {
 							<p>level 6.5</p>
 						</div>
 					</div>
-					<div className='onevsone-dashboard-logo-friends'>
-						{(allSet) ? (
-							<img id='versus-logo' src={Icons.versus} alt="profile-pic" />
-						) : ''}
+					<div className={(!allSet && loadMatch) ? 'onevsone-dashboard-logo onevsone-dashboard-logo-loading' : 'onevsone-dashboard-logo'} >
+					{(!loadMatch && allSet) ? (<img id='versus-logo' src={Icons.versus} alt="profile-pic" />) : (loadMatch && !allSet) ? (
+						<>
+							<div id='paddle-1' ></div>
+							<div id='net' ></div>
+							<div id='ball' ></div>
+							<div id='paddle-2' ></div>
+						</>
+					) : ''}
 					</div>
 					<div className='onevsone-dashboard-opponent'>
 						{enemyInfos ? (

@@ -144,7 +144,7 @@ const OneVsOneRandom = () => {
                         <p>level 6.5</p>
                     </div>
                 </div>
-                <div className='onevsone-dashboard-logo'>
+                <div className={(!allSet && loadMatch) ? 'onevsone-dashboard-logo onevsone-dashboard-logo-loading' : 'onevsone-dashboard-logo'} >
                 {(!loadMatch && allSet) ? (<img id='versus-logo' src={Icons.versus} alt="profile-pic" />) : (loadMatch && !allSet) ? (
                     <>
                         <div id='paddle-1' ></div>

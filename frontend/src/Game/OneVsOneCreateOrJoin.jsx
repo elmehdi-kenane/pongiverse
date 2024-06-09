@@ -87,20 +87,22 @@ const OneVsOneCreateOrJoin = () => {
                   console.log("ALL SET BROTHER")
               } else if (type === "playersReady") {
                   console.log("inside playersReady")
+                  setLoadMatch(false)
                   setAllSet(true)
-              } else if (type === "playerNo") {
-                  console.log("inside playerNo")
-                  setPlayerNo(message.playerNo)
-                  setTmpRoomID(message.id)
-                  setGameStarted(true)
-              }
-              else if (type === "playerInfos") {
+                } else if (type === "playerNo") {
+                    console.log("inside playerNo")
+                    setPlayerNo(message.playerNo)
+                    setTmpRoomID(message.id)
+                    setGameStarted(true)
+                }
+                else if (type === "playerInfos") {
                 console.log("inside playerInfos")
                 setPlayerNo(message.playerNo)
                 setTmpRoomID(message.id)
                 setExpandJoin(false)
                 setMatchCreated(true)
                 setGameStarted(true)
+                setLoadMatch(true) ////////////
                 if (!message.creator) {
                     setExpandCreate(false)
                     setMatchJoined(true)
@@ -113,7 +115,7 @@ const OneVsOneCreateOrJoin = () => {
                 setExpandJoin(false)
                 setMatchCreated(true)
                 setGameStarted(true)
-                //   setLoadMatch(true)
+                setLoadMatch(true)
                 if (!message.creator) {
                     setExpandCreate(false)
                     setMatchJoined(true)
@@ -256,11 +258,16 @@ const OneVsOneCreateOrJoin = () => {
                           <p>level 6.5</p>
                       </div>
                   </div>
-                  <div className='onevsone-dashboard-logo-friends'>
-                      {(allSet) ? (
-                          <img id='versus-logo' src={Icons.versus} alt="profile-pic" />
-                      ) : ''}
-                  </div>
+                  <div className={(!allSet && loadMatch) ? 'onevsone-dashboard-logo onevsone-dashboard-logo-loading' : 'onevsone-dashboard-logo'} >
+					{(!loadMatch && allSet) ? (<img id='versus-logo' src={Icons.versus} alt="profile-pic" />) : (loadMatch && !allSet) ? (
+						<>
+							<div id='paddle-1' ></div>
+							<div id='net' ></div>
+							<div id='ball' ></div>
+							<div id='paddle-2' ></div>
+						</>
+					) : ''}
+					</div>
                   <div className='onevsone-dashboard-opponent'>
                       {enemyInfos ? (
                           <>

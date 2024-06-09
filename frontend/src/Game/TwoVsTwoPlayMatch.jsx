@@ -162,16 +162,7 @@ const TwoVsTwoPlayMatch = () => {
                 player4 = new Player(585, 250, 10, 100, 'white', 0)
                 ball = new Ball(300, 200, 10, 'red')
                 net = new Net(300, 0, 2, 10, 'white')
-
                 draw()
-                // context.fillStyle = 'black'
-                // context.fillRect(0, 0, 600, 400);
-                // net.draw(context)
-                // player1.draw(context)
-                // player2.draw(context)
-                // player3.draw(context)
-                // player4.draw(context)
-                // ball.draw(context)
                 setCanvasDrawing(true)
             }
         }
@@ -248,19 +239,22 @@ const TwoVsTwoPlayMatch = () => {
         if (!isGameStarted)
             return;
         const rect = canvasDimensionsRef.current
+        const userGotOut = userOutRef.current
         if (playerNo === 1) {
             if (player1) {
+                const playerBottom = (userGotOut.includes(2) ? 400 : 200)
                 player1.y = e.clientY - rect.top - 50;
                 if (player1.y < 0)
                     player1.y = 0;
-                else if (player1.y + 100 > 200)
+                else if (player1.y + 100 > playerBottom)
                     player1.y = 100
             }
         }
         else if (playerNo === 2) {
             if (player2) {
+                const playerTop = (userGotOut.includes(1) ? 0 : 200)
                 player2.y = e.clientY - rect.top - 50;
-                if (player2.y < 200)
+                if (player2.y < playerTop)
                     player2.y = 200
                 else if (player2.y + 100 > 400)
                     player2.y = 300
@@ -268,17 +262,19 @@ const TwoVsTwoPlayMatch = () => {
         }
         else if (playerNo === 3) {
             if (player3) {
+                const playerBottom = (userGotOut.includes(4) ? 400 : 200)
                 player3.y = e.clientY - rect.top - 50;
                 if (player3.y < 0)
                     player3.y = 0;
-                else if (player3.y + 100 > 200)
+                else if (player3.y + 100 > playerBottom)
                     player3.y = 100
             }
         }
         else if (playerNo === 4) {
             if (player4) {
+                const playerTop = (userGotOut.includes(3) ? 0 : 200)
                 player4.y = e.clientY - rect.top - 50;
-                if (player4.y < 200)
+                if (player4.y < playerTop)
                     player4.y = 200
                 else if (player4.y + 100 > 400)
                     player4.y = 300
@@ -322,6 +318,20 @@ const TwoVsTwoPlayMatch = () => {
             player4.width = 0
             player4.height = 0
         }
+    }
+    
+    const gamefinishedAborted = (message) => {
+        setUserName1(message.user1)
+        setUserName2(message.user2)
+        setUserName3(message.user3)
+        setUserName4(message.user4)
+        setScore1(message.playerScore1)
+        setScore2(message.playerScore2)
+        setScore3(message.playerScore3)
+        setScore4(message.playerScore4)
+        setUserOut([])
+        isGameStarted = false
+        draw()
     }
 
     useEffect(() => {
@@ -367,31 +377,11 @@ const TwoVsTwoPlayMatch = () => {
                 } else if (type === "roomNotExist") {
                     navigate("../game/solo/2vs2")
                 } else if (type === "finishedGame") {
-                    setUserName1(message.user1)
-                    setUserName2(message.user2)
-                    setUserName3(message.user3)
-                    setUserName4(message.user4)
-                    setScore1(message.playerScore1)
-                    setScore2(message.playerScore2)
-                    setScore3(message.playerScore3)
-                    setScore4(message.playerScore4)
                     setGameFinished(true)
-                    setUserOut([])
-                    isGameStarted = false
-                    draw()
+                    gamefinishedAborted(message)
                 } else if (type === "abortedGame") {
-                    setUserName1(message.user1)
-                    setUserName2(message.user2)
-                    setUserName3(message.user3)
-                    setUserName4(message.user4)
-                    setScore1(message.playerScore1)
-                    setScore2(message.playerScore2)
-                    setScore3(message.playerScore3)
-                    setScore4(message.playerScore4)
                     setGameAborted(true)
-                    setUserOut([])
-                    isGameStarted = false
-                    draw()
+                    gamefinishedAborted(message)
                 } else if (type === "playersInfos")
                     setPlayersPics(message.users)
                 else if (type === "playerOut") {

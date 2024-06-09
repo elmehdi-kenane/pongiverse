@@ -650,7 +650,7 @@ html, body {
     align-items: center;
     justify-content: center;
     height: 55px;
-    width: 80px;
+    width: 100%;
     /* background-color: #D9D9D9; */
 }
 
@@ -673,6 +673,9 @@ html, body {
     width: 12%;
     height: 50px;
     /* background-color: rgba(0, 0, 0, 0.658); */
+}
+
+.onevsone-dashboard-logo-loading {
     border: 2.5px solid rgb(247, 239, 255);
     background-color: #775C9E;
 }
@@ -975,8 +978,8 @@ html, body {
 
 .onevsone-dashboard-logo #paddle-1 {
     position: absolute;
-    width: 5px;
-    height: 30px;
+    width: 3px;
+    height: 20px;
     background-color: #ffffff;
     top: 50%;
     left: 0;
@@ -987,8 +990,8 @@ html, body {
 
 .onevsone-dashboard-logo #paddle-2 {
     position: absolute;
-    width: 5px;
-    height: 30px;
+    width: 3px;
+    height: 20px;
     background-color: #ffffff;
     top: 50%;
     right: 0;
@@ -999,8 +1002,8 @@ html, body {
 
 .onevsone-dashboard-logo #ball {
     position: absolute;
-    width: 8px;
-    height: 8px;
+    width: 5px;
+    height: 5px;
     background-color: #ffffff;
     top: 50%;
     left: 50%;
@@ -1117,6 +1120,25 @@ html, body {
     #onevsone-dashboard-matchmaking {
         text-align: center;
     }
+
+    .onevsone-dashboard-logo {
+        height: 40px;
+    }
+
+    .onevsone-dashboard-logo #paddle-1 {
+        height: 15px;
+        width: 3px;
+    }
+    
+    .onevsone-dashboard-logo #paddle-2 {
+        height: 15px;
+        width: 3px;
+    }
+    
+    .onevsone-dashboard-logo #ball {
+        height: 4px;
+        width: 4px;
+    }
 }
 
 @media screen and (max-width: 425px) {
@@ -1197,6 +1219,46 @@ html, body {
         bottom: -200px;
         width: 200px;
         height: 250px;
+    }
+
+    .onevsone-dashboard-logo {
+        height: 30px;
+    }
+
+    .onevsone-dashboard-logo #paddle-1 {
+        height: 10px;
+        width: 2px;
+    }
+    
+    .onevsone-dashboard-logo #paddle-2 {
+        height: 10px;
+        width: 2px;
+    }
+    
+    .onevsone-dashboard-logo #ball {
+        height: 3px;
+        width: 3px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .onevsone-dashboard-logo {
+        height: 25px;
+    }
+
+    .onevsone-dashboard-logo #paddle-1 {
+        height: 10px;
+        width: 2px;
+    }
+    
+    .onevsone-dashboard-logo #paddle-2 {
+        height: 10px;
+        width: 2px;
+    }
+    
+    .onevsone-dashboard-logo #ball {
+        height: 3px;
+        width: 3px;
     }
 }
 
@@ -1924,7 +1986,7 @@ html, body {
     align-items: center;
     justify-content: center;
     height: 55px;
-    width: 80px;
+    width: 100%;
 }
 
 .twovstwo-dashboard-logo {
@@ -1933,6 +1995,11 @@ html, body {
     justify-content: center;
     width: 12%;
     height: 50px;
+    /* border: 2.5px solid rgb(247, 239, 255);
+    background-color: #775C9E; */
+}
+
+.twovstwo-dashboard-logo-loading {
     border: 2.5px solid rgb(247, 239, 255);
     background-color: #775C9E;
 }
@@ -1960,7 +2027,7 @@ html, body {
         left: 0%;
     }
     75% {
-        left: calc(20% - 8px);
+        left: 10%;
     }
     100% {
         left: 0%;
@@ -1972,7 +2039,7 @@ html, body {
         right: 0%;
     }
     25% {
-        right: calc(20% - 7px);
+        right: 10%;
         /* right: 20%; */
     }
     50%, 75%, 100% {
@@ -1982,8 +2049,8 @@ html, body {
 
 .twovstwo-dashboard-logo #paddle-1 {
     position: absolute;
-    width: 5px;
-    height: 30px;
+    width: 3px;
+    height: 20px;
     background-color: #ffffff;
     top: 50%;
     left: 0;
@@ -1994,8 +2061,8 @@ html, body {
 
 .twovstwo-dashboard-logo #paddle-2 {
     position: absolute;
-    width: 5px;
-    height: 30px;
+    width: 3px;
+    height: 20px;
     background-color: #ffffff;
     top: 50%;
     right: 0;
@@ -2006,8 +2073,8 @@ html, body {
 
 .twovstwo-dashboard-logo #ball {
     position: absolute;
-    width: 8px;
-    height: 8px;
+    width: 5px;
+    height: 5px;
     background-color: #ffffff;
     top: 50%;
     left: 50%;
@@ -2059,6 +2126,12 @@ html, body {
     outline-offset: -2px;
 }
 
+.twovstwo-dashboard-player {
+    display: flex;
+    flex-direction: column;
+    align-items: center
+}
+
 /* 2vs2 friends page ==> STARTED */
 
 .twovstwo-dashboard-opponents .twovstwo-invite-friends {
@@ -2107,7 +2180,7 @@ html, body {
 
     .twovstwo-dashboard-opponents {
         width: 90%;
-        height: 100px;
+        height: 400px;
         margin: auto;
         width: 95%;
     }
@@ -2143,6 +2216,25 @@ html, body {
     .twovstwo-cancel-game {
         margin-left: 2%;
     }
+
+    .twovstwo-dashboard-logo {
+        height: 40px;
+    }
+
+    .twovstwo-dashboard-logo #paddle-1 {
+        height: 15px;
+        width: 3px;
+    }
+    
+    .twovstwo-dashboard-logo #paddle-2 {
+        height: 15px;
+        width: 3px;
+    }
+    
+    .twovstwo-dashboard-logo #ball {
+        height: 4px;
+        width: 4px;
+    }
 }
 
 @media screen and (max-width: 425px) {
@@ -2152,7 +2244,6 @@ html, body {
 
     .twovstwo-dashboard-opponents {
         width: 90%;
-        height: 1vw;
         padding: 120px 0;
         width: 100%;
     }
@@ -2170,6 +2261,10 @@ html, body {
 
     .twovstwo-opponent-infos, .twovstwo-opponent-infos-none {
         height: 25px;
+    }
+
+    .twovstwo-dashboard-logo {
+        height: 40px;
     }
 
     .twovstwo-dashboard-logo #paddle-1 {
@@ -2205,6 +2300,50 @@ html, body {
     .twovstwo-dashboard-opponents .twovstwo-invite-friends {
         width: 90px;
         font-size: 0.7em;
+    }
+
+    .twovstwo-dashboard-logo {
+        height: 30px;
+    }
+
+    .twovstwo-dashboard-logo #paddle-1 {
+        height: 10px;
+        width: 2px;
+    }
+    
+    .twovstwo-dashboard-logo #paddle-2 {
+        height: 10px;
+        width: 2px;
+    }
+    
+    .twovstwo-dashboard-logo #ball {
+        height: 3px;
+        width: 3px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .twovstwo-dashboard-opponents {
+        height: 300px;
+    }
+
+    .twovstwo-dashboard-logo {
+        height: 25px;
+    }
+
+    .twovstwo-dashboard-logo #paddle-1 {
+        height: 10px;
+        width: 2px;
+    }
+    
+    .twovstwo-dashboard-logo #paddle-2 {
+        height: 10px;
+        width: 2px;
+    }
+    
+    .twovstwo-dashboard-logo #ball {
+        height: 3px;
+        width: 3px;
     }
 }
 
