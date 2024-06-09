@@ -583,10 +583,7 @@ html, body {
 
 .onevsone-dashboard-opponents .onevsone-create-room img,
 .onevsone-dashboard-opponents .onevsone-join-room img {
-    /* padding: 12px 20px 12px 8px;
-    font-size: 0.8em; */
     width: 20%;
-    /* background-color: #775C9E; */
 }
 
 .onevsone-dashboard-opponents .onevsone-create-room .invite-friends-button,
@@ -976,7 +973,7 @@ html, body {
     }
 }
 
-.onevsone-dashboard-logo #paddle-1 {
+#paddle-1 {
     position: absolute;
     width: 3px;
     height: 20px;
@@ -988,7 +985,7 @@ html, body {
     margin-left: 2%;
 }
 
-.onevsone-dashboard-logo #paddle-2 {
+#paddle-2 {
     position: absolute;
     width: 3px;
     height: 20px;
@@ -1000,7 +997,7 @@ html, body {
     margin-right: 2%;
 }
 
-.onevsone-dashboard-logo #ball {
+#ball {
     position: absolute;
     width: 5px;
     height: 5px;
@@ -1012,7 +1009,7 @@ html, body {
     animation: moveBall 3s linear infinite;
 }
 
-.onevsone-dashboard-logo #net {
+#net {
     position: absolute;
     width: 1%;
     /* border-left: 1px solid black; */
@@ -1125,32 +1122,32 @@ html, body {
         height: 40px;
     }
 
-    .onevsone-dashboard-logo #paddle-1 {
+    #paddle-1 {
         height: 15px;
         width: 3px;
     }
     
-    .onevsone-dashboard-logo #paddle-2 {
+    #paddle-2 {
         height: 15px;
         width: 3px;
     }
     
-    .onevsone-dashboard-logo #ball {
+    #ball {
         height: 4px;
         width: 4px;
     }
 }
 
 @media screen and (max-width: 425px) {
-    .onevsone-dashboard-logo #paddle-1 {
+    #paddle-1 {
         height: 20px;
     }
     
-    .onevsone-dashboard-logo #paddle-2 {
+    #paddle-2 {
         height: 20px;
     }
     
-    .onevsone-dashboard-logo #ball {
+    #ball {
         height: 5px;
         width: 5px;
     }
@@ -1225,17 +1222,17 @@ html, body {
         height: 30px;
     }
 
-    .onevsone-dashboard-logo #paddle-1 {
+    #paddle-1 {
         height: 10px;
         width: 2px;
     }
     
-    .onevsone-dashboard-logo #paddle-2 {
+    #paddle-2 {
         height: 10px;
         width: 2px;
     }
     
-    .onevsone-dashboard-logo #ball {
+    #ball {
         height: 3px;
         width: 3px;
     }
@@ -1246,17 +1243,17 @@ html, body {
         height: 25px;
     }
 
-    .onevsone-dashboard-logo #paddle-1 {
+    #paddle-1 {
         height: 10px;
         width: 2px;
     }
     
-    .onevsone-dashboard-logo #paddle-2 {
+    #paddle-2 {
         height: 10px;
         width: 2px;
     }
     
-    .onevsone-dashboard-logo #ball {
+    #ball {
         height: 3px;
         width: 3px;
     }
@@ -2047,7 +2044,7 @@ html, body {
     }
 }
 
-.twovstwo-dashboard-logo #paddle-1 {
+#paddle-1 {
     position: absolute;
     width: 3px;
     height: 20px;
@@ -2059,7 +2056,7 @@ html, body {
     margin-left: 2%;
 }
 
-.twovstwo-dashboard-logo #paddle-2 {
+#paddle-2 {
     position: absolute;
     width: 3px;
     height: 20px;
@@ -2071,7 +2068,7 @@ html, body {
     margin-right: 2%;
 }
 
-.twovstwo-dashboard-logo #ball {
+#ball {
     position: absolute;
     width: 5px;
     height: 5px;
@@ -2083,7 +2080,7 @@ html, body {
     animation: moveBall 3s linear infinite;
 }
 
-.twovstwo-dashboard-logo #net {
+#net {
     position: absolute;
     width: 1%;
     height: 100%;
@@ -2148,6 +2145,20 @@ html, body {
     border-radius: 5px;
 }
 
+.twovstwo-dashboard-opponents .twovstwo-join-room {
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    left: 100%;
+    transform: translate(-100%, -110%);
+    background-color: #4c1c90;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 130px;
+    border-radius: 5px;
+}
+
 .twovstwo-dashboard-opponents .twovstwo-invite-friends .invite-friends-button {
     padding: 12px 8px 12px;
     font-size: 0.9em;
@@ -2159,6 +2170,46 @@ html, body {
     justify-content: center;
     width: 12%;
     height: 50px;
+}
+
+.game-friend-invite img {
+    width: 15px;
+    border-radius: 0;
+}
+
+.game-friend-waiting img {
+    width: 20px;
+}
+
+/* 2vs2 friends page ==> ENDED */
+
+/* 2vs2 create or join page ==> STARTED */
+
+.twovstwo-dashboard-opponents .twovstwo-create-room {
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    transform: translate(0, -110%);
+    background-color: #4c1c90;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 130px;
+    border-radius: 5px;
+}
+
+.twovstwo-dashboard-opponents .twovstwo-create-room img,
+.twovstwo-dashboard-opponents .twovstwo-join-room img {
+    width: 20%;
+}
+
+.twovstwo-dashboard-opponents .twovstwo-create-room .invite-friends-button,
+.twovstwo-dashboard-opponents .twovstwo-join-room .invite-friends-button {
+    padding: 12px 0px 12px 0px;
+    /* text-align: center; */
+    font-size: 0.9em;
+    /* width: 80%; */
 }
 
 /* 2vs2 friends page ==> ENDED */
@@ -2221,17 +2272,25 @@ html, body {
         height: 40px;
     }
 
-    .twovstwo-dashboard-logo #paddle-1 {
+    .game-friend-invite img {
+        width: 15px;
+    }
+
+    .game-friend-waiting img {
+        width: 20px;
+    }
+
+    #paddle-1 {
         height: 15px;
         width: 3px;
     }
     
-    .twovstwo-dashboard-logo #paddle-2 {
+    #paddle-2 {
         height: 15px;
         width: 3px;
     }
     
-    .twovstwo-dashboard-logo #ball {
+    #ball {
         height: 4px;
         width: 4px;
     }
@@ -2267,15 +2326,15 @@ html, body {
         height: 40px;
     }
 
-    .twovstwo-dashboard-logo #paddle-1 {
+    #paddle-1 {
         height: 20px;
     }
     
-    .twovstwo-dashboard-logo #paddle-2 {
+    #paddle-2 {
         height: 20px;
     }
     
-    .twovstwo-dashboard-logo #ball {
+    #ball {
         height: 5px;
         width: 5px;
     }
@@ -2302,21 +2361,29 @@ html, body {
         font-size: 0.7em;
     }
 
+    .game-friend-invite img {
+        width: 15px;
+    }
+
+    .game-friend-waiting img {
+        width: 20px;
+    }
+
     .twovstwo-dashboard-logo {
         height: 30px;
     }
 
-    .twovstwo-dashboard-logo #paddle-1 {
+    #paddle-1 {
         height: 10px;
         width: 2px;
     }
     
-    .twovstwo-dashboard-logo #paddle-2 {
+    #paddle-2 {
         height: 10px;
         width: 2px;
     }
     
-    .twovstwo-dashboard-logo #ball {
+    #ball {
         height: 3px;
         width: 3px;
     }
@@ -2331,17 +2398,17 @@ html, body {
         height: 25px;
     }
 
-    .twovstwo-dashboard-logo #paddle-1 {
+    #paddle-1 {
         height: 10px;
         width: 2px;
     }
     
-    .twovstwo-dashboard-logo #paddle-2 {
+    #paddle-2 {
         height: 10px;
         width: 2px;
     }
     
-    .twovstwo-dashboard-logo #ball {
+    #ball {
         height: 3px;
         width: 3px;
     }
@@ -2354,5 +2421,9 @@ html, body {
 
     .twovstwo-opponent-infos p:nth-child(2n) {
         font-size: 0.2em;
+    }
+
+    .game-friend-invite img {
+        width: 20%;
     }
 }

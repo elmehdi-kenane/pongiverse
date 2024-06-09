@@ -31,6 +31,7 @@ import TwoVsTwoRandom from './Game/TwoVsTwoRandom';
 import OneVsOnePlayMatch from './Game/OneVsOnePlayMatch';
 import TwoVsTwoPlayMatch from './Game/TwoVsTwoPlayMatch';
 import TwoVsTwoFriends from './Game/TwoVsTwoFriends';
+import TwoVsTwoCreateOrJoin from './Game/TwoVsTwoCreateOrJoin';
 
 const App = () => {
   return (
@@ -60,7 +61,7 @@ const App = () => {
               <Route path="game/solo/2vs2" element={<TwoVersusTwo />} />
               <Route path="game/solo/2vs2/random" element={<TwoVsTwoRandom />} />
               <Route path="game/solo/2vs2/friends" element={<TwoVsTwoFriends />} />
-              <Route path="game/solo/2vs2/create-or-join" element={<OneVsOneCreateOrJoin />} />
+              <Route path="game/solo/2vs2/create-or-join" element={<TwoVsTwoCreateOrJoin />} />
               <Route path="play/1vs1/:roomID" element={<OneVsOnePlayMatch />} />
               <Route path="play/2vs2/:roomID" element={<TwoVsTwoPlayMatch />} />
               <Route path="game/createtournament" element={<CreateTournament />} />
