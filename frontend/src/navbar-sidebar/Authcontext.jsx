@@ -1,176 +1,287 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Navigate} from 'react-router-dom'
+import { friends } from "../assets/navbar-sidebar";
+import * as Icons from '../assets/navbar-sidebar'
+import { useReducer } from "react";
 
 const AuthContext = createContext();
 
 export default AuthContext;
 
 export const AuthProvider = ({children}) => {
-    let navigate = useNavigate()
-    let location = useLocation()
-    let [user, setUser] = useState('')
-    let [socket, setSocket] = useState(null)
-    let [chatSocket, setChatSocket] = useState(null)
-    let [notifSocket, setNotifSocket] = useState(null)
-    let [socketRecreated, setSocketRecreated] = useState(false)
-    const idRegex = /^\/mainpage\/play\/1vs1\/\d+$/
-    const messageIdRegex = /^\/mainpage\/Chat\/\d+$/
+	let navigate = useNavigate()
+	let location = useLocation()
+	const [allGameFriends, setAllGameFriends] = useState([])
+	const [userImages, setUserImages] = useState([]);
+	const [loading, setLoading] = useState(true)
+	// const [gameNotif, setGameNotif] = useState(false)
+	let [user, setUser] = useState('')
+	let [userImg, setUserImg] = useState('')
+	let [socket, setSocket] = useState(null)
+	let [socketRecreated, setSocketRecreated] = useState(false)
+	let [allGameNotifs, setAllGameNotifs] = useState([])
+	let [notifsImgs, setNotifsImgs] = useState([])
+	let allGameFriendsRef = useRef(allGameFriends)
 
-    useEffect(() => {
-        if ((location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/Signin' && location.pathname !== '/SecondStep' &&  location.pathname !== 'WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && !notifSocket)) {
-            const newNotifSocket = new WebSocket(`ws://localhost:8000/ws/notification`)
-            newNotifSocket.onopen = () => {
-                console.log("Socket opened succefully")
-                newNotifSocket.onmessage = (event) => {
-                    let data = JSON.parse(event.data)
-                    let type = data.type
-                    if (type === 'connection_established') {
-                        console.log('connection established buddy')
-                        // setSocketRecreated(true)
-                    }
-                }
-                console.log(newNotifSocket)
-                setNotifSocket(newNotifSocket)
-            }
-            newNotifSocket.onclose = () => {
-                console.log("chatSocket closed")
-            }
-        } else if ((location.pathname === '/' || location.pathname === '/signup' || location.pathname === '/Signin' || location.pathname === '/SecondStep' ||  location.pathname === 'WaysSecondStep' || location.pathname === '/ForgotPassword' || location.pathname === '/ChangePassword') && notifSocket){
-            if (notifSocket) {
-                console.log("notifSocket closed succefully")
-                notifSocket.close()
-                setNotifSocket(null)
-            }
-        } 
-        if ((location.pathname === '/mainpage/groups' || location.pathname === '/mainpage/chat' || messageIdRegex.test(location.pathname)) && !chatSocket) {
-            const newChatSocket = new WebSocket(`ws://localhost:8000/ws/chat`)
-            newChatSocket.onopen = () => {
-                console.log("Socket opened succefully")
-                newChatSocket.onmessage = (event) => {
-                    let data = JSON.parse(event.data)
-                    let type = data.type
-                    if (type === 'connection_established') {
-                        console.log('connection established buddy')
-                        // setSocketRecreated(true)
-                    }
-                }
-                console.log(newChatSocket)
-                setChatSocket(newChatSocket)
-            }
-            newChatSocket.onclose = () => {
-                console.log("chatSocket closed")
-            }
-        } else if (location.pathname !== '/mainpage/groups' && location.pathname !== '/mainpage/chat' && !messageIdRegex.test(location.pathname) && chatSocket) {
-            console.log("pathname", location.pathname, chatSocket)
-            if (chatSocket) {
-                console.log("chatSocket closed succefully")
-                chatSocket.close()
-                setChatSocket(null)
-            }
-        }
-        if (location.pathname !== '/mainpage/game/solo/1vs1' && !idRegex.test(location.pathname) && socket) {
-            console.log("pathname", location.pathname, socket)
-            if (socket) {
-                console.log("Socket closed succefully")
-                socket.close()
-                setSocket(null)
-            }
-        } else if ((location.pathname === '/mainpage/game/solo/1vs1' || idRegex.test(location.pathname)) && !socket) {
-            const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
-            newSocket.onopen = () => {
-                console.log("Socket opened succefully")
-                newSocket.onmessage = (event) => {
-                    let data = JSON.parse(event.data)
-                    let type = data.type
-                    if (type === 'connection_established') {
-                        console.log('connection established buddy')
-                        setSocketRecreated(true)
-                    }
-                }
-                console.log(newSocket)
-                setSocket(newSocket)
-            }
-        }
-        const refRemoveRoomFromBack = () => {
-            if (socket && socket.readyState === WebSocket.OPEN) {
-                console.log("BEFORE GETTING OUT OF THE PAGE : BEFORE UNLOAD")
-                socket.close()
-                setSocket(null)
-            }
-        }
-        window.addEventListener("beforeunload", refRemoveRoomFromBack)
-        return () => {
-            //ma3eza said khass tkon clean up hana
-            window.addEventListener("beforeunload", refRemoveRoomFromBack)
-        }
-    }, [location.pathname])
+	useEffect(() => {
+		allGameFriendsRef.current = allGameFriends;
+	}, [allGameFriends]);
 
-    async function publicCheckAuth() {
-        try {
-            let response = await fetch('http://localhost:8000/auth/verifytoken/', {  // 10.12.7.3   localhost   127.0.0.1
-                method : 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-                body: JSON.stringify({
-                    user : user
-                }),
-            })
-            response = await response.json()
-            if (response.Case !== "Invalid token") {
-                console.log("USERRR :" + user);
-                navigate('/mainpage')
-            } else {
-                if (user)
-                    setUser('')
-            }
-        } catch (e) {
-            console.log("something wrong with fetch")
-        }
-    }
+	useEffect(() => {
+		const fetchImages = async () => {
+			const promises = allGameFriends.map(async (user) => {
+				const response = await fetch(`http://localhost:8000/api/getImage`, {
+					method: "POST",
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						image: user.image
+					})
+				});
+				const blob = await response.blob();
+				return URL.createObjectURL(blob);
+			});
+			const images = await Promise.all(promises);
+			setUserImages(images);
+		};
+		if (allGameFriends) {
+			let loadingImage = []
+			for (let i = 0; i < allGameFriends.length; i++)
+				loadingImage.push(Icons.solidGrey)
+			setUserImages(loadingImage)
+			fetchImages()
+		}
+	}, [allGameFriends])
 
-    async function privateCheckAuth() {
-        try {
-            let response = await fetch('http://localhost:8000/auth/verifytoken/', {  // 10.12.7.3   localhost   127.0.0.1
-                method : 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-                body: JSON.stringify({
-                    user : user
-                }),
-            })
-            response = await response.json()
-            if (response.Case !== "Invalid token") {
-                console.log("USERRR :" + response.data.username);
-                if (!user)
-                    setUser(response.data.username)
-            } else
-                navigate('/signin')
-        } catch (e) {
-            console.log("something wrong with fetch")
-        }
-    }
+	useEffect(() => {
+		const fetchNotifsImages = async () => {
+			const promises = allGameNotifs.map(async (user) => {
+				const response = await fetch(`http://localhost:8000/api/getImage`, {
+					method: "POST",
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						image: user.avatar
+					})
+				});
+				const blob = await response.blob();
+				return URL.createObjectURL(blob);
+			});
+			const images = await Promise.all(promises);
+			setNotifsImgs(images);
+		};
+		if (allGameFriends)
+			fetchNotifsImages()
+	}, [allGameNotifs])
 
-    let contextData = {
-        user: user,
-        setUser: setUser,
-        publicCheckAuth: publicCheckAuth,
-        privateCheckAuth: privateCheckAuth,
-        socket: socket,
-        setSocket: setSocket,
-        socketRecreated: socketRecreated,
-        setSocketRecreated: setSocketRecreated,
-        chatSocket : chatSocket,
-        setChatSocket : setChatSocket,
-    }
+	useEffect(() => {
+		const getAllGameFriends = async () => {
+			try {
+				let response = await fetch('http://localhost:8000/api/onlineFriends', {
+					method: "POST",
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						user: user
+					})
+				})
+				let friends = await response.json()
+				if (friends.message.length)
+					setAllGameFriends(friends.message)
+				setLoading(false)
+			} catch (e) {
+				console.log("something wrong with fetch")
+			}
+		}
 
-    return (
-        <AuthContext.Provider value={contextData} >
-            {children}
-        </AuthContext.Provider>
-    )
+		const getAllNotifsFriends = async () => {
+			try {
+				let response = await fetch('http://localhost:8000/api/notifsFriends', {
+					method: "POST",
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						user: user
+					})
+				})
+				let friends = await response.json()
+				if (friends.message.length) {
+					console.log(friends.message)
+					setAllGameNotifs(friends.message)
+				}
+			} catch (e) {
+				console.log("something wrong with fetch")
+			}
+		}
+
+		const getUserImage = async () => {
+			try {
+				let response = await fetch('http://localhost:8000/api/getUserImage', {
+					method: "POST",
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						user: user
+					})
+				})
+				const blob = await response.blob();
+				const image = URL.createObjectURL(blob)
+				setUserImg(image)
+				// console.log('USER IMAGE IS THIS : ', image)
+			} catch (e) {
+				console.log("something wrong with fetch")
+			}
+		}
+
+		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && location.pathname !== '/game/solo/1vs1/friends' && location.pathname !== '/game/solo/1vs1/random' && user && !allGameNotifs.length)
+			getAllNotifsFriends()
+		else
+			setAllGameNotifs([])
+
+		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && user && !userImg)
+			getUserImage()
+
+		if ((location.pathname === '/mainpage/game/solo/1vs1/friends' || location.pathname === '/mainpage/game/createtournament' || location.pathname === '/mainpage/game/solo/2vs2/friends') && user)
+			getAllGameFriends()
+		else
+			setAllGameFriends([])
+	}, [location.pathname, user])
+
+	useEffect(() => {
+		const addUser = (newUser, currentAllGameFriends) => {
+			const userExists = currentAllGameFriends.some(user => user.name === newUser.name)
+			if (!userExists)
+				setAllGameFriends([...currentAllGameFriends, newUser])
+			// setAllGameFriends(prevFriends => [...prevFriends, newUser]);
+		  };
+		async function sendUserData(uname, currentAllGameFriends){
+			try {
+				let response = await fetch('http://localhost:8000/api/get_user', {
+					method: "POST",
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						uname: uname
+					})
+				});
+				let data = await response.json();
+				const newUser = {id: data.id, name: data.name, level : data.level, image: data.image}
+				addUser(newUser, currentAllGameFriends)
+			} catch (error) {
+				console.error('There has been a problem with your fetch operation:', error);
+			}
+		}
+		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && !socket && user) {
+			const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
+			newSocket.onopen = () => {
+				setSocket(newSocket)
+			}
+			newSocket.onmessage = (event) => {
+				let data = JSON.parse(event.data)
+				let type = data.type
+				// let message = data.message
+				let uname = data.username
+				// if (type === 'user_disconnected') {
+				// 	const currentAllGameFriends = allGameFriendsRef.current;
+				// 	console.log("user disconnected : ", allGameFriends)
+				// 	let uname = data.username
+				// 	setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname));
+				// }
+				// if (type === 'connected_again') {
+				// 	const currentAllGameFriends = allGameFriendsRef.current;
+				// 	console.log("user connected : ", allGameFriends)
+				// 	console.log("VISITED CONNECTED AGAIN")
+				// 	sendUserData(uname, currentAllGameFriends)
+				// }
+			}
+		} else if ((location.pathname === '/' || location.pathname === '/signup' || location.pathname === '/signin' || location.pathname === '/SecondStep' ||  location.pathname === '/WaysSecondStep' || location.pathname === '/ForgotPassword' || location.pathname === '/ChangePassword') && socket) {
+			if (socket) {
+				console.log("socket closed succefully")
+				socket.close()
+				setSocket(null)
+			}
+		}
+
+	}, [location.pathname, user])
+
+	async function publicCheckAuth() {
+		try {
+			let response = await fetch('http://localhost:8000/auth/verifytoken/', {  // 10.12.7.3   localhost   127.0.0.1
+				method : 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				credentials: 'include',
+				body: JSON.stringify({
+					user : user
+				}),
+			})
+			response = await response.json()
+			if (response.Case !== "Invalid token") {
+				setUser(response.data.username)
+				navigate('/mainpage')
+			} else {
+				setUser('')
+			}
+		} catch (e) {
+			console.log("something wrong with fetch")
+		}
+	}
+
+	async function privateCheckAuth() {
+		try {
+			let response = await fetch('http://localhost:8000/auth/verifytoken/', {  // 10.12.7.3   localhost   127.0.0.1
+				method : 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				credentials: 'include',
+				body: JSON.stringify({
+					user : user
+				}),
+			})
+			response = await response.json()
+			if (response.Case !== "Invalid token") {
+				setUser(response.data.username)
+			} else {
+				setUser('')
+				navigate('/signin')
+			}
+		} catch (e) {
+			console.log("something wrong with fetch")
+		}
+	}
+
+	let contextData = {
+		user: user,
+		setUser: setUser,
+		publicCheckAuth: publicCheckAuth,
+		privateCheckAuth: privateCheckAuth,
+		socket: socket,
+		setSocket: setSocket,
+		socketRecreated: socketRecreated,
+		setSocketRecreated: setSocketRecreated,
+		userImg: userImg,
+		allGameFriends: allGameFriends,
+		setAllGameFriends: setAllGameFriends,
+		loading: loading,
+		userImages: userImages,
+		setAllGameNotifs: setAllGameNotifs,
+		allGameNotifs: allGameNotifs,
+		notifsImgs: notifsImgs
+		// gameNotif: gameNotif
+	}
+
+	return (
+		<AuthContext.Provider value={contextData} >
+			{children}
+		</AuthContext.Provider>
+	)
 }

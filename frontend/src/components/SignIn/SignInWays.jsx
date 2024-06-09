@@ -3,7 +3,7 @@ import logo42 from '../../assets/SignUp/42_logo.svg'
 import { useEffect } from 'react';
 import googleIcon from '../../assets/SignUp/googleIcon.png'
 import styles from '../../assets/SignUp/SignUpPage.module.css'
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import { GoogleOAuthProvider, useGoogleLogin, GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -29,7 +29,7 @@ function SignInWays() {
 		axios.post('https://api.intra.42.fr/oauth/token', {
 			grant_type: 'authorization_code',
 			client_id: CLIENT_ID,
-			client_secret: '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',
+			client_secret: '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',
 			code: code,
 			redirect_uri: REDIRECT_URI
 		}).then(response => {
@@ -80,6 +80,7 @@ function SignInWays() {
 		}
 	}, []);
 
+
 	const handleSuccess = (credentialResponse) => {
 		const decoded = jwtDecode(credentialResponse.credential);
 		const data = {
@@ -106,6 +107,20 @@ function SignInWays() {
 		console.log('Google login failed');
 	};
 
+
+	function CustomGoogleButton() {
+
+		const login = useGoogleLogin({
+			onSuccess: handleSuccess,
+			onError: handleError,
+		  });
+		return (
+		<button  onClick={login}>
+		Sign in with Google
+		</button>
+		);
+		}
+
 	return (
 		<>
 			<div className={styles["Intra"]}>
@@ -118,6 +133,7 @@ function SignInWays() {
 						onSuccess={handleSuccess}
 						onError={handleError}
 					/>
+					{/* <CustomGoogleButton /> */}
 				</GoogleOAuthProvider>
 			</div>
 		</>

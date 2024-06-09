@@ -1,9 +1,13 @@
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
-    # path('signup', views.signup, name='signup'),
-    # path('signin', views.signin, name='signin'),
-    # path('get', views.get, name='get'),
-    # path('logout', views.logout, name='logout')
+	path('onlineFriends', views.online_friends, name='friends'),
+	path('getImage', views.serve_image, name='image'),
+	path('get_user', views.get_user, name='get_user'),
+	path('create_tournament', views.create_tournament, name='create_tournament'),
+    path('notifsFriends', views.notifs_friends, name='notifs_friends'),
+    path('getUserImage', views.user_image, name='image'),
 ]

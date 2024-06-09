@@ -53,7 +53,7 @@ html, body {
 .search-bar input {
     width: 90%;
     height: 40px;
-    border: 2px solid white;
+    border: 2px solid rgb(255, 255, 255);
     border-radius: 30px;
     background-color: transparent;
     background-image: url("./search.svg");
@@ -509,7 +509,9 @@ html, body {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    position: relative;
 }
+
 
 .onevsone-dashboard {
     width: 100%;
@@ -517,7 +519,8 @@ html, body {
     flex-direction: row;
     justify-content: center;
     gap: 35px;
-    margin-top: 200px;
+    margin-top: 150px;
+    margin-bottom: 100px;
 }
 
 .onevsone-dashboard-opponents {
@@ -526,8 +529,69 @@ html, body {
     flex-direction: row;
     align-items: center;
     justify-content: space-evenly;
-    background: linear-gradient(120deg, rgba(126,87,194,1), rgba(126,87,194,0.5) 50%, rgba(126,87,194,0.7) 50%, rgba(126,87,194,1));
-    padding: 130px 0
+    background: linear-gradient(125deg, rgba(68, 45, 106,1), rgba(68, 45, 106,0.7) 50%,rgba(68, 45, 106,0.5) 50%, rgba(68, 45, 106,1));
+    padding: 180px 0;
+    position: relative;
+}
+
+.onevsone-dashboard-opponents .onevsone-invite-friends {
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    transform: translate(0, -110%);
+    background-color: #4c1c90;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 120px;
+    border-radius: 5px;
+}
+
+.onevsone-dashboard-opponents .onevsone-create-room {
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    transform: translate(0, -110%);
+    background-color: #4c1c90;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 130px;
+    border-radius: 5px;
+}
+
+.onevsone-dashboard-opponents .onevsone-join-room {
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    left: 100%;
+    transform: translate(-100%, -110%);
+    background-color: #4c1c90;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 130px;
+    border-radius: 5px;
+}
+
+.onevsone-dashboard-opponents .onevsone-invite-friends .invite-friends-button {
+    padding: 12px 8px 12px;
+    font-size: 0.9em;
+}
+
+.onevsone-dashboard-opponents .onevsone-create-room img,
+.onevsone-dashboard-opponents .onevsone-join-room img {
+    width: 20%;
+}
+
+.onevsone-dashboard-opponents .onevsone-create-room .invite-friends-button,
+.onevsone-dashboard-opponents .onevsone-join-room .invite-friends-button {
+    padding: 12px 0px 12px 0px;
+    /* text-align: center; */
+    font-size: 0.9em;
+    /* width: 80%; */
 }
 
 .onevsone-dashboard-selection {
@@ -560,7 +624,8 @@ html, body {
 .onevsone-dashboard-opponent {
     display: flex;
     flex-direction: column;
-    align-items: center
+    align-items: center;
+    /* background-color: #4D4EA6; */
 }
 
 .onevsone-dashboard-opponents img {
@@ -571,35 +636,76 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center
+    justify-content: center;
+    height: 55px;
+    /* background-color: #D9D9D9; */
+}
+
+.onevsone-opponent-infos-none {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 55px;
+    width: 100%;
+    /* background-color: #D9D9D9; */
 }
 
 .onevsone-opponent-infos p:nth-child(2n + 1) {
     font-weight: bold;
     font-size: 20px;
-    margin: 10px 0 -10px 0;
+    margin: 10px 0 2px 0;
 }
 
 .onevsone-opponent-infos p:nth-child(2n) {
     color: white;
-    font-size: 16px;
+    font-size: 12px;
     opacity: 0.6;
 }
 
 .onevsone-dashboard-logo {
+    position: relative;
     display: flex;
-    justify-content: center
+    justify-content: center;
+    width: 12%;
+    height: 50px;
+    /* background-color: rgba(0, 0, 0, 0.658); */
 }
 
-.onevsone-cancel:hover {
+.onevsone-dashboard-logo-loading {
+    border: 2.5px solid rgb(247, 239, 255);
+    background-color: #775C9E;
+}
+
+.onevsone-dashboard-logo-friends {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 12%;
+    height: 50px;
+    /* background-color: rgba(0, 0, 0, 0.658); */
+    /* border: 2.5px solid rgb(247, 239, 255); */
+    /* background-color: #775C9E; */
+}
+
+.onevsone-cancel {
+    width: 100%;
+    /* display: flex; */
+    /* align-items: center; */
+    margin-top: 0;
+    margin-bottom: 100px;
+    /* background-color: #D9D9D9; */
+}
+
+.onevsone-cancel-game:hover {
     background-color: white;
     color: #1E1E1E;
     font-weight: bolder;
     transition: all 0.5s ease;
 }
 
-.onevsone-cancel {
-    margin: 80px 50px 100px 4%;
+.onevsone-cancel-game {
+    margin: 0 0 0 14.8%;
     text-align: center;
     width: 150px;
     padding: 12px 0;
@@ -610,13 +716,46 @@ html, body {
 
 .expand-friends {
     position: absolute;
-    left: 102%;
+    left: 0;
     top: 0;
     display: flex;
     flex-direction: column;
     background-color: #4D4EA6;
-    width: 260px;
+    width: 265px;
     height: 400px;
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 5px;
+    font-size: 15px;
+    overflow-y: auto;
+}
+
+.expand-create-room {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #4D4EA6;
+    width: 280px;
+    height: 160px;
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 5px;
+    font-size: 15px;
+    overflow-y: auto;
+}
+
+.expand-join-room {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    transform: translate(-100%);
+    background-color: #4D4EA6;
+    width: 280px;
+    height: 160px;
     z-index: 100;
     background-color: rgba(0, 0, 0, 0.6);
     border-radius: 5px;
@@ -671,6 +810,29 @@ html, body {
 
 .game-friend-waiting img {
     width: 20px;
+}
+
+.game-friend-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%
+}
+
+.expand-friends .game-friend-loading img {
+    width: 20px;
+    color: white;
+    animation: rotate 5s linear infinite;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    } 
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .expand-joining {
@@ -762,10 +924,104 @@ html, body {
 }
 
 #incorrect-id {
-    margin-top: -5px;
+    /* margin-top: -5px; */
     font-weight: 500;
     color: red;
     display: none;
+}
+
+@keyframes moveBall {
+    0% {
+        left: 50%;
+    }
+    25% {
+        left: 80%;
+    }
+    50% {
+        left: 50%;
+    }
+    75% {
+        left: 20%;
+    }
+    100% {
+        left: 50%;
+    }
+}
+
+@keyframes movePaddle1 {
+    0%, 25%, 50% {
+        left: 0%;
+    }
+    75% {
+        left: calc(20% - 8px);
+    }
+    100% {
+        left: 0%;
+    }
+}
+
+@keyframes movePaddle2 {
+    0% {
+        right: 0%;
+    }
+    25% {
+        right: calc(20% - 7px);
+        /* right: 20%; */
+    }
+    50%, 75%, 100% {
+        right: 0%;
+    }
+}
+
+#paddle-1 {
+    position: absolute;
+    width: 3px;
+    height: 20px;
+    background-color: #ffffff;
+    top: 50%;
+    left: 0;
+    transform: translate(0, -50%);
+    animation: movePaddle1 3s linear infinite;
+    margin-left: 2%;
+}
+
+#paddle-2 {
+    position: absolute;
+    width: 3px;
+    height: 20px;
+    background-color: #ffffff;
+    top: 50%;
+    right: 0;
+    transform: translate(0, -50%);
+    animation: movePaddle2 3s linear infinite;
+    margin-right: 2%;
+}
+
+#ball {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background-color: #ffffff;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    animation: moveBall 3s linear infinite;
+}
+
+#net {
+    position: absolute;
+    width: 1%;
+    /* border-left: 1px solid black; */
+    height: 100%;
+    background-color: rgb(247, 239, 255);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.onevsone-dashboard-logo #versus-logo {
+    width: 100px;
 }
 
 @media screen and (min-width: 1444px) {
@@ -781,11 +1037,11 @@ html, body {
     }
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1024px) {
     .onevsone-dashboard {
         flex-direction: column;
         flex-flow: column-reverse;
-        margin-top: 50px;
+        margin-top: 150px;
         gap: 20px;
     }
 
@@ -793,6 +1049,7 @@ html, body {
         width: 90%;
         height: 100px;
         margin: auto;
+        width: 95%;
     }
     
     .onevsone-dashboard-selection {
@@ -801,23 +1058,50 @@ html, body {
     }
     
     .onevsone-cancel {
-        width: 90%;
-        margin: 20px auto 100px;
+        margin-top: -40px;
     }
 
-    .onevsone-dashboard-opponents img, .onevsone-dashboard-logo img {
+    .onevsone-cancel-game {
+        margin-left: 2%;
+    }
+
+    .onevsone-dashboard-opponents img {
         width: 100px;
+    }
+
+    .onevsone-dashboard-logo #loading-match {
+        width: 40px;
+    }
+
+    .onevsone-dashboard-logo #versus-logo {
+        width: 60px;
+    }
+
+    .onevsone-opponent-infos, .onevsone-opponent-infos-none {
+        height: 35px;
     }
 
     .onevsone-dashboard-opponent .onevsone-opponent-infos p {
         font-size: 15px;
     }
 
+    /* height: 55px; */
+
+    .onevsone-opponent-infos p:nth-child(2n) {
+        font-size: 10px;
+    }
+
     .expand-friends {
-        height: 320px;
+        height: 350px;
         width: 240px;
-        left: calc(50% - 120px);
-        top: -320px;
+    }
+
+    .game-friend-invite img {
+        width: 15px;
+    }
+    
+    .game-friend-waiting img {
+        width: 20px;
     }
 
     .expand-joining,
@@ -833,28 +1117,145 @@ html, body {
     #onevsone-dashboard-matchmaking {
         text-align: center;
     }
+
+    .onevsone-dashboard-logo {
+        height: 40px;
+    }
+
+    #paddle-1 {
+        height: 15px;
+        width: 3px;
+    }
+    
+    #paddle-2 {
+        height: 15px;
+        width: 3px;
+    }
+    
+    #ball {
+        height: 4px;
+        width: 4px;
+    }
 }
 
 @media screen and (max-width: 425px) {
+    #paddle-1 {
+        height: 20px;
+    }
+    
+    #paddle-2 {
+        height: 20px;
+    }
+    
+    #ball {
+        height: 5px;
+        width: 5px;
+    }
+
+    .onevsone-dashboard {
+        margin-top: 80px;
+    }
+    
     .onevsone-dashboard-opponents {
         width: 90%;
         height: 1vw;
+        padding: 120px 0;
+        width: 100%;
     }
     
     .onevsone-dashboard-selection {
         width: 90%;
     }
     
-    .onevsone-cancel {
-        width: 90%;
+    .onevsone-cancel-game {
+        margin: 0;
+        width: 100%;
     }
 
     .onevsone-dashboard-opponents img, .onevsone-dashboard-logo img {
         width: 25vw;
     }
 
+    .onevsone-dashboard-logo #loading-match {
+        width: 10vw;
+    }
+
+    .onevsone-dashboard-logo #versus-logo {
+        width: 12vw;
+    }
+
+    .onevsone-opponent-infos, .onevsone-opponent-infos-none {
+        height: 25px;
+    }
+
     .onevsone-dashboard-opponent .onevsone-opponent-infos p {
         font-size: 0.8em;
+    }
+    .onevsone-opponent-infos p:nth-child(2n) {
+        font-size: 0.5em;
+    }
+
+    .onevsone-dashboard-opponents .onevsone-invite-friends {
+        width: 90px;
+        font-size: 0.7em;
+    }
+
+    .game-friend-invite img {
+        width: 15px;
+    }
+    
+    .game-friend-waiting img {
+        width: 20px;
+    }
+
+    .game-friend-invite {
+        width: 60px;
+    }
+
+    .expand-friends {
+        bottom: -200px;
+        width: 200px;
+        height: 250px;
+    }
+
+    .onevsone-dashboard-logo {
+        height: 30px;
+    }
+
+    #paddle-1 {
+        height: 10px;
+        width: 2px;
+    }
+    
+    #paddle-2 {
+        height: 10px;
+        width: 2px;
+    }
+    
+    #ball {
+        height: 3px;
+        width: 3px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .onevsone-dashboard-logo {
+        height: 25px;
+    }
+
+    #paddle-1 {
+        height: 10px;
+        width: 2px;
+    }
+    
+    #paddle-2 {
+        height: 10px;
+        width: 2px;
+    }
+    
+    #ball {
+        height: 3px;
+        width: 3px;
     }
 }
 
@@ -863,10 +1264,12 @@ html, body {
         font-size: 0.5em;
     }
 
+    .onevsone-opponent-infos p:nth-child(2n) {
+        font-size: 0.2em;
+    }
+
     .expand-friends {
         width: 100%;
-        left: 0;
-        top: -320px;
     }
 
     .expand-joining,
@@ -874,5 +1277,1153 @@ html, body {
         width: 100%;
         left: 0;
         top: -150px;
+    }
+
+    .game-friend-invite img {
+        width: 20%;
+    }
+    
+    .game-friend-profile div p {
+        font-size: 10px;
+    }
+}
+
+
+.cancel-game-invite-request {
+    /* margin: 30px 0 100px 0; */
+    position: absolute;
+    top: 20px;
+    left: 100%;
+    z-index: 100;
+    transform: translate(-100%);
+}
+
+/* GAME INVITATION DESIGN */
+
+.game-invitations {
+    width: 400px;
+    margin: 0 0 30px 100%;
+    transform: translate(-100%);
+    max-height: 130px;
+    /* overflow-y: auto; */
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.game-invitation {
+    display: flex;
+    flex-direction: row;
+    background: linear-gradient(to right, rgba(126,87,194,1), rgba(126,87,194,0.5) 55%);
+    height: 65px;
+    border-bottom: 3px solid #250939;
+    border-radius: 5px 5px 5px 8px;
+    /* position: absolute; */
+    width: 100%;
+    animation: notifyAnimation 1s ease-in;
+}
+
+@keyframes notifyAnimation {
+    0% {
+        margin-left: 100%;
+    }
+    100% {
+        margin-left: 0;
+    }
+}
+
+.game-invitation > img:first-child {
+    height: 100%;
+    width: 16%;
+    border-radius: 5px 0 0 5px
+}
+
+.game-invitation .user-infos {
+    width: 49%;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    justify-content: center;
+    gap: 5px
+}
+
+.game-invitation .user-infos > span:first-child {
+    color: white;
+    margin-left: 15px;
+    font-weight: bolder
+}
+
+.game-invitation .user-infos > span:nth-child(2) {
+    color: rgba(255,255,255,0.7);
+    margin-left: 15px;
+    font-size: 10px;
+    font-weight: medium
+}
+
+.game-invitation .invitation-mode {
+    background: linear-gradient(90deg, rgba(140, 83, 180, 1), rgba(51, 22, 72, 0.8) 50%, rgba(51, 22, 72, 0.7) 50%, rgba(140, 83, 180, 1));
+    height: 100%;
+    width: 15%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin: 0 10px 0 0;
+    /* border-radius: 100px */
+}
+
+.game-invitation .invitation-mode span {
+    color: white;
+    font-weight: bolder
+}
+
+.game-invitation .accept-refuse {
+    height: 58%;
+    width: 21%;
+    display: flex;
+    margin: auto 0;
+    gap: 5px
+}
+
+.game-invitation .accept-refuse > div:first-child {
+    width: 42%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #19A519;
+    border-radius: 5px
+}
+
+.game-invitation .accept-refuse > div:nth-child(2) {
+    width: 42%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    border: 2px solid white
+}
+
+/* 1 VS 1 RANDOM MATCH */
+
+.onevsone-dashboard-logo #loading-match {
+    animation: rotate 5s linear infinite;
+}
+
+
+
+
+
+
+
+/* 1vs1 -new page- */
+
+.duelMode {
+    width: 100%;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    position: relative;
+}
+
+.duelMode-modes {
+    width: 51%;
+    margin: 80px auto 0;
+    display: flex;
+    flex-direction: column
+}
+
+.duelMode-modes-quickMatch {
+    background: linear-gradient(90deg, rgba(68, 45, 106, 1), rgba(68, 45, 106, 0.5));
+    position: relative;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.duelMode-modes-friendMatch,
+.duelMode-modes-createJoinMatch {
+    background: linear-gradient(90deg, rgba(68, 45, 106, 1), rgba(68, 45, 106, 0.5));
+    position: relative;
+    margin-top: 48px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.duelMode-modes-quickMatch div,
+.duelMode-modes-friendMatch div,
+.duelMode-modes-createJoinMatch .createJoinMatch__icon {
+    position: absolute;
+    top: 0;
+    left:0;
+    transform: translate(-50%, -50%);
+    background-color: #F4EFFA;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.duelMode-modes-quickMatch div img {
+    width: 45px;
+    height: 45px;
+    transform: translate(-2px, -2px)
+}
+
+.duelMode-modes-quickMatch h1,
+.duelMode-modes-friendMatch h1,
+.duelMode-modes-createJoinMatch h1 {
+    padding: 25px 30px 8px;
+    font-weight: 500
+}
+
+.duelMode-modes-quickMatch p,
+.duelMode-modes-friendMatch p,
+.duelMode-modes-createJoinMatch p {
+    padding: 8px 30px 30px;
+    font-size: 15px
+}
+
+.duelMode-modes-friendMatch div img {
+    width: 38px;
+    height: 38px
+}
+
+.createJoinMatch__icon > div:first-child {
+    position: absolute;
+    bottom: 0%;
+    left: -20%;
+    background-color: #F4EFFA;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+.createJoinMatch__icon > div:first-child img {
+    width: 10px;
+    height: 10px
+}
+
+.createJoinMatch__icon > img {
+    width: 28px;
+    height: 28px;
+    transform: translate(0px, 0px)
+}
+
+.createJoinMatch__icon > div:nth-child(3) {
+    position: absolute;
+    top: 0%;
+    right: -20%;
+    background-color: #F4EFFA;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.createJoinMatch__icon > div:nth-child(3) img {
+    width: 13px;
+    height: 13px
+}
+
+.duelMode-cancel-next {
+    width: 77%;
+    margin: 80px auto 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between
+}
+
+.duelMode-cancel-next > div:first-child {
+    padding: 10px 50px;
+    border: 2px solid white;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer
+}
+
+.duelMode-cancel-next > div:last-child {
+    padding: 10px 50px;
+    border: 2px solid #913DCE;
+    background-color: #913DCE;
+    text-align: center;
+    border-radius: 5px;
+    opacity: 0.5;
+    cursor: not-allowed
+}
+
+.duelMode-modes-quickMatch-selected,
+.duelMode-modes-friendMatch-selected,
+.duelMode-modes-createJoinMatch-selected {
+    /* border: 2px solid #F4EFFA; */
+    outline: 2px solid #F4EFFA;
+    outline-offset: -2px;
+}
+
+.duelMode-cancel-next #selected {
+    opacity: 1;
+    cursor: pointer
+}
+
+@media screen and (min-width: 1444px) {
+    .duelMode {
+        width: 1360px;
+        margin: 0 auto;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .duelMode-modes {
+        width: 80%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .duelMode-modes {
+        width: 90%;
+    }
+    
+    .duelMode-modes-quickMatch div,
+    .duelMode-modes-friendMatch div,
+    .duelMode-modes-createJoinMatch .createJoinMatch__icon {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 44px;
+        height: 44px;
+    }
+
+    
+    .duelMode-modes-friendMatch div img {
+        width: 30px;
+        height: 30px
+    }
+    
+    
+    .createJoinMatch__icon > img {
+        width: 22px;
+        height: 22px;
+        transform: translate(0px, 0px)
+    }
+    
+    .createJoinMatch__icon > div:nth-child(3),
+    .createJoinMatch__icon > div:first-child {
+        width: 19px;
+        height: 19px;
+    }
+
+    .createJoinMatch__icon > div:nth-child(3) img {
+        width: 10px;
+        height: 10px
+    }
+    
+    .duelMode-modes-quickMatch div img {
+        width: 36px;
+        height: 36px;
+    }
+
+    .createJoinMatch__icon > div:first-child img {
+        width: 8px;
+        height: 8px;
+    }
+
+    .duelMode-modes-quickMatch h1,
+    .duelMode-modes-friendMatch h1,
+    .duelMode-modes-createJoinMatch h1 {
+        text-align: center;
+        font-size: 26px;
+        /* margin-top: 5px; */
+        padding: 32px 30px 4px;
+    }
+
+    .duelMode-cancel-next {
+        flex-direction: column;
+        margin-top: 40px;
+        gap: 15px;
+        width: 90%;
+        flex-flow: column-reverse;
+    }
+
+    .duelMode-modes-friendMatch,
+    .duelMode-modes-createJoinMatch {
+        margin-top: 40px;
+    }
+}
+
+/* solo -new page- */
+
+.soloMode {
+    width: 100%;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    position: relative;
+}
+
+.soloMode-modes {
+    width: 80%;
+    margin: 80px auto 0;
+    display: flex;
+    flex-direction: column
+}
+
+.soloMode-modes-twoPlayers {
+    background: linear-gradient(90deg, rgba(68, 45, 106, 1), rgba(68, 45, 106, 0.5));
+    display: flex;
+    position: relative;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.soloMode-modes-fourPlayers,
+.soloMode-modes-bot {
+    background: linear-gradient(90deg, rgba(68, 45, 106, 1), rgba(68, 45, 106, 0.5));
+    display: flex;
+    position: relative;
+    margin-top: 48px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+#ai-robot img {
+    width: 30px;
+}
+
+.soloMode-modes-twoPlayers > div:nth-child(2) h1,
+.soloMode-modes-fourPlayers > div:nth-child(2) h1,
+.soloMode-modes-bot > div:nth-child(2) h1 {
+    padding: 25px 30px 8px 5px;
+    font-weight: 500
+}
+
+.soloMode-modes-twoPlayers > div:nth-child(2) p,
+.soloMode-modes-fourPlayers > div:nth-child(2) p,
+.soloMode-modes-bot > div:nth-child(2) p {
+    padding: 8px 30px 30px 5px;
+    font-size: 15px
+}
+
+.soloMode-modes-twoPlayers > div:nth-child(2),
+.soloMode-modes-fourPlayers > div:nth-child(2),
+.soloMode-modes-bot > div:nth-child(2) {
+    width: 80%;
+}
+
+.soloMode-modes-twoPlayers > div:first-child,
+.soloMode-modes-fourPlayers > div:first-child,
+.soloMode-modes-bot > div:first-child {
+    height: 100%;
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.soloMode-modes-twoPlayers > div:first-child div,
+.soloMode-modes-fourPlayers > div:first-child div,
+.soloMode-modes-bot > div:first-child div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: #FFFFFF;
+    width: 47px;
+    height: 47px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+}
+
+.soloMode-cancel-next {
+    width: 80%;
+    margin: 80px auto 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between
+}
+
+.soloMode-cancel-next > div:first-child {
+    padding: 10px 50px;
+    border: 2px solid white;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer
+}
+
+.soloMode-cancel-next > div:last-child {
+    padding: 10px 50px;
+    border: 2px solid #913DCE;
+    background-color: #913DCE;
+    text-align: center;
+    border-radius: 5px;
+    opacity: 0.5;
+    cursor: not-allowed
+}
+
+.soloMode-modes-twoPlayers-selected,
+.soloMode-modes-fourPlayers-selected,
+.soloMode-modes-bot-selected {
+    /* border: 2px solid #F4EFFA; */
+    outline: 2px solid #F4EFFA;
+    outline-offset: -2px;
+}
+
+.soloMode-cancel-next #selected {
+    opacity: 1;
+    cursor: pointer
+}
+
+@media screen and (min-width: 1444px) {
+    .soloMode {
+        width: 1360px;
+        margin: 0 auto;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .soloMode-modes-twoPlayers > div:first-child img,
+    .soloMode-modes-fourPlayers > div:first-child img,
+    .soloMode-modes-bot > div:first-child img {
+        width: 100px;
+    }
+
+    .soloMode-modes-twoPlayers > div:first-child div,
+    .soloMode-modes-fourPlayers > div:first-child div,
+    .soloMode-modes-bot > div:first-child div {
+        width: 40px;
+        height: 40px;
+        font-size: 13px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .soloMode-modes-twoPlayers > div:first-child,
+    .soloMode-modes-fourPlayers > div:first-child,
+    .soloMode-modes-bot > div:first-child {
+        height: 100%;
+        width: 20%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .soloMode-modes-twoPlayers,
+    .soloMode-modes-fourPlayers,
+    .soloMode-modes-bot {
+        position: relative;
+    }
+
+    .soloMode-modes-twoPlayers > div:nth-child(2) h1,
+    .soloMode-modes-fourPlayers > div:nth-child(2) h1,
+    .soloMode-modes-bot > div:nth-child(2) h1,
+    .soloMode-modes-twoPlayers > div:nth-child(2) p,
+    .soloMode-modes-fourPlayers > div:nth-child(2) p,
+    .soloMode-modes-bot > div:nth-child(2) p {
+        padding-left: 20px;
+    }
+
+    .soloMode-modes-twoPlayers > div:first-child,
+    .soloMode-modes-fourPlayers > div:first-child,
+    .soloMode-modes-bot > div:first-child {
+        position: absolute;
+        top: -50%;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .soloMode-modes-twoPlayers > div:first-child img,
+    .soloMode-modes-fourPlayers > div:first-child img,
+    .soloMode-modes-bot > div:first-child img {
+        width: 90px;
+    }
+
+    .soloMode-modes-twoPlayers > div:first-child div,
+    .soloMode-modes-fourPlayers > div:first-child div,
+    .soloMode-modes-bot > div:first-child div {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+    }
+
+    .soloMode-modes-twoPlayers > div:nth-child(2),
+    .soloMode-modes-fourPlayers > div:nth-child(2),
+    .soloMode-modes-bot > div:nth-child(2) {
+        width: 100%;
+    }
+
+    #ai-robot img {
+        width: 24px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .soloMode-modes-twoPlayers > div:nth-child(2) h1,
+    .soloMode-modes-fourPlayers > div:nth-child(2) h1,
+    .soloMode-modes-bot > div:nth-child(2) h1 {
+        font-size: 26px;
+    }
+
+    .soloMode-modes-twoPlayers > div:nth-child(2) h1,
+    .soloMode-modes-fourPlayers > div:nth-child(2) h1,
+    .soloMode-modes-bot > div:nth-child(2) h1,
+    .soloMode-modes-twoPlayers > div:nth-child(2) p,
+    .soloMode-modes-fourPlayers > div:nth-child(2) p,
+    .soloMode-modes-bot > div:nth-child(2) p {
+        text-align: center;
+    }
+
+    .soloMode-modes-twoPlayers > div:nth-child(2) h1,
+    .soloMode-modes-fourPlayers > div:nth-child(2) h1,
+    .soloMode-modes-bot > div:nth-child(2) h1 {
+        margin-top: 10px;
+    }
+
+    .soloMode-modes-twoPlayers > div:first-child,
+    .soloMode-modes-fourPlayers > div:first-child,
+    .soloMode-modes-bot > div:first-child {
+        position: absolute;
+        top: -50%;
+        left: 50%;
+        transform: translate(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .soloMode-cancel-next {
+        flex-direction: column;
+        margin-top: 40px;
+        gap: 15px;
+        width: 80%;
+        flex-flow: column-reverse;
+    }
+}
+
+/* 2 vs 2 -new page- */
+.twovstwo {
+    width: 100%;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    position: relative;
+}
+
+.twovstwo-dashboard {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 35px;
+    margin-top: 150px;
+    margin-bottom: 100px;
+}
+
+.twovstwo-dashboard-opponents {
+    width: 70%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    background: linear-gradient(125deg, rgba(68, 45, 106,1), rgba(68, 45, 106,0.7) 50%,rgba(68, 45, 106,0.5) 50%, rgba(68, 45, 106,1));
+    padding: 100px 0;
+    position: relative;
+}
+
+.twovstwo-dashboard-opponents img {
+    width: 150px;
+    border-radius: 50%
+}
+
+.twovstwo-dashboard-opponent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px
+}
+
+.twovstwo-opponent-infos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 55px;
+}
+
+.twovstwo-opponent-infos p:nth-child(2n + 1) {
+    font-weight: bold;
+    font-size: 20px;
+    margin: 10px 0 2px 0;
+}
+
+.twovstwo-opponent-infos p:nth-child(2n) {
+    color: white;
+    font-size: 12px;
+    opacity: 0.6;
+}
+
+.twovstwo-opponent-infos-none {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 55px;
+    width: 100%;
+}
+
+.twovstwo-dashboard-logo {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 12%;
+    height: 50px;
+    /* border: 2.5px solid rgb(247, 239, 255);
+    background-color: #775C9E; */
+}
+
+.twovstwo-dashboard-logo-loading {
+    border: 2.5px solid rgb(247, 239, 255);
+    background-color: #775C9E;
+}
+
+@keyframes moveBall {
+    0% {
+        left: 50%;
+    }
+    25% {
+        left: 80%;
+    }
+    50% {
+        left: 50%;
+    }
+    75% {
+        left: 20%;
+    }
+    100% {
+        left: 50%;
+    }
+}
+
+@keyframes movePaddle1 {
+    0%, 25%, 50% {
+        left: 0%;
+    }
+    75% {
+        left: 10%;
+    }
+    100% {
+        left: 0%;
+    }
+}
+
+@keyframes movePaddle2 {
+    0% {
+        right: 0%;
+    }
+    25% {
+        right: 10%;
+        /* right: 20%; */
+    }
+    50%, 75%, 100% {
+        right: 0%;
+    }
+}
+
+#paddle-1 {
+    position: absolute;
+    width: 3px;
+    height: 20px;
+    background-color: #ffffff;
+    top: 50%;
+    left: 0;
+    transform: translate(0, -50%);
+    animation: movePaddle1 3s linear infinite;
+    margin-left: 2%;
+}
+
+#paddle-2 {
+    position: absolute;
+    width: 3px;
+    height: 20px;
+    background-color: #ffffff;
+    top: 50%;
+    right: 0;
+    transform: translate(0, -50%);
+    animation: movePaddle2 3s linear infinite;
+    margin-right: 2%;
+}
+
+#ball {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background-color: #ffffff;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    animation: moveBall 3s linear infinite;
+}
+
+#net {
+    position: absolute;
+    width: 1%;
+    height: 100%;
+    background-color: rgb(247, 239, 255);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.twovstwo-dashboard-logo #versus-logo {
+    width: 100px;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    } 
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.twovstwo-dashboard-logo #loading-match {
+    animation: rotate 5s linear infinite;
+}
+
+.twovstwo-cancel {
+    width: 100%;
+    margin-top: 0;
+    margin-bottom: 100px;
+}
+
+.twovstwo-cancel-game {
+    margin: 0 0 0 14.8%;
+    text-align: center;
+    width: 150px;
+    padding: 12px 0;
+    background: transparent;
+    outline: 2px solid white;
+    outline-offset: -2px;
+}
+
+.twovstwo-dashboard-player {
+    display: flex;
+    flex-direction: column;
+    align-items: center
+}
+
+/* 2vs2 friends page ==> STARTED */
+
+.twovstwo-dashboard-opponents .twovstwo-invite-friends {
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    transform: translate(0, -110%);
+    background-color: #4c1c90;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 120px;
+    border-radius: 5px;
+}
+
+.twovstwo-dashboard-opponents .twovstwo-join-room {
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    left: 100%;
+    transform: translate(-100%, -110%);
+    background-color: #4c1c90;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 130px;
+    border-radius: 5px;
+}
+
+.twovstwo-dashboard-opponents .twovstwo-invite-friends .invite-friends-button {
+    padding: 12px 8px 12px;
+    font-size: 0.9em;
+}
+
+.twovstwo-dashboard-logo-friends {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 12%;
+    height: 50px;
+}
+
+.game-friend-invite img {
+    width: 15px;
+    border-radius: 0;
+}
+
+.game-friend-waiting img {
+    width: 20px;
+}
+
+/* 2vs2 friends page ==> ENDED */
+
+/* 2vs2 create or join page ==> STARTED */
+
+.twovstwo-dashboard-opponents .twovstwo-create-room {
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    transform: translate(0, -110%);
+    background-color: #4c1c90;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 130px;
+    border-radius: 5px;
+}
+
+.twovstwo-dashboard-opponents .twovstwo-create-room img,
+.twovstwo-dashboard-opponents .twovstwo-join-room img {
+    width: 20%;
+}
+
+.twovstwo-dashboard-opponents .twovstwo-create-room .invite-friends-button,
+.twovstwo-dashboard-opponents .twovstwo-join-room .invite-friends-button {
+    padding: 12px 0px 12px 0px;
+    /* text-align: center; */
+    font-size: 0.9em;
+    /* width: 80%; */
+}
+
+/* 2vs2 friends page ==> ENDED */
+
+@media screen and (min-width: 1444px) {
+    .twovstwo {
+        width: 1360px;
+        margin: 0 auto;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .twovstwo-dashboard {
+        flex-direction: column;
+        flex-flow: column-reverse;
+        margin-top: 150px;
+        gap: 20px;
+    }
+
+    .twovstwo-dashboard-opponents {
+        width: 90%;
+        height: 400px;
+        margin: auto;
+        width: 95%;
+    }
+
+    .twovstwo-dashboard-opponents img {
+        width: 100px;
+    }
+
+    .twovstwo-dashboard-opponent .twovstwo-opponent-infos p {
+        font-size: 15px;
+    }
+
+    .twovstwo-opponent-infos p:nth-child(2n) {
+        font-size: 10px;
+    }
+
+    .twovstwo-opponent-infos, .twovstwo-opponent-infos-none {
+        height: 35px;
+    }
+
+    .twovstwo-dashboard-logo #loading-match {
+        width: 40px;
+    }
+
+    .twovstwo-dashboard-logo #versus-logo {
+        width: 60px;
+    }
+
+    .twovstwo-cancel {
+        margin-top: -40px;
+    }
+
+    .twovstwo-cancel-game {
+        margin-left: 2%;
+    }
+
+    .twovstwo-dashboard-logo {
+        height: 40px;
+    }
+
+    .game-friend-invite img {
+        width: 15px;
+    }
+
+    .game-friend-waiting img {
+        width: 20px;
+    }
+
+    #paddle-1 {
+        height: 15px;
+        width: 3px;
+    }
+    
+    #paddle-2 {
+        height: 15px;
+        width: 3px;
+    }
+    
+    #ball {
+        height: 4px;
+        width: 4px;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .twovstwo-dashboard {
+        margin-top: 80px;
+    }
+
+    .twovstwo-dashboard-opponents {
+        width: 90%;
+        padding: 120px 0;
+        width: 100%;
+    }
+
+    .twovstwo-dashboard-opponents img {
+        width: 25vw;
+    }
+
+    .twovstwo-dashboard-opponent .twovstwo-opponent-infos p {
+        font-size: 0.8em;
+    }
+    .twovstwo-opponent-infos p:nth-child(2n) {
+        font-size: 0.5em;
+    }
+
+    .twovstwo-opponent-infos, .twovstwo-opponent-infos-none {
+        height: 25px;
+    }
+
+    .twovstwo-dashboard-logo {
+        height: 40px;
+    }
+
+    #paddle-1 {
+        height: 20px;
+    }
+    
+    #paddle-2 {
+        height: 20px;
+    }
+    
+    #ball {
+        height: 5px;
+        width: 5px;
+    }
+
+    .twovstwo-dashboard-opponents img, .twovstwo-dashboard-logo img {
+        width: 25vw;
+    }
+
+    .twovstwo-dashboard-logo #loading-match {
+        width: 10vw;
+    }
+
+    .twovstwo-dashboard-logo #versus-logo {
+        width: 12vw;
+    }
+
+    .twovstwo-cancel-game {
+        margin: 0;
+        width: 100%;
+    }
+
+    .twovstwo-dashboard-opponents .twovstwo-invite-friends {
+        width: 90px;
+        font-size: 0.7em;
+    }
+
+    .game-friend-invite img {
+        width: 15px;
+    }
+
+    .game-friend-waiting img {
+        width: 20px;
+    }
+
+    .twovstwo-dashboard-logo {
+        height: 30px;
+    }
+
+    #paddle-1 {
+        height: 10px;
+        width: 2px;
+    }
+    
+    #paddle-2 {
+        height: 10px;
+        width: 2px;
+    }
+    
+    #ball {
+        height: 3px;
+        width: 3px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .twovstwo-dashboard-opponents {
+        height: 300px;
+    }
+
+    .twovstwo-dashboard-logo {
+        height: 25px;
+    }
+
+    #paddle-1 {
+        height: 10px;
+        width: 2px;
+    }
+    
+    #paddle-2 {
+        height: 10px;
+        width: 2px;
+    }
+    
+    #ball {
+        height: 3px;
+        width: 3px;
+    }
+}
+
+@media screen and (max-width: 280px) {
+    .twovstwo-dashboard-opponent .twovstwo-opponent-infos p {
+        font-size: 0.5em;
+    }
+
+    .twovstwo-opponent-infos p:nth-child(2n) {
+        font-size: 0.2em;
+    }
+
+    .game-friend-invite img {
+        width: 20%;
     }
 }

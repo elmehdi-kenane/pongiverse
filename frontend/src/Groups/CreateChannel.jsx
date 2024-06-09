@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import SocketContext from "./SocketContext";
-import "./Groups.css";
 
 const CreateChannel = (props) => {
-  const { chatSocket } = useContext(AuthContext);
+  const { socket } = useContext(AuthContext);
   const { user } = useContext(AuthContext);
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
@@ -22,8 +21,8 @@ const CreateChannel = (props) => {
     setErrors({})
   };
   useEffect(() => {
-    if (chatSocket) {
-      chatSocket.onmessage = (event) => {
+    if (socket) {
+      socket.onmessage = (event) => {
         let data = JSON.parse(event.data);
         console.log("data:", data);
         if (data.type === "channel-created") {
@@ -33,7 +32,7 @@ const CreateChannel = (props) => {
         }
       };
     }
-  }, [chatSocket]);
+  }, [socket]);
 
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
@@ -58,7 +57,7 @@ const CreateChannel = (props) => {
       errorContainers.confirmPassword = "Password not match";
     setErrors(errorContainers);
     if (Object.keys(errorContainers).length === 0) {
-      chatSocket.send(
+      socket.send(
         JSON.stringify({
           type: "join-channel",
           message: {
