@@ -75,7 +75,7 @@ h1, h3, p{
     color: white;
 }
 
-.profile-userinfo .userinfo__addfriend {
+.profile-userinfo .userinfo__is-friends {
     display: flex;
     padding: 5px;
     background: #826aed;
@@ -85,17 +85,25 @@ h1, h3, p{
     align-items: center;
     gap: 3px;
     position: absolute;
-    margin-top: 20px;
-    margin-right: 10px;
+    /* margin-top: 20px;
+    margin-right: 10px; */
 }
-.profile-userinfo .userinfo__addfriend:active {
+.profile-userinfo .userinfo__is-friends:hover {
     background: #250939;
 }
-.profile-userinfo .userinfo__addfriend p {
-    font-size: 14px;
+.profile-userinfo .userinfo__is-friends:active {
+    background: #826aed;
 }
-.profile-userinfo .userinfo__addfriend svg {
+.profile-userinfo .userinfo__is-friends p {
+    font-size: 14px;
+    font-weight: 450;
+}
+.profile-userinfo .userinfo__is-friends svg {
     height: 18px;
+}
+
+.profile-userinfo .friends-padding {
+    padding: 5px 8px;
 }
 
 /* Player Banner Info */
