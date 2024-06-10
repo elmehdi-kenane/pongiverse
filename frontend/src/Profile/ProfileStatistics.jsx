@@ -7,6 +7,8 @@ import Pagination from "../Dashboard/helpers/Pagination"
 import BarGraph from "../Dashboard/charts/BarGraph"
 import { profileLevel } from './data/ProfileDataLevel';
 
+import DashboardHead from '../Dashboard/DashboardHead'
+
 import { achv } from './data/achvData'
 
 
@@ -33,7 +35,7 @@ import { achv } from './data/achvData'
                 <img src={player.img} alt='playerImg'/>
                 <p> {player.name} </p>
               </Link>
-              <Link className='chat__button no-select'>
+              <Link className='chat__button no-select' to='/mainpage/chat'>
                 <img src={chatSvg} alt='chatIcon'/>
                 <p style={{cursor: 'pointer'}}> message </p>
               </Link>

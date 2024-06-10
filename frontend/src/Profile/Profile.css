@@ -62,9 +62,9 @@ h1, h3, p{
 /* Add Friend - Edit */
 
 .profile-userinfo .userinfo__edit {
-    height: 30px;
-    width: 30px;
-    padding: 3px;
+    height: 28px;
+    width: 28px;
+    padding: 4px;
     background: white;
     color: #826aed;
     border-radius: 50%;
@@ -76,7 +76,7 @@ h1, h3, p{
 }
 
 .profile-userinfo .userinfo__loading,
-.profile-userinfo .userinfo__is-friends {
+.profile-userinfo .userinfo__isfriends {
     display: flex;
     justify-content: center;
     width: 105px;
@@ -90,14 +90,14 @@ h1, h3, p{
     position: absolute;
 }
 
-.profile-userinfo .userinfo__is-friends:active {
+.profile-userinfo .userinfo__isfriends:active {
     background: #250939;
 }
-.profile-userinfo .userinfo__is-friends p {
+.profile-userinfo .userinfo__isfriends p {
     font-size: 14px;
     font-weight: 450;
 }
-.profile-userinfo .userinfo__is-friends svg {
+.profile-userinfo .userinfo__isfriends svg {
     height: 17px;
 }
 .profile-userinfo .userinfo__loading{
@@ -121,9 +121,7 @@ h1, h3, p{
     cursor: pointer;
 }
 
-.userinfo__friend-param .param__rp-friend,
-.userinfo__friend-param .param__rm-friend,
-.userinfo__friend-param .param__chat {
+.userinfo__friend-param .parameter {
     display: flex;
     padding: 0 8px;
     gap: 10px;
@@ -133,17 +131,12 @@ h1, h3, p{
     font-weight: 410;
     width: 100%;
     height: 100%;
-    /* border: #8edf34 1px solid; */
     text-decoration: none;
 }
-.userinfo__friend-param .param__rp-friend p,
-.userinfo__friend-param .param__rm-friend p,
-.userinfo__friend-param .param__chat p{
+.userinfo__friend-param .parameter p{
     cursor: pointer;
 }
-.userinfo__friend-param .param__rp-friend:hover,
-.userinfo__friend-param .param__rm-friend:hover,
-.userinfo__friend-param .param__chat:hover{
+.userinfo__friend-param .parameter:hover{
     background-color: #826aed;
 }
 
@@ -382,6 +375,7 @@ h1, h3, p{
     gap: 5px;
     height: 100%;
     width: 100%;
+    text-decoration: none;
     /* border: #826aed solid */
 }
 .classment__friend .friend__pic-name img {
