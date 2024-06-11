@@ -14,7 +14,3 @@ class customuser(AbstractUser):
 	is_active = models.BooleanField(default=True)
 	is_online = models.BooleanField(default=False)
 	is_playing = models.BooleanField(default=False)
-
-	def save(self, *args, **kwargs):
-		self.password = make_password(self.password)
-		super().save(*args, **kwargs)

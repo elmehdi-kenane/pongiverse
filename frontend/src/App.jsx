@@ -22,6 +22,7 @@ import SignInPage from './components/SignIn/SignInPage';
 import SignUpPage from './components/SignUp/SignUpPage';
 import SecondStep from './components/SignUp/SecondStep';
 import CreateTournament from './Tournament/CreateTournament';
+import JoinTournament from './Tournament/JoinTournament';
 import MessagesContainer from './Chat/MessagesPage';
 import OneVsOneRandom from './Game/OneVsOneRandom';
 import OneVsOneFriends from './Game/OneVsOneFriends';
@@ -54,6 +55,7 @@ const App = () => {
                       <Route path="game/solo/1vs1/create-or-join" element={<OneVsOneCreateOrJoin />} />
                       <Route path="play/1vs1/:roomID" element={<PlayMatch />} />
 					  <Route path="game/createtournament" element={<CreateTournament />} />
+					  <Route path="game/jointournament" element={<JoinTournament />} />
                     </Route>
                 </Routes>
           </AuthProvider>

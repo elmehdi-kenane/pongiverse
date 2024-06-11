@@ -50,4 +50,16 @@ class GameNotifications(models.Model):
 # room_id_manager = RoomIDManager()
 
 class Tournament(models.Model):
-	tournament_id = models.IntegerField(unique=True)
+	tournament_id = models.CharField(unique=True, max_length=255)
+	is_started = models.BooleanField(default=False)
+
+
+class TournamentMembers(models.Model):
+	user = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='tournament_member')
+	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='tournament')
+	is_owner = models.BooleanField(default=False)
+
+class TournamentInvitation(models.Model):
+	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='TournamentInvitation_tournament')
+	sender = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='sender')
+	receiver = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='receiver')

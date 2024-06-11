@@ -183,25 +183,14 @@ export const AuthProvider = ({children}) => {
 			newSocket.onopen = () => {
 				setSocket(newSocket)
 			}
-			newSocket.onmessage = (event) => {
-				let data = JSON.parse(event.data)
-				let type = data.type
-				// let message = data.message
-				let uname = data.username
-				console.log("THE TYPE IS : ", type)
-				// if (type === 'user_disconnected') {
-				// 	const currentAllGameFriends = allGameFriendsRef.current;
-				// 	console.log("user disconnected : ", allGameFriends)
-				// 	let uname = data.username
-				// 	setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname));
-				// }
-				// if (type === 'connected_again') {
-				// 	const currentAllGameFriends = allGameFriendsRef.current;
-				// 	console.log("user connected : ", allGameFriends)
-				// 	console.log("VISITED CONNECTED AGAIN")
-				// 	sendUserData(uname, currentAllGameFriends)
-				// }
-			}
+			// newSocket.onmessage = (event) => {
+			// 	let data = JSON.parse(event.data)
+			// 	let type = data.type
+			// 	console.log("THE TYPE IS : ", type)
+			// 	if (type === 'accepted_invitation'){
+			// 		console.log("IN AUTH CONTEXT")
+			// 	}
+			// }
 		} else if ((location.pathname === '/' || location.pathname === '/signup' || location.pathname === '/signin' || location.pathname === '/SecondStep' ||  location.pathname === '/WaysSecondStep' || location.pathname === '/ForgotPassword' || location.pathname === '/ChangePassword') && socket) {
 			if (socket) {
 				console.log("socket closed succefully")

@@ -29,7 +29,7 @@ function SignInWays() {
 		axios.post('https://api.intra.42.fr/oauth/token', {
 			grant_type: 'authorization_code',
 			client_id: CLIENT_ID,
-			client_secret: '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',
+			client_secret: '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',
 			code: code,
 			redirect_uri: REDIRECT_URI
 		}).then(response => {
