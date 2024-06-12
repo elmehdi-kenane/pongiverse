@@ -6,7 +6,6 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 import Loading from '../../Game/Loading';
 import FriendsParam from './FriendsParam';
-import Report from './Report';
 
 function IsFriends(){
     const [isLoading, setIsLoading] = useState(false);
@@ -83,7 +82,6 @@ function IsFriends(){
                 <p> Friends </p>
             </div>
             {isParam && <FriendsParam onRmFriend={handleRequestFriend}/>}
-            {/* {isReport && <Report />} */}
         </>
       )
     }
