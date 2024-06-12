@@ -6,15 +6,17 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 import Loading from '../../Game/Loading';
 import FriendsParam from './FriendsParam';
+import Report from './Report';
 
 function IsFriends(){
     const [isLoading, setIsLoading] = useState(false);
     const [isFriend, setIsFriend] = useState('true');
+    
     const [isParam, setIsParam] = useState(false);
     const paramRef = useRef(null);
 
     const handleRequestFriend = () => {    
-      if (isFriend != 'pending'){
+      if (isFriend !== 'pending'){
           setIsLoading(true);
           setTimeout(() => {
               setIsLoading(false);
@@ -25,8 +27,10 @@ function IsFriends(){
           setIsFriend('pending');
       else if (isFriend === 'pending')
           setIsFriend('true');
-      else if (isFriend === 'true')
-          setIsFriend('false');
+      else if (isFriend === 'true'){
+        setIsParam(false);
+        setIsFriend('false');
+      }
     }
 
     const handleFriendParam = () => {
@@ -35,7 +39,7 @@ function IsFriends(){
 
     useEffect (() => {
       document.body.addEventListener('click', (event)=> {
-        if (paramRef.current && !event.composedPath().includes(paramRef.current)){
+        if (paramRef.current && !event.composedPath().includes(paramRef.current)) {
           setIsParam(false);
           // console.log("click outside Param");
           // console.log(event.composedPath);
@@ -78,7 +82,8 @@ function IsFriends(){
                 <HowToRegIcon />
                 <p> Friends </p>
             </div>
-            {isParam && <FriendsParam onRmFriend={handleRequestFriend} />}
+            {isParam && <FriendsParam onRmFriend={handleRequestFriend}/>}
+            {/* {isReport && <Report />} */}
         </>
       )
     }

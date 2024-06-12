@@ -2,6 +2,7 @@ import {React, useState} from 'react'
 import EditIcon from '@mui/icons-material/Edit';
 
 import IsFriends from './Helpers/IsFriends';
+import Report from './Helpers/Report';
 
 // import clan from "./assets/Frame.svg"
 // import clan4 from "./assets/Frame4.svg"
@@ -34,6 +35,7 @@ function ProfileInfo() {
         </div>
         <p className="userinfo__bio"> {bio} </p>
       </div>
+      <Report />
     </div>
   )
 }

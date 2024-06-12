@@ -7,6 +7,7 @@
     padding: 50px 50px 0;
     gap: 30px;
     overflow-y: scroll;
+    /* z-index: 1; */
 }
 
 img, 
@@ -49,6 +50,7 @@ h1, h3, p{
     padding: 0 10px;
     flex-shrink: 0;
     position: relative;
+    z-index: 1;
 
     background-position: center;
     background-size: cover;
@@ -110,7 +112,7 @@ h1, h3, p{
     display: flex;
     flex-direction: column;
     width: 140px;
-    height: 120px;
+    height: 80px;
     position: absolute;
     top: 40px;
     right: 10px;
@@ -119,6 +121,7 @@ h1, h3, p{
     background-color: rgb(0, 0, 0, 0.8);
     border-radius: 5px;
     cursor: pointer;
+    user-select: none;
 }
 
 .userinfo__friend-param .parameter {
@@ -140,7 +143,33 @@ h1, h3, p{
     background-color: #826aed;
 }
 
+/* Reporting User */
 
+.profile-userinfo .userinfo__report{
+    display: flex;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    border: #8edf34 1px solid;
+    width: 40px;
+    height: 40px;
+}
+
+
+.profile-userinfo .parameter__report {
+    display: flex;
+    width: 60%;
+    height: 400px;
+    position: absolute;
+    /* position: fixed; */
+    
+    top: 150px;
+    border: #826aed solid 1px;
+    border-radius: 5px;
+    background-color: gray;
+    z-index: 3;
+    backdrop-filter: blur(1000px);
+}
 
 
 
