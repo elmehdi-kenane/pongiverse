@@ -12,3 +12,4 @@
 backend/ft_trans/src/uploads
 backend/ft_trans/src/db.sqlite3
 /.vscode
+/.DS_Store
