@@ -1,15 +1,13 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 
-import chatSvg from "../../assets/navbar-sidebar/chat.svg"
+import ChatIcon from '@mui/icons-material/Chat';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
-import ReportIcon from '@mui/icons-material/Report';
-import FlagIcon from '@mui/icons-material/Flag';
+import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 
 
 function FriendsParam(props) {
-
 
     const handleRmFriend = () => {
         props.onRmFriend();
@@ -18,21 +16,21 @@ function FriendsParam(props) {
   return (
         <div className="userinfo__friend-param">
             <Link className='parameter' to='/mainpage/chat'>
-                <img src={chatSvg} alt='chatIcon'/>
+                <ChatIcon />
                 <p> Send Message </p>
+            </Link>
+            <Link className='parameter' to='/mainpage/game'>
+                <SportsEsportsIcon />
+                <p> Challenge </p>
             </Link>
             <div className="parameter" onClick={handleRmFriend}>
                 <PersonRemoveIcon />
                 <p> Remove Friend </p>
             </div>
-            {/* <div className="parameter">
-                <FlagIcon />
-                <p> Report </p>
-            </div>
             <div className="parameter">
                 <NoAccountsIcon />
                 <p> Block </p>
-            </div> */}
+            </div>
         </div>
   )
 }

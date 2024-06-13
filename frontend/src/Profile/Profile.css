@@ -80,30 +80,68 @@ h1, h3, p{
 .profile-userinfo .userinfo__loading,
 .profile-userinfo .userinfo__isfriends {
     display: flex;
-    justify-content: center;
-    width: 105px;
+    width: 115px;
     height: 30px;
+    align-items: center;
+    justify-content: center;
     background: #826aed;
     border-radius: 10px;
     color: white;
-    border: white 0.5px solid;
-    align-items: center;
-    gap: 2px;
+    border: white 1px solid;
     position: absolute;
 }
-
-.profile-userinfo .userinfo__isfriends:active {
-    background: #250939;
+.userinfo__isfriends .isfriends__icon-desc {
+    display: flex;
+    width: 80%;
+    align-items: center;
+    justify-content: center;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
-.profile-userinfo .userinfo__isfriends p {
+.profile-userinfo .isfriends__icon-desc p {
     font-size: 14px;
     font-weight: 450;
 }
-.profile-userinfo .userinfo__isfriends svg {
-    height: 17px;
+.profile-userinfo .isfriends__icon-desc svg {
+    height: 16px;
 }
+.userinfo__isfriends .adjust-addfriend{
+    height: 100%;
+}
+.userinfo__isfriends .adjust-addfriend,
+.userinfo__isfriends .adjust-addfriend p
+{
+    justify-content: flex-start;
+    font-size: 12px;
+}
+.userinfo__isfriends .adjust-addfriend:hover {
+    background: #250939;
+}
+
 .profile-userinfo .userinfo__loading{
     background: #250939;
+}
+
+.userinfo__isfriends .isfriends__menu {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 20%;
+    height: 100%;
+    border-left: white solid 1px;
+}
+.userinfo__isfriends .isfriends__menu svg {
+    height: 100%;
+    width: 100%;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.profile-userinfo .isfriends__menu:hover svg{
+    background: #250939;
+}
+.profile-userinfo .isfriends__menu:active svg{
+    color: #826aed;
 }
 
 /* Friends Parameter */
@@ -111,9 +149,7 @@ h1, h3, p{
 .profile-userinfo .userinfo__friend-param {
     display: flex;
     flex-direction: column;
-    width: 140px;
-    height: 80px;
-    /* height: 120px; */
+    /* width: 140px; */
     position: absolute;
     top: 40px;
     right: 10px;
@@ -134,11 +170,14 @@ h1, h3, p{
     font-size: 12px;
     font-weight: 410;
     width: 100%;
-    height: 100%;
+    height: 29px;
     text-decoration: none;
 }
 .userinfo__friend-param .parameter p{
     cursor: pointer;
+}
+.userinfo__friend-param .parameter svg{
+    height: 20px;
 }
 .userinfo__friend-param .parameter:hover{
     background-color: #826aed;
@@ -194,9 +233,15 @@ h1, h3, p{
     color: #826aed;
     top: 5px;
     right: 5px;
-    height: 35px;
-    width: 35px;
-    border: #8edf34 1px solid;
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+}
+
+.parameter__report .report__close svg{
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
 }
 
 
