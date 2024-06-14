@@ -112,7 +112,7 @@ h1, h3, p{
 .userinfo__isfriends .adjust-addfriend p
 {
     justify-content: flex-start;
-    font-size: 12px;
+    font-size: 12.5px;
 }
 .userinfo__isfriends .adjust-addfriend:hover {
     background: #250939;

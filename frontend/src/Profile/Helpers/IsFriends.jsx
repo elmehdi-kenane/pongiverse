@@ -6,26 +6,25 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 import Loading from '../../Game/Loading';
-// Params
-import FriendsParam from './FriendsParams/FriendsParam';
-import PendingParams from './FriendsParams/PendingParams';
-import AddFriendParams from './FriendsParams/AddFriendParams';
+import FriendsParam from './FriendsParam';
+
+const addfriendsPrm = ["chat", "challenge", "block"];
+const pendingPrm = ["chat", "challenge", "cancel", "block"];
+const friendPrm = ["chat", "challenge", "remove", "block"];
 
 function IsFriends(){
     const [isLoading, setIsLoading] = useState(false);
     const [isFriend, setIsFriend] = useState('false');
-    
+
     const [isParam, setIsParam] = useState(false);
     const paramRef = useRef(null);
 
-    const handleRequestFriend = (value) => {    
-      
+    const handleRequestFriend = (value) => {
       setIsParam(false);
       setIsLoading(true);
       setTimeout(() => {
           setIsLoading(false);
       }, 1200);
-
       setIsFriend(value);
     }
 
@@ -64,7 +63,7 @@ function IsFriends(){
                 <ArrowDropDownIcon />
               </div>
             </div> 
-            {isParam && <AddFriendParams onCnclRequest={() => {handleRequestFriend('false')}}/>}
+            {isParam && <FriendsParam Prm={addfriendsPrm} />}
           </>
       )
     }
@@ -80,7 +79,7 @@ function IsFriends(){
               <ArrowDropDownIcon />
             </div>
           </div>
-          {isParam && <PendingParams onCnclRequest={() => {handleRequestFriend('false')}}/>}
+          {isParam && <FriendsParam onCnclRequest={() => {handleRequestFriend('false')}} Prm={pendingPrm}/>}
         </>
       )
     }
@@ -96,7 +95,7 @@ function IsFriends(){
               <ArrowDropDownIcon />
             </div>
           </div>
-          {isParam && <FriendsParam onRmFriend={() => {handleRequestFriend('false')}}/>}
+          {isParam && <FriendsParam onRmFriend={() => {handleRequestFriend('false') }} Prm={friendPrm} />}
         </>
       )
     }
