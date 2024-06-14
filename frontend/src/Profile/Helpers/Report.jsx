@@ -20,7 +20,7 @@ function Report() {
       if (!event.composedPath().includes(reportRef.current)
       && !event.composedPath().includes(insideReportRef.current) ) {
         setIsReport(false);
-        console.log("Click Outside the Report");
+        // console.log("Click Outside the Report");
       }
     })
     

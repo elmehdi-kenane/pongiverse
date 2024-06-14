@@ -28,9 +28,9 @@ import { achv } from './data/achvData'
       <div className='userstate__friends purple-glass-stats'>
         <div className='userstate-header'><h1> Friends </h1> </div>
         <div className="userfriends__classment">
-        {rankData.map((player) => {
+        {rankData.map((player, key) => {
           return (
-            <div className='classment__friend'>
+            <div className='classment__friend' key={key}>
               <Link className="friend__pic-name">
                 <img src={player.img} alt='playerImg'/>
                 <p> {player.name} </p>
@@ -53,9 +53,9 @@ import { achv } from './data/achvData'
       <div className='userstate__achievements purple-glass-stats'>
         <div className='userstate-header'> <h1> Achievements </h1> </div>
         <div className="achievements__container">
-          { achv.map((ach) => {
+          { achv.map((ach, key) => {
             return (
-              <div className="achivement">
+              <div className="achivement" key={key}>
                 <img src={ach.image} alt='achievmentImg'/>
                 <div className="achivement__title-desc">
                   <h3> {ach.title} </h3>

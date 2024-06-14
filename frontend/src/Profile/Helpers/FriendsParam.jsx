@@ -57,15 +57,15 @@ function FriendsParam(props) {
     
     return (
         <div className="userinfo__friend-param">
-            {friendsPrm.map((prm) => {
+            {friendsPrm.map((prm, key) => {
                 return (
-                    <>
+                    <div key={key}>
                         {prm === "chat" && chatJsx}
                         {prm === "challenge" && challengeJsx}
                         {prm === "cancel" && cancelJsx}
                         {prm === "remove" && removeJsx}
                         {prm === "block" && blockJsx}
-                    </>
+                    </ div>
                 )
             })}
         </div>
