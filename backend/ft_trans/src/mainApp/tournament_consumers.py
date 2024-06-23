@@ -23,6 +23,7 @@ async def disconnected(self, user_channels):
 	if user_id:
 		user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
 		username = user.username
+		tmp_username = username
 		user.is_online = False
 		await sync_to_async(user.save)()
 		user_channels.pop(username, None)
@@ -44,6 +45,16 @@ async def disconnected(self, user_channels):
 						}
 					}
 				)
+		for username, channel_name in user_channels.items():
+			await self.channel_layer.send(
+				channel_name,
+				{
+					'type': 'user_disconnected',
+					'message': {
+						'user': tmp_username
+					}
+				}
+			)
 
 async def create_tournament(self, data, user_channels):
 	username = data['message']['user']

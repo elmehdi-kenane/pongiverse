@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 const client = axios.create({
-baseURL: "http://localhost:8000",	
+baseURL: "http://localhost:8000",
 });
 
 function SecondStep() {
@@ -22,7 +22,7 @@ function SecondStep() {
 	const [errors, setErrors] = useState({})
 	const location = useLocation();
 	const data = location.state || {};
-	const [exist, setExist] = useState(false);		
+	const [exist, setExist] = useState(false);
 	const handleInputChange = (e) => {
 		e.preventDefault();
 		if (e.target.name === 'avatar') {
@@ -112,3 +112,4 @@ function SecondStep() {
 }
 
 export default SecondStep;
+

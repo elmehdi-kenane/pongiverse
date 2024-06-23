@@ -209,6 +209,10 @@ def get_notifications(request):
 
 @api_view(['POST'])
 def get_tournament_data(request):
+	username = 'hmed'
+	user = customuser.objects.filter(username=username).first()
+	if user is not None:
+		print(f"AVATARR : {user.avatar.path}")
 	tournament_id = request.data.get('id')
 	response = Response()
 	my_tournament = Tournament.objects.filter(tournament_id=tournament_id).first()

@@ -27,6 +27,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		user_id = payload_data.get('user_id')
 		user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
 		username = user.username
+		tmp_username = username
 		user.is_online = True
 		await sync_to_async(user.save)()
 		user_channels[username] = self.channel_name
@@ -70,6 +71,23 @@ class ChatConsumer(AsyncWebsocketConsumer):
 							}
 					}
 				)
+		for username, channel_name in user_channels.items():
+			user = await sync_to_async(customuser.objects.filter(username=username).first)()
+			await self.channel_layer.send(
+				channel_name,
+				{
+					'type': 'connected_again_tourn',
+					'message': {
+						'user': tmp_username,
+						'userInfos': {
+							'id': user.id,
+							'name': user.username,
+							'level': 2,
+							'image': user.avatar.path,
+						}
+					}
+				}
+			)
 
 	async def receive(self, text_data):
 		data = json.loads(text_data)

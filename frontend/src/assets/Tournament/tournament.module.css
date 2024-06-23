@@ -52,7 +52,9 @@
 	gap: 1.5%;
 	margin-top: 3%;
 	margin-left: 8%;
+	align-items: center;
 }
+
 
 .little-line {
 	width: 1px;
@@ -62,6 +64,8 @@
 
 .tournament-id-title,
 .players-number-title {
+	display: inline;
+	white-space: nowrap;
 	font-size: 90%;
 	color: white;
 }
@@ -111,7 +115,6 @@
 	justify-content: center;
 	gap: 20px;
 	padding-top: 2%;
-	overflow: auto;
 	scrollbar-color: transparent transparent;
 	height: 600px;
 }

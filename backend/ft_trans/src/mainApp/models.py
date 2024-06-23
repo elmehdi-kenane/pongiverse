@@ -50,7 +50,7 @@ class GameNotifications(models.Model):
 # room_id_manager = RoomIDManager()
 
 class Tournament(models.Model):
-	tournament_id = models.CharField(unique=True, max_length=255)
+	tournament_id = models.IntegerField(unique=True)
 	is_started = models.BooleanField(default=False)
 
 

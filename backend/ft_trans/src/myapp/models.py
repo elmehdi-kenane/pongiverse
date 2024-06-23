@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 def default_image():
-	return '../avatar.png'
+	return 'uploads/avatar.png'
 
 class customuser(AbstractUser):
 	username = models.CharField(unique=True, max_length=100)

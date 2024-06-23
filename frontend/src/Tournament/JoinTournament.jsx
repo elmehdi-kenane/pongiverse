@@ -6,7 +6,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 function JoinTournament() {
 	const navigate = useNavigate()
-	const [data, setData] = useState('')
+	const [data, setData] = useState(0)
 	const { user, socket } = useContext(AuthContext)
 	const [tournamentSuggestions, setTournamentSuggestions] = useState([])
 	const [TournamentInfo, setTournamentInfo] = useState({
@@ -15,7 +15,8 @@ function JoinTournament() {
 	})
 	const handleInputChange = (e) => {
 		e.preventDefault();
-		setData(e.target.value);
+		const value = e.target.value.replace(/\D/g, '');
+		setData(value);
 	};
 	const handleAccept = async () => {
 		if (socket && socket.readyState === WebSocket.OPEN) {
@@ -69,7 +70,7 @@ function JoinTournament() {
 				else if (type === 'tournament_destroyed_by_user') {
 					let tournament_id = data.message.tournament_id
 					console.log("DESTROY : ", tournament_id)
-					setTournamentSuggestions((prevTournamentSuggestions) => prevTournamentSuggestions.filter((member) => member.tournament_id != tournament_id));
+					setTournamentSuggestions((prevTournamentSuggestions) => prevTournamentSuggestions.filter((member) => member.tournament_id !== tournament_id));
 				}
 				else if (type === 'user_leave_tournament' || type === 'user_kicked_from_tournament') {
 					let tournament_id = data.message.tournament_id
@@ -133,7 +134,7 @@ function JoinTournament() {
 			<div className={styles['search']}>
 				<div className={styles['input-and-icon']}>
 					<SearchIcon className={styles['search-icon']} />
-					<input className={styles['search-input']} type="text" name='data' value={data} pattern="\d*" onChange={handleInputChange} placeholder='Search' />
+					<input className={styles['search-input']} type="text" name='data' value={data} onChange={handleInputChange} placeholder='Search' />
 				</div>
 				<div>
 					{
@@ -154,7 +155,7 @@ function JoinTournament() {
 				{
 					tournamentSuggestions.length > 0 && tournamentSuggestions.map((tournament) => {
 						return (
-							<div className={styles['table-th']} key={tournament.owner}>
+							<div className={styles['table-th']} key={tournament.tournament_id}>
 								<h4>{tournament.tournament_id}</h4>
 								<h4>{tournament.owner}</h4>
 								<h4>{tournament.size}/16</h4>

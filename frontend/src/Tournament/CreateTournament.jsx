@@ -307,7 +307,6 @@ function CreateTournament() {
 						<div className={styles["tournament-id"]}>
 							<h4 className={styles["tournament-id-title"]}>Tournament ID:</h4>
 							<h5 className={styles["tournament-id-value"]}>{tournamentId}</h5>
-
 						</div>
 						<div className={styles["little-line"]}></div>
 						<div className={styles["players-number"]}>
