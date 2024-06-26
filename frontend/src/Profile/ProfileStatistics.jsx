@@ -7,7 +7,8 @@ import Pagination from "../Dashboard/helpers/Pagination"
 import BarGraph from "../Dashboard/charts/BarGraph"
 import { profileLevel } from './data/ProfileDataLevel';
 
-import DashboardHead from '../Dashboard/DashboardHead'
+// import DashboardHead from '../Dashboard/DashboardHead'
+
 
 import { achv } from './data/achvData'
 

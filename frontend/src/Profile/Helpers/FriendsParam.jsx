@@ -9,7 +9,6 @@ import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 
 
 function FriendsParam(props) {
-
     const friendsPrm = props.Prm;
 
     const handleRmFriend = () => {
@@ -19,42 +18,39 @@ function FriendsParam(props) {
         props.onCnclRequest();
     }
     
+    // Params JSX -----------------------
     const chatJsx = (
         <Link className='parameter' to='/mainpage/chat'>
             <ChatIcon />
             <p> Send Message </p>
         </Link>
     );
-
     const challengeJsx = (
         <Link className='parameter' to='/mainpage/game'>
             <SportsEsportsIcon />
             <p> Challenge </p>
         </Link>
     );
-
-
     const cancelJsx = (
         <div className="parameter" onClick={handleCnclRequest}>
             <CancelScheduleSendIcon />
             <p> Cancel Request </p>
         </div>
     )
-
     const removeJsx = (
         <div className="parameter" onClick={handleRmFriend}>
             <PersonRemoveIcon />
             <p> Remove Friend </p>
         </div>
     )
-
     const blockJsx = (
         <div className="parameter">
             <NoAccountsIcon />
             <p> Block </p>
         </div>
     );
-    
+    // ------------------------------------------
+
     return (
         <div className="userinfo__friend-param">
             {friendsPrm.map((prm, key) => {

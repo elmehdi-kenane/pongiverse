@@ -5,7 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 function ReportContent(props) {
 
     const handleClick = () => {
-        props.handleClick(false);
+        props.handleClick();
     }
 
   return (

@@ -1,4 +1,4 @@
-import {React, useState} from 'react'
+import {React} from 'react'
 import EditIcon from '@mui/icons-material/Edit';
 
 import IsFriends from './Helpers/IsFriends';
@@ -9,12 +9,13 @@ import Report from './Helpers/Report';
 import clan5 from "./assets/Frame5.svg"
 import mavSvg from "./assets/Group.svg"
 import bg1 from "./assets/bg1.jpg"
-import bg2 from "./assets/bg2.jpg"
+// import bg2 from "./assets/bg2.jpg"
 
 function ProfileInfo() {
 
     const bio = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim."
-    const [isOwnProfile, setIsOwnProfile] = useState(false);
+    // const [isOwnProfile, setIsOwnProfile] = useState(false);
+    const isOwnProfile = false;
 
   return (
     <div className="profile-userinfo purple-glass" style={{backgroundImage: `url(${bg1})`}}>

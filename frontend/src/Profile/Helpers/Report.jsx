@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import ReportContent from './ReportContent';
 
 import ReportIcon from '@mui/icons-material/Report';
-import FlagIcon from '@mui/icons-material/Flag';
+// import FlagIcon from '@mui/icons-material/Flag';
 
 function Report() {
 
@@ -42,7 +42,7 @@ function Report() {
     <div className="userinfo__report" onClick={handleReportClick} ref={reportRef}>
       <ReportIcon />
     </div>
-      {isReport && <ReportContent ReportRef={insideReportRef} handleClick={setIsReport} /> }
+      {isReport && <ReportContent ReportRef={insideReportRef} handleClick={()=>{setIsReport(false);}} /> }
     </>
   )
 }

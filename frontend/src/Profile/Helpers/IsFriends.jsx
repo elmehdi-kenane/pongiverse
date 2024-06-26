@@ -37,7 +37,7 @@ function IsFriends(){
         if (paramRef.current && !event.composedPath().includes(paramRef.current)) {
           setIsParam(false);
           // console.log("click outside Param");
-          // console.log(event.composedPath);
+          // console.log(event.composedPath());
         }
       })
     }, [])
@@ -86,7 +86,7 @@ function IsFriends(){
     else if (isFriend === 'true' ){
       return (
         <>
-          <div className="userinfo__isfriends no-select info-position ">
+          <div className="userinfo__isfriends no-select info-position">
             <div className="isfriends__icon-desc">
               <HowToRegIcon />
               <p> Friends </p>
