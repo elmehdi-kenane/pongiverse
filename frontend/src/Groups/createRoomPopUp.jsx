@@ -152,8 +152,8 @@ const CreateRoom = (props) => {
             <img src={ChatIcons.PlaceHolder} alt=""  className="default-room-avatar"/>
           </div>
           <div className="create-room-btns">
-            <button className="create-room">CREATE</button>
             <button onClick={props.onClose} className="cancel-create-room">CANCEL</button>
+            <button className="create-room">CREATE</button>
           </div>
       </div>
   );
