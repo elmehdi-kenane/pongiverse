@@ -10,4 +10,6 @@ urlpatterns = [
 	path('create_tournament', views.create_tournament, name='create_tournament'),
     path('notifsFriends', views.notifs_friends, name='notifs_friends'),
     path('getUserImage', views.user_image, name='image'),
+    path('customizeGame', views.customize_game, name='image'),
+    path('getCustomizeGame', views.get_customize_game, name='image'),
 ]

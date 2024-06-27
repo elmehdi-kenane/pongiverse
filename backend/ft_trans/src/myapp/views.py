@@ -151,6 +151,7 @@ class VerifyTokenView(APIView):
 			token = request.COOKIES.get('token')
 			decoded_token = AccessToken(token)
 			data = decoded_token.payload
+			# print(data)
 			if not data.get('user_id'):
 				# if username:
 				# 	user = customuser.objects.filter(username=username).first()

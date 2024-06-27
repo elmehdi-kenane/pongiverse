@@ -9,7 +9,7 @@ import { Outlet } from 'react-router-dom'
 function NavbarSidebar() {
     const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
     const [searchbar, setSearchBar] = useState(false);
-    let { user, privateCheckAuth, setUser } = useContext(AuthContext)
+    let { user, privateCheckAuth, setUser, hideNavSideBar } = useContext(AuthContext)
     let navigate = useNavigate()
     
     useEffect(() => {
@@ -53,18 +53,18 @@ function NavbarSidebar() {
     }
     return (
       <>
-          <Navbar
+          {!hideNavSideBar && (<Navbar
               Icons={Icons}
               searchbar={searchbar}
               setSearchBar={setSearchBar}
               handleSearchBar={handleSearchBar}
-          />
-          <div className='sidebarWrapper'>
-            <Sidebar
+          />)}
+          {<div className='sidebarWrapper'>
+            {!hideNavSideBar && (<Sidebar
                 Icons={Icons}
-            />
+            />)}
             <Outlet />
-          </div>
+          </div>}
       </>
     );
 }

@@ -98,9 +98,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		elif data['type'] == 'moveKeyMp': await gameMultiplayerConsumers.move_paddle_mp(self, data, rooms)    #### 2V2
 		elif data['type'] == 'moveMouseMp':await gameMultiplayerConsumers.move_mouse_mp(self, data, rooms)    #### 2V2
 		elif data['type'] == 'playerChangedPageMp': await gameMultiplayerConsumers.changed_page_mp(self, data, rooms)    #### 2V2
+		elif data['type'] == 'playerMovedOutMp': await gameMultiplayerConsumers.moved_out_mp(self, data, rooms)    #### 2V2
 		elif data['type'] == 'userExitedMp': await gameMultiplayerConsumers.user_exited_mp(self, data, rooms)    #### 2V2
 		elif data['type'] == 'inviteFriendGameMp': await gameMultiplayerConsumers.invite_friend_mp(self, data, rooms, user_channels)
 		elif data['type'] == 'acceptInvitationMp': await gameMultiplayerConsumers.accept_game_invite_mp(self, data, rooms, user_channels)
+		elif data['type'] == 'createRoomMp': await gameMultiplayerConsumers.create_new_room_mp(self, data, rooms, user_channels)
+		elif data['type'] == 'checkingRoomCodeMp': await gameMultiplayerConsumers.join_new_room_mp(self, data, rooms, user_channels)
 
 	async def disconnect(self, close_code):
 		await tournament_consumers.disconnected(self, user_channels)
@@ -201,6 +204,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	async def sendPlayerNo(self, event):
 		await self.send(text_data=json.dumps({
 			'type': 'playerNo',
+			'message': event['message']
+		}))
+
+	async def creatorOut(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'creatorOut',
 			'message': event['message']
 		}))
 
