@@ -142,7 +142,7 @@ const Rooms = () => {
             </div>
           </div>
           {/* channels invitations*/}
-          <div className="rooms-header">Channels Invitations</div>
+          <div className="rooms-header room-header-invitation">Channels Invitations</div>
           <div className="invitation-room-row">
             <img
               src={ChatIcons.leftHand}

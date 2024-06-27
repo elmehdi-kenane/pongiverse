@@ -7,6 +7,8 @@ const MyRoom = () => {
   const [changeRoomName, setChangeRoomName] = useState(false);
   const [updateRoomAvatar, setUpdateRoomAvatar] = useState(false);
   const [deleteRoom, setDeletRoom] = useState(false);
+  const [addRoomAdmin, setAddRoomAdmin] = useState(false);
+  const [inviteMember, setInviteMember] = useState(false);
   const showRoomSettings = () => {
     console.log("i clicked show settings");
     setShowSettings(true);
@@ -42,49 +44,115 @@ const MyRoom = () => {
               className="close-setting-btn"
               onClick={() => setShowSettings(false)}
             />
-            <div className="change-room-name" onClick={()=>setChangeRoomName(true)}>Change Room Name</div>
-            <div className="update-room-avatar" onClick={()=>setUpdateRoomAvatar(true)}>Update Room Avatar</div>
-            <div className="add-room-admin">Add Room Admin</div>
-            <div className="invite-member-room">Invite a Member</div>
-            <div className="delete-room" onClick={()=>setDeletRoom(true)}>Delete Room</div>
+            <div
+              className="change-room-name"
+              onClick={() => setChangeRoomName(true)}
+            >
+              Change Room Name
+            </div>
+            <div
+              className="update-room-avatar"
+              onClick={() => setUpdateRoomAvatar(true)}
+            >
+              Update Room Avatar
+            </div>
+            <div
+              className="add-room-admin"
+              onClick={() => setAddRoomAdmin(true)}
+            >
+              Add Room Admin
+            </div>
+            <div
+              className="invite-member-room"
+              onClick={() => setInviteMember(true)}
+            >
+              Invite a Member
+            </div>
+            <div className="delete-room" onClick={() => setDeletRoom(true)}>
+              Delete Room
+            </div>
           </div>
         </div>
       )}
-      {
-        changeRoomName && 
+      {changeRoomName && (
         <div className="change-room-name-container">
           <div className="change-room-name-head">Enter Room Name</div>
-          <input type="text"  className="change-room-name-input"/>
+          <input type="text" className="change-room-name-input" />
           <div className="change-room-name-btns">
-            <button onClick={()=>setChangeRoomName(false)}>Cancel</button>
-            <button >Save</button>
+            <button onClick={() => setChangeRoomName(false)}>Cancel</button>
+            <button>Save</button>
           </div>
         </div>
-      }
-      {
-        updateRoomAvatar && 
+      )}
+      {updateRoomAvatar && (
         <div className="update-room-avate-container">
           <div className="upload-room-avatar-container">
-            <img src={ChatIcons.RoomIcon} alt=""  className="live-updated-room-avatar"/>
-            <label for='update-room-image' id="upate-room-image-label">Select an Image</label>
-            <input type="file" name="avatar" accept="image/png, image/jpeg" id='update-room-image' />
+            <img
+              src={ChatIcons.RoomIcon}
+              alt=""
+              className="live-updated-room-avatar"
+            />
+            <label for="update-room-image" id="upate-room-image-label">
+              Select an Image
+            </label>
+            <input
+              type="file"
+              name="avatar"
+              accept="image/png, image/jpeg"
+              id="update-room-image"
+            />
           </div>
           <div className="update-room-avatar-btns">
-            <button onClick={()=>setUpdateRoomAvatar(false)}>Cancel</button>
-            <button >Save</button>
+            <button onClick={() => setUpdateRoomAvatar(false)}>Cancel</button>
+            <button>Save</button>
           </div>
         </div>
-      }
-      {
-        deleteRoom && 
+      )}
+      {addRoomAdmin && (
+        <div className="add-room-admin-container">
+          <img
+            src={ChatIcons.closeButton}
+            alt=""
+            className="add-admin-close-btn"
+            onClick={() => setAddRoomAdmin(false)}
+          />
+          <div className="add-room-member-list">
+            <div className="add-admin-member-infos">
+              <img src={ChatIcons.mmaqbourImage} alt="" className="invite-room-member-image"/>
+              <div className="add-admin-member-name">Mohammed</div>
+            </div>
+            <button className="add-room-admin-btn">Add Admin</button>
+          </div>
+        </div>
+      )}
+      {/* {inviteMember && (
+        <div className="invite-room-member-container">
+          <img
+            src={ChatIcons.closeButton}
+            alt=""
+            className="invite-member-close-btn"
+            onClick={() => setInviteMember(false)}
+          />
+          <div className="invite-room-member-list">
+            <div className="invite-member-infos">
+              <img src={ChatIcons.mmaqbourImage} alt="" className="invite-room-member-image"/>
+              <div className="add-admin-member-name">Mohammed</div>
+            </div>
+            <button className="invite-room-member-btn">Invite</button>
+          </div>
+        </div>
+      )} */}
+      {deleteRoom && (
         <div className="delete-room-container">
-          <div className="delete-room-head">Are You Sure You Wanna Delete Room</div>
+          <div className="delete-room-head">
+            Are You Sure You Wanna Delete Room
+          </div>
           <div className="delete-room-btns">
-            <button onClick={()=>setDeletRoom(false)}>Cancel</button>
-            <button >Delete</button>
+            <button onClick={() => setDeletRoom(false)}>Cancel</button>
+            <button>Delete</button>
           </div>
         </div>
-      }
+      )}
       {leaveRoom && (
         <div className="leave-room-container">
           <div className="confirmation-text">
