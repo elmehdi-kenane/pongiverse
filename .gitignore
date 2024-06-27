@@ -1,4 +1,5 @@
 /venv
+/env
 /backend/ft_trans/src/chat/__pycache__
 /backend/ft_trans/src/ft_transcandence/__pycache__
 /backend/ft_trans/src/mainApp/__pycache__
