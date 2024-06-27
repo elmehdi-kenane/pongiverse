@@ -24,6 +24,10 @@ export const AuthProvider = ({children}) => {
 	let [notifsImgs, setNotifsImgs] = useState([])
 	let allGameFriendsRef = useRef(allGameFriends)
 
+	// Profile States
+
+	
+
 	let [hideNavSideBar, setHideNavSideBar] = useState(false)
 	let [gameCustomize, setGameCustomize] = useState(['#FFFFFF', '#1C00C3', '#5241AB', false])
 	const oneVsOneIdRegex = /^\/mainpage\/play\/1vs1\/\d+$/
