@@ -24,6 +24,11 @@ export const AuthProvider = ({children}) => {
 	let [notifsImgs, setNotifsImgs] = useState([])
 	let allGameFriendsRef = useRef(allGameFriends)
 
+	let [hideNavSideBar, setHideNavSideBar] = useState(false)
+	let [gameCustomize, setGameCustomize] = useState(['#FFFFFF', '#1C00C3', '#5241AB', false])
+	const oneVsOneIdRegex = /^\/mainpage\/play\/1vs1\/\d+$/
+	const twoVsTwoIdRegex = /^\/mainpage\/play\/2vs2\/\d+$/
+
 	useEffect(() => {
 		allGameFriendsRef.current = allGameFriends;
 	}, [allGameFriends]);
@@ -138,19 +143,42 @@ export const AuthProvider = ({children}) => {
 				console.log("something wrong with fetch")
 			}
 		}
+		
+		const getGameCustomize = async () => {
+			try {
+				let response = await fetch('http://localhost:8000/api/getCustomizeGame', {
+					credentials: 'include'
+				})
+				const res = await response.json()
+				console.log(res)
+				if (res.data)
+					setGameCustomize(res.data)
+			} catch (e) {
+				console.log("something wrong with fetch")
+			}
+		}
 
 		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && location.pathname !== '/game/solo/1vs1/friends' && location.pathname !== '/game/solo/1vs1/random' && user && !allGameNotifs.length)
 			getAllNotifsFriends()
 		else
 			setAllGameNotifs([])
 
-		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && user && !userImg)
-			getUserImage()
-
 		if ((location.pathname === '/mainpage/game/solo/1vs1/friends' || location.pathname === '/mainpage/game/createtournament' || location.pathname === '/mainpage/game/solo/2vs2/friends') && user)
 			getAllGameFriends()
 		else
 			setAllGameFriends([])
+
+		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && user && !userImg)
+			getUserImage()
+
+		if ((location.pathname === '/mainpage/game/board' || oneVsOneIdRegex.test(location.pathname) || twoVsTwoIdRegex.test(location.pathname)) && user)
+			getGameCustomize()
+
+		if (oneVsOneIdRegex.test(location.pathname) || twoVsTwoIdRegex.test(location.pathname))
+			setHideNavSideBar(true)
+		else
+			setHideNavSideBar(false)
+
 	}, [location.pathname, user])
 
 	useEffect(() => {
@@ -275,7 +303,9 @@ export const AuthProvider = ({children}) => {
 		userImages: userImages,
 		setAllGameNotifs: setAllGameNotifs,
 		allGameNotifs: allGameNotifs,
-		notifsImgs: notifsImgs
+		notifsImgs: notifsImgs,
+		gameCustomize: gameCustomize,
+		hideNavSideBar: hideNavSideBar
 		// gameNotif: gameNotif
 	}
 

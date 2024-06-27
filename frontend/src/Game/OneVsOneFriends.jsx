@@ -29,6 +29,11 @@ const OneVsOneFriends = () => {
 		userImages, setAllGameFriends } = useContext(AuthContext)
 	const allGameFriendsRef = useRef(allGameFriends);
 
+	let isOut = false
+	const userRef = useRef(user)
+    const roomIdRef = useRef(tmpRoomID)
+    const socketRef = useRef(socket)
+
     useEffect(() => {
         privateCheckAuth()
     }, [])
@@ -181,7 +186,10 @@ const OneVsOneFriends = () => {
 
 	useEffect(() => {
 		allGameFriendsRef.current = allGameFriends;
-	}, [allGameFriends]);
+		userRef.current = user;
+		roomIdRef.current = tmpRoomID;
+		socketRef.current = socket;
+	}, [allGameFriends, user, tmpRoomID, socket]);
 
 	// useEffect(() => {
 	//     console.log(allGameFriends)
@@ -227,6 +235,49 @@ const OneVsOneFriends = () => {
 	const expandFriendsList = () => {
 		setExpandFriends(!expandFriends)
 	}
+	
+	useEffect(() => {
+        return () => {
+            if (isOut) {
+                const user = userRef.current
+                const socket = socketRef.current
+                const roomID = roomIdRef.current
+                console.log("USER IS GETTING OUT ", user, roomID, socket)
+                if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
+                    socket.send(JSON.stringify({
+                        type: 'quit',
+                        message: {
+                            user: user,
+                            id: roomID
+                        }
+                    }))
+                }
+            } else
+                isOut = true
+        }
+    }, [])
+
+	useEffect(() => {
+        const handleBeforeUnload = (event) => {
+            const user = userRef.current
+            const socket = socketRef.current
+            const roomID = roomIdRef.current
+            console.log("INSIDE THE MATCH : ", user, roomID, socket)
+            if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
+                socket.send(JSON.stringify({
+                    type: 'quit',
+                    message: {
+                        user: user,
+                        id: roomID
+                    }
+                }))
+            }
+        }
+        window.addEventListener('beforeunload', handleBeforeUnload)
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload)
+        }
+    }, [])
 
 	return (
 		<div className='onevsone'>

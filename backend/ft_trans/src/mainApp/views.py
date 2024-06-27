@@ -4,8 +4,10 @@ from rest_framework.response import Response
 from myapp.models import customuser
 from chat.models import Friends
 from .models import Tournament
+from .models import GameCustomisation
 import random
 from myapp.serializers import MyModelSerializer
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError, AccessToken
 # from rest_framework.exceptions import AuthenticationFailed
 # from .serializers import UserSerializer
 # from .models import User
@@ -151,3 +153,53 @@ def user_image(request):
 				return HttpResponse(image_file.read(), content_type='image/jpeg')
 	else:
 		return Response({'message': 'user not exit in the database'})
+
+@api_view(['POST'])
+def customize_game(request):
+	paddle_color = request.data['paddle']
+	ball_color = request.data['ball']
+	board_color = request.data['board']
+	ball_effect = request.data['effect']
+	username = request.data['username']
+	print(f"THE SELF OBJECT IS : {request.COOKIES.get('token')}")
+	user = customuser.objects.filter(username=username).first()
+	if user:
+		print(request.data)
+		game_customize = GameCustomisation.objects.filter(user=user).first()
+		if game_customize:
+			game_customize.paddle_color = paddle_color
+			game_customize.ball_color = ball_color
+			game_customize.board_color = board_color
+			game_customize.ball_effect = ball_effect
+			game_customize.save()
+			return Response({'message': 'updated successfully'})
+		GameCustomisation.objects.create(
+			user=user,
+			paddle_color=paddle_color,
+			ball_color=ball_color,
+			board_color=board_color,
+			ball_effect=ball_effect
+		)
+		return Response({'message': 'updated successfully'})
+		# return Response({'message': 'row not created yet'})
+	else:
+		return Response({'message': 'user not exit in the database'})
+
+@api_view(['GET'])
+def get_customize_game(request):
+	try:
+		print(f"THE SELF OBJECT IS : {request.COOKIES.get('token')}")
+		token = request.COOKIES.get('token')
+		decoded_token = AccessToken(token)
+		data = decoded_token.payload
+		print(data)
+		if data.get('user_id'):
+			user = customuser.objects.filter(id=data['user_id']).first()
+			if user is not None:
+				game_customize = GameCustomisation.objects.filter(user=user).first()
+				if game_customize:
+					return Response({'data' : [game_customize.paddle_color, game_customize.ball_color, game_customize.board_color, game_customize.ball_effect]})
+				return Response({'data' : ['blue', 'red', 'black']})
+		return Response({'data' : None})
+	except TokenError as e:
+		return Response({'data' : None})

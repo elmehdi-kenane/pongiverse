@@ -20,6 +20,11 @@ const OneVsOneRandom = () => {
         socketRecreated, setSocketRecreated,
         userImg, loading } = useContext(AuthContext)
     
+    let isOut = false
+    const userRef = useRef(user)
+    const roomIdRef = useRef(roomID)
+    const socketRef = useRef(socket)
+
     useEffect(() => {
         privateCheckAuth()
     }, [])
@@ -119,8 +124,14 @@ const OneVsOneRandom = () => {
 
     }, [socket, user, allSet, roomID, alreadyChecked])
 
+    useEffect(() => {
+		userRef.current = user;
+		roomIdRef.current = roomID;
+		socketRef.current = socket;
+	}, [user, roomID, socket]);
+
     const cancelTheGame = () => {
-        if (socket && socket.readyState === WebSocket.OPEN && user) {
+        if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
             socket.send(JSON.stringify({
                 type: 'quit',
                 message: {
@@ -132,6 +143,49 @@ const OneVsOneRandom = () => {
         } else
             console.log('socket is null or not open, refresh')
     }
+
+    useEffect(() => {
+        return () => {
+            if (isOut) {
+                const user = userRef.current
+                const socket = socketRef.current
+                const roomID = roomIdRef.current
+                console.log("USER IS GETTING OUT ", user, roomID, socket)
+                if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
+                    socket.send(JSON.stringify({
+                        type: 'quit',
+                        message: {
+                            user: user,
+                            id: roomID
+                        }
+                    }))
+                }
+            } else
+                isOut = true
+        }
+    }, [])
+
+    useEffect(() => {
+        const handleBeforeUnload = (event) => {
+            const user = userRef.current
+            const socket = socketRef.current
+            const roomID = roomIdRef.current
+            console.log("INSIDE THE MATCH : ", user, roomID, socket)
+            if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
+                socket.send(JSON.stringify({
+                    type: 'quit',
+                    message: {
+                        user: user,
+                        id: roomID
+                    }
+                }))
+            }
+        }
+        window.addEventListener('beforeunload', handleBeforeUnload)
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload)
+        }
+    }, [])
 
     return (
     <div className='onevsone'>

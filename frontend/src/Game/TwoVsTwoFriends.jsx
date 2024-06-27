@@ -33,6 +33,11 @@ const TwoVsTwoFriends = () => {
 		userImages, setAllGameFriends } = useContext(AuthContext)
 	const allGameFriendsRef = useRef(allGameFriends);
 
+	let isOut = false
+    const userRef = useRef(user)
+    const roomIdRef = useRef(tmpRoomID)
+    const socketRef = useRef(socket)
+
     useEffect(() => {
         privateCheckAuth()
     }, [])
@@ -307,7 +312,10 @@ const TwoVsTwoFriends = () => {
 	useEffect(() => {
 		allGameFriendsRef.current = allGameFriends;
 		playerNoRef.current = playerNo;
-	}, [allGameFriends, playerNo]);
+		userRef.current = user;
+		roomIdRef.current = tmpRoomID;
+		socketRef.current = socket;
+	}, [allGameFriends, playerNo, user, tmpRoomID, socket]);
 
 	// useEffect(() => {
 	//     console.log(allGameFriends)
@@ -315,7 +323,7 @@ const TwoVsTwoFriends = () => {
 
 	const cancelTheGame = () => {
 		// setSelectedFriends([])
-		if (socket && socket.readyState === WebSocket.OPEN && user) {
+		if (socket && socket.readyState === WebSocket.OPEN && user && tmpRoomID) {
 			console.log("inside quit")
 			socket.send(JSON.stringify({
 				type: 'quitMp',
@@ -354,6 +362,49 @@ const TwoVsTwoFriends = () => {
 	const expandFriendsList = () => {
 		setExpandFriends(!expandFriends)
 	}
+
+	useEffect(() => {
+        return () => {
+            if (isOut) {
+                const user = userRef.current
+                const socket = socketRef.current
+                const roomID = roomIdRef.current
+                console.log("USER IS GETTING OUT ", user, roomID, socket)
+                if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
+                    socket.send(JSON.stringify({
+                        type: 'quitMp',
+                        message: {
+                            user: user,
+                            id: roomID
+                        }
+                    }))
+                }
+            } else
+                isOut = true
+        }
+    }, [])
+
+	useEffect(() => {
+        const handleBeforeUnload = (event) => {
+            const user = userRef.current
+            const socket = socketRef.current
+            const roomID = roomIdRef.current
+            console.log("INSIDE THE MATCH : ", user, roomID, socket)
+            if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
+                socket.send(JSON.stringify({
+                    type: 'quitMp',
+                    message: {
+                        user: user,
+                        id: roomID
+                    }
+                }))
+            }
+        }
+        window.addEventListener('beforeunload', handleBeforeUnload)
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload)
+        }
+    }, [])
 
 	return (
 		<div className='twovstwo'>

@@ -6,19 +6,20 @@ from myapp.models import customuser
 import random
 
 class Match(models.Model):
-	mode = models.CharField(max_length=255)
-	room_id = models.PositiveBigIntegerField(unique=True)
-	team1_player1 = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='team1_player1')
-	team1_player2 = models.ForeignKey(customuser, on_delete=models.CASCADE, null=True, related_name='team1_player2')
-	team2_player1 = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='team2_player1')
-	team2_player2 = models.ForeignKey(customuser, on_delete=models.CASCADE, null=True, related_name='team2_player2')
-	team1_score = models.PositiveIntegerField(default=0)
-	team2_score = models.PositiveIntegerField(default=0)
-	team1_status = models.CharField(max_length=255)
-	team2_status = models.CharField(max_length=255)
-	date_started = models.DateTimeField(default=timezone.now)
-	date_ended = models.DateTimeField(default=timezone.now)
-	match_status = models.CharField(max_length=255)
+    mode = models.CharField(max_length=255)
+    room_id = models.PositiveBigIntegerField(unique=True)
+    team1_player1 = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='team1_player1')
+    team1_player2 = models.ForeignKey(customuser, on_delete=models.CASCADE, null=True, related_name='team1_player2')
+    team2_player1 = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='team2_player1')
+    team2_player2 = models.ForeignKey(customuser, on_delete=models.CASCADE, null=True, related_name='team2_player2')
+    team1_score = models.PositiveIntegerField(default=0)
+    team2_score = models.PositiveIntegerField(default=0)
+    team1_status = models.CharField(max_length=255)
+    team2_status = models.CharField(max_length=255)
+    date_started = models.DateTimeField(default=timezone.now)
+    date_ended = models.DateTimeField(default=timezone.now)
+    match_status = models.CharField(max_length=255)
+    duration = models.PositiveIntegerField(default=0)
 
 class ActiveMatch(models.Model):
     mode = models.CharField(max_length=255)
@@ -48,6 +49,13 @@ class GameNotifications(models.Model):
     user = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='notify_user')
     target = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='notify_target')
     mode = models.CharField(max_length=255)
+
+class GameCustomisation(models.Model):
+    user = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='customize_board')
+    paddle_color = models.CharField(max_length=255)
+    ball_color = models.CharField(max_length=255)
+    board_color = models.CharField(max_length=255)
+    ball_effect = models.BooleanField(default=False)
 # room_id_manager = RoomIDManager()
 
 class Tournament(models.Model):
