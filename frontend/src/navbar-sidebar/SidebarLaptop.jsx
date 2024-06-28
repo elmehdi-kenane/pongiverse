@@ -1,8 +1,14 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 
+import AuthContext from "./Authcontext";
+
 function SidebarLaptop({ Icons }) {
+
+    const {isReport} = useContext(AuthContext);
+
     return (
-        <div className="sidebar blur">
+        <div className={isReport ?"profile-blur sidebar":"sidebar blur"}>
             <div className="sidebar-navigations" id="sidebar-dashboard">
                 <div className="sidebar-icons">
                     <Link to="dashboard">
