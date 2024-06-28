@@ -1,18 +1,25 @@
-import {React} from 'react'
+import {React, useContext} from 'react'
 
 import ProfileInfo from './ProfileInfo';
 import ProfileLevel from './ProfileLevel';
 import ProfileStatistics from './ProfileStatistics'
+import AuthContext from '../navbar-sidebar/Authcontext';
+import ReportContent from "./Report/ReportContent"
 import "./Profile.css"
 
 function Profile() {
   
+  const {isReport} = useContext(AuthContext);
+
   return (
-    <div className='profile-page'>
-        <ProfileInfo />
-        <ProfileLevel />
-        <ProfileStatistics />
-    </div>
+    <>
+      {isReport && <ReportContent /> }
+      <div className={isReport?'profile-page profile-blur':'profile-page'}>
+          <ProfileInfo />
+          <ProfileLevel />
+          <ProfileStatistics />
+      </div>
+    </>
   )
 }
 

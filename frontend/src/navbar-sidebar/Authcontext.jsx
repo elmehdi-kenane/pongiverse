@@ -24,8 +24,9 @@ export const AuthProvider = ({children}) => {
 	let [notifsImgs, setNotifsImgs] = useState([])
 	let allGameFriendsRef = useRef(allGameFriends)
 
-	// Profile States
-
+	// Profile States --------------------------------------------
+	const [isReport, setIsReport] = useState(false);
+	const reportContentRef = useRef(null);
 	
 
 	let [hideNavSideBar, setHideNavSideBar] = useState(false)
@@ -309,7 +310,10 @@ export const AuthProvider = ({children}) => {
 		allGameNotifs: allGameNotifs,
 		notifsImgs: notifsImgs,
 		gameCustomize: gameCustomize,
-		hideNavSideBar: hideNavSideBar
+		hideNavSideBar: hideNavSideBar,
+		isReport: isReport,
+		setIsReport: setIsReport,
+		reportContentRef: reportContentRef,
 		// gameNotif: gameNotif
 	}
 

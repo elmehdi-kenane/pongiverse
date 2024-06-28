@@ -1,8 +1,8 @@
 import {React} from 'react'
 import EditIcon from '@mui/icons-material/Edit';
 
-import IsFriends from './Helpers/IsFriends';
-import Report from './Helpers/Report';
+import IsFriends from './FriendOptions/IsFriends';
+import Report from './Report/Report';
 
 // import clan from "./assets/Frame.svg"
 // import clan4 from "./assets/Frame4.svg"

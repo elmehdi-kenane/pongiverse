@@ -1,15 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react'
-
-import ReportContent from './ReportContent';
+import React, { useState, useEffect, useRef, useContext } from 'react'
 
 import ReportIcon from '@mui/icons-material/Report';
-// import FlagIcon from '@mui/icons-material/Flag';
+import AuthContext from '../../navbar-sidebar/Authcontext';
 
 function Report() {
 
-  const [isReport, setIsReport] = useState(false);
+  const {isReport} = useContext(AuthContext);
+  const {setIsReport} = useContext(AuthContext);
+  
   const reportRef = useRef(null);
-  const insideReportRef = useRef(null);
+  const {reportContentRef} = useContext(AuthContext);
+
   const handleReportClick = () => {
     setIsReport(!isReport)
   }
@@ -18,12 +19,11 @@ function Report() {
     // Handle CLick Outside Report
     document.body.addEventListener('click', (event)=>{
       if (!event.composedPath().includes(reportRef.current)
-      && !event.composedPath().includes(insideReportRef.current) ) {
+      && !event.composedPath().includes(reportContentRef.current) ) {
         setIsReport(false);
         // console.log("Click Outside the Report");
       }
     })
-    
     // Handle ESC
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
@@ -34,27 +34,13 @@ function Report() {
     return () => {
       document.body.removeEventListener('keydown', handleKeyDown);
     };
-
   }, [])
 
   return (
-    <>
     <div className="userinfo__report" onClick={handleReportClick} ref={reportRef}>
       <ReportIcon />
     </div>
-      {isReport && <ReportContent ReportRef={insideReportRef} handleClick={()=>{setIsReport(false);}} /> }
-    </>
   )
 }
 
 export default Report
-
-// window.addEventListener('click', (e) => {
-//   console.log(reportRef.current)
-//   if (!e.target.closest(".parameter__report") && props.isReport){
-//       console.log("CLICK HERE")
-//       // if (isReport) {
-//         props.setIsReport(false)
-//       // }
-//     }
-// })

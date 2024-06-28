@@ -932,7 +932,7 @@ html, body {
     display: none;
 }
 
-@keyframes moveBall {
+@keyframes loadingBall {
     0% {
         left: 50%;
     }
@@ -1008,7 +1008,7 @@ html, body {
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    animation: moveBall 3s linear infinite;
+    animation: loadingBall 3s linear infinite;
 }
 
 #net {
@@ -2003,7 +2003,7 @@ html, body {
     background-color: #775C9E;
 }
 
-@keyframes moveBall {
+@keyframes loadingBall {
     0% {
         left: 50%;
     }
@@ -2079,7 +2079,7 @@ html, body {
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    animation: moveBall 3s linear infinite;
+    animation: loadingBall 3s linear infinite;
 }
 
 #net {
