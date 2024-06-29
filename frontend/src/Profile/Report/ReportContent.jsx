@@ -2,6 +2,8 @@ import React, {useContext } from 'react'
 
 import AuthContext from '../../navbar-sidebar/Authcontext';
 import CloseIcon from '@mui/icons-material/Close';
+import ReportOptions from './ReportOptions';
+import ReportFooter from './ReportFooter';
 
 function ReportContent() {
 
@@ -16,9 +18,10 @@ function ReportContent() {
   return (
     <div className='profile__report'>
       <div className="report__content" ref={reportContentRef}>
-        <div className='report__close' onClick={handleClose}>
-            <CloseIcon />
-        </div>
+        <CloseIcon onClick={handleClose} className='report-close'/>
+        <h1 className='report__title'> Report Maverick </h1>
+        <ReportOptions />
+        <ReportFooter />
       </div>
     </div>
   )

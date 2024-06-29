@@ -7,7 +7,8 @@ function Report() {
 
   const {isReport} = useContext(AuthContext);
   const {setIsReport} = useContext(AuthContext);
-  
+  const {setReportValue} = useContext(AuthContext);
+
   const reportRef = useRef(null);
   const {reportContentRef} = useContext(AuthContext);
 
@@ -21,6 +22,7 @@ function Report() {
       if (!event.composedPath().includes(reportRef.current)
       && !event.composedPath().includes(reportContentRef.current) ) {
         setIsReport(false);
+        setReportValue(null);
         // console.log("Click Outside the Report");
       }
     })

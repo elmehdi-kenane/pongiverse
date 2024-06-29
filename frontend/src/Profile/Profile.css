@@ -40,8 +40,9 @@ h1, h3, p{
 
 .profile-blur {
     filter: blur(6px);
+    pointer-events: none;
   }
-  
+
 /* ------------------- User Info ------------------- */
 
 .profile-userinfo {
@@ -187,7 +188,7 @@ h1, h3, p{
     background-color: #826aed;
 }
 
-/* Reporting User */
+/* Reporting User Icon */
 
 .profile-userinfo .userinfo__report{
     display: flex;
@@ -222,36 +223,189 @@ h1, h3, p{
     width: 100%;
     position: absolute;
     justify-content: center;
+
 }
 
 .report__content {
     display: flex;
-    height: 400px;
-    width: 400px;
+    height: 450px;
+    width: 350px;
     position: fixed;
+    flex-direction: column;
+    /* padding: 0 20px; */
+    gap: 10px;
 
     top: 400px;
     border: #826aed solid 2px;
     border-radius: 5px;
     background-color: rgb(0, 0, 0, 0.9);
+    background-color: #1b062a;
     z-index: 3;
 }
-
-.report__content .report__close {
+/* Close Report */
+.report__content .report-close { 
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: absolute;
     color: #826aed;
-    top: 5px;
+    top: 6px;
     right: 5px;
-    height: 32px;
-    width: 32px;
-    border-radius: 50%;
+    height: 34px;
+    width: 34px;
+}
+.report__content .report-close:hover{
+    color: #9e88fd;
 }
 
-.report__content .report__close svg{
-    border-radius: 50%;
-    width: 100%;
-    height: 100%;
+.report__content .report__title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    color: white;
+    font-size: 20px;
+    letter-spacing: 1px;
 }
+
+.report__content  .report__options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    color: white;
+    padding: 0 20px;
+}
+.report__options .report__abuse {
+    display: flex;
+    flex-direction: column;
+    /* border: #826aed 1px solid; */
+}
+.report__options .report__abuse h1{
+    font-size: 15px;
+    font-weight: 600;
+    color: #dcdcdc;
+    
+}
+
+.report__options .report__abuse .abuse__options {
+    display: flex;
+    flex-direction: column;
+}
+.report__options .report__abuse .abuse__options .option {
+    display: flex;
+    align-items: center;
+    margin-top: 0px;
+    height: 20px;
+    width: 200px;
+    border: none;
+}
+.abuse__options .option p{
+    margin-top: -1.5px;
+    font-size: 14.5px;
+    cursor: pointer;
+    color: #ccc;
+}
+
+.report__input {
+    cursor: pointer;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+}
+.report__input:hover {
+    border-color: white;
+}
+.report__input:active {
+    background-color: #826aed;
+}
+.report__input:checked {
+    border-color: #826aed;
+    transition: border-color 0.3s;
+  }
+
+.report__content .report__footer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    height: 100px;
+    border-top: 0.5px solid #826aed;
+}
+
+.report__content .report__footer .block-user {
+    display: flex;
+    align-items: center;
+    background-color: #1b062a;
+    border: none;
+    margin-top: 15px;
+    /* border: #826aed solid 1px; */
+    gap: 5px;
+    cursor: pointer;
+}
+.report__content .report__footer .block-user .block-icon{  /* SVG */
+    border: #ccc solid 1px;
+    border-radius: 20%;
+    height: 15px;
+    width: 15px;
+}
+.report__content .report__footer .block-user:hover .block-icon {
+    border-color: white;
+}
+.report__content .report__footer .block-user .valid-bg{
+    /* border-color: #826aed; */
+    background-color: #826aed;
+    transition: border-color 0.3s;
+    color: white;
+}
+.report__content .report__footer .block-user p{
+    cursor: inherit;
+    color: #dcdcdc;
+    font-size: 15px;
+}
+
+.report__footer .report-submit {
+    display: flex;
+    gap: 15px;
+}
+
+.report__footer .report-submit .submit-button {
+    color: white;
+    border: none;
+    border-radius: 10%;
+    padding: 10px 40px;
+    border: white .5px solid;
+    cursor: pointer;
+    font-size: 15px;
+}
+.report__footer .report-submit .submit__cancel {
+    background-color: #2f084b;
+}
+.report__footer .report-submit .submit__cancel:hover {
+    border: none;
+    background-color: #52127f;
+    transition: ease-in  0.3s;
+}
+.report__footer .report-submit .submit__report {
+    background-color: #826aed;
+}
+.report__footer .report-submit .submit__report:hover {
+    /* padding: 12px 42px; */
+    border: none;
+    background-color: #826aed;
+    transition: ease-in 0.3s;
+}
+
+.report__footer .report-submit .need-report {
+    background-color: #6652c0;
+    cursor:not-allowed;
+}
+
+
+
+
+
 
 
 
