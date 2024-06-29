@@ -26,6 +26,7 @@ export const AuthProvider = ({children}) => {
 
 	// Profile States --------------------------------------------
 	const [isReport, setIsReport] = useState(false);
+	const [reportValue, setReportValue] = useState(null);
 	const reportContentRef = useRef(null);
 	
 
@@ -311,9 +312,12 @@ export const AuthProvider = ({children}) => {
 		notifsImgs: notifsImgs,
 		gameCustomize: gameCustomize,
 		hideNavSideBar: hideNavSideBar,
+		// Profile Settings
 		isReport: isReport,
 		setIsReport: setIsReport,
 		reportContentRef: reportContentRef,
+		reportValue: reportValue,
+		setReportValue: setReportValue,
 		// gameNotif: gameNotif
 	}
 
