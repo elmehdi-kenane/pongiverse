@@ -8,12 +8,11 @@ import ReportFooter from './ReportFooter';
 function ReportContent() {
 
   const {setIsReport} = useContext(AuthContext);
-  
   const {reportContentRef} = useContext(AuthContext);
 
-    const handleClose = () => {
-      setIsReport(false);
-    }
+  const handleClose = () => {
+    setIsReport(false);
+  }
 
   return (
     <div className='profile__report'>

@@ -46,7 +46,7 @@ function ReportOptions() {
   const {setReportValue} = useContext(AuthContext);
   
   const onChangeValue = (event) => {
-    console.log(event.target.value);
+    // console.log(event.target.value);
     setReportValue(event.target.value);
   }
 

@@ -30,6 +30,7 @@ function Report() {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
         setIsReport(false);
+        setReportValue(null);
       }
     };
     document.body.addEventListener('keydown', handleKeyDown);

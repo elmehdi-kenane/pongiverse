@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {Link} from 'react-router-dom'
+import AuthContext from '../../navbar-sidebar/Authcontext';
 
 import ChatIcon from '@mui/icons-material/Chat';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
@@ -10,12 +11,17 @@ import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 
 function FriendsParam(props) {
     const friendsPrm = props.Prm;
+    const {isBlock} = useContext(AuthContext);
+    const {setIsBlock} = useContext(AuthContext);
 
     const handleRmFriend = () => {
         props.onRmFriend();
     }
     const handleCnclRequest = () => {
         props.onCnclRequest();
+    }
+    const handleBlock = () => {
+        setIsBlock(!isBlock);
     }
     
     // Params JSX -----------------------
@@ -44,9 +50,9 @@ function FriendsParam(props) {
         </div>
     )
     const blockJsx = (
-        <div className="parameter">
+        <div className="parameter" onClick={handleBlock} >
             <NoAccountsIcon />
-            <p> Block </p>
+            <p> {!isBlock ? 'Block': 'Deblock'} </p>
         </div>
     );
     // ------------------------------------------

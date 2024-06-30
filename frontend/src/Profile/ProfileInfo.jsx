@@ -36,7 +36,7 @@ function ProfileInfo() {
         </div>
         <p className="userinfo__bio"> {bio} </p>
       </div>
-      <Report />
+      {!isOwnProfile && <Report />}
     </div>
   )
 }
