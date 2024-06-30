@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from django.contrib.auth.hashers import make_password
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view
 from .serializers import MyModelSerializer
 from rest_framework.parsers import MultiPartParser, FormParser
 from .models import customuser
@@ -21,6 +22,7 @@ from django.contrib.auth import get_user_model
 from .serializers import MyModelSerializer
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from urllib.parse import urlencode
 
 
 class SignUpView(APIView) :
@@ -161,7 +163,6 @@ class VerifyTokenView(APIView):
 				response.data = {"Case" : "Invalid token"}
 				return response
 		except TokenError as e:
-			# print(username)
 			if username == '':
 				response.data = {"Case" : "Invalid token"}
 				return response
@@ -225,3 +226,28 @@ class TestView(APIView):
 		serializer = MyModelSerializer(user)
 		response.data = {"Case" : "REDA", "data" : serializer.data}
 		return response
+
+
+@api_view(['GET'])
+def GoogleL(request):
+	response = Response()
+	client_id = '295320971655-s5ood5a528rk815h85f2pancufc342of.apps.googleusercontent.com'
+	redirect_uri = 'http://localhost:3000/testest'
+	scope = 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'
+	response_type = 'code'
+	auth_url = 'https://accounts.google.com/o/oauth2/auth'
+	params = {
+		'client_id': client_id,
+		'redirect_uri': redirect_uri,
+		'scope': scope,
+		'response_type': response_type,
+	}
+	auth_url_with_params = f'{auth_url}?{urlencode(params)}'
+	print(f"heyy : {auth_url_with_params}")
+	response.data = {'code' : auth_url_with_params}
+	return response
+
+@api_view(['POST'])
+def GoogleLoginGetToken(request):
+	code = request.data.get('code')
+	print(f"code : {code}")

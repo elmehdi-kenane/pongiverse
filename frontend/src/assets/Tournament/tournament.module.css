@@ -94,6 +94,18 @@
 	font-size: 20px;
 }
 
+.up-button-disabled {
+	background-color: #913dce;
+	border-radius: 7px;
+	color: white;
+	border: none;
+	height: 40px;
+	width: 130px;
+	padding: 0 5px;
+	font-size: 20px;
+	opacity: 50%;
+}
+
 .down-button{
 	background-color: #913dce;
 	border-radius: 7px;
@@ -204,6 +216,14 @@
 	padding: 0 5px;
 	align-items: center;
 }
+.error-container{
+	margin-top: 10%;
+}
+
+.title-swal{
+	color: #B00020;
+	font-size: 20px;
+}
 
 .friend-data {
 	display: flex;
@@ -287,12 +307,35 @@
 	font-size: 20px;
 }
 
+.button-disabled {
+	background-color: #913dce;
+	border-radius: 7px;
+	color: white;
+	border: none;
+	height: 50px;
+	width: 150px;
+	padding: 0 5px;
+	font-size: 20px;
+	opacity: 50%;
+}
+
 .notifications{
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
 	align-items: end;
 }
+
+@keyframes fadeInRight {
+	from {
+	  opacity: 0;
+	  transform: translateX(10px); /* Move from right to left */
+	}
+	to {
+	  opacity: 1;
+	  transform: translateX(0);
+	}
+  }
 
 .notif{
 	margin-right: 5px;
@@ -306,6 +349,8 @@
 	/* position: fixed; */
 	border-radius: 8px;
 	gap: 10px;
+	opacity: 0;
+	animation: fadeInRight 0.5s ease-in-out forwards;
 }
 
 .invite-notif-text{
@@ -426,6 +471,17 @@ font-size: 15px;
 	}
 
 	.up-button {
+		background-color: #913dce;
+		border-radius: 7px;
+		color: white;
+		border: none;
+		height: 40px;
+		width: 130px;
+		padding: 0 5px;
+		font-size: 20px;
+	}
+
+	.up-button-disabled {
 		background-color: #913dce;
 		border-radius: 7px;
 		color: white;
@@ -583,6 +639,18 @@ font-size: 15px;
 		padding: 0 5px;
 		font-size: 13px;
 	}
+
+	.up-button-disabled{
+		background-color: #913dce;
+		border-radius: 7px;
+		color: white;
+		border: none;
+		height: 30px;
+		width: 85px;
+		padding: 0 5px;
+		font-size: 13px;
+	}
+
 	.destroy-button{
 		background-color: #913dce;
 		border-radius: 7px;
@@ -666,6 +734,16 @@ font-size: 15px;
 	}
 
 	.up-button {
+		background-color: #913dce;
+		border-radius: 7px;
+		color: white;
+		border: none;
+		height: 25px;
+		width: 85px;
+		padding: 0 5px;
+		font-size: 10px;
+	}
+	.up-button-disabled {
 		background-color: #913dce;
 		border-radius: 7px;
 		color: white;

@@ -7,66 +7,66 @@ import AuthContext from '../navbar-sidebar/Authcontext'
 import { Outlet } from 'react-router-dom'
 
 function NavbarSidebar() {
-    const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
-    const [searchbar, setSearchBar] = useState(false);
-    let { user, privateCheckAuth, setUser } = useContext(AuthContext)
-    let navigate = useNavigate()
-    
-    useEffect(() => {
-      privateCheckAuth()
-    }, [])
+	const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
+	const [searchbar, setSearchBar] = useState(false);
+	let { user, privateCheckAuth, setUser } = useContext(AuthContext)
+	let navigate = useNavigate()
 
-    window.addEventListener('resize', () => {
-        if (window.innerWidth > 768) {
-          setSidebarIsOpen(false);
-          setSearchBar(false);
-        }
-    });
+	useEffect(() => {
+		privateCheckAuth()
+	}, [])
 
-    const handleExapandSidebar = () => {
-        setSidebarIsOpen(!sidebarIsOpen)
-    }
+	window.addEventListener('resize', () => {
+		if (window.innerWidth > 768) {
+			setSidebarIsOpen(false);
+			setSearchBar(false);
+		}
+	});
 
-    const handleSearchBar = () => {
-      setSearchBar(!searchbar);
-    }
+	const handleExapandSidebar = () => {
+		setSidebarIsOpen(!sidebarIsOpen)
+	}
 
-    let logout = async (e) => {
-      e.preventDefault();
+	const handleSearchBar = () => {
+		setSearchBar(!searchbar);
+	}
 
-      try {
-        let response = await fetch('http://localhost:8000/api/logout', {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-        })
-        let content = await response.json()
-        if (content.message) {
-          setUser('')
-          navigate('/signin')
-        }
-      } catch (e) {
-        console.log('Error in network or URL')
-      }
-    }
-    return (
-      <>
-          <Navbar
-              Icons={Icons}
-              searchbar={searchbar}
-              setSearchBar={setSearchBar}
-              handleSearchBar={handleSearchBar}
-          />
-          <div className='sidebarWrapper'>
-            <Sidebar
-                Icons={Icons}
-            />
-            <Outlet />
-          </div>
-      </>
-    );
+	let logout = async (e) => {
+		e.preventDefault();
+
+		try {
+			let response = await fetch('http://localhost:8000/api/logout', {
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			})
+			let content = await response.json()
+			if (content.message) {
+				setUser('')
+				navigate('/signin')
+			}
+		} catch (e) {
+			console.log('Error in network or URL')
+		}
+	}
+	return (
+		<>
+			<Navbar
+				Icons={Icons}
+				searchbar={searchbar}
+				setSearchBar={setSearchBar}
+				handleSearchBar={handleSearchBar}
+			/>
+			<div className='sidebarWrapper'>
+				<Sidebar
+					Icons={Icons}
+				/>
+				<Outlet />
+			</div>
+		</>
+	);
 }
 
 export default NavbarSidebar;

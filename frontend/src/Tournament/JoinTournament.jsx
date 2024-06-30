@@ -6,7 +6,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 function JoinTournament() {
 	const navigate = useNavigate()
-	const [data, setData] = useState(0)
+	const [data, setData] = useState('')
 	const { user, socket } = useContext(AuthContext)
 	const [tournamentSuggestions, setTournamentSuggestions] = useState([])
 	const [TournamentInfo, setTournamentInfo] = useState({
@@ -36,6 +36,24 @@ function JoinTournament() {
 		}
 	};
 
+	const handleJoin = async (tournament_id) => {
+		if (socket && socket.readyState === WebSocket.OPEN) {
+			try {
+				await socket.send(
+					JSON.stringify({
+						type: 'accept-tournament-invitation',
+						message: {
+							user: user,
+							tournament_id: tournament_id
+						}
+					})
+				);
+			} catch (error) {
+				console.error("Error sending message:", error);
+			}
+		}
+	}
+
 	useEffect(() => {
 		const getTournamentSuggestions = async () => {
 			const response = await fetch(`http://localhost:8000/api/get-tournament-suggestions`, {
@@ -64,12 +82,10 @@ function JoinTournament() {
 					navigate("/mainpage/game/createtournament");
 				} else if (type === 'tournament_created_by_user') {
 					let newTournament = data.message.tournament_info
-					console.log("IN CREATEE :", newTournament)
 					setTournamentSuggestions((prevTournamentSuggestions) => [...prevTournamentSuggestions, newTournament]);
 				}
 				else if (type === 'tournament_destroyed_by_user') {
 					let tournament_id = data.message.tournament_id
-					console.log("DESTROY : ", tournament_id)
 					setTournamentSuggestions((prevTournamentSuggestions) => prevTournamentSuggestions.filter((member) => member.tournament_id !== tournament_id));
 				}
 				else if (type === 'user_leave_tournament' || type === 'user_kicked_from_tournament') {
@@ -160,7 +176,7 @@ function JoinTournament() {
 								<h4>{tournament.owner}</h4>
 								<h4>{tournament.size}/16</h4>
 								<div className={styles['join']}>
-									<button className={styles['join-button']}>Join</button>
+									<button className={styles['join-button']} onClick={() => handleJoin(tournament.tournament_id)}>Join</button>
 								</div>
 							</div>
 						)

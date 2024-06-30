@@ -4,6 +4,7 @@ import { useNavigate, useLocation, json } from 'react-router-dom';
 import AuthContext from '../navbar-sidebar/Authcontext';
 import InviteNotif from '../Tournament/invite_notif'
 import styles from '../assets/Tournament/tournament.module.css'
+import Swal from 'sweetalert2';
 
 
 const Dashboard = () => {
@@ -38,7 +39,6 @@ const Dashboard = () => {
 				})
 			})
 			const res = await response.json()
-			console.log("reskh :", res.notifications)
 			setNotifications(res.notifications)
 			console.log("RESSS :", res)
 		}
@@ -77,21 +77,60 @@ const Dashboard = () => {
 	}
 
 	const handleAccept = async (tournament_id) => {
-		console.log("user : ", user);
-		if (socket && socket.readyState === WebSocket.OPEN) {
-		  try {
-			await socket.send(
-			  JSON.stringify({
-				type: 'accept-tournament-invitation',
-				message: {
-				  user: user,
-				  tournament_id: tournament_id
+		const response = await fetch(`http://localhost:8000/api/get-tournament-size`, {
+			method: "POST",
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				tournament_id: tournament_id
+			})
+		});
+		if (response.ok) {
+			const data = await response.json();
+			if (data.Case === 'Tournament_started'){
+				Swal.fire({
+					icon: "warning",
+					position: "top-end",
+					title: "Tournament is already started",
+					showConfirmButton: false,
+					customClass: {
+						popup: styles['error-container'] ,
+						title: styles['title-swal'],
+					},
+					timer: 1500
+				});
+			}else if (data.Case === 'Tournament_is_full'){
+				Swal.fire({
+					icon: "warning",
+					position: "top-end",
+					title: "Tournament is full",
+					showConfirmButton: false,
+					customClass: {
+						popup: styles['error-container'] ,
+						title: styles['title-swal'],
+					},
+					timer: 1500
+				});
+			} else {
+				if (socket && socket.readyState === WebSocket.OPEN) {
+				  try {
+					await socket.send(
+					  JSON.stringify({
+						type: 'accept-tournament-invitation',
+						message: {
+						  user: user,
+						  tournament_id: tournament_id
+						}
+					  })
+					);
+				  } catch (error) {
+					console.error("Error sending message:", error);
+				  }
 				}
-			  })
-			);
-		  } catch (error) {
-			console.error("Error sending message:", error);
-		  }
+			}
+		} else {
+			console.error('Failed to fetch data');
 		}
 	  };
 

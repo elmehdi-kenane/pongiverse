@@ -344,3 +344,20 @@ async def destroy_tournament(self, data, user_channels):
 				}
 			}
 		)
+
+async def start_tournament(self, data, user_channels):
+	print(f"DATAAA : {data}")
+	tournament_id = data['message']['tournament_id']
+	tournament = await sync_to_async(Tournament.objects.filter(tournament_id=tournament_id).first)()
+	tournament.is_started = True
+	await sync_to_async(tournament.save)()
+	members = await sync_to_async(list)(TournamentMembers.objects.filter(tournament=tournament))
+	for member in members:
+		username = await sync_to_async(lambda: member.user.username)()
+		channel_name = user_channels.get(username)
+		await self.channel_layer.send(
+			channel_name,
+			{
+				'type': 'tournament_started'
+			}
+		)

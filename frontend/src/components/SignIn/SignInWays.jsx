@@ -129,11 +129,11 @@ function SignInWays() {
 			</div>
 			<div className={styles["Google"]}>
 				<GoogleOAuthProvider clientId="295320971655-s5ood5a528rk815h85f2pancufc342of.apps.googleusercontent.com">
-					<GoogleLogin
+					{/* <GoogleLogin
 						onSuccess={handleSuccess}
 						onError={handleError}
-					/>
-					{/* <CustomGoogleButton /> */}
+					/> */}
+					<CustomGoogleButton />
 				</GoogleOAuthProvider>
 			</div>
 		</>

@@ -8,6 +8,8 @@ from .views import GoogleLoginView
 from .views import VerifyTokenView
 from .views import ForgetPasswordView
 from .views import ChangePasswordView
+from .views import GoogleL
+from .views import GoogleLoginGetToken
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -21,4 +23,6 @@ urlpatterns = [
     path('verifytoken/', VerifyTokenView.as_view(), name='verifytoken'),
     path('ForgetPassword/', ForgetPasswordView.as_view(), name='ForgetPassword'),
     path('ChangePassword/', ChangePasswordView.as_view(), name='ChangePassword'),
+    path('GoogleL/', GoogleL, name='GoogleL'),
+    path('google-login-get-token/', GoogleLoginGetToken, name='GoogleLoginGetToken'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

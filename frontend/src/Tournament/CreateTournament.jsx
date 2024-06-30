@@ -10,8 +10,6 @@ import Swal from 'sweetalert2';
 
 
 function CreateTournament() {
-
-	const MySwal = withReactContent(Swal);
 	const [open, setOpen] = useState(false);
 	const [isTournamentOwner, setIsTournamentOwner] = useState(false)
 	const [inviteButton, setInviteButton] = useState(true)
@@ -39,7 +37,7 @@ function CreateTournament() {
 		}
 	};
 
-	const Destroy_tournament = () =>{
+	const Destroy_tournament = () => {
 		Swal.fire({
 			title: "Are you sure?",
 			text: "You won't be able to revert this!",
@@ -55,7 +53,7 @@ function CreateTournament() {
 						type: 'destroy-tournament',
 						message: {
 							tournament_id: tournamentId,
-							user : user
+							user: user
 						}
 					}))
 				}
@@ -107,11 +105,52 @@ function CreateTournament() {
 				console.error('Failed to fetch data');
 			}
 		}
-		if (user)
-			get_members()
+		if (user) {
+			const check_is_join = async () => {
+				const response = await fetch(`http://localhost:8000/api/is-joining-tournament`, {
+					method: "POST",
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						user: user
+					})
+				});
+				if (response.ok) {
+					const data = await response.json();
+					if (data.Case === 'yes')
+						get_members()
+					else
+						navigate("../game")
+				} else {
+					console.error('Failed to fetch data');
+				}
+			}
+			const check_is_started_and_not_finished = async () =>{
+				const response = await fetch(`http://localhost:8000/api/is-started-and-not-finshed`, {
+					method: "POST",
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						user: user
+					})
+				});
+				if (response.ok) {
+					const data = await response.json();
+					if (data.Case === 'yes')
+						navigate('../game/tournamentbracket');
+					else
+					check_is_join()
+				} else {
+					console.error('Failed to fetch data');
+				}
+			}
+			check_is_started_and_not_finished()
+		}
 	}, [user])
 
-	useEffect(() =>{
+	useEffect(() => {
 		const fetchImages = async () => {
 			const promises = tournamentMembers.map(async (user) => {
 				const response = await fetch(`http://localhost:8000/api/getImage`, {
@@ -131,7 +170,7 @@ function CreateTournament() {
 		};
 		if (tournamentMembers)
 			fetchImages()
-	},[tournamentMembers])
+	}, [tournamentMembers])
 
 	useEffect(() => {
 		const get_member = async (username) => {
@@ -186,44 +225,46 @@ function CreateTournament() {
 					let uname = data.message.user
 					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname))
 					setTournamentMembers(prevMembers => prevMembers.map(member => member.name === uname ? { ...member, 'is_online': false } : member));
-				}else if (type === 'connected_again_tourn'){
+				} else if (type === 'connected_again_tourn') {
 					setTournamentMembers(prevMembers => prevMembers.map(member => member.name === message.user ? { ...member, 'is_online': true } : member));
-				} else if (type === 'connected_again'){
+				} else if (type === 'connected_again') {
 					const currentAllGameFriends = allGameFriendsRef.current;
 					const userExists = currentAllGameFriends.some(friend => friend.name === message.user)
 					if (!userExists)
 						setAllGameFriends([...currentAllGameFriends, message.userInfos])
-				}else if (type === 'accepted_invitation') {
+				} else if (type === 'accepted_invitation') {
 					const currentAllGameFriends = allGameFriendsRef.current;
 					let username = data.message.user
 					if (username !== user) {
 						get_member(data.message.user)
 						setAllGameFriends(currentAllGameFriends.filter(user => user.name !== data.message.user))
 					}
-				}else if (type === 'user_kicked_out'){
+				} else if (type === 'user_kicked_out') {
 					let kicked = data.message.kicked
 					setTournamentMembers((prevMembers) =>
 						prevMembers.filter((member) => member.name !== kicked));
-				}else if (type === 'leave_tournament'){
+				} else if (type === 'leave_tournament') {
 					let kicked = data.message.kicked
 					const currentAllGameFriends = allGameFriendsRef.current;
 					setTournamentMembers((prevMembers) =>
 						prevMembers.filter((member) => member.name !== kicked));
 					setAllGameFriends([...currentAllGameFriends, message.userInfos])
-					if (kicked === user){
+					if (kicked === user) {
 						navigate("/mainpage/game")
 					}
-				} else if (type === 'tournament_destroyed'){
+				} else if (type === 'tournament_destroyed') {
 					navigate("/mainpage/game")
-				}else if (type === 'friend_created_tournament'){
+				} else if (type === 'friend_created_tournament') {
 					const currentAllGameFriends = allGameFriendsRef.current;
 					let userInfos = message.userInfos
 					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== userInfos.name))
-				}else if (type === 'friend_distroyed_tournament'){
+				} else if (type === 'friend_distroyed_tournament') {
 					const currentAllGameFriends = allGameFriendsRef.current;
 					const userExists = currentAllGameFriends.some(friend => friend.name === message.userInfos.name)
 					if (!userExists)
 						setAllGameFriends([...currentAllGameFriends, message.userInfos])
+				} else if (type === 'tournament_started'){
+					navigate('../game/tournamentbracket');
 				}
 			}
 		}
@@ -240,26 +281,61 @@ function CreateTournament() {
 			}))
 		}
 	}, [socket])
+
+	// useEffect(() =>{
+	// 	const is_tournament_advanced = async () =>{
+	// 		const response = await fetch(`http://localhost:8000/api/is-tournament-advanced`, {
+	// 			method: "POST",
+	// 			headers: {
+	// 				'Content-Type': 'application/json',
+	// 			},
+	// 			body: JSON.stringify({
+	// 				tournament_id: tournamentId
+	// 			})
+	// 		});
+	// 		if (response.ok) {
+	// 			const data = await response.json();
+	// 			if (data.Case === 'tournament_advanced')
+	// 				navigate("../game/tournamentbracket")
+	// 		} else {
+	// 			console.error('Failed to fetch data');
+	// 		}
+	// 	}
+	// 	is_tournament_advanced()
+
+	// },[user, tournamentId])
 	const handleKick = (username) => {
 		if (socket && socket.readyState === WebSocket.OPEN) {
 			socket.send(JSON.stringify({
 				type: 'kick-player-out',
 				message: {
 					user: user,
-					kicked : username,
-					tournament_id : tournamentId
+					kicked: username,
+					tournament_id: tournamentId
 				}
 			}))
 		}
 	}
 
-	const LeaveTournament = () =>{
+	const LeaveTournament = () => {
 		if (socket && socket.readyState === WebSocket.OPEN) {
 			socket.send(JSON.stringify({
 				type: 'leave-tournament',
 				message: {
-					kicked : user,
-					tournament_id : tournamentId
+					kicked: user,
+					tournament_id: tournamentId
+				}
+			}))
+		}
+	}
+
+	const handleStart = () => {
+		if (socket && socket.readyState === WebSocket.OPEN) {
+			socket.send(JSON.stringify({
+				type: 'start-tournament',
+				message: {
+					user: user,
+					tournament_id: tournamentId
 				}
 			}))
 		}
@@ -318,7 +394,9 @@ function CreateTournament() {
 						isTournamentOwner ?
 							<div className={styles["up-buttons"]}>
 								<button className={styles["up-button"]} onClick={isOpen}>Invite Friend</button>
-								<button className={styles["up-button"]}>Start</button>
+								{
+									tournamentMembers.length > 0 ? <button className={styles["up-button"]} onClick={handleStart}>Start</button> : <button className={styles["up-button-disabled"]} onClick={handleStart} disabled>Start</button>
+								}
 							</div>
 							: <div className={styles["up-buttons"]}>
 								<button className={styles["up-button"]} onClick={LeaveTournament}>Leave</button>
@@ -357,7 +435,7 @@ function CreateTournament() {
 										<p>diconnected</p>
 										{
 
-										isTournamentOwner &&	<button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[1].name)}>Kick out</button>
+											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[1].name)}>Kick out</button>
 										}
 									</div>
 								}
@@ -382,7 +460,7 @@ function CreateTournament() {
 										<p>diconnected</p>
 										{
 
-										isTournamentOwner &&	<button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[2].name)}>Kick out</button>
+											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[2].name)}>Kick out</button>
 										}
 									</div>
 								}
@@ -407,7 +485,7 @@ function CreateTournament() {
 										<p>diconnected</p>
 										{
 
-										isTournamentOwner &&	<button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[3].name)}>Kick out</button>
+											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[3].name)}>Kick out</button>
 										}
 									</div>
 								}
@@ -432,7 +510,7 @@ function CreateTournament() {
 										<p>diconnected</p>
 										{
 
-										isTournamentOwner &&	<button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[4].name)}>Kick out</button>
+											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[4].name)}>Kick out</button>
 										}
 									</div>
 								}
@@ -457,7 +535,7 @@ function CreateTournament() {
 										<p>diconnected</p>
 										{
 
-										isTournamentOwner &&	<button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[5].name)}>Kick out</button>
+											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[5].name)}>Kick out</button>
 										}
 									</div>
 								}
@@ -482,7 +560,7 @@ function CreateTournament() {
 										<p>diconnected</p>
 										{
 
-										isTournamentOwner &&	<button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[6].name)}>Kick out</button>
+											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[6].name)}>Kick out</button>
 										}
 									</div>
 								}
@@ -507,7 +585,7 @@ function CreateTournament() {
 										<p>diconnected</p>
 										{
 
-										isTournamentOwner &&	<button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[7].name)}>Kick out</button>
+											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[7].name)}>Kick out</button>
 										}
 									</div>
 								}
@@ -532,7 +610,7 @@ function CreateTournament() {
 										<p>diconnected</p>
 										{
 
-										isTournamentOwner &&	<button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[8].name)}>Kick out</button>
+											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[8].name)}>Kick out</button>
 										}
 									</div>
 								}
@@ -557,7 +635,7 @@ function CreateTournament() {
 										<p>diconnected</p>
 										{
 
-										isTournamentOwner &&	<button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[9].name)}>Kick out</button>
+											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[9].name)}>Kick out</button>
 										}
 									</div>
 								}
@@ -582,7 +660,7 @@ function CreateTournament() {
 										<p>diconnected</p>
 										{
 
-										isTournamentOwner &&	<button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[10].name)}>Kick out</button>
+											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[10].name)}>Kick out</button>
 										}
 									</div>
 								}
@@ -607,7 +685,7 @@ function CreateTournament() {
 										<p>diconnected</p>
 										{
 
-										isTournamentOwner &&	<button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[11].name)}>Kick out</button>
+											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[11].name)}>Kick out</button>
 										}
 									</div>
 								}
@@ -632,7 +710,7 @@ function CreateTournament() {
 										<p>diconnected</p>
 										{
 
-										isTournamentOwner &&	<button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[12].name)}>Kick out</button>
+											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[12].name)}>Kick out</button>
 										}
 									</div>
 								}
@@ -657,7 +735,7 @@ function CreateTournament() {
 										<p>diconnected</p>
 										{
 
-										isTournamentOwner &&	<button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[13].name)}>Kick out</button>
+											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[13].name)}>Kick out</button>
 										}
 									</div>
 								}
@@ -682,7 +760,7 @@ function CreateTournament() {
 										<p>diconnected</p>
 										{
 
-										isTournamentOwner &&	<button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[14].name)}>Kick out</button>
+											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[14].name)}>Kick out</button>
 										}
 									</div>
 								}
@@ -707,7 +785,7 @@ function CreateTournament() {
 										<p>diconnected</p>
 										{
 
-										isTournamentOwner &&	<button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[15].name)}>Kick out</button>
+											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[15].name)}>Kick out</button>
 										}
 									</div>
 								}
@@ -733,7 +811,9 @@ function CreateTournament() {
 										{open && <InviteFriendComp class="Invite-friend-popup-down" />}
 										<button className={styles["button"]} onClick={isOpen}>Invite Friend</button>
 									</div>
-									<button className={styles["button"]}>Start</button>
+									{
+										tournamentMembers.length > 0 ? <button className={styles["button"]} onClick={handleStart}>Start</button> : <button className={styles["button-disabled"]} onClick={handleStart} disabled>Start</button>
+									}
 								</div>
 								{open && <InviteFriendComp class="Invite-friend-popup-up" />}
 							</> :

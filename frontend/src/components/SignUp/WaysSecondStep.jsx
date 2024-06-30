@@ -24,6 +24,9 @@ function WaysSecondStep() {
 	const [errors, setErrors] = useState({});
 	const location = useLocation();
 	const data = location.state || {};
+	if (!data.email || !data.avatar){
+		navigate("/signup");
+	}
 	const handleInputChange = (e) => {
 		e.preventDefault();
 		setNextdata({ ...nextdata, [e.target.name]: e.target.value });
@@ -59,6 +62,7 @@ function WaysSecondStep() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
+
 		const validationErrors = {};
 		if (!nextdata.username.trim()) {
 			validationErrors.username = "username is required";

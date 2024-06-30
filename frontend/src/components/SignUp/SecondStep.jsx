@@ -22,6 +22,9 @@ function SecondStep() {
 	const [errors, setErrors] = useState({})
 	const location = useLocation();
 	const data = location.state || {};
+	if (!data.email || !data.password){
+		navigate("/signup");
+	}
 	const [exist, setExist] = useState(false);
 	const handleInputChange = (e) => {
 		e.preventDefault();
