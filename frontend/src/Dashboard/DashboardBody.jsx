@@ -90,9 +90,9 @@ function DashboardBody() {
               <div className='title'> Goal </div>
             </div>
             <div className="dashpage__body__rank__classment">
-              {rankData.map((player) => {
+              {rankData.map((player, key) => {
                 return (
-                  <div className='player__classment'>
+                  <div className='player__classment' key={key}>
                     {RankClassment(i = i + 1, player)}
                   </div>
                 )
