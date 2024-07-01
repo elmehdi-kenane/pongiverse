@@ -23,6 +23,7 @@ from .serializers import MyModelSerializer
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from urllib.parse import urlencode
+import json
 
 
 class SignUpView(APIView) :
@@ -227,12 +228,11 @@ class TestView(APIView):
 		response.data = {"Case" : "REDA", "data" : serializer.data}
 		return response
 
-
 @api_view(['GET'])
-def GoogleL(request):
+def SignInGoogleGetUrl(request):
 	response = Response()
 	client_id = '295320971655-s5ood5a528rk815h85f2pancufc342of.apps.googleusercontent.com'
-	redirect_uri = 'http://localhost:3000/testest'
+	redirect_uri = 'http://localhost:3000/signin'
 	scope = 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'
 	response_type = 'code'
 	auth_url = 'https://accounts.google.com/o/oauth2/auth'
@@ -247,7 +247,174 @@ def GoogleL(request):
 	response.data = {'code' : auth_url_with_params}
 	return response
 
+@api_view(['GET'])
+def SignInIntraGetUrl(request):
+	response = Response()
+	client_id = 'u-s4t2ud-fcffc65b4899785b254efb0f6527c2d4493781c1e7792364b758f426b18a2598'
+	redirect_uri = 'http://localhost:3000/signin'
+	auth_url = 'https://api.intra.42.fr/oauth/authorize'
+	response_type = 'code'
+	auth_url_with_params = f'{auth_url}?client_id={client_id}&redirect_uri={redirect_uri}&response_type={response_type}'
+	response.data = {'code' : auth_url_with_params}
+	return response
+
 @api_view(['POST'])
-def GoogleLoginGetToken(request):
-	code = request.data.get('code')
-	print(f"code : {code}")
+def SignInGoogleGetUserData(request):
+	try :
+		code = request.data.get('code')
+		response = Response()
+		client_id = '295320971655-s5ood5a528rk815h85f2pancufc342of.apps.googleusercontent.com'
+		redirect_uri = 'http://localhost:3000/signin'
+		client_secret = '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'
+		token_url = 'https://oauth2.googleapis.com/token'
+		payload = {
+			'code': code,
+			'client_id': client_id,
+			'client_secret': client_secret,
+			'redirect_uri': redirect_uri,
+			'grant_type': 'authorization_code'
+		}
+		headers = {
+			'Content-Type': 'application/json'
+		}
+		response = requests.post(token_url, json=payload, headers=headers)
+		response_data = json.loads(response.text)
+		access_token = response_data.get('access_token')
+		user_info_url = 'https://www.googleapis.com/oauth2/v2/userinfo'
+		user_info_response = requests.get(user_info_url, headers={'Authorization': f'Bearer {access_token}'})
+		user_info_data = user_info_response.json()
+		user_email = user_info_data.get('email')
+		user_picture = user_info_data.get('picture')
+		return Response({'email': user_email, 'picture': user_picture})
+	except Exception as e:
+		print(f"Exception: {str(e)}")
+		return Response({'error': str(e)}, status=500)
+
+@api_view(['GET'])
+def SignUpGoogleGetUrl(request):
+	response = Response()
+	client_id = '571941928482-b8jr8007vd334l591r30stnfm26ua6qo.apps.googleusercontent.com'
+	redirect_uri = 'http://localhost:3000/signup'
+	scope = 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'
+	response_type = 'code'
+	auth_url = 'https://accounts.google.com/o/oauth2/auth'
+	params = {
+		'client_id': client_id,
+		'redirect_uri': redirect_uri,
+		'scope': scope,
+		'response_type': response_type,
+	}
+	auth_url_with_params = f'{auth_url}?{urlencode(params)}'
+	print(f"heyy : {auth_url_with_params}")
+	response.data = {'code' : auth_url_with_params}
+	return response
+
+
+@api_view(['POST'])
+def SignInIntraGetUserData(request):
+	try :
+		code = request.data.get('code')
+		response = Response()
+		client_id = 'u-s4t2ud-fcffc65b4899785b254efb0f6527c2d4493781c1e7792364b758f426b18a2598'
+		client_secret = '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'
+		redirect_uri = 'http://localhost:3000/signin'
+		token_url = 'https://api.intra.42.fr/oauth/token'
+		payload = {
+			'grant_type': 'authorization_code',
+			'client_id': client_id,
+			'client_secret': client_secret,
+			'code': code,
+			'redirect_uri': redirect_uri,
+		}
+		headers = {
+			'Content-Type': 'application/json'
+		}
+		response = requests.post(token_url, json=payload, headers=headers)
+		response_data = json.loads(response.text)
+		access_token = response_data.get('access_token')
+		user_info_url = 'https://api.intra.42.fr/v2/me'
+		user_info_response = requests.get(user_info_url, headers={'Authorization': f'Bearer {access_token}'})
+		user_info_data = user_info_response.json()
+		user_email = user_info_data.get('email')
+		image = user_info_data.get('image')
+		user_picture = image.get('link')
+		return Response({'email': user_email, 'picture': user_picture})
+	except Exception as e:
+		print(f"Exception: {str(e)}")
+		return Response({'error': str(e)}, status=500)
+
+@api_view(['GET'])
+def SignUpIntraGetUrl(request):
+	response = Response()
+	client_id = 'u-s4t2ud-c5d50d0148bff2ac03dbdadd313e919f7799e35329997235b2427e1cef984e18'
+	redirect_uri = 'http://localhost:3000/signup'
+	auth_url = 'https://api.intra.42.fr/oauth/authorize'
+	response_type = 'code'
+	auth_url_with_params = f'{auth_url}?client_id={client_id}&redirect_uri={redirect_uri}&response_type={response_type}'
+	response.data = {'code' : auth_url_with_params}
+	return response
+
+@api_view(['POST'])
+def SignUpGoogleGetUserData(request):
+	try :
+		code = request.data.get('code')
+		response = Response()
+		client_id = '571941928482-b8jr8007vd334l591r30stnfm26ua6qo.apps.googleusercontent.com'
+		redirect_uri = 'http://localhost:3000/signup'
+		client_secret = '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'
+		token_url = 'https://oauth2.googleapis.com/token'
+		payload = {
+			'code': code,
+			'client_id': client_id,
+			'client_secret': client_secret,
+			'redirect_uri': redirect_uri,
+			'grant_type': 'authorization_code'
+		}
+		headers = {
+			'Content-Type': 'application/json'
+		}
+		response = requests.post(token_url, json=payload, headers=headers)
+		response_data = json.loads(response.text)
+		access_token = response_data.get('access_token')
+		user_info_url = 'https://www.googleapis.com/oauth2/v2/userinfo'
+		user_info_response = requests.get(user_info_url, headers={'Authorization': f'Bearer {access_token}'})
+		user_info_data = user_info_response.json()
+		user_email = user_info_data.get('email')
+		user_picture = user_info_data.get('picture')
+		return Response({'email': user_email, 'picture': user_picture})
+	except Exception as e:
+		print(f"Exception: {str(e)}")
+		return Response({'error': str(e)}, status=500)
+
+@api_view(['POST'])
+def SignUpIntraGetUserData(request):
+	try :
+		code = request.data.get('code')
+		response = Response()
+		client_id = 'u-s4t2ud-c5d50d0148bff2ac03dbdadd313e919f7799e35329997235b2427e1cef984e18'
+		client_secret = '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'
+		redirect_uri = 'http://localhost:3000/signup'
+		token_url = 'https://api.intra.42.fr/oauth/token'
+		payload = {
+			'grant_type': 'authorization_code',
+			'client_id': client_id,
+			'client_secret': client_secret,
+			'code': code,
+			'redirect_uri': redirect_uri,
+		}
+		headers = {
+			'Content-Type': 'application/json'
+		}
+		response = requests.post(token_url, json=payload, headers=headers)
+		response_data = json.loads(response.text)
+		access_token = response_data.get('access_token')
+		user_info_url = 'https://api.intra.42.fr/v2/me'
+		user_info_response = requests.get(user_info_url, headers={'Authorization': f'Bearer {access_token}'})
+		user_info_data = user_info_response.json()
+		user_email = user_info_data.get('email')
+		image = user_info_data.get('image')
+		user_picture = image.get('link')
+		return Response({'email': user_email, 'picture': user_picture})
+	except Exception as e:
+		print(f"Exception: {str(e)}")
+		return Response({'error': str(e)}, status=500)
