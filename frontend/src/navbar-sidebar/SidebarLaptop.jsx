@@ -6,9 +6,10 @@ import AuthContext from "./Authcontext";
 function SidebarLaptop({ Icons }) {
 
     const {isReport} = useContext(AuthContext);
+    const {isBlock} = useContext(AuthContext);
 
     return (
-        <div className={isReport ?"profile-blur sidebar":"sidebar blur"}>
+        <div className={(isReport || isBlock) ?"profile-blur sidebar":"sidebar blur"}>
             <div className="sidebar-navigations" id="sidebar-dashboard">
                 <div className="sidebar-icons">
                     <Link to="dashboard">

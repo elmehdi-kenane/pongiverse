@@ -29,6 +29,8 @@ export const AuthProvider = ({children}) => {
 	const [isBlock, setIsBlock] = useState(false);
 	const [reportValue, setReportValue] = useState(null);
 	const reportContentRef = useRef(null);
+	const blockRef = useRef(null);
+	const blockContentRef = useRef(null);
 	
 
 	let [hideNavSideBar, setHideNavSideBar] = useState(false)
@@ -321,6 +323,8 @@ export const AuthProvider = ({children}) => {
 		setReportValue: setReportValue,
 		isBlock: isBlock,
 		setIsBlock:setIsBlock,
+		blockRef:blockRef,
+		blockContentRef:blockContentRef,
 		// gameNotif: gameNotif
 	}
 
