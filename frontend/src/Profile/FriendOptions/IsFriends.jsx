@@ -1,4 +1,5 @@
-import {React, useState, useEffect, useRef} from 'react'
+import {React, useState, useEffect, useRef, useContext} from 'react'
+import AuthContext from '../../navbar-sidebar/Authcontext';
 
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
@@ -8,16 +9,20 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Loading from '../../Game/Loading';
 import FriendsParam from './FriendsParam';
 
-const addfriendsPrm = ["chat", "challenge", "block"];
-const pendingPrm = ["chat", "challenge", "cancel", "block"];
+const addfriendsPrm = ["chat", "challenge"];
+const pendingPrm = ["chat", "challenge", "cancel"];
 const friendPrm = ["chat", "challenge", "remove", "block"];
 
 function IsFriends(){
     const [isLoading, setIsLoading] = useState(false);
-    const [isFriend, setIsFriend] = useState('false');
+    const [isFriend, setIsFriend] = useState('true');
 
     const [isParam, setIsParam] = useState(false);
     const paramRef = useRef(null);
+
+    const {blockRef} = useContext(AuthContext);
+    const {blockContentRef} = useContext(AuthContext);
+    const {setIsBlock} = useContext(AuthContext);
 
     const handleRequestFriend = (value) => {
       setIsParam(false);
@@ -33,13 +38,22 @@ function IsFriends(){
     }
 
     useEffect (() => {
-      document.body.addEventListener('click', (event)=> {
-        if (paramRef.current && !event.composedPath().includes(paramRef.current)) {
+      const handleClickOutside = (event)=> {
+        if (!event.composedPath().includes(paramRef.current)) {
           setIsParam(false);
           // console.log("click outside Param");
           // console.log(event.composedPath());
         }
-      })
+        if (!event.composedPath().includes(blockRef.current) 
+          && !event.composedPath().includes(blockContentRef.current) 
+        ) {
+          setIsBlock(false);
+        }
+      }
+      document.body.addEventListener('click', handleClickOutside)
+      return () => {
+        document.body.removeEventListener('click', handleClickOutside)
+      }
     }, [])
 
     if (isLoading === true) {

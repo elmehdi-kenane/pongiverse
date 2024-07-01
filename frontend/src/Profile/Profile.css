@@ -320,7 +320,6 @@ h1, h3, p{
     top: 400px;
     border: #826aed solid 2px;
     border-radius: 5px;
-    background-color: rgb(0, 0, 0, 0.9);
     background-color: #1b062a;
     z-index: 3;
 }
@@ -496,25 +495,76 @@ h1, h3, p{
 
 .profile__block .block-content{
     display: flex;
-    height: 450px;
-    width: 350px;
+    height: 300px;
+    width: 400px;
     position: fixed;
     flex-direction: column;
-    /* padding: 0 20px; */
+    /* padding: 20px; */
     gap: 10px;
-
+    
     top: 400px;
     border: #826aed solid 2px;
     border-radius: 5px;
-    background-color: rgb(0, 0, 0, 0.9);
     background-color: #1b062a;
     z-index: 3;
 }
+.profile__block .block-content .block-content__title{
+    padding: 10px 25px;
+    color: white;
+    font-size: 25px;
+    letter-spacing: 1.5px;
+    border-bottom: #826aed .5px solid;
+}
+.profile__block .block-content .block-content__title2{
+    padding: 10px 25px;
+    color: white;
+    font-size: 20px;
+    font-weight: 550;
+}
 
+.profile__block .block-content .block-content__desc{
+    padding: 10px 25px;
+    color: white;
+    
+}
 
-
-
-
+.profile__block .block-content .block__submit{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    /* border: #8edf34 0.5px solid; */
+    gap: 10px;
+}
+.block-content .block__submit .block-cancel,
+.block-content .block__submit .block-confirm{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 50px;
+    font-weight: 550;
+    color: white;
+    border: white .5px solid;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+    background-color: #826aed;
+    text-decoration: none;
+}
+.block-content .block__submit .block-confirm:hover {
+    /* padding: 12px 42px; */
+    border: none;
+    background-color: #927eea;
+    transition: ease-in 0.2s;
+}
+.block-content .block__submit .block-cancel{
+    background-color: #2f084b;
+}
+.block-content .block__submit .block-cancel:hover{
+    border: none;
+    background-color: #52127f;
+    transition: ease-in  0.3s;
+}
 
 
 

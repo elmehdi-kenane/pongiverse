@@ -15,9 +15,9 @@ function Profile() {
 
   return (
     <>
-      {/* {isBlock && <Block /> } */}
+      {isBlock && <Block /> }
       {isReport && <ReportContent /> }
-      <div className={(isReport) ?'profile-page profile-blur':'profile-page'}>
+      <div className={(isReport || isBlock) ?'profile-page profile-blur':'profile-page'}>
           <ProfileInfo />
           <ProfileLevel />
           <ProfileStatistics />

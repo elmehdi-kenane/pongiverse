@@ -17,25 +17,28 @@ function Report() {
   }
 
   useEffect (() => {
-    // Handle CLick Outside Report
-    document.body.addEventListener('click', (event)=>{
+
+    // Handle CLick Outside Report -----------------------------
+    const handleOutsideClick = (event)=>{
       if (!event.composedPath().includes(reportRef.current)
       && !event.composedPath().includes(reportContentRef.current) ) {
         setIsReport(false);
         setReportValue(null);
         // console.log("Click Outside the Report");
       }
-    })
-    // Handle ESC
-    const handleKeyDown = (event) => {
+    }
+    document.body.addEventListener('click', handleOutsideClick)
+    // Handle ESC -----------------------------
+    const handleEsc = (event) => {
       if (event.key === 'Escape') {
         setIsReport(false);
         setReportValue(null);
       }
     };
-    document.body.addEventListener('keydown', handleKeyDown);
+    document.body.addEventListener('keydown', handleEsc);
     return () => {
-      document.body.removeEventListener('keydown', handleKeyDown);
+      document.body.removeEventListener('click', handleOutsideClick)
+      document.body.removeEventListener('keydown', handleEsc);
     };
   }, [])
 

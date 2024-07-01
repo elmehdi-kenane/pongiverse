@@ -13,6 +13,7 @@ function FriendsParam(props) {
     const friendsPrm = props.Prm;
     const {isBlock} = useContext(AuthContext);
     const {setIsBlock} = useContext(AuthContext);
+    const {blockRef} = useContext(AuthContext);
 
     const handleRmFriend = () => {
         props.onRmFriend();
@@ -50,9 +51,9 @@ function FriendsParam(props) {
         </div>
     )
     const blockJsx = (
-        <div className="parameter" onClick={handleBlock} >
+        <div className="parameter" onClick={handleBlock} ref={blockRef}>
             <NoAccountsIcon />
-            <p> {!isBlock ? 'Block': 'Deblock'} </p>
+            <p> Block </p>
         </div>
     );
     // ------------------------------------------
