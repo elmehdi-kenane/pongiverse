@@ -644,7 +644,25 @@ h1, h3, p{
     width: 100%;
     height: 400px;
     align-items: center;
+    position: relative;
     /* border: cyan solid 1px; */
+}
+
+.userstate_statistics .statics__chart-icon {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    color: #826aed;
+    height: 30px;
+    width: 30px;
+    background: #f4effa;
+    border-radius: 40%;
+}
+.userstate_statistics .statics__chart-icon:hover {
+    background: #826aed;
+    color: #f4effa;
+    cursor: pointer;
+    transition: ease-in 0.2s;
 }
 
 .userstate_statistics .statistics__container {
