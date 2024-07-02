@@ -67,6 +67,13 @@ function DashboardBody() {
         console.log(isLineChart);
       }
 
+    const chartParameters = {
+      left: -30,
+      right: 5,
+      data: dataLevel,
+      brSize: 10,
+    }
+
     return (
     <div className="dashpage__body dash--space">
         <div className="dashpage__body__statistics dash--bkborder">
@@ -76,8 +83,8 @@ function DashboardBody() {
             {!isLineChart && <ShowChartIcon className="chart-icon" onClick={handleIconClick}/>}
           </div>
           <div className="line-graph">
-            {!isLineChart ? <BarGraph marginLeft={-30} marginRight={5} dataLevel={dataLevel}/>
-              : <LineGraph />}
+            {!isLineChart ? <BarGraph param={chartParameters}/>
+              : <LineGraph param={chartParameters}/>}
           </div>
         </div>
           {/* Rank */}
