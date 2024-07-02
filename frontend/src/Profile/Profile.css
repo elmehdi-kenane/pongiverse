@@ -650,11 +650,11 @@ h1, h3, p{
 
 .userstate_statistics .statics__chart-icon {
     position: absolute;
-    top: 10px;
+    top: 11px;
     right: 14px;
     color: #826aed;
-    height: 30px;
-    width: 30px;
+    height: 28px;
+    width: 28px;
     background: #f4effa;
     border-radius: 40%;
 }
@@ -827,18 +827,77 @@ h1, h3, p{
     }
 }
 
-@media (max-width: 1024px) {
-    /* .profile-userstats {
-        flex-wrap: wrap-reverse;
-        justify-content: center;
-        margin-top: 410px;
+@media (max-width: 768px) {
+    .userinfo__pic img {
+        height: 140px;
+    }
+    .userinfo__name-bio .userinfo__bio{
+        font-size: 13px;
+        max-width: 350px;
+    }
+    .userinfo__name-avatar .userinfo__name {
+        font-size: 28px;
+    }
+    .userinfo__pic .is-online {
+        height: 20px;
+        width: 20px;
+        bottom: 33px;
+        right: 15px;
+    }
+    .userinfo__avatar img {
+        height: 35px;
+    }
+    .profile-userstats .userstate-header {
+        padding: 8px 0;
+    }
+    .profile-userstats .userstate-header h1{
+        font-size: 23px;
+    }
+    .userstate_statistics .statics__chart-icon {
+        /* top: 11px; */
+        height: 25px;
+        width: 25px;
     }
 
-    .profile-userstats .userstate__friends,
-    .profile-userstats .userstate__achievements{
-        width: 45%;
+    .achievements__container .achivement img {
+        height: 70px;
     }
-    .profile-userstats .userstate_statistics {
-        width: 92%;
-    } */
+    .achivement .achivement__title-desc h3 {
+        font-size: 15px;
+    }
+    .achivement .achivement__title-desc p {
+        font-size: 13px;
+    }
+
+}
+
+@media (max-width: 650px) {
+    .profile-userinfo .userinfo__loading,
+    .profile-userinfo .userinfo__isfriends {
+        width: 65px;
+    }
+    .userinfo__isfriends .isfriends__menu{
+        width: 40%;
+    }
+    .userinfo__isfriends .isfriends__icon-desc {
+        width: 60%;
+    }
+    .userinfo__isfriends .isfriends__menu svg {
+        width: 100%;
+    }
+    .profile-userinfo .isfriends__icon-desc p {
+        display: none;
+    }
+    .userinfo__isfriends .adjust-addfriend {
+        justify-content: center;
+    }
+    .chat__button {
+        padding: 4px 8px;
+        
+    }
+    .chat__button p {
+        display: none;
+    }
+
+    
 }

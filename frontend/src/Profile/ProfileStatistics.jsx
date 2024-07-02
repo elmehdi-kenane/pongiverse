@@ -87,7 +87,6 @@ import { achv } from './data/achvData'
   }
   
 function ProfileStatistics() {
-
     
   return (
     <div className="profile-userstats">
