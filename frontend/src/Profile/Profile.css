@@ -240,6 +240,7 @@ h1, h3, p{
     position: absolute;
     top: 40px;
     right: 10px;
+    z-index: 2;
 
     border: #826aed solid 1px;
     background-color: rgb(0, 0, 0, 0.8);
@@ -310,7 +311,7 @@ h1, h3, p{
 
 .report__content {
     display: flex;
-    height: 450px;
+    /* height: 450px; */
     width: 350px;
     position: fixed;
     flex-direction: column;
@@ -364,7 +365,6 @@ h1, h3, p{
     font-size: 15px;
     font-weight: 600;
     color: #dcdcdc;
-    
 }
 
 .report__options .report__slt .slt__options {
@@ -378,6 +378,7 @@ h1, h3, p{
     height: 20px;
     width: 200px;
     border: none;
+    /* border: #826aed solid .5px; */
 }
 .slt__options .option p{
     margin-top: -1.5px;
@@ -410,6 +411,7 @@ h1, h3, p{
 .report__content .report__footer {
     display: flex;
     flex-direction: column;
+    margin-bottom: 10px;
     gap: 20px;
     align-items: center;
     height: 100px;
@@ -436,9 +438,8 @@ h1, h3, p{
     border-color: white;
 }
 .report__content .report__footer .block-user .valid-bg{
-    /* border-color: #826aed; */
     background-color: #826aed;
-    transition: border-color 0.3s;
+    transition: background-color 0.2s;
     color: white;
 }
 .report__content .report__footer .block-user p{
@@ -495,11 +496,9 @@ h1, h3, p{
 
 .profile__block .block-content{
     display: flex;
-    height: 300px;
     width: 400px;
     position: fixed;
     flex-direction: column;
-    /* padding: 20px; */
     gap: 10px;
     
     top: 400px;
@@ -534,6 +533,7 @@ h1, h3, p{
     width: 100%;
     /* border: #8edf34 0.5px solid; */
     gap: 10px;
+    margin-bottom: 15px;
 }
 .block-content .block__submit .block-cancel,
 .block-content .block__submit .block-confirm{
@@ -604,7 +604,6 @@ h1, h3, p{
     font-weight: 500;
     margin-top: -33px;
 }
-
 
 
 
@@ -690,9 +689,7 @@ h1, h3, p{
     height: 100%;
 }
 
-.userstate__friends-achievements .userstate__friends h1,
-.userstate__friends-achievements .userstate__achievements h1,
-.profile-userstats .userstate_statistics h1 {
+.profile-userstats .userstate-header h1{
     color: white;
     text-align: center;
     letter-spacing: 1px;
@@ -899,5 +896,144 @@ h1, h3, p{
         display: none;
     }
 
+    /* Report */
+    .report__content {
+        display: flex;
+        width: 250px;
+    }
+    .report__content .report__title {
+        font-size: 15px;
+        letter-spacing: 0.5px;
+        height: 40px;
+    }
+    .report__content .report-close {
+        top: 6px;
+        right: 8px;
+        height: 28px;
+        width: 28px;
+    }
+    .report__content  .report__options {
+        gap: 10px;
+    }
+    .report__options .report__slt h1{
+        font-size: 12px;
+        font-weight: 600;
+    }
+    .report__options .report__slt .slt__options .option {
+        margin-top: 0px;
+        height: 20px;
+        width: 155px;
+    }
+    .slt__options .option p{
+        font-size: 11px;
+    }
+    .report__content .report__footer {
+        margin-bottom: 0px;
+        gap: 15px;
+        height: 100px;
+        border-top: 0.5px solid #826aed;
+    }
+    .report__content .report__footer .block-user .block-icon{  /* SVG */
+        height: 13px;
+        width: 13px;
+    }
+    .report__content .report__footer .block-user p{
+        font-size: 12.5px;
+    }
+    .report__footer .report-submit .submit-button {
+        padding: 9px 22px;
+        font-size: 11px;
+    }
+    /* BLOCK */
+    .profile__block .block-content{
+        display: flex;
+        width: 250px;
+    }
+    .profile__block .block-content .block-content__title{
+        padding: 8px 25px;
+        font-size: 20px;
+        letter-spacing: 1.5px;
+    }
+    .profile__block .block-content .block-content__title2{
+        padding: 5px 25px;
+        font-size: 17px;
+    }
+    .profile__block .block-content .block-content__desc{
+        margin-top: -5px;
+        padding: 8px 25px;
+        font-size: 12px;
+    }
+    .block-content .block__submit .block-cancel,
+    .block-content .block__submit .block-confirm{
+        width: 65px;
+        height: 35px;
+        font-size: 12px;
+    }
+}
+
+
+@media (max-width: 550px) {
+
+    .profile-page {
+        padding: 50px 15px 0;
+    }
+    /* Player Banner */
+    .profile-userinfo {
+        padding: 0 10px;
+        height: 300px;
+        flex-direction: column;
+        gap: 0px;
+    }
+    .userinfo__pic {
+        height: 180px;
+    }
+    .userinfo__name-bio .userinfo__name-avatar {
+        justify-content: center;
+        margin-top: -5px;
+    }
+    .userinfo__name-bio {
+        gap: 10px;
+        /* width: 0px; */
+    }
+
+
+    /* Statistics */
+    .profile-userstats .userstate__friends-achievements {
+        /* border: cyan solid 1px; */
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: auto;
+        gap: 25px;
+    }
+    .profile-userstats .userstate__friends-achievements .userstate__friends,
+    .profile-userstats .userstate__friends-achievements .userstate__achievements {
+        width: 100%;
+        height: 405px;
+    }
+    .profile-userstats .userstate-header h1{
+        font-size: 20px;
+    }
+    /* Friends */
+    .classment__friend .friend__pic-name img {
+        height: 32px;
+    }
+    .classment__friend .friend__pic-name p {
+        letter-spacing: 0.5px;
+        font-size: 14px;
+    }
+    /* Achievements */
+    .achievements__container .achivement img {
+        height: 50px;
+    }
+    .achivement .achivement__title-desc h3 {
+        font-size: 14px;
+    }
+    .achivement .achivement__title-desc p {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 550px) {
     
 }

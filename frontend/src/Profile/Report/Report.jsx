@@ -17,7 +17,6 @@ function Report() {
   }
 
   useEffect (() => {
-
     // Handle CLick Outside Report -----------------------------
     const handleOutsideClick = (event)=>{
       if (!event.composedPath().includes(reportRef.current)
