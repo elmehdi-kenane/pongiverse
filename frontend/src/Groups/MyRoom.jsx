@@ -1,7 +1,7 @@
 import { useState } from "react";
 import * as ChatIcons from "../assets/chat/media";
 
-const MyRoom = () => {
+const MyRoom = (props) => {
   const [showSettings, setShowSettings] = useState(false);
   const [leaveRoom, setLeaveRoom] = useState(false);
   const [changeRoomName, setChangeRoomName] = useState(false);
@@ -16,18 +16,18 @@ const MyRoom = () => {
   return (
     <div className="room-box">
       <div className="room-details">
-        <img src={ChatIcons.RoomIcon} className="room-avatar" alt="" />
+        <img src={props.roomIcons[props.index]} className="room-avatar" alt="" />
         <div className="room-infos">
-          <div className="room-name">No Hesi</div>
-          <div className="room-members">144 Member</div>
+          <div className="room-name">{props.name}</div>
+          <div className="room-members">{props.membersCount} Members</div>
         </div>
       </div>
       <div className="room-desc">
-        Lorem Ipsum is simply dummy text of the printing and
+        {props.topic}
       </div>
       <div className="btn-and-settings">
         <button className="leave-room" onClick={() => setLeaveRoom(true)}>
-          Leave Channel
+          Leave Room
         </button>
         <img
           src={ChatIcons.RoomSettings}
@@ -118,14 +118,17 @@ const MyRoom = () => {
           />
           <div className="add-room-member-list">
             <div className="add-admin-member-infos">
-              <img src={ChatIcons.mmaqbourImage} alt="" className="invite-room-member-image"/>
-              <div className="add-admin-member-name">Mohammed</div>
+              <img src={ChatIcons.mmaqbourImage} alt="" className="add-room-admin-image"/>
+              <div className="add-room-admin-infos">
+                <div className="add-admin-member-name">Mohammed</div>
+                <div className="add-admin-member-level">level2</div>
+              </div>
             </div>
             <button className="add-room-admin-btn">Add Admin</button>
           </div>
         </div>
       )}
-      {/* {inviteMember && (
+      {inviteMember && (
         <div className="invite-room-member-container">
           <img
             src={ChatIcons.closeButton}
@@ -136,12 +139,15 @@ const MyRoom = () => {
           <div className="invite-room-member-list">
             <div className="invite-member-infos">
               <img src={ChatIcons.mmaqbourImage} alt="" className="invite-room-member-image"/>
-              <div className="add-admin-member-name">Mohammed</div>
+              <div className="invite-room-member-infos">
+                <div className="invite-room-member-name">Mohammed</div>
+                <div className="invite-room-member-level">level2</div>
+              </div>
             </div>
             <button className="invite-room-member-btn">Invite</button>
           </div>
         </div>
-      )} */}
+      )}
       {deleteRoom && (
         <div className="delete-room-container">
           <div className="delete-room-head">

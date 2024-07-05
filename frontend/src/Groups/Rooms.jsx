@@ -13,49 +13,164 @@ const Rooms = () => {
   const [createRoom, setCreateRoom] = useState(false);
   const [joinRoom, setJoinRoom] = useState(false);
   const { isBlur, setIsBlur } = useContext(ChatContext);
+  const {user, socket} = useContext(AuthContext)
+  const [myRooms, setMyRooms] = useState([])
+  const [myRoomsIcons, setMyRoomsIcons] = useState([])
+  const [newRoomCreated, setNewRoomCreated] = useState({})
+  const [newJoin, setNewJoin] = useState({})
+  let numberOfRoomInvitation = 5;
+  let numberOfSuggestedRoom = 5;
 
-  const onClickScroller = (handle) => {
+  //hande scroller handler (My Rooms)
+  const onClickScroller = (handle, numberOfRooms) => {
     const slider = document.getElementsByClassName("rooms-slider")[0];
     let sliderIndex = parseInt(
       getComputedStyle(slider).getPropertyValue("--slider-index")
     );
+    let itemsPerScreen = parseInt(
+      getComputedStyle(slider).getPropertyValue("--items-per-screen")
+    );
     if (handle === "left" && sliderIndex) {
       slider.style.setProperty("--slider-index", sliderIndex - 1);
     } else if (handle === "right") {
-      if (sliderIndex + 1 >= 18 / 4) sliderIndex = 0;
-      slider.style.setProperty("--slider-index", sliderIndex + 1);
+      if (sliderIndex + 1 >= numberOfRooms / itemsPerScreen) {
+        sliderIndex = 0;
+        slider.style.setProperty("--slider-index", sliderIndex);
+      } else slider.style.setProperty("--slider-index", sliderIndex + 1);
     }
   };
-  const onClickScrollerSuggested = (handle) => {
-    console.log("im Hereee");
+
+  //hande scroller handler (Suggested Room)
+  const onClickScrollerSuggested = (handle, numberOfRooms) => {
     const slider = document.getElementsByClassName("suggested-rooms-slider")[0];
-    console.log(slider);
     let sliderIndex = parseInt(
       getComputedStyle(slider).getPropertyValue("--suggested-slider-index")
     );
-    if (handle === "left") {
+    let itemsPerScreen = parseInt(
+      getComputedStyle(slider).getPropertyValue("--items-per-screen")
+    );
+    if (handle === "left" && sliderIndex) {
       slider.style.setProperty("--suggested-slider-index", sliderIndex - 1);
-    } else if (handle === "right")
-      slider.style.setProperty("--suggested-slider-index", sliderIndex + 1);
+    } else if (handle === "right") {
+      if (sliderIndex + 1 >= numberOfRooms / itemsPerScreen) {
+        sliderIndex = 0;
+        slider.style.setProperty("--suggested-slider-index", sliderIndex);
+      } else
+        slider.style.setProperty("--suggested-slider-index", sliderIndex + 1);
+    }
   };
-  const onClickScrollerInvitation = (handle) => {
-    console.log("im Hereee");
-    const slider = document.getElementsByClassName("invitation-rooms-slider")[0];
-    console.log(slider);
+
+  //hande scroller handler (Room Invitations)
+  const onClickScrollerInvitation = (handle, numberOfRooms) => {
+    const slider = document.getElementsByClassName(
+      "invitation-rooms-slider"
+    )[0];
     let sliderIndex = parseInt(
       getComputedStyle(slider).getPropertyValue("--invitation-slider-index")
     );
-    if (handle === "left") {
+    let itemsPerScreen = parseInt(
+      getComputedStyle(slider).getPropertyValue("--items-per-screen")
+    );
+    if (handle === "left" && sliderIndex) {
       slider.style.setProperty("--invitation-slider-index", sliderIndex - 1);
-    } else if (handle === "right")
-      slider.style.setProperty("--invitation-slider-index", sliderIndex + 1);
+    } else if (handle === "right") {
+      if (sliderIndex + 1 >= numberOfRooms / itemsPerScreen) {
+        sliderIndex = 0;
+        slider.style.setProperty("--invitation-slider-index", sliderIndex);
+      } else
+        slider.style.setProperty("--invitation-slider-index", sliderIndex + 1);
+    }
   };
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      const promises = myRooms.map(async (room) => {
+        const response = await fetch(`http://localhost:8000/api/getImage`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            image: room.icon_url,
+          }),
+        });
+        const blob = await response.blob();
+        return URL.createObjectURL(blob);
+      });
+      const images = await Promise.all(promises);
+      setMyRoomsIcons(images);
+    };
+    if (myRooms.length !== 0) {
+      console.log(myRooms.length)
+      console.log(myRooms)
+      fetchImages();
+    }
+  }, [myRooms]);
+
+  //fetch rooms
+  useEffect(()=> {
+    const fetchMyRooms = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/chatAPI/channels/${user}`)
+        const data = await response.json()
+        if(data && data.length){
+          console.log("rooms: ",data)
+          setMyRooms(data)
+        }
+      }catch(error) {
+        console.log(error)
+      }
+    }
+    if(user)
+      fetchMyRooms()
+  },[user])
+
+  useEffect(()=>{
+    
+    const addUserChannelGroup = ()=> {
+          socket.send(JSON.stringify({
+            type : 'addUserChannelGroup',
+            user: user,
+          }))
+    }
+    if(socket && socket.readyState === WebSocket.OPEN  && user)
+      addUserChannelGroup()
+  }, [socket, user])
+
+  useEffect(() => {
+    if(Object.keys(newRoomCreated).length !== 0) {
+      console.log("lol")
+      setMyRooms(prev => [...prev, newRoomCreated])
+      setNewRoomCreated({})
+    }
+  }, [newRoomCreated])
+
+  useEffect(()=> {
+    if(Object.keys(newJoin).length !== 0) {
+      console.log("new Join" ,newJoin)
+      const roomExists = myRooms.some(room => room.name === newJoin.name);
+      if(roomExists) {
+
+        const updatedRooms = myRooms.map(room => {
+          if (room.name === newJoin.name) {
+            return { ...room, membersCount: newJoin.membersCount };
+          }
+          return room
+        });
+        setMyRooms(updatedRooms);
+      } else {
+        setMyRooms(prevRooms => [...prevRooms, newJoin]);
+      }
+      setJoinRoom({})
+    }
+  },[newJoin])
 
   return (
     <div className="rooms-page">
       <div className="page-middle-container">
         {joinRoom && (
           <JoinRoom
+            setNewJoin = {setNewJoin}
             onClose={() => {
               setJoinRoom(false);
               setIsBlur(false);
@@ -64,10 +179,12 @@ const Rooms = () => {
         )}
         {createRoom && (
           <CreateRoom
+            setNewRoomCreated = {setNewRoomCreated} 
             onClose={() => {
               setCreateRoom(false);
               setIsBlur(false);
-            }}
+            }
+          }
           />
         )}
         <div className={isBlur ? "rooms-container blur" : "rooms-container"}>
@@ -80,7 +197,7 @@ const Rooms = () => {
               }}
             >
               <img src={ChatIcons.JoinChannel} alt="" className="join-icon" />
-              <div className="join-room-text">Join a Channel</div>
+              <div className="join-room-text">Join a Room</div>
             </div>
             <div
               className="create-room-btn"
@@ -94,77 +211,120 @@ const Rooms = () => {
                 alt=""
                 className="create-icon"
               />
-              <div className="create-room-text">Create a Channel</div>
+              <div className="create-room-text">Create a Room</div>
             </div>
           </div>
-          <div className="rooms-header">Your Channels</div>
+          <div className="rooms-header">Your Rooms</div>
           <div className="my-rooms-row">
-            <img
-              src={ChatIcons.leftHand}
-              className="hande left-hande"
-              onClick={() => onClickScroller("left")}
-            />
-            <img
-              src={ChatIcons.rightHand}
-              className="hande right-hande"
-              onClick={() => onClickScroller("right")}
-            />
+            {myRooms.length > 4 ? (
+              <>
+                <img
+                  src={ChatIcons.leftHand}
+                  className="hande left-hande"
+                  onClick={() => onClickScroller("left", myRooms.length)}
+                />
+                <img
+                  src={ChatIcons.rightHand}
+                  className="hande right-hande"
+                  onClick={() => onClickScroller("right", myRooms.length)}
+                />
+              </>
+            ) : (
+              ""
+            )}
             <div className="slider-container">
-              <div className="rooms-slider">
-                {Array(17)
-                  .fill()
-                  .map((_, i) => (
-                    <MyRoom />
+              {/*Display rooms */}
+              {(myRooms && myRooms.length) ? (
+                <div className="rooms-slider">
+                 { myRooms.map((room, index) => (
+                    <MyRoom key={index} name={room.name} index={index} topic= {room.topic} roomIcons={myRoomsIcons} membersCount={room.membersCount}/>
                   ))}
-              </div>
+                </div>
+              ) : (
+                <div className="rooms-slider empty-rooms-slider">
+                  Couldn't find a room
+                </div>
+              )}
             </div>
           </div>
-          <div className="rooms-header">Suggested Public Channels</div>
+          <div className="rooms-header">Suggested Public Rooms</div>
           <div className="suggested-room-row">
-            <img
-              src={ChatIcons.leftHand}
-              className="hande left-hande"
-              onClick={() => onClickScrollerSuggested("left")}
-            />
-            <img
-              src={ChatIcons.rightHand}
-              className="hande right-hande"
-              onClick={() => onClickScrollerSuggested("right")}
-            />
+            {numberOfSuggestedRoom > 4 ? (
+              <>
+                <img
+                  src={ChatIcons.leftHand}
+                  className="hande left-hande"
+                  onClick={() =>
+                    onClickScrollerSuggested("left", numberOfSuggestedRoom)
+                  }
+                />
+                <img
+                  src={ChatIcons.rightHand}
+                  className="hande right-hande"
+                  onClick={() =>
+                    onClickScrollerSuggested("right", numberOfSuggestedRoom)
+                  }
+                />
+              </>
+            ) : (
+              ""
+            )}
             <div className="slider-container">
-              <div className="suggested-rooms-slider">
-                {Array(9)
-                  .fill()
-                  .map((_, i) => (
-                    <SuggestedRoom />
-                  ))}
-              </div>
+              {numberOfSuggestedRoom ? (
+                <div className="suggested-rooms-slider">
+                  {Array(numberOfSuggestedRoom)
+                    .fill()
+                    .map((_, i) => (
+                      <SuggestedRoom />
+                    ))}
+                </div>
+              ) : (
+                <div className="suggested-rooms-slider empty-rooms-slider">
+                  couldn't find a suggested room
+                </div>
+              )}
             </div>
           </div>
-          {/* channels invitations*/}
-          <div className="rooms-header room-header-invitation">Channels Invitations</div>
+          <div className="rooms-header room-header-invitation">
+            Room Invitations
+          </div>
           <div className="invitation-room-row">
-            <img
-              src={ChatIcons.leftHand}
-              className="hande left-hande"
-              onClick={() => onClickScrollerInvitation("left")}
-            />
-            <img
-              src={ChatIcons.rightHand}
-              className="hande right-hande"
-              onClick={() => onClickScrollerInvitation("right")}
-              />
+            {numberOfRoomInvitation > 4 ? (
+              <>
+                <img
+                  src={ChatIcons.leftHand}
+                  className="hande left-hande"
+                  onClick={() =>
+                    onClickScrollerInvitation("left", numberOfRoomInvitation)
+                  }
+                />
+                <img
+                  src={ChatIcons.rightHand}
+                  className="hande right-hande"
+                  onClick={() =>
+                    onClickScrollerInvitation("right", numberOfRoomInvitation)
+                  }
+                />
+              </>
+            ) : (
+              ""
+            )}
             <div className="slider-container">
-              <div className="invitation-rooms-slider">
-                {Array(9)
+              {
+                numberOfRoomInvitation ?
+                <div className="invitation-rooms-slider">
+                {Array(numberOfRoomInvitation)
                   .fill()
                   .map((_, i) => (
                     <InvitationRooms />
                   ))}
+              </div> : 
+              <div className="invitation-rooms-slider empty-rooms-slider">
+                You Don't Have any Room Ivitation Yet
               </div>
+                }
             </div>
           </div>
-          {/* channels invitations*/}
         </div>
       </div>
     </div>

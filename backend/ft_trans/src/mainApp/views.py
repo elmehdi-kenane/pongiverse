@@ -76,6 +76,7 @@ from django.http import HttpResponse
 import base64
 import os
 from .models import GameNotifications
+from mimetypes import guess_type
 
 @api_view(['POST'])
 def online_friends(request):
@@ -107,8 +108,10 @@ def notifs_friends(request):
 @api_view(['POST'])
 def serve_image(request):
 	if (request.data).get('image'):
+		print("the image url: ", request.data['image'])
 		with open(request.data['image'], 'rb') as image_file:
-			return HttpResponse(image_file.read(), content_type='image/jpeg')
+			content_type = guess_type(request.data['image'])
+			return HttpResponse(image_file.read(), content_type=content_type)
 
 @api_view(['POST'])
 def get_user(request):

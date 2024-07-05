@@ -11,10 +11,10 @@ const SuggestedRoom = () => {
         </div>
       </div>
       <div className="room-desc">
-        Lorem Ipsum is simply 
+        Lorem Ipsum is simply Lorem Ipsum is Lorem Ipsum aa
       </div>
       <div className="btn-and-settings">
-        <button className="leave-room">Join Channel</button>
+        <button className="leave-room">Join Room</button>
       </div>
     </div>
   );

@@ -31,6 +31,7 @@ export const AuthProvider = ({children}) => {
 	useEffect(() => {
 		const fetchImages = async () => {
 			const promises = allGameFriends.map(async (user) => {
+				
 				const response = await fetch(`http://localhost:8000/api/getImage`, {
 					method: "POST",
 					headers: {
@@ -111,7 +112,7 @@ export const AuthProvider = ({children}) => {
 					})
 				})
 				let friends = await response.json()
-				console.log("ALL MY GAME NOTIFS ARE : ", friends.message)
+				// console.log("ALL MY GAME NOTIFS ARE : ", friends.message)
 				if (friends.message.length)
 					setAllGameNotifs(friends.message)
 			} catch (e) {
@@ -181,7 +182,7 @@ export const AuthProvider = ({children}) => {
 		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && !socket && user) {
 			const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
 			newSocket.onopen = () => {
-				console.log("Socket created and Opened")
+				// console.log("Socket created and Opened")
 				setSocket(newSocket)
 			}
 			newSocket.onmessage = (event) => {

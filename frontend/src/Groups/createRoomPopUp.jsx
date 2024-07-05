@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
-import * as ChatIcons from '../assets/chat/media'
+import * as ChatIcons from "../assets/chat/media";
 import "../assets/chat/Groups.css";
 
 const CreateRoom = (props) => {
@@ -10,24 +10,25 @@ const CreateRoom = (props) => {
   const [formData, setFormData] = useState({
     name: "",
     topic: "",
+    icon: null,
     password: "",
     confirmPassword: "",
   });
+  const [roomVisibility, setRoomVisibility] = useState("public-room");
 
-  const [visibility, setVisibility] = useState("public-room");
 
   const handleVisibilityChange = (selectedVisibility) => {
-    setVisibility(selectedVisibility);
-    setErrors({})
+    setRoomVisibility(selectedVisibility);
+    setErrors({});
   };
   useEffect(() => {
     if (socket) {
       socket.onmessage = (event) => {
         let data = JSON.parse(event.data);
         console.log("data:", data);
-        if (data.type === "channel-created") {
-          console.log("channel created");
-          props.setNewRoom(data.room);
+        if (data.type === "newRoomCreated") {
+          console.log("channel created", data.room);
+          props.setNewRoomCreated(data.room);
           console.log(data.room);
         }
       };
@@ -49,20 +50,25 @@ const CreateRoom = (props) => {
       errorContainers.name = "Channel name is required";
     if (!formData.topic.trim())
       errorContainers.topic = "Channel topic is invalid";
-    if (visibility === "protected-room" && !formData.password.trim())
+    if (roomVisibility === "protected-room" && !formData.password.trim())
       errorContainers.password = "Password is required";
-    if (visibility === "protected-room" && formData.password !== formData.confirmPassword)
+    if (
+      roomVisibility === "protected-room" &&
+      formData.password !== formData.confirmPassword
+    )
       errorContainers.confirmPassword = "Password not match";
     setErrors(errorContainers);
     if (Object.keys(errorContainers).length === 0) {
       socket.send(
         JSON.stringify({
-          type: "join-channel",
-          message: {
-            user: user,
-            room_name: formData.name,
-            topic: formData.topic,
-            password: formData.password,
+          type: "createChatRoom",
+          user: user,
+          message : {
+            name : formData.name,
+            topic : formData.topic,
+            icon : formData.icon,
+            roomVisibility : roomVisibility,
+            password : formData.password
           },
         })
       );
@@ -70,92 +76,121 @@ const CreateRoom = (props) => {
     }
   };
 
-  const  onChangeAvatar = (e) => {
-    console.log("Here ",e.target.files)
+  const onChangeAvatar = (e) => {
     const file = e.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-      const imageUrl = e.target.result;
-      const placeHolder = document.getElementsByClassName("default-room-avatar")[0];
-      placeHolder.src = imageUrl;
-    };
-
+    console.log("the file image: ",file)
     if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const imageUrl = e.target.result;
+        const base64Image = reader.result.split(',')[1];
+        setFormData({
+          ...formData,
+          icon: base64Image,
+        });
+        const placeHolder = document.getElementsByClassName(
+          "default-room-avatar"
+        )[0];
+        placeHolder.src = imageUrl;
+      };
       reader.readAsDataURL(file);
     }
-  }
+  };
 
   return (
-      <div className="create-room-container">
-          <div className="create-room-header">Create a Channel</div>
-          <div className="room-visibility">Visibility:</div>
-          <div className="room-visibility-btns">
-            <button
-              className={visibility === "public-room" ? "selected-room" : "public-room"}
-              onClick={() => handleVisibilityChange("public-room")}
-            >
-              PUBLIC
-            </button>
-            <button
-              className={visibility === "private-room" ? "selected-room" : "private-room"}
-              onClick={() => handleVisibilityChange("private-room")}
-            >
-              PRIVATE
-            </button>
-            <button
-              className={visibility === "protected-room" ? "selected-room" : "protected-room"}
-              onClick={() => handleVisibilityChange("protected-room")}
-            >
-              PROTECTED
-            </button>
-          </div>
-          <form action="" className="create-room-form" onSubmit={submitHandler}>
-            <input
-              type="text"
-              placeholder="Channel Name"
-              name="name"
-              onChange={onChangeHandler}
-            />
-            {errors.name && <span id="create-room-errors">{errors.name}</span>}
-            <input
-              type="text"
-              placeholder="Channel Topic"
-              name="topic"
-              onChange={onChangeHandler}
-            />
-            {errors.topic && <span id="create-room-errors">{errors.topic}</span>}
-            {visibility === "protected-room" && (
-              <>
-                <input
-                  type="text"
-                  placeholder="Channel Password"
-                  name="password"
-                  onChange={onChangeHandler}
-                />
-                {errors.password && <span id="create-room-errors">{errors.password}</span>}
-                <input
-                  type="text"
-                  placeholder="Confirm Channel Password"
-                  name="confirmPassword"
-                  onChange={onChangeHandler}
-                />
-                {errors.confirmPassword && (
-                  <span id="create-room-errors">{errors.confirmPassword}</span>
-                )}
-              </>
-            )}
-          </form>
-          <div className="room-image-container">
-            <label for='room-image' id="room-avatar-label">Upload and image (Room avatar)</label>
-            <input type="file" name="avatar" accept="image/png, image/jpeg" id='room-image' onChange={onChangeAvatar}/>
-            <img src={ChatIcons.PlaceHolder} alt=""  className="default-room-avatar"/>
-          </div>
-          <div className="create-room-btns">
-            <button onClick={props.onClose} className="cancel-create-room">CANCEL</button>
-            <button className="create-room">CREATE</button>
-          </div>
+    <div className="create-room-container">
+      <div className="create-room-header">Create a Room</div>
+      <div className="room-visibility">Visibility:</div>
+      <div className="room-visibility-btns">
+        <button
+          className={
+            roomVisibility === "public-room" ? "selected-room" : "public-room"
+          }
+          onClick={() => handleVisibilityChange("public-room")}
+        >
+          PUBLIC
+        </button>
+        <button
+          className={
+            roomVisibility === "private-room" ? "selected-room" : "private-room"
+          }
+          onClick={() => handleVisibilityChange("private-room")}
+        >
+          PRIVATE
+        </button>
+        <button
+          className={
+            roomVisibility === "protected-room" ? "selected-room" : "protected-room"
+          }
+          onClick={() => handleVisibilityChange("protected-room")}
+        >
+          PROTECTED
+        </button>
       </div>
+      <form action="" className="create-room-form" onSubmit={submitHandler}>
+        <input
+          type="text"
+          placeholder="Room Name"
+          name="name"
+          onChange={onChangeHandler}
+        />
+        {errors.name && <span id="create-room-errors">{errors.name}</span>}
+        <input
+          type="text"
+          placeholder="Room Topic"
+          name="topic"
+          onChange={onChangeHandler}
+        />
+        {errors.topic && <span id="create-room-errors">{errors.topic}</span>}
+        {roomVisibility === "protected-room" && (
+          <>
+            <input
+              type="password"
+              placeholder="Channel Password"
+              name="password"
+              onChange={onChangeHandler}
+            />
+            {errors.password && (
+              <span id="create-room-errors">{errors.password}</span>
+            )}
+            <input
+              type="password"
+              placeholder="Confirm Channel Password"
+              name="confirmPassword"
+              onChange={onChangeHandler}
+            />
+            {errors.confirmPassword && (
+              <span id="create-room-errors">{errors.confirmPassword}</span>
+            )}
+          </>
+        )}
+        <div className="room-image-container">
+          <label htmlFor="room-image" id="room-avatar-label">
+            Upload and image (Room avatar)
+          </label>
+          <input
+            type="file"
+            name="avatar"
+            accept="image/png, image/jpeg"
+            id="room-image"
+            onChange={onChangeAvatar}
+          />
+          <img
+            src={ChatIcons.PlaceHolder}
+            alt=""
+            className="default-room-avatar"
+          />
+        </div>
+        <div className="create-room-btns">
+          <button onClick={props.onClose}  type='button' className="cancel-create-room">
+            CANCEL
+          </button>
+          <button className="create-room" type="submit">
+            CREATE
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 

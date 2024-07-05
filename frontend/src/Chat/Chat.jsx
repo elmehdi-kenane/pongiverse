@@ -31,7 +31,7 @@ const Chat = () => {
     <div className="chat-page">
       <div className="chat-container">
         <div className="conversations">
-      {<h4> {user} </h4>}
+      {/* {<h4> {user} </h4>} */}
           <div className="conversations__search__mobile">
             <img
               src={ChatIcons.SearchIcon}

@@ -20,8 +20,12 @@ def channel_list(request, username):
             channel_data = {
                 'id': channel.id,
                 'name': channel.name,
+                'topic': channel.topic,
+                'icon_url':channel.icon.path,
+                'membersCount': channel.members_count,
             }
             data.append(channel_data)
+        print('channel data: ',data)
         return Response(data)
 
     return Response({'error': 'Invalid request method'}, status=400)

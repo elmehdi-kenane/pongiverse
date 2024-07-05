@@ -72,6 +72,7 @@
 
 .blur {
   filter: blur(7px);
+  pointer-events: none;
 }
 
 .join-and-create {
@@ -137,15 +138,25 @@
   --slider-index: 0;
   --items-per-screen: 4;
   width: 100%;
+  height: 220px;
   display: flex;
   transform: translateX(calc(var(--slider-index) * -100%));
   transition: transform 500ms ease-in-out;
 }
 
+.empty-rooms-slider {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: .5;
+  background-color: #15072ae2;
+  border-radius: 5px;
+}
 .suggested-rooms-slider {
   --suggested-slider-index: 0;
   --items-per-screen: 4;
   width: 100%;
+  height: 220px;
   display: flex;
   transform: translateX(calc(var(--suggested-slider-index) * -100%));
   transition: transform 500ms ease-in-out;
@@ -155,6 +166,7 @@
   --invitation-slider-index: 0;
   --items-per-screen: 4;
   width: 100%;
+  height: 80px;
   display: flex;
   transform: translateX(calc(var(--invitation-slider-index) * -100%));
   transition: transform 500ms ease-in-out;
@@ -240,6 +252,7 @@
   width: 60px;
   height: 60px;
   border-radius: 7px;
+  outline: .5px solid #15072a;
 }
 
 .room-name {
@@ -436,6 +449,7 @@
   align-items: center;
   justify-content: space-around;
   flex-direction: column;
+  /* pointer-events: none; */
 }
 .confirm-leave-btns {
   width: 100%;
@@ -520,7 +534,7 @@
   gap: 10px;
 }
 
-
+/*addRoomAdmin && InviteMemeber*/
 .add-room-admin-container,
 .invite-room-member-container {
   position: absolute;
@@ -529,7 +543,62 @@
   height: 100%;
   top: 0;
   left: 0;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
+.add-admin-close-btn,
+.invite-member-close-btn {
+  align-self: flex-end;
+  width: 20px;
+  cursor: pointer;
+
+}
+.add-room-member-list,
+.invite-room-member-list {
+  display: flex;
+  justify-content: space-between;
+}
+
+.add-admin-member-infos,
+.invite-member-infos {
+  display: flex;
+  gap: 5px;
+}
+
+.add-room-admin-image,
+.invite-room-member-image {
+  width: 25px;
+  height: 25px;
+  border-radius: 5px;
+}
+
+.add-admin-member-name,
+.invite-room-member-name {
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.add-admin-member-level,
+.invite-room-member-level {
+  font-size: 8px;
+  font-weight: lighter;
+}
+
+.add-room-admin-btn,
+.invite-room-member-btn {
+  width: 30%;
+  font-size: 10px;
+  height: 20px;
+  border: none;
+  background-color: white;
+  color: #15072a;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/*END addRoomAdmin && InviteMemeber*/
 
 .upload-room-avatar-container {
   display: flex;
@@ -651,21 +720,8 @@
   gap: 5px;
 }
 
-.invite-room-member-image {
-  width: 50px;
-}
-.add-admin-member-infos {
-  display: flex;
-  flex-direction: column;
-}
-.add-room-member-list {
-  display: flex;
-  justify-content: space-between;
-}
-.invite-member-infos {
-  display: flex;
-  flex-direction: column;
-}
+
+
 
 @media screen and (min-width: 1440px) {
   .page-middle-container {

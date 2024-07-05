@@ -10,6 +10,7 @@ import ChatContext from "../Groups/ChatContext";
 
 const MessagesContainer = () => {
   const [messages, setMessages] = useState([]);
+  const [showDirectOptions, setShowDirectOptions] = useState(false);
   const [recivedMessages, setRecivedMessages] = useState(null);
   const [newMessage, setNewMessage] = useState("");
   const { user, socket } = useContext(AuthContext);
@@ -95,6 +96,7 @@ const MessagesContainer = () => {
   return (
     <>
       <div className="name-container">
+      {showDirectOptions ? <div className="direct-options-container"> </div> : ""}
         <div className="name-container__conv-infos">
           <img
             src={ChatIcons.DefaultAvatar}
@@ -118,6 +120,7 @@ const MessagesContainer = () => {
           </div>
           <div className="name-container__options">
             <img
+            onClick={() => {console.log("im cliccccked")}}
               src={ChatIcons.ThreePoints}
               alt=""
               className="name-container__option-icon"

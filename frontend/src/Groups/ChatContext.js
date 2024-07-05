@@ -38,14 +38,9 @@ export const ChatProvider = ({ children }) => {
         return URL.createObjectURL(blob);
       });
       const images = await Promise.all(promises);
-      console.log("images: " ,images)
       setDirectsImages(images);
     };
     if (directsConversations) {
-      // let loadingImage = []
-      // for (let i = 0; i < directsConversations.length; i++)
-      //     loadingImage.push(Icons.solidGrey)
-      // setDirectsImages(loadingImage)
       fetchImages();
     }
   }, [directsConversations]);

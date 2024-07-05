@@ -19,7 +19,8 @@ function ForgotPassword() {
 	const [errors, setErrors] = useState({})
 	let attempts = 0;
 	const [code, setCode] = useState(-12);
-	const [inputCode, setInputCode] = useState(-140);
+	const [
+		Code, setInputCode] = useState(-140);
 	const [exist, SetExist] = useState('');
 	const navigate = useNavigate();
 	const MySwal = withReactContent(Swal);

@@ -11,6 +11,7 @@ import { friends } from "../assets/navbar-sidebar";
 
 const DirectMessages = () => {
   const [messages, setMessages] = useState([]);
+  const [showDirectOptions, setShowDirectOptions] = useState(false);
   const [recivedMessages, setRecivedMessages] = useState(null);
   const [newMessage, setNewMessage] = useState("");
   const { user, socket, userImg } = useContext(AuthContext);
@@ -159,10 +160,17 @@ const inviteFriend = () => {
           </div>
           <div className="name-container__options">
             <img
+              onClick={() => {showDirectOptions ? setShowDirectOptions(false) : setShowDirectOptions(true)}}
               src={ChatIcons.ThreePoints}
               alt=""
               className="name-container__option-icon"
-            />
+              />
+            {showDirectOptions ?
+             <div className="direct-options-container"> 
+             <div className="view-profile-option">View Profile</div>
+             <div className="block-friend-option">Block</div>
+             <div className="change-wallpaper-option">Wallpaper</div>
+             </div> : ""}
           </div>
         </div>
       </div>

@@ -59,7 +59,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 				)
 
 	async def receive(self, text_data):
-		data = json.loads(text_data)
+		data = json.loads(text_data) 
 		if data['type'] == 'isPlayerInAnyRoom': await game_consumers.isPlayerInAnyRoom(self, data, rooms, user_channels)
 		elif data['type'] == 'dataBackUp': await game_consumers.backUpData(self, data, rooms)
 		elif data['type'] == 'join': await game_consumers.joinRoom(self, data, rooms, user_channels)
@@ -79,7 +79,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		elif data['type'] == 'createRoom': await game_consumers.create_new_room(self, data, rooms, user_channels)
 		elif data['type'] == 'checkingRoomCode': await game_consumers.join_new_room(self, data, rooms, user_channels)
 		#chat
-		elif data['type'] == 'join-channel': await chat_consumers.join_channel(self, data)
+		elif data['type'] == 'createChatRoom': await chat_consumers.create_chat_room(self, data)
+		elif data['type'] == 'joinChatRoom': await chat_consumers.join_chat_room(self, data)
+		elif data['type'] == 'addUserChannelGroup': await chat_consumers.add_user_channel_group(self, data)
 		elif data['type'] == 'message': await chat_consumers.message(self, data)
 		elif data['type'] == 'directMessage': await chat_consumers.direct_message(self, data, user_channels)
 
@@ -192,7 +194,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			'type': 'connected_again',
 			'message': event['message']
 		}))
-		##################################### (CHAT) #####################################
+	##################################### (CHAT) #####################################
 		
 	async def send_message(self, event):
 		data = event['message']
@@ -205,6 +207,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
 				'sender' : data.sender.username,
 				'date' : timestamp,
 			}
+		}
+		await self.send(text_data=json.dumps(message))
+	async def newRoomJoin(self, event):
+		data = event['data']
+		print(data)
+		message  = {
+			'type':'newRoomJoin',
+			'room' : data
 		}
 		await self.send(text_data=json.dumps(message))
 	async def send_direct(self, event):
