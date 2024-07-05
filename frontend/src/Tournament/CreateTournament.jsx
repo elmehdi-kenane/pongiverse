@@ -20,6 +20,10 @@ function CreateTournament() {
 	const location = useLocation()
 	const { user, userImages, allGameFriends, socket, setAllGameFriends } = useContext(AuthContext)
 	const allGameFriendsRef = useRef(allGameFriends);
+	const divRef = useRef(null);
+	const divRef2 = useRef(null);
+	const inviteRef = useRef(null);
+	const inviteRef2 = useRef(null);
 	const isOpen = () => {
 		setOpen(!open);
 	}
@@ -126,7 +130,7 @@ function CreateTournament() {
 					console.error('Failed to fetch data');
 				}
 			}
-			const check_is_started_and_not_finished = async () =>{
+			const check_is_started_and_not_finished = async () => {
 				const response = await fetch(`http://localhost:8000/api/is-started-and-not-finshed`, {
 					method: "POST",
 					headers: {
@@ -141,7 +145,7 @@ function CreateTournament() {
 					if (data.Case === 'yes')
 						navigate('../game/tournamentbracket');
 					else
-					check_is_join()
+						check_is_join()
 				} else {
 					console.error('Failed to fetch data');
 				}
@@ -263,7 +267,7 @@ function CreateTournament() {
 					const userExists = currentAllGameFriends.some(friend => friend.name === message.userInfos.name)
 					if (!userExists)
 						setAllGameFriends([...currentAllGameFriends, message.userInfos])
-				} else if (type === 'tournament_started'){
+				} else if (type === 'tournament_started') {
 					navigate('../game/tournamentbracket');
 				}
 			}
@@ -342,10 +346,24 @@ function CreateTournament() {
 	}
 
 	const username = user
+
+	useEffect(() => {
+		const handleClickOutside = (event) => {
+			if (!event.composedPath().includes(inviteRef.current) && !event.composedPath().includes(divRef.current) && !event.composedPath().includes(inviteRef2.current) && !event.composedPath().includes(divRef2.current)) {
+				setOpen(false)
+			}
+		};
+		document.body.addEventListener('click', handleClickOutside);
+		return () => {
+			document.body.removeEventListener('click', handleClickOutside);
+		};
+
+	}, [])
+
 	const InviteFriendComp = (props) => {
 		return (
-			<div className={styles[props.class]}>
-				<h3 className={styles["pop-up-title"]}></h3>
+			<div className={styles[props.class]} ref={props.refs}>
+				{/* <h3 className={styles["pop-up-title"]}></h3> */}
 				{
 					allGameFriends.length > 0 && allGameFriends.map((user, key) => {
 						if (user.name !== username) {
@@ -393,9 +411,9 @@ function CreateTournament() {
 					{
 						isTournamentOwner ?
 							<div className={styles["up-buttons"]}>
-								<button className={styles["up-button"]} onClick={isOpen}>Invite Friend</button>
+								<button className={styles["up-button"]} onClick={isOpen} ref={inviteRef2}>Invite Friend</button>
 								{
-									tournamentMembers.length > 0 ? <button className={styles["up-button"]} onClick={handleStart}>Start</button> : <button className={styles["up-button-disabled"]} onClick={handleStart} disabled>Start</button>
+									tournamentMembers.length === 16 ? <button className={styles["up-button"]} onClick={handleStart}>Start</button> : <button className={styles["up-button-disabled"]} onClick={handleStart} disabled>Start</button>
 								}
 							</div>
 							: <div className={styles["up-buttons"]}>
@@ -784,7 +802,6 @@ function CreateTournament() {
 									<div className={styles["disconnected-div"]}>
 										<p>diconnected</p>
 										{
-
 											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[15].name)}>Kick out</button>
 										}
 									</div>
@@ -808,14 +825,14 @@ function CreateTournament() {
 							<>
 								<div className={styles["buttons"]}>
 									<div className={styles["down-popup-button"]}>
-										{open && <InviteFriendComp class="Invite-friend-popup-down" />}
-										<button className={styles["button"]} onClick={isOpen}>Invite Friend</button>
+										{open && <InviteFriendComp class="Invite-friend-popup-down" refs={divRef} />}
+										<button className={styles["button"]} onClick={isOpen} ref={inviteRef}>Invite Friend</button>
 									</div>
 									{
-										tournamentMembers.length > 0 ? <button className={styles["button"]} onClick={handleStart}>Start</button> : <button className={styles["button-disabled"]} onClick={handleStart} disabled>Start</button>
+										tournamentMembers.length === 16 ? <button className={styles["button"]} onClick={handleStart}>Start</button> : <button className={styles["button-disabled"]} onClick={handleStart} disabled>Start</button>
 									}
 								</div>
-								{open && <InviteFriendComp class="Invite-friend-popup-up" />}
+								{open && <InviteFriendComp class="Invite-friend-popup-up" refs={divRef2} />}
 							</> :
 							<div className={styles["down-buttons"]}>
 								<button className={styles["down-button"]} onClick={LeaveTournament}>Leave</button>

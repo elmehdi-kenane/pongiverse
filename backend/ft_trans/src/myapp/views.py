@@ -26,22 +26,39 @@ from urllib.parse import urlencode
 import json
 
 
-class SignUpView(APIView) :
+class SignUpView(APIView):
 	parser_classes = (MultiPartParser, FormParser)
+
 	def post(self, request, *args, **kwargs):
-		if request.data.get('avatar') == 'null':
-			my_dict = dict(username=request.data.get('username'), email=request.data.get('email'), password=request.data.get('password'), is_active=request.data.get('is_active'))
+		print(f"datatata : {request.data}")
+		avatar = request.data.get('avatar')
+		if avatar == 'null' or avatar is None:
+			my_dict = {
+				'username': request.data.get('username'),
+				'email': request.data.get('email'),
+				'password': request.data.get('password'),
+				'is_active': request.data.get('is_active', True)
+			}
 		else:
-			my_dict = dict(username=request.data.get('username'), email=request.data.get('email'), password=request.data.get('password'), is_active=request.data.get('is_active'), avatar=request.data.get('avatar'))
+			my_dict = {
+				'username': request.data.get('username'),
+				'email': request.data.get('email'),
+				'password': request.data.get('password'),
+				'is_active': request.data.get('is_active', True),
+				'avatar': avatar
+			}
+
 		serializer = MyModelSerializer(data=my_dict)
+
 		if serializer.is_valid():
 			user = serializer.save()
 			response = Response()
 			data = get_tokens_for_user(user)
 			csrf.get_token(request)
-			response.data = {"Case" : "Sign up successfully","data":data}
+			response.data = {"Case": "Sign up successfully", "data": data}
 			return response
 		else:
+			print(f"Serializer errors: {serializer.errors}")  # Add this line to print serializer errors
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class WaysSignUpView(APIView) :

@@ -188,7 +188,7 @@
 	transform: translate(-50%, -50%);
 	width: 90%;
 	overflow: auto;
-	background-color: rgba(255, 255, 255, 0.7);
+	background-color: #1b062a;
 }
 
 
@@ -201,11 +201,11 @@
 	z-index: 1;
 	left: 117%;
 	bottom: -216px;
-	height: 531px;
+	height: 534px;
 	transform: translate(-50%, -50%);
 	width: 350px;
 	overflow: auto;
-	background-color: rgba(255, 255, 255, 0.7);
+	background-color: #1b062a;
 }
 
 .friend {
@@ -245,12 +245,12 @@
 }
 
 .friend-name {
-	color: black;
+	color: rgb(255, 255, 255);
 	font-size: 14px;
 }
 
 .friend-status {
-	color: black;
+	color: rgb(255, 255, 255);
 	font-size: 12px;
 	opacity: 0.7;
 }
@@ -443,7 +443,7 @@ font-size: 15px;
 		transform: translate(-50%, -50%);
 		width: 300px;
 		overflow: auto;
-		background-color: rgba(255, 255, 255, 0.7);
+		background-color: #1b062a;
 	}
 
 	.friend {
@@ -578,7 +578,7 @@ font-size: 15px;
 		transform: translate(-50%, -50%);
 		width: 200px;
 		overflow: auto;
-		background-color: rgba(255, 255, 255, 0.7);
+		background-color: #1b062a;
 	}
 
 	.friend {
@@ -605,14 +605,12 @@ font-size: 15px;
 
 	.tournament-id {
 		display: flex;
-		column-gap: 10px;
+		column-gap: 50px;
 	}
-
-
 
 	.players-number {
 		display: flex;
-		column-gap: 10px;
+		column-gap: 30px;
 	}
 
 	.tournament-title {
@@ -709,7 +707,7 @@ font-size: 15px;
 		transform: translate(-50%, -50%);
 		width: 90%;
 		overflow: auto;
-		background-color: rgba(255, 255, 255, 0.7);
+		background-color: #1b062a;
 	}
 
 	.friend-invite-button {

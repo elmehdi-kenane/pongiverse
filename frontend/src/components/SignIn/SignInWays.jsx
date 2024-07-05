@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styles from '../../assets/SignUp/SignUpPage.module.css'
 import logo42 from '../../assets/SignUp/42_logo.svg'
 import logoGoogle from '../../assets/SignIn/GoogleIcon.svg'
-
+import Swal from 'sweetalert2';
 
 function SignInWays() {
 	const [googleAuthUrl, setGoogleAuthUrl] = useState('')
@@ -11,6 +11,7 @@ function SignInWays() {
 	const [googleCode, setGoogleCode] = useState('')
 	const [intraCode, setIntraCode] = useState('')
 	const navigate = useNavigate()
+
 
 	useEffect(() => {
 		const getQueryParam = (name) => {
@@ -47,7 +48,10 @@ function SignInWays() {
 			if (data.Case === "Login successfully") {
 				navigate('/mainpage');
 			} else if (data.Case === "Invalid username or password!!") {
-				alert("there is no account")
+				Swal.fire({
+					text: 'There is no account',
+					icon: 'error',
+				});
 			}
 		} else {
 			console.error('Failed to fetch data');
@@ -92,7 +96,6 @@ function SignInWays() {
 			});
 			if (response.ok) {
 				const response_data = await response.json();
-				console.log("mohamed  :", response_data.email)
 				verify_email(response_data.email)
 			} else {
 				console.error('Failed to fetch data');
