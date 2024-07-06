@@ -27,6 +27,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		user_id = payload_data.get('user_id')
 		user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
 		username = user.username
+		tmp_username = username
 		user.is_online = True
 		await sync_to_async(user.save)()
 		user_channels[username] = self.channel_name
@@ -38,28 +39,59 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			friend_is_online = await sync_to_async(lambda: friend.friend.is_online)()
 			channel_name = user_channels.get(friend_username)
 			print(f"USER CHANNEL ON CONNECT IS : {channel_name}")
-			if channel_name and friend_is_online:
+			if channel_name and friend_is_online and not user.is_playing:
 				await self.channel_layer.send(
 					channel_name,
 					{
 						'type': 'connected_again',
-						# 'user': username
 						'message': {
 								'user': username,
-								'is_playing': False,
 								'userInfos': {
 									'id': user.id,
 									'name': user.username,
 									'level': 2,
-									'image': user.avatar.path
-									# {'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path}
+									'image': user.avatar.path,
 								}
 							}
 					}
 				)
+			if channel_name and friend_is_online:
+				await self.channel_layer.send(
+					channel_name,
+					{
+						'type': 'connected_again_tourn',
+						'message': {
+								'user': username,
+								'userInfos': {
+									'id': user.id,
+									'name': user.username,
+									'level': 2,
+									'image': user.avatar.path,
+								}
+							}
+					}
+				)
+		for username, channel_name in user_channels.items():
+			user = await sync_to_async(customuser.objects.filter(username=username).first)()
+			await self.channel_layer.send(
+				channel_name,
+				{
+					'type': 'connected_again_tourn',
+					'message': {
+						'user': tmp_username,
+						'userInfos': {
+							'id': user.id,
+							'name': user.username,
+							'level': 2,
+							'image': user.avatar.path,
+						}
+					}
+				}
+			)
 
 	async def receive(self, text_data):
-		data = json.loads(text_data) 
+		data = json.loads(text_data)
+
 		if data['type'] == 'isPlayerInAnyRoom': await game_consumers.isPlayerInAnyRoom(self, data, rooms, user_channels)
 		elif data['type'] == 'dataBackUp': await game_consumers.backUpData(self, data, rooms)
 		elif data['type'] == 'join': await game_consumers.joinRoom(self, data, rooms, user_channels)
@@ -84,6 +116,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		elif data['type'] == 'addUserChannelGroup': await chat_consumers.add_user_channel_group(self, data)
 		elif data['type'] == 'message': await chat_consumers.message(self, data)
 		elif data['type'] == 'directMessage': await chat_consumers.direct_message(self, data, user_channels)
+		###
+		elif data['type'] == 'createTournament': await tournament_consumers.create_tournament(self, data, user_channels)
+		elif data['type'] == 'invite-friend': await tournament_consumers.invite_friend(self, data, user_channels)
+		elif data['type'] == 'accept-tournament-invitation': await tournament_consumers.accept_invite(self, data, user_channels)
+		elif data['type'] == 'deny-tournament-invitation': await tournament_consumers.deny_invite(self, data, user_channels)
+		elif data['type'] == 'tournament-member-loged-again': await tournament_consumers.loged_again(self, data, user_channels)
+		elif data['type'] == 'kick-player-out': await tournament_consumers.kick_player(self, data, user_channels)
+		elif data['type'] == 'destroy-tournament': await tournament_consumers.destroy_tournament(self, data, user_channels)
+		elif data['type'] == 'leave-tournament': await tournament_consumers.leave_tournament(self, data, user_channels)
+		elif data['type'] == 'start-tournament': await tournament_consumers.start_tournament(self, data, user_channels)
 
 	async def disconnect(self, close_code):
 		await tournament_consumers.disconnected(self, user_channels)
@@ -187,6 +229,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		await self.send(text_data=json.dumps({
 			'type': 'user_disconnected',
 			'message': event['message']
+		}))
+
+	async def tournament_created(self, event):
+		await self.send(text_data=json.dumps({
+			'type' : 'tournament_created',
+			'message' : event['message']
 		}))
 
 	async def connected_again(self, event):
@@ -360,3 +408,82 @@ class ChatConsumer(AsyncWebsocketConsumer):
 #             'type': 'updateGame',
 #             'message': event['message']
 #         }))
+
+	async def connected_again_tourn(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'connected_again_tourn',
+			'message': event['message']
+		}))
+
+	async def invited_to_tournament(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'invited_to_tournament',
+			'message': event['message']
+		}))
+
+	async def accepted_invitation(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'accepted_invitation',
+			'message': event['message']
+		}))
+	async def user_kicked_out(self, event):
+		await self.send(text_data=json.dumps({
+			'type' : 'user_kicked_out',
+			'message' : event['message']
+		}))
+
+	async def leave_tournament(self, event):
+		await self.send(text_data=json.dumps({
+			'type' : 'leave_tournament',
+			'message' : event['message']
+		}))
+
+	async def tournament_destroyed(self, event):
+		await self.send(text_data=json.dumps({
+			'type' : 'tournament_destroyed'
+		}))
+	async def friend_created_tournament(self, event):
+		await self.send(text_data=json.dumps({
+			'type' : 'friend_created_tournament',
+			'message' : event['message']
+		}))
+
+	async def friend_distroyed_tournament(self, event):
+		await self.send(text_data=json.dumps({
+			'type' : 'friend_distroyed_tournament',
+			'message' : event['message']
+		}))
+
+	async def tournament_created_by_user(self, event):
+		await self.send(text_data=json.dumps({
+			'type' : 'tournament_created_by_user',
+			'message' : event['message']
+		}))
+
+	async def tournament_destroyed_by_user(self, event):
+		await self.send(text_data=json.dumps({
+			'type' : 'tournament_destroyed_by_user',
+			'message' : event['message']
+		}))
+
+	async def user_leave_tournament(self, event):
+		await self.send(text_data=json.dumps({
+			'type' : 'user_leave_tournament',
+			'message' : event['message']
+		}))
+
+	async def user_join_tournament(self, event):
+		await self.send(text_data=json.dumps({
+			'type' : 'user_join_tournament',
+			'message' : event['message']
+		}))
+
+	async def user_kicked_from_tournament(self, event):
+		await self.send(text_data=json.dumps({
+			'type' : 'user_kicked_from_tournament',
+			'message' : event['message']
+		}))
+	async def tournament_started(self, event):
+		await self.send(text_data=json.dumps({
+			'type' : 'tournament_started',
+		}))

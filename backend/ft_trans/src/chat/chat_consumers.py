@@ -91,18 +91,18 @@ async def  join_chat_room(self, data):
         await self.send(json.dumps({'type': 'roomNotFound'}))
 
 async def message(self, data):
-    room_id = data['data']['room_id']
-    user_name = data['data']['sender']
-    message = data['data']['message']
-    room  = await sync_to_async(Room.objects.filter(id=room_id).get)()
-    sender = await get_user_by_name(self, user_name)
-    newMessage = await sync_to_async(Message.objects.create)(sender=sender,room=room, content=message)
-    event = {
-        'type': 'send_message',
-        'message': newMessage,
-    }
-    await self.channel_layer.group_add(room.name, self.channel_name)
-    await self.channel_layer.group_send(room.name, event)
+	room_id = data['data']['room_id']
+	user_name = data['data']['sender']
+	message = data['data']['message']
+	room  = await sync_to_async(Room.objects.filter(id=room_id).get)()
+	sender = await get_user_by_name(self, user_name)
+	newMessage = await sync_to_async(Message.objects.create)(sender=sender,room=room, content=message)
+	event = {
+		'type': 'send_message',
+		'message': newMessage,
+	}
+	await self.channel_layer.group_add(room.name, self.channel_name)
+	await self.channel_layer.group_send(room.name, event)
 
 async def get_user_by_name(self, user_name):
     return await sync_to_async(customuser.objects.get)(username=user_name)

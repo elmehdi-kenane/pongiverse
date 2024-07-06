@@ -3,7 +3,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from myapp.models import customuser
 from chat.models import Friends
+from .models import TournamentMembers
 from .models import Tournament
+from .models import TournamentMembers
+from .models import TournamentInvitation
 import random
 from myapp.serializers import MyModelSerializer
 # from rest_framework.exceptions import AuthenticationFailed
@@ -87,10 +90,7 @@ def online_friends(request):
 	for user_id in Friends.objects.filter(user=user):
 		if user_id.friend.is_online and not user_id.friend.is_playing: ####################  and user_id.friend.is_playing
 			image_path = user_id.friend.avatar.path
-			# with open(image_path, 'rb') as image_file:
-				# encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
 			allFriends.append({'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path})
-		# print(f'friends are {friends}')
 	return Response({'message': allFriends})
 
 @api_view(['POST'])
@@ -108,10 +108,8 @@ def notifs_friends(request):
 @api_view(['POST'])
 def serve_image(request):
 	if (request.data).get('image'):
-		print("the image url: ", request.data['image'])
 		with open(request.data['image'], 'rb') as image_file:
-			content_type = guess_type(request.data['image'])
-			return HttpResponse(image_file.read(), content_type=content_type)
+			return HttpResponse(image_file.read(), content_type='image/jpeg')
 
 @api_view(['POST'])
 def get_user(request):
@@ -152,3 +150,175 @@ def user_image(request):
 				return HttpResponse(image_file.read(), content_type='image/jpeg')
 	else:
 		return Response({'message': 'user not exit in the database'})
+
+@api_view(['POST'])
+def tournament_members(request):
+	username = request.data.get('user')
+	user = customuser.objects.filter(username=username).first()
+	if not user:
+		return Response({'error': 'User not found'}, status=404)
+	tournament_members = TournamentMembers.objects.select_related('tournament').filter(user=user, tournament__is_started=False)
+	if not tournament_members.exists():
+		return Response({'error': 'No active tournaments found for the user'}, status=404)
+	tournament_member = tournament_members.first()
+	tournament_id = tournament_member.tournament.tournament_id
+	my_tournament = Tournament.objects.filter(tournament_id=tournament_id).first()
+	if not my_tournament:
+		return Response({'error': 'Tournament not found'}, status=404)
+	allMembers = []
+	for member in TournamentMembers.objects.filter(tournament=my_tournament):
+		image_path = member.user.avatar.path
+		allMembers.append({
+			'id': member.user.id,
+			'name': member.user.username,
+			'level': 2,  # Assuming level is static for now
+			'image': image_path,
+			'is_online' : member.user.is_online
+		})
+	response = Response()
+	tournamentMember = TournamentMembers.objects.filter(user=user, tournament=my_tournament).first()
+	if not tournamentMember.is_owner:
+		response.data = {'tournament_id': tournament_id, 'allMembers': allMembers, 'is_owner' : 'no'}
+	else:
+		response.data = {'tournament_id': tournament_id, 'allMembers': allMembers, 'is_owner' : 'yes'}
+	return response
+
+
+@api_view(['POST'])
+def started_tournament_members(request):
+	username = request.data.get('user')
+	user = customuser.objects.filter(username=username).first()
+	if not user:
+		return Response({'error': 'User not found'}, status=404)
+	tournament_members = TournamentMembers.objects.select_related('tournament').filter(user=user, tournament__is_started=True, tournament__is_finished=False)
+	if not tournament_members.exists():
+		return Response({'error': 'No active tournaments found for the user'}, status=404)
+	tournament_member = tournament_members.first()
+	tournament_id = tournament_member.tournament.tournament_id
+	my_tournament = Tournament.objects.filter(tournament_id=tournament_id).first()
+	if not my_tournament:
+		return Response({'error': 'Tournament not found'}, status=404)
+	allMembers = []
+	for member in TournamentMembers.objects.filter(tournament=my_tournament):
+		image_path = member.user.avatar.path
+		allMembers.append({
+			'id': member.user.id,
+			'name': member.user.username,
+			'level': 2,  # Assuming level is static for now
+			'image': image_path,
+			'is_online' : member.user.is_online
+		})
+	response = Response()
+	tournamentMember = TournamentMembers.objects.filter(user=user, tournament=my_tournament).first()
+	if not tournamentMember.is_owner:
+		response.data = {'tournament_id': tournament_id, 'allMembers': allMembers, 'is_owner' : 'no'}
+	else:
+		response.data = {'tournament_id': tournament_id, 'allMembers': allMembers, 'is_owner' : 'yes'}
+	return response
+
+
+
+@api_view(['POST'])
+def get_tournament_member(request):
+	username = request.data.get('user')
+	user = customuser.objects.filter(username=username).first()
+	if user is not None:
+		response = Response()
+		response.data = {'id' : user.id, 'name' : user.username, 'level' : 2, 'image' : user.avatar.path, 'is_online' : user.is_online}
+		return response
+
+@api_view(['POST'])
+def get_notifications(request):
+	username = request.data.get('user')
+	receiver = customuser.objects.filter(username=username).first()
+	Notifications = []
+	invitations = TournamentInvitation.objects.filter(receiver=receiver)
+	if invitations is not None:
+		for notification in invitations:
+			Notifications.append({
+				'sender': notification.sender.username,
+				'tournament_id': notification.tournament.tournament_id
+			})
+	response = Response()
+	response.data = {'notifications': Notifications}
+	return response
+
+@api_view(['POST'])
+def get_tournament_data(request):
+	tournament_id = request.data.get('id')
+	if tournament_id == '' :
+		tournament_id = 0
+	response = Response()
+	my_tournament = Tournament.objects.filter(tournament_id=tournament_id).first()
+	if my_tournament is not None:
+		if not my_tournament.is_started:
+			tournament_size = TournamentMembers.objects.filter(tournament=my_tournament).count()
+			response.data = {'case' : 'exist', 'id' : my_tournament.tournament_id, 'size' : tournament_size}
+		else:
+			response.data = {'case' : 'does not exist'}
+	else:
+		response.data = {'case' : 'does not exist'}
+	return response
+
+@api_view(['GET'])
+def get_tournament_suggestions(request):
+	avaibleTournaments = []
+	tournaments =Tournament.objects.filter(is_started=False)
+	for tournament in tournaments:
+		tournamentmember = TournamentMembers.objects.filter(tournament=tournament, is_owner = True).first()
+		tournament_size = TournamentMembers.objects.filter(tournament=tournament).count()
+		avaibleTournaments.append({
+			'tournament_id' : tournament.tournament_id,
+			'owner' : tournamentmember.user.username,
+			'size' : tournament_size
+		})
+	response = Response()
+	response.data = {'tournaments' : avaibleTournaments}
+	return response
+
+@api_view(['POST'])
+def is_joining_tournament(request):
+	username = request.data.get('user')
+	response = Response()
+	user = customuser.objects.filter(username=username).first()
+	for member in TournamentMembers.objects.filter(user=user):
+		if member.tournament.is_started == False:
+			response.data = {'Case' : 'yes'}
+			return response
+	response.data = {'Case' : 'no'}
+	return response
+
+@api_view(['POST'])
+def is_started_and_not_finshed(request):
+	username = request.data.get('user')
+	response = Response()
+	user = customuser.objects.filter(username=username).first()
+	for member in TournamentMembers.objects.filter(user=user):
+		if member.tournament.is_started == True and member.tournament.is_finished == False:
+			response.data = {'Case' : 'yes'}
+			return response
+	response.data = {'Case' : 'no'}
+	return response
+# @api_view(['POST'])
+# def is_tournament_advanced(request):
+# 	tournament_id = request.data.get('tournament_id')
+# 	response = Response()
+# 	tournament = Tournament.objects.filter(tournament_id=tournament_id).first()
+# 	if tournament.is_advanced == True:
+# 		response.data = {'Case' : 'tournament_advanced'}
+# 		return response
+# 	response.data = {'Case' : 'tournament_not_advanced'}
+# 	return response
+
+@api_view(['POST'])
+def get_tournament_size(request):
+	response = Response()
+	tournament_id = request.data.get('tournament_id')
+	tournament = Tournament.objects.filter(tournament_id=tournament_id).first()
+	if tournament.is_started == True:
+		response.data = {'Case' : 'Tournament_started'}
+	elif TournamentMembers.objects.filter(tournament=tournament).count() == 16:
+		response.data = {'Case' : 'Tournament_is_full'}
+	else:
+		response.data = {'Case' : 'size_is_valide'}
+	return response

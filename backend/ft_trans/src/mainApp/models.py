@@ -44,10 +44,23 @@ class NotifPlayer(models.Model):
     player = models.ForeignKey(customuser, on_delete=models.CASCADE)
 
 class GameNotifications(models.Model):
-    active_match = models.ForeignKey(ActiveMatch, on_delete=models.CASCADE, related_name='game_notify_active_match')
-    user = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='notify_user')
-    target = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='notify_target')
+	active_match = models.ForeignKey(ActiveMatch, on_delete=models.CASCADE, related_name='game_notify_active_match')
+	user = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='notify_user')
+	target = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='notify_target')
 # room_id_manager = RoomIDManager()
 
 class Tournament(models.Model):
 	tournament_id = models.IntegerField(unique=True)
+	is_started = models.BooleanField(default=False)
+	is_finished = models.BooleanField(default=False)
+
+
+class TournamentMembers(models.Model):
+	user = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='tournament_member')
+	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='tournament_members')
+	is_owner = models.BooleanField(default=False)
+
+class TournamentInvitation(models.Model):
+	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='Invitation_tournament')
+	sender = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='sender')
+	receiver = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='receiver')

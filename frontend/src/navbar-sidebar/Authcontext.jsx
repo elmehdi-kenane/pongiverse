@@ -31,7 +31,6 @@ export const AuthProvider = ({children}) => {
 	useEffect(() => {
 		const fetchImages = async () => {
 			const promises = allGameFriends.map(async (user) => {
-				
 				const response = await fetch(`http://localhost:8000/api/getImage`, {
 					method: "POST",
 					headers: {
@@ -112,7 +111,7 @@ export const AuthProvider = ({children}) => {
 					})
 				})
 				let friends = await response.json()
-				// console.log("ALL MY GAME NOTIFS ARE : ", friends.message)
+				console.log("ALL MY GAME NOTIFS ARE : ", friends.message)
 				if (friends.message.length)
 					setAllGameNotifs(friends.message)
 			} catch (e) {

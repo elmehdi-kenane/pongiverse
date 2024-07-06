@@ -18,8 +18,8 @@ const Rooms = () => {
   const [myRoomsIcons, setMyRoomsIcons] = useState([])
   const [newRoomCreated, setNewRoomCreated] = useState({})
   const [newJoin, setNewJoin] = useState({})
-  let numberOfRoomInvitation = 5;
-  let numberOfSuggestedRoom = 5;
+  let numberOfRoomInvitation = 0;
+  let numberOfSuggestedRoom = 0;
 
   //hande scroller handler (My Rooms)
   const onClickScroller = (handle, numberOfRooms) => {

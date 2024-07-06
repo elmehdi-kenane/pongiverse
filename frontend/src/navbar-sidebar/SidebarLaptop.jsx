@@ -60,5 +60,5 @@ function SidebarLaptop({ Icons }) {
         </div>
     );
 }
- 
+
 export default SidebarLaptop;
