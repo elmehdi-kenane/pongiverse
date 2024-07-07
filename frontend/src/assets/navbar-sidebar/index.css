@@ -932,7 +932,7 @@ html, body {
     display: none;
 }
 
-@keyframes moveBall {
+@keyframes moveTableBall {
     0% {
         left: 50%;
     }
@@ -968,7 +968,6 @@ html, body {
     }
     25% {
         right: calc(20% - 7px);
-        /* right: 20%; */
     }
     50%, 75%, 100% {
         right: 0%;
@@ -1008,13 +1007,12 @@ html, body {
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    animation: moveBall 3s linear infinite;
+    animation: moveTableBall 3s linear infinite;
 }
 
 #net {
     position: absolute;
     width: 1%;
-    /* border-left: 1px solid black; */
     height: 100%;
     background-color: rgb(247, 239, 255);
     top: 50%;
@@ -1141,7 +1139,7 @@ html, body {
 }
 
 @media screen and (max-width: 425px) {
-    #paddle-1 {
+    /* #paddle-1 {
         height: 20px;
     }
     
@@ -1152,7 +1150,7 @@ html, body {
     #ball {
         height: 5px;
         width: 5px;
-    }
+    } */
 
     .onevsone-dashboard {
         margin-top: 80px;
@@ -1224,7 +1222,7 @@ html, body {
         height: 30px;
     }
 
-    #paddle-1 {
+    /* #paddle-1 {
         height: 10px;
         width: 2px;
     }
@@ -1237,7 +1235,7 @@ html, body {
     #ball {
         height: 3px;
         width: 3px;
-    }
+    } */
 }
 
 @media screen and (max-width: 320px) {
@@ -2003,7 +2001,7 @@ html, body {
     background-color: #775C9E;
 }
 
-@keyframes moveBall {
+/* @keyframes moveBall {
     0% {
         left: 50%;
     }
@@ -2039,7 +2037,6 @@ html, body {
     }
     25% {
         right: 10%;
-        /* right: 20%; */
     }
     50%, 75%, 100% {
         right: 0%;
@@ -2090,7 +2087,7 @@ html, body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-}
+} */
 
 .twovstwo-dashboard-logo #versus-logo {
     width: 100px;
@@ -2282,7 +2279,7 @@ html, body {
         width: 20px;
     }
 
-    #paddle-1 {
+    /* #paddle-1 {
         height: 15px;
         width: 3px;
     }
@@ -2295,7 +2292,7 @@ html, body {
     #ball {
         height: 4px;
         width: 4px;
-    }
+    } */
 }
 
 @media screen and (max-width: 425px) {
@@ -2328,7 +2325,7 @@ html, body {
         height: 40px;
     }
 
-    #paddle-1 {
+    /* #paddle-1 {
         height: 20px;
     }
     
@@ -2339,7 +2336,7 @@ html, body {
     #ball {
         height: 5px;
         width: 5px;
-    }
+    } */
 
     .twovstwo-dashboard-opponents img, .twovstwo-dashboard-logo img {
         width: 25vw;
@@ -2375,7 +2372,7 @@ html, body {
         height: 30px;
     }
 
-    #paddle-1 {
+    /* #paddle-1 {
         height: 10px;
         width: 2px;
     }
@@ -2388,7 +2385,7 @@ html, body {
     #ball {
         height: 3px;
         width: 3px;
-    }
+    } */
 }
 
 @media screen and (max-width: 320px) {
@@ -2400,7 +2397,7 @@ html, body {
         height: 25px;
     }
 
-    #paddle-1 {
+    /* #paddle-1 {
         height: 10px;
         width: 2px;
     }
@@ -2413,7 +2410,7 @@ html, body {
     #ball {
         height: 3px;
         width: 3px;
-    }
+    } */
 }
 
 @media screen and (max-width: 280px) {
@@ -2520,7 +2517,6 @@ html, body {
 
 .slider-container-active::before{
     content: '';
-
     background: conic-gradient(
         from var(--gradient-angle),
         rgb(77, 49, 49), 
@@ -2830,6 +2826,14 @@ html, body {
     background-color: #ae3dff;
 }
 
+#gameCustom-selects-saving {
+    opacity: 0.5
+}
+
+#gameCustom-selects-saving:hover {
+    background-color: #913DCE;
+}
+
 @media (max-width: 450px) {
     .gameCustom-components {
         gap: 8px
@@ -2896,11 +2900,12 @@ html, body {
     justify-content:space-between;
     width: 100%;
     align-items: center;
-    height: 60px
+    height: 60px;
+    position: relative;
 }
 
 .onevsone-pm-infos > div:first-child,
-.onevsone-pm-infos > div:last-child {
+.onevsone-pm-infos > div:nth-child(3) {
     display: flex;
     height: 100%;
     align-items: center;
@@ -3382,5 +3387,274 @@ html, body {
     .twovstwo-pm-infos > div:first-child,
     .twovstwo-pm-infos > div:last-child {
         gap: 2px
+    }
+}
+
+
+
+
+
+
+.easy_mode {
+    background-image: url('./easy_difficulty.png');
+    background-size: cover;
+}
+
+.difficulty_level {
+    position: relative;
+    border: 3px solid #EAD3D6;
+}
+
+.difficulty-title {
+    text-align: center;
+    margin: 100px 0 0;
+    font-weight: bolder;
+    letter-spacing: 1.5px
+}
+
+.difficulty-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    margin: 100px 0 0
+}
+
+.novice_level,
+.skilled_level,
+.master_level {
+    width: 30%;
+    height: auto;
+    position: relative;
+    box-shadow:0 0 3px rgb(126,87,194);
+    opacity: 0.6;
+}
+
+.novice_level:hover div,
+.skilled_level:hover div,
+.master_level:hover div {
+    animation: showDifficulty 1s forwards;
+}
+
+.novice_level img,
+.skilled_level img,
+.master_level img {
+    width: 100%;
+    display: block;
+}
+
+.novice_level div,
+.skilled_level div,
+.master_level div {
+    position: absolute;
+    top: 100%;
+    transform: translate(0, -100%);
+    background-color: rgba(0,0,0,0.7);
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    overflow: hidden;
+}
+
+@keyframes showDifficulty {
+    0% {height: 0;}
+    100% {height: 100%}
+}
+
+/* .novice_level:hover div,
+.skilled_level:hover div,
+.master_level:hover div {
+    height: 100%;
+} */
+
+.novice_level div p:first-child,
+.skilled_level div p:first-child,
+.master_level div p:first-child {
+    padding: 10px 0 5px;
+    font-weight: bolder;
+    font-size: 1em
+}
+
+.novice_level div p:last-child,
+.skilled_level div p:last-child,
+.master_level div p:last-child {
+    text-align: center;
+    padding: 5px 0 20px;
+    font-size: 0.9em
+}
+
+.difficulty_level_selected {
+    opacity: 1;
+    outline: 2px solid white;
+    box-shadow: 0 0 20px white;
+}
+
+.difficulty-selects {
+    display: flex;
+    width: 80%;
+    height: 40px;
+    min-height: 40px;
+    margin: 100px auto 100px;
+    justify-content: space-between
+}
+
+.difficulty-selects button:first-child {
+    width: 138px;
+    height: 100%;
+    border-radius: 5px;
+    border: 2px solid white;
+    background-color: transparent;
+    color: white;
+    cursor: pointer;
+}
+
+.difficulty-selects button:last-child {
+    width: 138px;
+    height: 100%;
+    border-radius: 5px;
+    border: none;
+    background-color: #913DCE;
+    color: white;
+    cursor: pointer;
+}
+
+.difficulty-selects button:last-child:hover {
+    background-color: #ae3dff;
+}
+
+#difficulty-selects-saving {
+    opacity: 0.5
+}
+
+#difficulty-selects-saving:hover {
+    background-color: #913DCE;
+    cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    .difficulty-container {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        height: 800px;
+        min-height: 800px;
+        margin: 20px 0 0;
+    }
+
+    .difficulty-title {
+        text-align: center;
+        margin: 20px 0 0;
+        font-weight: bolder;
+        letter-spacing: 1.5px
+    }
+
+    .novice_level,
+    .skilled_level,
+    .master_level {
+        width: 250px;
+        height: 250px;
+        min-height: 250px;
+        position: relative;
+        box-shadow:0 0 3px rgb(126,87,194);
+        opacity: 0.6;
+    }
+
+    .novice_level div p:first-child,
+    .skilled_level div p:first-child,
+    .master_level div p:first-child {
+        padding: 6px 0 3px;
+        font-weight: bolder;
+        font-size: 0.8em
+    }
+
+    .novice_level div p:last-child,
+    .skilled_level div p:last-child,
+    .master_level div p:last-child {
+        text-align: center;
+        padding: 3px 0 10px;
+        font-size: 0.7em
+    }
+
+    .difficulty-selects {
+        display: flex;
+        width: 80%;
+        height: 40px;
+        min-height: 40px;
+        margin: 20px auto 20px;
+        justify-content: space-between
+    }
+
+    .difficulty_level_selected {
+        opacity: 1;
+    }
+}
+
+
+@media (max-width: 425px) {
+    .difficulty_level {
+        position: relative;
+        border: 3px solid #EAD3D6;
+    }
+    
+    .difficulty-title {
+        font-size: 1.5em;
+    }
+    
+    .difficulty-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .novice_level,
+    .skilled_level,
+    .master_level {
+        width: 70%;
+        height: auto;
+        opacity: 0.6;
+    }
+    
+    .novice_level img,
+    .skilled_level img,
+    .master_level img {
+        height:100%;
+    }
+    
+    .novice_level div p:first-child,
+    .skilled_level div p:first-child,
+    .master_level div p:first-child {
+        font-size: 1em
+    }
+    
+    .novice_level div p:last-child,
+    .skilled_level div p:last-child,
+    .master_level div p:last-child {
+        font-size: 0.9em
+    }
+    
+    .difficulty_level_selected {
+        opacity: 1;
+    }
+
+
+
+
+    .difficulty-selects {
+        display: flex;
+        flex-direction: column;
+        height: 90px;
+        min-height: 80px;
+        gap: 10px;
+        margin: 20px auto 20px;
+    }
+
+    .difficulty-selects button {
+        width: 100%;
+        min-width: 100%;
+        height: 40px;
+        min-height: 40px;
     }
 }

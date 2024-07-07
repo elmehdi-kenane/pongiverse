@@ -60,4 +60,9 @@ export { default as boardEmpty } from './board-empty.svg';
 export { default as boardFilled } from './board-filled.svg';
 export { default as bgPaddleCm } from './bg-paddle-cm.svg';
 
+export { default as easyMode } from './easy_difficulty.png'
+export { default as normalMode } from './normal_difficulty.png'
+export { default as hardMode } from './hard_difficulty.png'
+
+export { default as AiBot } from './AI-bot.jpg'
 // blue green black maroon gray white
