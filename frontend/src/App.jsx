@@ -34,6 +34,7 @@ import TwoVsTwoPlayMatch from './Game/TwoVsTwoPlayMatch';
 import TwoVsTwoFriends from './Game/TwoVsTwoFriends';
 import TwoVsTwoCreateOrJoin from './Game/TwoVsTwoCreateOrJoin';
 import GameSettings from './Game/GameSettings';
+import Settings from './Settings/Settings';
 
 const App = () => {
   return (
@@ -51,6 +52,7 @@ const App = () => {
             <Route path="/mainpage" element={<NavbarSidebar />} >
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="profile" element={<Profile />} />
+              <Route path="settings" element={<Settings />} />
               <Route path="chat" element={<Chat />} />
               {/* <Route path="chat/:roomId" element={<MessagesContainer />} /> */}
               <Route path="friends" element={<Friends />} />
