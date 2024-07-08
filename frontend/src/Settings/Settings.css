@@ -1,0 +1,111 @@
+.settings-page {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    /* border: #826aed solid 2px; */
+    padding: 100px 20px 0;
+    gap: 20px;
+}
+
+.purple-bg {
+    background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
+    box-shadow: 0 0px 20px 0 rgb(130, 106, 237, 0.5) ;
+    box-shadow: 0 0.5px 5px 0 #826aed;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+
+.btn-active {
+    background: #464656;
+}
+
+/* ---------- Left Side ---------- */
+
+.settings-page .settings__leftside {
+    display: flex;
+    flex-direction: column;
+    height: 400px;
+    width: 30%;
+    /* border: #8edf34 solid 1px; */
+    color: white;
+}
+.settings__leftside .pic-name{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.settings__leftside .pic-name img {
+    height: 40px;
+}
+
+.settings-page .settings__leftside .left__email{
+    margin-top: 5px;
+    width: 100%;
+    height: 30px;
+    text-align: center;
+    border-bottom: #ccc 0.5px solid;
+    margin-bottom: 20px;
+}
+
+.settings-page .settings__leftside .left__security,
+.settings-page .settings__leftside .left__pers-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 45px;
+    width: 100%;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+
+/* ---------- Right Side ---------- */
+
+/* --- Personal Info --- */
+
+.settings-page .settings__personal-info {
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+    width: 70%;
+    padding-top: 5px;
+    gap: 15px;
+}
+
+.settings__personal-info .personal__header {
+    color: white;
+    font-size: 28px;
+    border-bottom: #ccc 0.1px solid;
+}
+.settings__personal-info .personal-info__update {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    
+    border: #ccc solid 1px;
+    background: #250939;
+    box-shadow: 0 0px 20px 0 #ccc ;
+    box-shadow: 0 0.5px 5px 0 #ccc;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 3px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+
+.settings-page .settings__security {
+    display: flex;
+    height: 600px;
+    width: 70%;
+    
+
+    border: #ccc solid 1px;
+    background: #826aed;
+    box-shadow: 0 0px 20px 0 #ccc ;
+    box-shadow: 0 0.5px 5px 0 #ccc;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 3px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
