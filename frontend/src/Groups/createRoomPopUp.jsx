@@ -21,19 +21,6 @@ const CreateRoom = (props) => {
     setRoomVisibility(selectedVisibility);
     setErrors({});
   };
-  useEffect(() => {
-    if (socket) {
-      socket.onmessage = (event) => {
-        let data = JSON.parse(event.data);
-        console.log("data:", data);
-        if (data.type === "newRoomCreated") {
-          console.log("channel created", data.room);
-          props.setNewRoomCreated(data.room);
-          console.log(data.room);
-        }
-      };
-    }
-  }, [socket]);
 
   const onChangeHandler = (e) => {
     const { name, value } = e.target;

@@ -113,6 +113,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		#chat
 		elif data['type'] == 'createChatRoom': await chat_consumers.create_chat_room(self, data)
 		elif data['type'] == 'joinChatRoom': await chat_consumers.join_chat_room(self, data)
+		elif data['type'] == 'leaveRoom': await chat_consumers.leave_chat_room(self, data)
+		elif data['type'] == 'changeRoomName': await chat_consumers.change_chat_room_name(self, data, user_channels)
+		elif data['type'] == 'changeRoomAvatar': await chat_consumers.change_chat_room_avatar(self, data)
 		elif data['type'] == 'addUserChannelGroup': await chat_consumers.add_user_channel_group(self, data)
 		elif data['type'] == 'message': await chat_consumers.message(self, data)
 		elif data['type'] == 'directMessage': await chat_consumers.direct_message(self, data, user_channels)
@@ -243,7 +246,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			'message': event['message']
 		}))
 	##################################### (CHAT) #####################################
-		
+	async def broadcast_message(self, event):
+		await self.send(text_data=json.dumps(event['data']))
 	async def send_message(self, event):
 		data = event['message']
 		timestamp = data.timestamp.isoformat()

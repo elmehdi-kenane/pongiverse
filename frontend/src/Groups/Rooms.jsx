@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import MyRoom from "./MyRoom";
 import SuggestedRoom from "./SuggestedRoom";
@@ -16,8 +16,7 @@ const Rooms = () => {
   const {user, socket} = useContext(AuthContext)
   const [myRooms, setMyRooms] = useState([])
   const [myRoomsIcons, setMyRoomsIcons] = useState([])
-  const [newRoomCreated, setNewRoomCreated] = useState({})
-  const [newJoin, setNewJoin] = useState({})
+  const myRoomsRef = useRef(myRooms)
   let numberOfRoomInvitation = 0;
   let numberOfSuggestedRoom = 0;
 
@@ -82,7 +81,9 @@ const Rooms = () => {
     }
   };
 
+  //fetch room's images if myRooms Changed
   useEffect(() => {
+
     const fetchImages = async () => {
       const promises = myRooms.map(async (room) => {
         const response = await fetch(`http://localhost:8000/api/getImage`, {
@@ -100,9 +101,9 @@ const Rooms = () => {
       const images = await Promise.all(promises);
       setMyRoomsIcons(images);
     };
+    myRoomsRef.current = myRooms
+    console.log("ALL ROOMS NOW IS : ", myRooms)
     if (myRooms.length !== 0) {
-      console.log(myRooms.length)
-      console.log(myRooms)
       fetchImages();
     }
   }, [myRooms]);
@@ -125,8 +126,8 @@ const Rooms = () => {
       fetchMyRooms()
   },[user])
 
+  //add user to channel Group
   useEffect(()=>{
-    
     const addUserChannelGroup = ()=> {
           socket.send(JSON.stringify({
             type : 'addUserChannelGroup',
@@ -136,41 +137,108 @@ const Rooms = () => {
     if(socket && socket.readyState === WebSocket.OPEN  && user)
       addUserChannelGroup()
   }, [socket, user])
-
-  useEffect(() => {
-    if(Object.keys(newRoomCreated).length !== 0) {
-      console.log("lol")
-      setMyRooms(prev => [...prev, newRoomCreated])
-      setNewRoomCreated({})
+  
+  //update myRooms array When a new Memeber join
+  const newUserJoinedChatRoom = (data) => {
+    const allRooms = myRoomsRef.current
+    const roomExists = allRooms.some(myroom => myroom.name === data.name);
+    if(roomExists) {
+      console.log("room exist")
+      const updatedRooms = allRooms.map(room => {
+        if (room.name === data.name) {
+          return { ...room, membersCount: data.membersCount };
+        }
+        return room
+      });
+      setMyRooms(updatedRooms);
+    } else {
+      console.log("room doesn't exist")
+      setMyRooms([...allRooms, data]);
     }
-  }, [newRoomCreated])
+  } 
+  //update myRooms Array if an Memeber leave
+  const memeberLeaveChatRoomUpdater = (data) => {
+    const allRooms = myRoomsRef.current
+    console.log("data", data)
+    if(data && data.user === user){
+      console.log("inside the user")
+      const updatedRooms =  allRooms.filter((myroom) => myroom.name !== data.name)
+      console.log("updated inside memeber leave",updatedRooms)
+      setMyRooms(updatedRooms)
+    }
+    else {
+      console.log("the other member")
+      const updatedRooms = allRooms.map(room => {
+        if (room.name === data.name) {
+          return { ...room, membersCount: data.membersCount };
+        }
+        return room
+      });
+      console.log(updatedRooms)
+      setMyRooms(updatedRooms);
+    }
+  }
+
+  //update chat Room Name if Changed
+  const chatRoomNameChangedUpdater = (data) => {
+    const allRooms = myRoomsRef.current
+    const updatedRooms = allRooms.map(room => {
+      if(room.name === data.name) {
+        return {...room, name: data.newName}
+      }
+      return room
+    })
+    console.log("update rooms: ", updatedRooms)
+    setMyRooms(updatedRooms);
+  }
+
+  const chatRoomIconChanged = (data) => {
+    const allRooms = myRoomsRef.current
+    const updatedRooms = allRooms.map(room => {
+      if(room.name === data.name) {
+        return {...room, icon_url: data.iconPath}
+      }
+      return room
+    })
+    console.log("update rooms: ", updatedRooms)
+    setMyRooms(updatedRooms);
+  }
 
   useEffect(()=> {
-    if(Object.keys(newJoin).length !== 0) {
-      console.log("new Join" ,newJoin)
-      const roomExists = myRooms.some(room => room.name === newJoin.name);
-      if(roomExists) {
-
-        const updatedRooms = myRooms.map(room => {
-          if (room.name === newJoin.name) {
-            return { ...room, membersCount: newJoin.membersCount };
-          }
-          return room
-        });
-        setMyRooms(updatedRooms);
-      } else {
-        setMyRooms(prevRooms => [...prevRooms, newJoin]);
-      }
-      setJoinRoom({})
+    if(socket) {
+      socket.onmessage = (e) => {
+        let data = JSON.parse(e.data)
+        console.log("data recived from socket :",data)
+        if(data.type === 'newRoomJoin')
+          newUserJoinedChatRoom(data.room)
+        else if(data.type === 'alreadyJoined')
+          console.log('already joined')
+        else if (data.type === 'privateRoom')
+          console.log('private room')
+        else if (data.type === 'incorrectPassword')
+          console.log("incorrect password")
+        else if (data.type === 'roomNotFound')
+        console.log('room not found')
+        else if (data.type === "newRoomCreated") {
+          const allRooms = myRoomsRef.current
+          setMyRooms([...allRooms, data.room])
+        }
+        else if(data.type === 'memberleaveChatRoom')
+          memeberLeaveChatRoomUpdater(data.message)
+        else if (data.type === 'chatRoomNameChanged')
+          chatRoomNameChangedUpdater(data.message)
+        else if (data.type === 'chatRoomAvatarChanged')
+          chatRoomIconChanged(data.message)
     }
-  },[newJoin])
+  }
+  },[socket])
+
 
   return (
     <div className="rooms-page">
       <div className="page-middle-container">
         {joinRoom && (
           <JoinRoom
-            setNewJoin = {setNewJoin}
             onClose={() => {
               setJoinRoom(false);
               setIsBlur(false);
@@ -178,8 +246,7 @@ const Rooms = () => {
           />
         )}
         {createRoom && (
-          <CreateRoom
-            setNewRoomCreated = {setNewRoomCreated} 
+          <CreateRoom 
             onClose={() => {
               setCreateRoom(false);
               setIsBlur(false);
@@ -237,7 +304,7 @@ const Rooms = () => {
               {(myRooms && myRooms.length) ? (
                 <div className="rooms-slider">
                  { myRooms.map((room, index) => (
-                    <MyRoom key={index} name={room.name} index={index} topic= {room.topic} roomIcons={myRoomsIcons} membersCount={room.membersCount}/>
+                    <MyRoom key={index} role = {room.role} name={room.name} index={index} topic= {room.topic} roomIcons={myRoomsIcons} membersCount={room.membersCount}/>
                   ))}
                 </div>
               ) : (

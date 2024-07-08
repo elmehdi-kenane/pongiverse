@@ -15,27 +15,9 @@ const JoinRoom = (props) => {
       name : roomName,
       password : roomPassword,
     }))
+    props.onClose()
   }
-  useEffect(()=> {
-    if(socket) {
 
-      socket.onmessage = (e) => {
-        let data = JSON.parse(e.data)
-        console.log(data)
-        if(data.type === 'newRoomJoin')
-          props.setNewJoin(data.room)
-        else if(data.type === 'alreadyJoined')
-          console.log('already joined')
-        else if (data.type === 'privateRoom')
-          console.log('private room')
-        else if (data.type === 'incorrectPassword')
-          console.log("incorrect password")
-        else if (data.type === 'roomNotFound')
-        console.log('room not found')
-        props.onClose()
-    }
-  }
-  },[socket])
   
   return (
     <div className="join-room-container">
@@ -62,8 +44,7 @@ const JoinRoom = (props) => {
         <button className="cancel-room" type="button" onClick={props.onClose}>
           CANCEL
         </button>
-        <button className="join-room" type="submit" >JOIN</button>
-        <div className="join-room-error"></div>
+        <button className="join-room" type="submit" onClick={joinRoomSubmitHandler} >JOIN</button>
       </div>
       </form>
     </div>

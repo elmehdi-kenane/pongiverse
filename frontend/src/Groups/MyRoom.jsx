@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import * as ChatIcons from "../assets/chat/media";
-
+import AuthContext from "../navbar-sidebar/Authcontext";
 const MyRoom = (props) => {
+  const {socket, user} = useContext(AuthContext)
   const [showSettings, setShowSettings] = useState(false);
   const [leaveRoom, setLeaveRoom] = useState(false);
   const [changeRoomName, setChangeRoomName] = useState(false);
@@ -9,10 +10,68 @@ const MyRoom = (props) => {
   const [deleteRoom, setDeletRoom] = useState(false);
   const [addRoomAdmin, setAddRoomAdmin] = useState(false);
   const [inviteMember, setInviteMember] = useState(false);
+  const [newRoomName, setNewRoomName] = useState('')
+  const [newRoomIcon, setnewRoomIcon] = useState(null)
   const showRoomSettings = () => {
     console.log("i clicked show settings");
     setShowSettings(true);
   };
+
+  const leaveRoomSubmitHandler = () =>{
+    if(socket) {
+      socket.send(JSON.stringify({
+        type: 'leaveRoom',
+        message : {
+          user : user,
+          room: props.name
+        }
+      }))
+    }
+  }
+
+  const changeRoomNameSubmitHandler = () => {
+    if(socket) {
+      socket.send(JSON.stringify({
+        type : 'changeRoomName',
+        message : {
+          room : props.name,
+          newName : newRoomName
+        }
+      }))
+    }
+    setChangeRoomName(false)
+    setShowSettings(false)
+  }
+  const onChangeChangeRoomAvatar = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const imageUrl = e.target.result;
+        const base64Image = reader.result.split(',')[1];
+        setnewRoomIcon(base64Image)
+        const placeHolder = document.getElementsByClassName(
+          "live-updated-room-avatar"
+        )[0];
+        placeHolder.src = imageUrl;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+  const updateRoomAvatarSubmitHandler = () => {
+    if(socket) {
+      socket.send(JSON.stringify({
+        type : 'changeRoomAvatar',
+        message : {
+          room : props.name,
+          newIcon : newRoomIcon
+        }
+      }))
+    }
+    setUpdateRoomAvatar(false)
+    setShowSettings(false)
+  }
+
   return (
     <div className="room-box">
       <div className="room-details">
@@ -29,11 +88,15 @@ const MyRoom = (props) => {
         <button className="leave-room" onClick={() => setLeaveRoom(true)}>
           Leave Room
         </button>
-        <img
+        { props.role === 'admin' ?
+          <>
+          <img
           src={ChatIcons.RoomSettings}
           className="room-settings"
           onClick={showRoomSettings}
-        />
+          />
+          </> : ''
+        }
       </div>
       {showSettings && (
         <div className="room-settings-container">
@@ -77,10 +140,10 @@ const MyRoom = (props) => {
       {changeRoomName && (
         <div className="change-room-name-container">
           <div className="change-room-name-head">Enter Room Name</div>
-          <input type="text" className="change-room-name-input" />
+          <input type="text" className="change-room-name-input" placeholder={props.name} onChange={(e)=> setNewRoomName(e.target.value)}/>
           <div className="change-room-name-btns">
             <button onClick={() => setChangeRoomName(false)}>Cancel</button>
-            <button>Save</button>
+            <button onClick={changeRoomNameSubmitHandler}>Update</button>
           </div>
         </div>
       )}
@@ -92,7 +155,7 @@ const MyRoom = (props) => {
               alt=""
               className="live-updated-room-avatar"
             />
-            <label for="update-room-image" id="upate-room-image-label">
+            <label htmlFor="update-room-image" id="upate-room-image-label">
               Select an Image
             </label>
             <input
@@ -100,11 +163,12 @@ const MyRoom = (props) => {
               name="avatar"
               accept="image/png, image/jpeg"
               id="update-room-image"
+              onChange={onChangeChangeRoomAvatar}
             />
           </div>
           <div className="update-room-avatar-btns">
             <button onClick={() => setUpdateRoomAvatar(false)}>Cancel</button>
-            <button>Save</button>
+            <button onClick={updateRoomAvatarSubmitHandler}>Save</button>
           </div>
         </div>
       )}
@@ -171,7 +235,7 @@ const MyRoom = (props) => {
             >
               CANCEL
             </button>
-            <button className="confirm-leave-confirm-btn">CONFIRM</button>
+            <button className="confirm-leave-confirm-btn" onClick={leaveRoomSubmitHandler}>CONFIRM</button>
           </div>
         </div>
       )}

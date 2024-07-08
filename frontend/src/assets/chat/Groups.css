@@ -631,7 +631,7 @@
 .update-room-avatar-btns button,
 .change-room-name-btns button,
 .delete-room-btns button{
-  width: 40%;
+  width: 48%;
   height: 30px;
   background-color: white;
   font-weight: 600;
@@ -646,17 +646,19 @@
 }
 
 .change-room-name-input {
-  width: calc(80% + 10px);
+  width: calc(95% + 10px);
   height: 30px;
   text-indent: 10px;
   background-color: transparent;
   border-radius: 5px;
-  outline: 1px solid white;
+  outline: .5px solid white;
   outline-offset: -1px;
   color: white;
 }
 
-
+.change-room-name-head {
+  font-weight: 600;
+}
 
 
 .invitation-owner {
