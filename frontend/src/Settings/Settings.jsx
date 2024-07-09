@@ -9,9 +9,6 @@ function Settings() {
 
     const [isInfo, setIsInfo] = useState(true);
 
-    const handleClick = () => {
-        setIsInfo(!isInfo);
-    }
   return (
     <div className='settings-page'>
       <div className="settings__leftside">

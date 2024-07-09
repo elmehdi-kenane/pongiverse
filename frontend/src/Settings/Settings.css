@@ -18,8 +18,12 @@
 }
 
 .btn-active {
-    background: #464656;
+    background: linear-gradient(to bottom, rgb(68, 45, 106, 0.9), rgba(74, 37, 139, 0.4));
 }
+.settings__personal-info .personal-info__update .no-botom {
+    border-bottom: none;
+}
+
 
 /* ---------- Left Side ---------- */
 
@@ -63,49 +67,102 @@
 
 /* ---------- Right Side ---------- */
 
-/* --- Personal Info --- */
-
-.settings-page .settings__personal-info {
-    display: flex;
-    flex-direction: column;
-    height: 600px;
-    width: 70%;
-    padding-top: 5px;
-    gap: 15px;
-}
-
-.settings__personal-info .personal__header {
-    color: white;
-    font-size: 28px;
-    border-bottom: #ccc 0.1px solid;
-}
-.settings__personal-info .personal-info__update {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    
-    border: #ccc solid 1px;
-    background: #250939;
-    box-shadow: 0 0px 20px 0 #ccc ;
-    box-shadow: 0 0.5px 5px 0 #ccc;
-    backdrop-filter: blur( 4px );
-    -webkit-backdrop-filter: blur( 4px );
-    border-radius: 3px;
-    border: 1px solid rgba( 255, 255, 255, 0.18 );
-}
+/* --- Security --- */
 
 .settings-page .settings__security {
     display: flex;
     height: 600px;
     width: 70%;
-    
 
     border: #ccc solid 1px;
-    background: #826aed;
+    background: rgb(68, 45, 106);
     box-shadow: 0 0px 20px 0 #ccc ;
     box-shadow: 0 0.5px 5px 0 #ccc;
     backdrop-filter: blur( 4px );
     -webkit-backdrop-filter: blur( 4px );
-    border-radius: 3px;
+    border-radius: 5px;
     border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+
+/* --- Personal Info --- */
+
+.settings-page .settings__personal-info {
+    display: flex;
+    flex-direction: column;
+    /* height: 600px; */
+    width: 70%;
+    padding-top: 5px;
+    gap: 15px;
+}
+
+.settings__personal-info .personal-info__header {
+    color: white;
+    font-size: 28px;
+    border-bottom: #ccc 0.1px solid;
+    letter-spacing: 0.5px;
+}
+.settings__personal-info .personal-info__update {
+    display: flex;
+    flex-direction: column;
+    /* height: 100%; */
+    
+    border: #ccc solid 1px;
+    background: linear-gradient(to bottom, rgb(68, 45, 106, 0.8), rgba(74, 37, 139, 0));
+    box-shadow: 0 0px 20px 0 #ccc ;
+    box-shadow: 0 0.5px 5px 0 #ccc;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 5px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+
+.personal-info__update .update {
+    display: flex;
+    align-items: center;
+    height: 90px;
+    border-bottom: 2px solid rgba( 255, 255, 255, 0.2 );
+    padding: 0 40px 0 20px;
+    gap: 15px;
+    color: white;
+}
+.personal-info__update .update img {
+    height: 70px;
+    border-radius: 50%;
+}
+.personal-info__update .update + .update img {
+    height: 55px;
+    width: 70px;
+    border: 1px solid white;
+    border-radius: 5px;
+}
+
+.personal-info__update .update .title-pic {
+    font-size: 18px;
+    font-weight: 450;
+    color: #ccc;
+}
+.personal-info__update .update .title {
+    color: #ccc;
+    width: 90px;
+    font-size: 18px;
+    font-weight: 450;
+}
+.personal-info__update .update .info {
+    margin-left: 20px;
+    font-size: 18px;
+    font-weight: 450;
+}
+.personal-info__update .update .upload-btn {
+    background-color: #826aed;
+    border: white 1px solid;
+    border-radius: 10px;
+    padding: 10px;
+    margin-left: auto;
+    cursor: pointer;
+    user-select: none;
+}
+.personal-info__update .update .upload-btn:hover {
+    padding: 12px;
+    background-color: #927eea;
+    transition: ease-in-out 0.2s;
 }
