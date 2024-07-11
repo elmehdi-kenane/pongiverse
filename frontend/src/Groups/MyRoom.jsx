@@ -1,6 +1,8 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import * as ChatIcons from "../assets/chat/media";
 import AuthContext from "../navbar-sidebar/Authcontext";
+import ChatRoomMember from "./chatRoomMember";
+import ChatRoomMemberToInvite from "./chatRoomMemberToInvite";
 const MyRoom = (props) => {
   const {socket, user} = useContext(AuthContext)
   const [showSettings, setShowSettings] = useState(false);
@@ -12,6 +14,8 @@ const MyRoom = (props) => {
   const [inviteMember, setInviteMember] = useState(false);
   const [newRoomName, setNewRoomName] = useState('')
   const [newRoomIcon, setnewRoomIcon] = useState(null)
+  const [allChatRoomMembers,setAllChatRoomMembers] = useState([])
+  const [allFriends,setAllFriends] = useState([])
   const showRoomSettings = () => {
     console.log("i clicked show settings");
     setShowSettings(true);
@@ -38,9 +42,9 @@ const MyRoom = (props) => {
           newName : newRoomName
         }
       }))
+      setChangeRoomName(false)
+      setShowSettings(false)
     }
-    setChangeRoomName(false)
-    setShowSettings(false)
   }
   const onChangeChangeRoomAvatar = (e) => {
     const file = e.target.files[0];
@@ -70,6 +74,61 @@ const MyRoom = (props) => {
     }
     setUpdateRoomAvatar(false)
     setShowSettings(false)
+  }
+
+  useEffect(()=>{
+    const fetchAllChatRoomMembers = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/chatAPI/allRoomMembers/${props.name}`)
+        const data = await response.json()
+        console.log("all chat room: ", data)
+        setAllChatRoomMembers(data)
+      } catch(error) {
+        console.log(error)
+      }
+
+    }
+    if(addRoomAdmin) {
+      fetchAllChatRoomMembers()
+    }
+  }, [addRoomAdmin])
+
+  useEffect(()=>{
+
+    const fetchAllFriends = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/chatAPI/listAllFriends', {
+          method: 'POST',
+          headers : {
+            "Content-Type": "application/json",
+          },
+          body : JSON.stringify ({
+            user : user,
+            room : props.name,
+          })
+        })
+        const data = await response.json()
+        setAllFriends(data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    if(inviteMember)
+      fetchAllFriends()
+  }, [inviteMember])
+
+  const onClickDeleteChatRoomHandler = () => {
+    if(socket) {
+      console.log("inside delete chat room")
+      socket.send(JSON.stringify({
+        type : 'deleteChatRoom',
+        message : {
+          room : props.name
+        }
+      }))
+      setDeletRoom(false)
+      setShowSettings(false)
+    }
   }
 
   return (
@@ -180,16 +239,9 @@ const MyRoom = (props) => {
             className="add-admin-close-btn"
             onClick={() => setAddRoomAdmin(false)}
           />
-          <div className="add-room-member-list">
-            <div className="add-admin-member-infos">
-              <img src={ChatIcons.mmaqbourImage} alt="" className="add-room-admin-image"/>
-              <div className="add-room-admin-infos">
-                <div className="add-admin-member-name">Mohammed</div>
-                <div className="add-admin-member-level">level2</div>
-              </div>
-            </div>
-            <button className="add-room-admin-btn">Add Admin</button>
-          </div>
+          {allChatRoomMembers.map((memeber , index) => (
+            <ChatRoomMember  key={index} name={memeber.name} roomName={props.name}/>
+          ))}
         </div>
       )}
       {inviteMember && (
@@ -200,16 +252,9 @@ const MyRoom = (props) => {
             className="invite-member-close-btn"
             onClick={() => setInviteMember(false)}
           />
-          <div className="invite-room-member-list">
-            <div className="invite-member-infos">
-              <img src={ChatIcons.mmaqbourImage} alt="" className="invite-room-member-image"/>
-              <div className="invite-room-member-infos">
-                <div className="invite-room-member-name">Mohammed</div>
-                <div className="invite-room-member-level">level2</div>
-              </div>
-            </div>
-            <button className="invite-room-member-btn">Invite</button>
-          </div>
+          {allFriends.map((friend, index) => (
+            <ChatRoomMemberToInvite key={index} name= {friend.name} roomName={props.name}/>
+          ))}
         </div>
       )}
       {deleteRoom && (
@@ -219,7 +264,7 @@ const MyRoom = (props) => {
           </div>
           <div className="delete-room-btns">
             <button onClick={() => setDeletRoom(false)}>Cancel</button>
-            <button>Delete</button>
+            <button onClick={onClickDeleteChatRoomHandler}>Delete</button>
           </div>
         </div>
       )}

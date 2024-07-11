@@ -22,7 +22,7 @@ class Message(models.Model):
 class Membership(models.Model):
 	user = models.ForeignKey(User,on_delete=models.CASCADE)
 	room = models.ForeignKey(Room,on_delete=models.CASCADE)
-	roles = models.TextField()
+	roles = models.TextField(default='member')
 	joined_at = models.DateTimeField(auto_now_add=True)
 
 class Friends(models.Model):
@@ -36,3 +36,12 @@ class Directs(models.Model):
   message = models.TextField()
   timestamp = models.DateTimeField(auto_now_add=True)
   is_read = models.BooleanField(default=False)
+
+class RoomInvitation(models.Model):
+    INVITATION_STATUS = {
+        ("PEN", "pending"),
+        ("ACC" , 'accepted')
+    }
+    user=models.ForeignKey(User, on_delete=models.CASCADE, related_name='invitation_reciver')
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='invitation_room')
+    status = models.CharField(max_length=20,choices=INVITATION_STATUS, default='pending' )

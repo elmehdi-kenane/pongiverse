@@ -252,6 +252,7 @@ export const AuthProvider = ({children}) => {
 			response = await response.json()
 			if (response.Case !== "Invalid token") {
 				setUser(response.data.username)
+				console.log("USER USERNSME: ",response.data.username)
 			} else {
 				setUser('')
 				navigate('/signin')

@@ -22,6 +22,7 @@ export const ChatProvider = ({ children }) => {
     avatar : "",
   })
 
+  
   useEffect(() => {
     const fetchImages = async () => {
       const promises = directsConversations.map(async (user) => {

@@ -187,6 +187,7 @@
   border-radius: 5px;
   padding: 25px 10px 10px 10px;
   justify-content: space-between;
+  cursor: pointer;
 }
 
 .invitation-room-box {
@@ -242,8 +243,12 @@
 .room-details {
   display: flex;
   gap: 10px;
+  border-radius: 5px;
+  padding: 5px;
 }
-
+.room-details:hover {
+  background-color: #1f0935;
+}
 .room-desc {
   font-size: 15px;
 }
@@ -674,6 +679,7 @@
   width: 55px;
   height: 55px;
   border-radius: 7px;
+  border: .5px solid #1f0935;
 }
 
 .accept-and-cancel-bnts {
@@ -722,6 +728,9 @@
   gap: 5px;
 }
 
+.room-invite-sent-icon {
+  width: 25px;
+}
 
 
 

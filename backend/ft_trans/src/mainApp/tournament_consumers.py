@@ -28,23 +28,6 @@ async def disconnected(self, user_channels):
 		await sync_to_async(user.save)()
 		user_channels.pop(username, None)
 		channel_layer = get_channel_layer()
-		user = await sync_to_async(customuser.objects.filter(username=username).first)()
-		friends = await sync_to_async(list)(Friends.objects.filter(user=user))
-		for friend in friends:
-			friend_username = await sync_to_async(lambda: friend.friend.username)()
-			channel_name = user_channels.get(friend_username)
-			print(f"USER CHANNEL ON DISCONNECT IS : {channel_name}")
-			print(f'ON DISCONNECT : {friend_username} {channel_name}')
-			if channel_name:
-				await self.channel_layer.send(
-					channel_name,
-					{
-						'type': 'user_disconnected',
-						'message': {
-							'user': username
-						}
-					}
-				)
 		for username, channel_name in user_channels.items():
 			await self.channel_layer.send(
 				channel_name,
