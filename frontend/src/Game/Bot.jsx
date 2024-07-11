@@ -5,6 +5,7 @@ import * as Icons from '../assets/navbar-sidebar'
 import '../assets/navbar-sidebar/index.css';
 
 import SpaceBarIcon from '@mui/icons-material/SpaceBar';
+import { Icon } from '@mui/material';
 
 class Player {
   constructor(x, y, width, height, color, score) {
@@ -111,9 +112,11 @@ const Bot = () => {
   const [userName2, setUserName2] = useState(null)
   const navigate = useNavigate()
   let canvasRef = useRef(null);
+  // let gameFinishedRef = useRef(gameFinished);
   let isOut = false
 
   let isGameStarted = false
+  let isGameFinished = false
   let playerNo = 0
 
   let player1 = useRef(null)
@@ -175,10 +178,12 @@ const Bot = () => {
   const gameState = useRef(null)
   
   const [difficultyMode, setDifficultyMode] = useState(0)
-
+  
   let ballComingTowardsAI = false;
   let difficultyLevelVar = 0
   let goalScored = 0
+
+  const [pageSetted, setSettedPage] = useState(false)
   // const radius = Math.random() + 0.8
 
 
@@ -262,7 +267,7 @@ const Bot = () => {
   }, [gameCustomize])
 
   useEffect(() => {
-    console.log("gggg", canvasContext)
+    // console.log("gggg", canvasContext)
 		canvasContextRef.current = canvasContext
     gameCustomizeRef.current = gameCustomize
     startGameRef.current = startGame
@@ -316,8 +321,8 @@ const Bot = () => {
     const gameCustom = gameCustomizeRef.current
 
     if (gameCustom && player1.current && player2.current && ball.current && edges.current) {
-      player1.current.changeProperties((15 * widthScalingFactor), (originalPositions.player1_y * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
-      player2.current.changeProperties((685 * widthScalingFactor), (originalPositions.player2_y * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), '#B38EF0');
+      player1.current.changeProperties((15 * widthScalingFactor), (originalPositions.player1_y * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0], player1.current.score);
+      player2.current.changeProperties((685 * widthScalingFactor), (originalPositions.player2_y * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), '#B38EF0', player2.current.score);
       ball.current.changeProperties((originalPositions.ball_x * widthScalingFactor), (originalPositions.ball_y * heightScalingFactor), (7 * scalingFactor), gameCustom[1], ball.current.velocityX, ball.current.velocityY, ball.current.speed);
       edges.current.changeProperties((10 * scalingFactor), 'white');
       // console.log("inside the update game properties : ", ball.current.x, ball.current.y)
@@ -326,25 +331,27 @@ const Bot = () => {
 
   function resetBall() {
     const canvas = canvasRef.current
-    ball.current.x = canvas.width/2;
-    ball.current.y = canvas.height/2;
-    ball.current.velocityX = 5;
-    ball.current.velocityY = 5;
-    ball.current.speed = 5;
+    ball.current.x = canvas.width / 2
+    ball.current.y = canvas.height / 2
+    originalPositions.ball_x = 355
+    originalPositions.ball_y = 200
+    ball.current.velocityX = 5
+    ball.current.velocityY = 5
+    ball.current.speed = 5
 }
 
 function collision(b, p) {
-    const playerTop = p.playerY;
-    const playerBottom = p.playerY + 70;
-    const playerLeft = p.playerX;
-    const playerRight = p.playerX + 10;
+    const playerTop = p.playerY
+    const playerBottom = p.playerY + 70
+    const playerLeft = p.playerX
+    const playerRight = p.playerX + 10
     
-    const ballTop = b.ballY - 7;
-    const ballBottom = b.ballY + 7;
-    const ballLeft = b.ballX - 7;
-    const ballRight = b.ballX + 7;
+    const ballTop = b.ballY - 7
+    const ballBottom = b.ballY + 7
+    const ballLeft = b.ballX - 7
+    const ballRight = b.ballX + 7
     
-    return playerLeft < ballRight && playerTop < ballBottom && playerRight > ballLeft && playerBottom > ballTop;
+    return playerLeft < ballRight && playerTop < ballBottom && playerRight > ballLeft && playerBottom > ballTop
 }
 
 // function predictBallY(ball, aiX, canvas) {
@@ -359,13 +366,10 @@ function predictBallY(localBall, player2X) {
   while (timeToReachAI > 0) {
       let timeToWall;
 
-      if (velocityY > 0) {
-          // timeToWall = (canvas.height - ball.radius - predictedY) / velocityY;
+      if (velocityY > 0)
           timeToWall = (400 - 7 - predictedY) / velocityY;
-      } else {
-          // timeToWall = (ball.radius - predictedY) / velocityY;
+      else
           timeToWall = (7 - predictedY) / velocityY;
-      }
 
       if (timeToWall < timeToReachAI) {
           predictedY += velocityY * timeToWall;
@@ -393,15 +397,18 @@ function predictBallY(localBall, player2X) {
         const heightScalingFactor = canvas.height / 400
         const widthScalingFactor = canvas.width / 710
 
+        // console.log(keys)
         if (keys['ArrowUp']) {
+          console.log("ARROW UP")
           if (!((player1.current.y - (8 * heightScalingFactor)) <= edges.current.height)) {
-              player1.current.y -= (8 * heightScalingFactor);
-              originalPositions.player1_y -= 8
-            } else {
-              player1.current.y = edges.current.height
-              originalPositions.player1_y = 10
+            player1.current.y -= (8 * heightScalingFactor);
+            originalPositions.player1_y -= 8
+          } else {
+            player1.current.y = edges.current.height
+            originalPositions.player1_y = 10
           }
         } else if (keys['ArrowDown']) {
+          console.log("ARROW DOWN")
           if (!(((player1.current.y + player1.current.height) + (8 * heightScalingFactor)) >= (canvas.height - edges.current.height))) {
               player1.current.y += (8 * heightScalingFactor)
               originalPositions.player1_y += 8
@@ -451,41 +458,34 @@ function predictBallY(localBall, player2X) {
           ball.current.velocityY = ball.current.speed * Math.sin(angleRad);
           if (ball.current.speed < 15) {
             ball.current.speed += 0.5
-            // if (difficultyLevel === 0.3)
-            //   difficultyLevelVar += 0.01 //
-            // else if (difficultyLevel === 0.5)
-            //   difficultyLevelVar += 0.02 //
-            // else
-              // difficultyLevelVar += 0.03 //
-            // setDifficultyLevel(prevDifficultyLvl => prevDifficultyLvl + 0.02)
-          }
-          else if (ball.current.speed < 16) {
+          } else if (ball.current.speed < 16)
             ball.current.speed += 0.001
-            // difficultyLevelVar += 0.002 //
-            // setDifficultyLevel(prevDifficultyLvl => prevDifficultyLvl + 0.002)
-          }
-          if (localPlayer === localPlayer2) {
+          if (localPlayer === localPlayer2)
             ballComingTowardsAI = false;
-          }
         }
 
-        player1.current.x = localPlayer1.playerX * widthScalingFactor
-        player1.current.y = localPlayer1.playerY * heightScalingFactor
-        player2.current.x = localPlayer2.playerX * widthScalingFactor
-        player2.current.y = localPlayer2.playerY * heightScalingFactor
+        // player1.current.x = localPlayer1.playerX * widthScalingFactor
+        // player1.current.y = localPlayer1.playerY * heightScalingFactor
+        // player2.current.x = localPlayer2.playerX * widthScalingFactor
+        // player2.current.y = localPlayer2.playerY * heightScalingFactor
         ball.current.x = localBall.ballX * widthScalingFactor
         ball.current.y = localBall.ballY * heightScalingFactor
+        originalPositions.ball_x = localBall.ballX
+        originalPositions.ball_y = localBall.ballY
 
         // console.log(localBall.ballX * widthScalingFactor, localBall.ballX * widthScalingFactor)
 
         if (localBall.ballX - 7 < 0 ) {
-            player2.current.score++
+            player2.current.score += 1
             setScore2(prevScore2 => prevScore2 + 1)
             // comScore.play() // sound
             resetBall()
             ballComingTowardsAI = false
             goalScored = 10
             difficultyLevelVar = difficultyLevel //
+            // console.log("bot scored : ", player2.current.score)
+            if (player2.current.score === 3)
+              isGameFinished = true
           } else if (localBall.ballX + 7 > 710) {
             player1.current.score++
             setScore1(prevScore1 => prevScore1 + 1)
@@ -494,30 +494,22 @@ function predictBallY(localBall, player2X) {
             ballComingTowardsAI = true
             goalScored = 10
             difficultyLevelVar = difficultyLevel //
+            if (player1.current.score === 3)
+              isGameFinished = true
         }
 
         localBall.ballX = ball.current.x * originalWidth
         localBall.ballY = ball.current.y * originalHeight
 
         if (localBall.ballX > 355) {
-          if (ball.current.velocityX > 0) {
+          if (ball.current.velocityX > 0)
               ballComingTowardsAI = true;
-          } else {
+          else
               ballComingTowardsAI = false;
-          }
           
           if (ballComingTowardsAI) {
-              // const predictedY = predictBallY(ball, ai.x, canvas);
               const predictedY = predictBallY(localBall, localPlayer2.playerX);
               const tolerance = 5; // Adjust this value as needed for smoothness
-              
-              // if (Math.abs(ai.y + ai.height / 2 - predictedY) > tolerance) {
-              //     if (predictedY < ai.y + ai.height / 2) {
-              //         ai.y -= currentDifficulty * ball.speed; // Move up, adjust speed based on ball speed
-              //     } else if (predictedY > ai.y + ai.height / 2) {
-              //         ai.y += currentDifficulty * ball.speed; // Move down, adjust speed based on ball speed
-              //     }
-              // }
               if (Math.abs(localPlayer2.playerY + 35 - predictedY) > tolerance) {
                   if (predictedY < localPlayer2.playerY + 70 / 2) {
                       localPlayer2.playerY -= difficultyLevelVar * ball.current.speed; // Move up, adjust speed based on ball speed
@@ -532,16 +524,39 @@ function predictBallY(localBall, player2X) {
               else if (localPlayer2.playerY + 70 > 390)
                 localPlayer2.playerY = 320
               player2.current.y = localPlayer2.playerY * heightScalingFactor
+              originalPositions.player2_y = localPlayer2.playerY
           }
-      }
-      }
-
+        }
+    }
   }
 
   const gameLoop = () => {
     update();
     draw();
   };
+
+  const runGame = () => {
+    setTimeout(() => {
+      startTimer()
+      let loop = setInterval(() => {
+        if (isGameFinished) {
+          setGameFinished(true)
+          setStartGame(false)
+          isGameStarted = false
+          difficultyLevelVar = 0
+          ballComingTowardsAI = false
+          originalPositions.ball_x = 355
+          originalPositions.ball_y = 200
+          originalPositions.player1_x = 15
+          originalPositions.player1_y = 165
+          originalPositions.player2_x = 685
+          originalPositions.player2_y = 165
+          clearInterval(loop)
+        } else
+          gameLoop()
+      },1000/50);
+    }, 2000);
+  }
 
   useEffect(() => {
     if (difficultyLevel && canvasRef && !firstDraw) { ////////  && gameCustomize.length
@@ -554,7 +569,7 @@ function predictBallY(localBall, player2X) {
       ball.current = new Ball(355, 200, 7, gameCustomize[1], 5, 5, 5)
       edges.current = new Edges(10, 'white')
       resizeCanvas()
-      const rectDim = canvas.getBoundingClientRect()
+      // const rectDim = canvas.getBoundingClientRect()
       // console.log("context : ", context)
       setCanvasContext(context);
       // setCanvasDimensions(rectDim)
@@ -566,12 +581,23 @@ function predictBallY(localBall, player2X) {
       isGameStarted = true
       difficultyLevelVar = difficultyLevel //
       setStartGame(true)
-      setTimeout(() => {
-        startTimer()
-        let loop = setInterval(() => {
-          gameLoop()
-        },1000/50);
-      }, 5000);
+      runGame() //////
+      // setTimeout(() => {
+      //   startTimer()
+      //   let loop = setInterval(() => {
+      //     if (isGameFinished) {
+      //       // setDifficultyLevel(0)
+      //       setGameFinished(true)
+      //       isGameStarted = false
+      //       firstDraw = false
+      //       difficultyLevelVar = 0
+      //       ballComingTowardsAI = false
+      //       clearInterval(loop)
+      //       // return
+      //     } else
+      //       gameLoop()
+      //   },1000/50);
+      // }, 5000);
     }
   }, [canvasRef, difficultyLevel])
 
@@ -623,24 +649,31 @@ function predictBallY(localBall, player2X) {
   // }
 
   const handleKeyDown = (e) => {
-    keys[e.code] = true;
+    const gameStarted = startGameRef.current
+    if (gameStarted && (e.code === 'ArrowUp' || e.code === 'ArrowDown')) {
+      // console.log(e.code)
+      keys[e.code] = true;
+    }
   }
-
+  
   const handleKeyUp = (e) => {
-    keys[e.code] = false;
+    const gameStarted = startGameRef.current
+    if (gameStarted && (e.code === 'ArrowUp' || e.code === 'ArrowDown'))
+      keys[e.code] = false;
   }
 
   const handleMouseMove = (e) => {
     const canvas = canvasRef.current;
     const rect = canvas.getBoundingClientRect()
-    if (!isGameStarted)
-      return;
+    const gameStarted = startGameRef.current
+    if (!gameStarted)
+      return
     if (player1.current) {
       player1.current.y = e.clientY - rect.top - (player1.current.height / 2)
-      originalPositions.player1_y = e.clientY - rect.top - 35;
+      originalPositions.player1_y = ((e.clientY - rect.top) * (400 / canvas.height)) - 35
       if (player1.current.y < edges.current.height) {
-        player1.current.y = edges.current.height;
-        originalPositions.player1_y = 10;
+        player1.current.y = edges.current.height
+        originalPositions.player1_y = 10
       } else if (player1.current.y + player1.current.height > (canvas.height - edges.current.height)) {
         player1.current.y = ((canvas.height - edges.current.height) - player1.current.height)
         originalPositions.player1_y = 320
@@ -704,10 +737,6 @@ function predictBallY(localBall, player2X) {
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
   }
 
-  // useEffect(() => {
-  //   userRef.current = user;
-  // }, [user, roomID, socket]);
-
   useEffect(() => {
     const handleBeforeUnload = (event) => {
       const startedGame = startGameRef.current
@@ -748,11 +777,96 @@ function predictBallY(localBall, player2X) {
       setDifficultyLevel(difficultyMode)
   }
 
+  const restartGame = () => {
+    setGameFinished(false)
+    firstDraw = false
+    setDifficultyLevel(0)
+    setScore1(0)
+    setScore2(0)
+    setTime(0)
+    // originalPositions.player1_x = 15
+    // originalPositions.player1_y = 165
+    // originalPositions.player2_x = 685
+    // originalPositions.player2_y = 165
+    // originalPositions.ball_x = 355
+    // originalPositions.ball_y = 200
+  }
+
   return (
     <>
-      {(difficultyLevel) ? (
+      {/* {gameFinished && ( */}
+        <div className='onevsone' style={{}} >
+          {/* <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginTop: '100px', gap: '10px', padding: '20px 0'}}> */}
+            {/* <div style={{height: '80px', minHeight: '80px'}}>
+              <img src={userImg} alt="" style={{height: '100%'}} />
+            </div> */}
+            {/* <p>{user}</p> */}
+            {(score1 === 3) ? (<p style={{fontSize: '30px', display: 'flex', alignItems: 'center', marginTop: '100px', gap: '10px', padding: '20px 0'}} >WINNER WINNER CHICKEN DINNER!</p>) : (<p style={{fontSize: '30px', display: 'flex', alignItems: 'center', marginTop: '100px', gap: '10px', padding: '20px 0'}} >BETTER LUCK NEXT TIME!</p>)}
+          {/* </div> */}
+          <div style={{width: '100%', backgroundColor: 'rgba(0,0,0,0.5)', height: '300px', marginTop: '200px', display: 'flex'}} >
+            <div style={{width: '20%', display: 'flex', alignItems: 'center', justifyContent: 'center'}} >
+              <img src={Icons.winnerCup} alt="" style={{ width: '100%'}} />
+            </div>
+            <div style={{display: 'flex', flexDirection: 'column', borderLeft: '0.1px solid rgba(255, 255, 255, 0.2)', width: '80%'}} > {/* width: '60%' incase of achievement */}
+              {/* <div style={{width: '100%', height: '40px', display: 'flex'}} >
+              </div> */}
+              <div style={{width: '100%', height: '40px', display: 'flex', alignItems: 'center'}} >
+                <div style={{height: '100%', display: 'flex', alignItems: 'center', width: '31%'}} >
+                  <p style={{marginLeft: '5%'}} >Player</p>
+                </div>
+                <div style={{width: '23%', textAlign: 'center'}} >Shots</div>
+                <div style={{width: '23%', textAlign: 'center'}} >Spend time</div>
+                <div style={{width: '23%', textAlign: 'center'}} >Rating</div>
+              </div>
+              <div style={{width: '100%', height: '65px', display: 'flex', alignItems: 'center'}} >
+                <div style={{height: '100%', display: 'flex', alignItems: 'center', gap: '10px', width: '31%'}} >
+                  <img src={userImg} alt="" style={{height: '60%', marginLeft: '5%'}} />
+                  <p>{user}</p>
+                </div>
+                <div style={{width: '23%', textAlign: 'center'}} >4</div>
+                <div style={{width: '23%', textAlign: 'center'}} >45.6m</div>
+                <div style={{width: '23%', textAlign: 'center'}} >+450</div>
+              </div>
+              <div style={{width: '100%', height: '65px', display: 'flex', alignItems: 'center'}} >
+                <div style={{height: '100%', display: 'flex', alignItems: 'center', gap: '10px', width: '31%'}} >
+                  <img src={userImg} alt="" style={{height: '60%', marginLeft: '5%'}} />
+                  <p>{user}</p>
+                </div>
+                <div style={{width: '23%', textAlign: 'center'}} >4</div>
+                <div style={{width: '23%', textAlign: 'center'}} >45.6m</div>
+                <div style={{width: '23%', textAlign: 'center', }} >+450</div>
+              </div>
+              <div style={{width: '100%', height: '65px', display: 'flex', alignItems: 'center'}} >
+                <div style={{height: '100%', display: 'flex', alignItems: 'center', gap: '10px', width: '31%'}} >
+                  <img src={userImg} alt="" style={{height: '60%', marginLeft: '5%'}} />
+                  <p>{user}</p>
+                </div>
+                <div style={{width: '23%', textAlign: 'center'}} >4</div>
+                <div style={{width: '23%', textAlign: 'center'}} >45.6m</div>
+                <div style={{width: '23%', textAlign: 'center'}} >+450</div>
+              </div>
+              <div style={{width: '100%', height: '65px', display: 'flex', alignItems: 'center'}} >
+                <div style={{height: '100%', display: 'flex', alignItems: 'center', gap: '10px', width: '31%'}} >
+                  <img src={userImg} alt="" style={{height: '60%', marginLeft: '5%'}} />
+                  <p>{user}</p>
+                </div>
+                <div style={{width: '23%', textAlign: 'center'}} >4</div>
+                <div style={{width: '23%', textAlign: 'center'}} >45.6m</div>
+                <div style={{width: '23%', textAlign: 'center'}} >+450</div>
+              </div>
+              {/* <div style={{width: '100%', height: '65px', backgroundColor: 'red'}} ></div>
+              <div style={{width: '100%', height: '65px', backgroundColor: 'red'}} ></div>
+              <div style={{width: '100%', height: '65px', backgroundColor: 'red'}} ></div> */}
+            </div>
+          </div>
+        </div>
+        {/* {<div style={{fontWeight:"bolder", textAlign:"center", color:"white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>
+          <p>GAME FINISHED</p>
+          <button onClick={restartGame} >restart</button>
+        </div>} */}
+      {/* )} */}
+      {/* {(difficultyLevel && !gameFinished) && (
         <div className='onevsone-pm' ref={wrapperRef} >
-          // {gameFinished ? (<div style={{fontWeight:"bolder", textAlign:"center", color:"white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}><p>GAME FINISHED</p></div>) : gameAborted ? (<div style={{fontWeight:"bolder", textAlign:"center", color:"white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}><p>GAME ABORTED</p></div>) : ''}
           <div ref={resultRef} className='onevsone-pm-infos' >
             <div>
               {userImg ? (<img src={userImg} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
@@ -779,7 +893,8 @@ function predictBallY(localBall, player2X) {
           </div>
           <canvas ref={canvasRef} ></canvas>
         </div>
-      ) : ( 
+      )} */}
+      {/* {(!difficultyLevel && !gameFinished) && ( 
         <div className='onevsone'>
           <h1 className='difficulty-title' >SELECT DIFFICULTY</h1>
           <div className='difficulty-container' >
@@ -790,7 +905,7 @@ function predictBallY(localBall, player2X) {
                 <p>Ideal for beginners. The AI offers a gentle challenge to help you learn the basics.</p>
               </div>
             </div>
-            <div className={(difficultyMode === 0.6) ? 'skilled_level difficulty_level_selected' : 'skilled_level'} onClick={normalSelected} >  {/* style={{opacity: '1', outline: '2px solid white'}} */}
+            <div className={(difficultyMode === 0.6) ? 'skilled_level difficulty_level_selected' : 'skilled_level'} onClick={normalSelected} >
               <img src={Icons.normalMode} alt="" />
               <div>
                 <p>Skilled</p>
@@ -810,7 +925,7 @@ function predictBallY(localBall, player2X) {
             {difficultyMode ? (<button onClick={saveDifficultyLevel} >Save</button>) : (<button id='difficulty-selects-saving' >Save</button>)}
           </div>
         </div> 
-      )}
+      )} */}
     </>
   );
 }

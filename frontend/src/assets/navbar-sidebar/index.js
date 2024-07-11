@@ -64,5 +64,9 @@ export { default as easyMode } from './easy_difficulty.png'
 export { default as normalMode } from './normal_difficulty.png'
 export { default as hardMode } from './hard_difficulty.png'
 
+export { default as winnerCup } from './winner_cup.svg'
+export { default as leanWinnerCup } from './lean_winner_cup.svg'
+
+
 export { default as AiBot } from './AI-bot.jpg'
 // blue green black maroon gray white
