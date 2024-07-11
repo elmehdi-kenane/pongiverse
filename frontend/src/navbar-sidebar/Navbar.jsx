@@ -7,11 +7,10 @@ import AuthContext from "./Authcontext";
 
 function Navbar({ Icons, handleExapandSidebar, searchbar, handleSearchBar }) {
 
-    const {isReport} = useContext(AuthContext);
-    const {isBlock} = useContext(AuthContext);
+    const {isGlass} = useContext(AuthContext);
 
     return (
-        <div className={(isReport || isBlock) ?"navbar profile-blur":"navbar blur"}>
+        <div className={(isGlass) ?"navbar profile-blur":"navbar"}>
             <NavbarIconSearch
                 Icons={Icons}
                 handleExapandSidebar={handleExapandSidebar}

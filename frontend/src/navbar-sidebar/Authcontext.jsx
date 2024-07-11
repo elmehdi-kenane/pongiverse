@@ -24,9 +24,15 @@ export const AuthProvider = ({children}) => {
 	let [notifsImgs, setNotifsImgs] = useState([])
 	let allGameFriendsRef = useRef(allGameFriends)
 
+	
+	// Glass Background State --------------------------------------------
+	const [isGlass, setIsGlass] = useState(false);
+	
 	// Profile States --------------------------------------------
+	//-- Glass Background
 	const [isReport, setIsReport] = useState(false);
 	const [isBlock, setIsBlock] = useState(false);
+
 	const [reportValue, setReportValue] = useState(null);
 	const reportContentRef = useRef(null);
 	const blockRef = useRef(null);
@@ -37,6 +43,15 @@ export const AuthProvider = ({children}) => {
 	let [gameCustomize, setGameCustomize] = useState(['#FFFFFF', '#1C00C3', '#5241AB', false])
 	const oneVsOneIdRegex = /^\/mainpage\/play\/1vs1\/\d+$/
 	const twoVsTwoIdRegex = /^\/mainpage\/play\/2vs2\/\d+$/
+
+
+	// Glass Background Effect
+	useEffect (()=> {
+		if (!isReport && !isBlock)
+			setIsGlass(false);
+		else
+			setIsGlass(true);
+	}, [isReport, isBlock])
 
 	useEffect(() => {
 		allGameFriendsRef.current = allGameFriends;
@@ -316,6 +331,8 @@ export const AuthProvider = ({children}) => {
 		gameCustomize: gameCustomize,
 		hideNavSideBar: hideNavSideBar,
 		// Profile Settings
+		isGlass:isGlass,
+		setIsGlass:setIsGlass,
 		isReport: isReport,
 		setIsReport: setIsReport,
 		reportContentRef: reportContentRef,
