@@ -9,97 +9,73 @@ import { Icon } from '@mui/material';
 
 class Player {
   constructor(x, y, width, height, color, score) {
-      this.x = x;
-      this.y = y;
-      this.width = width;
-      this.height = height;
-      this.color = color;
-      this.score = score;
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.color = color;
+    this.score = score;
   }
 
   changeProperties(newX, newY, newWidth, newHeight, newColor, newScore) {
-      this.x = newX
-      this.y = newY
-      this.width = newWidth
-      this.height = newHeight
-      this.color = newColor
-      this.score = newScore
+    this.x = newX
+    this.y = newY
+    this.width = newWidth
+    this.height = newHeight
+    this.color = newColor
+    this.score = newScore
   }
 
   draw(ctx) {
-      ctx.fillStyle = this.color;
-      ctx.fillRect(this.x, this.y, this.width, this.height);
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.x, this.y, this.width, this.height);
   }
 }
 
 class Ball {
   constructor(x, y, radius, color, velocityX, velocityY, speed) {
-      this.x = x;
-      this.y = y;
-      this.radius = radius;
-      this.color = color;
-      this.velocityX = velocityX;
-      this.velocityY = velocityY;
-      this.speed = speed;
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.color = color;
+    this.velocityX = velocityX;
+    this.velocityY = velocityY;
+    this.speed = speed;
   }
-  
+
   changeProperties(newX, newY, newRadius, newColor, newVelocityX, newVelocityY, newSpeed) {
-      this.x = newX
-      this.y = newY
-      this.radius = newRadius
-      this.color = newColor
-      this.velocityX = newVelocityX
-      this.velocityY = newVelocityY
-      this.speed = newSpeed
+    this.x = newX
+    this.y = newY
+    this.radius = newRadius
+    this.color = newColor
+    this.velocityX = newVelocityX
+    this.velocityY = newVelocityY
+    this.speed = newSpeed
   }
 
   draw(ctx) {
-      ctx.fillStyle = this.color;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
-      ctx.fill();
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+    ctx.fill();
   }
 }
 
-// class Net {
-//   constructor(x, y, width, height, color) {
-//       this.x = x;
-//       this.y = y;
-//       this.width = width;
-//       this.height = height;
-//       this.color = color
-//   }
-
-//   changeProperties(newX, newY, newWidth, newHeight, newColor) {
-//       this.x = newX
-//       this.y = newY
-//       this.width = newWidth
-//       this.height = newHeight
-//       this.color = newColor
-//   }
-
-//   draw(ctx) {
-//       ctx.fillStyle = this.color;
-//       for (let i = 0; i <= ctx.canvas.height; i += 15)
-//           ctx.fillRect(this.x, this.y + i, this.width, this.height);
-//   }
-// }
-
 class Edges {
   constructor(newHeight, newColor) {
-      this.height = newHeight
-      this.color = newColor
+    this.height = newHeight
+    this.color = newColor
   }
 
   changeProperties(newHeight) {
-      this.height = newHeight
+    this.height = newHeight
   }
 
   draw(ctx) {
-      ctx.fillStyle = this.color
-      ctx.fillRect(0, 0, ctx.canvas.width, this.height)
-      ctx.fillStyle = this.color
-      ctx.fillRect(0, ctx.canvas.height - this.height, ctx.canvas.width, this.height)
+    ctx.fillStyle = this.color
+    ctx.fillRect(0, 0, ctx.canvas.width, this.height)
+    ctx.fillStyle = this.color
+    ctx.fillRect(0, ctx.canvas.height - this.height, ctx.canvas.width, this.height)
   }
 }
 
@@ -112,7 +88,6 @@ const Bot = () => {
   const [userName2, setUserName2] = useState(null)
   const navigate = useNavigate()
   let canvasRef = useRef(null);
-  // let gameFinishedRef = useRef(gameFinished);
   let isOut = false
 
   let isGameStarted = false
@@ -128,7 +103,7 @@ const Bot = () => {
   // let player2 = {}
   // let ball = {}
   // let edges = {}
-  
+
   let [score1, setScore1] = useState(0)
   let [score2, setScore2] = useState(0)
   let audio;
@@ -144,7 +119,7 @@ const Bot = () => {
   // const [canvasDimensions, setCanvasDimensions] = useState(null);
   // const canvasDimensionsRef = useRef(canvasDimensions);
   const gameCustomizeRef = useRef(gameCustomize);
-  const gameFinishedRef = useRef(gameFinished);
+  // const gameFinishedRef = useRef(gameFinished);
   const gameAbortedRef = useRef(gameAborted);
   const wrapperRef = useRef(null);
   const resultRef = useRef(null);
@@ -167,23 +142,50 @@ const Bot = () => {
 
   const userRef = useRef(user)
   let firstDraw = false
-  
+
   let particles = [];
-  
+
   const [difficulty, setDifficulty] = useState(false)
   const [difficultyLevel, setDifficultyLevel] = useState(0)
   const [startGame, setStartGame] = useState(false)
   const startGameRef = useRef(startGame)
-  
+
   const gameState = useRef(null)
-  
+
   const [difficultyMode, setDifficultyMode] = useState(0)
-  
+
   let ballComingTowardsAI = false;
   let difficultyLevelVar = 0
   let goalScored = 0
 
   const [pageSetted, setSettedPage] = useState(false)
+
+  const [playersInfos, setPlayersInfos] = useState([
+    {
+      totalScore: 0,
+      tmpScore: 0,
+      score: 0,
+      hit: 0,
+      accuracy: 0,
+      rating: 0,
+    },
+    {
+      totalScore: 0,
+      tmpScore: 0,
+      score: 0,
+      hit: 0,
+      accuracy: 0,
+      rating: 0
+    },
+    {
+      time: 0,
+      difficultyLevel: 0
+    }
+  ])
+
+  const difficultyLevelRef = useRef(difficultyLevel)
+  const playersInfosRef = useRef(playersInfos)
+  const timeRef = useRef(time)
   // const radius = Math.random() + 0.8
 
 
@@ -260,23 +262,31 @@ const Bot = () => {
 
   useEffect(() => {
     if (player1.current && player2.current && ball.current) {
-        player1.current.changeProperties(player1.current.x, player1.current.y, player1.current.width, player1.current.height, gameCustomize[0], player1.current.score)
-        player2.current.changeProperties(player2.current.x, player2.current.y, player2.current.width, player2.current.height, '#B38EF0', player2.current.score)
-        ball.current.changeProperties(ball.current.x, ball.current.y, ball.current.radius, gameCustomize[1])
+      player1.current.changeProperties(player1.current.x, player1.current.y, player1.current.width, player1.current.height, gameCustomize[0], player1.current.score)
+      player2.current.changeProperties(player2.current.x, player2.current.y, player2.current.width, player2.current.height, '#B38EF0', player2.current.score)
+      ball.current.changeProperties(ball.current.x, ball.current.y, ball.current.radius, gameCustomize[1])
     }
   }, [gameCustomize])
 
   useEffect(() => {
     // console.log("gggg", canvasContext)
-		canvasContextRef.current = canvasContext
+    canvasContextRef.current = canvasContext
     gameCustomizeRef.current = gameCustomize
     startGameRef.current = startGame
+    
+    // gameFinishedRef.current = gameFinished
+    // if ()
     resizeCanvas()
-		// canvasDimensionsRef.current = canvasDimensions;
-    //     gameFinishedRef.current = gameFinished
+    // canvasDimensionsRef.current = canvasDimensions;
     //     gameAbortedRef.current = gameAborted
     //     canvasDimsRef.current = canvasDims
-	}, [canvasContext, gameCustomize, startGame]);
+  }, [canvasContext, gameCustomize, startGame]);
+
+  useEffect(() => {
+    playersInfosRef.current = playersInfos
+    difficultyLevelRef.current = difficultyLevel
+    timeRef.current = time
+  }, [playersInfosRef, difficultyLevelRef, time])
 
   function resizeCanvas() {
     const canvas = canvasRef.current
@@ -338,51 +348,62 @@ const Bot = () => {
     ball.current.velocityX = 5
     ball.current.velocityY = 5
     ball.current.speed = 5
-}
+  }
 
-function collision(b, p) {
-    const playerTop = p.playerY
-    const playerBottom = p.playerY + 70
-    const playerLeft = p.playerX
-    const playerRight = p.playerX + 10
-    
+  function collision(b, p) {
+    const playerTop = p[0].playerY
+    const playerBottom = p[0].playerY + 70
+    const playerLeft = p[0].playerX
+    const playerRight = p[0].playerX + 10
+
     const ballTop = b.ballY - 7
     const ballBottom = b.ballY + 7
     const ballLeft = b.ballX - 7
     const ballRight = b.ballX + 7
-    
-    return playerLeft < ballRight && playerTop < ballBottom && playerRight > ballLeft && playerBottom > ballTop
-}
 
-// function predictBallY(ball, aiX, canvas) {
-function predictBallY(localBall, player2X) {
-  // let predictedY = ball.y;
-  let predictedY = localBall.ballY;
-  // let velocityY = ball.velocityY;
-  let velocityY = ball.current.velocityY;
-  // let timeToReachAI = (aiX - ball.x) / ball.velocityX;
-  let timeToReachAI = (player2X - localBall.ballX) / ball.current.velocityX;
+    let check = (playerLeft < ballRight && playerTop < ballBottom && playerRight > ballLeft && playerBottom > ballTop)
+    if (check) {
+      let allPlayersInfos = [...playersInfos]
+      allPlayersInfos[0].tmpScore = 0
+      allPlayersInfos[1].tmpScore = 0
+      allPlayersInfos[p[1]].hit += 1
+      allPlayersInfos[p[1]].tmpScore = 1
+      setPlayersInfos(allPlayersInfos)
+      return 1
+    }
+    return 0
+    // return playerLeft < ballRight && playerTop < ballBottom && playerRight > ballLeft && playerBottom > ballTop
+  }
 
-  while (timeToReachAI > 0) {
+  // function predictBallY(ball, aiX, canvas) {
+  function predictBallY(localBall, player2X) {
+    // let predictedY = ball.y;
+    let predictedY = localBall.ballY;
+    // let velocityY = ball.velocityY;
+    let velocityY = ball.current.velocityY;
+    // let timeToReachAI = (aiX - ball.x) / ball.velocityX;
+    let timeToReachAI = (player2X - localBall.ballX) / ball.current.velocityX;
+
+    while (timeToReachAI > 0) {
       let timeToWall;
 
       if (velocityY > 0)
-          timeToWall = (400 - 7 - predictedY) / velocityY;
+        timeToWall = (400 - 7 - predictedY) / velocityY;
       else
-          timeToWall = (7 - predictedY) / velocityY;
+        timeToWall = (7 - predictedY) / velocityY;
 
       if (timeToWall < timeToReachAI) {
-          predictedY += velocityY * timeToWall;
-          velocityY = -velocityY; // Ball bounces off the wall
-          timeToReachAI -= timeToWall;
+        predictedY += velocityY * timeToWall;
+        velocityY = -velocityY; // Ball bounces off the wall
+        timeToReachAI -= timeToWall;
       } else {
-          predictedY += velocityY * timeToReachAI;
-          timeToReachAI = 0;
+        predictedY += velocityY * timeToReachAI;
+        timeToReachAI = 0;
       }
-  }
+    }
 
-  return predictedY;
-}
+    return predictedY;
+  }
 
   const update = () => {
     const canvas = canvasRef.current
@@ -390,145 +411,172 @@ function predictBallY(localBall, player2X) {
     // if (goalScored)
     //   goalScored--
     if (canvas && player1.current && player2.current && ball.current) {
-        // console.log("inside", ball.current.x, ball.current.y)
-        const originalHeight = 400 / canvas.height
-        const originalWidth = 710 / canvas.width
+      // console.log("inside", ball.current.x, ball.current.y)
+      const originalHeight = 400 / canvas.height
+      const originalWidth = 710 / canvas.width
 
-        const heightScalingFactor = canvas.height / 400
-        const widthScalingFactor = canvas.width / 710
+      const heightScalingFactor = canvas.height / 400
+      const widthScalingFactor = canvas.width / 710
 
-        // console.log(keys)
-        if (keys['ArrowUp']) {
-          console.log("ARROW UP")
-          if (!((player1.current.y - (8 * heightScalingFactor)) <= edges.current.height)) {
-            player1.current.y -= (8 * heightScalingFactor);
-            originalPositions.player1_y -= 8
-          } else {
-            player1.current.y = edges.current.height
-            originalPositions.player1_y = 10
+      // console.log(keys)
+      if (keys['ArrowUp']) {
+        console.log("ARROW UP")
+        if (!((player1.current.y - (8 * heightScalingFactor)) <= edges.current.height)) {
+          player1.current.y -= (8 * heightScalingFactor);
+          originalPositions.player1_y -= 8
+        } else {
+          player1.current.y = edges.current.height
+          originalPositions.player1_y = 10
+        }
+      } else if (keys['ArrowDown']) {
+        console.log("ARROW DOWN")
+        if (!(((player1.current.y + player1.current.height) + (8 * heightScalingFactor)) >= (canvas.height - edges.current.height))) {
+          player1.current.y += (8 * heightScalingFactor)
+          originalPositions.player1_y += 8
+        } else {
+          player1.current.y = ((canvas.height - edges.current.height) - player1.current.height)
+          originalPositions.player1_y = 320
+        }
+      }
+
+      const localBall = {
+        ballX: ball.current.x * originalWidth,
+        ballY: ball.current.y * originalHeight
+      }
+
+      const localPlayer1 = {
+        playerX: player1.current.x * originalWidth,
+        playerY: player1.current.y * originalHeight
+      }
+
+      const localPlayer2 = {
+        playerX: player2.current.x * originalWidth,
+        playerY: player2.current.y * originalHeight
+      }
+
+      localBall.ballX += ball.current.velocityX
+      localBall.ballY += ball.current.velocityY
+
+      if (localBall.ballY + 7 > 390 || localBall.ballY - 7 < 10) {
+        ball.current.velocityY = -ball.current.velocityY;
+        // wall.play(); // sound
+      }
+
+      if (localBall.ballY - 7 < 10)
+        localBall.ballY += 5
+      if (localBall.ballY + 7 > 390)
+        localBall.ballY -= 5
+
+      let localPlayer = (localBall.ballX < 355) ? [localPlayer1, 0] : [localPlayer2, 1];
+
+      if (collision(localBall, localPlayer)) {
+        // hit.play(); // sound
+        let collidePoint = localBall.ballY - (localPlayer[0].playerY + 35)
+        collidePoint = collidePoint / 35
+        let angleRad = collidePoint * Math.PI / 4
+        let direction = (localBall.ballX < 355) ? 1 : -1;
+        ball.current.velocityX = direction * ball.current.speed * Math.cos(angleRad);
+        ball.current.velocityY = ball.current.speed * Math.sin(angleRad);
+        if (ball.current.speed < 15) {
+          ball.current.speed += 0.5
+        } else if (ball.current.speed < 16)
+          ball.current.speed += 0.001
+        if (localPlayer === localPlayer2)
+          ballComingTowardsAI = false;
+      }
+
+      // player1.current.x = localPlayer1.playerX * widthScalingFactor
+      // player1.current.y = localPlayer1.playerY * heightScalingFactor
+      // player2.current.x = localPlayer2.playerX * widthScalingFactor
+      // player2.current.y = localPlayer2.playerY * heightScalingFactor
+      ball.current.x = localBall.ballX * widthScalingFactor
+      ball.current.y = localBall.ballY * heightScalingFactor
+      originalPositions.ball_x = localBall.ballX
+      originalPositions.ball_y = localBall.ballY
+
+      // console.log(localBall.ballX * widthScalingFactor, localBall.ballX * widthScalingFactor)
+
+      if (localBall.ballX - 7 < 0) {
+        player2.current.score++
+        let allPlayersInfos = [...playersInfos]
+        allPlayersInfos[1].totalScore += 1
+        allPlayersInfos[1].score += allPlayersInfos[1].tmpScore
+        setPlayersInfos(allPlayersInfos)
+        // setScore2(prevScore2 => prevScore2 + 1)
+        // comScore.play() // sound
+        resetBall()
+        ballComingTowardsAI = false
+        // goalScored = 10
+        difficultyLevelVar = difficultyLevel //
+        if (player2.current.score === 3)
+          isGameFinished = true
+      } else if (localBall.ballX + 7 > 710) {
+        player1.current.score++
+        let allPlayersInfos = [...playersInfos]
+        allPlayersInfos[0].totalScore += 1
+        allPlayersInfos[0].score += allPlayersInfos[0].tmpScore
+        setPlayersInfos(allPlayersInfos)
+        // setScore1(prevScore1 => prevScore1 + 1)
+        // userScore.play() // sound
+        resetBall()
+        ballComingTowardsAI = true
+        // goalScored = 10
+        difficultyLevelVar = difficultyLevel //
+        if (player1.current.score === 3)
+          isGameFinished = true
+      }
+
+      localBall.ballX = ball.current.x * originalWidth
+      localBall.ballY = ball.current.y * originalHeight
+
+      if (localBall.ballX > 355) {
+        if (ball.current.velocityX > 0)
+          ballComingTowardsAI = true;
+        else
+          ballComingTowardsAI = false;
+
+        if (ballComingTowardsAI) {
+          const predictedY = predictBallY(localBall, localPlayer2.playerX);
+          const tolerance = 5; // Adjust this value as needed for smoothness
+          if (Math.abs(localPlayer2.playerY + 35 - predictedY) > tolerance) {
+            if (predictedY < localPlayer2.playerY + 70 / 2) {
+              localPlayer2.playerY -= difficultyLevelVar * ball.current.speed; // Move up, adjust speed based on ball speed
+            } else if (predictedY > localPlayer2.playerY + 70 / 2) {
+              localPlayer2.playerY += difficultyLevelVar * ball.current.speed; // Move down, adjust speed based on ball speed
+            }
           }
-        } else if (keys['ArrowDown']) {
-          console.log("ARROW DOWN")
-          if (!(((player1.current.y + player1.current.height) + (8 * heightScalingFactor)) >= (canvas.height - edges.current.height))) {
-              player1.current.y += (8 * heightScalingFactor)
-              originalPositions.player1_y += 8
-          } else {
-              player1.current.y = ((canvas.height - edges.current.height) - player1.current.height)
-              originalPositions.player1_y = 320
-          }
-        }
 
-        const localBall = {
-          ballX: ball.current.x * originalWidth,
-          ballY: ball.current.y * originalHeight
+          // localPlayer2.playerY = Math.max(Math.min(localPlayer2.playerY, 400 - 70), 0); // Prevent AI from moving out of canvas
+          if (localPlayer2.playerY < 10)
+            localPlayer2.playerY = 10
+          else if (localPlayer2.playerY + 70 > 390)
+            localPlayer2.playerY = 320
+          player2.current.y = localPlayer2.playerY * heightScalingFactor
+          originalPositions.player2_y = localPlayer2.playerY
         }
-        
-        const localPlayer1 = {
-          playerX : player1.current.x * originalWidth,
-          playerY: player1.current.y * originalHeight
-        }
-        
-        const localPlayer2 = {
-          playerX : player2.current.x * originalWidth,
-          playerY: player2.current.y * originalHeight
-        }
-
-        localBall.ballX += ball.current.velocityX
-        localBall.ballY += ball.current.velocityY
-        
-        if (localBall.ballY + 7 > 390 || localBall.ballY - 7 < 10){
-          ball.current.velocityY = -ball.current.velocityY;
-          // wall.play(); // sound
-        }
-        
-        if (localBall.ballY - 7 < 10)
-          localBall.ballY += 5
-        if (localBall.ballY + 7 > 390)
-          localBall.ballY -= 5
-        
-        let localPlayer = (localBall.ballX < 355) ? localPlayer1 : localPlayer2;
-        
-        if (collision(localBall, localPlayer)) {
-          // hit.play(); // sound
-          let collidePoint = localBall.ballY - (localPlayer.playerY + 35)
-          collidePoint = collidePoint / 35
-          let angleRad = collidePoint * Math.PI / 4
-          let direction = (localBall.ballX < 355) ? 1 : -1;
-          ball.current.velocityX = direction * ball.current.speed * Math.cos(angleRad);
-          ball.current.velocityY = ball.current.speed * Math.sin(angleRad);
-          if (ball.current.speed < 15) {
-            ball.current.speed += 0.5
-          } else if (ball.current.speed < 16)
-            ball.current.speed += 0.001
-          if (localPlayer === localPlayer2)
-            ballComingTowardsAI = false;
-        }
-
-        // player1.current.x = localPlayer1.playerX * widthScalingFactor
-        // player1.current.y = localPlayer1.playerY * heightScalingFactor
-        // player2.current.x = localPlayer2.playerX * widthScalingFactor
-        // player2.current.y = localPlayer2.playerY * heightScalingFactor
-        ball.current.x = localBall.ballX * widthScalingFactor
-        ball.current.y = localBall.ballY * heightScalingFactor
-        originalPositions.ball_x = localBall.ballX
-        originalPositions.ball_y = localBall.ballY
-
-        // console.log(localBall.ballX * widthScalingFactor, localBall.ballX * widthScalingFactor)
-
-        if (localBall.ballX - 7 < 0 ) {
-            player2.current.score += 1
-            setScore2(prevScore2 => prevScore2 + 1)
-            // comScore.play() // sound
-            resetBall()
-            ballComingTowardsAI = false
-            goalScored = 10
-            difficultyLevelVar = difficultyLevel //
-            // console.log("bot scored : ", player2.current.score)
-            if (player2.current.score === 3)
-              isGameFinished = true
-          } else if (localBall.ballX + 7 > 710) {
-            player1.current.score++
-            setScore1(prevScore1 => prevScore1 + 1)
-            // userScore.play() // sound
-            resetBall()
-            ballComingTowardsAI = true
-            goalScored = 10
-            difficultyLevelVar = difficultyLevel //
-            if (player1.current.score === 3)
-              isGameFinished = true
-        }
-
-        localBall.ballX = ball.current.x * originalWidth
-        localBall.ballY = ball.current.y * originalHeight
-
-        if (localBall.ballX > 355) {
-          if (ball.current.velocityX > 0)
-              ballComingTowardsAI = true;
-          else
-              ballComingTowardsAI = false;
-          
-          if (ballComingTowardsAI) {
-              const predictedY = predictBallY(localBall, localPlayer2.playerX);
-              const tolerance = 5; // Adjust this value as needed for smoothness
-              if (Math.abs(localPlayer2.playerY + 35 - predictedY) > tolerance) {
-                  if (predictedY < localPlayer2.playerY + 70 / 2) {
-                      localPlayer2.playerY -= difficultyLevelVar * ball.current.speed; // Move up, adjust speed based on ball speed
-                  } else if (predictedY > localPlayer2.playerY + 70 / 2) {
-                      localPlayer2.playerY += difficultyLevelVar * ball.current.speed; // Move down, adjust speed based on ball speed
-                  }
-              }
-              
-              // localPlayer2.playerY = Math.max(Math.min(localPlayer2.playerY, 400 - 70), 0); // Prevent AI from moving out of canvas
-              if (localPlayer2.playerY < 10)
-                localPlayer2.playerY = 10
-              else if (localPlayer2.playerY + 70 > 390)
-                localPlayer2.playerY = 320
-              player2.current.y = localPlayer2.playerY * heightScalingFactor
-              originalPositions.player2_y = localPlayer2.playerY
-          }
-        }
+      }
     }
   }
+
+  let gameAlreadyCheck = false
+
+  useEffect(() => {
+    if (gameAlreadyCheck) {
+      let botGameStatusJson = localStorage.getItem('botGameStatus')
+      let botGameStatus = JSON.parse(botGameStatusJson)
+      if (botGameStatus) {
+        console.log(botGameStatus)
+        localStorage.removeItem('botGameStatus')
+        setDifficultyLevel(botGameStatus[2].difficultyLevel)
+        setTime(botGameStatus[2].time)
+        setPlayersInfos(botGameStatus)
+        console.log('already a running game')
+      }
+      else
+        console.log('not a single running game')
+    } else
+      gameAlreadyCheck = true
+  }, [])
 
   const gameLoop = () => {
     update();
@@ -551,10 +599,11 @@ function predictBallY(localBall, player2X) {
           originalPositions.player1_y = 165
           originalPositions.player2_x = 685
           originalPositions.player2_y = 165
+          // console.log("players infos : ", playersInfos, difficultyLevel)
           clearInterval(loop)
         } else
           gameLoop()
-      },1000/50);
+      }, 1000 / 50);
     }, 2000);
   }
 
@@ -563,9 +612,10 @@ function predictBallY(localBall, player2X) {
       firstDraw = true
       // setCanvasDrawing(true)
       const canvas = canvasRef.current
+      const allPlayersInfos = playersInfosRef.current
       const context = canvas.getContext('2d')
-      player1.current = new Player(15, 165, 10, 70, gameCustomize[0], 0)
-      player2.current = new Player(685, 165, 10, 70, gameCustomize[0], 0)
+      player1.current = new Player(15, 165, 10, 70, gameCustomize[0], allPlayersInfos[0].score)
+      player2.current = new Player(685, 165, 10, 70, gameCustomize[0], allPlayersInfos[1].score)
       ball.current = new Ball(355, 200, 7, gameCustomize[1], 5, 5, 5)
       edges.current = new Edges(10, 'white')
       resizeCanvas()
@@ -655,7 +705,7 @@ function predictBallY(localBall, player2X) {
       keys[e.code] = true;
     }
   }
-  
+
   const handleKeyUp = (e) => {
     const gameStarted = startGameRef.current
     if (gameStarted && (e.code === 'ArrowUp' || e.code === 'ArrowDown'))
@@ -740,18 +790,19 @@ function predictBallY(localBall, player2X) {
   useEffect(() => {
     const handleBeforeUnload = (event) => {
       const startedGame = startGameRef.current
+      const allPlayersInfos = playersInfosRef.current
+      const difficultyLvl = difficultyLevelRef.current
+      const timeCount = timeRef.current
       if (startedGame) {
-        localStorage.setItem('botValues', {
-          player1_score: score1,
-          player2_score: score2,
-          time: time,
-          difficultyLevel: difficultyLevel
-        })
+        let allPlayersStats = [...allPlayersInfos]
+        allPlayersInfos[2].time = timeCount
+        allPlayersInfos[2].difficultyLevel = difficultyLvl
+        localStorage.setItem('botGameStatus', JSON.stringify(allPlayersStats))
       }
     }
     window.addEventListener('beforeunload', handleBeforeUnload)
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload)
+      window.removeEventListener('beforeunload', JSON.stringify(handleBeforeUnload))
     }
   }, [])
 
@@ -759,13 +810,14 @@ function predictBallY(localBall, player2X) {
     return () => {
       if (isOut) {
         const startedGame = startGameRef.current
+        const allPlayersInfos = playersInfosRef.current
+        const difficultyLvl = difficultyLevelRef.current
+        const timeCount = timeRef.current
         if (startedGame) {
-          localStorage.setItem('botValues', {
-            player1_score: score1,
-            player2_score: score2,
-            time: time,
-            difficultyLevel: difficultyLevel
-          })
+          let allPlayersStats = [...allPlayersInfos]
+          allPlayersInfos[2].time = timeCount
+          allPlayersInfos[2].difficultyLevel = difficultyLvl
+          localStorage.setItem('botGameStatus', allPlayersStats)
         }
       } else
         isOut = true
@@ -794,107 +846,107 @@ function predictBallY(localBall, player2X) {
 
   return (
     <>
-      {/* {gameFinished && ( */}
+      {gameFinished && (
         <div className='onevsone' style={{}} >
-          {/* <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginTop: '100px', gap: '10px', padding: '20px 0'}}> */}
-            {/* <div style={{height: '80px', minHeight: '80px'}}>
-              <img src={userImg} alt="" style={{height: '100%'}} />
-            </div> */}
-            {/* <p>{user}</p> */}
-            {(score1 === 3) ? (<p style={{fontSize: '30px', display: 'flex', alignItems: 'center', marginTop: '100px', gap: '10px', padding: '20px 0'}} >WINNER WINNER CHICKEN DINNER!</p>) : (<p style={{fontSize: '30px', display: 'flex', alignItems: 'center', marginTop: '100px', gap: '10px', padding: '20px 0'}} >BETTER LUCK NEXT TIME!</p>)}
-          {/* </div> */}
-          <div style={{width: '100%', backgroundColor: 'rgba(0,0,0,0.5)', height: '300px', marginTop: '200px', display: 'flex'}} >
-            <div style={{width: '20%', display: 'flex', alignItems: 'center', justifyContent: 'center'}} >
-              <img src={Icons.winnerCup} alt="" style={{ width: '100%'}} />
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginTop: '100px', gap: '10px', padding: '20px 0' }}>
+            <div style={{ height: '80px', minHeight: '80px' }}>
+              <img src={userImg} alt="" style={{ height: '100%' }} />
             </div>
-            <div style={{display: 'flex', flexDirection: 'column', borderLeft: '0.1px solid rgba(255, 255, 255, 0.2)', width: '80%'}} > {/* width: '60%' incase of achievement */}
+            <p>{user}</p>
+            {(score1 === 3) ? (<p style={{ fontSize: '30px', display: 'flex', alignItems: 'center', marginTop: '100px', gap: '10px', padding: '20px 0' }} >WINNER WINNER CHICKEN DINNER!</p>) : (<p style={{ fontSize: '30px', display: 'flex', alignItems: 'center', marginTop: '100px', gap: '10px', padding: '20px 0' }} >BETTER LUCK NEXT TIME!</p>)}
+          </div>
+          <div style={{ width: '100%', backgroundColor: 'rgba(0,0,0,0.5)', height: '300px', marginTop: '200px', display: 'flex' }} >
+            <div style={{ width: '20%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
+              <img src={Icons.winnerCup} alt="" style={{ width: '100%' }} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', borderLeft: '0.1px solid rgba(255, 255, 255, 0.2)', width: '80%' }} > {/* width: '60%' incase of achievement */}
               {/* <div style={{width: '100%', height: '40px', display: 'flex'}} >
               </div> */}
-              <div style={{width: '100%', height: '40px', display: 'flex', alignItems: 'center'}} >
-                <div style={{height: '100%', display: 'flex', alignItems: 'center', width: '31%'}} >
-                  <p style={{marginLeft: '5%'}} >Player</p>
+              <div style={{ width: '100%', height: '40px', display: 'flex', alignItems: 'center' }} >
+                <div style={{ height: '100%', display: 'flex', alignItems: 'center', width: '31%' }} >
+                  <p style={{ marginLeft: '5%' }} >Player</p>
                 </div>
-                <div style={{width: '23%', textAlign: 'center'}} >Shots</div>
-                <div style={{width: '23%', textAlign: 'center'}} >Spend time</div>
-                <div style={{width: '23%', textAlign: 'center'}} >Rating</div>
+                <div style={{ width: '23%', textAlign: 'center' }} >Shots</div>
+                <div style={{ width: '23%', textAlign: 'center' }} >Spend time</div>
+                <div style={{ width: '23%', textAlign: 'center' }} >Rating</div>
               </div>
-              <div style={{width: '100%', height: '65px', display: 'flex', alignItems: 'center'}} >
-                <div style={{height: '100%', display: 'flex', alignItems: 'center', gap: '10px', width: '31%'}} >
-                  <img src={userImg} alt="" style={{height: '60%', marginLeft: '5%'}} />
+              <div style={{ width: '100%', height: '65px', display: 'flex', alignItems: 'center' }} >
+                <div style={{ height: '100%', display: 'flex', alignItems: 'center', gap: '10px', width: '31%' }} >
+                  <img src={userImg} alt="" style={{ height: '60%', marginLeft: '5%' }} />
                   <p>{user}</p>
                 </div>
-                <div style={{width: '23%', textAlign: 'center'}} >4</div>
-                <div style={{width: '23%', textAlign: 'center'}} >45.6m</div>
-                <div style={{width: '23%', textAlign: 'center'}} >+450</div>
+                <div style={{ width: '23%', textAlign: 'center' }} >4</div>
+                <div style={{ width: '23%', textAlign: 'center' }} >45.6m</div>
+                <div style={{ width: '23%', textAlign: 'center' }} >+450</div>
               </div>
-              <div style={{width: '100%', height: '65px', display: 'flex', alignItems: 'center'}} >
-                <div style={{height: '100%', display: 'flex', alignItems: 'center', gap: '10px', width: '31%'}} >
-                  <img src={userImg} alt="" style={{height: '60%', marginLeft: '5%'}} />
+              <div style={{ width: '100%', height: '65px', display: 'flex', alignItems: 'center' }} >
+                <div style={{ height: '100%', display: 'flex', alignItems: 'center', gap: '10px', width: '31%' }} >
+                  <img src={userImg} alt="" style={{ height: '60%', marginLeft: '5%' }} />
                   <p>{user}</p>
                 </div>
-                <div style={{width: '23%', textAlign: 'center'}} >4</div>
-                <div style={{width: '23%', textAlign: 'center'}} >45.6m</div>
-                <div style={{width: '23%', textAlign: 'center', }} >+450</div>
+                <div style={{ width: '23%', textAlign: 'center' }} >4</div>
+                <div style={{ width: '23%', textAlign: 'center' }} >45.6m</div>
+                <div style={{ width: '23%', textAlign: 'center', }} >+450</div>
               </div>
-              <div style={{width: '100%', height: '65px', display: 'flex', alignItems: 'center'}} >
-                <div style={{height: '100%', display: 'flex', alignItems: 'center', gap: '10px', width: '31%'}} >
-                  <img src={userImg} alt="" style={{height: '60%', marginLeft: '5%'}} />
+              <div style={{ width: '100%', height: '65px', display: 'flex', alignItems: 'center' }} >
+                <div style={{ height: '100%', display: 'flex', alignItems: 'center', gap: '10px', width: '31%' }} >
+                  <img src={userImg} alt="" style={{ height: '60%', marginLeft: '5%' }} />
                   <p>{user}</p>
                 </div>
-                <div style={{width: '23%', textAlign: 'center'}} >4</div>
-                <div style={{width: '23%', textAlign: 'center'}} >45.6m</div>
-                <div style={{width: '23%', textAlign: 'center'}} >+450</div>
+                <div style={{ width: '23%', textAlign: 'center' }} >4</div>
+                <div style={{ width: '23%', textAlign: 'center' }} >45.6m</div>
+                <div style={{ width: '23%', textAlign: 'center' }} >+450</div>
               </div>
-              <div style={{width: '100%', height: '65px', display: 'flex', alignItems: 'center'}} >
-                <div style={{height: '100%', display: 'flex', alignItems: 'center', gap: '10px', width: '31%'}} >
-                  <img src={userImg} alt="" style={{height: '60%', marginLeft: '5%'}} />
+              <div style={{ width: '100%', height: '65px', display: 'flex', alignItems: 'center' }} >
+                <div style={{ height: '100%', display: 'flex', alignItems: 'center', gap: '10px', width: '31%' }} >
+                  <img src={userImg} alt="" style={{ height: '60%', marginLeft: '5%' }} />
                   <p>{user}</p>
                 </div>
-                <div style={{width: '23%', textAlign: 'center'}} >4</div>
-                <div style={{width: '23%', textAlign: 'center'}} >45.6m</div>
-                <div style={{width: '23%', textAlign: 'center'}} >+450</div>
+                <div style={{ width: '23%', textAlign: 'center' }} >4</div>
+                <div style={{ width: '23%', textAlign: 'center' }} >45.6m</div>
+                <div style={{ width: '23%', textAlign: 'center' }} >+450</div>
               </div>
-              {/* <div style={{width: '100%', height: '65px', backgroundColor: 'red'}} ></div>
-              <div style={{width: '100%', height: '65px', backgroundColor: 'red'}} ></div>
-              <div style={{width: '100%', height: '65px', backgroundColor: 'red'}} ></div> */}
+              <div style={{ width: '100%', height: '65px', backgroundColor: 'red' }} ></div>
+              <div style={{ width: '100%', height: '65px', backgroundColor: 'red' }} ></div>
+              <div style={{ width: '100%', height: '65px', backgroundColor: 'red' }} ></div>
             </div>
           </div>
         </div>
-        {/* {<div style={{fontWeight:"bolder", textAlign:"center", color:"white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>
-          <p>GAME FINISHED</p>
-          <button onClick={restartGame} >restart</button>
-        </div>} */}
-      {/* )} */}
-      {/* {(difficultyLevel && !gameFinished) && (
+        // {<div style={{fontWeight:"bolder", textAlign:"center", color:"white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>
+        //   <p>GAME FINISHED</p>
+        //   <button onClick={restartGame} >restart</button>
+        // </div>}
+      )}
+      {(difficultyLevel && !gameFinished) && (
         <div className='onevsone-pm' ref={wrapperRef} >
           <div ref={resultRef} className='onevsone-pm-infos' >
             <div>
-              {userImg ? (<img src={userImg} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
-              <div style={{textAlign:"center"}} ><p>{user}</p></div>
+              {userImg ? (<img src={userImg} alt="" style={{ height: '100%' }} />) : (<img src={Icons.solidGrey} alt="" style={{ height: '100%' }} />)}
+              <div style={{ textAlign: "center" }} ><p>{user}</p></div>
             </div>
             <div>
-              <p>{score1}</p>
+              <p>{playersInfos[0].totalScore}</p>
               <div className='onevsone-pm-infos-stats' >
-                  <div>
-                      <p>Goal: 5</p>
-                      <div onClick={(!gameFinished && !gameAborted) ? exitTheGame : undefined} >
-                          <img src={Icons.logout} alt="" />
-                          <p>Exit</p>
-                      </div>
+                <div>
+                  <p>Goal: 5</p>
+                  <div onClick={(!gameFinished && !gameAborted) ? exitTheGame : undefined} >
+                    <img src={Icons.logout} alt="" />
+                    <p>Exit</p>
                   </div>
-                  <div>{formatTime(time)}</div>
+                </div>
+                <div>{formatTime(time)}</div>
               </div>
-              <p>{score2}</p>
+              <p>{playersInfos[1].totalScore}</p>
             </div>
             <div>
-              <div style={{textAlign:"center"}}><p>Bot</p></div>
-              <img src={Icons.AiBot} alt="" style={{height: '100%'}} />
+              <div style={{ textAlign: "center" }}><p>Bot</p></div>
+              <img src={Icons.AiBot} alt="" style={{ height: '100%' }} />
             </div>
           </div>
           <canvas ref={canvasRef} ></canvas>
         </div>
-      )} */}
-      {/* {(!difficultyLevel && !gameFinished) && ( 
+      )}
+      {(!difficultyLevel && !gameFinished) && (
         <div className='onevsone'>
           <h1 className='difficulty-title' >SELECT DIFFICULTY</h1>
           <div className='difficulty-container' >
@@ -924,8 +976,8 @@ function predictBallY(localBall, player2X) {
             <button>Back</button>
             {difficultyMode ? (<button onClick={saveDifficultyLevel} >Save</button>) : (<button id='difficulty-selects-saving' >Save</button>)}
           </div>
-        </div> 
-      )} */}
+        </div>
+      )}
     </>
   );
 }

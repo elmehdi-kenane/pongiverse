@@ -969,7 +969,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
         player = [room["players"][0], 0] if room["ball"]["ballX"] < 355 else [room['players'][1], 1]
         # print(f"speed : {ballProps['speed']}")
         if collision(self, room["ball"], player, room):
-            hitPoint = room["ball"]["ballY"] - (player["paddleY"] + 35) #### player["height"] / 2 => 50
+            hitPoint = room["ball"]["ballY"] - (player[0]["paddleY"] + 35) #### player["height"] / 2 => 50
             hitPoint = hitPoint / 35 #### player["height"] / 2 => 50
             angle = hitPoint * math.pi / 4
             direction = 1 if (room["ball"]["ballX"] < 355) else -1
