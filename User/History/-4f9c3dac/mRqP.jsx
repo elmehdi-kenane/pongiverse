@@ -769,7 +769,6 @@ const Bot = () => {
   const exitTheGame = () => {
     setStartGame(false)
     // exitGame = true
-    startGameRef.current = false
     navigate('../game/solo/1vs1')
   }
 

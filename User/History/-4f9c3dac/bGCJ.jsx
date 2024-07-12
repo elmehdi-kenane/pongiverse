@@ -764,12 +764,11 @@ const Bot = () => {
   //   draw()
   // }
 
-  // let exitGame = false
+  let exitGame = false
 
   const exitTheGame = () => {
     setStartGame(false)
-    // exitGame = true
-    startGameRef.current = false
+    exitGame = true
     navigate('../game/solo/1vs1')
   }
 
@@ -798,7 +797,7 @@ const Bot = () => {
       const allPlayersInfos = playersInfosRef.current
       const difficultyLvl = difficultyLevelRef.current
       const timeCount = timeRef.current
-      if (startedGame) {
+      if (startedGame && !exitGame) {
         let allPlayersStats = [...allPlayersInfos]
         allPlayersInfos[2].time = timeCount
         allPlayersInfos[2].difficultyLevel = difficultyLvl
@@ -818,7 +817,7 @@ const Bot = () => {
         const allPlayersInfos = playersInfosRef.current
         const difficultyLvl = difficultyLevelRef.current
         const timeCount = timeRef.current
-        if (startedGame) {
+        if (startedGame && !exitGame) {
           let allPlayersStats = [...allPlayersInfos]
           allPlayersInfos[2].time = timeCount
           allPlayersInfos[2].difficultyLevel = difficultyLvl
