@@ -4,3 +4,14 @@ migrations/
 uploads/
 db.sqlite3
 .vscode/
+
+Backups/
+Cache/
+CachedData/
+databases/
+logs/
+User/
+Network Persistent State
+notes.txt
+SharedStorage
+TransportSecurity
