@@ -5,6 +5,7 @@
     /* border: #826aed solid 2px; */
     padding: 100px 20px 0;
     gap: 20px;
+    overflow-y: scroll;
 }
 
 .purple-bg {
@@ -92,6 +93,7 @@
     width: 70%;
     padding-top: 5px;
     gap: 15px;
+    margin-bottom: 650px;
 }
 
 .settings__personal-info .personal-info__header {
