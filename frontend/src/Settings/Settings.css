@@ -25,14 +25,13 @@
     border-bottom: none;
 }
 
-
 /* ---------- Left Side ---------- */
 
 .settings-page .settings__leftside {
     display: flex;
     flex-direction: column;
     height: 400px;
-    width: 30%;
+    width: 25%;
     /* border: #8edf34 solid 1px; */
     color: white;
 }
@@ -72,7 +71,8 @@
 .settings-page .settings__security {
     display: flex;
     height: 600px;
-    width: 70%;
+    width: 75%;
+    margin-bottom: 150px;
 
     border: #ccc solid 1px;
     background: rgb(68, 45, 106);
@@ -93,7 +93,7 @@
     width: 70%;
     padding-top: 5px;
     gap: 15px;
-    margin-bottom: 650px;
+    margin-bottom: 700px;
 }
 
 .settings__personal-info .personal-info__header {
@@ -129,8 +129,10 @@
 .personal-info__update .update img {
     height: 70px;
     border-radius: 50%;
+    margin-right: 10px;
 }
 .personal-info__update .update + .update img {
+    margin-right: 10px;
     height: 55px;
     width: 70px;
     border: 1px solid white;
@@ -168,12 +170,18 @@
 }
 .update .update__input::placeholder {
     color: rgb(127, 127, 127, 0.8);
+    font-size: 13px;
 }
 
-.update .update__input:focus {
-    transition: ease-in 1s;
-    /* background-color: purple; */
+.personal-info__update .update-text_area { /* Bio Text Area */
+    height: 150px;
 }
+.personal-info__update .update .input-bio {
+    height: 100px;
+    width: 250px;
+    padding: 8px;
+}
+/* --- */
 
 .personal-info__update .update .update__btn {
     background-color: #826aed;
