@@ -508,8 +508,13 @@ const Bot = () => {
         ballComingTowardsAI = false
         // goalScored = 10
         difficultyLevelVar = difficultyLevel //
-        if (player2.current.score === 3)
+        if (player2.current.score === 3) {
           isGameFinished = true
+          const allPlayersInfos = [...playersInfosRef.current]
+          allPlayersInfos[0].accuracy = (allPlayersInfos[0].score * allPlayersInfos[0].hit) / 100
+          allPlayersInfos[1].accuracy = (allPlayersInfos[1].score * allPlayersInfos[1].hit) / 100
+          setPlayersInfos(allPlayersInfos)
+        }
       } else if (localBall.ballX + 7 > 710) {
         player1.current.score++
         let allPlayersInfos = [...playersInfos]
@@ -522,8 +527,13 @@ const Bot = () => {
         ballComingTowardsAI = true
         // goalScored = 10
         difficultyLevelVar = difficultyLevel //
-        if (player1.current.score === 3)
+        if (player1.current.score === 3) {
           isGameFinished = true
+          const allPlayersInfos = [...playersInfosRef.current]
+          allPlayersInfos[0].accuracy = (allPlayersInfos[0].score * allPlayersInfos[0].hit) / 100
+          allPlayersInfos[1].accuracy = (allPlayersInfos[1].score * allPlayersInfos[1].hit) / 100
+          setPlayersInfos(allPlayersInfos)          
+        }
       }
 
       localBall.ballX = ball.current.x * originalWidth
@@ -835,9 +845,31 @@ const Bot = () => {
     setGameFinished(false)
     firstDraw = false
     setDifficultyLevel(0)
-    setScore1(0)
-    setScore2(0)
+    setPlayersInfos([
+      {
+        totalScore: 0,
+        tmpScore: 0,
+        score: 0,
+        hit: 0,
+        accuracy: 0,
+        rating: 0,
+      },
+      {
+        totalScore: 0,
+        tmpScore: 0,
+        score: 0,
+        hit: 0,
+        accuracy: 0,
+        rating: 0
+      },
+      {
+        time: 0,
+        difficultyLevel: 0
+      }
+    ])
     setTime(0)
+    // setScore1(0)
+    // setScore2(0)
     // originalPositions.player1_x = 15
     // originalPositions.player1_y = 165
     // originalPositions.player2_x = 685
@@ -846,79 +878,83 @@ const Bot = () => {
     // originalPositions.ball_y = 200
   }
 
+  const exitBotGame = () => {
+    navigate('../game/solo')
+  }
+
   return (
     <>
       {gameFinished && (
         <div className='onevsone' style={{}} >
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginTop: '100px', gap: '10px', padding: '20px 0' }}>
-            <div style={{ height: '80px', minHeight: '80px' }}>
-              <img src={userImg} alt="" style={{ height: '100%' }} />
+          {(playersInfos[0].totalScore > playersInfos[1].totalScore) && (<div className='winner_cup' >
+            <img src={Icons.winnerCup} alt="winner cup" />
+          </div>)}
+          {(playersInfos[0].totalScore === 3) ? (<p className='winner_congrats' >WINNER WINNER CHICKEN DINNER!</p>) : (<p className='loser_support' >BETTER LUCK NEXT TIME!</p>)}
+          <div className='gameStats_container' >
+            <div className='gameStats_playerInfos' >
+              <div className='gameStats_playerInfos-details' >
+                <div>
+                  <img src={userImg} alt="user image" />
+                  <p>{user}</p>
+                </div>
+                <div>
+                  <p>Bot</p>
+                  <img src={Icons.AiBot} alt="user image" />
+                </div>
+              </div>
             </div>
-            <p>{user}</p>
-            {(score1 === 3) ? (<p style={{ fontSize: '30px', display: 'flex', alignItems: 'center', marginTop: '100px', gap: '10px', padding: '20px 0' }} >WINNER WINNER CHICKEN DINNER!</p>) : (<p style={{ fontSize: '30px', display: 'flex', alignItems: 'center', marginTop: '100px', gap: '10px', padding: '20px 0' }} >BETTER LUCK NEXT TIME!</p>)}
-          </div>
-          <div style={{ width: '100%', backgroundColor: 'rgba(0,0,0,0.5)', height: '300px', marginTop: '200px', display: 'flex' }} >
-            <div style={{ width: '20%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
-              <img src={Icons.winnerCup} alt="" style={{ width: '100%' }} />
+            <div className='gameStats_details' >
+              <div>
+                <p>{playersInfos[0].totalScore}</p>
+                <p>Total Score</p>
+                <p>{playersInfos[1].totalScore}</p>
+              </div>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', borderLeft: '0.1px solid rgba(255, 255, 255, 0.2)', width: '80%' }} > {/* width: '60%' incase of achievement */}
-              {/* <div style={{width: '100%', height: '40px', display: 'flex'}} >
-              </div> */}
-              <div style={{ width: '100%', height: '40px', display: 'flex', alignItems: 'center' }} >
-                <div style={{ height: '100%', display: 'flex', alignItems: 'center', width: '31%' }} >
-                  <p style={{ marginLeft: '5%' }} >Player</p>
-                </div>
-                <div style={{ width: '23%', textAlign: 'center' }} >Shots</div>
-                <div style={{ width: '23%', textAlign: 'center' }} >Spend time</div>
-                <div style={{ width: '23%', textAlign: 'center' }} >Rating</div>
+            <div className='gameStats_details' >
+              <div>
+                <p>{playersInfos[0].score}</p>
+                <p>Score</p>
+                <p>{playersInfos[1].score}</p>
               </div>
-              <div style={{ width: '100%', height: '65px', display: 'flex', alignItems: 'center' }} >
-                <div style={{ height: '100%', display: 'flex', alignItems: 'center', gap: '10px', width: '31%' }} >
-                  <img src={userImg} alt="" style={{ height: '60%', marginLeft: '5%' }} />
-                  <p>{user}</p>
-                </div>
-                <div style={{ width: '23%', textAlign: 'center' }} >4</div>
-                <div style={{ width: '23%', textAlign: 'center' }} >45.6m</div>
-                <div style={{ width: '23%', textAlign: 'center' }} >+450</div>
+            </div>
+            <div className='gameStats_details' >
+              <div>
+                <p>{playersInfos[0].hit}</p>
+                <p>Hit</p>
+                <p>{playersInfos[1].hit}</p>
               </div>
-              <div style={{ width: '100%', height: '65px', display: 'flex', alignItems: 'center' }} >
-                <div style={{ height: '100%', display: 'flex', alignItems: 'center', gap: '10px', width: '31%' }} >
-                  <img src={userImg} alt="" style={{ height: '60%', marginLeft: '5%' }} />
-                  <p>{user}</p>
-                </div>
-                <div style={{ width: '23%', textAlign: 'center' }} >4</div>
-                <div style={{ width: '23%', textAlign: 'center' }} >45.6m</div>
-                <div style={{ width: '23%', textAlign: 'center', }} >+450</div>
+            </div>
+            <div className='gameStats_details' >
+              <div>
+                {(playersInfos[0].hit) ?
+                  (<p>{Math.floor((playersInfos[0].score / playersInfos[0].hit ) * 100)}%</p>) :
+                  (<p>0%</p>)
+                }
+                <p>Accuracy</p>
+                {(playersInfos[1].hit) ?
+                  (<p>{Math.floor((playersInfos[1].score / playersInfos[1].hit ) * 100)}%</p>) :
+                  (<p>0%</p>)
+                }
               </div>
-              <div style={{ width: '100%', height: '65px', display: 'flex', alignItems: 'center' }} >
-                <div style={{ height: '100%', display: 'flex', alignItems: 'center', gap: '10px', width: '31%' }} >
-                  <img src={userImg} alt="" style={{ height: '60%', marginLeft: '5%' }} />
-                  <p>{user}</p>
-                </div>
-                <div style={{ width: '23%', textAlign: 'center' }} >4</div>
-                <div style={{ width: '23%', textAlign: 'center' }} >45.6m</div>
-                <div style={{ width: '23%', textAlign: 'center' }} >+450</div>
+            </div>
+            <div className='gameStats_details' >
+              <div>
+                <p>{playersInfos[0].rating}</p>
+                <p>Rating</p>
+                <p>{playersInfos[1].rating}</p>
               </div>
-              <div style={{ width: '100%', height: '65px', display: 'flex', alignItems: 'center' }} >
-                <div style={{ height: '100%', display: 'flex', alignItems: 'center', gap: '10px', width: '31%' }} >
-                  <img src={userImg} alt="" style={{ height: '60%', marginLeft: '5%' }} />
-                  <p>{user}</p>
-                </div>
-                <div style={{ width: '23%', textAlign: 'center' }} >4</div>
-                <div style={{ width: '23%', textAlign: 'center' }} >45.6m</div>
-                <div style={{ width: '23%', textAlign: 'center' }} >+450</div>
-              </div>
-              <div style={{ width: '100%', height: '65px', backgroundColor: 'red' }} ></div>
-              <div style={{ width: '100%', height: '65px', backgroundColor: 'red' }} ></div>
-              <div style={{ width: '100%', height: '65px', backgroundColor: 'red' }} ></div>
             </div>
           </div>
-        </div>
-        // {<div style={{fontWeight:"bolder", textAlign:"center", color:"white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>
+          <div className='stats-selects' >
+            <button onClick={exitBotGame} >Exit</button>
+            <button onClick={restartGame} >Restart</button>
+          </div>
+        </div>)}
+        {/* // {<div style={{fontWeight:"bolder", textAlign:"center", color:"white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>
         //   <p>GAME FINISHED</p>
         //   <button onClick={restartGame} >restart</button>
         // </div>}
-      )}
+      // )} */}
       {(difficultyLevel && !gameFinished) && (
         <div className='onevsone-pm' ref={wrapperRef} >
           <div ref={resultRef} className='onevsone-pm-infos' >

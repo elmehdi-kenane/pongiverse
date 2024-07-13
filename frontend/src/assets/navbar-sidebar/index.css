@@ -3658,3 +3658,170 @@ html, body {
         min-height: 40px;
     }
 }
+
+/* BOT PAGE (MATCH STATISTICS) */
+
+.winner_cup {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 250px;
+    min-height: 250px ;
+    margin-top: 30px
+}
+
+.winner_cup img {
+    height: 100%
+}
+
+.winner_congrats {
+    font-size: 40px;
+    margin-top: 0;
+    padding: 0;
+    width: 100%;
+    text-align: center;
+    font-weight: bolder
+}
+
+.loser_support {
+    font-size: 40px;
+    margin-top: 150px;
+    padding: 0;
+    width: 100%;
+    text-align: center;
+    font-weight: bolder
+}
+
+.gameStats_container {
+    width: 80%;
+    background-color: rgba(0,0,0,0.5);
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    margin: 50px auto 0;
+    border-radius: 10px
+}
+
+.gameStats_playerInfos {
+    display: flex;
+    border-left: 0.1px solid rgba(255, 255, 255, 0.2);
+    width: 100%;
+    border-radius: 10px 10px 0 0;
+}
+
+.gameStats_playerInfos-details {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 80px
+} 
+
+.gameStats_playerInfos-details div {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    gap: 10px;
+    font-size: 1.5em
+}
+
+.gameStats_playerInfos-details div img {
+    height: 80%;
+    border-radius: 10px
+}
+
+.gameStats_playerInfos-details div:first-child img {
+    margin-left: 8px;
+}
+
+.gameStats_playerInfos-details div:last-child img {
+    margin-right: 8px;
+}
+
+.gameStats_details {
+    display: flex;
+    border-left: 0.1px solid rgba(255, 255, 255, 0.2);
+    width: 100%
+}
+
+.gameStats_details div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 80px
+}
+
+.gameStats_details div p:first-child,
+.gameStats_details div p:last-child {
+    width: 80px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.gameStats_details div p:nth-child(2) {
+    font-weight: bolder;
+    font-size: 20px;
+}
+
+.gameStats_container > div:nth-child(odd) {
+    background-color: rgba(109, 109, 109, 0.3);
+}
+
+.gameStats_container > div:nth-child(even) {
+    background-color: rgba(42, 42, 42, 0.3);
+}
+
+.stats-selects {
+    display: flex;
+    width: 80%;
+    height: 40px;
+    min-height: 40px;
+    margin: 50px auto 30px;
+    justify-content: space-between
+}
+
+.stats-selects button:first-child {
+    width: 138px;
+    height: 100%;
+    border-radius: 5px;
+    border: 2px solid white;
+    background-color: transparent;
+    color: white;
+    cursor: pointer;
+    font-weight: bolder;
+}
+
+.stats-selects button:last-child {
+    width: 138px;
+    height: 100%;
+    border-radius: 5px;
+    border: none;
+    background-color: #913DCE;
+    color: white;
+    cursor: pointer;
+    font-weight: bolder;
+}
+
+.stats-selects button:last-child:hover {
+    background-color: #ae3dff;
+}
+
+@media (max-width: 425px) {
+
+    .stats-selects {
+        display: flex;
+        flex-direction: column;
+        height: 90px;
+        min-height: 80px;
+        gap: 10px;
+        margin: 20px auto 20px;
+    }
+
+    .stats-selects button {
+        width: 100%;
+        min-width: 100%;
+        height: 40px;
+        min-height: 40px;
+    }
+}

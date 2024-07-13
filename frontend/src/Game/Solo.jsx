@@ -35,7 +35,7 @@ const Solo = () => {
             navigate('../game/solo/2vs2')
         }
         if (selected === 3) {
-            navigate('../game/solo/bot')
+            navigate('../game/solo/computer')
         }
     }
 
