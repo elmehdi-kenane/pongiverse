@@ -4,6 +4,8 @@
   color: white;
   display: flex;
   overflow: hidden;
+  flex-direction: column;
+  position: relative;
 }
 
 .page-middle-container {
@@ -36,7 +38,7 @@
   left: 50%;
   top: 450px;
   transform: translate(-50%, -50%);
-  z-index: 999;
+  z-index: 100;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -817,4 +819,34 @@
   .join-and-create {
     gap: 5px;
   }
+}
+
+
+.room-page-error-container {
+  display: none;
+}
+
+.room-page-error-container-active {
+  text-align: center;
+  padding: 5px 10px;
+  position: absolute;
+  width: 30%;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%);
+  background-color: #913dce;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 101;
+}
+
+.error-message-content {
+  flex: 1;
+}
+
+.close-error-message-btn {
+  width: 25px;
 }

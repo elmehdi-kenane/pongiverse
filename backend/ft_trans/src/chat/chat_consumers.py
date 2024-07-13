@@ -203,7 +203,7 @@ async def leave_chat_room(self, data, user_channels):
 
 
 async def change_chat_room_name(self, data, user_channels):
-    if sync_to_async(Room.objects.filter(name=data["message"]["newName"]).exists)():
+    if await sync_to_async(Room.objects.filter(name=data["message"]["newName"]).exists)():
         await self.send(json.dumps({"type": "newNameAlreadyExists"}))
         return
     room = await sync_to_async(Room.objects.get)(name=data["message"]["room"])

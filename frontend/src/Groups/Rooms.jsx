@@ -18,9 +18,9 @@ const Rooms = () => {
   const [roomInvitations, setRoomInvitations] = useState([]);
   const [myRoomsIcons, setMyRoomsIcons] = useState([]);
   const [roomInviationsIcons, setRoomInvitationsIcons] = useState([]);
+  const [errorMessage, setErrorMessage] = useState('');
   const myRoomsRef = useRef(myRooms);
   const roomInvitationsRef = useRef(roomInvitations);
-  let numberOfRoomInvitation = 0;
   let numberOfSuggestedRoom = 0;
 
   //hande scroller handler (My Rooms)
@@ -164,7 +164,10 @@ const Rooms = () => {
         console.log(error);
       }
     };
-    if (user) {fetchMyRooms(); fetchRoomsInvitations()};
+    if (user) {
+      fetchMyRooms();
+      fetchRoomsInvitations();
+    }
   }, [user]);
 
   //add user to channel Group
@@ -255,31 +258,30 @@ const Rooms = () => {
   };
 
   const roomInvitationsAcceptedUpdater = (data) => {
-    const allRooms = myRoomsRef.current
-    const allRoomInvites = roomInvitationsRef.current
-    console.log("data recive if the invite accepted", data)
-    if(user === data.user) {
+    const allRooms = myRoomsRef.current;
+    const allRoomInvites = roomInvitationsRef.current;
+    console.log("data recive if the invite accepted", data);
+    if (user === data.user) {
       setMyRooms([...allRooms, data.room]);
       const updatedRoomsInvits = allRoomInvites.filter(
         (room) => room.name !== data.room.name
       );
       setRoomInvitations(updatedRoomsInvits);
-    } else { 
+    } else {
       const updatedRooms = allRooms.map((room) => {
-        if (room.name === data.room.name) return { ...room, membersCount: data.room.membersCount };
+        if (room.name === data.room.name)
+          return { ...room, membersCount: data.room.membersCount };
         return room;
       });
-      setMyRooms(updatedRooms)
+      setMyRooms(updatedRooms);
     }
-  }
+  };
 
   const chatRoomDeletedUpdater = (data) => {
-    const allRooms = myRoomsRef.current
-    const updatedRooms = allRooms.filter ( (room) =>
-      room.name !== data.name
-    )
-    setMyRooms(updatedRooms)
-  }
+    const allRooms = myRoomsRef.current;
+    const updatedRooms = allRooms.filter((room) => room.name !== data.name);
+    setMyRooms(updatedRooms);
+  };
 
   useEffect(() => {
     if (socket) {
@@ -287,37 +289,55 @@ const Rooms = () => {
         let data = JSON.parse(e.data);
         console.log("data recived from socket :", data);
         if (data.type === "newRoomJoin") newUserJoinedChatRoom(data.room);
-        else if (data.type === "alreadyJoined") console.log("already joined");
-        else if (data.type === "privateRoom") console.log("private room");
+        else if (data.type === "alreadyJoined")
+          setErrorMessage("Room Already Joined");
+        else if (data.type === "privateRoom") setErrorMessage("Private Room");
+        else if (data.type === "roomNotFound")
+          setErrorMessage("Room Not Found");
         else if (data.type === "incorrectPassword")
           console.log("incorrect password");
-        else if (data.type === "roomNotFound") console.log("room not found");
         else if (data.type === "newRoomCreated") {
           const allRooms = myRoomsRef.current;
           setMyRooms([...allRooms, data.room]);
-        }
-        else if (data.type === "memberleaveChatRoom")
+        } else if (data.type === "memberleaveChatRoom")
           memeberLeaveChatRoomUpdater(data.message);
         else if (data.type === "chatRoomNameChanged")
           chatRoomNameChangedUpdater(data.message);
         else if (data.type === "chatRoomAvatarChanged")
           chatRoomIconChanged(data.message);
         else if (data.type == "chatRoomDeleted")
-          chatRoomDeletedUpdater(data.message)
+          chatRoomDeletedUpdater(data.message);
         else if (data.type === "chatRoomAdminAdded")
           chatRoomAdminAdded(data.message);
-        else if (data.type === 'roomInvitation') {
+        else if (data.type === "roomInvitation") {
           const allInvitaions = roomInvitationsRef.current;
           setRoomInvitations([...allInvitaions, data.room]);
-        }
-        else if (data.type === 'roomInvitationAccepted')
-          roomInvitationsAcceptedUpdater(data.data) 
+        } else if (data.type === "roomInvitationAccepted")
+          roomInvitationsAcceptedUpdater(data.data);
       };
     }
   }, [socket]);
 
   return (
     <div className="rooms-page">
+      <div
+        className={
+          errorMessage.length !== 0
+            ? "room-page-error-container-active"
+            : "room-page-error-container"
+        }
+      >
+        <div className="error-message-content">{errorMessage}</div>
+        <img
+          src={ChatIcons.closeButton}
+          alt=""
+          className="close-error-message-btn"
+          onClick={() => {
+            setErrorMessage('');
+            console.log(errorMessage);
+          }}
+        />
+      </div>
       <div className="page-middle-container">
         {joinRoom && (
           <JoinRoom
@@ -468,15 +488,15 @@ const Rooms = () => {
             <div className="slider-container">
               {roomInvitations.length ? (
                 <div className="invitation-rooms-slider">
-                    {roomInvitations.map((room, index) => (
-                      <InvitationRooms 
-                        key={index}
-                        index={index}
-                        name={room.name}
-                        membersCount={room.membersCount}
-                        room_icon={roomInviationsIcons}
-                      />
-                    ))}
+                  {roomInvitations.map((room, index) => (
+                    <InvitationRooms
+                      key={index}
+                      index={index}
+                      name={room.name}
+                      membersCount={room.membersCount}
+                      room_icon={roomInviationsIcons}
+                    />
+                  ))}
                 </div>
               ) : (
                 <div className="invitation-rooms-slider empty-rooms-slider">
