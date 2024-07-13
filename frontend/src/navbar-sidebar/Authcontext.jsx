@@ -28,7 +28,7 @@ export const AuthProvider = ({children}) => {
 	// Glass Background State --------------------------------------------
 	const [isGlass, setIsGlass] = useState(false);
 	
-	// Profile States --------------------------------------------
+	// Imad's States --------------------------------------------
 	//-- Glass Background
 	const [isReport, setIsReport] = useState(false);
 	const [isBlock, setIsBlock] = useState(false);
@@ -38,6 +38,11 @@ export const AuthProvider = ({children}) => {
 	const blockRef = useRef(null);
 	const blockContentRef = useRef(null);
 	
+	const [nickName, setNickName] = useState("Maverick");
+	const [bio, setBio] = useState("Lorem ipsum dolor ...");
+	const [country, setCountry] = useState("Morocco");
+
+
 
 	let [hideNavSideBar, setHideNavSideBar] = useState(false)
 	let [gameCustomize, setGameCustomize] = useState(['#FFFFFF', '#1C00C3', '#5241AB', false])
@@ -342,6 +347,13 @@ export const AuthProvider = ({children}) => {
 		setIsBlock:setIsBlock,
 		blockRef:blockRef,
 		blockContentRef:blockContentRef,
+		// User Credintials
+		nickName:nickName,
+		bio:bio,
+		country,country,
+		setNickName:setNickName,
+		setBio:setBio,
+		setCountry:setCountry,
 		// gameNotif: gameNotif
 	}
 
