@@ -75,6 +75,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		data = json.loads(text_data)
 
 		if data['type'] == 'isPlayerInAnyRoom': await gameConsumers.isPlayerInAnyRoom(self, data, rooms, user_channels)
+		if data['type'] == 'get_sent_requests': await gameConsumers.isPlayerInAnyRoom(self, data, rooms, user_channels)
 		elif data['type'] == 'dataBackUp': await gameConsumers.backUpData(self, data, rooms)
 		elif data['type'] == 'join': await gameConsumers.joinRoom(self, data, rooms, user_channels)
 		elif data['type'] == 'quit': await gameConsumers.quitRoom(self, data, rooms, user_channels)

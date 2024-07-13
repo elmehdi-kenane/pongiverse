@@ -1,14 +1,6 @@
-/venv
-/backend/ft_trans/src/chat/__pycache__
-/backend/ft_trans/src/ft_transcandence/__pycache__
-/backend/ft_trans/src/mainApp/__pycache__
-/backend/ft_trans/src/myapp/__pycache__
-/backend/ft_trans/src/Profile/__pycache__
-/backend/ft_trans/src/chat/migrations
-/backend/ft_trans/src/ft_transcandence/migrations
-/backend/ft_trans/src/mainApp/migrations
-/backend/ft_trans/src/myapp/migrations
-/backend/ft_trans/src/Profile/migrations
+.venv
+__pycache__
+migrations
 backend/ft_trans/src/uploads
 backend/ft_trans/src/db.sqlite3
 /.vscode

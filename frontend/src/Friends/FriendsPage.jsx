@@ -18,9 +18,9 @@ import BlockedAccountCard from './BlockedAccountCard.jsx'
 // import Profile from '../assets/Friends/profile.png';
 
 const Friends = () => {
-    const { user } = useContext(AuthContext);
+    const { user, socket } = useContext(AuthContext);
+    // const { user } = useContext(AuthContext);
     const friendSectionRef = useRef(null);
-    const webSocketRef = useRef(null);
     const [friends, setFriends] = useState([]);
     const [blockedFriends, setBlockedFriends] = useState([]);
     const [sentRequests, setSentRequests] = useState([]);
@@ -35,27 +35,28 @@ const Friends = () => {
     }
 
     useEffect(() => {
-        webSocketRef.current = new WebSocket("ws://localhost:8000/ws/friends/")
-
         const getSentRequests = () => {
             if (user) {
                 const requestData = {
-                    action: 'get_sent_requests',
+                    type: 'get_sent_requests',
                     username: user
                 };
-                webSocketRef.current.send(JSON.stringify(requestData));
+                socket.send(JSON.stringify(requestData));
             }
         };
         getSentRequests();
-
-        webSocketRef.current.onmessage = (e) => {
-            const data = JSON.parse(e.data);
-            console.log(data);
+        if (socket) {
+            socket.onmessage = (e) => {
+                const data = JSON.parse(e.data);
+                console.log(data);
+            }
         }
 
-        return () => {
-            webSocketRef.current.close();
-        };
+        if (socket) {
+            return () => {
+                socket.close();
+            };
+        }
     }, []);
 
 
@@ -176,23 +177,6 @@ const Friends = () => {
 //         };
 //         if (user) getRecievedRequests();
 //     }, [user]);
-
-//     useEffect(() => {
-//         const handleScroll = () => {
-//             setIsScrolling(true);
-//             const scrollTimeout = setTimeout(() => {
-//                 setIsScrolling(false);
-//             }, 150);
-//             clearTimeout(scrollTimeout);
-//         };
-
-//         const listElement = friendSectionRef.current;
-//         listElement.addEventListener('mousedown', handleScroll);
-//         console.log(listElement);
-//         return () => {
-//             listElement.removeEventListener('mousedown', handleScroll);
-//         };
-//     }, []);
 
   return (
       <div className="FriendPage">

@@ -10,7 +10,7 @@ import Solo from './Game/Solo';
 import OneVersusOne from './Game/OneVersusOne';
 import PlayMatch from './Game/OneVsOnePlayMatch';
 import Groups from './Groups/Groups';
-import Friends from './Friends/Friends';
+import Friends from './Friends/FriendsPage';
 import Dashboard from './Dashboard/Dashboard';
 import { Navigate } from 'react-router-dom';
 import Game from './Game/Game';
