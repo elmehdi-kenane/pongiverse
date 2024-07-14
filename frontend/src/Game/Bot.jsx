@@ -508,7 +508,7 @@ const Bot = () => {
         ballComingTowardsAI = false
         // goalScored = 10
         difficultyLevelVar = difficultyLevel //
-        if (player2.current.score === 3) {
+        if (player2.current.score === 1) {
           isGameFinished = true
           const allPlayersInfos = [...playersInfosRef.current]
           allPlayersInfos[0].accuracy = (allPlayersInfos[0].score * allPlayersInfos[0].hit) / 100
@@ -527,7 +527,7 @@ const Bot = () => {
         ballComingTowardsAI = true
         // goalScored = 10
         difficultyLevelVar = difficultyLevel //
-        if (player1.current.score === 3) {
+        if (player1.current.score === 1) {
           isGameFinished = true
           const allPlayersInfos = [...playersInfosRef.current]
           allPlayersInfos[0].accuracy = (allPlayersInfos[0].score * allPlayersInfos[0].hit) / 100
@@ -885,7 +885,8 @@ const Bot = () => {
   return (
     <>
       {gameFinished && (
-        <div className='onevsone' style={{}} >
+        <div className='onevsone' style={{position: 'relative'}} >
+          <div className='match-ended' ></div>
           {(playersInfos[0].totalScore > playersInfos[1].totalScore) && (<div className='winner_cup' >
             <img src={Icons.winnerCup} alt="winner cup" />
           </div>)}
@@ -906,14 +907,14 @@ const Bot = () => {
             <div className='gameStats_details' >
               <div>
                 <p>{playersInfos[0].totalScore}</p>
-                <p>Total Score</p>
+                <p>Score</p>
                 <p>{playersInfos[1].totalScore}</p>
               </div>
             </div>
             <div className='gameStats_details' >
               <div>
                 <p>{playersInfos[0].score}</p>
-                <p>Score</p>
+                <p>Goals</p>
                 <p>{playersInfos[1].score}</p>
               </div>
             </div>
