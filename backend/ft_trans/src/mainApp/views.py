@@ -298,16 +298,6 @@ def is_started_and_not_finshed(request):
 			return response
 	response.data = {'Case' : 'no'}
 	return response
-# @api_view(['POST'])
-# def is_tournament_advanced(request):
-# 	tournament_id = request.data.get('tournament_id')
-# 	response = Response()
-# 	tournament = Tournament.objects.filter(tournament_id=tournament_id).first()
-# 	if tournament.is_advanced == True:
-# 		response.data = {'Case' : 'tournament_advanced'}
-# 		return response
-# 	response.data = {'Case' : 'tournament_not_advanced'}
-# 	return response
 
 @api_view(['POST'])
 def get_tournament_size(request):
@@ -320,4 +310,19 @@ def get_tournament_size(request):
 		response.data = {'Case' : 'Tournament_is_full'}
 	else:
 		response.data = {'Case' : 'size_is_valide'}
+	return response
+
+@api_view(['POST'])
+def set_is_inside(request):
+	response = Response()
+	is_inside = request.data.get('is_inside')
+	username = request.data.get('user')
+	user = customuser.objects.filter(username=username).first()
+	for member in TournamentMembers.objects.filter(user=user):
+		if member.tournament.is_started == False or (member.tournament.is_started == True and member.tournament.is_finished == False):
+			member.is_inside = is_inside
+			member.save()
+			response.data = {'Case' : 'yes'}
+			return response
+	response.data = {'Case' : 'no'}
 	return response

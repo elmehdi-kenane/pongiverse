@@ -119,6 +119,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		elif data['type'] == 'destroy-tournament': await tournament_consumers.destroy_tournament(self, data, user_channels)
 		elif data['type'] == 'leave-tournament': await tournament_consumers.leave_tournament(self, data, user_channels)
 		elif data['type'] == 'start-tournament': await tournament_consumers.start_tournament(self, data, user_channels)
+		elif data['type'] == 'Round-16-timer': await tournament_consumers.Round_16_timer(self, data, user_channels)
+		elif data['type'] == 'check-round-16-players': await tournament_consumers.check_round_16_players(self, data, user_channels)
 
 	async def disconnect(self, close_code):
 		await tournament_consumers.disconnected(self, user_channels)
@@ -313,4 +315,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	async def tournament_started(self, event):
 		await self.send(text_data=json.dumps({
 			'type' : 'tournament_started',
+		}))
+	async def warn_members(self, event):
+		await self.send(text_data=json.dumps({
+			'type' : 'warn_members',
+		}))
+
+	async def get_user_path(self, event):
+		await self.send(text_data=json.dumps({
+			'type' : 'get_user_path',
 		}))

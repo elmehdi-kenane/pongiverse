@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 const SvgComponent = ({ images }) => {
 	const navigate = useNavigate()
-	console.log("YESSSS");
 	if (!images) {
 		navigate("../game/createtournament")
 	}
@@ -129,8 +128,8 @@ const SvgComponent = ({ images }) => {
 				images && images.length > 1 && (
 					<foreignObject x="118" y="257" width="40" height="40">
 						<picture>
-							<source srcSet={images[0]} media="(max-width: 600px)" />
-							<img src={images[0]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
+							<source srcSet={images[1]} media="(max-width: 600px)" />
+							<img src={images[1]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
 						</picture>
 					</foreignObject>
 				)

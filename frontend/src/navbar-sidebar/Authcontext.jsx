@@ -186,8 +186,7 @@ export const AuthProvider = ({children}) => {
 			// newSocket.onmessage = (event) => {
 			// 	let data = JSON.parse(event.data)
 			// 	let type = data.type
-			// 	console.log("THE TYPE IS : ", type)
-			// 	if (type === 'accepted_invitation'){
+			// 	if (type === 'tournament_started'){
 			// 		console.log("IN AUTH CONTEXT")
 			// 	}
 			// }

@@ -1,6 +1,7 @@
 import json
 from datetime import datetime
 import random
+import time
 import asyncio
 import math
 from rest_framework_simplejwt.tokens import AccessToken
@@ -12,6 +13,9 @@ from asgiref.sync import sync_to_async
 from channels.layers import get_channel_layer
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.core.exceptions import ObjectDoesNotExist
+import asyncio
+
+the_tournament_id = 0
 
 async def disconnected(self, user_channels):
 	print(f"ALL THE USERS CHANNEL_NAMES in DISCONNECTED : {user_channels}")
@@ -30,21 +34,7 @@ async def disconnected(self, user_channels):
 		channel_layer = get_channel_layer()
 		user = await sync_to_async(customuser.objects.filter(username=username).first)()
 		friends = await sync_to_async(list)(Friends.objects.filter(user=user))
-		for friend in friends:
-			friend_username = await sync_to_async(lambda: friend.friend.username)()
-			channel_name = user_channels.get(friend_username)
-			print(f"USER CHANNEL ON DISCONNECT IS : {channel_name}")
-			print(f'ON DISCONNECT : {friend_username} {channel_name}')
-			if channel_name:
-				await self.channel_layer.send(
-					channel_name,
-					{
-						'type': 'user_disconnected',
-						'message': {
-							'user': username
-						}
-					}
-				)
+		#### in case of logout
 		for username, channel_name in user_channels.items():
 			await self.channel_layer.send(
 				channel_name,
@@ -345,19 +335,58 @@ async def destroy_tournament(self, data, user_channels):
 			}
 		)
 
+
+async def Round_16_timer(self, data, user_channels):
+	tournament = await sync_to_async(Tournament.objects.filter(tournament_id=the_tournament_id).first)()
+	members = await sync_to_async(list)(TournamentMembers.objects.filter(tournament=tournament))
+	group_name = f'tournament_{the_tournament_id}'
+	await self.channel_layer.group_send(
+		group_name,
+		{
+			'type': 'warn_members',
+		}
+	)
+	# await asyncio.sleep(16)
+	# for member in members:
+	# 	username = await sync_to_async(lambda: member.user.username)()
+	# 	channel_name = user_channels.get(username)
+	# 	if channel_name:
+	# 		await self.channel_layer.send(
+	# 			channel_name,
+	# 			{
+	# 				'type': 'get_user_path',
+	# 			}
+	# 		)
+
 async def start_tournament(self, data, user_channels):
-	print(f"DATAAA : {data}")
+	print("*******reached start")
 	tournament_id = data['message']['tournament_id']
+	global the_tournament_id
+	the_tournament_id = tournament_id
 	tournament = await sync_to_async(Tournament.objects.filter(tournament_id=tournament_id).first)()
 	tournament.is_started = True
 	await sync_to_async(tournament.save)()
 	members = await sync_to_async(list)(TournamentMembers.objects.filter(tournament=tournament))
+	count = 1
 	for member in members:
 		username = await sync_to_async(lambda: member.user.username)()
+		member.position = count
+		member.rank = 'ROUND 16'
+		count += 1
+		await sync_to_async(member.save)()
 		channel_name = user_channels.get(username)
-		await self.channel_layer.send(
-			channel_name,
-			{
-				'type': 'tournament_started'
-			}
-		)
+		if channel_name:
+			await self.channel_layer.send(
+				channel_name,
+				{
+					'type': 'tournament_started'
+				}
+			)
+
+# async def tournament_inform_or_eliminate(self, data, user_channels):
+# 	username = data['message']['user']
+# 	user = await sync_to_async(customuser.objects.filter(username=username).first)()
+# 	members = await sync_to_async(list)(TournamentMembers.objects.filter(user=user))
+# 	# for member in members:
+# 	# if he is in a tournament that is started and not finished and not eliminated
+

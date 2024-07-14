@@ -8,12 +8,30 @@ import Swal from 'sweetalert2';
 
 
 const Dashboard = () => {
+	const location = useLocation()
 	const { user, notifSocket, socket } = useContext(AuthContext)
 	const [users, setUsers] = useState([])
 	const [notifications, setNotifications] = useState([])
 	const navigate = useNavigate()
 	let a = 0
-
+	useEffect(()=>{
+		const check_is_joining_a_tournament = async () => {
+			const response = await fetch(`http://localhost:8000/api/is-started-and-not-finshed`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					user: user,
+				})
+			})
+			const res = await response.json()
+			if (res.Case === 'yes'){
+				console.log("you have to go back to tournament")
+			}
+		}
+		check_is_joining_a_tournament()
+	},[])
 	useEffect(() => {
 		const getUsers = async () => {
 			const response = await fetch(`http://localhost:8000/users/profile/${user}`, {
@@ -23,11 +41,6 @@ const Dashboard = () => {
 			console.log(res)
 			setUsers(res)
 		}
-		if (user)
-			getUsers()
-	}, [user])
-
-	useEffect(() => {
 		const getNotifications = async () => {
 			const response = await fetch(`http://localhost:8000/api/get-notifications`, {
 				method: 'POST',
@@ -40,11 +53,28 @@ const Dashboard = () => {
 			})
 			const res = await response.json()
 			setNotifications(res.notifications)
-			console.log("RESSS :", res)
 		}
-		if (user)
+		const set_is_inside = async () =>{
+			const response = await fetch(`http://localhost:8000/api/set-is-inside`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					user: user,
+					is_inside: false
+				})
+			})
+			const res = await response.json()
+		}
+
+		if (user){
+			getUsers()
 			getNotifications()
+			set_is_inside()
+		}
 	}, [user])
+
 
 	useEffect(() => {
 		if (socket && socket.readyState === WebSocket.OPEN) {
@@ -52,12 +82,17 @@ const Dashboard = () => {
 				let data = JSON.parse(event.data)
 				let type = data.type
 				if (type === 'invited_to_tournament') {
-					console.log("YOU HAVE BEEN INVITED BY " + data.message.user + " TO TOURNAMENT N: ", data.message.tournament_id)
 					const notif = {'sender' : data.message.user, 'tournament_id': data.message.tournament_id}
 					setNotifications((prevNotifications) => [...prevNotifications, notif]);
 				}
 				else if (type == 'accepted_invitation'){
 					navigate("/mainpage/game/createtournament");
+				}
+				else if (type == 'tournament_started'){
+					console.log("tournament mohamed")
+				}
+				else if (type == 'warn_members'){
+					console.log("you have to go back to tournament")
 				}
 			}
 		}
