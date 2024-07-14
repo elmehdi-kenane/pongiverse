@@ -385,7 +385,7 @@ img.name-container__invite-icon:hover {
         flex-direction: column;
         align-items: center;
         padding: 0px 5px;
-        margin-top: -60px;
+        /* margin-top: -60px; */
     }
     .conversations {
         width: 100%;

@@ -1,0 +1,129 @@
+.conversations-small-screen-container {
+    width: 100%;
+    height: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.btns-swicher-container {
+    background-color: antiquewhite;
+    width: 100%;
+    height: 50px;
+    border-radius: 5px;
+    background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
+    gap: 5px;
+
+}
+
+.btns-swicher-container {
+    padding: 10px 5px;
+    display: flex;
+    width: 100%;
+}
+
+.chat-switch-btns {
+    display: flex;
+    gap: 2px;
+    width: 30%;
+}
+
+button.directs-switch-btn,
+button.rooms-switch-btn {
+    width: 50%;
+    border-radius: 30px;
+    border: none;
+    background-color: #1f0935;
+    color: white;
+    font-size: 10px;
+    cursor: pointer;
+    font-weight: lighter;
+}
+
+button.directs-switch-btn:hover,
+button.rooms-switch-btn:hover {
+    outline-offset: -1px;
+    outline: 1px solid white;
+}
+
+.small-screen-chat-search {
+    flex: 1;
+    border-radius: 50px;
+    border: none;
+    outline: 1px solid white;
+    outline-offset: -1px;
+    background-color: transparent;
+    background-image: url('./media/smallScreenShearchIcon.svg');
+    background-repeat: no-repeat;
+    background-position:calc(100% - 10px) center;;
+    background-size: 20px;
+    color: white;
+    text-indent: 10px;
+    font-size: 10px
+
+}
+
+.small-screen-chat-search:focus {
+    background-image: none;
+    outline: 1px solid #7660D9;
+}
+
+.small-screen-conversations-list-holder {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 750px;
+    background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
+    border-radius: 5px;
+    padding: 10px 5px;
+}
+
+.small-screen-conversations-list-content {
+    overflow-y: auto;
+    width: 100%;
+}
+.small-screen-conversation-container {
+    padding: 7px 5px;
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.small-screen-conversation-container:hover {
+    background-color: #1f0935;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+
+.small-screen-avatar {
+    width: 40px;
+    border-radius: 50px;
+}
+
+.small-screen-conversation-name {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.small-screen-conversation-detainls {
+
+}
+
+.small-screen-conversation-lst-msg {
+    font-size: 10px;
+    font-weight: 200;
+    width: calc(100% - 55px);
+    white-space: nowrap;
+    overflow: hidden;          
+    text-overflow: ellipsis;
+    opacity: .8;
+}
+
+.small-screen-message-container {
+    width: 100%;
+    height: 800px;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
+}
