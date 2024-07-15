@@ -7,7 +7,7 @@ import Security from './Security';
 
 function Settings() {
 
-    const [isInfo, setIsInfo] = useState(true);
+  const [isInfo, setIsInfo] = useState(true);
 
   return (
     <div className='settings-page'>
