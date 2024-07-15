@@ -508,7 +508,7 @@ const Bot = () => {
         ballComingTowardsAI = false
         // goalScored = 10
         difficultyLevelVar = difficultyLevel //
-        if (player2.current.score === 1) {
+        if (player2.current.score === 3) {
           isGameFinished = true
           const allPlayersInfos = [...playersInfosRef.current]
           allPlayersInfos[0].accuracy = (allPlayersInfos[0].score * allPlayersInfos[0].hit) / 100
@@ -527,7 +527,7 @@ const Bot = () => {
         ballComingTowardsAI = true
         // goalScored = 10
         difficultyLevelVar = difficultyLevel //
-        if (player1.current.score === 1) {
+        if (player1.current.score === 3) {
           isGameFinished = true
           const allPlayersInfos = [...playersInfosRef.current]
           allPlayersInfos[0].accuracy = (allPlayersInfos[0].score * allPlayersInfos[0].hit) / 100
