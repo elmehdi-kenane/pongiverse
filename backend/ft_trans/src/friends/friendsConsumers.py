@@ -2,26 +2,42 @@ import json
 from myapp.models import customuser
 from .models import FriendRequest
 from .serializers import friendRequestSerializer
-from channels.generic.websocket import AsyncWebsocketConsumer
+from asgiref.sync import sync_to_async
 
-class FriendConsumer(AsyncWebsocketConsumer):
-    async def connect(self):
-        await self.accept()
-    async def disconnect(self, close_code):
-        pass
-    async def receive(self, text_data):
-        text_data_json = json.loads(text_data)
-        username = text_data_json['username']
-        # action = text_data_json['action']
-        # if (action == "get_sent_requests")
-        user = customuser.objects.get(username=username)
-        sent_requests_objs = FriendRequest.objects.filter(from_user=user, status="sent")
-        request_list_ser = friendRequestSerializer(sent_requests_objs, many=True)
-        sent_request_list = list(set(d['to_user'] for d in request_list_ser.data))
-        sent_request_usernames = []
-        for sent_request_id in sent_request_list:
-            sent_request = customuser.objects.get(id=sent_request_id)
-            sent_request_usernames.append(sent_request.username)
-        await self.send(text_data=json.dumps({
-        'sent_requests': sent_request_usernames
-        }))
+# async def add_friend_request(self, data):
+#     from_username = data['from_username']
+#     to_username = data['to_username']
+#     from_user = await sync_to_async(customuser.objects.get)(username=from_username)
+#     to_user = await sync_to_async(customuser.objects.get)(username=to_username)
+#     try:
+#         await sync_to_async(FriendRequest.objects.get)(from_user=from_user, to_user=to_user)
+#         await sync_to_async(FriendRequest.objects.get)(from_user=to_user, to_user=from_user)
+#         await self.send(text_data=json.dumps({"Error": "Friend request already exists."}))
+#     except FriendRequest.DoesNotExist:
+#         await sync_to_async(FriendRequest.objects.create)(from_user=from_user, to_user=to_user, status="sent")
+#         await sync_to_async(FriendRequest.objects.create)(from_user=to_user, to_user=from_user, status="recieved")
+#     data = {
+#         'type': 'add-friend-request',
+#         'to_username' : to_username
+#     }
+#     print(f"++++++++++++++ Friend request sent ++++++++++++++")
+#     await self.send(text_data=json.dumps(data))
+
+# async def cancel_friend_request(self, data):
+#     from_username = data['from_username']
+#     to_username = data['to_username']
+#     from_user = await sync_to_async(customuser.objects.get)(username=from_username)
+#     to_user = await sync_to_async(customuser.objects.get)(username=to_username)
+#     try:
+#         friend_request = await sync_to_async(FriendRequest.objects.get)(from_user=from_user, to_user=to_user, status="sent")
+#         await sync_to_async(friend_request.delete)()
+#         friend_request = await sync_to_async(FriendRequest.objects.get)(from_user=to_user, to_user=from_user, status="recieved")
+#         await sync_to_async(friend_request.delete)()
+#     except FriendRequest.DoesNotExist:
+#         print(f"++++++++++++++ Friend request doesn't exist. ++++++++++++++")
+#     data = {
+#         'type': 'cancel-friend-request',
+#         'to_username' : to_username
+#     }
+#     print(f"++++++++++++++ Friend request deleted successfully. ++++++++++++++")
+#     await self.send(text_data=json.dumps(data))

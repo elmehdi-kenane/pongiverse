@@ -2,6 +2,7 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from rest_framework_simplejwt.tokens import AccessToken
 from . import gameConsumers
+from friends import friendsConsumers
 from . import gameMultiplayerConsumers
 from . import tournament_consumers
 from channels.layers import get_channel_layer
@@ -75,7 +76,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		data = json.loads(text_data)
 
 		if data['type'] == 'isPlayerInAnyRoom': await gameConsumers.isPlayerInAnyRoom(self, data, rooms, user_channels)
-		if data['type'] == 'get_sent_requests': await gameConsumers.isPlayerInAnyRoom(self, data, rooms, user_channels)
+		# elif data['type'] == 'add_friend_request': await friendsConsumers.add_friend_request(self, data)
+		# elif data['type'] == 'cancel_friend_request': await friendsConsumers.cancel_friend_request(self, data)
 		elif data['type'] == 'dataBackUp': await gameConsumers.backUpData(self, data, rooms)
 		elif data['type'] == 'join': await gameConsumers.joinRoom(self, data, rooms, user_channels)
 		elif data['type'] == 'quit': await gameConsumers.quitRoom(self, data, rooms, user_channels)
@@ -108,6 +110,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 	async def disconnect(self, close_code):
 		await tournament_consumers.disconnected(self, user_channels)
+
+	##################################### FRIENDS #####################################
+
+	async def add_friend_request(self, event):
+		print(f"inside add_friend_request handler")
+		await self.send(text_data=json.dumps({
+			'type': 'add_friend_request',
+			'message': event['message']
+		}))
 
 	##################################### 1vs1 (GAME) #####################################
 

@@ -21,6 +21,6 @@ class Membership(models.Model):
 	joined_at = models.DateTimeField(auto_now_add=True)
 
 class Friends(models.Model):
-	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friends_of_user')
+	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friends_user')
 	friend = models.ForeignKey(User, on_delete=models.CASCADE)
 	isBlocked = models.BooleanField(default=False)

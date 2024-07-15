@@ -4,7 +4,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist
 # Create your views here.
-
+import json
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import FriendRequest
@@ -12,12 +14,6 @@ from .models import Friendship
 from .serializers import friendRequestSerializer
 from .serializers import getFriendListSerializer
 from myapp.serializers import MyModelSerializer
-
-# @api_view(['GET'])
-# def friend_requests(request):
-#     friend_requests = FriendRequest.objects.all()
-#     serializer = friendRequestSerializer(friend_requests, many=True)
-#     return Response(serializer.data)
 
 @api_view(['GET'])
 def get_friend_list(request, username):
@@ -90,6 +86,15 @@ def add_friend_request(request):
     except FriendRequest.DoesNotExist:
         FriendRequest.objects.create(from_user=from_user, to_user=to_user, status="sent")
         FriendRequest.objects.create(from_user=to_user, to_user=from_user, status="recieved")
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        "friends_group",
+        {
+            'type': 'add_friend_request',
+            'message': to_username
+        }
+    )
+    print(f"++++++++++++++ Friend request sent ++++++++++++++")
     return Response({"success": "Friend request added successfully."})
 
 @api_view(['POST'])
