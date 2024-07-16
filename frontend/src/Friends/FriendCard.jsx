@@ -12,14 +12,14 @@ import ChatBubbleOutlinedIcon from '@mui/icons-material/ChatBubbleOutlined';
 // - the option-list should kept in the cadre of the friend-section
 // - the option-list should unappears if a part of it is hidden
 
-const FriendCard = ({ friendSectionRef, isLastTwoElements}) => {
+const FriendCard = ({ friendSectionRef, isLastTwoElements, secondUsername}) => {
     const menuRef = useRef(null);
     const buttonRef = useRef(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolling, setIsScrolling] = useState(false);
 
     const handleClickOutside = (event) => {
-        if (menuRef.current && !menuRef.current.contains(event.target)) {
+        if (menuRef && menuRef.current && !menuRef.current.contains(event.target)) {
             setIsMenuOpen(false); // Close the sidebar if the click is outside
         }
     };
@@ -78,7 +78,7 @@ const FriendCard = ({ friendSectionRef, isLastTwoElements}) => {
         <div className="FriendCard">
             <div className="ProfileName">
                 <img src={Profile} alt="Profile" className="Profile" />
-                {/* {name} */}
+                {secondUsername}
             </div>
             {isMenuOpen ?
                 <>

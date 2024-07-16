@@ -1,5 +1,6 @@
 import React, { useRef } from 'react'
 import AuthContext from '../navbar-sidebar/Authcontext'
+import SocketDataContext from '../navbar-sidebar/SocketDataContext'
 import { useState } from 'react'
 import { useContext } from 'react'
 import { useEffect } from 'react'
@@ -19,6 +20,7 @@ import BlockedAccountCard from './BlockedAccountCard.jsx'
 
 const Friends = () => {
     const { user, socket } = useContext(AuthContext);
+    const { message, type } = useContext(SocketDataContext);
     const friendSectionRef = useRef(null);
     const [friends, setFriends] = useState([]);
     const [blockedFriends, setBlockedFriends] = useState([]);
@@ -26,7 +28,6 @@ const Friends = () => {
     const [recievedRequests, setRecievedRequests] = useState([]);
     const [friendSuggestions, setfriendSuggestions] = useState([]);
     const [selectedButton, setSelectedButton] = useState('Friends');
-
 
     const handlesSelectedButton = (selectedButton) => {
         setSelectedButton(selectedButton);
@@ -70,30 +71,58 @@ const Friends = () => {
     }, [user]);
 
     useEffect(() => {
-        if (socket) {
-            socket.onmessage = (e) => {
-                const data = JSON.parse(e.data);
                 console.log("============ socket-start ============");
-                console.log(data);
+                console.log(message, type);
                 console.log("============ socket-end ============");
-                console.log("the type is ", data.type);
-                if (data.type === 'cancel-friend-request') {
-                    console.log("handel cancel friend request");
+                console.log("the type is");
+                console.log(type);
+                if (type === 'cancel-friend-request') {
                     setSentRequests((prevSentRequests) => {
-                        const updatedSentRequests = prevSentRequests.filter(SentRequest => SentRequest !== data.message);
+                        const updatedSentRequests = prevSentRequests.filter(SentRequest => SentRequest !== message);
                         return updatedSentRequests;
                     });
                 }
-                else if (data.type === 'add-friend-request') {
-                    console.log("handel add friend request");
+                else if (type === 'remove-friend-request') {
+                    setRecievedRequests((prevRecievedRequests) => {
+                        const updatedRecievedRequests = prevRecievedRequests.filter(RecievedRequest => RecievedRequest !== message);
+                        return updatedRecievedRequests;
+                    });
+                }
+                else if (type === 'friend-request-accepted') {
                     setSentRequests((prevSentRequests) => {
-                        const updatedSentRequests = [data.message, ...prevSentRequests];
+                        const updatedSentRequests = prevSentRequests.filter(SentRequest => SentRequest !== message);
+                        return updatedSentRequests;
+                    });
+                    setFriends((prevFriends) => {
+                        const updatedFriends = [message, ...prevFriends];
+                        return updatedFriends;
+                    });
+                }
+                else if (type === 'confirm-friend-request') {
+                    setRecievedRequests((prevRecievedRequests) => {
+                        const updatedRecievedRequests = prevRecievedRequests.filter(RecievedRequest => RecievedRequest !== message);
+                        return updatedRecievedRequests;
+                    });
+                    setFriends((prevFriends) => {
+                        const updatedFriends = [message, ...prevFriends];
+                        return updatedFriends;
+                    });
+                }
+                else if (type === 'send-friend-request') {
+                    setSentRequests((prevSentRequests) => {
+                        const updatedSentRequests = [message, ...prevSentRequests];
                         return updatedSentRequests;
                     });
                 }
-            }
-        }
-    }, [socket]);
+                else if (type === 'recieve-friend-request') {
+                    setRecievedRequests((prevRecievedRequests) => {
+                        const updatedRecievedRequests = [message, ...prevRecievedRequests];
+                        return updatedRecievedRequests;
+                    });
+                }
+                else
+                    console.log("unknown type");
+    }, [message, type, socket]);
 
     useEffect(() => {
         const getSentRequests = async () => {
@@ -174,9 +203,16 @@ const Friends = () => {
                               There are no friends :/.
                           </div>
                           :
-                          friends.map((friend, index) => (
-                              <FriendCard key={index} name={friend}></FriendCard>
-                          ))
+                          <>
+                              {
+                                  friends.slice(0, (friends.length - 2)).map((friendUsername, index) => (
+                                      <FriendCard key={index} friendSectionRef={friendSectionRef} isLastTwoElements={false} secondUsername={friendUsername}></FriendCard>
+                                  ))}
+                              {
+                                  friends.slice(-2).map((friendUsername, index) => (
+                                      <FriendCard key={index} friendSectionRef={friendSectionRef} isLastTwoElements={friends.length > 2 ? true : false} secondUsername={friendUsername}></FriendCard>
+                                  ))}
+                          </>
                   }
               </div>
               <div className="friendSection">
@@ -193,7 +229,7 @@ const Friends = () => {
                   }
               </div>
               <div className="friendSection">
-                  <h3 className="FriendsPageHeader">Sent request</h3>
+                  <h3 className="FriendsPageHeader">Sent Requests</h3>
                   {
                       sentRequests.length === 0 ?
                           <div className="friendPageEmptyList">

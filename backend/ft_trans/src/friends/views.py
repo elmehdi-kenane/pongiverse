@@ -45,6 +45,7 @@ def get_blocked_list(request, username):
 
 @api_view(['GET'])
 def get_friend_suggestions(request, username):
+    # remove [friends, sent/recieve friend reqs, blocked accounts]
     user_ser_list = MyModelSerializer(customuser.objects.all(), many=True)
     user_list = list(set([d['username'] for d in user_ser_list.data if d['username'] != username]))
     return Response(user_list)
@@ -86,12 +87,21 @@ def add_friend_request(request):
     except FriendRequest.DoesNotExist:
         FriendRequest.objects.create(from_user=from_user, to_user=to_user, status="sent")
         FriendRequest.objects.create(from_user=to_user, to_user=from_user, status="recieved")
+    from_user_id = from_user.id
+    to_user_id = to_user.id
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
-        "friends_group",
+        f"friends_group{from_user_id}",
         {
-            'type': 'add_friend_request',
+            'type': 'send_friend_request',
             'message': to_username
+        }
+    )
+    async_to_sync(channel_layer.group_send)(
+        f"friends_group{to_user_id}",
+        {
+            'type': 'recieve_friend_request',
+            'message': from_username
         }
     )
     print(f"++++++++++++++ Friend request sent ++++++++++++++")
@@ -110,6 +120,23 @@ def cancel_friend_request(request):
         friend_request.delete()
     except FriendRequest.DoesNotExist:
         return Response({"error": "Friend request doesn't exist."})
+    from_user_id = from_user.id
+    to_user_id = to_user.id
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"friends_group{from_user_id}",
+        {
+            'type': 'cancel_friend_request',
+            'message': to_username
+        }
+    )
+    async_to_sync(channel_layer.group_send)(
+        f"friends_group{to_user_id}",
+        {
+            'type': 'remove_friend_request',
+            'message': from_username
+        }
+    )
     return Response({"success": "Friend request deleted successfully."})
 
 @api_view(['POST'])
@@ -133,4 +160,21 @@ def confirm_friend_request(request):
         # do I really need to have two objects
         Friendship.objects.create(user=from_user, friend=to_user)
         Friendship.objects.create(user=to_user, friend=from_user)
+    from_user_id = from_user.id
+    to_user_id = to_user.id
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"friends_group{from_user_id}",
+        {
+            'type': 'friend_request_accepted',
+            'message': to_username
+        }
+    )
+    async_to_sync(channel_layer.group_send)(
+        f"friends_group{to_user_id}",
+        {
+            'type': 'confirm_friend_request',
+            'message': from_username
+        }
+    )
     return Response({"success": "Friendship created successfully."})

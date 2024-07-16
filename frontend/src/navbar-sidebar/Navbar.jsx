@@ -1,3 +1,8 @@
+import AuthContext from '../navbar-sidebar/Authcontext'
+import { useContext } from 'react'
+import { useEffect } from 'react'
+import { useState } from 'react'
+
 import NavbarIconSearch from "./NavbarIconSearch";
 import NavbarprofNotifs from "./NavbarProfNotifs";
 

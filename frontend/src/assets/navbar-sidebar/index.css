@@ -72,6 +72,63 @@ html, body {
     text-indent: 50px;
 }
 
+.NotificationPopupCard {
+    background-color: #913DCE;
+    border-radius: 10px;
+    border: 2px solid white;
+    padding: 10px;
+    margin-top: 60px;
+    width: 10%;
+    gap: 5px;
+    position: absolute;
+    left: 83%;
+    z-index: 99;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.NotificationPopupCard div {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.NotificationPopupCard button {
+    border: none;
+    background-color: transparent;
+}
+
+.CheckCircleIcon {
+    background-color: white;
+    color: green;
+    border: none;
+    border-radius: 100%;
+}
+
+.CancelOutlinedIcon {
+    background-color: transparent;
+    border: none;
+    color: white;
+    border-radius: 100%;
+}
+
+.NotificationPopupHeader {
+    color: white;
+}
+
+.NotificationPopupHeader p {
+    color: white;
+    font-weight: 400;
+    font-size: medium;
+}
+
+.NotificationPopupUsername {
+    font-size: medium;
+    color: white;
+    font-weight: bold;
+}
+
 .search-bar input:focus {
     height: 42px;
     outline: none;

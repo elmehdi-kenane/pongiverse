@@ -2,6 +2,7 @@ import './assets/navbar-sidebar/index.css'
 import NavbarSidebar from './navbar-sidebar/NavbarSidebar';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './navbar-sidebar/Authcontext';
+import { SocketDataContextProvider } from './navbar-sidebar/SocketDataContext';
 import SignIn from './homepage/SignIn'
 import SignUp from './homepage/SignUp';
 import HomePage from './homepage/HomePage';
@@ -39,6 +40,7 @@ const App = () => {
     <div className="page">
       <Router>
         <AuthProvider>
+            <SocketDataContextProvider>
           <Routes>
             <Route path="/" element={<HomePage />} exact />
             <Route path="/signup" element={<SignUpPage />} />
@@ -69,6 +71,7 @@ const App = () => {
               <Route path="game/createtournament" element={<CreateTournament />} />
             </Route>
           </Routes>
+                  </SocketDataContextProvider>
         </AuthProvider>
       </Router>
     </div>

@@ -3,15 +3,34 @@ import Navbar from './Navbar'
 import Sidebar from './Sidebar'
 import * as Icons from '../assets/navbar-sidebar'
 import { useNavigate } from 'react-router-dom'
-import AuthContext from '../navbar-sidebar/Authcontext'
+import AuthContext from './Authcontext'
+import SocketDataContext from './SocketDataContext'
+import NotificationPopupCard from './NotificationPopupCard'
 import { Outlet } from 'react-router-dom'
 
 function NavbarSidebar() {
     const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
     const [searchbar, setSearchBar] = useState(false);
-    let { user, privateCheckAuth, setUser, hideNavSideBar } = useContext(AuthContext)
+    let { socket, privateCheckAuth, setUser, hideNavSideBar } = useContext(AuthContext)
+    const data = useContext(SocketDataContext)
     let navigate = useNavigate()
-    
+    const [newRecievedFriendReqNotif, setNewRecievedFriendReqNotif] = useState(false);
+
+    console.log("xxxxxxx");
+    console.log(data);
+    console.log("xxxxxxx");
+    useEffect(() => {
+        console.log("============ socket-notif-start ============");
+        console.log(data.message, data.type);
+        console.log("============ socket-notif-end ============");
+        if (data.type === 'recieve-friend-request') {
+            console.log("notification will be appear here");
+            setNewRecievedFriendReqNotif(true);
+        }
+        else
+            console.log("unknown notif type");
+    }, [data.message, data.type, socket]);
+
     useEffect(() => {
       privateCheckAuth()
     }, [])
@@ -53,6 +72,12 @@ function NavbarSidebar() {
     }
     return (
       <>
+            {
+                newRecievedFriendReqNotif ?
+                    <NotificationPopupCard secondUsername={data.message}></NotificationPopupCard>
+                    :
+                    console.log("there's no newRecievedFriendReqNotif")
+        }
           {!hideNavSideBar && (<Navbar
               Icons={Icons}
               searchbar={searchbar}

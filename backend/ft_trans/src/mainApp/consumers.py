@@ -6,6 +6,7 @@ from friends import friendsConsumers
 from . import gameMultiplayerConsumers
 from . import tournament_consumers
 from channels.layers import get_channel_layer
+from channels.layers import get_channel_layer
 from chat import chat_consumers
 from asgiref.sync import sync_to_async
 from myapp.models import customuser
@@ -39,6 +40,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		decoded_token = AccessToken(token)
 		payload_data = decoded_token.payload
 		user_id = payload_data.get('user_id')
+		self.group_name = f"friends_group{user_id}"
+		await self.channel_layer.group_add(self.group_name, self.channel_name)
 		user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
 		username = user.username
 		user.is_online = True
@@ -113,10 +116,45 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 	##################################### FRIENDS #####################################
 
-	async def add_friend_request(self, event):
-		print(f"inside add_friend_request handler")
+	async def send_friend_request(self, event):
+		print("inside send_friend_request")
 		await self.send(text_data=json.dumps({
-			'type': 'add_friend_request',
+			'type': 'send-friend-request',
+			'message': event['message']
+		}))
+
+	async def recieve_friend_request(self, event):
+		print("inside recieve_friend_request")
+		await self.send(text_data=json.dumps({
+			'type': 'recieve-friend-request',
+			'message': event['message']
+		}))
+
+	async def cancel_friend_request(self, event):
+		print("inside cancel_friend_request")
+		await self.send(text_data=json.dumps({
+			'type': 'cancel-friend-request',
+			'message': event['message']
+		}))
+
+	async def remove_friend_request(self, event):
+		print("inside remove_friend_request")
+		await self.send(text_data=json.dumps({
+			'type': 'remove-friend-request',
+			'message': event['message']
+		}))
+
+	async def friend_request_accepted(self, event):
+		print("inside friend_request_accepted")
+		await self.send(text_data=json.dumps({
+			'type': 'friend-request-accepted',
+			'message': event['message']
+		}))
+
+	async def confirm_friend_request(self, event):
+		print("inside confirm_friend_request")
+		await self.send(text_data=json.dumps({
+			'type': 'confirm-friend-request',
 			'message': event['message']
 		}))
 
