@@ -15,17 +15,23 @@ function NavbarSidebar() {
     const data = useContext(SocketDataContext)
     let navigate = useNavigate()
     const [newRecievedFriendReqNotif, setNewRecievedFriendReqNotif] = useState(false);
+    const [friendReqUsername, setFriendReqUsername] = useState('');
+    const [removeFriendReqNotif, setRemoveFriendReqNotif] = useState(false);
 
-    console.log("xxxxxxx");
-    console.log(data);
-    console.log("xxxxxxx");
     useEffect(() => {
         console.log("============ socket-notif-start ============");
         console.log(data.message, data.type);
         console.log("============ socket-notif-end ============");
         if (data.type === 'recieve-friend-request') {
-            console.log("notification will be appear here");
             setNewRecievedFriendReqNotif(true);
+            setRemoveFriendReqNotif(false);
+            setFriendReqUsername(data.message);
+        }
+        else if (data.type === 'confirm-friend-request' && data.message === friendReqUsername) {
+            setRemoveFriendReqNotif(true);
+        }
+        else if (data.type === 'remove-friend-request' && data.message === friendReqUsername) {
+            setRemoveFriendReqNotif(true);
         }
         else
             console.log("unknown notif type");
@@ -74,7 +80,12 @@ function NavbarSidebar() {
       <>
             {
                 newRecievedFriendReqNotif ?
-                    <NotificationPopupCard secondUsername={data.message}></NotificationPopupCard>
+                    (
+                        removeFriendReqNotif ?
+                            console.log("current notif should be disappears")
+                            :
+                            <NotificationPopupCard secondUsername={friendReqUsername}></NotificationPopupCard>
+                    )
                     :
                     console.log("there's no newRecievedFriendReqNotif")
         }

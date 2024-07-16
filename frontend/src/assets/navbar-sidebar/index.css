@@ -72,13 +72,17 @@ html, body {
     text-indent: 50px;
 }
 
+.NotificationPopupCardDesappeared {
+    display: none;
+}
+
 .NotificationPopupCard {
     background-color: #913DCE;
     border-radius: 10px;
     border: 2px solid white;
     padding: 10px;
     margin-top: 60px;
-    width: 10%;
+    width: 13%;
     gap: 5px;
     position: absolute;
     left: 83%;

@@ -178,3 +178,99 @@ def confirm_friend_request(request):
         }
     )
     return Response({"success": "Friendship created successfully."})
+
+@api_view(['POST'])
+def remove_friendship(request):
+    from_username = request.data['from_username']
+    to_username = request.data['to_username']
+    from_user = customuser.objects.get(username=from_username)
+    to_user = customuser.objects.get(username=to_username)
+    try:
+        friendship_obj = Friendship.objects.get(user=from_user, friend=to_user)
+        friendship_obj.delete()
+        friendship_obj = Friendship.objects.get(user=to_user, friend=from_user)
+        friendship_obj.delete()
+    except Friendship.DoesNotExist:
+        return Response({"error": "Friend relation doesn't exist."})
+    from_user_id = from_user.id
+    to_user_id = to_user.id
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"friends_group{from_user_id}",
+        {
+            'type': 'remove_friendship',
+            'message': to_username
+        }
+    )
+    async_to_sync(channel_layer.group_send)(
+        f"friends_group{to_user_id}",
+        {
+            'type': 'remove_friendship',
+            'message': from_username
+        }
+    )
+    return Response({"success": "Friendship removed successfully."})
+
+@api_view(['POST'])
+def block_friend(request):
+    from_username = request.data['from_username']
+    to_username = request.data['to_username']
+    from_user = customuser.objects.get(username=from_username)
+    to_user = customuser.objects.get(username=to_username)
+    try:
+        friendship_obj = Friendship.objects.get(user=from_user, friend=to_user)
+        friendship_obj.isBlocked =True
+        friendship_obj = Friendship.objects.get(user=to_user, friend=from_user)
+        friendship_obj.isBlocked =True
+    except Friendship.DoesNotExist:
+        return Response({"error": "Friend relation doesn't exist."})
+    from_user_id = from_user.id
+    to_user_id = to_user.id
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"friends_group{from_user_id}",
+        {
+            'type': 'block_friend',
+            'message': to_username
+        }
+    )
+    async_to_sync(channel_layer.group_send)(
+        f"friends_group{to_user_id}",
+        {
+            'type': 'block_friend',
+            'message': from_username
+        }
+    )
+    return Response({"success": "friend blocked successfully."})
+
+@api_view(['POST'])
+def unblock_friend(request):
+    from_username = request.data['from_username']
+    to_username = request.data['to_username']
+    from_user = customuser.objects.get(username=from_username)
+    to_user = customuser.objects.get(username=to_username)
+    try:
+        friendship_obj = Friendship.objects.get(user=from_user, friend=to_user)
+        friendship_obj.isBlocked =False
+        friendship_obj = Friendship.objects.get(user=to_user, friend=from_user)
+        friendship_obj.isBlocked =False
+    except Friendship.DoesNotExist:
+        return Response({"error": "Friend relation doesn't exist."})
+    from_user_id = from_user.id
+    to_user_id = to_user.id
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"friends_group{from_user_id}",
+        {
+            'type': 'unblock_friend',
+            'message': to_username
+        }
+    )
+    async_to_sync(channel_layer.group_send)(
+        f"friends_group{to_user_id}",
+        {
+            'type': 'unblock_friend',
+            'message': from_username
+        }
+    )
+    return Response({"success": "friend unblocked successfully."})

@@ -82,6 +82,32 @@ const Friends = () => {
                         return updatedSentRequests;
                     });
                 }
+                else if (type === 'remove-friendship') {
+                    setFriends((prevFriends) => {
+                        const updatedFriends = prevFriends.filter(Friend => Friend !== message);
+                        return updatedFriends;
+                    });
+                }
+                else if (type === 'block-friend') {
+                    setFriends((prevFriends) => {
+                        const updatedFriends = prevFriends.filter(Friend => Friend !== message);
+                        return updatedFriends;
+                    });
+                    setBlockedFriends((prevBlockedFriends) => {
+                        const updatedBlockedFriends = [message, ...prevBlockedFriends];
+                        return updatedBlockedFriends;
+                    });
+                }
+                else if (type === 'unblock-friend') {
+                    setFriends((prevFriends) => {
+                        const updatedFriends = [message, ...prevFriends];
+                        return updatedFriends;
+                    });
+                    setBlockedFriends((prevBlockedFriends) => {
+                        const updatedBlockedFriends = prevBlockedFriends.filter(UnblockedFriend => UnblockedFriend !== message);
+                        return updatedBlockedFriends;
+                    });
+                }
                 else if (type === 'remove-friend-request') {
                     setRecievedRequests((prevRecievedRequests) => {
                         const updatedRecievedRequests = prevRecievedRequests.filter(RecievedRequest => RecievedRequest !== message);
@@ -249,7 +275,7 @@ const Friends = () => {
                       </div>
                       :
                       blockedFriends.map((blockedFriend, index) => (
-                        <BlockedAccountCard key={index} name={blockedFriend}></BlockedAccountCard>
+                          <BlockedAccountCard key={index} secondUsername={blockedFriend}></BlockedAccountCard>
                       ))
                   }
               </div>
