@@ -203,7 +203,7 @@
 .update .country__select-button {
     user-select: none;
     margin-top: 5px;
-    width: 200px;
+    /* width: 200px; */
     color: white;
     background: linear-gradient(to bottom, rgb(68, 45, 106, 0.9), rgba(74, 37, 139, 0.4));
     border: white 1px solid;
