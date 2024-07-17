@@ -39,7 +39,7 @@ export const AuthProvider = ({children}) => {
 	const blockContentRef = useRef(null);
 	
 	const [nickName, setNickName] = useState("Maverick");
-	const [bio, setBio] = useState("Lorem ipsum dolor ...");
+	const [bio, setBio] = useState("Lorem ipsum dolor sit amet consectetur adipisicing elit.");
 	const [country, setCountry] = useState("Morocco");
 
 
