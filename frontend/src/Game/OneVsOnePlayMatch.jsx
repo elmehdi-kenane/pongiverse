@@ -587,7 +587,6 @@ function createParticle(x, y) {
         return () => {
             if (isOut) {
                 if (socket && socket.readyState === WebSocket.OPEN) {
-                    // window.alert(user, roomID)
                     socket.send(JSON.stringify({
                         type: 'playerChangedPage',
                         message: {
@@ -635,7 +634,6 @@ function createParticle(x, y) {
 
     const startTimer = () => {
         timer = setInterval(() => {
-            // console.log("TIME IS ", isGameStarted)
             if (isGameStarted)
                 setTime(prevTime => prevTime + 1);
             else
