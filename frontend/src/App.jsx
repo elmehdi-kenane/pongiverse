@@ -30,6 +30,7 @@ import OneVsOneCreateOrJoin from './Game/OneVsOneCreateOrJoin';
 import TournamentBracket from './Tournament/TournamentBracket';
 import LoginGoogleTest from './components/SignIn/LoginGoogleTest';
 import { ChatProvider } from './Groups/ChatContext';
+import MyChat from './The_Chat/chatPage';
 
 const App = () => {
 	return (
@@ -48,7 +49,8 @@ const App = () => {
 						<Route path="/ChangePassword" element={<ChangePassword />} />
 						<Route path="/mainpage" element={<NavbarSidebar />} >
 							<Route path="dashboard" element={<Dashboard />} />
-							<Route path="chat" element={<Chat />} />
+							<Route path="chat" element={<MyChat />} />
+							{/* <Route path="thechat" element={<MyChat />} /> */}
 							<Route path="friends" element={<Friends />} />
 							<Route path="groups" element={<Rooms />} />
 							<Route path="game" element={<Modes />} />

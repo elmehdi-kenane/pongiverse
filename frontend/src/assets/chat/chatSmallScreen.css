@@ -1,4 +1,4 @@
-.sm-screen-conversation-container-collapsed,
+/* .conversation-container-collapsed,
 .sm-screen-conversation-container-expanded,
 .sm-screen-conversation-container{
     display: none;
@@ -200,5 +200,224 @@
         color: white;
         font-size: 10px;
         width: 100%;
+    }
+} */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+    display: none;
+  }
+
+.chat-page {
+    width: 100%;
+    height: 100%;
+    color: white;
+    display: flex;
+    overflow-y: auto;
+    justify-content: center;
+}
+
+.chat-container {
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height: 800px;
+    margin: 20px 5px;
+    gap: 5px;
+}
+
+.chat-sidebar,
+.chat-sidebar-hidden {
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
+    width: 20%;
+    padding: 10px 0;
+    height: 100%;
+}
+
+.chat-sidebar-header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0px 10px 10px 10px;
+    gap: 10px;
+}
+
+input.chat-search-input {
+    border: none;
+    outline: 1px solid white;
+    outline-offset: -2px;
+    background-color:transparent;
+    height: 30px;
+    border-radius: 30px;
+    text-indent: 10px;
+    color: white;
+    font-size: 12px;
+}
+input.chat-search-input::placeholder {
+    font-size: 12px;
+}
+.chat-switch-button-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+button.direct-switch-button,
+button.rooms-switch-button {
+    width: 50%;
+    border: none;
+    background-color: #250939;
+    color: white;
+    font-size: 12px;
+    height: 30px;
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+.chat-conversations-list {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+.chat-conversation-item {
+    display: flex;
+    gap: 5px;
+    cursor: pointer;
+    padding: 5px 10px;
+}
+
+.chat-conversation-item:hover  {
+    background-color: #1f0935;
+}
+.conversation-item-avatar {
+    width: 35px;
+    border-radius: 50px;
+}
+.conversation-item-details {
+    width: 100%;
+}
+.conversation-item-name {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.conversation-item-last-msg {
+    font-size: 10px;
+    font-weight: 100;
+    width: 90%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: -2px;
+}
+
+.chat-window,
+.chat-window-hidden{
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
+    width: 80%;
+}
+
+
+.conversation-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    background-color: #1f0935;
+    padding: 5px;
+    border-radius: 5px;
+}
+.conversation-header-info {
+    display: flex;
+    gap: 5px;
+}
+.conversation-back-arrow {
+    width: 25px;
+    cursor: pointer;
+}
+.conversation-avatar {
+    width: 35px;
+    border-radius: 50px;
+}
+.conversation-details {
+    
+}
+.conversation-name {
+    font-size: 14px;
+    
+}
+.conversation-info {
+    font-size: 10px;
+    font-weight: 100;
+    margin-top: -2px
+
+}
+.conversation-options {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+}
+.conversation-invite-icon {
+    width: 25px;
+    cursor: pointer;
+}
+.conversation-options-icon {
+    width: 20px;
+    cursor: pointer;
+
+}
+.conversation-body {
+    flex: 1;
+    margin: 10px 5px;
+    overflow-y: auto;
+}
+.conversation-send-form{
+
+}
+input.conversation-input {
+    padding: 7px 0px;
+    border: none;
+    outline: 1px solid white;
+    outline-offset: -1px;
+    border-radius: 30px;
+    background-color: transparent;
+    text-indent: 10px;
+    color: white;
+    font-size: 10px;
+    width: 100%;
+}
+@media screen and (min-width: 1444px) {
+    .chat-container {
+        width: 1440px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .chat-sidebar {
+        width: 96%;
+    }
+    .chat-window {
+        width: 96%;
+    }
+
+    .chat-window-hidden {
+        display: none;
+    }
+    
+    .chat-sidebar-hidden {
+    display: none;
     }
 }

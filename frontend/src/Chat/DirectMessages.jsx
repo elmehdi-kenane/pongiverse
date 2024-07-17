@@ -15,7 +15,7 @@ const DirectMessages = () => {
   const [recivedMessages, setRecivedMessages] = useState(null);
   const [newMessage, setNewMessage] = useState("");
   const { user, socket, userImg } = useContext(AuthContext);
-  const { selectedDirect } = useContext(ChatContext);
+const { selectedDirect } = useContext(ChatContext);
   const messageEndRef = useRef(null);
   const selectedDirectRef = useRef(selectedDirect);
   const navigate = useNavigate()

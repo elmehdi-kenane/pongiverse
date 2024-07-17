@@ -13,26 +13,26 @@ import "../assets/chat/chatSmallScreen.css";
 import DirectMessages from "./DirectMessages";
 
 const Chat = () => {
-  const [isHome, setIsHome] = useState(true);
-  const [query, setQuery] = useState("");
-  const [expandSearch, setExpandSearch] = useState(false);
-  const {
-    channelsConversations,
-    directsConversations,
-    setSelectedChannel,
-    selectedChannel,
-    setSelectedDirect,
-    selectedDirect,
-  } = useContext(ChatContext);
-  const { user } = useContext(AuthContext);
+  // const [isHome, setIsHome] = useState(true);
+  // const [query, setQuery] = useState("");
+  // const [expandSearch, setExpandSearch] = useState(false);
+  // const {
+  //   channelsConversations,
+  //   directsConversations,
+  //   setSelectedChannel,
+  //   selectedChannel,
+  //   setSelectedDirect,
+  //   selectedDirect,
+  // } = useContext(ChatContext);
+  // const { user } = useContext(AuthContext);
   
-  const filteredConversation = directsConversations.filter((conversation) => {
-    return conversation.name.includes(query);
-  });
+  // const filteredConversation = directsConversations.filter((conversation) => {
+  //   return conversation.name.includes(query);
+  // });
 
   return (
     <div className="chat-page">
-      <div className="chat-container">
+      {/* <div className="chat-container">
         <div className="conversations">
           <div className="conversations__search__mobile">
             <img
@@ -118,8 +118,7 @@ const Chat = () => {
             ""
           )}
         </div>
-      </div>
-      <ChatSmallScreen filteredConversation={filteredConversation}  />
+      </div> */}
     </div>
   );
 };

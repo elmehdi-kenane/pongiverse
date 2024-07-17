@@ -27,7 +27,8 @@ const Conversation = (props) => {
 
     return (
         <div className="conversation-holder" onClick={handleClick}>
-            <img src={directsImages[props.imageIndex]} alt="" className='conversation-holder__avatar' />
+            {/* <img src={directsImages[props.imageIndex]} alt="" className='conversation-holder__avatar' /> */}
+            <img src={ChatIcons.DefaultAvatar} alt="" className='conversation-holder__avatar' />
             <div className="conversation-holder__deatils">
                 <div className="conversation-holder__deatils__name">
                     {props.name}

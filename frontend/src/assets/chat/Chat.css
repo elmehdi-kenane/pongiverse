@@ -1,4 +1,4 @@
-* {
+/* * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -28,9 +28,9 @@
     gap: 5px;
     padding: 0px 10px;
     margin-top: 20px;
-}
+} */
 
-.conversations__search__mobile,
+/* .conversations__search__mobile,
 .conversations__switcher__mobile{
     display: none;
 }
@@ -222,9 +222,9 @@
 .message-row__mymessage__text, .message-row__other-message__text  {
     background-color: #250939;
     padding: 10px 15px;
-}
+} */
 
-.my-message , .other-message{
+/* .my-message , .other-message{
     word-break: break-all;
     max-width: 70%;
     background-color: #250939;
@@ -284,16 +284,16 @@ img.name-container__invite-icon:hover {
 .block-friend-option:hover,
 .change-wallpaper-option:hover {
     background-color: #7660D9;
-}
+} */
 
-@media screen and (min-width: 1444px) {
+/* @media screen and (min-width: 1444px) {
     .chat-container {
         width: 1440px;
     }
-}
+} */
 
 
-@media screen and (max-width: 768px) {
+/* @media screen and (max-width: 768px) {
 
     .chat-container {
         gap: 3px;
@@ -379,87 +379,27 @@ img.name-container__invite-icon:hover {
 }
 
 @media screen and (max-width: 425px) {
-    .chat-container {
-        display: none;
-    }
-    /* .conversations {
-        width: 100%;
-        height: 165px;
-        padding: 10px 5px;
-        display: none;
-    }
-    .conv-container {
-        width: 100%;
-        height: 600px;
-        padding: 10px 5px;
-        display: none;
-    }
-    .conversations__list {
-        width: 100%;
-        flex-direction: row;
-        padding: 0;
-    }
-    .conversation-holder {
-        width: 45px;
-        align-items: center;
-        padding: 0px;
+    .conversations {
+        flex-direction: column;
+        width: 98%;
     }
 
-    .conversation-holder__deatils__status,
-    .conversations__switcher__mobile,
-    .conversations__search__mobile{
-        display: none;
-    }
-    .conversations__switcher {
-        width: 100%;
-        display: flex;
+    .conversation-holder {
         flex-direction: row;
-    }
-    .conversation-holder__deatils__name {
-        text-align: start;
-    }
-    .conversations__search{
-        width: 100%;
-        display: flex;
+        align-items: start;
+        gap: 5px;
     }
     .conversation-holder__avatar {
         width: 35px;
     }
-    .conversation-holder__deatils {
-        width: 100%;
-    }
-
-    .name-container {
-        padding: 5px 10px;
-    }
-    .name-container__avatar {
-        width: 35px;
-    }
-    .name-container__conv-infos {
-        gap: 5px;
-    }
-    .name-container__name {
+    .conversation-holder__deatils__name {
+        text-align: start;
         font-size: 14px;
     }
-
-    .name-container__icons {
-        gap: 10px;
+    .conversation-holder__deatils__status {
+        display: block;
     }
-    img.name-container__invite-icon {
-        width: 25px;
+    .conv-container {
+        display: none;
     }
-
-    img.name-container__option-icon {
-        width: 15px;
-        height: 15px;
-    }
-    .message-row__mymessage__text, .message-row__other-message__text  {
-        padding: 5px 10px;
-        font-size: 15px;
-    }
-    .conversation__form__input {
-        padding: 7px 0px 7px 0;
-        text-indent: 7px;
-        font-size: 10px;
-    } */
-}
+} */
