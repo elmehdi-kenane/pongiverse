@@ -18,6 +18,13 @@
     border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
+.shadow-bg {
+    box-shadow: 0 0px 20px 0 #ccc ;
+    box-shadow: 0 0.5px 5px 0 #ccc;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+}
+
 .btn-active {
     background: linear-gradient(to bottom, rgb(68, 45, 106, 0.9), rgba(74, 37, 139, 0.4));
 }
@@ -25,7 +32,7 @@
     border-bottom: none;
 }
 
-/* ---------- Left Side ---------- */
+/* -------------------------- Left Side -------------------------- */
 
 .settings-page .settings__leftside {
     display: flex;
@@ -64,7 +71,7 @@
 }
 
 
-/* ---------- Right Side ---------- */
+/* -------------------------- Right Side -------------------------- */
 
 /* --- Security --- */
 
@@ -107,7 +114,6 @@
     flex-direction: column;
     /* height: 100%; */
     
-    border: #ccc solid 1px;
     background: linear-gradient(to bottom, rgb(68, 45, 106, 0.8), rgba(74, 37, 139, 0));
     box-shadow: 0 0px 20px 0 #ccc ;
     box-shadow: 0 0.5px 5px 0 #ccc;
@@ -128,6 +134,7 @@
 }
 .personal-info__update .update img {
     height: 70px;
+    width: 70px;
     border-radius: 50%;
     margin-right: 10px;
 }
@@ -152,36 +159,64 @@
     margin-right: 20px;
     /* border: #826aed solid 1px; */
 }
-.personal-info__update .update .update__info {
+.update .update__info {
     font-size: 18px;
     font-weight: 450;
+    cursor: inherit;
 }
+
+/* --- Update Bio --- */
+.update .update__bio {
+    position: relative;
+    cursor: pointer;
+}
+.update .update__bio .update__info-hover {
+    position: absolute;
+    top: -23px;
+    opacity: 0;
+    padding: 5px;
+    font-size: 15px;
+    transition: opacity 1s ease;
+    border: solid white 0.5px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    cursor: pointer;
+}
+.update .update__bio:hover .update__info-hover{
+    opacity: 1;
+}
+.update .update__bio:hover .update__info {
+    opacity: 0;
+}
+/*--- Input ---*/
+
 .personal-info__update .update .update__input {
     padding-left: 5px;
-    width: 150px;
+    width: 160px;
     height: 35px;
     outline: none;
     border: solid white 0.5px;
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 5px;
-    caret-color: white;
     color : white;
-    font-size: 15px;
+    font-size: 17px;
 }
 .update .update__input::placeholder {
     color: rgb(127, 127, 127, 0.8);
-    font-size: 13px;
+    font-size: 14px;
 }
 
-.personal-info__update .update-text_area { /* Bio Text Area */
+.personal-info__update .update-height { /* Bio Text Area */
     height: 150px;
 }
 .personal-info__update .update .input-bio {
     height: 100px;
     width: 250px;
     padding: 8px;
+    font-size: 15px;
 }
-/* --- */
+
+/*---- Update Btn ----*/
 
 .personal-info__update .update .update__btn {
     background-color: #826aed;
@@ -198,7 +233,7 @@
     transition: ease-in-out 0.2s;
 }
 
-/*-------*/
+/*---- Update Country ----*/
 
 .update .country__select-button {
     user-select: none;

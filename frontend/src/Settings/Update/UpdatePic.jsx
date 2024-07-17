@@ -9,19 +9,16 @@ function UpdatePic() {
     const [backgndPic, setBackgndPic] = useState(bg1);
     
     const UpdateProfilePic = (event) => {
-        console.log("click ...")
         if (event.target.files && event.target.files[0]) {
-            setProfilePic(event.target.files[0]);
-            console.log(event.target.files[0])
-            // Here you can save the uploaded image, for example, by sending it to a server
-            // using an API call or storing it in the browser's local storage
+            setProfilePic(URL.createObjectURL(event.target.files[0]));
+            console.log(URL.createObjectURL(event.target.files[0]))
         }
     }
 
   return (
     <div>
         <div className="update"> 
-            <img  src={mavSvg} alt="UserPic"/>
+            <img src={profilePic} alt="UserPic"/>
             <p className='title-pic'> Upload a new picture </p>
             <div className="update__btn" onClick={() => document.getElementById('fileInput').click()}>Update 
                 <input

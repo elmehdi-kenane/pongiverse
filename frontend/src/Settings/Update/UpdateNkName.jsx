@@ -53,7 +53,7 @@ function UpdateNkName() {
           {isUpdate && <input type="text" 
                               className="update__input" 
                               placeholder='Enter new Nickname... '
-                              maxLength={10}
+                              maxLength={8}
                               onKeyDown={handleInputKeyDown}
                               ref={inputRef}/>}
           <div className="update__btn" onClick={onUpdate} ref={iconRef}> {submit} </div>

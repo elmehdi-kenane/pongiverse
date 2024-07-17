@@ -32,12 +32,11 @@ function UpdateBio() {
         }
     },[])
   
-  const onUpdate = () => {
-    if (isUpdate){
-      if (inputRef.current.value)
-        setBio(inputRef.current.value)
-    }
-    setIsUpdate(!isUpdate);
+  const truncateString = (str) => {
+    if (str.length > 20)
+      return str.slice(0, 20) + "...";
+    else
+      return str;
   }
   const handleInputKeyDown = (event) => {
     if (event.key === 'Enter'){
@@ -46,10 +45,22 @@ function UpdateBio() {
       setIsUpdate(false);
     }
   }
+  const onUpdate = () => {
+    if (isUpdate){
+      if (inputRef.current.value)
+        setBio(inputRef.current.value)
+    }
+    setIsUpdate(!isUpdate);
+  }
     return (
-      <div className={isUpdate ? "update update-text_area" : "update"}> 
+      <div className={isUpdate ? "update update-height" : "update"}> 
           <p className='title'> Bio </p>
-          {!isUpdate && <p className='update__info'> {bio} </p>}
+          {!isUpdate && 
+            <div className='update__bio'>
+              <p className='update__info'> {truncateString(bio)} </p>
+              <p className='update__info-hover shadow-bg'> {bio} </p>
+            </div>
+          }
           {isUpdate && <textarea type="text" 
                               className="update__input input-bio" 
                               placeholder='Enter new bio... '
@@ -62,4 +73,3 @@ function UpdateBio() {
   }
 
 export default UpdateBio
-
