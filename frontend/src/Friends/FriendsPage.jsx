@@ -4,6 +4,14 @@ import SocketDataContext from '../navbar-sidebar/SocketDataContext'
 import { useState } from 'react'
 import { useContext } from 'react'
 import { useEffect } from 'react'
+import { useCallback } from 'react'
+import useEmblaCarousel from 'embla-carousel-react'
+import {
+    PrevButton,
+    NextButton,
+    usePrevNextButtons
+} from './EmblaCarouselArrowButtons'
+import Autoplay from 'embla-carousel-autoplay'
 import "../assets/Friends/FriendsPage.css";
 import SuggestionFriendCard from "./SuggestionFriendCard.jsx";
 import FriendCard from "./FriendCard.jsx";
@@ -29,9 +37,26 @@ const Friends = () => {
     const [friendSuggestions, setfriendSuggestions] = useState([]);
     const [selectedButton, setSelectedButton] = useState('Friends');
 
+    const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false })
+
+    const {
+        prevBtnDisabled,
+        nextBtnDisabled,
+        onPrevButtonClick,
+        onNextButtonClick
+    } = usePrevNextButtons(emblaApi)
+
     const handlesSelectedButton = (selectedButton) => {
         setSelectedButton(selectedButton);
     }
+
+    const scrollPrev = useCallback(() => {
+        if (emblaApi) emblaApi.scrollPrev()
+    }, [emblaApi])
+
+    const scrollNext = useCallback(() => {
+        if (emblaApi) emblaApi.scrollNext()
+    }, [emblaApi])
 
     useEffect(() => {
         const getFriendSuggestions = async () => {
@@ -212,12 +237,18 @@ const Friends = () => {
 
   return (
       <div className="FriendPage">
-          <div className="Suggestions">
-              <h3 className="FriendsPageHeader">{user} Suggestions List</h3>
-              <div className="Carousel">
+          <h3 className="FriendsPageHeader">{user} Suggestions List</h3>
+          <div className="embla">
+              <div className="embla__viewport" ref={emblaRef}>
+                  <div className="embla__container">
                   {friendSuggestions.map((SuggestionUsername, index) => (
                       <SuggestionFriendCard key={index} currentUsername={user} secondUsername={SuggestionUsername}></SuggestionFriendCard>
                   ))}
+                  </div>
+                  <div className="embla__buttons">
+                      <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled}>Prev</PrevButton>
+                      <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled}>Next</NextButton>
+                  </div>
               </div>
           </div>
           <div className="friendPageSections">

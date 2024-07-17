@@ -37,6 +37,7 @@ const SuggestionFriendCard = ({ currentUsername, secondUsername }) => {
         .catch((error) => {
             console.error('Error:', error);
         });
+        setFriendRequestBtn(true);
 };
 
 // const handleCancelFriendReq = () => {
@@ -73,17 +74,15 @@ const SuggestionFriendCard = ({ currentUsername, secondUsername }) => {
     // }
 
     return (
-        <div className="SuggestionFriendCard">
+        <div className="SuggestionFriendCard embla__slide">
             <div className="ProfileName">
                 <img src={Profile} alt="Profile" className="Profile" />
                 {secondUsername}
                 <div className="lvl">1.5lvl</div>
             </div>
                 {friendRequestBtn ?
-                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", alignContent: "center", width: "100%" }}>
-                        <div style={{ fontSize: "small" }}>Request Sent</div>
-                        {/* <button className="FriendBtn Add" onClick={handleCancelFriendReq}>X</button> */}
-                    </div>
+                        <div style={{ fontSize: "small", marginTop: "10px" }}>Request Sent</div>
+                        // <button className="FriendBtn Add" onClick={handleCancelFriendReq}>X</button>
                     :
                     <button className="FriendBtn Add" onClick={handleAddFriendReq}>Add friend</button>
                 }

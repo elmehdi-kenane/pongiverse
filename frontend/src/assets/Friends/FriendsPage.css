@@ -1,3 +1,40 @@
+.embla {
+  overflow: hidden;
+}
+.embla__container {
+  display: flex;
+  gap: 1%;
+}
+
+.embla {
+    width: 95%;
+    align-self: center;
+    min-width: 145px;
+}
+
+.embla__slide {
+  flex: 0 0 19.2%;
+}
+
+.embla__buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 50%;
+    position: absolute;
+    right: calc(25% - 42px);
+    top: 255px;
+    z-index: 101;
+}
+
+.embla__buttons button {
+    background-color: #D9D9D9;
+    border: none;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    border-radius: 100%;
+}
+
 .FriendPage {
     display: flex;
     flex-direction: column;
@@ -39,7 +76,9 @@
     background-color: rgba(58,25,82,1);
     font-weight: 500;
     border-radius: 10px;
-    width: 170px;
+    width: 20%;
+    max-width: 188px;
+    min-width: 145px;
     height: 170px;
     padding: 20px;
 }
@@ -74,7 +113,9 @@
     justify-content: center;
     align-items: center;
     height: 70%;
+    min-height: 764px;
     border-radius: 10px;
+    overflow: scroll;
 }
 
 .friendSection .FriendsPageHeader {
