@@ -16,7 +16,7 @@ export const ChatProvider = ({ children }) => {
     name: "",
     roomId: "",
   });
-  const [selectedDirect, setSelectedDirect] = useState( {
+  const [selectedDirect, setSelectedDirect] = useState({
     name: "",
     status : "",
     avatar : "",

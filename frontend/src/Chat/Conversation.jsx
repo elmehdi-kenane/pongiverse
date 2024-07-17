@@ -22,8 +22,7 @@ const Conversation = (props) => {
                 name: props.name,
                 roomId: props.roomId,
             });
-        }
-             
+        }    
       };
 
     return (

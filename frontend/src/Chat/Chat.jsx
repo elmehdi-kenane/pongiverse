@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import ChatContext from "../Groups/ChatContext";
-import SmallScreenConversation from "./smallScreenConversation";
+import ChatSmallScreen from "./chatSmallScreen";
 import Conversation from "./Conversation";
 import MessagesContainer from "./MessagesPage";
 import * as ChatIcons from "../assets/chat/media";
@@ -16,7 +16,6 @@ const Chat = () => {
   const [isHome, setIsHome] = useState(true);
   const [query, setQuery] = useState("");
   const [expandSearch, setExpandSearch] = useState(false);
-  const [showDirectMessage ,setShowDirectMsg] = useState(false)
   const {
     channelsConversations,
     directsConversations,
@@ -26,6 +25,7 @@ const Chat = () => {
     selectedDirect,
   } = useContext(ChatContext);
   const { user } = useContext(AuthContext);
+  
   const filteredConversation = directsConversations.filter((conversation) => {
     return conversation.name.includes(query);
   });
@@ -33,7 +33,7 @@ const Chat = () => {
   return (
     <div className="chat-page">
       <div className="chat-container">
-        {/* <div className="conversations">
+        <div className="conversations">
           <div className="conversations__search__mobile">
             <img
               src={ChatIcons.SearchIcon}
@@ -106,39 +106,20 @@ const Chat = () => {
               ))}
             </div>
           )}
-        </div>*/}
-        {/* <div className="conv-container">
+        </div>
+        <div className="conv-container">
           {!isHome &&
           Object.values(selectedChannel).every((value) => value !== "") ? (
-            <MessagesContainer/>
-          ) : (isHome && Object.values(selectedDirect).every((value) => value !== "")) ? (
-            <DirectMessages/>
+            <MessagesContainer />
+          ) : isHome &&
+            Object.values(selectedDirect).every((value) => value !== "") ? (
+            <DirectMessages />
           ) : (
             ""
           )}
-        </div> */}
-        <div className="conversations-small-screen-container" onClick={()=> setShowDirectMsg(true)}> 
-          <div className="btns-swicher-container">
-            <div className="chat-switch-btns">
-              <button className="directs-switch-btn">Directs</button>
-              <button className="rooms-switch-btn">Rooms</button>
-            </div>
-            <input type="text" className="small-screen-chat-search" />
-          </div>
-          <div className="small-screen-conversations-list-holder">
-            <div className="small-screen-conversations-list-content" >
-              {filteredConversation.map((user, index) => (
-                <SmallScreenConversation name={user.name} key={index} index={index}/>
-              ))}
-            </div>
-          </div>
         </div>
-        {
-          showDirectMessage ? 
-          <div className="small-screen-message-container"></div>
-          : ''
-        }
       </div>
+      <ChatSmallScreen filteredConversation={filteredConversation}  />
     </div>
   );
 };

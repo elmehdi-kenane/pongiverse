@@ -14,6 +14,7 @@
     color: white;
     display: flex;
     overflow-y: auto;
+    justify-content: center;
 }
 
 .chat-container {
@@ -24,9 +25,9 @@
     justify-content: center;
     height: 800px;
     margin-bottom: 100px;
-    margin-top: 40px;
     gap: 5px;
     padding: 0px 10px;
+    margin-top: 20px;
 }
 
 .conversations__search__mobile,
@@ -52,8 +53,8 @@
 .conv-container {
     display: flex;
     flex-direction: column;
-    width: 80%;
-    padding: 15px 10px;
+    width: calc(98% - 70px);
+    padding: 10px;
 }
 
 .conversations__switcher {
@@ -296,7 +297,6 @@ img.name-container__invite-icon:hover {
 
     .chat-container {
         gap: 3px;
-        margin-top: 50px;
         padding: 0px;
     }
     .conversations {
@@ -358,7 +358,6 @@ img.name-container__invite-icon:hover {
     }
 
     .chat-search-mobile {
-        margin-top: 50px;
         text-align: center;
     }
 
@@ -381,21 +380,19 @@ img.name-container__invite-icon:hover {
 
 @media screen and (max-width: 425px) {
     .chat-container {
-        width: 100%;
-        flex-direction: column;
-        align-items: center;
-        padding: 0px 5px;
-        /* margin-top: -60px; */
+        display: none;
     }
-    .conversations {
+    /* .conversations {
         width: 100%;
         height: 165px;
         padding: 10px 5px;
+        display: none;
     }
     .conv-container {
         width: 100%;
         height: 600px;
         padding: 10px 5px;
+        display: none;
     }
     .conversations__list {
         width: 100%;
@@ -464,5 +461,5 @@ img.name-container__invite-icon:hover {
         padding: 7px 0px 7px 0;
         text-indent: 7px;
         font-size: 10px;
-    }
+    } */
 }
