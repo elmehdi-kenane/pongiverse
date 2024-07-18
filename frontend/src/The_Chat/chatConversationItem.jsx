@@ -13,8 +13,8 @@ const ChatConversationItem = (props) => {
                 status : props.status,
                 
             })
-        }else if (!props.isDirect) {
-            props.setSelectedChannel({
+        }else if (!props.isDirect && props.name) {
+            props.setSelectedChatRoom({
                 name: props.name,
                 roomId: props.roomId,
             });
@@ -32,7 +32,7 @@ const ChatConversationItem = (props) => {
                   {props.name}
                 </div>
                 <div className="conversation-item-last-msg">
-                  whach akhii mohammed hani
+                  {props.lastMessage}
                 </div>
               </div>
             </div>

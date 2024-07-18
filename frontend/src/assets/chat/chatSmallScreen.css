@@ -1,208 +1,3 @@
-/* .conversation-container-collapsed,
-.sm-screen-conversation-container-expanded,
-.sm-screen-conversation-container{
-    display: none;
-}
-
-@media screen and (max-width: 425px) {
-
-    .sm-screen-conversation-container-expanded {
-        margin-top: 20px;
-        width: 100%;
-        height: 650px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 5px;
-    }
-    .sm-screen-conversation-container-collapsed {
-        display: none;
-    }
-    .sm-screen-chat-toggle-buttons{
-        display: flex;
-        min-width: 30%;
-    }
-    .sm-screen-button-switcher-container {
-        width: 98%;
-        height: 50px;
-        border-radius: 5px;
-        background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
-        gap: 5px;
-        padding: 10px 5px;
-        display: flex;
-    }
-
-    button.sm-screen-direct-messages-button,
-    button.sm-screen-rooms-button {
-        width: 50%;
-        border-radius: 30px;
-        border: none;
-        background-color: #1f0935;
-        color: white;
-        font-size: 10px;
-        cursor: pointer;
-        font-weight: lighter;
-    }
-
-    button.sm-screen-direct-messages-button:hover,
-    button.sm-screen-rooms-button:hover {
-        outline-offset: -1px;
-        outline: 1px solid white;
-    }
-
-    .sm-screen-chat-search-input {
-        flex: 1;
-        border-radius: 50px;
-        border: none;
-        outline: 1px solid white;
-        outline-offset: -1px;
-        background-color: transparent;
-        background-image: url('./media/smallScreenShearchIcon.svg');
-        background-repeat: no-repeat;
-        background-position: calc(100% - 10px) center;
-        background-size: 20px;
-        color: white;
-        text-indent: 10px;
-        font-size: 10px
-    }
-
-    .sm-screen-chat-search-input:focus {
-        background-image: none;
-        outline: 1px solid #7660D9;
-    }
-
-    .sm-screen-conversations-list-wrapper {
-        display: flex;
-        flex-direction: column;
-        width: 98%;
-        height: 600px;
-        background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
-        border-radius: 5px;
-        padding: 5px;
-    }
-
-    .sm-screen-conversations-list-content{
-        display: flex;
-        flex-direction: column;
-        overflow-y: auto;
-        width: 100%;
-    }
-
-    .sm-screen-conversation-item {
-        padding: 7px 5px;
-        display: flex;
-        gap: 5px;
-    }
-
-    .sm-screen-conversation-item:hover {
-        background-color: #1f0935;
-        cursor: pointer;
-        border-radius: 5px;
-    }
-
-
-    .sm-screen-conversation-item-avatar {
-        width: 35px;
-        border-radius: 50px;
-    }
-    
-    .sm-screen-conversation-item-details {
-        width: 100%;
-
-    }
-    .sm-screen-conversation-item-name {
-        font-size: 14px;
-    }
-
-    .sm-screen-conversation-item-last-msg{
-        font-size: 10px;
-        font-weight: 100;
-        width: 90%;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        margin-top: -2px;
-    }
-
-    .sm-screen-conversation-container {
-        margin-top: 20px;
-        width: 98%;
-        height: 650px;
-        display: flex;
-        flex-direction: column;
-        border-radius: 5px;
-        background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
-        padding: 10px 5px;
-    }
-    .sm-screen-conversation-header {
-        display: flex;
-        justify-content: space-between;
-        background-color: #1f0935;
-        padding: 5px;
-        border-radius: 5px;
-    }
-    .sm-screen-conversation-header-info {
-        display: flex;
-        gap: 5px;
-    }
-    .sm-screen-conversation-back-arrow {
-        width: 25px;
-        cursor: pointer;
-    }
-    .sm-screen-conversation-avatar {
-        width: 35px;
-        border-radius: 50px;
-    }
-    .sm-screen-conversation-details {
-        
-    }
-    .sm-screen-conversation-name {
-        font-size: 14px;
-        
-    }
-    .sm-screen-conversation-info {
-        font-size: 10px;
-        font-weight: 100;
-        margin-top: -2px
-
-    }
-    .sm-screen-conversation-options {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-
-    }
-    .sm-screen-conversation-invite-icon {
-        width: 25px;
-        cursor: pointer;
-    }
-    .sm-screen-conversation-options-icon {
-        width: 20px;
-        cursor: pointer;
-
-    }
-    .sm-screen-conversation-content {
-        flex: 1;
-        margin: 10px 5px;
-        overflow-y: auto;
-    }
-    .sm-screen-conversation-form {
-
-    }
-    input.sm-screen-conversation-input {
-        padding: 7px 0px;
-        border: none;
-        outline: 1px solid white;
-        outline-offset: -1px;
-        border-radius: 30px;
-        background-color: transparent;
-        text-indent: 10px;
-        color: white;
-        font-size: 10px;
-        width: 100%;
-    }
-} */
-
 * {
     margin: 0;
     padding: 0;
@@ -284,6 +79,18 @@ button.rooms-switch-button {
     font-weight: 500;
 }
 
+button.direct-switch-button-active,
+button.rooms-switch-button-active {
+    width: 50%;
+    border: none;
+    background-color: #6652c0;
+    color: white;
+    font-size: 12px;
+    height: 30px;
+    border-radius: 5px;
+    font-weight: 500;
+}
+
 .chat-conversations-list {
     display: flex;
     flex-direction: column;
@@ -294,6 +101,7 @@ button.rooms-switch-button {
     gap: 5px;
     cursor: pointer;
     padding: 5px 10px;
+    overflow: hidden;
 }
 
 .chat-conversation-item:hover  {
@@ -305,6 +113,8 @@ button.rooms-switch-button {
 }
 .conversation-item-details {
     width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 .conversation-item-name {
     font-size: 16px;
@@ -314,7 +124,7 @@ button.rooms-switch-button {
 .conversation-item-last-msg {
     font-size: 10px;
     font-weight: 100;
-    width: 90%;
+    width: 75%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -323,6 +133,7 @@ button.rooms-switch-button {
 
 .chat-window,
 .chat-window-hidden{
+    padding: 10px;
     display: flex;
     flex-direction: column;
     border-radius: 5px;
@@ -336,7 +147,7 @@ button.rooms-switch-button {
     display: flex;
     justify-content: space-between;
     background-color: #1f0935;
-    padding: 5px;
+    padding: 10px;
     border-radius: 5px;
 }
 .conversation-header-info {
@@ -348,18 +159,18 @@ button.rooms-switch-button {
     cursor: pointer;
 }
 .conversation-avatar {
-    width: 35px;
+    width: 40px;
     border-radius: 50px;
 }
 .conversation-details {
     
 }
 .conversation-name {
-    font-size: 14px;
+    font-size: 16px;
     
 }
 .conversation-info {
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 100;
     margin-top: -2px
 
@@ -371,22 +182,92 @@ button.rooms-switch-button {
 
 }
 .conversation-invite-icon {
-    width: 25px;
+    width: 35px;
     cursor: pointer;
 }
+
+.conversation-options-wrapper {
+    position: relative;
+    display: flex;
+}
 .conversation-options-icon {
-    width: 20px;
+    width: 30px;
     cursor: pointer;
 
 }
+
+.direct-options-container {
+    position: absolute;
+    width: 180px;
+    background-color:#250939;
+    opacity: 0.9;
+    top: calc(100% + 2px);
+    right: 0;
+    border-radius: 5px 5px  5px 5px;
+    outline: .5px solid #7660D9;
+}
+
+.view-profile-option,
+.block-friend-option,
+.change-wallpaper-option {
+    padding: 10px 10px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.view-profile-option:hover,
+.block-friend-option:hover,
+.change-wallpaper-option:hover {
+    background-color: #7660D9;
+} 
+
 .conversation-body {
     flex: 1;
     margin: 10px 5px;
+    display: flex;
+    flex-direction: column;
     overflow-y: auto;
 }
 .conversation-send-form{
 
 }
+
+.message-row {
+    padding: 7px 0;
+    display: flex;
+    gap: 5px;
+}
+
+.my-message-row {
+    align-self: flex-end;
+}
+
+.message-content {
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    background-color:#1f0935;
+
+}
+
+.my-message-content {
+    border-radius: 15px 0px 15px 15px;
+}
+.other-message-content {
+    border-radius: 0px 15px 15px 15px;
+}
+.my-message-avatar,
+.other-message-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 30px;
+}
+.conversation-send-form {
+    display: flex;
+    width: 100%;
+    gap: 5px;
+}
+
 input.conversation-input {
     padding: 7px 0px;
     border: none;
@@ -396,8 +277,18 @@ input.conversation-input {
     background-color: transparent;
     text-indent: 10px;
     color: white;
-    font-size: 10px;
+    font-size: 14px;
     width: 100%;
+    height: 35px;
+}
+input.conversation-input::placeholder  {
+    font-size: 12px;
+}
+
+.conversation-send-icon {
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
 }
 @media screen and (min-width: 1444px) {
     .chat-container {
@@ -407,10 +298,10 @@ input.conversation-input {
 
 @media screen and (max-width: 768px) {
     .chat-sidebar {
-        width: 96%;
+        width: 100%;
     }
     .chat-window {
-        width: 96%;
+        width: 100%;
     }
 
     .chat-window-hidden {

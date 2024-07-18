@@ -1,8 +1,8 @@
 import { useEffect, useState, useContext, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import MyMessage from "./MyMessage";
+import MyMessage from "../The_Chat/MyMessage";
 import AuthContext from "../navbar-sidebar/Authcontext";
-import OtherMessage from "./OtherMessage";
+import OtherMessage from "../The_Chat/OtherMessage";
 import * as ChatIcons from "../assets/chat/media";
 
 import "../assets/chat/Chat.css";

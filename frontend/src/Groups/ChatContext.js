@@ -8,11 +8,11 @@ export default ChatContext;
 export const ChatProvider = ({ children }) => {
   let location = useLocation();
   const { user } = useContext(AuthContext);
-  const [channelsConversations, setChannelsConversations] = useState([]);
-  const [directsConversations, setDirectsConversations] = useState([]);
+  const [chatRoomConversations, setChatRoomConversations] = useState([]);
+  const [directConversations, setDirectConversations] = useState([]);
   const [directsImages, setDirectsImages] = useState([]);
   let [isBlur, setIsBlur] = useState(false)
-  const [selectedChannel, setSelectedChannel] = useState({
+  const [selectedChatRoom, setSelectedChatRoom] = useState({
     name: "",
     roomId: "",
   });
@@ -25,7 +25,7 @@ export const ChatProvider = ({ children }) => {
   
   useEffect(() => {
     const fetchImages = async () => {
-      const promises = directsConversations.map(async (user) => {
+      const promises = directConversations.map(async (user) => {
         const response = await fetch(`http://localhost:8000/api/getImage`, {
           method: "POST",
           headers: {
@@ -41,10 +41,10 @@ export const ChatProvider = ({ children }) => {
       const images = await Promise.all(promises);
       setDirectsImages(images);
     };
-    if (directsConversations) {
+    if (directConversations) {
       fetchImages();
     }
-  }, [directsConversations]);
+  }, [directConversations]);
 
   useEffect(() => {
     const fetchChannelsWithMessage = async () => {
@@ -53,7 +53,7 @@ export const ChatProvider = ({ children }) => {
           `http://localhost:8000/chatAPI/channels/${user}`
         );
         const data = await response.json();
-        setChannelsConversations(data);
+        setChatRoomConversations(data);
         console.log("inside the context channels", data);
       } catch (error) {
         console.log(error);
@@ -65,7 +65,7 @@ export const ChatProvider = ({ children }) => {
           `http://localhost:8000/users/firendwithdirects/${user}`
         );
         const data = await response.json();
-        setDirectsConversations(data);
+        setDirectConversations(data);
         console.log("inside the context Friends: ", data);
       } catch (error) {
         console.log(error);
@@ -79,12 +79,12 @@ export const ChatProvider = ({ children }) => {
   }, [location.pathname, user]);
 
   let contextData = {
-    channelsConversations: channelsConversations,
-    setChannelsConversations: setChannelsConversations,
-    directsConversations: directsConversations,
-    setDirectsConversations: setDirectsConversations,
-    setSelectedChannel: setSelectedChannel,
-    selectedChannel: selectedChannel,
+    chatRoomConversations: chatRoomConversations,
+    setChatRoomConversations: setChatRoomConversations,
+    directConversations: directConversations,
+    setDirectConversations: setDirectConversations,
+    setSelectedChatRoom: setSelectedChatRoom,
+    selectedChatRoom: selectedChatRoom,
     directsImages : directsImages,
     setDirectsImages : setDirectsImages,
     selectedDirect : selectedDirect,
