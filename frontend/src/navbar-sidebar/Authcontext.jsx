@@ -5,6 +5,8 @@ import { friends } from "../assets/navbar-sidebar";
 import * as Icons from '../assets/navbar-sidebar'
 import { useReducer } from "react";
 
+import userPc from "../Settings/assets/Group.svg"
+
 const AuthContext = createContext();
 
 export default AuthContext;
@@ -38,6 +40,8 @@ export const AuthProvider = ({children}) => {
 	const blockRef = useRef(null);
 	const blockContentRef = useRef(null);
 	
+
+	const [userPic, setUserPic] = useState(userPc);
 	const [nickName, setNickName] = useState("Maverick");
 	const [bio, setBio] = useState("Lorem ipsum dolor sit amet consectetur adipisicing elit.");
 	const [country, setCountry] = useState("Morocco");
@@ -348,6 +352,8 @@ export const AuthProvider = ({children}) => {
 		blockRef:blockRef,
 		blockContentRef:blockContentRef,
 		// User Credintials
+		userPic:userPic,
+		setUserPic:setUserPic,
 		nickName:nickName,
 		bio:bio,
 		country,country,
