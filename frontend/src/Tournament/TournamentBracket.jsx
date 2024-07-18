@@ -10,6 +10,10 @@ function TournamentBracket() {
 	const navigate = useNavigate()
 	const location = useLocation()
 	const [tournamentMembers, setTournamentMembers] = useState([])
+	const [roundSixteenMembers, setRoundSixteenMembers] = useState([])
+	const [roundQuarterFinalMembers, setroundQuarterFinalMembers] = useState([])
+	const [roundSemiFinalMembers, setroundSemiFinalMembers] = useState([])
+	const [winnerMember, setwinnerMember] = useState([])
 	const [isTournamentOwner, setIsTournamentOwner] = useState(false)
 	const [membersImages, setMemberImages] = useState([])
 	const { user, socket } = useContext(AuthContext)
@@ -57,6 +61,7 @@ function TournamentBracket() {
 			}
 		}
 		const set_is_inside = async () => {
+			console.log("----SET IS INSIDE")
 			const response = await fetch(`http://localhost:8000/api/set-is-inside`, {
 				method: 'POST',
 				headers: {
@@ -88,9 +93,28 @@ function TournamentBracket() {
 				console.error('Failed to fetch data');
 			}
 		}
+		const gameMembersRounds = async () =>{
+			console.log("----GET MEMBERS------")
+			const response = await fetch('http//localhost:8000/api/get-game-members-round', {
+				method : 'POST',
+				headers : {
+					'Content-type' : 'application/json'
+				},
+				body: JSON.stringify({
+					user: user
+				})
+			});
+			if (response.ok) {
+				const data = await response.json();
+				console.log("---------USERSS MEMBERS : ", data)
+			} else {
+				console.error('Failed to fetch data');
+			}
+		}
 		if (user) {
 			check_is_join()
 			set_is_inside()
+			gameMembersRounds()
 		}
 	}, [user])
 
@@ -100,19 +124,10 @@ function TournamentBracket() {
 				let data = JSON.parse(event.data)
 				let type = data.type
 				let message = data.message
-				console.log("DATA RECEIVED:", data)
-				if (type == 'get_user_path'){
-					console.log("yessss")
-					if (socket && socket.readyState === WebSocket.OPEN) {
-						socket.send(JSON.stringify({
-							type: 'check-round-16-players',
-							message: {
-								location: location.pathname,
-								user : user
-							}
-						}))
-					}
-				}
+				console.log("DATA rida RECEIVED:", data)
+				// if (type == 'user_eliminated'){
+				// 	navigate("../game")
+				// }
 			}
 		}
 	},[socket])

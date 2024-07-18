@@ -321,7 +321,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			'type' : 'warn_members',
 		}))
 
-	async def get_user_path(self, event):
+	async def user_eliminated(self, event):
 		await self.send(text_data=json.dumps({
-			'type' : 'get_user_path',
+			'type' : 'user_eliminated',
 		}))

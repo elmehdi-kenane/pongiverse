@@ -3,10 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from myapp.models import customuser
 from chat.models import Friends
-from .models import TournamentMembers
-from .models import Tournament
-from .models import TournamentMembers
-from .models import TournamentInvitation
+from .models import TournamentMembers, Tournament, TournamentInvitation, Round, TournamentUserInfo
 import random
 from myapp.serializers import MyModelSerializer
 # from rest_framework.exceptions import AuthenticationFailed
@@ -293,7 +290,7 @@ def is_started_and_not_finshed(request):
 	response = Response()
 	user = customuser.objects.filter(username=username).first()
 	for member in TournamentMembers.objects.filter(user=user):
-		if member.tournament.is_started == True and member.tournament.is_finished == False:
+		if member.tournament.is_started == True and member.tournament.is_finished == False and member.is_eliminated == False:
 			response.data = {'Case' : 'yes'}
 			return response
 	response.data = {'Case' : 'no'}
@@ -316,13 +313,62 @@ def get_tournament_size(request):
 def set_is_inside(request):
 	response = Response()
 	is_inside = request.data.get('is_inside')
+	print(f"----- get to is inside {is_inside}---------------")
 	username = request.data.get('user')
 	user = customuser.objects.filter(username=username).first()
 	for member in TournamentMembers.objects.filter(user=user):
-		if member.tournament.is_started == False or (member.tournament.is_started == True and member.tournament.is_finished == False):
+		if member.tournament.is_started == False or (member.tournament.is_started == True and member.tournament.is_finished == False and member.is_eliminated == False):
 			member.is_inside = is_inside
 			member.save()
 			response.data = {'Case' : 'yes'}
 			return response
 	response.data = {'Case' : 'no'}
+	return response
+
+@api_view(['POST'])
+def get_game_members_round(request):
+	username = request.data.get('user')
+	user = customuser.objects.filter(username=username).first()
+	response = Response()
+	for member in TournamentMembers.objects.filter(user=user):
+		if member.tournament.is_started == True and member.tournament.is_finished == False and member.is_eliminated == False:
+			roundsixteen = Round.objects.filter(tournament=member.tournament, type="ROUND 16").first()
+			roundquarterfinal = Round.objects.filter(tournament=member.tournament, type="QUARTERFINAL").first()
+			roundsemierfinal = Round.objects.filter(tournament=member.tournament, type="SEMIFINAL").first()
+			winner = Round.objects.filter(tournament=member.tournament, type="WINNER").first()
+			if roundsixteen is not None:
+				sixteenmembers = []
+				for sixteenmember in TournamentUserInfo.objects.filter(round=roundsixteen):
+					sixteenmembers.append({
+						'id' : sixteenmember.user.id,
+						'name' : sixteenmember.user.username,
+						'level': 2,  # Assuming level is static for now
+						'image': sixteenmember.user.avatar.path,
+						'position': sixteenmember.position
+					})
+			if roundquarterfinal is not None:
+				quartermembers = []
+				for quartermember in TournamentUserInfo.objects.filter(round=roundquarterfinal):
+					quartermembers.append({
+						'id' : quartermember.user.id,
+						'name' : quartermember.user.username,
+						'level': 2,  # Assuming level is static for now
+						'image': quartermember.user.avatar.path,
+						'position': quartermember.position
+					})
+			if roundsemierfinal is not None:
+				semimembers = []
+				for semimember in TournamentUserInfo.objects.filter(round=roundsemierfinal):
+					semimembers.append({
+						'id' : semimember.user.id,
+						'name' : semimember.user.username,
+						'level': 2,  # Assuming level is static for now
+						'image': semimember.user.avatar.path,
+						'position': semimember.position
+					})
+			winnermember = TournamentUserInfo.objects.filter(round=winner).first()
+			winnerdict = {}
+			if winnermember is not None:
+				winnerdict.update({'id': winnermember.user.id, 'name' : winnermember.user.username, 'level' : 2, 'image' : winnermember.user.avatar.path, 'position' : winnermember.position})
+	response.data = {'roundsixteen' : sixteenmembers, 'roundquarter' : quartermembers, 'roundsemi' : semimembers, 'winner' : winnerdict}
 	return response

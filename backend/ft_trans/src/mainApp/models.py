@@ -61,8 +61,6 @@ class TournamentMembers(models.Model):
 	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='tournament_members')
 	is_owner = models.BooleanField(default=False)
 	is_eliminated = models.BooleanField(default=False)
-	rank = models.CharField(max_length=255, default='')
-	position = models.PositiveIntegerField(default=0)
 	is_inside = models.BooleanField(default=False)
 
 class TournamentInvitation(models.Model):
@@ -73,3 +71,12 @@ class TournamentInvitation(models.Model):
 class TournamentWarnNotifications(models.Model):
 	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='TournamentWarnNotifications')
 	created_at = models.DateTimeField(default=timezone.now, editable=False)
+
+class Round(models.Model):
+	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='round')
+	type = models.CharField(max_length=255, default='')
+
+class TournamentUserInfo(models.Model):
+	round = models.ForeignKey(Round, on_delete=models.CASCADE, related_name='tournamentuserinfo')
+	user = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='user', null=True, blank=True)
+	position = models.PositiveIntegerField(default=0)

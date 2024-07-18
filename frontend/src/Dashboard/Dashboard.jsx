@@ -94,6 +94,9 @@ const Dashboard = () => {
 				else if (type == 'warn_members'){
 					console.log("you have to go back to tournament")
 				}
+				else if (type == 'user_eliminated'){
+					console.log("you have been kicked from the tournament")
+				}
 			}
 		}
 	}, [socket])

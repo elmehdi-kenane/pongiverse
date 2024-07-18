@@ -282,6 +282,7 @@ function CreateTournament() {
 					if (!userExists)
 						setAllGameFriends([...currentAllGameFriends, message.userInfos])
 				} else if (type === 'tournament_started') {
+					console.log("YESSS")
 					if (socket && socket.readyState === WebSocket.OPEN) {
 						socket.send(JSON.stringify({
 							type: 'Round-16-timer',
