@@ -1,39 +1,39 @@
-import React, { useState } from 'react'
-import mavSvg from '../assets/Group.svg'
+import React, { useState, useContext} from 'react'
+import AuthContext from '../../navbar-sidebar/Authcontext';
 import bg1 from "../assets/bg1.jpg"
 
 
-function UpdatePic() {
+function UpdatePic(props) {
     
-    const [profilePic, setProfilePic] = useState(mavSvg);
     const [backgndPic, setBackgndPic] = useState(bg1);
-    
-    const UpdateProfilePic = (event) => {
-        if (event.target.files && event.target.files[0]) {
-            setProfilePic(URL.createObjectURL(event.target.files[0]));
-            console.log(URL.createObjectURL(event.target.files[0]))
-        }
+    const {userPic} = useContext(AuthContext)
+
+    const UpdateBgPic = (event) => {
+      if (event.target.files && event.target.files[0]) {
+          setBackgndPic(URL.createObjectURL(event.target.files[0]));
+          // console.log(URL.createObjectURL(event.target.files[0]))
+      }
     }
 
   return (
     <div>
         <div className="update"> 
-            <img src={profilePic} alt="UserPic"/>
+            <img src={userPic} alt="UserPic"/>
             <p className='title-pic'> Upload a new picture </p>
-            <div className="update__btn" onClick={() => document.getElementById('fileInput').click()}>Update 
+            <div className="update__btn" onClick={() => props.setAdjust(true)}> Update </div>
+        </div>
+        <div className="update"> 
+            <img  src={backgndPic} alt="UserPic"/>
+            <p className='title-pic'> Upload a new walppaper </p>
+            <div className="update__btn" onClick={() => document.getElementById('fileInput').click()}> Update 
                 <input
                     id="fileInput"
                     type="file"
                     accept="image/*"
-                    onChange={UpdateProfilePic}
+                    onChange={UpdateBgPic}
                     style={{ display: 'none' }}
                     />
             </div>
-        </div>
-        <div className="update"> 
-            <img  src={bg1} alt="UserPic"/>
-            <p className='title-pic'> Upload a new walppaper </p>
-            <div className="update__btn"> Update </div>
         </div>
     </div>
   )

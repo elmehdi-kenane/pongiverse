@@ -251,3 +251,53 @@
 .country-space {
     justify-content: space-between;
 }
+
+/*------ Adjust Pic -----*/
+
+.adjustpic {
+    display: flex;
+    /* height: 400px; */
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+    gap: 20px;
+    padding: 10px 0;
+}
+.adjustpic .adjustpic__img-name {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    
+}
+.adjustpic .adjustpic__img-name img{
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+}
+.adjustpic .adjustpic__img-name h1{
+    font-size: 20px;
+    color: white;
+    font-weight: 500;
+}
+
+.adjustpic .adjustpic__submit {
+    display: flex;
+    gap: 10px;
+}
+.adjustpic .adjustpic__submit button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 30px;
+    border: solid 1px white;
+    border-radius: 5px;
+    background: #442d6ae6;
+    color: white;
+    font-weight: 450;
+    font-size: 15px;
+    cursor: pointer;
+}
+.adjustpic .adjustpic__submit button:nth-child(2) {
+    background: #826aed;
+}

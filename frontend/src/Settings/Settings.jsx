@@ -1,19 +1,20 @@
-import React, { useState } from 'react'
+import React, { useState, useContext} from 'react'
 import './Settings.css'
-import mavSvg from './assets/Group.svg'
 import PersonalInfo from './PersonalInfo'
 import Security from './Security';
+import AuthContext from '../navbar-sidebar/Authcontext';
 
 
 function Settings() {
 
   const [isInfo, setIsInfo] = useState(true);
+  const {userPic} = useContext(AuthContext);
 
   return (
     <div className='settings-page'>
       <div className="settings__leftside">
         <div className='pic-name'>
-            <img src={mavSvg} alt='UserPic'/>
+            <img src={userPic} alt='UserPic'/>
             <p> Maverick </p>
         </div>
         <p className='left__email'>
