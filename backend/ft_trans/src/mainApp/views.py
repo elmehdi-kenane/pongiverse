@@ -336,8 +336,11 @@ def get_game_members_round(request):
 			roundquarterfinal = Round.objects.filter(tournament=member.tournament, type="QUARTERFINAL").first()
 			roundsemierfinal = Round.objects.filter(tournament=member.tournament, type="SEMIFINAL").first()
 			winner = Round.objects.filter(tournament=member.tournament, type="WINNER").first()
+			sixteenmembers = []
+			quartermembers = []
+			semimembers = []
+			winnerdict = {}
 			if roundsixteen is not None:
-				sixteenmembers = []
 				for sixteenmember in TournamentUserInfo.objects.filter(round=roundsixteen):
 					sixteenmembers.append({
 						'id' : sixteenmember.user.id,
@@ -347,7 +350,6 @@ def get_game_members_round(request):
 						'position': sixteenmember.position
 					})
 			if roundquarterfinal is not None:
-				quartermembers = []
 				for quartermember in TournamentUserInfo.objects.filter(round=roundquarterfinal):
 					quartermembers.append({
 						'id' : quartermember.user.id,
@@ -357,7 +359,6 @@ def get_game_members_round(request):
 						'position': quartermember.position
 					})
 			if roundsemierfinal is not None:
-				semimembers = []
 				for semimember in TournamentUserInfo.objects.filter(round=roundsemierfinal):
 					semimembers.append({
 						'id' : semimember.user.id,
@@ -367,7 +368,6 @@ def get_game_members_round(request):
 						'position': semimember.position
 					})
 			winnermember = TournamentUserInfo.objects.filter(round=winner).first()
-			winnerdict = {}
 			if winnermember is not None:
 				winnerdict.update({'id': winnermember.user.id, 'name' : winnermember.user.username, 'level' : 2, 'image' : winnermember.user.avatar.path, 'position' : winnermember.position})
 	response.data = {'roundsixteen' : sixteenmembers, 'roundquarter' : quartermembers, 'roundsemi' : semimembers, 'winner' : winnerdict}

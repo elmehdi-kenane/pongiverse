@@ -14,52 +14,15 @@ function TournamentBracket() {
 	const [roundQuarterFinalMembers, setroundQuarterFinalMembers] = useState([])
 	const [roundSemiFinalMembers, setroundSemiFinalMembers] = useState([])
 	const [winnerMember, setwinnerMember] = useState([])
+	const [roundSixteenMembersImages, setRoundSixteenMembersImages] = useState([])
+	const [roundQuarterFinalMembersImages, setroundQuarterFinalMembersImages] = useState([])
+	const [roundSemiFinalMembersImages, setroundSemiFinalMembersImages] = useState([])
+	const [winnerMemberImage, setwinnerMemberImage] = useState([])
 	const [isTournamentOwner, setIsTournamentOwner] = useState(false)
 	const [membersImages, setMemberImages] = useState([])
 	const { user, socket } = useContext(AuthContext)
 
 	useEffect(() => {
-		const get_members = async () => {
-			const response = await fetch(`http://localhost:8000/api/started-tournament-members`, {
-				method: "POST",
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					user: user
-				})
-			});
-			if (response.ok) {
-				const data = await response.json();
-				const allMembers = data.allMembers
-				if (data.is_owner === 'yes')
-					setIsTournamentOwner(true)
-				if (allMembers.length < 1)
-					navigate("../game/createTournament")
-				console.log(data)
-				setTournamentMembers(allMembers)
-				const fetchImages = async () => {
-					const promises = allMembers.map(async (user) => {
-						const response = await fetch(`http://localhost:8000/api/getImage`, {
-							method: "POST",
-							headers: {
-								'Content-Type': 'application/json',
-							},
-							body: JSON.stringify({
-								image: user.image
-							})
-						});
-						const blob = await response.blob();
-						return URL.createObjectURL(blob);
-					});
-					const images = await Promise.all(promises);
-					setMemberImages(images)
-				};
-				fetchImages()
-			} else {
-				console.error('Failed to fetch data');
-			}
-		}
 		const set_is_inside = async () => {
 			console.log("----SET IS INSIDE")
 			const response = await fetch(`http://localhost:8000/api/set-is-inside`, {
@@ -86,16 +49,32 @@ function TournamentBracket() {
 			if (response.ok) {
 				const data = await response.json();
 				if (data.Case === 'yes')
-					get_members()
+					gameMembersRounds()
 				else
 					navigate("../game")
 			} else {
 				console.error('Failed to fetch data');
 			}
 		}
+		const fetchImages = async (members, setElements) => {
+			const promises = members.map(async (user) => {
+				const response = await fetch(`http://localhost:8000/api/getImage`, {
+					method: "POST",
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						image: user.image
+					})
+				});
+				const blob = await response.blob();
+				return URL.createObjectURL(blob);
+			});
+			const images = await Promise.all(promises);
+			setElements(images)
+		}
 		const gameMembersRounds = async () =>{
-			console.log("----GET MEMBERS------")
-			const response = await fetch('http//localhost:8000/api/get-game-members-round', {
+			const response = await fetch('http://localhost:8000/api/get-game-members-round', {
 				method : 'POST',
 				headers : {
 					'Content-type' : 'application/json'
@@ -106,7 +85,16 @@ function TournamentBracket() {
 			});
 			if (response.ok) {
 				const data = await response.json();
-				console.log("---------USERSS MEMBERS : ", data)
+				setRoundSixteenMembers(data.roundsixteen)
+				setroundQuarterFinalMembers(data.roundquarter)
+				setroundSemiFinalMembers(data.semimembers)
+				setwinnerMember(data.winner)
+				if (roundSixteenMembers.length > 0)
+					fetchImages(roundSixteenMembers, setRoundSixteenMembersImages)
+				if (roundQuarterFinalMembers.length !== 0)
+					fetchImages(roundQuarterFinalMembers, setroundQuarterFinalMembersImages)
+				if (roundSemiFinalMembers.length !== 0)
+					fetchImages(roundSemiFinalMembers, setroundSemiFinalMembersImages)
 			} else {
 				console.error('Failed to fetch data');
 			}
@@ -114,7 +102,6 @@ function TournamentBracket() {
 		if (user) {
 			check_is_join()
 			set_is_inside()
-			gameMembersRounds()
 		}
 	}, [user])
 
@@ -124,7 +111,7 @@ function TournamentBracket() {
 				let data = JSON.parse(event.data)
 				let type = data.type
 				let message = data.message
-				console.log("DATA rida RECEIVED:", data)
+				console.log("DATA RECEIVED:", data)
 				// if (type == 'user_eliminated'){
 				// 	navigate("../game")
 				// }
@@ -136,11 +123,11 @@ function TournamentBracket() {
 		<div className={styles['tournamentbracketpage']}>
 			<div className={styles['normalSvg']}>
 				{/* <img src={<SvgComponent images={membersImages} />} alt="" /> */}
-				<SvgComponent images={membersImages} />
+				<SvgComponent images={roundSixteenMembersImages} />
 			</div>
 			<div className={styles['verticalSvg']}>
 				{/* <img src={<SvgVerticalComponent images={membersImages} />} alt="" /> */}
-				<SvgVerticalComponent images={membersImages} />
+				<SvgVerticalComponent images={roundSixteenMembersImages} />
 			</div>
 		</div>
 	);
