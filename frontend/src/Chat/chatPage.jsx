@@ -6,7 +6,7 @@ import ChatConversation from "./chatConversation";
 import ChatRoomConversation from "./chatRoomConversation";
 import { useContext, useEffect, useState } from "react";
 
-const MyChat = () => {
+const Chat = () => {
   const {
     chatRoomConversations,
     directConversations,
@@ -26,7 +26,7 @@ const MyChat = () => {
   const handleSelectItem = (itemName) => {
     setSelectedItem(itemName);
   };
-
+  
   return (
     <div className="chat-page">
       <div className="chat-container">
@@ -122,4 +122,4 @@ const MyChat = () => {
   );
 };
 
-export default MyChat;
+export default Chat;

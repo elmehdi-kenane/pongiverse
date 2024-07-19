@@ -6,6 +6,21 @@ import MyMessage from "./MyMessage";
 import OtherMessage from "./OtherMessage";
 import { useNavigate } from "react-router-dom";
 
+export let useClickOutSide = (handler) => {
+  let domNode = useRef()
+  useEffect(()=> {
+    let eventHandler = (event)=> {
+      if(!domNode.current.contains(event.target))
+        handler()
+    }
+    document.addEventListener('mousedown',eventHandler)
+    return () => {
+      document.removeEventListener('mousedown', eventHandler)
+    }
+  })
+  return domNode
+}
+
 const ChatConversation = () => {
   const { selectedDirect, setSelectedDirect } = useContext(ChatContext);
   const [messages, setMessages] = useState([]);
@@ -120,6 +135,10 @@ const ChatConversation = () => {
       );
     }
   };
+  let domNode = useClickOutSide(()=>{
+    setShowDirectOptions(false)
+  })
+
   return (
     <>
       <div className="conversation-header">
@@ -148,7 +167,7 @@ const ChatConversation = () => {
             </div>
           </div>
         </div>
-        <div className="conversation-options">
+        <div className="conversation-options" ref={domNode}>
           <img
             src={ChatIcons.InviteToPlay}
             alt="Invite"

@@ -14,7 +14,6 @@ import Friends from './Friends/Friends';
 import Dashboard from './Dashboard/Dashboard';
 import { Navigate } from 'react-router-dom';
 import Game from './Game/Game';
-import Chat from './Chat/Chat';
 import WaysSecondStep from './components/SignUp/WaysSecondStep';
 import ForgotPassword from './components/SignIn/ForgotPassword';
 import ChangePassword from './components/SignIn/ChangePassword';
@@ -23,14 +22,13 @@ import SignUpPage from './components/SignUp/SignUpPage';
 import SecondStep from './components/SignUp/SecondStep';
 import CreateTournament from './Tournament/CreateTournament';
 import JoinTournament from './Tournament/JoinTournament';
-import MessagesContainer from './Chat/MessagesPage';
 import OneVsOneRandom from './Game/OneVsOneRandom';
 import OneVsOneFriends from './Game/OneVsOneFriends';
 import OneVsOneCreateOrJoin from './Game/OneVsOneCreateOrJoin';
 import TournamentBracket from './Tournament/TournamentBracket';
 import LoginGoogleTest from './components/SignIn/LoginGoogleTest';
 import { ChatProvider } from './Groups/ChatContext';
-import MyChat from './The_Chat/chatPage';
+import Chat from './Chat/chatPage';
 
 const App = () => {
 	return (
@@ -49,8 +47,7 @@ const App = () => {
 						<Route path="/ChangePassword" element={<ChangePassword />} />
 						<Route path="/mainpage" element={<NavbarSidebar />} >
 							<Route path="dashboard" element={<Dashboard />} />
-							<Route path="chat" element={<MyChat />} />
-							{/* <Route path="thechat" element={<MyChat />} /> */}
+							<Route path="chat" element={<Chat />} />
 							<Route path="friends" element={<Friends />} />
 							<Route path="groups" element={<Rooms />} />
 							<Route path="game" element={<Modes />} />

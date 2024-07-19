@@ -1,5 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
+import {useClickOutSide} from "../Chat/chatConversation"
+
 const JoinRoom = (props) => {
   const [isProtected, setIsProtected] = useState(false)
   const [roomName, setRoomName] = useState('')
@@ -18,9 +20,9 @@ const JoinRoom = (props) => {
     props.onClose()
   }
 
-  
+  let nodeDom = useClickOutSide(props.onClose)
   return (
-    <div className="join-room-container">
+    <div className="join-room-container" ref={nodeDom}>
       <div className="join-room-header">Join a Room</div>
       <div className="join-visibility-btns">
         <div className="join-visibility-text">

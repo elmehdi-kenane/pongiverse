@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import * as ChatIcons from "../assets/chat/media";
 import "../assets/chat/Groups.css";
+import {useClickOutSide} from "../Chat/chatConversation"
 
 const CreateRoom = (props) => {
   const { socket } = useContext(AuthContext);
@@ -83,9 +84,9 @@ const CreateRoom = (props) => {
       reader.readAsDataURL(file);
     }
   };
-
+  let nodeDom = useClickOutSide(props.onClose)
   return (
-    <div className="create-room-container">
+    <div className="create-room-container" ref={nodeDom}>
       <div className="create-room-header">Create a Room</div>
       <div className="room-visibility">Visibility:</div>
       <div className="room-visibility-btns">
