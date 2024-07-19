@@ -18,17 +18,21 @@ const MyChat = () => {
   const { user } = useContext(AuthContext);
   const [query, setQuery] = useState("");
   const [isHome, setIsHome] = useState(true);
-
+  const [selectedItem, setSelectedItem] = useState(null);
   const filteredConversations = directConversations.filter((conversation) => {
     return conversation.name.includes(query);
   });
+
+  const handleSelectItem = (itemName) => {
+    setSelectedItem(itemName);
+  };
 
   return (
     <div className="chat-page">
       <div className="chat-container">
         <div
           className={
-            Object.values(selectedDirect).every((value) => value !== "")
+            Object.values(selectedDirect).every((value) => value !== "") || Object.values(selectedChatRoom).every((value) => value !== "")
               ? "chat-sidebar-hidden"
               : "chat-sidebar"
           }
@@ -75,6 +79,8 @@ const MyChat = () => {
                     imageIndex={key}
                     isDirect={isHome}
                     setSelectedDirect={setSelectedDirect}
+                    isSelected={selectedItem === friend.name}
+                    setSelectedItem={handleSelectItem}
                   />
                 ))
               : chatRoomConversations.map((chatRoom, key) => (
@@ -88,13 +94,15 @@ const MyChat = () => {
                     membersCount={chatRoom.membersCount}
                     roomId={chatRoom.id}
                     setSelectedChatRoom={setSelectedChatRoom}
+                    isSelected={selectedItem === chatRoom.name}
+                    setSelectedItem={handleSelectItem}
                   />
                 ))}
           </div>
         </div>
         <div
           className={
-            Object.values(selectedDirect).every((value) => value !== "")
+            Object.values(selectedDirect).every((value) => value !== "") || Object.values(selectedChatRoom).every((value) => value !== "")
               ? "chat-window"
               : "chat-window-hidden"
           }

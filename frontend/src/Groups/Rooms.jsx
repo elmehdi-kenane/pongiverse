@@ -139,7 +139,7 @@ const Rooms = () => {
     const fetchMyRooms = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/chatAPI/channels/${user}`
+          `http://localhost:8000/chatAPI/chatRooms/${user}`
         );
         const data = await response.json();
         if (data && data.length) {

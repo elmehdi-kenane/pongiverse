@@ -6,7 +6,8 @@ import MyMessage from "./MyMessage";
 import OtherMessage from "./OtherMessage";
 
 const ChatRoomConversation = () => {
-  const { selectedChatRoom, setSelectedChatRoom} = useContext(ChatContext);
+  const { selectedChatRoom, setSelectedChatRoom } = useContext(ChatContext);
+  const [showChatRoomOptions, setShowChatRoomOptions] = useState(false);
   const [messages, setMessages] = useState([]);
   const [messageToSend, setMessageToSend] = useState("");
   const [recivedMessage, setRecivedMessage] = useState(null);
@@ -47,16 +48,21 @@ const ChatRoomConversation = () => {
         console.log(error);
       }
     };
-    if (selectedChatRoom){
+    if (selectedChatRoom) {
       fetchMessages();
-    } 
+    }
   }, [selectedChatRoom]);
-
+  useEffect(()=> {
+    console.log(showChatRoomOptions, "hhhhhhh")
+  },[showChatRoomOptions])
   useEffect(() => {
     if (socket) {
       socket.onmessage = (e) => {
         let data = JSON.parse(e.data);
-        if (data.type === "newMessage") setRecivedMessage(data.data);
+        if (data.type === "newMessage") {
+          setRecivedMessage(data.data);
+          console.log(data.data);
+        }
       };
     }
   }, [socket]);
@@ -100,33 +106,66 @@ const ChatRoomConversation = () => {
             </div>
           </div>
         </div>
-        <div className="conversation-options">
+        <div className="conversation-options-wrapper">
           <img
-            src={ChatIcons.InviteToPlay}
-            alt="Invite"
-            className="conversation-invite-icon"
-          />
-          <img
+            onClick={() => {
+              console.log("im herrrrreeeeee");
+              showChatRoomOptions
+                ? setShowChatRoomOptions(false)
+                : setShowChatRoomOptions(true);
+            }}
             src={ChatIcons.ThreePoints}
             alt="Options"
             className="conversation-options-icon"
           />
+          {showChatRoomOptions ? (
+            <div className="direct-options-container">
+              <div className="view-profile-option">Leave Chat Room</div>
+              <div className="view-profile-option">Chat Room Info</div>
+              <div className="block-friend-option">Members List</div>
+              <div className="change-wallpaper-option">Wallpaper</div>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
       <div className="conversation-body" id="start">
         {messages.length !== 0 &&
           messages.map((message, index) =>
             message.sender === user ? (
-              <MyMessage key={index} content={message.content} avatar={userImg}/>
+              <MyMessage
+                key={index}
+                content={message.content}
+                avatar={userImg}
+              />
             ) : (
-              <OtherMessage key={index} content={message.content} />
+              <OtherMessage
+                key={index}
+                content={message.content}
+                avatar={selectedChatRoom.icon}
+              />
             )
           )}
         <div ref={messageEndRef}></div>
       </div>
-      <form action="submit" className="conversation-send-form" onSubmit={sendMessage}>
-        <input type="text" className="conversation-input" value={messageToSend} onChange={(e)=>setMessageToSend(e.target.value)} placeholder="Enter your message"/>
-        <img src={ChatIcons.sendIcon} className="conversation-send-icon" onClick={sendMessage}/>
+      <form
+        action="submit"
+        className="conversation-send-form"
+        onSubmit={sendMessage}
+      >
+        <input
+          type="text"
+          className="conversation-input"
+          value={messageToSend}
+          onChange={(e) => setMessageToSend(e.target.value)}
+          placeholder="Enter your message"
+        />
+        <img
+          src={ChatIcons.sendIcon}
+          className="conversation-send-icon"
+          onClick={sendMessage}
+        />
       </form>
     </>
   );

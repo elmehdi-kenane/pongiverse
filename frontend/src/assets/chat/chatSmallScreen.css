@@ -25,6 +25,7 @@
     justify-content: center;
     height: 800px;
     margin: 20px 5px;
+    margin-bottom: 100px;
     gap: 5px;
 }
 
@@ -100,15 +101,21 @@ button.rooms-switch-button-active {
     display: flex;
     gap: 5px;
     cursor: pointer;
-    padding: 5px 10px;
+    padding: 10px;
     overflow: hidden;
+}
+
+.chat-conversation-item-active {
+    background-color: #1f0935
 }
 
 .chat-conversation-item:hover  {
     background-color: #1f0935;
 }
+
 .conversation-item-avatar {
     width: 35px;
+    height: 35px;
     border-radius: 50px;
 }
 .conversation-item-details {
@@ -152,6 +159,7 @@ button.rooms-switch-button-active {
 }
 .conversation-header-info {
     display: flex;
+    align-items: center;
     gap: 5px;
 }
 .conversation-back-arrow {
@@ -160,6 +168,7 @@ button.rooms-switch-button-active {
 }
 .conversation-avatar {
     width: 40px;
+    height: 40px;
     border-radius: 50px;
 }
 .conversation-details {
@@ -228,24 +237,26 @@ button.rooms-switch-button-active {
     flex-direction: column;
     overflow-y: auto;
 }
+
 .conversation-send-form{
 
 }
 
 .message-row {
-    padding: 7px 0;
+    padding-top: 7px;
     display: flex;
     gap: 5px;
+    max-width: 80%;
 }
 
 .my-message-row {
     align-self: flex-end;
-    max-width: 70%;
 }
 
 .message-content {
     padding: 10px 15px;
     display: flex;
+    font-size: 15px;
     align-items: center;
     background-color:#1f0935;
     word-break: break-all;
@@ -266,12 +277,12 @@ button.rooms-switch-button-active {
 }
 .conversation-send-form {
     display: flex;
+    align-items: center;
     width: 100%;
     gap: 5px;
 }
 
 input.conversation-input {
-    padding: 7px 0px;
     border: none;
     outline: 1px solid white;
     outline-offset: -1px;
@@ -312,5 +323,77 @@ input.conversation-input::placeholder  {
     
     .chat-sidebar-hidden {
     display: none;
+    }
+}
+
+@media screen and (max-width:425px) {
+    .chat-sidebar {
+        height: 700px;
+    }
+    .chat-window {
+        height: 700px;
+        padding: 5px;
+    }
+    .conversation-header {
+        padding: 7px;
+    }
+    .conversation-back-arrow {
+        width: 20px; 
+    }
+    .conversation-avatar {
+        width: 30px;
+        height: 30px;
+        display: flex;
+    }
+    .conversation-name {
+        font-size: 14px;
+    }
+    .conversation-info {
+        font-size: 10px;
+    }
+    .conversation-invite-icon {
+        width: 25px;
+    }
+    
+    .conversation-options-icon {
+        width: 20px; 
+    }
+    .direct-options-container {
+        width: 130px;
+    }
+    
+    .view-profile-option,
+    .block-friend-option,
+    .change-wallpaper-option {
+        padding: 7px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    input.conversation-input {
+        height: 28px;
+        font-size: 13px;
+    }
+    .conversation-send-icon {
+        width: 27px;
+        height: 27px;
+    }
+    .message-row {
+        padding-top: 5px; 
+        max-width: 90%;
+    }
+    .message-content {
+        font-size: 12px;
+        padding: 10px 15px;
+    }
+    .my-message-content {
+        border-radius: 10px 0px 10px 10px;
+    }
+    .my-message-avatar, .other-message-avatar {
+        width: 25px;
+        height: 25px;
+    }
+    .other-message-content {
+        border-radius: 0px 10px 10px 10px;
     }
 }

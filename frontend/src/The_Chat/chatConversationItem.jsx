@@ -1,10 +1,9 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import * as ChatIcons from "../assets/chat/media/index";
 import ChatContext from "../Groups/ChatContext";
 
 const ChatConversationItem = (props) => {
   const {directsImages, chatRoomIcons} = useContext(ChatContext);
-
     const handleClick = () => {
         if(props.isDirect && props.name) {
             props.setSelectedDirect ({
@@ -20,10 +19,11 @@ const ChatConversationItem = (props) => {
                 icon: chatRoomIcons[props.imageIndex],
                 roomId: props.roomId,
             });
-        }    
+        }
+        props.setSelectedItem(props.name)
       };
     return (
-        <div className="chat-conversation-item" onClick={handleClick}>
+        <div className={props.isSelected ? "chat-conversation-item chat-conversation-item-active" : "chat-conversation-item " } onClick={handleClick}>
               <img
               
                 src={props.isDirect? directsImages[props.imageIndex] : chatRoomIcons[props.imageIndex]}
