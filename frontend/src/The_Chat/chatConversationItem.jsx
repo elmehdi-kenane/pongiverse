@@ -3,7 +3,7 @@ import * as ChatIcons from "../assets/chat/media/index";
 import ChatContext from "../Groups/ChatContext";
 
 const ChatConversationItem = (props) => {
-  const {directsImages} = useContext(ChatContext);
+  const {directsImages, chatRoomIcons} = useContext(ChatContext);
 
     const handleClick = () => {
         if(props.isDirect && props.name) {
@@ -16,6 +16,8 @@ const ChatConversationItem = (props) => {
         }else if (!props.isDirect && props.name) {
             props.setSelectedChatRoom({
                 name: props.name,
+                memberCount: props.membersCount,
+                icon: chatRoomIcons[props.imageIndex],
                 roomId: props.roomId,
             });
         }    
@@ -23,7 +25,8 @@ const ChatConversationItem = (props) => {
     return (
         <div className="chat-conversation-item" onClick={handleClick}>
               <img
-                src={ChatIcons.DefaultAvatar}
+              
+                src={props.isDirect? directsImages[props.imageIndex] : chatRoomIcons[props.imageIndex]}
                 alt=""
                 className="conversation-item-avatar"
               />

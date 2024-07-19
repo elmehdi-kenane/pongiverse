@@ -393,10 +393,10 @@ async def chat_room_invitation_declined(self, data):
 
 
 async def message(self, data):
-    room_id = data["data"]["room_id"]
+    room_name = data["data"]["name"]
     user_name = data["data"]["sender"]
     message = data["data"]["message"]
-    room = await sync_to_async(Room.objects.filter(id=room_id).get)()
+    room = await sync_to_async(Room.objects.filter(name=room_name).get)()
     sender = await get_user_by_name(self, user_name)
     newMessage = await sync_to_async(Message.objects.create)(
         sender=sender, room=room, content=message

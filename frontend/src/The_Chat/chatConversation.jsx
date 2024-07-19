@@ -67,7 +67,6 @@ const ChatConversation = () => {
       }
     };
     if (selectedDirect) {
-      console.log("selected Direct: ", selectedDirect);
       fetchMessages();
     }
     let scrollView = document.getElementById("start");

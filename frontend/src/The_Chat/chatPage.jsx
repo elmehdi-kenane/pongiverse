@@ -82,11 +82,11 @@ const MyChat = () => {
                     key={key}
                     name={chatRoom.name}
                     lastMessage={
-                      "The correct format would typically be chatRoomConversations"
-                    }
+                      "The correct format would typically be chatRoomConversations"}
                     imageIndex={key}
                     isDirect={isHome}
-                    members={chatRoom.membersCount}
+                    membersCount={chatRoom.membersCount}
+                    roomId={chatRoom.id}
                     setSelectedChatRoom={setSelectedChatRoom}
                   />
                 ))}

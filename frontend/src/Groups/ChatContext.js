@@ -11,9 +11,12 @@ export const ChatProvider = ({ children }) => {
   const [chatRoomConversations, setChatRoomConversations] = useState([]);
   const [directConversations, setDirectConversations] = useState([]);
   const [directsImages, setDirectsImages] = useState([]);
+  const [chatRoomIcons, setChatRoomIcons] = useState([]);
   let [isBlur, setIsBlur] = useState(false)
   const [selectedChatRoom, setSelectedChatRoom] = useState({
     name: "",
+    memberCount: "",
+    icon: '',
     roomId: "",
   });
   const [selectedDirect, setSelectedDirect] = useState({
@@ -42,15 +45,40 @@ export const ChatProvider = ({ children }) => {
       setDirectsImages(images);
     };
     if (directConversations) {
+      
       fetchImages();
     }
   }, [directConversations]);
 
   useEffect(() => {
-    const fetchChannelsWithMessage = async () => {
+    const fetchImages = async () => {
+      const promises = chatRoomConversations.map(async (room) => {
+        console.log(room.name)
+        const response = await fetch(`http://localhost:8000/api/getImage`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            image: room.icon_url,
+          }),
+        });
+        const blob = await response.blob();
+        return URL.createObjectURL(blob);
+      });
+      const images = await Promise.all(promises);
+      setChatRoomIcons(images);
+    };
+    if (chatRoomConversations.length !== 0) {
+      fetchImages();
+    }
+  }, [chatRoomConversations]);
+
+  useEffect(() => {
+    const fetchChatRooms = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/chatAPI/channels/${user}`
+          `http://localhost:8000/chatAPI/chatRooms/${user}`
         );
         const data = await response.json();
         setChatRoomConversations(data);
@@ -73,7 +101,7 @@ export const ChatProvider = ({ children }) => {
     };
     if (user && location.pathname === "/mainpage/chat") {
       console.log("inside the context user: ", user);
-      fetchChannelsWithMessage();
+      fetchChatRooms();
       fetchDirectsWithMessage();
     }
   }, [location.pathname, user]);
@@ -86,6 +114,7 @@ export const ChatProvider = ({ children }) => {
     setSelectedChatRoom: setSelectedChatRoom,
     selectedChatRoom: selectedChatRoom,
     directsImages : directsImages,
+    chatRoomIcons:chatRoomIcons,
     setDirectsImages : setDirectsImages,
     selectedDirect : selectedDirect,
     setSelectedDirect: setSelectedDirect,

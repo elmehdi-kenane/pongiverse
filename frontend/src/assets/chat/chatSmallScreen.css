@@ -240,6 +240,7 @@ button.rooms-switch-button-active {
 
 .my-message-row {
     align-self: flex-end;
+    max-width: 70%;
 }
 
 .message-content {
@@ -247,6 +248,7 @@ button.rooms-switch-button-active {
     display: flex;
     align-items: center;
     background-color:#1f0935;
+    word-break: break-all;
 
 }
 
