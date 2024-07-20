@@ -2,8 +2,9 @@ import { useContext, useEffect, useRef, useState } from "react";
 import * as ChatIcons from "../assets/chat/media/index";
 import ChatContext from "../Groups/ChatContext";
 import AuthContext from "../navbar-sidebar/Authcontext";
-import MyMessage from "./MyMessage";
-import OtherMessage from "./OtherMessage";
+import MyMessage from "./myMessage";
+import OtherMessage from "./otherMessage";
+import {useClickOutSide} from "../Chat/chatConversation"
 
 const ChatRoomConversation = () => {
   const { selectedChatRoom, setSelectedChatRoom } = useContext(ChatContext);
@@ -79,6 +80,10 @@ const ChatRoomConversation = () => {
       scrollView.scrollTop = scrollView.scrollHeight;
     }
   }, [messages]);
+
+  let domNode = useClickOutSide(()=> {
+    setShowChatRoomOptions(false)
+  })
   return (
     <>
       <div className="conversation-header">
@@ -106,10 +111,9 @@ const ChatRoomConversation = () => {
             </div>
           </div>
         </div>
-        <div className="conversation-options-wrapper">
+        <div className="conversation-options-wrapper" ref={domNode}>
           <img
             onClick={() => {
-              console.log("im herrrrreeeeee");
               showChatRoomOptions
                 ? setShowChatRoomOptions(false)
                 : setShowChatRoomOptions(true);
@@ -119,10 +123,10 @@ const ChatRoomConversation = () => {
             className="conversation-options-icon"
           />
           {showChatRoomOptions ? (
-            <div className="direct-options-container">
-              <div className="view-profile-option">Leave Chat Room</div>
-              <div className="view-profile-option">Chat Room Info</div>
-              <div className="block-friend-option">Members List</div>
+            <div className="room-options-container">
+              <div className="leave-chat-room-option">Leave Chat Room</div>
+              <div className="chat-room-info-option">Chat Room Info</div>
+              <div className="members-list-option">Members List</div>
               <div className="change-wallpaper-option">Wallpaper</div>
             </div>
           ) : (

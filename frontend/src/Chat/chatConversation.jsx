@@ -2,15 +2,16 @@ import { useContext, useEffect, useRef, useState } from "react";
 import * as ChatIcons from "../assets/chat/media/index";
 import ChatContext from "../Groups/ChatContext";
 import AuthContext from "../navbar-sidebar/Authcontext";
-import MyMessage from "./MyMessage";
-import OtherMessage from "./OtherMessage";
+import MyMessage from "./myMessage";
+import OtherMessage from "./otherMessage";
 import { useNavigate } from "react-router-dom";
+
 
 export let useClickOutSide = (handler) => {
   let domNode = useRef()
   useEffect(()=> {
     let eventHandler = (event)=> {
-      if(!domNode.current.contains(event.target))
+      if( domNode.current && !domNode.current.contains(event.target))
         handler()
     }
     document.addEventListener('mousedown',eventHandler)
@@ -222,13 +223,15 @@ const ChatConversation = () => {
         className="conversation-send-form"
         onSubmit={sendMessage}
       >
+
         <input
           value={messageToSend}
           placeholder="Type your message"
           type="text"
           className="conversation-input"
           onChange={(e) => setMessageToSend(e.target.value)}
-        />
+          />
+        <img src={ChatIcons.emojiPicker} alt="" className="conversation-emoji-picker" />
         <img
           src={ChatIcons.sendIcon}
           className="conversation-send-icon"

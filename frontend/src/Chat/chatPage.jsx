@@ -1,4 +1,4 @@
-import "../assets/chat/chatSmallScreen.css";
+import "../assets/chat/Chat.css";
 import ChatConversationItem from "./chatConversationItem";
 import ChatContext from "../Groups/ChatContext";
 import AuthContext from "../navbar-sidebar/Authcontext";

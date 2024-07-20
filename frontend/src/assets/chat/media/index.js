@@ -15,3 +15,4 @@ export { default as closeButton} from './closeButton.svg';
 export { default as mmaqbourImage} from './mmaqbourImage.jpeg';
 export { default as arrowLeft} from './arrowLeft.svg';
 export { default as sendIcon} from './sendIcon.svg';
+export { default as emojiPicker} from './emojiPicker.svg';
