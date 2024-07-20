@@ -9,13 +9,14 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 import AuthContext from '../navbar-sidebar/Authcontext'
 
-const FriendCard = ({ friendSectionRef, isLastTwoElements, secondUsername}) => {
+const FriendCard = ({ isLastTwoElements, currentUsername, secondUsername }) => {
     const menuRef = useRef(null);
     const buttonRef = useRef(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolling, setIsScrolling] = useState(false);
-    const { user } = useContext(AuthContext)
-
+    // const { user } = useContext(AuthContext)
+    console.log("currentUsername", currentUsername);
+    console.log("secondUsername", secondUsername);
     const handleBlockFriend = () => {
         fetch('http://localhost:8000/friends/block_friend/', {
             method: 'POST',
@@ -23,8 +24,8 @@ const FriendCard = ({ friendSectionRef, isLastTwoElements, secondUsername}) => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                from_username: secondUsername,
-                to_username: user,
+                from_username: currentUsername,
+                to_username: secondUsername,
             }),
         })
             .then(response => response.json())
@@ -44,8 +45,8 @@ const FriendCard = ({ friendSectionRef, isLastTwoElements, secondUsername}) => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                from_username: secondUsername,
-                to_username: user,
+                from_username: currentUsername,
+                to_username: secondUsername,
             }),
         })
             .then(response => response.json())
@@ -73,46 +74,8 @@ const FriendCard = ({ friendSectionRef, isLastTwoElements, secondUsername}) => {
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
-
-    useEffect(() => {
-        console.log("isMenuOpen: ", isMenuOpen);
-        console.log("buttonRef.current: ", buttonRef.current);
-        if (isMenuOpen && buttonRef.current && { friendSectionRef }.current) {
-            const menu = buttonRef.current.getBoundingClientRect();
-            const friendSection = { friendSectionRef }.current.getBoundingClientRect();
-            console.log("button attrs");
-            console.log("menu.top: ", menu.top);
-            console.log("menu.left: ", menu.left);
-            console.log("menu.right: ", menu.right);
-            console.log("menu.bottom: ", menu.bottom);
-            if (friendSection.top > menu.top)
-                console.log("menu is hidden at the TOP");
-        }
-    }, [isMenuOpen]
-    );
-
-    useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolling(true);
-            const scrollTimeout = setTimeout(() => {
-                setIsScrolling(false);
-            }, 150);
-            clearTimeout(scrollTimeout);
-        };
-
-        const listElement = friendSectionRef.current;
-        console.log(listElement);
-        if (listElement) {
-            listElement.addEventListener('scroll', handleScroll);
-        }
-
-        return () => {
-            if (listElement) {
-                listElement.removeEventListener('scroll', handleScroll);
-            }
-        };
-    }, []);
-
+    console.log("+++++++++++++++++++++++++++++++");
+    console.log(secondUsername);
     return (
         <div className="FriendCard">
             <div className="ProfileName">
@@ -124,7 +87,6 @@ const FriendCard = ({ friendSectionRef, isLastTwoElements, secondUsername}) => {
                     <button className="FriendBtn detailsOpened" onClick={toggleMenu} ref={buttonRef}>
                         <img src={ThreeDots} alt="ThreeDots" />
                     </button>
-                    {/* {console.log("isLastTwoElements: ", isLastTwoElements)} */}
                     <div className={`optionsFriendCard ${isLastTwoElements ? "lastTwoElements" : ""}`} ref={menuRef}>
                         <button>
                             <ChatBubbleIcon />

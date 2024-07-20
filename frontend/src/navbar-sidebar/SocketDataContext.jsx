@@ -10,7 +10,6 @@ export const SocketDataContextProvider = ({ children }) => {
     const [data, setData] = useState({ message: 'messageStart', type: 'typeStart' });
     useEffect(() => {
         if (socket) {
-            console.log("enter socket");
             socket.onmessage = (e) => {
                 const parsedData = JSON.parse(e.data);
                 const data =
@@ -22,9 +21,6 @@ export const SocketDataContextProvider = ({ children }) => {
             }
         }
     }, [socket]);
-    console.log("........start........");
-    console.log(data);
-    console.log("........end........");
     return (
         <SocketDataContext.Provider value={data}>
             {children}

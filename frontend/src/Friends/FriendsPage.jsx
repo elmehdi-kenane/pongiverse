@@ -69,9 +69,9 @@ const Friends = () => {
                 }
             );
             const res = await response.json();
-            console.log("==getFriendSuggestions===");
-            console.log(res);
-            console.log("==getFriendSuggestions===");
+            // console.log("==getFriendSuggestions===");
+            // console.log(res);
+            // console.log("==getFriendSuggestions===");
             if (res)
                 setfriendSuggestions(res);
         };
@@ -89,6 +89,9 @@ const Friends = () => {
                 }
             );
             const res = await response.json();
+            console.log("==getFriends===");
+            console.log(res);
+            console.log("==getFriends===");
             if (res)
                 setFriends(res);
         };
@@ -97,25 +100,24 @@ const Friends = () => {
 
     useEffect(() => {
                 console.log("============ socket-start ============");
-                console.log(message, type);
+        console.log("message:", message, "type:", type);
                 console.log("============ socket-end ============");
-                console.log("the type is");
-                console.log(type);
+        console.log("the type is", type);
                 if (type === 'cancel-friend-request') {
                     setSentRequests((prevSentRequests) => {
-                        const updatedSentRequests = prevSentRequests.filter(SentRequest => SentRequest !== message);
+                        const updatedSentRequests = prevSentRequests.filter(SentRequest => SentRequest.to_user !== message.to_user);
                         return updatedSentRequests;
                     });
                 }
                 else if (type === 'remove-friendship') {
                     setFriends((prevFriends) => {
-                        const updatedFriends = prevFriends.filter(Friend => Friend !== message);
+                        const updatedFriends = prevFriends.filter(Friend => Friend.friend !== message.friend);
                         return updatedFriends;
                     });
                 }
                 else if (type === 'block-friend') {
                     setFriends((prevFriends) => {
-                        const updatedFriends = prevFriends.filter(Friend => Friend !== message);
+                        const updatedFriends = prevFriends.filter(Friend => Friend.friend !== message.friend);
                         return updatedFriends;
                     });
                     setBlockedFriends((prevBlockedFriends) => {
@@ -129,33 +131,41 @@ const Friends = () => {
                         return updatedFriends;
                     });
                     setBlockedFriends((prevBlockedFriends) => {
-                        const updatedBlockedFriends = prevBlockedFriends.filter(UnblockedFriend => UnblockedFriend !== message);
+                        const updatedBlockedFriends = prevBlockedFriends.filter(UnblockedFriend => UnblockedFriend.to_user !== message.to_user);
                         return updatedBlockedFriends;
                     });
                 }
                 else if (type === 'remove-friend-request') {
                     setRecievedRequests((prevRecievedRequests) => {
-                        const updatedRecievedRequests = prevRecievedRequests.filter(RecievedRequest => RecievedRequest !== message);
+                        const updatedRecievedRequests = prevRecievedRequests.filter(RecievedRequest => RecievedRequest.friend !== message.friend);
                         return updatedRecievedRequests;
                     });
                 }
                 else if (type === 'friend-request-accepted') {
                     setSentRequests((prevSentRequests) => {
-                        const updatedSentRequests = prevSentRequests.filter(SentRequest => SentRequest !== message);
+                        const updatedSentRequests = prevSentRequests.filter(SentRequest => SentRequest.to_user !== message.to_user);
                         return updatedSentRequests;
                     });
+                    console.log("friends before")
+                    console.log(friends)
                     setFriends((prevFriends) => {
                         const updatedFriends = [message, ...prevFriends];
+                        console.log(updatedFriends)
+                        console.log("friends after")
                         return updatedFriends;
                     });
                 }
                 else if (type === 'confirm-friend-request') {
                     setRecievedRequests((prevRecievedRequests) => {
-                        const updatedRecievedRequests = prevRecievedRequests.filter(RecievedRequest => RecievedRequest !== message);
+                        const updatedRecievedRequests = prevRecievedRequests.filter(RecievedRequest => RecievedRequest.to_user !== message.to_user);
                         return updatedRecievedRequests;
                     });
+                    console.log("friends before")
+                    console.log(friends)
                     setFriends((prevFriends) => {
                         const updatedFriends = [message, ...prevFriends];
+                        console.log(updatedFriends)
+                        console.log("friends after")
                         return updatedFriends;
                     });
                 }
@@ -186,9 +196,9 @@ const Friends = () => {
                 }
             );
             const res = await response.json();
-            console.log("==getSentRequests===");
-            console.log(res);
-            console.log("==getSentRequests===");
+            // console.log("==getSentRequests===");
+            // console.log(res);
+            // console.log("==getSentRequests===");
             if (res)
                 setSentRequests(res);
             };
@@ -206,9 +216,9 @@ const Friends = () => {
                 }
             );
             const res = await response.json();
-            console.log("==getRecievedRequests===");
-            console.log(res);
-            console.log("==getRecievedRequests===");
+            // console.log("==getRecievedRequests===");
+            // console.log(res);
+            // console.log("==getRecievedRequests===");
             if (res)
                 setRecievedRequests(res);
         };
@@ -226,9 +236,9 @@ const Friends = () => {
                 }
             );
             const res = await response.json();
-            console.log("==result blocked list===");
-            console.log(res);
-            console.log("==result blocked list===");
+            // console.log("==result blocked list===");
+            // console.log(res);
+            // console.log("==result blocked list===");
             if (res)
                 setBlockedFriends(res);
         };
@@ -262,13 +272,15 @@ const Friends = () => {
                           :
                           <>
                               {
-                                  friends.slice(0, (friends.length - 2)).map((friendUsername, index) => (
-                                      <FriendCard key={index} friendSectionRef={friendSectionRef} isLastTwoElements={false} secondUsername={friendUsername}></FriendCard>
-                                  ))}
+                                  friends.slice(0, (friends.length - 2)).map((request, index) => (
+                                      <FriendCard key={index} isLastTwoElements={false} currentUsername={user} secondUsername={request.friend}></FriendCard>
+                                  ))
+                              }
                               {
-                                  friends.slice(-2).map((friendUsername, index) => (
-                                      <FriendCard key={index} friendSectionRef={friendSectionRef} isLastTwoElements={friends.length > 2 ? true : false} secondUsername={friendUsername}></FriendCard>
-                                  ))}
+                                  friends.slice(-2).map((request, index) => (
+                                      <FriendCard key={index} isLastTwoElements={friends.length > 2 ? true : false} currentUsername={user} secondUsername={request.friend}></FriendCard>
+                                  ))
+                              }
                           </>
                   }
               </div>
@@ -280,8 +292,8 @@ const Friends = () => {
                               There are no pending friend requests.
                           </div>
                           :
-                          recievedRequests.map((secondUsername, index) => (
-                              <RecievedFriendReqCard key={index} currentUsername={user} secondUsername={secondUsername}></RecievedFriendReqCard>
+                          recievedRequests.map((request, index) => (
+                              <RecievedFriendReqCard key={index} currentUsername={user} secondUsername={request.to_user} send_at={request.send_at} avatar={request.avatar}></RecievedFriendReqCard>
                           ))
                   }
               </div>
@@ -293,8 +305,8 @@ const Friends = () => {
                               There are no sent friend requests.
                           </div>
                           :
-                          sentRequests.map((secondUsername, index) => (
-                              <SentFriendReqCard key={index} currentUsername={user} secondUsername={secondUsername}></SentFriendReqCard>
+                          sentRequests.map((request, index) => (
+                              <SentFriendReqCard key={index} currentUsername={user} secondUsername={request.to_user} send_at={request.send_at} avatar={request.avatar}></SentFriendReqCard>
                           ))
                   }
               </div>
@@ -306,7 +318,7 @@ const Friends = () => {
                       </div>
                       :
                       blockedFriends.map((blockedFriend, index) => (
-                          <BlockedAccountCard key={index} secondUsername={blockedFriend}></BlockedAccountCard>
+                          <BlockedAccountCard key={index} secondUsername={blockedFriend.friend}></BlockedAccountCard>
                       ))
                   }
               </div>
@@ -318,7 +330,7 @@ const Friends = () => {
                   <button className={(selectedButton === "Sent_Requests") ? "selectedBtn" : ""} onClick={() => { handlesSelectedButton("Sent_Requests") }}>Sent Requests</button>
                   <button className={(selectedButton === "Blocked_Accounts") ? "selectedBtn" : ""} onClick={() => { handlesSelectedButton("Blocked_Accounts") }}>Blocked Accounts</button>
               </div>
-              {
+              {/* {
                   <div className="FriendManagement">
                       {(selectedButton === "Friends") && (
                           friends.length === 0 ?
@@ -367,7 +379,7 @@ const Friends = () => {
                               ))
                       )}
                   </div>
-              }
+              } */}
           </div>
 
 

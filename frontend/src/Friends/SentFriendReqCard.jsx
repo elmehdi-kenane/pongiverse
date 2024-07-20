@@ -1,6 +1,8 @@
+import { formatDistanceToNowStrict } from 'date-fns';
+
 import Profile from '../assets/Friends/profile.png';
 
-const SentFriendReqCard = ({ currentUsername, secondUsername }) => {
+const SentFriendReqCard = ({ currentUsername, secondUsername, send_at, avatar }) => {
     const handleCancelFriendReq = () => {
         fetch('http://localhost:8000/friends/cancel_friend_request/', {
             method: 'POST',
@@ -24,10 +26,12 @@ const SentFriendReqCard = ({ currentUsername, secondUsername }) => {
     return (
         <div className="SentFriendReqCard">
             <div className="ProfileName">
-                <img src={Profile} alt="Profile" className="Profile" />
-                {secondUsername}
+                <img src={avatar} alt="Profile" className="Profile" />
+                <p className="SentFriendReqCardUsername">{secondUsername}</p>
+                {console.log(send_at)}
+                <p className="SentFriendReqCardSendAt">{formatDistanceToNowStrict(new Date(send_at), { addSuffix: true })}</p>
             </div>
-            <button className="FriendBtn Cancel" onClick={handleCancelFriendReq}>Cancel</button>
+                <button className="FriendBtn Cancel" onClick={handleCancelFriendReq}>Cancel</button>
         </div>
     )
 }

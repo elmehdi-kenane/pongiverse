@@ -1,6 +1,8 @@
+import { formatDistanceToNowStrict } from 'date-fns';
+
 import Profile from '../assets/Friends/profile.png';
 
-const RecievedFriendReqCard = ({ currentUsername, secondUsername }) => {
+const RecievedFriendReqCard = ({ currentUsername, secondUsername, send_at, avatar }) => {
     const handleConfirmFriendReq = () => {
         fetch('http://localhost:8000/friends/confirm_friend_request/', {
             method: 'POST',
@@ -42,8 +44,9 @@ const RecievedFriendReqCard = ({ currentUsername, secondUsername }) => {
     return (
         <div className="RecievedFriendReqCard">
             <div className="ProfileName">
-                <img src={Profile} alt="Profile" className="Profile" />
-                {secondUsername}
+                <img src={avatar} alt="Profile" className="Profile" />
+                <p className="SentFriendReqCardUsername">{secondUsername}</p>
+                <p className="SentFriendReqCardSendAt">{formatDistanceToNowStrict(new Date(send_at), { addSuffix: true })}</p>
             </div>
             <div className="GroupFriendBtn">
                 <button className="FriendBtn Confirm" onClick={handleConfirmFriendReq}>Confirm</button>

@@ -25,17 +25,17 @@ function NavbarSidebar() {
         if (data.type === 'recieve-friend-request') {
             setNewRecievedFriendReqNotif(true);
             setRemoveFriendReqNotif(false);
-            setFriendReqUsername(data.message);
+            setFriendReqUsername(data.message.to_user);
         }
-        else if (data.type === 'confirm-friend-request' && data.message === friendReqUsername) {
+        else if (data.type === 'confirm-friend-request' && data.message.to_user === friendReqUsername) {
             setRemoveFriendReqNotif(true);
         }
-        else if (data.type === 'remove-friend-request' && data.message === friendReqUsername) {
+        else if (data.type === 'remove-friend-request' && data.message.to_user === friendReqUsername) {
             setRemoveFriendReqNotif(true);
         }
         else
             console.log("unknown notif type");
-    }, [data.message, data.type, socket]);
+    }, [data.message.to_user, data.type, socket]);
 
     useEffect(() => {
       privateCheckAuth()
