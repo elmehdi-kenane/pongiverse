@@ -28,7 +28,6 @@ const SentFriendReqCard = ({ currentUsername, secondUsername, send_at, avatar })
             <div className="ProfileName">
                 <img src={avatar} alt="Profile" className="Profile" />
                 <p className="SentFriendReqCardUsername">{secondUsername}</p>
-                {console.log(send_at)}
                 <p className="SentFriendReqCardSendAt">{formatDistanceToNowStrict(new Date(send_at), { addSuffix: true })}</p>
             </div>
                 <button className="FriendBtn Cancel" onClick={handleCancelFriendReq}>Cancel</button>

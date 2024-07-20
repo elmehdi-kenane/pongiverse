@@ -3,7 +3,7 @@ import AuthContext from '../navbar-sidebar/Authcontext'
 
 import Profile from '../assets/Friends/profile.png';
 
-const BlockedAccountCard = ({ secondUsername }) => {
+const BlockedAccountCard = ({ secondUsername, avatar}) => {
     const { user } = useContext(AuthContext)
 
     const handleUnblockFriend = () => {
@@ -29,7 +29,7 @@ const BlockedAccountCard = ({ secondUsername }) => {
     return (
         <div className="BlockedAccountCard">
             <div className="ProfileName">
-                <img src={Profile} alt="Profile" className="Profile" />
+                <img src={avatar} alt="Profile" className="Profile" />
                 {secondUsername}
             </div>
             <button onClick={handleUnblockFriend} className="FriendBtn Unblock">Unblock</button>

@@ -2,10 +2,9 @@ import { useState, useContext } from 'react'
 import AuthContext from '../navbar-sidebar/Authcontext'
 import Profile from '../assets/Friends/profile.png';
 
-const SuggestionFriendCard = ({ currentUsername, secondUsername }) => {
+const SuggestionFriendCard = ({ currentUsername, secondUsername, avatar}) => {
     const { user, socket } = useContext(AuthContext);
     const [friendRequestBtn, setFriendRequestBtn] = useState(false);
-    
     // const handleCancelFriendReq = () => {
         //     setFriendRequestBtn(false);
         //     if (user && socket) {
@@ -76,7 +75,7 @@ const SuggestionFriendCard = ({ currentUsername, secondUsername }) => {
     return (
         <div className="SuggestionFriendCard embla__slide">
             <div className="ProfileName">
-                <img src={Profile} alt="Profile" className="Profile" />
+                <img src={avatar} alt="Profile" className="Profile" />
                 {secondUsername}
                 <div className="lvl">1.5lvl</div>
             </div>

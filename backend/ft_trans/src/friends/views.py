@@ -12,45 +12,56 @@ from rest_framework.response import Response
 from .models import FriendRequest
 from .models import Friendship
 from .serializers import friendRequestSerializer
-from .serializers import getFriendListSerializer
-from myapp.serializers import MyModelSerializer
+from .serializers import friendSerializer
+from .serializers import customuserSerializer
 
 @api_view(['GET'])
 def get_friend_list(request, username):
     user = customuser.objects.filter(username=username).first()
     friend_objs = Friendship.objects.filter(user=user, isBlocked=False)
-    friends_ser = getFriendListSerializer(friend_objs, many=True)
+    friends_ser = friendSerializer(friend_objs, many=True)
     return Response(friends_ser.data)
 
 @api_view(['GET'])
 def get_blocked_list(request, username):
     user = customuser.objects.filter(username=username).first()
     blocked_objs = Friendship.objects.filter(user=user, isBlocked=True)
-    blocked_list_ser = getFriendListSerializer(blocked_objs, many=True)
+    blocked_list_ser = friendSerializer(blocked_objs, many=True)
     return Response(blocked_list_ser.data)
 
 
 @api_view(['GET'])
 def get_friend_suggestions(request, username):
-    # remove [friends, sent/recieve friend reqs, blocked accounts]
-    user_ser_list = MyModelSerializer(customuser.objects.all(), many=True)
-    user_list = list(set([d['username'] for d in user_ser_list.data if d['username'] != username]))
-    
     user = customuser.objects.filter(username=username).first()
-    # I think if isBlocked isn't speciefied will be returns friends and blocked-friends
+    
+    user_objs = customuser.objects.exclude(username=user.username)
+    user_ser_list = customuserSerializer(user_objs, many=True)
+    print("user_ser_list.data")
+    print(user_ser_list.data)
+    
     friend_objs = Friendship.objects.filter(user=user)
-    friend_usernames = [friend.friend.username for friend in friend_objs]
+    friends_ser = friendSerializer(friend_objs, many=True)
+    print("friends_ser.data")
+    print(friends_ser.data)
 
-    sent_requests = FriendRequest.objects.filter(from_user=user, status="sent")
-    sent_usernames = [req.to_user.username for req in sent_requests]
+    sent_requests_objs = FriendRequest.objects.filter(from_user=user, status="sent")
+    sent_reqs_ser = friendRequestSerializer(sent_requests_objs, many=True)
+    print("sent_reqs_ser.data")
+    print(sent_reqs_ser.data)
 
-    received_requests = FriendRequest.objects.filter(to_user=user, status="recieved")
-    received_usernames = [req.from_user.username for req in received_requests]
+    received_requests_objs = FriendRequest.objects.filter(to_user=user, status="recieved")
+    received_reqs_ser = friendRequestSerializer(received_requests_objs, many=True)
+    print("received_reqs_ser.data")
+    print(received_reqs_ser.data)
 
-    exclude_usernames = set(friend_usernames + sent_usernames + received_usernames)
+    exclude_ids = set()
+    exclude_ids.update([friend['friend.username'] for friend in friends_ser.data])
+    exclude_ids.update([req['to_user.username'] for req in sent_reqs_ser.data])
+    exclude_ids.update([req['from_user.username'] for req in received_reqs_ser.data])
 
-    suggestion_list = [user for user in user_list if user not in exclude_usernames]
-
+    suggestion_list = [user for user in user_ser_list.data if user['username'] not in exclude_ids]
+    print("suggestion_list")
+    print(suggestion_list)
     return Response(suggestion_list)
 
 @api_view(['GET'])
@@ -58,9 +69,7 @@ def get_sent_requests(request, username):
     user = customuser.objects.get(username=username)
     sent_requests_objs = FriendRequest.objects.filter(from_user=user, status="sent")
     request_list_ser = friendRequestSerializer(sent_requests_objs, many=True)
-    print("=====")
-    print(request_list_ser.data)
-    print("=====")
+    # print(request_list_ser.data)
     return Response(request_list_ser.data)
 
 @api_view(['GET'])
@@ -83,34 +92,32 @@ def add_friend_request(request):
     except FriendRequest.DoesNotExist:
         FriendRequest.objects.create(from_user=from_user, to_user=to_user, status="sent")
         FriendRequest.objects.create(from_user=to_user, to_user=from_user, status="recieved")
-    FriendReqObj = FriendRequest.objects.get(from_user=from_user, to_user=to_user)
-    request_ser = friendRequestSerializer(FriendReqObj)
-    print("+++++++++++++++++++++++++++++++++++++++++++")
-    print(request_ser.data)
-    from_user_id = from_user.id
-    to_user_id = to_user.id
     channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)(
-        f"friends_group{from_user_id}",
-        {
-            'type': 'send_friend_request',
-            'message': {
-                'to_user': to_username,
-                'avatar': request_ser.data['avatar'],
-                'send_at': request_ser.data['send_at']
-            }
-        }
-    )
     FriendReqObj = FriendRequest.objects.get(from_user=to_user, to_user=from_user)
     request_ser = friendRequestSerializer(FriendReqObj)
+    to_user_id = to_user.id
     async_to_sync(channel_layer.group_send)(
         f"friends_group{to_user_id}",
         {
             'type': 'recieve_friend_request',
             'message': {
-                'to_user': from_username,
+                'second_username': from_username,
                 'send_at': request_ser.data['send_at'],
                 'avatar': request_ser.data['avatar']
+            }
+        }
+    )
+    FriendReqObj = FriendRequest.objects.get(from_user=from_user, to_user=to_user)
+    request_ser = friendRequestSerializer(FriendReqObj)
+    from_user_id = from_user.id
+    async_to_sync(channel_layer.group_send)(
+        f"friends_group{from_user_id}",
+        {
+            'type': 'send_friend_request',
+            'message': {
+                'second_username': to_username,
+                'avatar': request_ser.data['avatar'],
+                'send_at': request_ser.data['send_at']
             }
         }
     )
@@ -126,9 +133,11 @@ def cancel_friend_request(request):
     try:
         friend_request = FriendRequest.objects.get(from_user=from_user, to_user=to_user, status="sent")
         sent_request_ser = friendRequestSerializer(friend_request)
+        print(sent_request_ser.data)
         friend_request.delete()
         friend_request = FriendRequest.objects.get(from_user=to_user, to_user=from_user, status="recieved")
         recieved_request_ser = friendRequestSerializer(friend_request)
+        print(recieved_request_ser.data)
         friend_request.delete()
     except FriendRequest.DoesNotExist:
         return Response({"error": "Friend request doesn't exist."})
@@ -140,7 +149,7 @@ def cancel_friend_request(request):
         {
             'type': 'cancel_friend_request',
             'message': {
-                'to_user': to_username,
+                'second_username': to_username,
                 'send_at': sent_request_ser.data['send_at'],
                 'avatar': sent_request_ser.data['avatar']
             }
@@ -151,7 +160,7 @@ def cancel_friend_request(request):
         {
             'type': 'remove_friend_request',
             'message': {
-                'to_user': from_username,
+                'second_username': from_username,
                 'send_at': recieved_request_ser.data['send_at'],
                 'avatar': recieved_request_ser.data['avatar']
             }
@@ -189,7 +198,7 @@ def confirm_friend_request(request):
         {
             'type': 'friend_request_accepted',
             'message': {
-                'to_user': to_username,
+                'second_username': to_username,
                 'send_at': request_accepted_ser.data['send_at'],
                 'avatar': request_accepted_ser.data['avatar']
             }
@@ -200,7 +209,7 @@ def confirm_friend_request(request):
         {
             'type': 'confirm_friend_request',
             'message': {
-                'to_user': from_username,
+                'second_username': from_username,
                 'send_at': confirm_request_ser.data['send_at'],
                 'avatar': confirm_request_ser.data['avatar']
             }
@@ -248,30 +257,38 @@ def block_friend(request):
     to_user = customuser.objects.get(username=to_username)
     try:
         friendship_obj = Friendship.objects.get(user=from_user, friend=to_user)
+        friend_ser_from = friendSerializer(friendship_obj)
         friendship_obj.isBlocked = True
         friendship_obj.save()
-        friendship_obj = Friendship.objects.get(user=to_user, friend=from_user)
-        friendship_obj.isBlocked = True
-        friendship_obj.save()
+        # friendship_obj = Friendship.objects.get(user=to_user, friend=from_user)
+        # friendship_obj.isBlocked = True
+        # friend_ser_to = friendSerializer(friendship_obj)
+        # friendship_obj.save()
     except Friendship.DoesNotExist:
         return Response({"error": "Friend relation doesn't exist."})
     from_user_id = from_user.id
-    to_user_id = to_user.id
+    # to_user_id = to_user.id
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
         f"friends_group{from_user_id}",
         {
             'type': 'block_friend',
-            'message': to_username
+            'message': {
+                'second_username': to_username,
+                'avatar': friend_ser_from.data['avatar']
+            }
         }
     )
-    async_to_sync(channel_layer.group_send)(
-        f"friends_group{to_user_id}",
-        {
-            'type': 'block_friend',
-            'message': from_username
-        }
-    )
+    # async_to_sync(channel_layer.group_send)(
+    #     f"friends_group{to_user_id}",
+    #     {
+    #         'type': 'block_friend',
+    #         'message': {
+    #             'second_username': from_username,
+    #             'avatar': friend_ser_to.data['avatar']
+    #         }
+    #     }
+    # )
     return Response({"success": "friend blocked successfully."})
 
 @api_view(['POST'])
@@ -284,9 +301,11 @@ def unblock_friend(request):
         friendship_obj = Friendship.objects.get(user=from_user, friend=to_user)
         friendship_obj.isBlocked = False
         friendship_obj.save()
+        friend_ser_from = friendSerializer(friendship_obj)
         friendship_obj = Friendship.objects.get(user=to_user, friend=from_user)
         friendship_obj.isBlocked = False
         friendship_obj.save()
+        friend_ser_to = friendSerializer(friendship_obj)
     except Friendship.DoesNotExist:
         return Response({"error": "Friend relation doesn't exist."})
     from_user_id = from_user.id
@@ -296,14 +315,20 @@ def unblock_friend(request):
         f"friends_group{from_user_id}",
         {
             'type': 'unblock_friend',
-            'message': to_username
+            'message': {
+                'second_username': to_username,
+                'avatar': friend_ser_from.data['avatar']
+            }
         }
     )
     async_to_sync(channel_layer.group_send)(
         f"friends_group{to_user_id}",
         {
             'type': 'unblock_friend',
-            'message': from_username
+            'message': {
+                'second_username': from_username,
+                'avatar': friend_ser_to.data['avatar']
+            }
         }
     )
     return Response({"success": "friend unblocked successfully."})

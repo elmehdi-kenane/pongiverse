@@ -9,7 +9,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 import AuthContext from '../navbar-sidebar/Authcontext'
 
-const FriendCard = ({ isLastTwoElements, currentUsername, secondUsername }) => {
+const FriendCard = ({ isLastTwoElements, currentUsername, secondUsername, avatar}) => {
     const menuRef = useRef(null);
     const buttonRef = useRef(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -79,7 +79,7 @@ const FriendCard = ({ isLastTwoElements, currentUsername, secondUsername }) => {
     return (
         <div className="FriendCard">
             <div className="ProfileName">
-                <img src={Profile} alt="Profile" className="Profile" />
+                <img src={avatar} alt="Profile" className="Profile" />
                 {secondUsername}
             </div>
             {isMenuOpen ?

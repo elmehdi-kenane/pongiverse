@@ -22,15 +22,16 @@ function NavbarSidebar() {
         console.log("============ socket-notif-start ============");
         console.log(data.message, data.type);
         console.log("============ socket-notif-end ============");
+
         if (data.type === 'recieve-friend-request') {
             setNewRecievedFriendReqNotif(true);
             setRemoveFriendReqNotif(false);
-            setFriendReqUsername(data.message.to_user);
+            setFriendReqUsername(data.message.second_username);
         }
-        else if (data.type === 'confirm-friend-request' && data.message.to_user === friendReqUsername) {
+        else if (data.type === 'confirm-friend-request' && data.message.second_username === friendReqUsername) {
             setRemoveFriendReqNotif(true);
         }
-        else if (data.type === 'remove-friend-request' && data.message.to_user === friendReqUsername) {
+        else if (data.type === 'remove-friend-request' && data.message.second_username === friendReqUsername) {
             setRemoveFriendReqNotif(true);
         }
         else
