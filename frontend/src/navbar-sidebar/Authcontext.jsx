@@ -24,11 +24,6 @@ export const AuthProvider = ({children}) => {
 	let [notifsImgs, setNotifsImgs] = useState([])
 	let allGameFriendsRef = useRef(allGameFriends)
 
-	let [hideNavSideBar, setHideNavSideBar] = useState(false)
-	let [gameCustomize, setGameCustomize] = useState(['#FFFFFF', '#1C00C3', '#5241AB', false])
-	const oneVsOneIdRegex = /^\/mainpage\/play\/1vs1\/\d+$/
-	const twoVsTwoIdRegex = /^\/mainpage\/play\/2vs2\/\d+$/
-
 	useEffect(() => {
 		allGameFriendsRef.current = allGameFriends;
 	}, [allGameFriends]);
@@ -95,6 +90,7 @@ export const AuthProvider = ({children}) => {
 					})
 				})
 				let friends = await response.json()
+				console.log("ALL MY FRIENDS ARE : ", friends.message)
 				if (friends.message.length)
 					setAllGameFriends(friends.message)
 				setLoading(false)
@@ -115,10 +111,9 @@ export const AuthProvider = ({children}) => {
 					})
 				})
 				let friends = await response.json()
-				if (friends.message.length) {
-					console.log(friends.message)
+				console.log("ALL MY GAME NOTIFS ARE : ", friends.message)
+				if (friends.message.length)
 					setAllGameNotifs(friends.message)
-				}
 			} catch (e) {
 				console.log("something wrong with fetch")
 			}
@@ -143,42 +138,19 @@ export const AuthProvider = ({children}) => {
 				console.log("something wrong with fetch")
 			}
 		}
-		
-		const getGameCustomize = async () => {
-			try {
-				let response = await fetch('http://localhost:8000/api/getCustomizeGame', {
-					credentials: 'include'
-				})
-				const res = await response.json()
-				console.log(res)
-				if (res.data)
-					setGameCustomize(res.data)
-			} catch (e) {
-				console.log("something wrong with fetch")
-			}
-		}
 
 		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && location.pathname !== '/game/solo/1vs1/friends' && location.pathname !== '/game/solo/1vs1/random' && user && !allGameNotifs.length)
 			getAllNotifsFriends()
 		else
 			setAllGameNotifs([])
 
-		if ((location.pathname === '/mainpage/game/solo/1vs1/friends' || location.pathname === '/mainpage/game/createtournament' || location.pathname === '/mainpage/game/solo/2vs2/friends') && user)
-			getAllGameFriends()
-		else
-			setAllGameFriends([])
-
 		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && user && !userImg)
 			getUserImage()
 
-		if ((location.pathname === '/mainpage/game/board' || oneVsOneIdRegex.test(location.pathname) || twoVsTwoIdRegex.test(location.pathname)) && user)
-			getGameCustomize()
-
-		if (oneVsOneIdRegex.test(location.pathname) || twoVsTwoIdRegex.test(location.pathname))
-			setHideNavSideBar(true)
+		if ((location.pathname === '/mainpage/game/solo/1vs1/friends' || location.pathname === '/mainpage/game/createtournament') && user)
+			getAllGameFriends()
 		else
-			setHideNavSideBar(false)
-
+			setAllGameFriends([])
 	}, [location.pathname, user])
 
 	useEffect(() => {
@@ -211,24 +183,13 @@ export const AuthProvider = ({children}) => {
 			newSocket.onopen = () => {
 				setSocket(newSocket)
 			}
-			newSocket.onmessage = (event) => {
-				let data = JSON.parse(event.data)
-				let type = data.type
-				// let message = data.message
-				let uname = data.username
-				// if (type === 'user_disconnected') {
-				// 	const currentAllGameFriends = allGameFriendsRef.current;
-				// 	console.log("user disconnected : ", allGameFriends)
-				// 	let uname = data.username
-				// 	setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname));
-				// }
-				// if (type === 'connected_again') {
-				// 	const currentAllGameFriends = allGameFriendsRef.current;
-				// 	console.log("user connected : ", allGameFriends)
-				// 	console.log("VISITED CONNECTED AGAIN")
-				// 	sendUserData(uname, currentAllGameFriends)
-				// }
-			}
+			// newSocket.onmessage = (event) => {
+			// 	let data = JSON.parse(event.data)
+			// 	let type = data.type
+			// 	if (type === 'tournament_started'){
+			// 		console.log("IN AUTH CONTEXT")
+			// 	}
+			// }
 		} else if ((location.pathname === '/' || location.pathname === '/signup' || location.pathname === '/signin' || location.pathname === '/SecondStep' ||  location.pathname === '/WaysSecondStep' || location.pathname === '/ForgotPassword' || location.pathname === '/ChangePassword') && socket) {
 			if (socket) {
 				console.log("socket closed succefully")
@@ -303,9 +264,7 @@ export const AuthProvider = ({children}) => {
 		userImages: userImages,
 		setAllGameNotifs: setAllGameNotifs,
 		allGameNotifs: allGameNotifs,
-		notifsImgs: notifsImgs,
-		gameCustomize: gameCustomize,
-		hideNavSideBar: hideNavSideBar
+		notifsImgs: notifsImgs
 		// gameNotif: gameNotif
 	}
 

@@ -24,6 +24,12 @@ function WaysSecondStep() {
 	const [errors, setErrors] = useState({});
 	const location = useLocation();
 	const data = location.state || {};
+<<<<<<< HEAD
+=======
+	if (!data.email || !data.avatar){
+		navigate("/signup");
+	}
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	const handleInputChange = (e) => {
 		e.preventDefault();
 		setNextdata({ ...nextdata, [e.target.name]: e.target.value });
@@ -59,6 +65,10 @@ function WaysSecondStep() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
+<<<<<<< HEAD
+=======
+
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 		const validationErrors = {};
 		if (!nextdata.username.trim()) {
 			validationErrors.username = "username is required";

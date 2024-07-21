@@ -9,101 +9,66 @@ import NotificationPopupCard from './NotificationPopupCard'
 import { Outlet } from 'react-router-dom'
 
 function NavbarSidebar() {
-    const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
-    const [searchbar, setSearchBar] = useState(false);
-    let { socket, privateCheckAuth, setUser, hideNavSideBar } = useContext(AuthContext)
-    const data = useContext(SocketDataContext)
-    let navigate = useNavigate()
-    const [newRecievedFriendReqNotif, setNewRecievedFriendReqNotif] = useState(false);
-    const [friendReqUsername, setFriendReqUsername] = useState('');
-    const [removeFriendReqNotif, setRemoveFriendReqNotif] = useState(false);
+	const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
+	const [searchbar, setSearchBar] = useState(false);
+	let { user, privateCheckAuth, setUser } = useContext(AuthContext)
+	let navigate = useNavigate()
 
-    useEffect(() => {
-        console.log("============ socket-notif-start ============");
-        console.log(data.message, data.type);
-        console.log("============ socket-notif-end ============");
+	useEffect(() => {
+		privateCheckAuth()
+	}, [])
 
-        if (data.type === 'recieve-friend-request') {
-            setNewRecievedFriendReqNotif(true);
-            setRemoveFriendReqNotif(false);
-            setFriendReqUsername(data.message.second_username);
-        }
-        else if (data.type === 'confirm-friend-request' && data.message.second_username === friendReqUsername) {
-            setRemoveFriendReqNotif(true);
-        }
-        else if (data.type === 'remove-friend-request' && data.message.second_username === friendReqUsername) {
-            setRemoveFriendReqNotif(true);
-        }
-        else
-            console.log("unknown notif type");
-    }, [data.message.to_user, data.type, socket]);
+	window.addEventListener('resize', () => {
+		if (window.innerWidth > 768) {
+			setSidebarIsOpen(false);
+			setSearchBar(false);
+		}
+	});
 
-    useEffect(() => {
-      privateCheckAuth()
-    }, [])
+	const handleExapandSidebar = () => {
+		setSidebarIsOpen(!sidebarIsOpen)
+	}
 
-    window.addEventListener('resize', () => {
-        if (window.innerWidth > 768) {
-          setSidebarIsOpen(false);
-          setSearchBar(false);
-        }
-    });
+	const handleSearchBar = () => {
+		setSearchBar(!searchbar);
+	}
 
-    const handleExapandSidebar = () => {
-        setSidebarIsOpen(!sidebarIsOpen)
-    }
+	let logout = async (e) => {
+		e.preventDefault();
 
-    const handleSearchBar = () => {
-      setSearchBar(!searchbar);
-    }
-
-    let logout = async (e) => {
-      e.preventDefault();
-
-      try {
-        let response = await fetch('http://localhost:8000/api/logout', {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-        })
-        let content = await response.json()
-        if (content.message) {
-          setUser('')
-          navigate('/signin')
-        }
-      } catch (e) {
-        console.log('Error in network or URL')
-      }
-    }
-    return (
-      <>
-            {
-                newRecievedFriendReqNotif ?
-                    (
-                        removeFriendReqNotif ?
-                            console.log("current notif should be disappears")
-                            :
-                            <NotificationPopupCard secondUsername={friendReqUsername}></NotificationPopupCard>
-                    )
-                    :
-                    console.log("there's no newRecievedFriendReqNotif")
-        }
-          {!hideNavSideBar && (<Navbar
-              Icons={Icons}
-              searchbar={searchbar}
-              setSearchBar={setSearchBar}
-              handleSearchBar={handleSearchBar}
-          />)}
-          {<div className='sidebarWrapper'>
-            {!hideNavSideBar && (<Sidebar
-                Icons={Icons}
-            />)}
-            <Outlet />
-          </div>}
-      </>
-    );
+		try {
+			let response = await fetch('http://localhost:8000/api/logout', {
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			})
+			let content = await response.json()
+			if (content.message) {
+				setUser('')
+				navigate('/signin')
+			}
+		} catch (e) {
+			console.log('Error in network or URL')
+		}
+	}
+	return (
+		<>
+			<Navbar
+				Icons={Icons}
+				searchbar={searchbar}
+				setSearchBar={setSearchBar}
+				handleSearchBar={handleSearchBar}
+			/>
+			<div className='sidebarWrapper'>
+				<Sidebar
+					Icons={Icons}
+				/>
+				<Outlet />
+			</div>
+		</>
+	);
 }
 
 export default NavbarSidebar;

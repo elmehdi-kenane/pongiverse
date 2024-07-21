@@ -8,6 +8,14 @@ from .views import GoogleLoginView
 from .views import VerifyTokenView
 from .views import ForgetPasswordView
 from .views import ChangePasswordView
+from .views import SignInGoogleGetUrl
+from .views import SignInIntraGetUrl
+from .views import SignInGoogleGetUserData
+from .views import SignInIntraGetUserData
+from .views import SignUpGoogleGetUrl
+from .views import SignUpIntraGetUrl
+from .views import SignUpGoogleGetUserData
+from .views import SignUpIntraGetUserData
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -21,4 +29,12 @@ urlpatterns = [
     path('verifytoken/', VerifyTokenView.as_view(), name='verifytoken'),
     path('ForgetPassword/', ForgetPasswordView.as_view(), name='ForgetPassword'),
     path('ChangePassword/', ChangePasswordView.as_view(), name='ChangePassword'),
+    path('google-get-url/', SignInGoogleGetUrl, name='SignInGoogleGetUrl'),
+    path('intra-get-url/', SignInIntraGetUrl, name='SignInIntraGetUrl'),
+    path('google-login-get-token/', SignInGoogleGetUserData, name='SignInGoogleGetUserData'),
+    path('intra-login-get-token/', SignInIntraGetUserData, name='SignInIntraGetUserData'),
+    path('sign-up-google-get-url/', SignUpGoogleGetUrl, name='SignUpGoogleGetUrl'),
+    path('sign-up-intra-get-url/', SignUpIntraGetUrl, name='SignUpIntraGetUrl'),
+    path('sign-up-google-login-get-token/', SignUpGoogleGetUserData, name='SignUpGoogleGetUserData'),
+    path('sign-up-intra-login-get-token/', SignUpIntraGetUserData, name='SignUpIntraGetUserData'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

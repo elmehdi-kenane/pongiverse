@@ -13,6 +13,15 @@
 	overflow-y: auto;
 }
 
+<<<<<<< HEAD
+=======
+.title-and-destroy{
+	display: flex;
+	justify-content: space-between;
+	margin-right: 8%;
+	align-items: center;
+}
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 
 .tournament-title {
 	margin-left: 8%;
@@ -20,6 +29,20 @@
 	font-weight: bold;
 }
 
+<<<<<<< HEAD
+=======
+.destroy-button{
+	border: none;
+	background-color: #913dce;
+	height: 40px;
+	margin-top: 10px;
+	border-radius: 7px;
+	color: white;
+	font-size: 20px;
+	width: 130px;
+}
+
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 .line {
 	margin-top: 1%;
 	width: 85%;
@@ -35,8 +58,15 @@
 	gap: 1.5%;
 	margin-top: 3%;
 	margin-left: 8%;
+<<<<<<< HEAD
 }
 
+=======
+	align-items: center;
+}
+
+
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 .little-line {
 	width: 1px;
 	height: 60%;
@@ -45,6 +75,11 @@
 
 .tournament-id-title,
 .players-number-title {
+<<<<<<< HEAD
+=======
+	display: inline;
+	white-space: nowrap;
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	font-size: 90%;
 	color: white;
 }
@@ -73,6 +108,32 @@
 	font-size: 20px;
 }
 
+<<<<<<< HEAD
+=======
+.up-button-disabled {
+	background-color: #913dce;
+	border-radius: 7px;
+	color: white;
+	border: none;
+	height: 40px;
+	width: 130px;
+	padding: 0 5px;
+	font-size: 20px;
+	opacity: 50%;
+}
+
+.down-button{
+	background-color: #913dce;
+	border-radius: 7px;
+	color: white;
+	border: none;
+	height: 50px;
+	width: 150px;
+	padding: 0 5px;
+	font-size: 20px;
+}
+
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 .tournament-members {
 	position: relative;
 	display: flex;
@@ -83,13 +144,20 @@
 	justify-content: center;
 	gap: 20px;
 	padding-top: 2%;
+<<<<<<< HEAD
 	overflow: auto;
+=======
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	scrollbar-color: transparent transparent;
 	height: 600px;
 }
 
 .player {
 	width: calc(90% / 4);
+<<<<<<< HEAD
+=======
+	position: relative;
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	max-width: 380px;
 	height: 120px;
 	display: flex;
@@ -100,6 +168,40 @@
 	column-gap: 20px;
 }
 
+<<<<<<< HEAD
+=======
+.disconnected-div
+{
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	background-color: rgba(41, 36, 48, 0.9);
+	height: 100%;
+	width: 100%;
+	border-radius: 10px;
+	align-items: center;
+	justify-content: center;
+}
+
+.disconnected-div p{
+	font-size: 20px;
+	font-weight: bold;
+	color: rgb(204, 63, 63);
+}
+
+.disconnected-button{
+	background-color: rgb(204, 63, 63);
+	border-radius: 7px;
+	color: white;
+	border: none;
+	height: 20px;
+	width: 100px;
+	padding: 0 5px;
+	font-size: 12px;
+}
+
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 .down-popup-button {
 	position: relative;
 }
@@ -113,7 +215,11 @@
 	transform: translate(-50%, -50%);
 	width: 90%;
 	overflow: auto;
+<<<<<<< HEAD
 	background-color: rgba(255, 255, 255, 0.7);
+=======
+	background-color: #1b062a;
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 }
 
 
@@ -126,11 +232,19 @@
 	z-index: 1;
 	left: 117%;
 	bottom: -216px;
+<<<<<<< HEAD
 	height: 531px;
 	transform: translate(-50%, -50%);
 	width: 350px;
 	overflow: auto;
 	background-color: rgba(255, 255, 255, 0.7);
+=======
+	height: 534px;
+	transform: translate(-50%, -50%);
+	width: 350px;
+	overflow: auto;
+	background-color: #1b062a;
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 }
 
 .friend {
@@ -141,6 +255,17 @@
 	padding: 0 5px;
 	align-items: center;
 }
+<<<<<<< HEAD
+=======
+.error-container{
+	margin-top: 10%;
+}
+
+.title-swal{
+	color: #B00020;
+	font-size: 20px;
+}
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 
 .friend-data {
 	display: flex;
@@ -162,12 +287,20 @@
 }
 
 .friend-name {
+<<<<<<< HEAD
 	color: black;
+=======
+	color: rgb(255, 255, 255);
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	font-size: 14px;
 }
 
 .friend-status {
+<<<<<<< HEAD
 	color: black;
+=======
+	color: rgb(255, 255, 255);
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	font-size: 12px;
 	opacity: 0.7;
 }
@@ -197,6 +330,17 @@
 	color: white;
 }
 
+<<<<<<< HEAD
+=======
+.down-buttons
+{
+	display: flex;
+	margin-top: 3%;
+	margin-left: 8%;
+	column-gap: 30px;
+}
+
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 .buttons {
 	display: flex;
 	justify-content: space-around;
@@ -216,6 +360,85 @@
 	font-size: 20px;
 }
 
+<<<<<<< HEAD
+=======
+.button-disabled {
+	background-color: #913dce;
+	border-radius: 7px;
+	color: white;
+	border: none;
+	height: 50px;
+	width: 150px;
+	padding: 0 5px;
+	font-size: 20px;
+	opacity: 50%;
+}
+
+.notifications{
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	align-items: end;
+}
+
+@keyframes fadeInRight {
+	from {
+	  opacity: 0;
+	  transform: translateX(10px); /* Move from right to left */
+	}
+	to {
+	  opacity: 1;
+	  transform: translateX(0);
+	}
+  }
+
+.notif{
+	margin-right: 5px;
+	background-color: rgba(255, 255, 255, 0.7);
+	display: flex;
+	flex-direction: column;
+	width: 270px;
+	right: 2%;
+	z-index: 1;
+	height: 75px;
+	/* position: fixed; */
+	border-radius: 8px;
+	gap: 10px;
+	opacity: 0;
+	animation: fadeInRight 0.5s ease-in-out forwards;
+}
+
+.invite-notif-text{
+	margin-top: 5px;
+	text-align: center;
+	font-size: 15px;
+}
+
+.invite-notif-buttons{
+	display: flex;
+	gap: 10px;
+	justify-content: center;
+}
+.invite-notif-button-accept{
+	background-color: #00ff43;
+	width: 70px;
+	height: 30px;
+	border-radius: 7px;
+	border: none;
+	font-weight: bold;
+	font-size: 15px;
+}
+.invite-notif-button-deny{
+	background-color: #ff2222;
+	width: 70px;
+	height: 30px;
+	font-weight: bold;
+	border-radius: 7px;
+	border: none;
+font-size: 15px;
+}
+
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 @media (min-width: 1440px) {
 
 	.tournament-page {
@@ -262,7 +485,13 @@
 		column-gap: 20px;
 	}
 
+<<<<<<< HEAD
 
+=======
+	.tournament-title{
+		font-size: 27px;
+	}
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	.Invite-friend-popup-up {
 		display: flex;
 		flex-direction: column;
@@ -274,7 +503,11 @@
 		transform: translate(-50%, -50%);
 		width: 300px;
 		overflow: auto;
+<<<<<<< HEAD
 		background-color: rgba(255, 255, 255, 0.7);
+=======
+		background-color: #1b062a;
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	}
 
 	.friend {
@@ -312,6 +545,32 @@
 		font-size: 20px;
 	}
 
+<<<<<<< HEAD
+=======
+	.up-button-disabled {
+		background-color: #913dce;
+		border-radius: 7px;
+		color: white;
+		border: none;
+		height: 40px;
+		width: 130px;
+		padding: 0 5px;
+		font-size: 20px;
+	}
+
+	.down-button{
+		display: none;
+		background-color: #913dce;
+		border-radius: 7px;
+		color: white;
+		border: none;
+		height: 50px;
+		width: 150px;
+		padding: 0 5px;
+		font-size: 20px;
+	}
+
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 }
 
 
@@ -319,6 +578,12 @@
 	.player {
 		width: 300px;
 	}
+<<<<<<< HEAD
+=======
+	.tournament-title{
+		font-size: 25px;
+	}
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 }
 
 @media (max-width: 852px) {
@@ -332,7 +597,10 @@
 
 @media (max-width: 578px) {
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	.player {
 		width: 300px;
 		column-gap: 10px;
@@ -341,6 +609,17 @@
 	.buttons {
 		margin-top: 20%;
 	}
+<<<<<<< HEAD
+=======
+	.tournament-title{
+		font-size: 22px;
+	}
+
+	.destroy-button{
+		height: 30px;
+		width: 100px;
+	}
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 }
 
 @media (max-width: 400px) {
@@ -376,7 +655,11 @@
 		transform: translate(-50%, -50%);
 		width: 200px;
 		overflow: auto;
+<<<<<<< HEAD
 		background-color: rgba(255, 255, 255, 0.7);
+=======
+		background-color: #1b062a;
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	}
 
 	.friend {
@@ -403,6 +686,7 @@
 
 	.tournament-id {
 		display: flex;
+<<<<<<< HEAD
 		column-gap: 10px;
 	}
 
@@ -411,11 +695,23 @@
 	.players-number {
 		display: flex;
 		column-gap: 10px;
+=======
+		column-gap: 50px;
+	}
+
+	.players-number {
+		display: flex;
+		column-gap: 30px;
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	}
 
 	.tournament-title {
 		margin-top: 5%;
+<<<<<<< HEAD
 		font-size: 25px;
+=======
+		font-size: 18px;
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	}
 
 	.up-buttons {
@@ -432,7 +728,33 @@
 		border-radius: 7px;
 		color: white;
 		border: none;
+<<<<<<< HEAD
 		height: 40px;
+=======
+		height: 30px;
+		width: 85px;
+		padding: 0 5px;
+		font-size: 13px;
+	}
+
+	.up-button-disabled{
+		background-color: #913dce;
+		border-radius: 7px;
+		color: white;
+		border: none;
+		height: 30px;
+		width: 85px;
+		padding: 0 5px;
+		font-size: 13px;
+	}
+
+	.destroy-button{
+		background-color: #913dce;
+		border-radius: 7px;
+		color: white;
+		border: none;
+		height: 30px;
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 		width: 85px;
 		padding: 0 5px;
 		font-size: 13px;
@@ -466,6 +788,13 @@
 		gap: 5px;
 		height: 800px;
 	}
+<<<<<<< HEAD
+=======
+	.tournament-title {
+		margin-top: 5%;
+		font-size: 13px;
+	}
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 
 	.player {
 		height: 70px;
@@ -481,7 +810,11 @@
 		transform: translate(-50%, -50%);
 		width: 90%;
 		overflow: auto;
+<<<<<<< HEAD
 		background-color: rgba(255, 255, 255, 0.7);
+=======
+		background-color: #1b062a;
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	}
 
 	.friend-invite-button {
@@ -500,14 +833,50 @@
 		column-gap: 10px;
 	}
 
+<<<<<<< HEAD
+=======
+	.avatar{
+		height: 60px;
+		width: 60px;
+	}
+
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	.up-button {
 		background-color: #913dce;
 		border-radius: 7px;
 		color: white;
 		border: none;
+<<<<<<< HEAD
 		height: 30px;
+=======
+		height: 25px;
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 		width: 85px;
 		padding: 0 5px;
 		font-size: 10px;
 	}
+<<<<<<< HEAD
+=======
+	.up-button-disabled {
+		background-color: #913dce;
+		border-radius: 7px;
+		color: white;
+		border: none;
+		height: 25px;
+		width: 85px;
+		padding: 0 5px;
+		font-size: 10px;
+	}
+	.destroy-button{
+		background-color: #913dce;
+		border-radius: 7px;
+		color: white;
+		border: none;
+		height: 25px;
+		width: 85px;
+		padding: 0 5px;
+		font-size: 10px;
+
+	}
+>>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 }

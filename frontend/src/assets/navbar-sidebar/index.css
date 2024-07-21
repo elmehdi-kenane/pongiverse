@@ -538,7 +538,7 @@ html, body {
         width: 80%;
         left: 20%;
     }
-    
+
     .notifications-container {
         position: fixed;
         top: 50px;
@@ -892,7 +892,7 @@ html, body {
 @keyframes rotate {
     from {
         transform: rotate(0deg);
-    } 
+    }
     to {
         transform: rotate(360deg);
     }
@@ -1114,12 +1114,12 @@ html, body {
         margin: auto;
         width: 95%;
     }
-    
+
     .onevsone-dashboard-selection {
         width: 90%;
         margin: auto;
     }
-    
+
     .onevsone-cancel {
         margin-top: -40px;
     }
@@ -1162,7 +1162,7 @@ html, body {
     .game-friend-invite img {
         width: 15px;
     }
-    
+
     .game-friend-waiting img {
         width: 20px;
     }
@@ -1205,12 +1205,12 @@ html, body {
     #paddle-1 {
         height: 20px;
     }
-    
-    #paddle-2 {
+
+    .onevsone-dashboard-logo #paddle-2 {
         height: 20px;
     }
-    
-    #ball {
+
+    .onevsone-dashboard-logo #ball {
         height: 5px;
         width: 5px;
     }
@@ -1218,18 +1218,18 @@ html, body {
     .onevsone-dashboard {
         margin-top: 80px;
     }
-    
+
     .onevsone-dashboard-opponents {
         width: 90%;
         height: 1vw;
         padding: 120px 0;
         width: 100%;
     }
-    
+
     .onevsone-dashboard-selection {
         width: 90%;
     }
-    
+
     .onevsone-cancel-game {
         margin: 0;
         width: 100%;
@@ -1266,7 +1266,7 @@ html, body {
     .game-friend-invite img {
         width: 15px;
     }
-    
+
     .game-friend-waiting img {
         width: 20px;
     }
@@ -1345,7 +1345,7 @@ html, body {
     .game-friend-invite img {
         width: 20%;
     }
-    
+
     .game-friend-profile div p {
         font-size: 10px;
     }

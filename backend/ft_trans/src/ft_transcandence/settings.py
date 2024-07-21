@@ -84,27 +84,6 @@ TEMPLATES = [
 # WSGI_APPLICATION = 'ft_transcandence.wsgi.application'
 ASGI_APPLICATION = 'ft_transcandence.asgi.application'
 
-# DB_NAME = "ft_transcendence"
-# DB_USER = "mmaqbour"
-# DB_PASSWORD = "mmaqbour2024"
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': DB_NAME,
-#         'USER': DB_USER,
-#         'PASSWORD': DB_PASSWORD,
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
-
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels_redis.core.RedisChannelLayer",
-#         "CONFIG": {
-#             "hosts": [("localhost", 6379)],
-#         },
-#     },
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels.layers.InMemoryChannelLayer"

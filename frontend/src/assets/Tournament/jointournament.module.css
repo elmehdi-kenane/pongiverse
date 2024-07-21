@@ -1,0 +1,293 @@
+.joinTournament{
+	position: relative;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	height: 100%;
+	top: 200px;
+	gap: 10px;
+}
+
+.search{
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	height: 60px;
+	width: 70%;
+	gap: 10px;
+}
+.input-and-icon{
+	position: relative;
+	display: flex;
+	gap: 10px;
+	width: 30%;
+	height: 40px;
+	display: flex;justify-content: space-between;
+	border: 1px solid #ffffff;
+	border-width: 2px;
+	border-radius: 20px;
+}
+
+.input-and-icon:focus-within {
+	border-color: #913DCE;
+  }
+.search-input{
+	border: none;
+	background-color: transparent;
+	color: white;
+	font-size: 20px;
+	width: 98%;
+}
+
+.search-icon{
+	color: rgb(255, 255, 255);
+	zoom: 1.1;
+	margin-top: 6px;
+	margin-left: 10px;
+}
+
+.search-input:focus {
+	outline: none;
+	border-color: #007bff;
+  }
+
+.search-results{
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	width: 95%;
+	margin-left: 2.5%;
+	height: 80px;
+	top: calc(100% + 2px);
+	background-color: rgba(41, 39, 39, 0.7);
+	gap: 20px;
+}
+
+.search-results-div{
+	display: flex;
+	width: 100%;
+	margin-top: 5px;
+	justify-content: center;
+}
+
+.search-results-titles{
+	color: white;
+	font-size: 15px;
+	width: 50%;
+}
+
+.search-results-join{
+	display: flex;
+	justify-content: center;
+	width: 50%;
+}
+/* 3489555980 */
+.search-results-join-button{
+	width: 90px;
+	height: 25px;
+	text-align: center;
+	border: none;
+	color: white;
+	font-weight: bold;
+	border-radius: 7px;
+	background-color: #913dce;
+}
+
+
+.tournament-suggestions{
+	background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
+	border-radius: 10px;
+	height: 700px;
+	width: 70%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+}
+.table-th{
+	margin-top: 20px;
+	width: 70%;
+	display: flex;
+	color: white;
+}
+
+h3{
+	width: 25%;
+	text-align: center;
+	font-size: 17px;
+}
+h4{
+	width: 25%;
+	text-align: center;
+}
+.join{
+	width: 25%;
+	height: 40px;
+	display: flex;
+	justify-content: center;
+}
+.join-button{
+	width: 100px;
+	height: 30px;
+	text-align: center;
+	border: none;
+	color: white;
+	font-weight: bold;
+	border-radius: 7px;
+	background-color: #913dce;
+}
+
+.join-button-search{
+	width: 100px;
+	height: 30px;
+	text-align: center;
+	border: none;
+	color: white;
+	font-weight: bold;
+	border-radius: 7px;
+	background-color: #913dce;
+}
+
+.table-line{
+	width: 75%;
+	height: 2px;
+	background-color: rgb(91, 82, 100);
+}
+
+@media (max-width: 1024px) {
+	.tournament-suggestions{
+		width: 90%;
+	}
+	.search{
+		width: 90%;
+	}
+	h3{
+		font-size: 15px;
+	}
+}
+
+@media (max-width: 768px) {
+	.tournament-suggestions{
+		width: 98%;
+	}
+	.search{
+		width: 98%;
+		align-items: center;
+		height: 50px;
+	}
+	.input-and-icon{
+		width: 50%;
+	}
+	.table-th{
+		margin-top: 10px;
+		width: 95%;
+	}
+	.table-line{
+		width: 95%;
+		height: 2px;
+		background-color: rgb(91, 82, 100);
+	}
+	.join-button{
+		width: 70px;
+		height: 25px;
+	}
+}
+
+@media (max-width: 500px) {
+	.tournament-suggestions{
+		width: 100%;
+	}
+	.search{
+		width: 100%;
+	}
+	.input-and-icon{
+		position: relative;
+		display: flex;
+		gap: 10px;
+		width: 30%;
+		height: 30px;
+	}
+	h3, h4{
+		font-size: 12px;
+	}
+	.join-button{
+		width: 60px;
+		height: 20px;
+	}
+	.join-button-search{
+		width: 60px;
+		height: 30px;
+	}
+
+	.input-and-icon{
+		width: 70%;
+		gap: 3px;
+	}
+	.search-input{
+		color: white;
+		font-size: 15px;
+	}
+
+	.search-icon{
+		color: rgb(255, 255, 255);
+		zoom: 1.1;
+		margin-top: 2px;
+		margin-left: 10px;
+	}
+}
+
+@media (max-width: 370px) {
+	h3, h4{
+		font-size: 10px;
+	}
+	.join-button{
+		width: 60px;
+		height: 15px;
+	}
+	.input-and-icon{
+		width: 100%;
+	}
+}
+
+
+@media (max-height: 340px) {
+	.joinTournament{
+		position: relative;
+		width: 100%;
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		height: 100%;
+		top: 10px;
+	}
+}
+
+@media (max-width: 290px) {
+	.tournament-suggestions{
+		gap: 5px;
+		width: 100%;
+	}
+	.joinTournament{
+		gap: 5px;
+	}
+	h3, h4{
+		font-size: 8px;
+	}
+	.join-button{
+		width: 60px;
+		height: 15px;
+	}
+	.input-and-icon{
+		width: 100%;
+	}
+	.table-th{
+		margin-top: 10px;
+		/* width: 95%; */
+	}
+}
+
+
+
+
+
