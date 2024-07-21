@@ -5,24 +5,26 @@ import AuthContext from "../navbar-sidebar/Authcontext";
 import MyMessage from "./myMessage";
 import OtherMessage from "./otherMessage";
 import { useNavigate } from "react-router-dom";
-
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
+import EmojiPicker from 'emoji-picker-react';
 
 export let useClickOutSide = (handler) => {
-  let domNode = useRef()
-  useEffect(()=> {
-    let eventHandler = (event)=> {
-      if( domNode.current && !domNode.current.contains(event.target))
-        handler()
-    }
-    document.addEventListener('mousedown',eventHandler)
+  let domNode = useRef();
+  useEffect(() => {
+    let eventHandler = (event) => {
+      if (domNode.current && !domNode.current.contains(event.target)) handler();
+    };
+    document.addEventListener("mousedown", eventHandler);
     return () => {
-      document.removeEventListener('mousedown', eventHandler)
-    }
-  })
-  return domNode
-}
+      document.removeEventListener("mousedown", eventHandler);
+    };
+  });
+  return domNode;
+};
 
 const ChatConversation = () => {
+  let [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const { selectedDirect, setSelectedDirect } = useContext(ChatContext);
   const [messages, setMessages] = useState([]);
   const [recivedMessage, setRecivedMessage] = useState(null);
@@ -136,10 +138,18 @@ const ChatConversation = () => {
       );
     }
   };
-  let domNode = useClickOutSide(()=>{
-    setShowDirectOptions(false)
-  })
-
+  let domNode = useClickOutSide(() => {
+    setShowDirectOptions(false);
+  });
+  let emojiPickerRef = useClickOutSide(() => {
+    setShowEmojiPicker(false);
+  });
+  const onEmojiClick = (emojiData, event) => {
+    console.log('Selected Emoji:', emojiData.emoji);
+    console.log('Emoji Unicode:', emojiData.unicode);
+    console.log('Emoji Name:', emojiData.name);
+    // setChosenEmoji(emojiObject);
+  };
   return (
     <>
       <div className="conversation-header">
@@ -223,15 +233,23 @@ const ChatConversation = () => {
         className="conversation-send-form"
         onSubmit={sendMessage}
       >
-
-        <input
+        <textarea
           value={messageToSend}
           placeholder="Type your message"
           type="text"
           className="conversation-input"
           onChange={(e) => setMessageToSend(e.target.value)}
-          />
-        <img src={ChatIcons.emojiPicker} alt="" className="conversation-emoji-picker" />
+          rows="4"
+        />
+        <img
+          src={ChatIcons.emojiPicker}
+          alt=""
+          className="conversation-emoji-picker"
+          onClick={()=>!showDirectOptions ? setShowEmojiPicker(true) : "" }
+        />
+        <div className={showEmojiPicker ? "conversation-emoji-container" : "conversation-emoji-container-hidden"} ref={emojiPickerRef}>
+          <EmojiPicker onEmojiClick={onEmojiClick} />
+        </div>
         <img
           src={ChatIcons.sendIcon}
           className="conversation-send-icon"

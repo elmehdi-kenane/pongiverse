@@ -132,38 +132,38 @@ const MyRoom = (props) => {
   }
 
   return (
-    <div className="room-box">
-      <div className="room-details">
+    <div className="room-container">
+      <div className="room-header">
         <img src={props.roomIcons[props.index]} className="room-avatar" alt="" />
-        <div className="room-infos">
+        <div className="room-info">
           <div className="room-name">{props.name}</div>
-          <div className="room-members">{props.membersCount} Members</div>
+          <div className="room-member-count">{props.membersCount} Members</div>
         </div>
       </div>
-      <div className="room-desc">
+      <div className="room-topic">
         {props.topic}
       </div>
-      <div className="btn-and-settings">
-        <button className="leave-room" onClick={() => setLeaveRoom(true)}>
+      <div className="room-actions">
+        <button className="room-leave-button" onClick={() => setLeaveRoom(true)}>
           Leave Room
         </button>
         { props.role === 'admin' ?
           <>
           <img
           src={ChatIcons.RoomSettings}
-          className="room-settings"
+          className="room-settings-icon"
           onClick={showRoomSettings}
           />
           </> : ''
         }
       </div>
       {showSettings && (
-        <div className="room-settings-container">
-          <div className="change-room-details">
+        <div className="room-settings-menu">
+          <div className="room-settings-actions">
             <img
               src={ChatIcons.closeButton}
               alt=""
-              className="close-setting-btn"
+              className="room-settings-close-button"
               onClick={() => setShowSettings(false)}
             />
             <div

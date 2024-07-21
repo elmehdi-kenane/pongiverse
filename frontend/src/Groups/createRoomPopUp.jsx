@@ -85,6 +85,7 @@ const CreateRoom = (props) => {
     }
   };
   let nodeDom = useClickOutSide(props.onClose)
+  
   return (
     <div className="create-room-container" ref={nodeDom}>
       <div className="create-room-header">Create a Room</div>

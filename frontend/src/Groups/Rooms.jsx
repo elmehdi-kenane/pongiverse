@@ -323,22 +323,22 @@ const Rooms = () => {
       <div
         className={
           errorMessage.length !== 0
-            ? "room-page-error-container-active"
-            : "room-page-error-container"
+            ? "rooms-error-container-active"
+            : "rooms-error-container"
         }
       >
-        <div className="error-message-content">{errorMessage}</div>
+        <div className="rooms-error-content">{errorMessage}</div>
         <img
           src={ChatIcons.closeButton}
           alt=""
-          className="close-error-message-btn"
+          className="rooms-close-error-button"
           onClick={() => {
             setErrorMessage('');
             console.log(errorMessage);
           }}
         />
       </div>
-      <div className="page-middle-container">
+      <div className="rooms-page-content">
         {joinRoom && (
           <JoinRoom
             onClose={() => {
@@ -355,20 +355,20 @@ const Rooms = () => {
             }}
           />
         )}
-        <div className={isBlur ? "rooms-container blur" : "rooms-container"}>
-          <div className="join-and-create">
+        <div className={isBlur ? "rooms-wrapper blur" : "rooms-wrapper"}>
+          <div className="rooms-actions-buttons-container">
             <div
-              className="join-room-btn"
+              className="join-room-button"
               onClick={() => {
                 setJoinRoom(true);
                 setIsBlur(true);
               }}
             >
-              <img src={ChatIcons.JoinChannel} alt="" className="join-icon" />
+              <img src={ChatIcons.JoinChannel} alt="" className="join-room-icon" />
               <div className="join-room-text">Join a Room</div>
             </div>
             <div
-              className="create-room-btn"
+              className="create-room-button"
               onClick={() => {
                 setCreateRoom(true);
                 setIsBlur(true);
@@ -377,7 +377,7 @@ const Rooms = () => {
               <img
                 src={ChatIcons.CreateChannel}
                 alt=""
-                className="create-icon"
+                className="create-room-icon"
               />
               <div className="create-room-text">Create a Room</div>
             </div>
@@ -400,8 +400,7 @@ const Rooms = () => {
             ) : (
               ""
             )}
-            <div className="slider-container">
-              {/*Display rooms */}
+            <div className="rooms-slider-container">
               {myRooms && myRooms.length ? (
                 <div className="rooms-slider">
                   {myRooms.map((room, index) => (
@@ -418,7 +417,7 @@ const Rooms = () => {
                 </div>
               ) : (
                 <div className="rooms-slider empty-rooms-slider">
-                  Couldn't find a room
+                  No chat room was found.
                 </div>
               )}
             </div>
@@ -445,7 +444,7 @@ const Rooms = () => {
             ) : (
               ""
             )}
-            <div className="slider-container">
+            <div className="rooms-slider-container">
               {numberOfSuggestedRoom ? (
                 <div className="suggested-rooms-slider">
                   {Array(numberOfSuggestedRoom)
@@ -456,15 +455,15 @@ const Rooms = () => {
                 </div>
               ) : (
                 <div className="suggested-rooms-slider empty-rooms-slider">
-                  couldn't find a suggested room
+                  No suggested chat room was found
                 </div>
               )}
             </div>
           </div>
-          <div className="rooms-header room-header-invitation">
+          <div className="rooms-header">
             Room Invitations
           </div>
-          <div className="invitation-room-row">
+          <div className="invitations-room-row">
             {roomInvitations.length > 4 ? (
               <>
                 <img
@@ -485,9 +484,9 @@ const Rooms = () => {
             ) : (
               ""
             )}
-            <div className="slider-container">
+            <div className="rooms-slider-container">
               {roomInvitations.length ? (
-                <div className="invitation-rooms-slider">
+                <div className="invitations-rooms-slider">
                   {roomInvitations.map((room, index) => (
                     <InvitationRooms
                       key={index}
@@ -499,8 +498,8 @@ const Rooms = () => {
                   ))}
                 </div>
               ) : (
-                <div className="invitation-rooms-slider empty-rooms-slider">
-                  You Don't Have any Room Ivitation Yet
+                <div className="invitations-rooms-slider empty-rooms-slider">
+                  You currently have no chat room invitations
                 </div>
               )}
             </div>

@@ -6,7 +6,7 @@
 
 ::-webkit-scrollbar {
     display: none;
-  }
+}
 
 .chat-page {
     width: 100%;
@@ -290,7 +290,7 @@ button.rooms-switch-button-active {
     position: relative;
 }
 
-input.conversation-input {
+/* textarea.conversation-input {
     border: none;
     outline: 1px solid white;
     outline-offset: -1px;
@@ -301,8 +301,27 @@ input.conversation-input {
     font-size: 14px;
     width: 100%;
     height: 35px;
-}
-input.conversation-input::placeholder  {
+} */
+textarea.conversation-input {
+    border: none;
+    outline: 1px solid white;
+    outline-offset: -1px;
+    border-radius: 30px;
+    background-color: transparent;
+    text-indent: 10px;
+    color: white;
+    font-size: 14px;
+    width: 100%;
+    height: 35px; /* Allow height to adjust based on content */
+    max-height: 250px; /* Set maximum height */
+    overflow-y: auto; /* Add vertical scroll when maximum height is reached */
+    resize: none; /* Prevent manual resizing */
+    padding:0 34px;
+    box-sizing: border-box; /* Ensure padding and border are included in width and height calculations */
+    word-break: break-all;
+
+  }
+textarea.conversation-input::placeholder  {
     font-size: 12px;
 }
 
@@ -313,7 +332,17 @@ input.conversation-input::placeholder  {
     height: 25px;
     cursor: pointer;
 }
-
+.conversation-emoji-container-hidden {
+    display: none;
+}
+.conversation-emoji-container {
+    display: flex;
+    justify-content: flex-end;
+    position: absolute;
+    bottom: 37px;
+    right: 45px;
+    max-width: calc(100%-45px);
+}
 .conversation-send-icon {
     width: 35px;
     height: 35px;
@@ -340,6 +369,10 @@ input.conversation-input::placeholder  {
     .chat-sidebar-hidden {
     display: none;
     }
+}
+
+:host {
+    width: 100% !important;
 }
 
 @media screen and (max-width:425px) {
@@ -419,5 +452,13 @@ input.conversation-input::placeholder  {
     }
     .other-message-content {
         border-radius: 0px 10px 10px 10px;
+    }
+
+    .conversation-emoji-container div {
+        width: 100% !important;
+    }
+
+    .emoji-picker-responsive {
+        width: 100%;
     }
 }
