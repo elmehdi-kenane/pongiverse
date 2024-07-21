@@ -1,7 +1,7 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from rest_framework_simplejwt.tokens import AccessToken
-from . import game_consumers
+from . import gameConsumers
 from . import tournament_consumers
 from channels.layers import get_channel_layer
 from chat import chat_consumers

@@ -115,8 +115,6 @@ async def create_tournament(self, data, user_channels):
 						}
 					}
 				)
-<<<<<<< HEAD
-=======
 		for username, channel_name in user_channels.items():
 			await self.channel_layer.send(
 				channel_name,
@@ -426,4 +424,3 @@ async def start_tournament(self, data, user_channels):
 			)
 
 
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
