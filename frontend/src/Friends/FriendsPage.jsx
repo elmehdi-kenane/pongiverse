@@ -11,20 +11,12 @@ import {
     NextButton,
     usePrevNextButtons
 } from './EmblaCarouselArrowButtons'
-import Autoplay from 'embla-carousel-autoplay'
 import "../assets/Friends/FriendsPage.css";
 import SuggestionFriendCard from "./SuggestionFriendCard.jsx";
 import FriendCard from "./FriendCard.jsx";
 import RecievedFriendReqCard from "./RecievedFriendReqCard.jsx";
 import SentFriendReqCard from "./SentFriendReqCard.jsx";
 import BlockedAccountCard from './BlockedAccountCard.jsx'
-// import BlockedAccountCard from "./BlockedAccountCard.jsx";
-// import MoveBtnPrevious from '../assets/Friends/move-btn-previous.svg';
-// import MoveBtnPreviousDisabled from '../assets/Friends/move-btn-previous-disabled.svg';
-// import MoveBtnNext from '../assets/Friends/move-btn-next.svg';
-// import MoveBtnNextDisabled from '../assets/Friends/move-btn-next-disabled.svg';
-
-// import Profile from '../assets/Friends/profile.png';
 
 const Friends = () => {
     const { user, socket } = useContext(AuthContext);
@@ -222,21 +214,21 @@ const Friends = () => {
   return (
       <div className="FriendPage">
           <h3 className="FriendsPageHeader">{user} Suggestions List</h3>
+          {
+              friendSuggestions.length === 0 &&
+              <div className="friendSuggestionsEmpty">friend suggestions Empty</div>
+          }
           <div className="embla">
               <div className="embla__viewport" ref={emblaRef}>
-                  {/* <div className="embla__container"> */}
                   <div className={`embla__container ${(prevBtnDisabled && nextBtnDisabled) ? "embla__container_centered" : ""}`}>
                       {
-                          friendSuggestions.length === 0 ?
-                              <div className="friendSuggestionsEmpty">friend suggestions Empty</div>
-                              :
+                          friendSuggestions.length !== 0 &&
                               friendSuggestions.map((SuggestionUser) => (
                                   <SuggestionFriendCard key={SuggestionUser.username} currentUsername={user} secondUsername={SuggestionUser.username} avatar={SuggestionUser.avatar}></SuggestionFriendCard>
                               ))
                       }
                   </div>
                   <div className="embla__buttons">
-                      {console.log("btns", prevBtnDisabled, nextBtnDisabled)}
                       <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled}>Prev</PrevButton>
                       <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled}>Next</NextButton>
                   </div>

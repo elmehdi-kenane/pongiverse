@@ -30,6 +30,30 @@
     z-index: 101;
 }
 
+.FriendPage {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    margin: 0 auto;
+    width: 50%;
+}
+
+@media (max-width: 768px) {
+    .embla__buttons {
+        display: flex;
+        justify-content: space-between;
+        width: 50%;
+        position: absolute;
+        right: calc(25%);
+        top: 275px;
+        z-index: 101;
+    }
+    .FriendPage {
+        width: 80%;
+    }
+
+}
+
 .embla__buttons button {
     background-color: #D9D9D9;
     border: none;
@@ -37,14 +61,6 @@
     height: 45px;
     cursor: pointer;
     border-radius: 100%;
-}
-
-.FriendPage {
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    margin: 0 auto;
-    width: 50%;
 }
 
 .FriendsPageHeader {
@@ -111,13 +127,15 @@
 
 .friendPageSections {
     background-color: white;
-    width: 100%;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    height: 70%;
+    /* height: auto;
+    width: auto; */
+    gap: 10px;
     min-height: 764px;
+    padding: 5px 0;
     border-radius: 10px;
     overflow: scroll;
 }
@@ -137,7 +155,7 @@
 .friendSection {
     width: 48%;
     height: 48%;
-    margin: 5px;
+    /* margin: 5px; */
     background-color: rgba(58, 25, 82, 1);
     color: white;
     display: flex;
@@ -155,6 +173,7 @@
     font-size: 20px;
     height: 40px;
     margin-top: 60px;
+    align-self: center;
 }
 
 .friendSection .friendPageEmptyList {
@@ -181,6 +200,12 @@
     }
 }
 
+@media (max-width: 425px) {
+    .optionBtns button {
+        font-size: 5vw;
+    }
+}
+
 .optionBtns {
     background-color: white;
     padding: 10px;
@@ -191,12 +216,12 @@
 
 .optionBtns button {
     padding: 10px;
-    /* width: 25%; */
     border: 1.5px solid #4D4EA6;
     color: #4D4EA6;
     background-color: transparent;
     font-weight: 600;
     border-radius: 5px;
+    font-size: 1vw;
 }
 
 .optionBtns button:hover {
