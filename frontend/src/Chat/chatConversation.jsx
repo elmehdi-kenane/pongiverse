@@ -5,9 +5,8 @@ import AuthContext from "../navbar-sidebar/Authcontext";
 import MyMessage from "./myMessage";
 import OtherMessage from "./otherMessage";
 import { useNavigate } from "react-router-dom";
-import data from "@emoji-mart/data";
-import Picker from "@emoji-mart/react";
 import EmojiPicker from 'emoji-picker-react';
+
 
 export let useClickOutSide = (handler) => {
   let domNode = useRef();
@@ -144,12 +143,7 @@ const ChatConversation = () => {
   let emojiPickerRef = useClickOutSide(() => {
     setShowEmojiPicker(false);
   });
-  const onEmojiClick = (emojiData, event) => {
-    console.log('Selected Emoji:', emojiData.emoji);
-    console.log('Emoji Unicode:', emojiData.unicode);
-    console.log('Emoji Name:', emojiData.name);
-    // setChosenEmoji(emojiObject);
-  };
+
   return (
     <>
       <div className="conversation-header">
@@ -233,13 +227,12 @@ const ChatConversation = () => {
         className="conversation-send-form"
         onSubmit={sendMessage}
       >
-        <textarea
+        <input
           value={messageToSend}
           placeholder="Type your message"
           type="text"
           className="conversation-input"
-          onChange={(e) => setMessageToSend(e.target.value)}
-          rows="4"
+          onChange={(e)=>setMessageToSend(e.target.value)}
         />
         <img
           src={ChatIcons.emojiPicker}
@@ -248,7 +241,7 @@ const ChatConversation = () => {
           onClick={()=>!showDirectOptions ? setShowEmojiPicker(true) : "" }
         />
         <div className={showEmojiPicker ? "conversation-emoji-container" : "conversation-emoji-container-hidden"} ref={emojiPickerRef}>
-          <EmojiPicker onEmojiClick={onEmojiClick} />
+          <EmojiPicker width="100%" Theme={'dark'}/>
         </div>
         <img
           src={ChatIcons.sendIcon}

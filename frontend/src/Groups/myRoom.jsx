@@ -2,7 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import * as ChatIcons from "../assets/chat/media";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import ChatRoomMember from "./chatRoomMember";
-import ChatRoomMemberToInvite from "./chatRoomMemberToInvite";
+import ChatRoomInvitee from './chatRoomInvitee'
+
 const MyRoom = (props) => {
   const {socket, user} = useContext(AuthContext)
   const [showSettings, setShowSettings] = useState(false);
@@ -167,54 +168,54 @@ const MyRoom = (props) => {
               onClick={() => setShowSettings(false)}
             />
             <div
-              className="change-room-name"
+              className="room-settings-change-name"
               onClick={() => setChangeRoomName(true)}
             >
               Change Room Name
             </div>
             <div
-              className="update-room-avatar"
+              className="room-settings-update-avatar"
               onClick={() => setUpdateRoomAvatar(true)}
             >
               Update Room Avatar
             </div>
             <div
-              className="add-room-admin"
+              className="room-settings-add-admin"
               onClick={() => setAddRoomAdmin(true)}
             >
               Add Room Admin
             </div>
             <div
-              className="invite-member-room"
+              className="room-settings-invite-member"
               onClick={() => setInviteMember(true)}
             >
               Invite a Member
             </div>
-            <div className="delete-room" onClick={() => setDeletRoom(true)}>
+            <div className="room-settings-delete-room" onClick={() => setDeletRoom(true)}>
               Delete Room
             </div>
           </div>
         </div>
       )}
       {changeRoomName && (
-        <div className="change-room-name-container">
-          <div className="change-room-name-head">Enter Room Name</div>
+        <div className="room-change-name-wrapper">
+          <div className="room-change-name-title">Enter Room Name</div>
           <input type="text" className="change-room-name-input" placeholder={props.name} onChange={(e)=> setNewRoomName(e.target.value)}/>
-          <div className="change-room-name-btns">
+          <div className="room-change-name-buttons">
             <button onClick={() => setChangeRoomName(false)}>Cancel</button>
             <button onClick={changeRoomNameSubmitHandler}>Update</button>
           </div>
         </div>
       )}
       {updateRoomAvatar && (
-        <div className="update-room-avate-container">
-          <div className="upload-room-avatar-container">
+        <div className="room-update-avatar-wrapper">
+          <div className="room-update-avatar-content">
             <img
               src={ChatIcons.RoomIcon}
               alt=""
-              className="live-updated-room-avatar"
+              className="room-update-avatar-preview"
             />
-            <label htmlFor="update-room-image" id="upate-room-image-label">
+            <label htmlFor="update-room-image" id="room-update-avatar-label">
               Select an Image
             </label>
             <input
@@ -225,18 +226,18 @@ const MyRoom = (props) => {
               onChange={onChangeChangeRoomAvatar}
             />
           </div>
-          <div className="update-room-avatar-btns">
+          <div className="room-update-avatar-buttons">
             <button onClick={() => setUpdateRoomAvatar(false)}>Cancel</button>
             <button onClick={updateRoomAvatarSubmitHandler}>Save</button>
           </div>
         </div>
       )}
       {addRoomAdmin && (
-        <div className="add-room-admin-container">
+        <div className="room-add-admin-wrapper">
           <img
             src={ChatIcons.closeButton}
             alt=""
-            className="add-admin-close-btn"
+            className="room-add-admin-close-button"
             onClick={() => setAddRoomAdmin(false)}
           />
           {allChatRoomMembers.map((memeber , index) => (
@@ -245,42 +246,42 @@ const MyRoom = (props) => {
         </div>
       )}
       {inviteMember && (
-        <div className="invite-room-member-container">
+        <div className="room-invite-member-wrapper">
           <img
             src={ChatIcons.closeButton}
             alt=""
-            className="invite-member-close-btn"
+            className="room-invite-member-close-button"
             onClick={() => setInviteMember(false)}
           />
           {allFriends.map((friend, index) => (
-            <ChatRoomMemberToInvite key={index} name= {friend.name} roomName={props.name}/>
+            <ChatRoomInvitee key={index} name= {friend.name} roomName={props.name}/>
           ))}
         </div>
       )}
       {deleteRoom && (
-        <div className="delete-room-container">
-          <div className="delete-room-head">
+        <div className="room-delete-wrapper">
+          <div className="room-delete-title">
             Are You Sure You Wanna Delete Room
           </div>
-          <div className="delete-room-btns">
+          <div className="room-delete-buttons">
             <button onClick={() => setDeletRoom(false)}>Cancel</button>
             <button onClick={onClickDeleteChatRoomHandler}>Delete</button>
           </div>
         </div>
       )}
       {leaveRoom && (
-        <div className="leave-room-container">
-          <div className="confirmation-text">
+        <div className="room-leave-wrapper">
+          <div className="room-leave-confirmation-message">
             Are you Sure you want to leave
           </div>
-          <div className="confirm-leave-btns">
+          <div className="room-leave-buttons">
             <button
-              className="confirm-leave-cancel-btn"
+              className="room-leave-cancel-button"
               onClick={() => setLeaveRoom(false)}
             >
               CANCEL
             </button>
-            <button className="confirm-leave-confirm-btn" onClick={leaveRoomSubmitHandler}>CONFIRM</button>
+            <button className="room-leave-confirm-button" onClick={leaveRoomSubmitHandler}>CONFIRM</button>
           </div>
         </div>
       )}

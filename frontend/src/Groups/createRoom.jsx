@@ -116,7 +116,7 @@ const CreateRoom = (props) => {
           PROTECTED
         </button>
       </div>
-      <form action="" className="create-room-form" onSubmit={submitHandler}>
+      <form action="" className="create-room-form" autocomplete="off" onSubmit={submitHandler}>
         <input
           type="text"
           placeholder="Room Name"
@@ -155,7 +155,7 @@ const CreateRoom = (props) => {
         )}
         <div className="room-image-container">
           <label htmlFor="room-image" id="room-avatar-label">
-            Upload and image (Room avatar)
+            Upload Room Icon
           </label>
           <input
             type="file"

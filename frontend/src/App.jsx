@@ -9,7 +9,7 @@ import Modes from './Game/Modes';
 import Solo from './Game/Solo';
 import OneVersusOne from './Game/OneVersusOne';
 import PlayMatch from './Game/PlayMatch';
-import Rooms from './Groups/Rooms';
+import Rooms from './Groups/roomsPage';
 import Friends from './Friends/Friends';
 import Dashboard from './Dashboard/Dashboard';
 import { Navigate } from 'react-router-dom';

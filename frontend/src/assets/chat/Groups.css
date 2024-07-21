@@ -29,12 +29,11 @@
   display: none;
 }
 
-
 .rooms-error-content {
   flex: 1;
 }
 
-.rooms-close-error-button{
+.rooms-close-error-button {
   width: 25px;
 }
 
@@ -50,7 +49,7 @@
 }
 
 .rooms-wrapper {
-  margin-top: 80px;
+  margin-top: 10px;
   width: calc(90% - 32.5px);
   height: 950px;
   display: flex;
@@ -61,7 +60,7 @@
 }
 
 .blur {
-  filter: blur(7px);
+  filter: blur(2px);
   pointer-events: none;
 }
 
@@ -73,7 +72,7 @@
 }
 
 .join-room-button,
-.create-room-button{
+.create-room-button {
   padding: 10px 0px;
   width: 30%;
   display: flex;
@@ -94,7 +93,7 @@
 }
 
 .join-room-icon,
-.create-room-icon{
+.create-room-icon {
   width: 25px;
 }
 
@@ -152,7 +151,6 @@
   overflow: hidden;
 }
 
-
 .rooms-slider {
   --slider-index: 0;
   --items-per-screen: 4;
@@ -163,14 +161,14 @@
   transition: transform 500ms ease-in-out;
 }
 
-
 .empty-rooms-slider {
   display: flex;
   justify-content: center;
   align-items: center;
-  opacity: .5;
+  opacity: 0.5;
   background-color: #15072ae2;
   border-radius: 5px;
+  font-size: 14px;
 }
 
 .suggested-rooms-slider {
@@ -193,7 +191,6 @@
   transition: transform 500ms ease-in-out;
 }
 
-
 /* JoinRoom*/
 .join-room-container,
 .create-room-container {
@@ -201,7 +198,7 @@
   color: black;
   background-color: #d9d9d9;
   left: 50%;
-  top: 450px;
+  top: 400px;
   transform: translate(-50%, -50%);
   z-index: 100;
   display: flex;
@@ -209,7 +206,7 @@
   align-items: center;
   gap: 1rem;
   padding: 25px 25px;
-  border-radius: 10px;
+  border-radius: 5px;
   width: 420px;
 }
 
@@ -220,19 +217,20 @@
   color: #913dce;
 }
 
-.join-visibility-btns {
+.join-room-visibility-buttons {
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
-
-.select-visibilty-lables {
+.join-room-visibility-text {
+}
+.join-room-visibility-labels {
   display: flex;
   justify-content: center;
   gap: 10px;
 }
 
-.room-visibility-check {
+.join-room-visibility-check {
   gap: 5px;
   display: flex;
 }
@@ -254,7 +252,7 @@
   background-color: transparent;
 }
 
-.join-btns {
+.join-room-buttons {
   display: flex;
   justify-content: center;
   width: 100%;
@@ -263,8 +261,8 @@
 
 .create-room,
 .cancel-create-room,
-.cancel-room,
-.join-room {
+.join-room-cancel,
+.join-room-submit {
   width: 50%;
   padding: 10px 0px;
   border: none;
@@ -275,7 +273,6 @@
   font-weight: 550;
   cursor: pointer;
 }
-
 
 /*CreateRoom*/
 
@@ -289,7 +286,6 @@
   padding: 10px 0px;
   font-size: 14px;
 }
-
 
 .room-visibility-btns {
   display: flex;
@@ -330,7 +326,6 @@
 }
 
 #create-room-errors {
-
 }
 
 .create-room-form input {
@@ -345,7 +340,6 @@
   background-color: #d9d9d9;
 }
 
-
 .room-image-container {
   width: 100%;
   display: flex;
@@ -356,7 +350,7 @@
 
 #room-avatar-label {
   flex: 1;
-  background-image: url('./media/PlaceHolder.svg');
+  background-image: url("./media/PlaceHolder.svg");
   cursor: pointer;
   border: none;
   outline: 1px solid black;
@@ -414,19 +408,21 @@
     rgba(74, 37, 139, 0.5)
   );
   border-radius: 5px;
-  padding: 25px 10px 10px 10px;
+  padding: 25px 5px 5px 5px;
   justify-content: space-between;
   cursor: pointer;
+  overflow: hidden;
 }
 
-.room-header{
+.room-header {
+  overflow: hidden;
   display: flex;
   gap: 10px;
   border-radius: 5px;
   padding: 5px;
 }
 
-.room-details:hover {
+.room-header:hover {
   background-color: #1f0935;
 }
 
@@ -434,16 +430,27 @@
   width: 60px;
   height: 60px;
   border-radius: 7px;
-  outline: .5px solid #15072a;
+  outline: 0.5px solid #15072a;
+}
+.room-info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
 }
 
 .room-name {
-  font-size: 22px;
+  overflow: hidden;
+  font-size: 20px;
   font-weight: bolder;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 90%;
 }
 
-.room-members-count {
-  font-size: 12px;
+.room-member-count {
+  font-size: 10px;
   font-weight: lighter;
 }
 
@@ -451,14 +458,14 @@
   font-size: 15px;
 }
 
-.room-actions{
+.room-actions {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 5px;
 }
 
-.room-leave-button{
+.room-leave-button {
   flex-grow: 1;
   border: none;
   background-color: #1f0935;
@@ -474,7 +481,7 @@
   cursor: pointer;
 }
 
-.room-settings-menu{
+.room-settings-menu {
   position: absolute;
   background-color: #15072a;
   width: 100%;
@@ -490,7 +497,7 @@
 }
 
 .room-settings-actions {
-  display:flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
   font-size: 15px;
@@ -504,12 +511,11 @@
   cursor: pointer;
 }
 
-
-.change-room-name,
-.update-room-avatar,
-.add-room-admin,
-.invite-member-room,
-.delete-room{
+.room-settings-change-name,
+.room-settings-update-avatar,
+.room-settings-add-admin,
+.room-settings-invite-member,
+.room-settings-delete-room {
   text-align: center;
   width: 100%;
   padding: 5px 5px;
@@ -517,17 +523,17 @@
   cursor: pointer;
 }
 
-.change-room-name:hover,
-.update-room-avatar:hover,
-.add-room-admin:hover,
-.invite-member-room:hover,
-.delete-room:hover{
-  background:#913dce;
+.room-settings-change-name:hover,
+.room-settings-update-avatar:hover,
+.room-settings-add-admin:hover,
+.room-settings-invite-member:hover,
+.room-settings-delete-room:hover {
+  background: #913dce;
 }
 
-.change-room-name-container,
-.update-room-avate-container,
-.delete-room-container {
+.room-change-name-wrapper,
+.room-update-avatar-wrapper,
+.room-delete-wrapper {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -543,7 +549,7 @@
   gap: 10px;
 }
 
-.change-room-name-head {
+.room-change-name-title {
   font-weight: 600;
 }
 
@@ -553,23 +559,23 @@
   text-indent: 10px;
   background-color: transparent;
   border-radius: 5px;
-  outline: .5px solid white;
+  outline: 0.5px solid white;
   outline-offset: -1px;
   color: white;
 }
 
-.update-room-avatar-btns,
-.change-room-name-btns,
-.delete-room-btns {
+.room-update-avatar-buttons,
+.room-change-name-buttons,
+.room-delete-buttons {
   display: flex;
   width: 100%;
   justify-content: center;
   gap: 10px;
 }
 
-.update-room-avatar-btns button,
-.change-room-name-btns button,
-.delete-room-btns button{
+.room-update-avatar-buttons button,
+.room-change-name-buttons button,
+.room-delete-buttons button {
   width: 48%;
   height: 30px;
   background-color: white;
@@ -580,20 +586,20 @@
   border-radius: 2px;
 }
 
-.upload-room-avatar-container {
+.room-update-avatar-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
 }
 
-.live-updated-room-avatar {
+.room-update-avatar-preview {
   width: 80px;
   height: 80px;
   border-radius: 7px;
 }
 
-#upate-room-image-label {
+#room-update-avatar-label {
   border: 1px solid white;
   padding: 5px 10px;
   border-radius: 5px;
@@ -604,8 +610,8 @@
   display: none;
 }
 
-.add-room-admin-container,
-.invite-room-member-container {
+.room-add-admin-wrapper,
+.room-invite-member-wrapper {
   position: absolute;
   background-color: #15072a;
   width: 100%;
@@ -618,15 +624,14 @@
   gap: 5px;
 }
 
-.add-admin-close-btn,
-.invite-member-close-btn {
+.room-add-admin-close-button,
+.room-invite-member-close-button {
   align-self: flex-end;
   width: 20px;
   cursor: pointer;
-
 }
 
-.leave-room-container {
+.room-leave-wrapper {
   position: absolute;
   width: 95%;
   height: 50%;
@@ -641,15 +646,15 @@
   flex-direction: column;
 }
 
-.confirm-leave-btns {
+.room-leave-buttons {
   width: 100%;
   display: flex;
   justify-content: center;
   gap: 5px;
 }
 
-.confirm-leave-cancel-btn,
-.confirm-leave-confirm-btn {
+.room-leave-cancel-button,
+.room-leave-confirm-button {
   width: 40%;
   height: 30px;
   background-color: white;
@@ -705,8 +710,6 @@
   cursor: pointer;
 }
 
-
-
 /*ChatRoomMemberToInvite*/
 .room-invite-sent-icon {
   width: 25px;
@@ -734,7 +737,7 @@
   gap: 10px;
 }
 
-.invitation-room-details-container { 
+.invitation-room-details-container {
   display: flex;
   justify-content: center;
   gap: 10px;
@@ -745,7 +748,7 @@
   width: 55px;
   height: 55px;
   border-radius: 7px;
-  border: .5px solid #1f0935;
+  border: 0.5px solid #1f0935;
 }
 
 .invitation-room-name {
@@ -795,13 +798,160 @@
   }
 }
 
+@media screen and (max-width: 1024px) {
+  .rooms-slider {
+    --items-per-screen: 3;
+  }
+
+  .suggested-rooms-slider {
+    --items-per-screen: 3;
+  }
+  .invitation-rooms-slider {
+    --items-per-screen: 3;
+  }
+  .hande {
+    width: 35px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .rooms-wrapper {
+    gap: 15px;
+    width: 100%;
+  }
+  .slider-container {
+    overflow-x: auto;
+  }
+  .rooms-slider {
+    --items-per-screen: 2;
+  }
+  .empty-rooms-slider {
+    font-size: 14px;
+  }
+  .suggested-rooms-slider {
+    --items-per-screen: 2;
+  }
+  .invitation-rooms-slider {
+    --items-per-screen: 2;
+  }
+
+  .join-room-button,
+  .create-room-button {
+    width: 50%;
+  }
+  .rooms-header {
+    margin: 0;
+    font-size: 16px;
+  }
+  .hande {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .rooms-slider {
+    --items-per-screen: 1;
+  }
+
+  .suggested-rooms-slider {
+    --items-per-screen: 1;
+  }
+  .invitation-rooms-slider {
+    --items-per-screen: 1;
+  }
+  .rooms-actions-buttons-container {
+    gap: 5px;
+    width: 100%;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .join-room-button,
+  .create-room-button {
+    padding: 7px 0px;
+    width: 100%;
+  }
+  /* JoinRoom*/
+  .join-room-container,
+  .create-room-container {
+    width: 98%;
+    padding: 25px 5px;
+  }
+}
+@media screen and (max-width: 375px) {
+  .create-room-header,
+  .join-room-header {
+    font-size: 22px;
+  }
+
+  .join-room-visibility-buttons {
+    gap: 5px;
+  }
+  .join-room-visibility-text {
+    font-size: 14px;
+  }
+  .join-room-visibility-labels {
+    gap: 5px;
+    font-size: 14px;
+  }
 
 
+  .join-room-form input {
+    text-indent: 5px
+  }
+
+  .join-room-form input::placeholder {
+    font-size: 10px;
+  }
+
+  .join-room-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .create-room,
+  .cancel-create-room,
+  .join-room-cancel,
+  .join-room-submit {
+    width: 100%;
+  }
 
 
-
-
-
-
-
-
+  .room-visibility {
+  }
+  
+  .room-visibility-btns {
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .public-room,
+  .private-room,
+  .protected-room {
+    width: 100%;
+  }
+  
+  .selected-room {
+    width: 100%;
+  }
+  
+  .create-room-form {
+    gap: 5px;
+  }
+  
+  #create-room-errors {
+  }
+  
+  .create-room-form input {
+    text-indent:5px
+  }
+  
+  .create-room-form input::placeholder {
+    font-size: 12px;
+  }
+  
+  .create-room-btns {
+    flex-direction: column;
+  }
+  
+}

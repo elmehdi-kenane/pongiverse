@@ -4,7 +4,7 @@ import AuthContext from "../navbar-sidebar/Authcontext";
 import * as Icons from '../assets/navbar-sidebar'
 
 
-const ChatRoomMemberToInvite = (props) => {
+const ChatRoomInvitee = (props) => {
   const {socket} = useContext(AuthContext)
   const [isInviteSent, setIsInviteSent] = useState(false)
   const onClickInviteMember = () => {
@@ -34,4 +34,4 @@ const ChatRoomMemberToInvite = (props) => {
     )
 }
 
-export default ChatRoomMemberToInvite
+export default ChatRoomInvitee

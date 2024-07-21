@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
 
-const InvitationRooms = (props) => {
+const InvitationRoom = (props) => {
   const {socket, user} = useContext(AuthContext)
   const onClickAcceptInvitaion = () => {
     if(socket) {
@@ -47,4 +47,4 @@ const InvitationRooms = (props) => {
   );
 };
 
-export default InvitationRooms;
+export default InvitationRoom;

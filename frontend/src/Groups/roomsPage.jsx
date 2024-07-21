@@ -1,10 +1,10 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
-import MyRoom from "./MyRoom";
+import MyRoom from "./myRoom";
 import SuggestedRoom from "./SuggestedRoom";
-import InvitationRooms from "./InvitationRoom";
-import CreateRoom from "./createRoomPopUp";
-import JoinRoom from "./joinRoomPopUp";
+import InvitationRoom from "./InvitationRoom";
+import CreateRoom from "./createRoom";
+import JoinRoom from "./joinRoom";
 import ChatContext from "./ChatContext";
 import * as ChatIcons from "../assets/chat/media";
 import "../assets/chat/Groups.css";
@@ -21,7 +21,7 @@ const Rooms = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const myRoomsRef = useRef(myRooms);
   const roomInvitationsRef = useRef(roomInvitations);
-  let numberOfSuggestedRoom = 0;
+  let numberOfSuggestedRoom = 2;
 
   //hande scroller handler (My Rooms)
   const onClickScroller = (handle, numberOfRooms) => {
@@ -488,7 +488,7 @@ const Rooms = () => {
               {roomInvitations.length ? (
                 <div className="invitations-rooms-slider">
                   {roomInvitations.map((room, index) => (
-                    <InvitationRooms
+                    <InvitationRoom
                       key={index}
                       index={index}
                       name={room.name}

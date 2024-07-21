@@ -2,19 +2,19 @@ import * as ChatIcons from "../assets/chat/media";
 
 const SuggestedRoom = () => {
   return (
-    <div className="room-box">
-      <div className="room-details">
+    <div className="room-container">
+      <div className="room-header">
         <img src={ChatIcons.RoomIcon} className="room-avatar" alt="" />
-        <div className="room-infos">
+        <div className="room-info">
           <div className="room-name">No Hesi</div>
-          <div className="room-members">144 Member</div>
+          <div className="room-member-count">144 Member</div>
         </div>
       </div>
-      <div className="room-desc">
+      <div className="room-topic">
         Lorem Ipsum is simply Lorem Ipsum is Lorem Ipsum aa
       </div>
-      <div className="btn-and-settings">
-        <button className="leave-room">Join Room</button>
+      <div className="room-actions">
+        <button className="room-leave-button">Join Room</button>
       </div>
     </div>
   );

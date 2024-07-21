@@ -24,16 +24,16 @@ const JoinRoom = (props) => {
   return (
     <div className="join-room-container" ref={nodeDom}>
       <div className="join-room-header">Join a Room</div>
-      <div className="join-visibility-btns">
-        <div className="join-visibility-text">
+      <div className="join-room-visibility-buttons">
+        <div className="join-room-visibility-text">
           Please Select Room Visibility:{" "}
         </div>
-        <div className="select-visibilty-lables">
-          <label className="room-visibility-check">
+        <div className="join-room-visibility-labels">
+          <label className="join-room-visibility-check">
             Public
             <input type="radio" checked={!isProtected} name="radio" onChange={() => setIsProtected(false)}/>
           </label>
-          <label className="room-visibility-check">
+          <label className="join-room-visibility-check">
           </label>
             Protected
             <input type="radio" checked={isProtected} name="radio" onChange={() => setIsProtected(true)}/>
@@ -42,11 +42,11 @@ const JoinRoom = (props) => {
       <form action="" onSubmit={joinRoomSubmitHandler} className="join-room-form">
         <input type="text" placeholder="Room name"  value={roomName} onChange={(e)=> setRoomName(e.target.value)} />
         {isProtected ? <input type="text" placeholder="Password" value={roomPassword} onChange={(e)=> setRoomPassword(e.target.value)}  /> : ""}
-      <div className="join-btns">
-        <button className="cancel-room" type="button" onClick={props.onClose}>
+      <div className="join-room-buttons">
+        <button className="join-room-cancel" type="button" onClick={props.onClose}>
           CANCEL
         </button>
-        <button className="join-room" type="submit" onClick={joinRoomSubmitHandler} >JOIN</button>
+        <button className="join-room-submit" type="submit" onClick={joinRoomSubmitHandler} >JOIN</button>
       </div>
       </form>
     </div>
