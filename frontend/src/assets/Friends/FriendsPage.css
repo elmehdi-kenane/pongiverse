@@ -3,8 +3,11 @@
 }
 .embla__container {
   display: flex;
-  justify-content: center;
   gap: 1%;
+}
+
+.embla__container_centered {
+  justify-content: center;
 }
 
 .embla {
@@ -146,17 +149,36 @@
     /* filter: drop-shadow(black 0 0 4px); */
 }
 
+.friendSuggestionsEmpty {
+    color: white;
+    font-weight: 600;
+    font-size: 20px;
+    height: 40px;
+    margin-top: 60px;
+}
+
 .friendSection .friendPageEmptyList {
     margin-top: 20px;
 }
-.optionBar {
-    align-self: center;
-    /* display: flex; */
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: max-content;
+
+@media (max-width: 1440px) {
+    .optionBar {
+        display: flex;
+        align-self: center;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: max-content;
+    }
+    .friendPageSections {
+        display: none;
+    }
+}
+
+@media (min-width: 1440px) {
+    .optionBar {
+        display: none;
+    }
 }
 
 .optionBtns {
@@ -197,7 +219,7 @@
     width: 100%;
 }
 
-.FriendRequests, .SentRequests, .BlockedAccounts {
+.Friends, .FriendRequests, .SentRequests, .BlockedAccounts {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

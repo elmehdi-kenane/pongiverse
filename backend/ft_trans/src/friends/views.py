@@ -55,9 +55,9 @@ def get_friend_suggestions(request, username):
     print(received_reqs_ser.data)
 
     exclude_ids = set()
-    exclude_ids.update([friend['friend.username'] for friend in friends_ser.data])
-    exclude_ids.update([req['to_user.username'] for req in sent_reqs_ser.data])
-    exclude_ids.update([req['from_user.username'] for req in received_reqs_ser.data])
+    exclude_ids.update([friend['second_username'] for friend in friends_ser.data])
+    exclude_ids.update([req['second_username'] for req in sent_reqs_ser.data])
+    exclude_ids.update([req['second_username'] for req in received_reqs_ser.data])
 
     suggestion_list = [user for user in user_ser_list.data if user['username'] not in exclude_ids]
     print("suggestion_list")

@@ -29,7 +29,6 @@ import BlockedAccountCard from './BlockedAccountCard.jsx'
 const Friends = () => {
     const { user, socket } = useContext(AuthContext);
     const { message, type } = useContext(SocketDataContext);
-    const friendSectionRef = useRef(null);
     const [friends, setFriends] = useState([]);
     const [blockedFriends, setBlockedFriends] = useState([]);
     const [sentRequests, setSentRequests] = useState([]);
@@ -154,7 +153,7 @@ const Friends = () => {
             });
             setTimeout(() => {
                 setFriendSuggestions((prevFriendSuggestions) => {
-                    const updatedFriendSuggestions = prevFriendSuggestions.filter(suggestion => suggestion !== message.second_username);
+                    const updatedFriendSuggestions = prevFriendSuggestions.filter(suggestion => suggestion.username !== message.second_username);
                     return updatedFriendSuggestions;
                 });
             }, 3000);
@@ -225,19 +224,26 @@ const Friends = () => {
           <h3 className="FriendsPageHeader">{user} Suggestions List</h3>
           <div className="embla">
               <div className="embla__viewport" ref={emblaRef}>
-                  <div className="embla__container">
-                  {friendSuggestions.map((SuggestionUser) => (
-                      <SuggestionFriendCard key={SuggestionUser.username} currentUsername={user} secondUsername={SuggestionUser.username} avatar={SuggestionUser.avatar}></SuggestionFriendCard>
-                  ))}
+                  {/* <div className="embla__container"> */}
+                  <div className={`embla__container ${(prevBtnDisabled && nextBtnDisabled) ? "embla__container_centered" : ""}`}>
+                      {
+                          friendSuggestions.length === 0 ?
+                              <div className="friendSuggestionsEmpty">friend suggestions Empty</div>
+                              :
+                              friendSuggestions.map((SuggestionUser) => (
+                                  <SuggestionFriendCard key={SuggestionUser.username} currentUsername={user} secondUsername={SuggestionUser.username} avatar={SuggestionUser.avatar}></SuggestionFriendCard>
+                              ))
+                      }
                   </div>
                   <div className="embla__buttons">
+                      {console.log("btns", prevBtnDisabled, nextBtnDisabled)}
                       <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled}>Prev</PrevButton>
                       <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled}>Next</NextButton>
                   </div>
               </div>
           </div>
           <div className="friendPageSections">
-              <div className="friendSection" ref={friendSectionRef}>
+              <div className="friendSection">
                   <h3 className="FriendsPageHeader">Friends</h3>
                   {
                       friends.length === 0 ?
@@ -305,17 +311,30 @@ const Friends = () => {
                   <button className={(selectedButton === "Sent_Requests") ? "selectedBtn" : ""} onClick={() => { handlesSelectedButton("Sent_Requests") }}>Sent Requests</button>
                   <button className={(selectedButton === "Blocked_Accounts") ? "selectedBtn" : ""} onClick={() => { handlesSelectedButton("Blocked_Accounts") }}>Blocked Accounts</button>
               </div>
-              {/* {
+              {
                   <div className="FriendManagement">
                       {(selectedButton === "Friends") && (
-                          friends.length === 0 ?
-                              <div className="friendPageEmptyList">
-                                  There are no friends :/.
-                              </div>
-                              :
-                              friends.map((friend, index) => (
-                                  <div key={index}>{friend}</div>
-                              ))
+                          <div className="Friends">
+                              {
+                                  friends.length === 0 ?
+                                      <div className="friendPageEmptyList">
+                                          There are no friends :/.
+                                      </div>
+                                      :
+                                      <>
+                                          {
+                                              friends.slice(0, (friends.length - 2)).map((request, index) => (
+                                                  <FriendCard key={index} isLastTwoElements={false} currentUsername={user} secondUsername={request.second_username} avatar={request.avatar}></FriendCard>
+                                              ))
+                                          }
+                                          {
+                                              friends.slice(-2).map((request, index) => (
+                                                  <FriendCard key={index} isLastTwoElements={friends.length > 2 ? true : false} currentUsername={user} secondUsername={request.second_username} avatar={request.avatar}></FriendCard>
+                                              ))
+                                          }
+                                      </>
+                              }
+                          </div>
                       )}
                       {(selectedButton === "Friend_Requests") && (
                           <div className="FriendRequests">
@@ -325,8 +344,8 @@ const Friends = () => {
                                           There are no pending friend requests.
                                       </div>
                                       :
-                                      recievedRequests.map((secondUsername, index) => (
-                                          <RecievedFriendReqCard key={index} currentUsername={user} secondUsername={secondUsername}></RecievedFriendReqCard>
+                                      recievedRequests.map((request, index) => (
+                                          <RecievedFriendReqCard key={index} currentUsername={user} secondUsername={request.second_username} send_at={request.send_at} avatar={request.avatar}></RecievedFriendReqCard>
                                       ))
                               }
                           </div>)}
@@ -338,49 +357,29 @@ const Friends = () => {
                                           There are no sent friend requests.
                                       </div>
                                       :
-                                      sentRequests.map((secondUsername, index) => (
-                                          <SentFriendReqCard key={index} currentUsername={user} secondUsername={secondUsername}></SentFriendReqCard>
-                                      ))}
+                                      sentRequests.map((request, index) => (
+                                          <SentFriendReqCard key={index} currentUsername={user} secondUsername={request.second_username} send_at={request.send_at} avatar={request.avatar}></SentFriendReqCard>
+                                      ))
+                              }
                           </div>)}
                       {(selectedButton === "Blocked_Accounts") && (
-                          blockedFriends.length === 0 ?
-                              <div className="friendPageEmptyList">
-                                  There are no blocked Accounts.
-                              </div>
-                              :
-                              blockedFriends.map((blockedFriend, index) => (
-                                <BlockedAccountCard key={index} ></BlockedAccountCard>
-                                //   <div key={index}>{blockedFriend}</div>
-                              ))
+                          <div className="BlockedAccounts">
+
+                              {
+                                  blockedFriends.length === 0 ?
+                                      <div className="friendPageEmptyList">
+                                          There are no blocked Accounts.
+                                      </div>
+                                      :
+                                      blockedFriends.map((blockedFriend, index) => (
+                                          <BlockedAccountCard key={index} secondUsername={blockedFriend.second_username} avatar={blockedFriend.avatar}></BlockedAccountCard>
+                                      ))
+                              }
+                          </div>
                       )}
                   </div>
-              } */}
+              }
           </div>
-
-
-
-
-
-
-          {/* <div className="FriendManagement">
-              <div className="FriendRequests">
-                  <h3 className="FriendsPageHeader">Friend Requests</h3>
-                  {
-                      recievedRequests.map((secondUsername, index) => (
-                          <RecievedFriendReqCard key={index} currentUsername={user} secondUsername={secondUsername}></RecievedFriendReqCard>
-                      ))
-                  }
-              </div>
-              <div className="SentRequests">
-                  <h3 className="FriendsPageHeader">Sent Requests</h3>
-                  {sentRequests.map((secondUsername, index) => (
-                      <SentFriendReqCard key={index} currentUsername={user} secondUsername={secondUsername}></SentFriendReqCard>
-                  ))}
-              </div>
-              <div className="BlockedAccounts">
-                  <h3 className="FriendsPageHeader">Blocked Accounts</h3>
-              </div>
-          </div> */}
     </div>
   );
 };
