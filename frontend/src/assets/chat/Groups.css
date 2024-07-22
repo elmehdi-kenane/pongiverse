@@ -169,6 +169,7 @@
   background-color: #15072ae2;
   border-radius: 5px;
   font-size: 14px;
+  text-align: center;
 }
 
 .suggested-rooms-slider {
@@ -717,7 +718,7 @@
 
 /*InvitationRooms*/
 
-.invitation-room-box {
+.invitation-room-container {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -731,22 +732,21 @@
     rgba(74, 37, 139, 0.5)
   );
   border-radius: 5px;
-  padding: 10px;
+  padding: 5px;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
 }
 
-.invitation-room-details-container {
+.invitation-room-details {
   display: flex;
-  justify-content: center;
-  gap: 10px;
+  gap: 5px;
   width: 100%;
 }
 
 .invitation-room-avatar {
-  width: 55px;
-  height: 55px;
+  width: 45px;
+  height: 45px;
   border-radius: 7px;
   border: 0.5px solid #1f0935;
 }
@@ -756,27 +756,25 @@
   font-weight: 700;
 }
 
-.invitation-room-members {
+.invitation-room-member-count {
   font-size: 10px;
   font-weight: 100;
 }
 
-.accept-and-cancel-bnts {
+.invitation-room-actions {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 5px;
-  margin: 0 auto;
-  width: 50%;
+  width: 100%;
 }
 
-.cancel-room-invitation,
-.accept-room-invitation {
+.room-invitation-cancel,
+.room-invitation-accept {
   border: none;
-  font-size: 15px;
+  font-size: 14px;
   width: 100%;
-  font-weight: 500;
+  font-weight: 600;
   height: 25px;
   border-radius: 5px;
   cursor: pointer;
@@ -786,7 +784,7 @@
   background-color: white;
   color: #15072a;
 }
-.accept-room-invitation {
+.room-invitation-accept {
   background-color: #1f0935;
   color: white;
 }
@@ -806,9 +804,11 @@
   .suggested-rooms-slider {
     --items-per-screen: 3;
   }
-  .invitation-rooms-slider {
+
+  .invitations-rooms-slider {
     --items-per-screen: 3;
   }
+
   .hande {
     width: 35px;
   }
@@ -827,11 +827,13 @@
   }
   .empty-rooms-slider {
     font-size: 14px;
+    text-align:center;
   }
   .suggested-rooms-slider {
     --items-per-screen: 2;
   }
-  .invitation-rooms-slider {
+  
+  .invitations-rooms-slider {
     --items-per-screen: 2;
   }
 
@@ -856,7 +858,7 @@
   .suggested-rooms-slider {
     --items-per-screen: 1;
   }
-  .invitation-rooms-slider {
+  .invitations-rooms-slider {
     --items-per-screen: 1;
   }
   .rooms-actions-buttons-container {
