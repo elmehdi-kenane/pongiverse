@@ -5,8 +5,7 @@ import AuthContext from "../navbar-sidebar/Authcontext";
 import MyMessage from "./myMessage";
 import OtherMessage from "./otherMessage";
 import { useNavigate } from "react-router-dom";
-import EmojiPicker from 'emoji-picker-react';
-
+import SendMessage from "./sendMessage";
 
 export let useClickOutSide = (handler) => {
   let domNode = useRef();
@@ -23,7 +22,6 @@ export let useClickOutSide = (handler) => {
 };
 
 const ChatConversation = () => {
-  let [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const { selectedDirect, setSelectedDirect } = useContext(ChatContext);
   const [messages, setMessages] = useState([]);
   const [recivedMessage, setRecivedMessage] = useState(null);
@@ -140,9 +138,7 @@ const ChatConversation = () => {
   let domNode = useClickOutSide(() => {
     setShowDirectOptions(false);
   });
-  let emojiPickerRef = useClickOutSide(() => {
-    setShowEmojiPicker(false);
-  });
+
 
   return (
     <>
@@ -222,33 +218,11 @@ const ChatConversation = () => {
           )}
         <div ref={messageEndRef}></div>
       </div>
-      <form
-        action="submit"
-        className="conversation-send-form"
-        onSubmit={sendMessage}
-      >
-        <input
-          value={messageToSend}
-          placeholder="Type your message"
-          type="text"
-          className="conversation-input"
-          onChange={(e)=>setMessageToSend(e.target.value)}
-        />
-        <img
-          src={ChatIcons.emojiPicker}
-          alt=""
-          className="conversation-emoji-picker"
-          onClick={()=>!showDirectOptions ? setShowEmojiPicker(true) : "" }
-        />
-        <div className={showEmojiPicker ? "conversation-emoji-container" : "conversation-emoji-container-hidden"} ref={emojiPickerRef}>
-          <EmojiPicker width="100%" Theme={'dark'}/>
-        </div>
-        <img
-          src={ChatIcons.sendIcon}
-          className="conversation-send-icon"
-          onClick={sendMessage}
-        />
-      </form>
+      <SendMessage
+        sendMessage={sendMessage}
+        messageToSend={messageToSend}
+        setMessageToSend={setMessageToSend}
+      />
     </>
   );
 };
