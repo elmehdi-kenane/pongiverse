@@ -61,12 +61,13 @@ function UpdateBio() {
               <p className='update__info-hover shadow-bg'> {bio} </p>
             </div>
           }
-          {isUpdate && <textarea type="text" 
-                              className="update__input input-bio" 
-                              placeholder='Enter new bio... '
-                              maxLength={100}
-                              onKeyDown={handleInputKeyDown}
-                              ref={inputRef}/>}
+          {isUpdate && 
+            <textarea type="text" 
+                      className="update__input input-bio" 
+                      placeholder='Enter new bio... '
+                      maxLength={100}
+                      onKeyDown={handleInputKeyDown}
+                      ref={inputRef}/>}
           <div className="update__btn" onClick={onUpdate} ref={iconRef}> {submit} </div>
       </div>
     )
