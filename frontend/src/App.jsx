@@ -35,7 +35,6 @@ import TwoVsTwoFriends from './Game/TwoVsTwoFriends';
 import TwoVsTwoCreateOrJoin from './Game/TwoVsTwoCreateOrJoin';
 import GameSettings from './Game/GameSettings';
 import Settings from './Settings/Settings';
-import Crop from './Test/Crop';
 
 const App = () => {
   return (
