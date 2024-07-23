@@ -5,7 +5,7 @@ import AuthContext from "../navbar-sidebar/Authcontext";
 import MyMessage from "./myMessage";
 import OtherMessage from "./otherMessage";
 import {useClickOutSide} from "../Chat/chatConversation"
-
+import SendMessage from "./sendMessage";
 const ChatRoomConversation = () => {
   const { selectedChatRoom, setSelectedChatRoom } = useContext(ChatContext);
   const [showChatRoomOptions, setShowChatRoomOptions] = useState(false);
@@ -15,8 +15,7 @@ const ChatRoomConversation = () => {
   const { user, socket, userImg } = useContext(AuthContext);
   const messageEndRef = useRef(null);
 
-  const sendMessage = (e) => {
-    e.preventDefault();
+  const sendMessage = () => {
     if (
       socket &&
       socket.readyState === WebSocket.OPEN &&
@@ -153,24 +152,11 @@ const ChatRoomConversation = () => {
           )}
         <div ref={messageEndRef}></div>
       </div>
-      <form
-        action="submit"
-        className="conversation-send-form"
-        onSubmit={sendMessage}
-      >
-        <input
-          type="text"
-          className="conversation-input"
-          value={messageToSend}
-          onChange={(e) => setMessageToSend(e.target.value)}
-          placeholder="Enter your message"
-        />
-        <img
-          src={ChatIcons.sendIcon}
-          className="conversation-send-icon"
-          onClick={sendMessage}
-        />
-      </form>
+      <SendMessage
+        sendMessage={sendMessage}
+        messageToSend={messageToSend}
+        setMessageToSend={setMessageToSend}
+      />
     </>
   );
 };

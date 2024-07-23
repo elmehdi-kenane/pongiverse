@@ -36,13 +36,14 @@ const ChatConversation = () => {
     selectedDirectRef.current = selectedDirect;
   }, [selectedDirect]);
 
-  const sendMessage = (e) => {
-    e.preventDefault();
+  const sendMessage = () => {
+    console.log(messageToSend)
     if (
       socket &&
       socket.readyState === WebSocket.OPEN &&
       messageToSend.trim() !== ""
     ) {
+      console.log(messageToSend)
       socket.send(
         JSON.stringify({
           type: "directMessage",
@@ -98,8 +99,10 @@ const ChatConversation = () => {
             (currentDirect.name === data.data.sender &&
               data.data.reciver === user) ||
             (user === data.data.sender && data.data.reciver === user)
-          )
+          ){
+            console.log(data.data)
             setRecivedMessage(data.data);
+          }
         } else if (data.type === "goToGamingPage") {
           console.log("navigating now");
           navigate(`/mainpage/game/solo/1vs1/friends`);

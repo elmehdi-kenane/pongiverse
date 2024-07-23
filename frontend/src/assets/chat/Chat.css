@@ -245,9 +245,7 @@ button.rooms-switch-button-active {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-}
-
-.conversation-send-form {
+  overflow-x: hidden;
 }
 
 .message-row {
@@ -262,12 +260,14 @@ button.rooms-switch-button-active {
 }
 
 .message-content {
+  white-space: pre-wrap;
   padding: 10px 15px;
   display: flex;
   font-size: 15px;
   align-items: center;
   background-color: #1f0935;
   word-break: break-all;
+  /* white-space: ; */
 }
 
 .my-message-content {
@@ -311,7 +311,7 @@ textarea.conversation-input {
   margin: 0;
   width: 100%;
   box-sizing: border-box;
-  font-size: 16px;
+  font-size: 14px;
   background-color: transparent;
   resize: none;
   border: none;
@@ -326,9 +326,10 @@ textarea.conversation-input::placeholder {
   opacity: .8;
 }
 
-.conversation-emoji-picker {
-  right: 45px;
-  width: 35px;
+.conversation-emoji-picker,
+.conversation-file-upload {
+  opacity: .6;
+  /* width: 25px; */
   height: 35px;
   cursor: pointer;
 }
@@ -337,11 +338,10 @@ textarea.conversation-input::placeholder {
 }
 .conversation-emoji-container {
   display: flex;
-  justify-content: flex-end;
   position: absolute;
-  bottom: 37px;
-  right: 45px;
-  max-width: calc(100%-45px);
+  left: 0;
+  bottom: 50px;
+  width: 50%;
 }
 .conversation-send-icon {
   width: 35px;
