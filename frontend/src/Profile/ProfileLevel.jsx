@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 function ProfileLevel() {
-    const level = 8;
-    const per = 55;
+    const [level, setLevel] = useState(0);
+    const [per, setPer] = useState(60);
 
     return (
     <div className="profile-userlevel">
