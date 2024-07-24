@@ -6,7 +6,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import IsFriends from './FriendOptions/IsFriends';
 import Report from './Report/Report';
 
-// import mavSvg from "./assets/Group.svg"
+import mavSvg from "./assets/Group.svg"
 // import clan from "./assets/Frame.svg"
 // import clan4 from "./assets/Frame4.svg"
 import clan5 from "./assets/Frame5.svg"
@@ -15,38 +15,14 @@ import bg1 from "./assets/bg1.jpg"
 
 function ProfileInfo(props) {
   
-  const {userPic} = useContext(AuthContext);
   const {bio} = useContext(AuthContext);
+  const { user, userImg } = useContext(AuthContext);
 
-  const [localPic, setLocalPic] = useState(userPic);
-
-  const { user } = useContext(AuthContext);
-  const [userInfo, setUserInfo] = useState([]);
+  const [userInfo, setUserInfo] = useState(null);
   const [userPicture, setUserPicture] = useState(null);
   
 
   useEffect(() => {
-
-    const getUserimg = async () => {
-      try {
-        const response = await fetch(`http://localhost:8000/api/getImage`, {
-          method: "POST",
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            image: userInfo.avatar
-          })
-        }
-        )
-        const blob = await response.blob();
-				setUserPicture(URL.createObjectURL(blob));
-        console.log("picture response : ", userPicture);
-      }
-      catch (error) {
-        console.error('Error Getting userPic :', error);
-      }
-    }
 
     const getUserInfo = async () => {
       try {
@@ -70,9 +46,36 @@ function ProfileInfo(props) {
     }
     if (user){
       getUserInfo();
-      getUserimg();
     }
   }, [user])
+
+
+  // useEffect(() => {
+  //   const getUserimg = async () => {
+  //     try {
+  //       const response = await fetch(`http://localhost:8000/api/getImage`, {
+  //         method: "POST",
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify({
+  //           image: userInfo.avatar
+  //         })
+  //       }
+  //       )
+  //       const blob = await response.blob();
+	// 			setUserPicture(URL.createObjectURL(blob));
+  //       console.log("userPicture response : ", userPicture);
+  //     }
+
+  //     catch (error) {
+  //       console.error('Error Getting userPic :', error);
+  //     }
+  //   }
+
+  //   if (userInfo)
+  //     getUserimg()
+  // },[userInfo])
 
     const isOwnProfile = false;
     // const [isOwnProfile, setIsOwnProfile] = useState(false);
@@ -84,13 +87,13 @@ function ProfileInfo(props) {
       
       <div className="userinfo__pic">
         {
-          userPicture ? <img src={userPicture} alt="Player" /> : <img src={userPic} alt="Player" />
+          userImg ? <img src={userImg} alt="Player" /> : <img src={mavSvg} alt="Player" />
         }
         <div className="is-online no-select"> Online </div>
       </div>
       <div className="userinfo__name-bio">
         <div className="userinfo__name-avatar">
-          <h1 className="userinfo__name"> {userInfo.username} </h1>
+          <h1 className="userinfo__name"> {userInfo && userInfo.username} </h1>
           <div className="userinfo__avatar">
               <img src={clan5} alt="Avatar" />
               <p className='avatar-desc filter-glass'> Avatar Level 5 </p>
