@@ -19,7 +19,7 @@ const client = axios.create({
 function SignInWays() {
 
 	const navigate = useNavigate();
-	const CLIENT_ID = 'u-s4t2ud-fcffc65b4899785b254efb0f6527c2d4493781c1e7792364b758f426b18a2598';
+	const CLIENT_ID = 'u-s4t2ud-6b8170511374b774e9fd9a7f9074a092f0f154051627b71f1deca43eb732373e';
 	const REDIRECT_URI = 'http://localhost:3000/signin';
 	const handleLogin = () => {
 		window.location.href = `https://api.intra.42.fr/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
@@ -29,7 +29,7 @@ function SignInWays() {
 		axios.post('https://api.intra.42.fr/oauth/token', {
 			grant_type: 'authorization_code',
 			client_id: CLIENT_ID,
-			client_secret: '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',
+			client_secret: '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',
 			code: code,
 			redirect_uri: REDIRECT_URI
 		}).then(response => {

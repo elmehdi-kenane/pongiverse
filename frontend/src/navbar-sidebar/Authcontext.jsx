@@ -174,7 +174,7 @@ export const AuthProvider = ({children}) => {
 		if ((location.pathname === '/mainpage/game/board' || oneVsOneIdRegex.test(location.pathname) || twoVsTwoIdRegex.test(location.pathname)) && user)
 			getGameCustomize()
 
-		if (oneVsOneIdRegex.test(location.pathname) || twoVsTwoIdRegex.test(location.pathname) || location.pathname === '/mainpage/game/solo/computer')
+		if (oneVsOneIdRegex.test(location.pathname) || twoVsTwoIdRegex.test(location.pathname))
 			setHideNavSideBar(true)
 		else
 			setHideNavSideBar(false)
@@ -187,7 +187,7 @@ export const AuthProvider = ({children}) => {
 			if (!userExists)
 				setAllGameFriends([...currentAllGameFriends, newUser])
 			// setAllGameFriends(prevFriends => [...prevFriends, newUser]);
-		};
+		  };
 		async function sendUserData(uname, currentAllGameFriends){
 			try {
 				let response = await fetch('http://localhost:8000/api/get_user', {

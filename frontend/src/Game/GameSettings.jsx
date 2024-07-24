@@ -213,7 +213,7 @@ const GameSettings = () => {
       </div>
       <div className='gameCustom-selects' >
         <button>Back</button>
-        {!onSavingParams ? (<button onClick={saveSettings} >Save</button>) : (<button id='gameCustom-selects-saving' style={{ opacity: '0.5' }} >Save</button>)}
+        {!onSavingParams ? (<button onClick={saveSettings} >Save</button>) : (<button style={{ opacity: '0.5' }} >Save</button>)}
       </div>
     </div>
   );

@@ -33,7 +33,6 @@ import TwoVsTwoPlayMatch from './Game/TwoVsTwoPlayMatch';
 import TwoVsTwoFriends from './Game/TwoVsTwoFriends';
 import TwoVsTwoCreateOrJoin from './Game/TwoVsTwoCreateOrJoin';
 import GameSettings from './Game/GameSettings';
-import Bot from './Game/Bot';
 
 const App = () => {
   return (
@@ -57,7 +56,6 @@ const App = () => {
               <Route path="game" element={<Modes />} />
               <Route path="game/board" element={<GameSettings />} />
               <Route path="game/solo" element={<Solo />} />
-              <Route path="game/solo/computer" element={<Bot />} />
               <Route path="game/solo/1vs1" element={<OneVersusOne />} />
               <Route path="game/solo/1vs1/random" element={<OneVsOneRandom />} />
               <Route path="game/solo/1vs1/friends" element={<OneVsOneFriends />} />
