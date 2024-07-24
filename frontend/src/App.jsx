@@ -12,6 +12,7 @@ import PlayMatch from './Game/OneVsOnePlayMatch';
 import Groups from './Groups/Groups';
 import Friends from './Friends/Friends';
 import Dashboard from './Dashboard/Dashboard';
+import Profile from './Profile/Profile';
 import { Navigate } from 'react-router-dom';
 import Game from './Game/Game';
 import Chat from './Chat/Chat';
@@ -33,6 +34,8 @@ import TwoVsTwoPlayMatch from './Game/TwoVsTwoPlayMatch';
 import TwoVsTwoFriends from './Game/TwoVsTwoFriends';
 import TwoVsTwoCreateOrJoin from './Game/TwoVsTwoCreateOrJoin';
 import GameSettings from './Game/GameSettings';
+import Settings from './Settings/Settings';
+import Bot from './Game/Bot';
 
 const App = () => {
   return (
@@ -49,6 +52,8 @@ const App = () => {
             <Route path="/ChangePassword" element={<ChangePassword />} />
             <Route path="/mainpage" element={<NavbarSidebar />} >
               <Route path="dashboard" element={<Dashboard />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="settings" element={<Settings />} />  
               <Route path="chat" element={<Chat />} />
               {/* <Route path="chat/:roomId" element={<MessagesContainer />} /> */}
               <Route path="friends" element={<Friends />} />
@@ -56,6 +61,7 @@ const App = () => {
               <Route path="game" element={<Modes />} />
               <Route path="game/board" element={<GameSettings />} />
               <Route path="game/solo" element={<Solo />} />
+              <Route path="game/solo/computer" element={<Bot />} />
               <Route path="game/solo/1vs1" element={<OneVersusOne />} />
               <Route path="game/solo/1vs1/random" element={<OneVsOneRandom />} />
               <Route path="game/solo/1vs1/friends" element={<OneVsOneFriends />} />
@@ -71,6 +77,7 @@ const App = () => {
           </Routes>
         </AuthProvider>
       </Router>
+
     </div>
   )
 }

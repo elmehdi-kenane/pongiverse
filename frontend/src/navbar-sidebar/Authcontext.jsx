@@ -5,6 +5,8 @@ import { friends } from "../assets/navbar-sidebar";
 import * as Icons from '../assets/navbar-sidebar'
 import { useReducer } from "react";
 
+import userPc from "../Settings/assets/Group.svg"
+
 const AuthContext = createContext();
 
 export default AuthContext;
@@ -24,10 +26,41 @@ export const AuthProvider = ({children}) => {
 	let [notifsImgs, setNotifsImgs] = useState([])
 	let allGameFriendsRef = useRef(allGameFriends)
 
+	
+	// Glass Background State --------------------------------------------
+	const [isGlass, setIsGlass] = useState(false);
+	
+	// Imad's States --------------------------------------------
+	//-- Glass Background
+	const [isReport, setIsReport] = useState(false);
+	const [isBlock, setIsBlock] = useState(false);
+
+	const [reportValue, setReportValue] = useState(null);
+	const reportContentRef = useRef(null);
+	const blockRef = useRef(null);
+	const blockContentRef = useRef(null);
+	
+
+	const [userPic, setUserPic] = useState(userPc);
+	const [nickName, setNickName] = useState("Maverick");
+	const [bio, setBio] = useState("Lorem ipsum dolor sit amet consectetur adipisicing elit.");
+	const [country, setCountry] = useState("Morocco");
+
+
+
 	let [hideNavSideBar, setHideNavSideBar] = useState(false)
 	let [gameCustomize, setGameCustomize] = useState(['#FFFFFF', '#1C00C3', '#5241AB', false])
 	const oneVsOneIdRegex = /^\/mainpage\/play\/1vs1\/\d+$/
 	const twoVsTwoIdRegex = /^\/mainpage\/play\/2vs2\/\d+$/
+
+
+	// Glass Background Effect
+	useEffect (()=> {
+		if (!isReport && !isBlock)
+			setIsGlass(false);
+		else
+			setIsGlass(true);
+	}, [isReport, isBlock])
 
 	useEffect(() => {
 		allGameFriendsRef.current = allGameFriends;
@@ -174,7 +207,7 @@ export const AuthProvider = ({children}) => {
 		if ((location.pathname === '/mainpage/game/board' || oneVsOneIdRegex.test(location.pathname) || twoVsTwoIdRegex.test(location.pathname)) && user)
 			getGameCustomize()
 
-		if (oneVsOneIdRegex.test(location.pathname) || twoVsTwoIdRegex.test(location.pathname))
+		if (oneVsOneIdRegex.test(location.pathname) || twoVsTwoIdRegex.test(location.pathname) || location.pathname === '/mainpage/game/solo/computer')
 			setHideNavSideBar(true)
 		else
 			setHideNavSideBar(false)
@@ -187,7 +220,7 @@ export const AuthProvider = ({children}) => {
 			if (!userExists)
 				setAllGameFriends([...currentAllGameFriends, newUser])
 			// setAllGameFriends(prevFriends => [...prevFriends, newUser]);
-		  };
+		};
 		async function sendUserData(uname, currentAllGameFriends){
 			try {
 				let response = await fetch('http://localhost:8000/api/get_user', {
@@ -305,7 +338,28 @@ export const AuthProvider = ({children}) => {
 		allGameNotifs: allGameNotifs,
 		notifsImgs: notifsImgs,
 		gameCustomize: gameCustomize,
-		hideNavSideBar: hideNavSideBar
+		hideNavSideBar: hideNavSideBar,
+		// Profile Settings
+		isGlass:isGlass,
+		setIsGlass:setIsGlass,
+		isReport: isReport,
+		setIsReport: setIsReport,
+		reportContentRef: reportContentRef,
+		reportValue: reportValue,
+		setReportValue: setReportValue,
+		isBlock: isBlock,
+		setIsBlock:setIsBlock,
+		blockRef:blockRef,
+		blockContentRef:blockContentRef,
+		// User Credintials
+		userPic:userPic,
+		setUserPic:setUserPic,
+		nickName:nickName,
+		bio:bio,
+		country,country,
+		setNickName:setNickName,
+		setBio:setBio,
+		setCountry:setCountry,
 		// gameNotif: gameNotif
 	}
 

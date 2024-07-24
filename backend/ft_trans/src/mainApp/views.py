@@ -112,7 +112,10 @@ def notifs_friends(request):
 def serve_image(request):
 	if (request.data).get('image'):
 		with open(request.data['image'], 'rb') as image_file:
-			return HttpResponse(image_file.read(), content_type='image/jpeg')
+			if image_file:
+				return HttpResponse(image_file.read(), content_type='image/jpeg')
+			else:
+				return Response("not found")
 
 @api_view(['POST'])
 def get_user(request):
