@@ -1656,15 +1656,12 @@ async def refuse_game_invite(self, data, rooms, user_channels):
                 'message': 'alreadyPlaying'
             }))
             return
-    # print("ACCEPT 1")
     creator = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
     friend = await sync_to_async(customuser.objects.filter(username=data['message']['target']).first)()
     active_match = await sync_to_async(ActiveMatch.objects.filter(room_id=data['message']['roomID']).first)()
     if active_match:
-        # print("ACCEPT 2")
         is_invited = await sync_to_async(NotifPlayer.objects.filter(active_match=active_match, player=friend).first)()
         if is_invited:
-            # print("ACCEPT 101")
             await sync_to_async(is_invited.delete)()
             game_notif = await sync_to_async(GameNotifications.objects.filter(active_match=active_match, target=friend).first)()
             await sync_to_async(game_notif.delete)()
