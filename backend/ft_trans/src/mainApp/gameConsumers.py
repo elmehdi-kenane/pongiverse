@@ -8,7 +8,7 @@ from chat.models import Friends
 from myapp.models import customuser
 from asgiref.sync import sync_to_async
 from .gameMultiplayerConsumers import waited_game
-from .models import Match, ActiveMatch, PlayerState, NotifPlayer, GameNotifications
+from .models import Match, ActiveMatch, PlayerState, NotifPlayer, GameNotifications, MatchStatistics
 
 async def isPlayerInAnyRoom(self, data, rooms, user_channels):
     message = data['message']
@@ -340,7 +340,10 @@ async def joinRoom(self, data, rooms, user_channels):
                     'paddleX': player_state.paddleX,
                     'paddleY': player_state.paddleY,
                     'score': player_state.score,
-                    'status': ''
+                    'status': '',
+                    'hit': 0, ####### added
+                    'self_scored': 0, ####### added
+                    'tmp_scored': 0 ####### added
                 })
                 with player.avatar.open('rb') as f:
                     users.append({
@@ -650,21 +653,59 @@ async def validatePlayer(self, data, rooms, user_channels):
                     }))
                     asyncio.create_task(users_infos(self, room['id'], users))
                     return
+    #             if room['players'][0]['score'] > room['players'][1]['score']:
+    #     player1_rating = (room['players'][0]['self_scored'] * 20) + (room['players'][0]['self_scored'] * 0.5)
+    #     player2_rating = (room['players'][1]['self_scored'] * 20) + (room['players'][1]['self_scored'] * -0.5)
+    # else:
+    #     player1_rating = (room['players'][0]['self_scored'] * 20) + (room['players'][0]['self_scored'] * -0.5)
+    #     player2_rating = (room['players'][1]['self_scored'] * 20) + (room['players'][1]['self_scored'] * 0.5)
+    # player1_accuracy = (room['players'][0]['self_scored'] * room['players'][0]['hit']) / 100
+    # player2_accuracy = (room['players'][1]['self_scored'] * room['players'][1]['hit']) / 100
+    # await self.channel_layer.group_send(str(room['id']), {
+    #         'type': 'finishedGame',
+    #         'message': {
+    #             'user1' : room['players'][0]['user'],
+    #             'user2' : room['players'][1]['user'],
+    #             'playerScore1' : room['players'][0]['score'],
+    #             'playerScore2' : room['players'][1]['score'],
+    #             'time': room['time'],
+    #             'score': [room['players'][0]['score'], room['players'][1]['score']],
+    #             'selfScore': [room['players'][0]['self_scored'], room['players'][1]['self_scored']],
+    #             'hit': [room['players'][0]['hit'], room['players'][1]['hit']],
+    #             'accuracy': [player1_accuracy, player2_accuracy],
+    #             'rating': [player1_rating, player2_rating]
+    #         }
+    #     }
                 elif room['status'] == 'aborted':
+                    player1_accuracy = (room['players'][0]['self_scored'] * room['players'][0]['hit']) / 100
+                    player2_accuracy = (room['players'][1]['self_scored'] * room['players'][1]['hit']) / 100
                     # print("GAME IS ALREADY ABORTED")
                     await self.send(text_data=json.dumps({
                         'type': 'abortedGame',
                         'message': {
-                             'playerNo': player['playerNo'],
+                            'playerNo': player['playerNo'],
                             'user1' : room['players'][0]['user'],
                             'user2' : room['players'][1]['user'],
                             'playerScore1' : room['players'][0]['score'],
                             'playerScore2' : room['players'][1]['score'],
-                            'time': room['time']
+                            'time': room['time'],
+                            'score': [room['players'][0]['score'], room['players'][1]['score']],
+                            'selfScore': [room['players'][0]['self_scored'], room['players'][1]['self_scored']],
+                            'hit': [room['players'][0]['hit'], room['players'][1]['hit']],
+                            'accuracy': [player1_accuracy, player2_accuracy],
+                            'rating': [0, 0]
                         }
                     }))
                     return
                 elif room['status'] == 'finished':
+                    if room['players'][0]['score'] > room['players'][1]['score']:
+                        player1_rating = (room['players'][0]['self_scored'] * 20) + (room['players'][0]['self_scored'] * 0.5)
+                        player2_rating = (room['players'][1]['self_scored'] * 20) + (room['players'][1]['self_scored'] * -0.5)
+                    else:
+                        player1_rating = (room['players'][0]['self_scored'] * 20) + (room['players'][0]['self_scored'] * -0.5)
+                        player2_rating = (room['players'][1]['self_scored'] * 20) + (room['players'][1]['self_scored'] * 0.5)
+                    player1_accuracy = (room['players'][0]['self_scored'] * room['players'][0]['hit']) / 100
+                    player2_accuracy = (room['players'][1]['self_scored'] * room['players'][1]['hit']) / 100
                     await self.send(text_data=json.dumps({
                         'type': 'finishedGame',
                         'message': {
@@ -673,7 +714,12 @@ async def validatePlayer(self, data, rooms, user_channels):
                             'user2' : room['players'][1]['user'],
                             'playerScore1' : room['players'][0]['score'],
                             'playerScore2' : room['players'][1]['score'],
-                            'time': room['time']
+                            'time': room['time'],
+                            'score': [room['players'][0]['score'], room['players'][1]['score']],
+                            'selfScore': [room['players'][0]['self_scored'], room['players'][1]['self_scored']],
+                            'hit': [room['players'][0]['hit'], room['players'][1]['hit']],
+                            'accuracy': [player1_accuracy, player2_accuracy],
+                            'rating': [player1_rating, player2_rating]
                         }
                     }))
                     return
@@ -706,12 +752,15 @@ async def validatePlayer(self, data, rooms, user_channels):
     else:
         try:
             match_played = await sync_to_async(Match.objects.get)(room_id=message['roomID'])
+            match_statistics = await sync_to_async(MatchStatistics.objects.get)(match=match_played)
             player1_username = await sync_to_async(lambda:match_played.team1_player1.username)()
             player2_username = await sync_to_async(lambda:match_played.team2_player1.username)()
             player1 = await sync_to_async(customuser.objects.filter(username=player1_username).first)()
             player2 = await sync_to_async(customuser.objects.filter(username=player2_username).first)()
             users = []
             if match_played.match_status == 'aborted':
+                player1_accuracy = (match_statistics.team1_player1_score * match_statistics.team1_player1_hit) / 100
+                player2_accuracy = (match_statistics.team2_player1_score * match_statistics.team2_player1_hit) / 100
                 await self.send(text_data=json.dumps({
                     'type': 'abortedGame',
                     'message': {
@@ -719,7 +768,12 @@ async def validatePlayer(self, data, rooms, user_channels):
                         'user2' : player2_username,
                         'playerScore1' : match_played.team1_score,
                         'playerScore2' : match_played.team2_score,
-                        'time': match_played.duration
+                        'time': match_played.duration,
+                        'score': [match_played.team1_score, match_played.team2_score],
+                        'selfScore': [match_statistics.team1_player1_score, match_statistics.team2_player1_score,],
+                        'hit': [match_statistics.team1_player1_hit, match_statistics.team2_player1_hit],
+                        'accuracy': [player1_accuracy, player2_accuracy],
+                        'rating': [0, 0]
                     }
                 }))
                 with player1.avatar.open('rb') as f:
@@ -741,6 +795,14 @@ async def validatePlayer(self, data, rooms, user_channels):
                     }
                 }))
             elif match_played.match_status == 'finished':
+                if match_played.team1_score > match_played.team2_score:
+                    player1_rating = (match_statistics.team1_player1_score * 20) + (match_statistics.team1_player1_score * 0.5)
+                    player2_rating = (match_statistics.team2_player1_score * 20) + (match_statistics.team2_player1_score * -0.5)
+                else:
+                    player1_rating = (match_statistics.team1_player1_score * 20) + (match_statistics.team1_player1_score * -0.5)
+                    player2_rating = (match_statistics.team2_player1_score * 20) + (match_statistics.team2_player1_score * 0.5)
+                player1_accuracy = (match_statistics.team1_player1_score * match_statistics.team1_player1_hit) / 100
+                player2_accuracy = (match_statistics.team2_player1_score * match_statistics.team2_player1_hit) / 100
                 await self.send(text_data=json.dumps({
                     'type': 'finishedGame',
                     'message': {
@@ -748,7 +810,12 @@ async def validatePlayer(self, data, rooms, user_channels):
                         'user2' : player2_username,
                         'playerScore1' : match_played.team1_score,
                         'playerScore2' : match_played.team2_score,
-                        'time': match_played.duration
+                        'time': match_played.duration,
+                        'score': [match_played.team1_score, match_played.team2_score],
+                        'selfScore': [match_statistics.team1_player1_score, match_statistics.team2_player1_score],
+                        'hit': [match_statistics.team1_player1_hit, match_statistics.team2_player1_hit],
+                        'accuracy': [player1_accuracy, player2_accuracy],
+                        'rating': [player1_rating, player2_rating]
                     }
                 }))
                 with player1.avatar.open('rb') as f:
@@ -787,44 +854,81 @@ async def updatingGame(self, room):
 			'ballY': room['ball']['ballY'],
 		}
 	})
-
+# 'user': player.username,
+#                     'state': player_state.state,
+#                     'playerNo': player_state.playerNo,
+#                     'paddleX': player_state.paddleX,
+#                     'paddleY': player_state.paddleY,
+#                     'score': player_state.score,
+#                     'status': '',
+#                     'hit': 0, ####### added
+#                     'self_scored': 0, ####### added
+#                     'tmp_scored': 0 ####### added
 async def gameFinished(self, room):
-	await self.channel_layer.group_send(str(room['id']), {
-			'type': 'finishedGame',
-			'message': {
-				'user1' : room['players'][0]['user'],
-				'user2' : room['players'][1]['user'],
-				'playerScore1' : room['players'][0]['score'],
-				'playerScore2' : room['players'][1]['score'],
-                'time': room['time']
-			}
-		}
-	)
+    if room['players'][0]['score'] > room['players'][1]['score']:
+        player1_rating = (room['players'][0]['self_scored'] * 20) + (room['players'][0]['self_scored'] * 0.5)
+        player2_rating = (room['players'][1]['self_scored'] * 20) + (room['players'][1]['self_scored'] * -0.5)
+    else:
+        player1_rating = (room['players'][0]['self_scored'] * 20) + (room['players'][0]['self_scored'] * -0.5)
+        player2_rating = (room['players'][1]['self_scored'] * 20) + (room['players'][1]['self_scored'] * 0.5)
+    player1_accuracy = (room['players'][0]['self_scored'] * room['players'][0]['hit']) / 100
+    player2_accuracy = (room['players'][1]['self_scored'] * room['players'][1]['hit']) / 100
+    await self.channel_layer.group_send(str(room['id']), {
+            'type': 'finishedGame',
+            'message': {
+                'user1' : room['players'][0]['user'],
+                'user2' : room['players'][1]['user'],
+                'playerScore1' : room['players'][0]['score'],
+                'playerScore2' : room['players'][1]['score'],
+                'time': room['time'],
+                'score': [room['players'][0]['score'], room['players'][1]['score']],
+                'selfScore': [room['players'][0]['self_scored'], room['players'][1]['self_scored']],
+                'hit': [room['players'][0]['hit'], room['players'][1]['hit']],
+                'accuracy': [player1_accuracy, player2_accuracy],
+                'rating': [player1_rating, player2_rating]
+            }
+        }
+)
 
 async def gameAborted(self, room):
-	await self.channel_layer.group_send(str(room['id']), {
-			'type': 'abortedGame',
-			'message': {
-				'user1' : room['players'][0]['user'],
-				'user2' : room['players'][1]['user'],
-				'playerScore1' : room['players'][0]['score'],
-				'playerScore2' : room['players'][1]['score'],
-                'time': room['time']
-			}
-		}
+    player1_accuracy = (room['players'][0]['self_scored'] * room['players'][0]['hit']) / 100
+    player2_accuracy = (room['players'][1]['self_scored'] * room['players'][1]['hit']) / 100
+    await self.channel_layer.group_send(str(room['id']), {
+            'type': 'abortedGame',
+            'message': {
+                'user1' : room['players'][0]['user'],
+                'user2' : room['players'][1]['user'],
+                'playerScore1' : room['players'][0]['score'],
+                'playerScore2' : room['players'][1]['score'],
+                'time': room['time'],
+                'score': [room['players'][0]['score'], room['players'][1]['score']],
+                'selfScore': [room['players'][0]['self_scored'], room['players'][1]['self_scored']],
+                'hit': [room['players'][0]['hit'], room['players'][1]['hit']],
+                'accuracy': [player1_accuracy, player2_accuracy],
+                'rating': [0, 0]
+            }
+        }
 	)
 
-def collision(self, ball, player):
-	ballTop = ball['ballY'] - 7 ## 15
-	ballButtom = ball['ballY'] + 7 ## 15
-	ballLeft = ball['ballX'] - 7 ## 15
-	ballRight = ball['ballX'] + 7 ## 15
-	playerTop = player['paddleY']
-	playerButtom = player['paddleY'] + 70
-	playerLeft = player['paddleX']
-	playerRight = player['paddleX'] + 10
-	return (ballRight > playerLeft and ballButtom > playerTop and
-			ballLeft < playerRight and ballTop < playerButtom)
+def collision(self, ball, player, room):
+    ballTop = ball['ballY'] - 7 ## 15
+    ballButtom = ball['ballY'] + 7 ## 15
+    ballLeft = ball['ballX'] - 7 ## 15
+    ballRight = ball['ballX'] + 7 ## 15
+    playerTop = player[0]['paddleY']
+    playerButtom = player[0]['paddleY'] + 70
+    playerLeft = player[0]['paddleX']
+    playerRight = player[0]['paddleX'] + 10
+    if (ballRight > playerLeft and ballButtom > playerTop and
+            ballLeft < playerRight and ballTop < playerButtom):
+        room['players'][0]['tmp_scored'] = 0
+        room['players'][1]['tmp_scored'] = 0
+        room['players'][player[1]]['hit'] += 1
+        room['players'][player[1]]['tmp_scored'] = 1
+        return 1
+    return 0
+    # return (ballRight > playerLeft and ballButtom > playerTop and
+    #         ballLeft < playerRight and ballTop < playerButtom)
 	# return (ballRight >= playerLeft or (ballButtom == playerTop and ((ballLeft >= playerRight and ballLeft <= playerLeft) or (ballRight >= playerLeft and ballRight <= playerRight))) or (ballTop == playerButtom and ((ballLeft >= playerRight and ballLeft <= playerLeft) or (ballRight >= playerLeft and ballRight <= playerRight))) or ballLeft <= playerRight)
 
 async def runOverGame(self, room, ballProps, rooms, user_channels):
@@ -894,7 +998,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
                             }
                         }
                     })
-            await sync_to_async(Match.objects.create)(
+            match = await sync_to_async(Match.objects.create)(
                 mode = room['mode'],
                 room_id = room['id'],
                 team1_player1 = player1,
@@ -908,6 +1012,45 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
                 match_status = room['status'],
                 duration=room['time']
             )
+            player1_rating = 0
+            player2_rating = 0
+            if room['players'][0]['score'] > room['players'][1]['score']:
+                if room['status'] == 'finished':
+                    player1_rating = (room['players'][0]['self_scored'] * 20) + (room['players'][0]['self_scored'] * 0.5)
+                    player2_rating = (room['players'][1]['self_scored'] * 20) + (room['players'][1]['self_scored'] * -0.5)
+                else:
+                    player1_rating = 0
+                    player2_rating = 0
+            else:
+                if room['status'] == 'finished':
+                    player1_rating = (room['players'][0]['self_scored'] * 20) + (room['players'][0]['self_scored'] * -0.5)
+                    player2_rating = (room['players'][1]['self_scored'] * 20) + (room['players'][1]['self_scored'] * 0.5)
+                else:
+                    player1_rating = 0
+                    player2_rating = 0
+            await sync_to_async(MatchStatistics.objects.create)(
+                match=match,
+                team1_player1_score=room['players'][0]['self_scored'],
+                team2_player1_score=room['players'][1]['self_scored'],
+                team1_player1_hit=room['players'][0]['hit'],
+                team2_player1_hit=room['players'][1]['hit'],
+                team1_player1_rating=player1_rating,
+                team2_player1_rating=player2_rating,
+                team1_player1_level=player1.level,
+                team2_player1_level=player2.level,
+            )
+            if room['status'] == 'finished':
+                player1_totalXP = player1.total_xp + player1_rating
+                player1.level += (player1_totalXP / 1000)
+                player1.total_xp = (player1_totalXP % 1000)
+                await sync_to_async(player1.save)()
+                player2_totalXP = player2.total_xp + player2_rating
+                player2.level += (player2_totalXP / 1000)
+                player2.total_xp = (player2_totalXP % 1000)
+                await sync_to_async(player2.save)()
+            # group_channels = await sync_to_async(self.channel_layer.group_channels)(str(room['id'])) #######################
+            # for channel_name in group_channels: #######################
+            #     sync_to_async(self.channel_layer.group_discard)(str(room['id']), channel_name) #######################
             return
         if room["ball"]["ballY"] + 7 > 390 or room["ball"]["ballY"] - 7 < 10: ## was 10 now 11 just for the stucking
             ballProps["velocityY"] *= -1
@@ -916,10 +1059,10 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
         if room["ball"]["ballY"] + 7 > 390:
             room["ball"]["ballY"] -= 5
             # ballProps["velocityX"] *= -1
-        player = room["players"][0] if room["ball"]["ballX"] < 355 else room['players'][1]
+        player = [room["players"][0], 0] if room["ball"]["ballX"] < 355 else [room['players'][1], 1]
         # print(f"speed : {ballProps['speed']}")
-        if collision(self, room["ball"], player):
-            hitPoint = room["ball"]["ballY"] - (player["paddleY"] + 35) #### player["height"] / 2 => 50
+        if collision(self, room["ball"], player, room):
+            hitPoint = room["ball"]["ballY"] - (player[0]["paddleY"] + 35) #### player["height"] / 2 => 50
             hitPoint = hitPoint / 35 #### player["height"] / 2 => 50
             angle = hitPoint * math.pi / 4
             direction = 1 if (room["ball"]["ballX"] < 355) else -1
@@ -932,8 +1075,10 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
         if room["ball"]["ballX"] - 7 < 0 or room["ball"]["ballX"] + 7 > 710:
             if room["ball"]["ballX"] - 7 < 0:
                 room["players"][1]["score"] += 1
+                room['players'][1]['self_scored'] += room['players'][1]['tmp_scored']
             elif room["ball"]["ballX"] + 7 > 710:
                 room["players"][0]["score"] += 1
+                room['players'][0]['self_scored'] += room['players'][0]['tmp_scored']
             serveX = random.randint(1, 2)
             serveY = random.randint(1, 2)
             room["ball"]["ballX"] = 355
@@ -995,7 +1140,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
                                 }
                             }
                         })
-                await sync_to_async(Match.objects.create)(
+                match = await sync_to_async(Match.objects.create)(
                     mode = room['mode'],
                     room_id = room['id'],
                     team1_player1 = player1,
@@ -1009,6 +1154,36 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
                     match_status = room['status'],
                     duration=room['time']
                 )
+                player1_rating = 0
+                player2_rating = 0
+                if room['players'][0]['score'] > room['players'][1]['score']:
+                    player1_rating = (room['players'][0]['self_scored'] * 20) + (room['players'][0]['self_scored'] * 0.5)
+                    player2_rating = (room['players'][1]['self_scored'] * 20) + (room['players'][1]['self_scored'] * -0.5)
+                else:
+                    player1_rating = (room['players'][0]['self_scored'] * 20) + (room['players'][0]['self_scored'] * -0.5)
+                    player2_rating = (room['players'][1]['self_scored'] * 20) + (room['players'][1]['self_scored'] * 0.5)
+                await sync_to_async(MatchStatistics.objects.create)(
+                    match=match,
+                    team1_player1_score=room['players'][0]['self_scored'],
+                    team2_player1_score=room['players'][1]['self_scored'],
+                    team1_player1_hit=room['players'][0]['hit'],
+                    team2_player1_hit=room['players'][1]['hit'],
+                    team1_player1_rating=player1_rating,
+                    team2_player1_rating=player2_rating,
+                    team1_player1_level=player1.level,
+                    team2_player1_level=player2.level,
+                )
+                player1_totalXP = player1.total_xp + player1_rating
+                player1.level += (player1_totalXP / 1000)
+                player1.total_xp = (player1_totalXP % 1000)
+                await sync_to_async(player1.save)()
+                player2_totalXP = player2.total_xp + player2_rating
+                player2.level += (player2_totalXP / 1000)
+                player2.total_xp = (player2_totalXP % 1000)
+                await sync_to_async(player2.save)()
+                # group_channels = await sync_to_async(self.channel_layer.group_channels)(str(room['id'])) #######################
+                # for channel_name in group_channels: #######################
+                #     sync_to_async(self.channel_layer.group_discard)(str(room['id']), channel_name) #######################
                 return
             elif room['players'][1]['score'] == 5:
                 room['winner'] = 2
@@ -1063,7 +1238,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
                                 }
                             }
                         })
-                await sync_to_async(Match.objects.create)(
+                match = await sync_to_async(Match.objects.create)(
                     mode = room['mode'],
                     room_id = room['id'],
                     team1_player1 = player1,
@@ -1077,6 +1252,36 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
                     match_status = room['status'],
                     duration=room['time']
                 )
+                player1_rating = 0
+                player2_rating = 0
+                if room['players'][0]['score'] > room['players'][1]['score']:
+                    player1_rating = (room['players'][0]['self_scored'] * 20) + (room['players'][0]['self_scored'] * 0.5)
+                    player2_rating = (room['players'][1]['self_scored'] * 20) + (room['players'][1]['self_scored'] * -0.5)
+                else:
+                    player1_rating = (room['players'][0]['self_scored'] * 20) + (room['players'][0]['self_scored'] * -0.5)
+                    player2_rating = (room['players'][1]['self_scored'] * 20) + (room['players'][1]['self_scored'] * 0.5)
+                await sync_to_async(MatchStatistics.objects.create)(
+                    match=match,
+                    team1_player1_score=room['players'][0]['self_scored'],
+                    team2_player1_score=room['players'][1]['self_scored'],
+                    team1_player1_hit=room['players'][0]['hit'],
+                    team2_player1_hit=room['players'][1]['hit'],
+                    team1_player1_rating=player1_rating,
+                    team2_player1_rating=player2_rating,
+                    team1_player1_level=player1.level,
+                    team2_player1_level=player2.level,
+                )
+                player1_totalXP = player1.total_xp + player1_rating
+                player1.level += (player1_totalXP / 1000)
+                player1.total_xp = (player1_totalXP % 1000)
+                await sync_to_async(player1.save)()
+                player2_totalXP = player2.total_xp + player2_rating
+                player2.level += (player2_totalXP / 1000)
+                player2.total_xp = (player2_totalXP % 1000)
+                await sync_to_async(player2.save)()
+                # group_channels = await sync_to_async(self.channel_layer.group_channels)(str(room['id'])) #######################
+                # for channel_name in group_channels: #######################
+                #     sync_to_async(self.channel_layer.group_discard)(str(room['id']), channel_name) #######################
                 return
             break
         await asyncio.create_task(updatingGame(self, room))
@@ -1379,7 +1584,10 @@ async def accept_game_invite(self, data, rooms, user_channels):
                     'paddleX': 15,
                     'paddleY': 165,
                     'score': 0,
-                    'status': ''
+                    'status': '',
+                    'hit': 0, ####### added
+                    'self_scored': 0, ####### added
+                    'tmp_scored': 0 ####### added
                 }, {
                     'user': friend.username,
                     'state': 'inactive',
@@ -1387,7 +1595,10 @@ async def accept_game_invite(self, data, rooms, user_channels):
                     'paddleX': 685,
                     'paddleY': 165,
                     'score': 0,
-                    'status': ''
+                    'status': '',
+                    'hit': 0, ####### added
+                    'self_scored': 0, ####### added
+                    'tmp_scored': 0 ####### added
                 }],
                 'ball': {
                     'ballX': 355,
@@ -1432,7 +1643,6 @@ async def accept_game_invite(self, data, rooms, user_channels):
                 await sync_to_async(player_notif.delete)()
 
 async def refuse_game_invite(self, data, rooms, user_channels):
-    # print(f"ACCEPTING A MATCH FRIEND")
     for key, value in rooms.items():
         if value['players'][0]['user'] == data['message']['user'] or value['players'][1]['user'] == data['message']['user']:
             await self.send(text_data=json.dumps({
@@ -1446,15 +1656,12 @@ async def refuse_game_invite(self, data, rooms, user_channels):
                 'message': 'alreadyPlaying'
             }))
             return
-    # print("ACCEPT 1")
     creator = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
     friend = await sync_to_async(customuser.objects.filter(username=data['message']['target']).first)()
     active_match = await sync_to_async(ActiveMatch.objects.filter(room_id=data['message']['roomID']).first)()
     if active_match:
-        # print("ACCEPT 2")
         is_invited = await sync_to_async(NotifPlayer.objects.filter(active_match=active_match, player=friend).first)()
         if is_invited:
-            # print("ACCEPT 101")
             await sync_to_async(is_invited.delete)()
             game_notif = await sync_to_async(GameNotifications.objects.filter(active_match=active_match, target=friend).first)()
             await sync_to_async(game_notif.delete)()
@@ -1541,7 +1748,10 @@ async def join_new_room(self, data, rooms, user_channels):
                 'paddleX': player_state.paddleX,
                 'paddleY': player_state.paddleY,
                 'score': player_state.score,
-                'status': ''
+                'status': '',
+                'hit': 0, ####### added
+                'self_scored': 0, ####### added
+                'tmp_scored': 0 ####### added
             })
             with player.avatar.open('rb') as f:
                 users.append({
