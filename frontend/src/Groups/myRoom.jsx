@@ -1,11 +1,17 @@
 import { useContext, useEffect, useState } from "react";
 import * as ChatIcons from "../assets/chat/media";
 import AuthContext from "../navbar-sidebar/Authcontext";
+import ChatContext from "./ChatContext";
 import ChatRoomMember from "./chatRoomMember";
 import ChatRoomInvitee from './chatRoomInvitee'
+import { useNavigate } from "react-router-dom";
 
 const MyRoom = (props) => {
   const {socket, user} = useContext(AuthContext)
+  const {
+    setIsHome,
+    setSelectedChatRoom,
+  } = useContext(ChatContext);
   const [showSettings, setShowSettings] = useState(false);
   const [leaveRoom, setLeaveRoom] = useState(false);
   const [changeRoomName, setChangeRoomName] = useState(false);
@@ -17,6 +23,10 @@ const MyRoom = (props) => {
   const [newRoomIcon, setnewRoomIcon] = useState(null)
   const [allChatRoomMembers,setAllChatRoomMembers] = useState([])
   const [allFriends,setAllFriends] = useState([])
+  const navigate = useNavigate();
+
+
+
   const showRoomSettings = () => {
     console.log("i clicked show settings");
     setShowSettings(true);
@@ -131,10 +141,20 @@ const MyRoom = (props) => {
       setShowSettings(false)
     }
   }
+  const navigateToChatRoom = () => {
+    setSelectedChatRoom({
+      name: props.name,
+      memberCount: props.membersCount,
+      icon: props.roomIcons[props.index],
+      roomId: props.roomId,
+    });
+    setIsHome(false)
+    navigate(`/mainpage/chat`)
+  }
 
   return (
     <div className="room-container">
-      <div className="room-header">
+      <div className="room-header" onClick={navigateToChatRoom}>
         <img src={props.roomIcons[props.index]} className="room-avatar" alt="" />
         <div className="room-info">
           <div className="room-name">{props.name}</div>

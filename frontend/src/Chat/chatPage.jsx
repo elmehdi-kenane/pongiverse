@@ -14,10 +14,11 @@ const Chat = () => {
     selectedChatRoom,
     setSelectedDirect,
     selectedDirect,
+    isHome,
+    setIsHome,
   } = useContext(ChatContext);
   const { user } = useContext(AuthContext);
   const [query, setQuery] = useState("");
-  const [isHome, setIsHome] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
   const filteredConversations = directConversations.filter((conversation) => {
     return conversation.name.includes(query);

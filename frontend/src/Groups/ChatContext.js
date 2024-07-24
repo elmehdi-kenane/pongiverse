@@ -13,6 +13,7 @@ export const ChatProvider = ({ children }) => {
   const [directsImages, setDirectsImages] = useState([]);
   const [chatRoomIcons, setChatRoomIcons] = useState([]);
   let [isBlur, setIsBlur] = useState(false)
+  const [isHome, setIsHome] = useState(true);
   const [selectedChatRoom, setSelectedChatRoom] = useState({
     name: "",
     memberCount: "",
@@ -120,6 +121,8 @@ export const ChatProvider = ({ children }) => {
     setSelectedDirect: setSelectedDirect,
     isBlur : isBlur,
     setIsBlur: setIsBlur,
+    isHome:isHome,
+    setIsHome:setIsHome,
   };
   return (
     <ChatContext.Provider value={contextData}>{children}</ChatContext.Provider>
