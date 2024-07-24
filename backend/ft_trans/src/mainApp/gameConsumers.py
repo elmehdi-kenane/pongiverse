@@ -1643,7 +1643,6 @@ async def accept_game_invite(self, data, rooms, user_channels):
                 await sync_to_async(player_notif.delete)()
 
 async def refuse_game_invite(self, data, rooms, user_channels):
-    # print(f"ACCEPTING A MATCH FRIEND")
     for key, value in rooms.items():
         if value['players'][0]['user'] == data['message']['user'] or value['players'][1]['user'] == data['message']['user']:
             await self.send(text_data=json.dumps({
