@@ -19,7 +19,6 @@ import requests
 the_tournament_id = 0
 
 async def disconnected(self, user_channels):
-	print(f"ALL THE USERS CHANNEL_NAMES in DISCONNECTED : {user_channels}")
 	cookiess = self.scope.get('cookies', {})
 	token = cookiess.get('token')
 	decoded_token = AccessToken(token)

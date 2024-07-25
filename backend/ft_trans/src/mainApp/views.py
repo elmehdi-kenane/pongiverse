@@ -3,10 +3,12 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from myapp.models import customuser
 from chat.models import Friends
+from .models import GameCustomisation
 from .models import TournamentMembers, Tournament, TournamentInvitation, Round, TournamentUserInfo, DisplayOpponent
 import random
 from django.db.models import Q
 from myapp.serializers import MyModelSerializer
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError, AccessToken
 # from rest_framework.exceptions import AuthenticationFailed
 # from .serializers import UserSerializer
 # from .models import User
@@ -77,14 +79,17 @@ from django.http import HttpResponse
 import base64
 import os
 from .models import GameNotifications
+from mimetypes import guess_type
 
 @api_view(['POST'])
 def online_friends(request):
 	username = request.data['user']
-	print(f'user is {username}')
+	# print(f'user is {username}')
 	user = customuser.objects.get(username=username)
 	allFriends = []
+	print(f"is_online {user.is_online}, is_playing {user.is_playing}, username {user.username}")
 	for user_id in Friends.objects.filter(user=user):
+		print(f"is_online {user_id.friend.is_online}, is_playing {user_id.friend.is_playing}, username {user_id.friend.username}")
 		if user_id.friend.is_online and not user_id.friend.is_playing: ####################  and user_id.friend.is_playing
 			image_path = user_id.friend.avatar.path
 			allFriends.append({'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path})
@@ -93,12 +98,12 @@ def online_friends(request):
 @api_view(['POST'])
 def notifs_friends(request):
 	username = request.data['user']
-	print(f'user is {username}')
+	# print(f'user is {username}')
 	target = customuser.objects.get(username=username)
 	allNotifs = []
 	for gameNotif in GameNotifications.objects.filter(target=target):
 		# print(f'ROOM_ID WHEN FETCHING IS : {gameNotif.room_id}')
-		allNotifs.append({'user': gameNotif.user.username, 'avatar': gameNotif.user.avatar.path, 'roomID': gameNotif.active_match.room_id})
+		allNotifs.append({'user': gameNotif.user.username, 'avatar': gameNotif.user.avatar.path, 'roomID': gameNotif.active_match.room_id, 'mode': gameNotif.mode})
 	return Response({'message': allNotifs})
 
 
@@ -106,7 +111,10 @@ def notifs_friends(request):
 def serve_image(request):
 	if (request.data).get('image'):
 		with open(request.data['image'], 'rb') as image_file:
-			return HttpResponse(image_file.read(), content_type='image/jpeg')
+			if image_file:
+				return HttpResponse(image_file.read(), content_type='image/jpeg')
+			else:
+				return Response("not found")
 
 @api_view(['POST'])
 def get_user(request):
@@ -309,6 +317,54 @@ def get_tournament_size(request):
 	else:
 		response.data = {'Case' : 'size_is_valide'}
 	return response
+def customize_game(request):
+	paddle_color = request.data['paddle']
+	ball_color = request.data['ball']
+	board_color = request.data['board']
+	ball_effect = request.data['effect']
+	username = request.data['username']
+	print(f"THE SELF OBJECT IS : {request.COOKIES.get('token')}")
+	user = customuser.objects.filter(username=username).first()
+	if user:
+		print(request.data)
+		game_customize = GameCustomisation.objects.filter(user=user).first()
+		if game_customize:
+			game_customize.paddle_color = paddle_color
+			game_customize.ball_color = ball_color
+			game_customize.board_color = board_color
+			game_customize.ball_effect = ball_effect
+			game_customize.save()
+			return Response({'message': 'updated successfully'})
+		GameCustomisation.objects.create(
+			user=user,
+			paddle_color=paddle_color,
+			ball_color=ball_color,
+			board_color=board_color,
+			ball_effect=ball_effect
+		)
+		return Response({'message': 'updated successfully'})
+		# return Response({'message': 'row not created yet'})
+	else:
+		return Response({'message': 'user not exit in the database'})
+
+@api_view(['GET'])
+def get_customize_game(request):
+	try:
+		print(f"THE SELF OBJECT IS : {request.COOKIES.get('token')}")
+		token = request.COOKIES.get('token')
+		decoded_token = AccessToken(token)
+		data = decoded_token.payload
+		print(data)
+		if data.get('user_id'):
+			user = customuser.objects.filter(id=data['user_id']).first()
+			if user is not None:
+				game_customize = GameCustomisation.objects.filter(user=user).first()
+				if game_customize:
+					return Response({'data' : [game_customize.paddle_color, game_customize.ball_color, game_customize.board_color, game_customize.ball_effect]})
+				return Response({'data' : ['blue', 'red', 'black']})
+		return Response({'data' : None})
+	except TokenError as e:
+		return Response({'data' : None})
 
 @api_view(['POST'])
 def set_is_inside(request):

@@ -1,0 +1,303 @@
+.settings-page {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    /* border: #826aed solid 2px; */
+    padding: 100px 20px 0;
+    gap: 20px;
+    overflow-y: scroll;
+}
+
+.purple-bg {
+    background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
+    box-shadow: 0 0px 20px 0 rgb(130, 106, 237, 0.5) ;
+    box-shadow: 0 0.5px 5px 0 #826aed;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+
+.shadow-bg {
+    box-shadow: 0 0px 20px 0 #ccc ;
+    box-shadow: 0 0.5px 5px 0 #ccc;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+}
+
+.btn-active {
+    background: linear-gradient(to bottom, rgb(68, 45, 106, 0.9), rgba(74, 37, 139, 0.4));
+}
+.settings__personal-info .personal-info__update .no-botom {
+    border-bottom: none;
+}
+
+/* -------------------------- Left Side -------------------------- */
+
+.settings-page .settings__leftside {
+    display: flex;
+    flex-direction: column;
+    height: 400px;
+    width: 25%;
+    /* border: #8edf34 solid 1px; */
+    color: white;
+}
+.settings__leftside .pic-name{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.settings__leftside .pic-name img {
+    height: 40px;
+}
+
+.settings-page .settings__leftside .left__email{
+    margin-top: 5px;
+    height: 30px;
+    /* text-align: center; */
+    border-bottom: #ccc 0.5px solid;
+    margin-bottom: 20px;
+}
+
+.settings-page .settings__leftside .left__security,
+.settings-page .settings__leftside .left__pers-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 45px;
+    width: 100%;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+
+/* -------------------------- Right Side -------------------------- */
+
+/* --- Security --- */
+
+.settings-page .settings__security {
+    display: flex;
+    height: 600px;
+    width: 75%;
+    margin-bottom: 150px;
+
+    border: #ccc solid 1px;
+    background: rgb(68, 45, 106);
+    box-shadow: 0 0px 20px 0 #ccc ;
+    box-shadow: 0 0.5px 5px 0 #ccc;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 5px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+
+/* --- Personal Info --- */
+
+.settings-page .settings__personal-info {
+    display: flex;
+    flex-direction: column;
+    /* height: 600px; */
+    width: 70%;
+    padding-top: 5px;
+    gap: 15px;
+    margin-bottom: 800px;
+}
+
+.settings__personal-info .personal-info__header {
+    color: white;
+    font-size: 28px;
+    border-bottom: #ccc 0.1px solid;
+    letter-spacing: 0.5px;
+}
+.settings__personal-info .personal-info__update {
+    display: flex;
+    flex-direction: column;
+    /* height: 100%; */
+    
+    background: linear-gradient(to bottom, rgb(68, 45, 106, 0.8), rgba(74, 37, 139, 0));
+    box-shadow: 0 0px 20px 0 #ccc ;
+    box-shadow: 0 0.5px 5px 0 #ccc;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 5px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+
+.personal-info__update .update { /* Update Container */
+    display: flex;
+    align-items: center;
+    height: 90px;
+    border-bottom: 2px solid rgba( 255, 255, 255, 0.2 );
+    padding: 0 40px 0 20px;
+    gap: 15px;
+    color: white;
+}
+.personal-info__update .update img {
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.personal-info__update .update + .update img {
+    margin-right: 10px;
+    height: 55px;
+    width: 70px;
+    border: 1px solid white;
+    border-radius: 5px;
+}
+
+.personal-info__update .update .title-pic {
+    font-size: 18px;
+    font-weight: 450;
+    color: #ccc;
+}
+.personal-info__update .update .title {
+    color: #ccc;
+    width: 90px;
+    font-size: 18px;
+    font-weight: 450;
+    margin-right: 20px;
+    /* border: #826aed solid 1px; */
+}
+.update .update__info {
+    font-size: 18px;
+    font-weight: 450;
+    cursor: inherit;
+}
+
+/* --- Update Bio --- */
+.update .update__bio {
+    position: relative;
+    cursor: pointer;
+}
+.update .update__bio .update__info-hover {
+    position: absolute;
+    top: -23px;
+    opacity: 0;
+    padding: 5px;
+    font-size: 15px;
+    transition: opacity 1s ease;
+    border: solid white 0.5px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    cursor: pointer;
+}
+.update .update__bio:hover .update__info-hover{
+    opacity: 1;
+}
+.update .update__bio:hover .update__info {
+    opacity: 0;
+}
+/*--- Input ---*/
+
+.personal-info__update .update .update__input {
+    padding-left: 5px;
+    width: 160px;
+    height: 35px;
+    outline: none;
+    border: solid white 0.5px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    color : white;
+    font-size: 17px;
+}
+.update .update__input::placeholder {
+    color: rgb(127, 127, 127, 0.8);
+    font-size: 14px;
+}
+
+.personal-info__update .update-height { /* Bio Text Area */
+    height: 150px;
+}
+.personal-info__update .update .input-bio {
+    height: 100px;
+    width: 250px;
+    padding: 8px;
+    font-size: 15px;
+}
+
+/*---- Update Btn ----*/
+
+.personal-info__update .update .update__btn {
+    background-color: #826aed;
+    border: white 1px solid;
+    border-radius: 10px;
+    padding: 8px 25px;
+    margin-left: auto;
+    cursor: pointer;
+    user-select: none;
+}
+.personal-info__update .update .update__btn:hover {
+    padding: 9px 27px;
+    background-color: #927eea;
+    transition: ease-in-out 0.2s;
+}
+
+/*---- Update Country ----*/
+
+.update .country__select-button {
+    user-select: none;
+    margin-top: 5px;
+    /* width: 200px; */
+    color: white;
+    background: linear-gradient(to bottom, rgb(68, 45, 106, 0.9), rgba(74, 37, 139, 0.4));
+    border: white 1px solid;
+}
+.update .update__country-placeholder {
+    color: white;
+    font-size: 15px;
+}
+
+.country-space {
+    justify-content: space-between;
+}
+
+/*------ Adjust Pic -----*/
+
+.adjustpic {
+    display: flex;
+    /* height: 400px; */
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+    gap: 20px;
+    padding: 10px 0;
+}
+.adjustpic .adjustpic__img-name {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    
+}
+.adjustpic .adjustpic__img-name img{
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+}
+.adjustpic .adjustpic__img-name h1{
+    font-size: 20px;
+    color: white;
+    font-weight: 500;
+}
+
+.adjustpic .adjustpic__submit {
+    display: flex;
+    gap: 10px;
+}
+.adjustpic .adjustpic__submit button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 30px;
+    border: solid 1px white;
+    border-radius: 5px;
+    background: #442d6ae6;
+    color: white;
+    font-weight: 450;
+    font-size: 15px;
+    cursor: pointer;
+}
+.adjustpic .adjustpic__submit button:nth-child(2) {
+    background: #826aed;
+}

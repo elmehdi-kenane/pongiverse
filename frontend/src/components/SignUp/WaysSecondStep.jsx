@@ -62,7 +62,6 @@ function WaysSecondStep() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-
 		const validationErrors = {};
 		if (!nextdata.username.trim()) {
 			validationErrors.username = "username is required";
