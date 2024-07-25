@@ -72,6 +72,29 @@ const Modes = () => {
 	const JoinTournament = async () => {
 		navigate("jointournament")
 	}
+  useEffect(() => {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.onmessage = (event) => {
+            let data = JSON.parse(event.data)
+            let type = data.type
+            let message = data.message
+            if (type === 'goToGamingPage') {
+                console.log("navigating now")
+                console.log("")
+                if (message.mode === '1vs1')
+                    navigate(`/mainpage/game/solo/1vs1/friends`)
+                else {
+
+                    navigate(`/mainpage/game/solo/2vs2/friends`)
+                }
+            } else if (type === 'receiveFriendGame') {
+              console.log("RECEIVED A GAME REQUEST")
+              setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message])
+              setRoomID(message.roomID)
+            }
+        }
+    }
+  }, [socket])
 
 	useEffect(() => {
 		if (socket && socket.readyState === WebSocket.OPEN) {
@@ -93,6 +116,35 @@ const Modes = () => {
 		}
 	}, [socket])
 
+//   const acceptInvitation = (creator) => {
+//     let notifSelected = allGameNotifs.filter((user) => user.user === creator)
+//     setAllGameNotifs(allGameNotifs.filter((user) => user.user !== creator))
+//     console.log(creator, user, notifSelected)
+//     if (socket && socket.readyState === WebSocket.OPEN) {
+//         console.log("inside join")
+//         if (notifSelected[0].mode === '1vs1') {
+//             socket.send(JSON.stringify({
+//                 type: 'acceptInvitation',
+//                 message: {
+//                     user: notifSelected[0].user,
+//                     target: user,
+//                     roomID: notifSelected[0].roomID
+//                 }
+//             }))
+//         }
+//         else if (notifSelected[0].mode === '2vs2') {
+//             console.log("2vs2 accepting notif")
+//             socket.send(JSON.stringify({
+//                 type: 'acceptInvitationMp',
+//                 message: {
+//                     user: notifSelected[0].user,
+//                     target: user,
+//                     roomID: notifSelected[0].roomID
+//                 }
+//             }))
+//         }
+//       }
+//   }
 
 
 	const refuseInvitation = (creator) => {

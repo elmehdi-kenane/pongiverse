@@ -9,11 +9,12 @@ import ChatContext from "./ChatContext";
 import * as ChatIcons from "../assets/chat/media";
 import "../assets/chat/Groups.css";
 
+
 const Rooms = () => {
   const [createRoom, setCreateRoom] = useState(false);
   const [joinRoom, setJoinRoom] = useState(false);
-  const { isBlur, setIsBlur } = useContext(ChatContext);
-  const { user, socket } = useContext(AuthContext);
+  // const { isBlur, setIsBlur } = useContext(ChatContext);
+  const { user, socket, isBlur, setIsBlur } = useContext(AuthContext);
   const [myRooms, setMyRooms] = useState([]);
   const [roomInvitations, setRoomInvitations] = useState([]);
   const [myRoomsIcons, setMyRoomsIcons] = useState([]);

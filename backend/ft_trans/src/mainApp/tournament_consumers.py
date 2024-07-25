@@ -14,7 +14,6 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from django.core.exceptions import ObjectDoesNotExist
 
 async def disconnected(self, user_channels):
-	print(f"ALL THE USERS CHANNEL_NAMES in DISCONNECTED : {user_channels}")
 	cookiess = self.scope.get('cookies', {})
 	token = cookiess.get('token')
 	decoded_token = AccessToken(token)

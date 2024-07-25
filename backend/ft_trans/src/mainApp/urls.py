@@ -19,4 +19,6 @@ urlpatterns = [
 	path('is-joining-tournament', views.is_joining_tournament, name='is_joining_tournament'),
 	path('get-tournament-size', views.get_tournament_size, name='get_tournament_size'),
 	path('is-started-and-not-finshed', views.is_started_and_not_finshed, name='is_started_and_not_finshed'),
+    path('customizeGame', views.customize_game, name='image'),
+    path('getCustomizeGame', views.get_customize_game, name='image'),
 ]

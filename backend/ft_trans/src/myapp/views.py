@@ -167,6 +167,7 @@ class VerifyTokenView(APIView):
 			token = request.COOKIES.get('token')
 			decoded_token = AccessToken(token)
 			data = decoded_token.payload
+			# print(data)
 			if not data.get('user_id'):
 				if username:
 					user = customuser.objects.filter(username=username).first()
@@ -327,6 +328,17 @@ def SignUpGoogleGetUrl(request):
 	return response
 
 
+@api_view(['GET'])
+def SignUpIntraGetUrl(request):
+	response = Response()
+	client_id = 'u-s4t2ud-c5d50d0148bff2ac03dbdadd313e919f7799e35329997235b2427e1cef984e18'
+	redirect_uri = 'http://localhost:3000/signup'
+	auth_url = 'https://api.intra.42.fr/oauth/authorize'
+	response_type = 'code'
+	auth_url_with_params = f'{auth_url}?client_id={client_id}&redirect_uri={redirect_uri}&response_type={response_type}'
+	response.data = {'code' : auth_url_with_params}
+	return response
+
 @api_view(['POST'])
 def SignInIntraGetUserData(request):
 	try :
@@ -360,16 +372,6 @@ def SignInIntraGetUserData(request):
 		print(f"Exception: {str(e)}")
 		return Response({'error': str(e)}, status=500)
 
-@api_view(['GET'])
-def SignUpIntraGetUrl(request):
-	response = Response()
-	client_id = 'u-s4t2ud-c5d50d0148bff2ac03dbdadd313e919f7799e35329997235b2427e1cef984e18'
-	redirect_uri = 'http://localhost:3000/signup'
-	auth_url = 'https://api.intra.42.fr/oauth/authorize'
-	response_type = 'code'
-	auth_url_with_params = f'{auth_url}?client_id={client_id}&redirect_uri={redirect_uri}&response_type={response_type}'
-	response.data = {'code' : auth_url_with_params}
-	return response
 
 @api_view(['POST'])
 def SignUpGoogleGetUserData(request):

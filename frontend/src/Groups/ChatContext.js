@@ -12,7 +12,6 @@ export const ChatProvider = ({ children }) => {
   const [directConversations, setDirectConversations] = useState([]);
   const [directsImages, setDirectsImages] = useState([]);
   const [chatRoomIcons, setChatRoomIcons] = useState([]);
-  let [isBlur, setIsBlur] = useState(false)
   const [isHome, setIsHome] = useState(true);
   const [selectedChatRoom, setSelectedChatRoom] = useState({
     name: "",
@@ -91,9 +90,10 @@ export const ChatProvider = ({ children }) => {
     const fetchDirectsWithMessage = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/users/firendwithdirects/${user}`
+          `http://localhost:8000/profile/firendwithdirects/${user}`
         );
         const data = await response.json();
+        console.log(data)
         setDirectConversations(data);
         console.log("inside the context Friends: ", data);
       } catch (error) {
@@ -119,8 +119,6 @@ export const ChatProvider = ({ children }) => {
     setDirectsImages : setDirectsImages,
     selectedDirect : selectedDirect,
     setSelectedDirect: setSelectedDirect,
-    isBlur : isBlur,
-    setIsBlur: setIsBlur,
     isHome:isHome,
     setIsHome:setIsHome,
   };

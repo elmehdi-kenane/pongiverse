@@ -1,11 +1,14 @@
-import { Link } from "react-router-dom";
-import ChatContext from "../Groups/ChatContext";
 import { useContext } from "react";
+import { Link } from "react-router-dom";
+
+import AuthContext from "./Authcontext";
 
 function SidebarLaptop({ Icons }) {
-    const {isBlur} = useContext(ChatContext)
+
+    const {isGlass} = useContext(AuthContext);
+
     return (
-        <div className= {isBlur ? "sidebar blur" : "sidebar" }>
+        <div className={(isGlass) ?"blur sidebar":"sidebar"}>
             <div className="sidebar-navigations" id="sidebar-dashboard">
                 <div className="sidebar-icons">
                     <Link to="dashboard">

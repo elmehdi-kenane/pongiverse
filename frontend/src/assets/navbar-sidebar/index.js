@@ -24,3 +24,49 @@ export { default as loading } from './loading.svg';
 export { default as solidGrey } from './solidGrey.png';
 export { default as cancel } from './cancel.svg';
 export { default as gameInvite } from './game-invite.svg';
+export { default as quickMatch } from './quick-match.svg';
+export { default as friendMatch } from './friend-match.svg';
+export { default as paddleCreateJoin } from './create-join-match.svg';
+export { default as createMatch } from './create-match.svg';
+export { default as joinMatch } from './join-match.svg';
+export { default as paddleChallenge } from './paddle-challenge.svg';
+export { default as aiRobot } from './AI.svg';
+export { default as paddle0 } from './red-paddle.svg';
+export { default as paddle1 } from './blue-paddle.svg';
+export { default as paddle2 } from './green-paddle.svg';
+export { default as paddle3 } from './orange-paddle.svg';
+export { default as paddle4 } from './pink-paddle.svg';
+export { default as paddle5 } from './skyblue-paddle.svg';
+export { default as paddle6 } from './yellow-paddle.svg';
+export { default as paddle7 } from './white-paddle.svg';
+export { default as ball0 } from './red-ball.svg';
+export { default as ball1 } from './blue-ball.svg';
+export { default as ball2 } from './green-ball.svg';
+export { default as ball3 } from './orange-ball.svg';
+export { default as ball4 } from './pink-ball.svg';
+export { default as ball5 } from './skyblue-ball.svg';
+export { default as ball6 } from './yellow-ball.svg';
+export { default as ball7 } from './white-ball.svg';
+export { default as board0 } from './black-board.svg';
+export { default as board1 } from './violet-board.svg';
+export { default as board2 } from './brown-board.svg';
+export { default as board3 } from './green-board.svg';
+export { default as board4 } from './blue-board.svg';
+export { default as paddleEmpty } from './paddle-empty.svg';
+export { default as paddleFilled } from './paddle-filled.svg';
+export { default as ballEmpty } from './ball-empty.svg';
+export { default as ballFilled } from './ball-filled.svg';
+export { default as boardEmpty } from './board-empty.svg';
+export { default as boardFilled } from './board-filled.svg';
+export { default as bgPaddleCm } from './bg-paddle-cm.svg';
+
+export { default as easyMode } from './easy_difficulty.png'
+export { default as normalMode } from './normal_difficulty.png'
+export { default as hardMode } from './hard_difficulty.png'
+
+export { default as winnerCup } from './winner_cup.svg'
+export { default as leanWinnerCup } from './lean_winner_cup.svg'
+
+
+export { default as AiBot } from './AI-bot.jpg'
+// blue green black maroon gray white

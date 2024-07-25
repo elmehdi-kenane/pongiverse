@@ -1,0 +1,1086 @@
+.profile-page {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px 50px 0;
+    gap: 30px;
+    overflow-y: scroll;
+    /* z-index: 1; */
+}
+
+img, 
+.no-select {
+    user-select: none;
+}
+
+.purple-glass {
+    background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
+    box-shadow: 0 0px 20px 0 rgb(130, 106, 237, 0.5) ;
+    box-shadow: 0 0.5px 5px 0 #826aed;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+
+.filter-glass {
+    background: rgba( 255, 255, 255, 0.05 );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    box-shadow: 0 2px 30px 0 #250939;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+}
+
+h1, h3, p{
+    cursor: default;
+}
+
+.profile-blur {
+    filter: blur(6px);
+    pointer-events: none;
+    user-select: none;
+  }
+
+/* ------------------- User Info ------------------- */
+
+.profile-userinfo {
+    display: flex;
+    height: 250px;
+    width: 100%;
+    align-items: center;
+    /* justify-content: center; */
+    gap: 20px;
+    padding: 0 30px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+
+    background-position: center;
+    background-size: cover;
+}
+.profile-userinfo .info-position {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+/*-- Player Banner Info --*/
+
+.userinfo__pic {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    position: relative;
+    /* border: #8edf34 solid 1px; */
+}
+.userinfo__pic img {
+    height: 160px;
+    border-radius: 50%;
+    border: #826aed solid 2px;
+}
+.userinfo__pic .is-online {
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+    height: 24px;
+    width: 24px;
+    position: absolute;
+    bottom: 26px;
+    right: 13px;
+    background-color: #8edf34;
+    color: #8edf34;
+    clip-path: circle();
+    font-size: 15px;
+}
+.userinfo__pic .is-online:hover {
+    color: black;
+    font-weight: 420;
+    transition: ease-out 0.3s;
+    clip-path: none;
+    border-radius: 10px;
+    width: 55px;
+    padding: 0 5px;
+}
+
+.userinfo__name-bio {
+    display: flex;
+    flex-direction: column;
+    /* border: cyan solid 1px; */
+    color: white;
+    gap: 18px;
+}
+
+.userinfo__name-bio .userinfo__name-avatar {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+.userinfo__avatar {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+.userinfo__avatar img {
+    height: 50px;
+}
+
+.avatar-desc {
+    position: absolute;
+    top: 0%;
+    left: 100%;
+    opacity: 0;
+    width: 65px;
+    text-align: center;
+    color: #826aed;
+    font-size: 13px;
+    font-weight: 450;
+    transition: opacity 0.5s ease;
+}
+.userinfo__avatar:hover .avatar-desc{
+    opacity: 1;
+}
+
+.userinfo__bio {
+    max-width: 500px;
+}
+
+/*-- IsFriends - Edit --*/
+
+.profile-userinfo .userinfo__edit {
+    height: 28px;
+    width: 28px;
+    padding: 4px;
+    background: white;
+    color: #826aed;
+    border-radius: 50%;
+    position: absolute;
+}
+.profile-userinfo .userinfo__edit:hover {
+    background:#826aed;
+    color: white;
+}
+
+.profile-userinfo .userinfo__loading,
+.profile-userinfo .userinfo__isfriends {
+    display: flex;
+    width: 115px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    background: #826aed;
+    border-radius: 10px;
+    color: white;
+    border: white 1px solid;
+    position: absolute;
+    z-index: 2;
+}
+.userinfo__isfriends .isfriends__icon-desc {
+    display: flex;
+    width: 80%;
+    align-items: center;
+    justify-content: center;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+.profile-userinfo .isfriends__icon-desc p {
+    font-size: 14px;
+    font-weight: 450;
+}
+.profile-userinfo .isfriends__icon-desc svg {
+    height: 16px;
+}
+.userinfo__isfriends .adjust-addfriend{
+    height: 100%;
+}
+.userinfo__isfriends .adjust-addfriend,
+.userinfo__isfriends .adjust-addfriend p
+{
+    justify-content: flex-start;
+    font-size: 12.5px;
+}
+.userinfo__isfriends .adjust-addfriend:hover {
+    background: #250939;
+}
+
+.profile-userinfo .userinfo__loading{
+    background: #250939;
+}
+
+.userinfo__isfriends .isfriends__menu {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 20%;
+    height: 100%;
+    border-left: white solid 1px;
+}
+.userinfo__isfriends .isfriends__menu svg {
+    height: 100%;
+    width: 100%;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.profile-userinfo .isfriends__menu:hover svg{
+    background: #250939;
+}
+.profile-userinfo .isfriends__menu:active svg{
+    color: #826aed;
+}
+
+/* Friends Parameter */
+
+.profile-userinfo .userinfo__friend-param {
+    display: flex;
+    flex-direction: column;
+    /* width: 140px; */
+    position: absolute;
+    top: 40px;
+    right: 10px;
+    z-index: 2;
+
+    border: #826aed solid 1px;
+    background-color: rgb(0, 0, 0, 0.8);
+    border-radius: 5px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.userinfo__friend-param .parameter {
+    display: flex;
+    padding: 0 8px;
+    gap: 10px;
+    align-items: center;
+    color: white;
+    font-size: 12px;
+    font-weight: 410;
+    width: 100%;
+    height: 29px;
+    text-decoration: none;
+}
+.userinfo__friend-param .parameter p{
+    cursor: pointer;
+}
+.userinfo__friend-param .parameter svg{
+    height: 20px;
+}
+.userinfo__friend-param .parameter:hover{
+    background-color: #826aed;
+}
+
+/* Reporting User Icon */
+
+.profile-userinfo .userinfo__report{
+    display: flex;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    border: #826aed 1px solid;
+    width: 30px;
+    height: 30px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50px;
+    background-color: #250939;
+}
+.profile-userinfo .userinfo__report svg {
+    color: #826aed;
+    height: 25px;
+    width: 25px;
+    
+}
+.profile-userinfo .userinfo__report:hover {
+    background-color: #826aed;
+}
+.profile-userinfo .userinfo__report:hover svg {
+    color: #250939;
+}
+
+/* Report Content */
+
+.profile__report {
+    display: flex;
+    width: 100%;
+    position: absolute;
+    justify-content: center;
+
+}
+
+.report__content {
+    display: flex;
+    /* height: 450px; */
+    width: 350px;
+    position: fixed;
+    flex-direction: column;
+    /* padding: 0 20px; */
+    gap: 10px;
+
+    top: 400px;
+    border: #826aed solid 2px;
+    border-radius: 5px;
+    background-color: #1b062a;
+    z-index: 3;
+}
+/* Close Report */
+.report__content .report-close { 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    color: #826aed;
+    top: 8px;
+    right: 5px;
+    height: 32px;
+    width: 32px;
+}
+.report__content .report-close:hover{
+    color: #9e88fd;
+}
+
+.report__content .report__title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    color: white;
+    font-size: 20px;
+    letter-spacing: 1px;
+}
+
+.report__content  .report__options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    color: white;
+    padding: 0 20px;
+}
+.report__options .report__slt {
+    display: flex;
+    flex-direction: column;
+}
+.report__options .report__slt h1{
+    font-size: 15px;
+    font-weight: 600;
+    color: #dcdcdc;
+}
+
+.report__options .report__slt .slt__options {
+    display: flex;
+    flex-direction: column;
+}
+.report__options .report__slt .slt__options .option { /* Label for each option */
+    display: flex;
+    align-items: center;
+    margin-top: 0px;
+    height: 20px;
+    width: 200px;
+    border: none;
+    /* border: #826aed solid .5px; */
+}
+.slt__options .option p{
+    margin-top: -1.5px;
+    font-size: 14.5px;
+    cursor: pointer;
+    color: #ccc;
+}
+
+.report__input {
+    cursor: pointer;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+}
+.report__input:hover {
+    border-color: white;
+}
+.report__input:active {
+    background-color: #826aed;
+}
+.report__input:checked {
+    /* border-color: #826aed; */
+    background-color: #826aed;
+    transition: ease-in 0.3s;
+  }
+
+  
+.report__content .report__footer {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    gap: 20px;
+    align-items: center;
+    height: 100px;
+    border-top: 0.5px solid #826aed;
+}
+
+.report__content .report__footer .block-user {
+    display: flex;
+    align-items: center;
+    background-color: #1b062a;
+    border: none;
+    margin-top: 15px;
+    /* border: #826aed solid 1px; */
+    gap: 5px;
+    cursor: pointer;
+}
+.report__content .report__footer .block-user .block-icon{  /* SVG */
+    border: #ccc solid 1px;
+    border-radius: 3px;
+    height: 15px;
+    width: 15px;
+}
+.report__content .report__footer .block-user:hover .block-icon {
+    border-color: white;
+}
+.report__content .report__footer .block-user .valid-bg{
+    background-color: #826aed;
+    transition: background-color 0.2s;
+    color: white;
+}
+.report__content .report__footer .block-user p{
+    cursor: inherit;
+    color: #dcdcdc;
+    font-size: 15px;
+}
+
+.report__footer .report-submit {
+    display: flex;
+    gap: 15px;
+}
+
+.report__footer .report-submit .submit-button {
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 40px;
+    border: white .5px solid;
+    cursor: pointer;
+    font-size: 15px;
+}
+.report__footer .report-submit .submit__cancel {
+    background-color: #2f084b;
+}
+.report__footer .report-submit .submit__cancel:hover {
+    border: none;
+    background-color: #52127f;
+    transition: ease-in  0.3s;
+}
+.report__footer .report-submit .submit__report {
+    background-color: #826aed;
+}
+.report__footer .report-submit .submit__report:hover {
+    /* padding: 12px 42px; */
+    border: none;
+    background-color: #927eea;
+    transition: ease-in 0.2s;
+}
+
+.report__footer .report-submit .need-report {
+    background-color: #3d3076;
+    cursor:not-allowed;
+}
+
+/*-- Block User --*/
+
+.profile__block {
+    display: flex;
+    width: 100%;
+    position: absolute;
+    justify-content: center;
+}
+
+.profile__block .block-content{
+    display: flex;
+    width: 400px;
+    position: fixed;
+    flex-direction: column;
+    gap: 10px;
+    
+    top: 400px;
+    border: #826aed solid 2px;
+    border-radius: 5px;
+    background-color: #1b062a;
+    z-index: 3;
+}
+.profile__block .block-content .block-content__title{
+    padding: 10px 25px;
+    color: white;
+    font-size: 25px;
+    letter-spacing: 1.5px;
+    border-bottom: #826aed .5px solid;
+}
+.profile__block .block-content .block-content__title2{
+    padding: 10px 25px;
+    color: white;
+    font-size: 20px;
+    font-weight: 550;
+}
+
+.profile__block .block-content .block-content__desc{
+    padding: 10px 25px;
+    color: white;
+    
+}
+
+.profile__block .block-content .block__submit{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    /* border: #8edf34 0.5px solid; */
+    gap: 10px;
+    margin-bottom: 15px;
+}
+.block-content .block__submit .block-cancel,
+.block-content .block__submit .block-confirm{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 50px;
+    font-weight: 550;
+    color: white;
+    border: white .5px solid;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+    background-color: #826aed;
+    text-decoration: none;
+}
+.block-content .block__submit .block-confirm:hover {
+    /* padding: 12px 42px; */
+    border: none;
+    background-color: #927eea;
+    transition: ease-in 0.2s;
+}
+.block-content .block__submit .block-cancel{
+    background-color: #2f084b;
+}
+.block-content .block__submit .block-cancel:hover{
+    border: none;
+    background-color: #52127f;
+    transition: ease-in  0.3s;
+}
+
+
+
+
+
+/* ------------------- User Level ------------------- */
+
+.profile-userlevel {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 45px;
+    border : white 1px solid;
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.profile-userlevel .userlevel__per {
+    height: 100%;
+    background: #826aed;
+    border-radius: 10px;
+    animation: level-moving 2s ease-in;
+}
+
+@keyframes level-moving {
+    0% {
+        width: 0%;
+    }
+    100% {
+        width: 60%;
+    }
+}
+
+.profile-userlevel p {
+    text-align: center;
+    color: white;
+    font-weight: 500;
+    margin-top: -33px;
+}
+
+
+
+/* ------------------- User Stats ------------------- */
+
+.profile-userstats {
+    display: flex;
+    /* height: 850px; */
+    width: 100%;
+    flex-direction: column;
+    gap: 25px;
+    margin-bottom: 130px;
+    /* border: yellow solid 1px; */
+}
+
+.profile-userstats .userstate-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 0;
+    border-bottom: #250939 5px solid;
+    width: 100%;
+}
+
+.purple-glass-stats {
+    background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 7px 7px 0 0;
+}
+
+/* ---- Statistics ---- */
+
+.profile-userstats .userstate_statistics {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 400px;
+    align-items: center;
+    position: relative;
+    /* border: cyan solid 1px; */
+}
+
+.userstate_statistics .statics__chart-icon {
+    position: absolute;
+    top: 11px;
+    right: 14px;
+    color: #826aed;
+    height: 28px;
+    width: 28px;
+    background: #f4effa;
+    border-radius: 40%;
+}
+.userstate_statistics .statics__chart-icon:hover {
+    background: #826aed;
+    color: #f4effa;
+    cursor: pointer;
+    transition: ease-in 0.2s;
+}
+
+.userstate_statistics .statistics__container {
+    width: 100%;
+    height: 100%;
+    padding: 10px 5px 10px;
+}
+
+/* ---- Friends - Achievement ---- */
+
+.profile-userstats .userstate__friends-achievements {
+    /* border: cyan solid 1px; */
+    display: flex;
+    width: 100%;
+    height: 410px;
+    gap: 25px;
+}
+
+.profile-userstats .userstate__friends-achievements .userstate__friends,
+.profile-userstats .userstate__friends-achievements .userstate__achievements {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+    height: 100%;
+}
+
+.profile-userstats .userstate-header h1{
+    color: white;
+    text-align: center;
+    letter-spacing: 1px;
+    font-size: 30px;
+}
+
+/*------------ Friends ------------*/
+
+.userstate__friends .userfriends__classment {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    overflow-y: scroll;
+    border-radius: 0;
+    cursor: pointer;
+}
+.userstate__friends .userfriends__classment p{
+    cursor: inherit;
+}
+.userfriends__classment .classment__friend { /* Friend Player */
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 3px #250939 solid;
+    height: 47px;
+    align-items: center;
+    padding: 0 5px;
+    flex-shrink: 0;
+}
+.userfriends__classment .classment__friend:hover {
+    background-color: #250939;
+    transition: ease-in 0.2s;
+    box-shadow: 0 2px 30px 0 #250939;
+}
+.userfriends__classment .classment__friend:hover .chat__button{
+    background-color: #826aed;
+    transition: ease-in 0.3s;
+}
+
+.classment__friend .friend__pic-name{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    height: 100%;
+    width: 100%;
+    text-decoration: none;
+    /* border: #826aed solid */
+}
+.classment__friend .friend__pic-name img {
+    height: 35px;
+}
+.classment__friend .friend__pic-name p {
+    color: white;
+    font-weight: 450;
+    letter-spacing: 0.8px;
+}
+
+.chat__button {
+    display: flex;
+    background-color: #250939;
+    border-radius: 5px;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 6px;
+    text-decoration: none;
+}
+.chat__button:hover {
+    padding: 6px 8px;
+    transition: ease-in 0.3s;
+}
+.chat__button img { 
+    height: 20px;
+}
+.chat__button p {
+    color: white;
+}
+
+/* ------------ Achievments ------------*/
+
+.userstate__achievements .achievements__container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    padding: 0 10px;
+    /* border: purple 1px solid; */
+}
+
+.achievements__container .achivement {
+    display: flex;
+    height: 85px;
+    align-items: center;
+    padding: 0 3px;
+    gap: 5px;
+
+    background: rgba( 255, 255, 255, 0.05 );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    box-shadow: 0 2px 30px 0 #250939;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+}
+.achievements__container .achivement:hover {
+    transition: ease-in 0.09s;
+    height: 86px;
+    box-shadow: 0px 0px 10px 0 #826aed ;
+}
+.achievements__container .achivement img {
+    height: 80px;
+}
+
+.achievements__container .achivement .achivement__title-desc {
+    width: 100%;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.achievements__container .achivement .achivement__title-desc p {
+    color: rgb(163, 163, 163);
+    cursor: default;
+}
+
+/*   -------------------   */
+
+@media (min-width: 1440px) {
+    .profile-page {
+        width: 1400px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .userinfo__pic img {
+        height: 140px;
+    }
+    .userinfo__name-bio .userinfo__bio{
+        font-size: 13px;
+        max-width: 350px;
+    }
+    .userinfo__name-avatar .userinfo__name {
+        font-size: 28px;
+    }
+    .userinfo__pic .is-online {
+        height: 20px;
+        width: 20px;
+        bottom: 33px;
+        right: 15px;
+    }
+    .userinfo__avatar img {
+        height: 35px;
+    }
+    .profile-userstats .userstate-header {
+        padding: 8px 0;
+    }
+    .profile-userstats .userstate-header h1{
+        font-size: 23px;
+    }
+    .userstate_statistics .statics__chart-icon {
+        /* top: 11px; */
+        height: 25px;
+        width: 25px;
+    }
+
+    .achievements__container .achivement img {
+        height: 70px;
+    }
+    .achivement .achivement__title-desc h3 {
+        font-size: 15px;
+    }
+    .achivement .achivement__title-desc p {
+        font-size: 13px;
+    }
+
+}
+
+@media (max-width: 650px) {
+    .profile-userinfo .userinfo__loading,
+    .profile-userinfo .userinfo__isfriends {
+        width: 65px;
+    }
+    .userinfo__isfriends .isfriends__menu{
+        width: 40%;
+    }
+    .userinfo__isfriends .isfriends__icon-desc {
+        width: 60%;
+    }
+    .userinfo__isfriends .isfriends__menu svg {
+        width: 100%;
+    }
+    .profile-userinfo .isfriends__icon-desc p {
+        display: none;
+    }
+    .userinfo__isfriends .adjust-addfriend {
+        justify-content: center;
+    }
+    .chat__button {
+        padding: 4px 8px;
+        
+    }
+    .chat__button p {
+        display: none;
+    }
+
+    /* Report */
+    .report__content {
+        display: flex;
+        width: 250px;
+    }
+    .report__content .report__title {
+        font-size: 15px;
+        letter-spacing: 0.5px;
+        height: 40px;
+    }
+    .report__content .report-close {
+        top: 6px;
+        right: 8px;
+        height: 28px;
+        width: 28px;
+    }
+    .report__content  .report__options {
+        gap: 10px;
+    }
+    .report__options .report__slt h1{
+        font-size: 12px;
+        font-weight: 600;
+    }
+    .report__options .report__slt .slt__options .option {
+        margin-top: 0px;
+        height: 20px;
+        width: 155px;
+    }
+    .slt__options .option p{
+        font-size: 11px;
+    }
+    .report__content .report__footer {
+        margin-bottom: 0px;
+        gap: 15px;
+        height: 100px;
+        border-top: 0.5px solid #826aed;
+    }
+    .report__content .report__footer .block-user .block-icon{  /* SVG */
+        height: 13px;
+        width: 13px;
+    }
+    .report__content .report__footer .block-user p{
+        font-size: 12.5px;
+    }
+    .report__footer .report-submit .submit-button {
+        padding: 9px 22px;
+        font-size: 11px;
+    }
+    /* BLOCK */
+    .profile__block .block-content{
+        display: flex;
+        width: 250px;
+    }
+    .profile__block .block-content .block-content__title{
+        padding: 8px 25px;
+        font-size: 20px;
+        letter-spacing: 1.5px;
+    }
+    .profile__block .block-content .block-content__title2{
+        padding: 5px 25px;
+        font-size: 17px;
+    }
+    .profile__block .block-content .block-content__desc{
+        margin-top: -5px;
+        padding: 8px 25px;
+        font-size: 12px;
+    }
+    .block-content .block__submit .block-cancel,
+    .block-content .block__submit .block-confirm{
+        width: 65px;
+        height: 35px;
+        font-size: 12px;
+    }
+}
+
+
+@media (max-width: 550px) {
+
+    .profile-page {
+        padding: 50px 15px 0;
+    }
+    /* Player Banner */
+    .profile-userinfo {
+        padding: 0 10px;
+        height: 300px;
+        flex-direction: column;
+        gap: 0px;
+    }
+    .userinfo__pic {
+        height: 170px;
+    }
+    .userinfo__pic img {
+        height: 125px;
+    }
+    .userinfo__pic .is-online {
+        height: 18px;
+        width: 18px;
+        right: 14px;
+    }
+    .userinfo__name-bio .userinfo__name-avatar {
+        justify-content: center;
+        margin-top: -5px;
+    }
+    .userinfo__name-bio {
+        gap: 10px;
+    }
+
+
+    /* Statistics */
+    .profile-userstats .userstate__friends-achievements {
+        /* border: cyan solid 1px; */
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: auto;
+        gap: 25px;
+    }
+    .profile-userstats .userstate__friends-achievements .userstate__friends,
+    .profile-userstats .userstate__friends-achievements .userstate__achievements {
+        width: 100%;
+        height: 405px;
+    }
+    .profile-userstats .userstate-header h1{
+        font-size: 20px;
+    }
+    .userstate_statistics .statics__chart-icon {
+        top: 9.5px;
+    }
+    .userstate_statistics .statics__chart-icon {
+        /* top: 11px; */
+        height: 23px;
+        width: 23px;
+    }
+    /* Friends */
+    .classment__friend .friend__pic-name img {
+        height: 32px;
+    }
+    .classment__friend .friend__pic-name p {
+        letter-spacing: 0.5px;
+        font-size: 14px;
+    }
+    /* Achievements */
+    .achievements__container .achivement img {
+        height: 50px;
+    }
+    .achivement .achivement__title-desc h3 {
+        font-size: 14px;
+    }
+    .achivement .achivement__title-desc p {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 400px) {
+    .profile-userinfo {
+        height: 218px;
+    }
+    .userinfo__pic {
+        height: 150px;
+    }
+    .userinfo__pic img {
+        height: 110px;
+    }
+    .userinfo__pic .is-online {
+        height: 15px;
+        width: 15px;
+        right: 10px;
+        bottom: 35px;
+        font-size: 14px;
+    }
+    .userinfo__name-bio{
+        margin-top: -5px;
+    }
+    .userinfo__name-bio .userinfo__name-avatar {
+        gap: 10px;
+    }
+    .userinfo__name-avatar .userinfo__name {
+        font-size: 20px;
+    }
+    .userinfo__avatar img {
+        height: 30px;
+    }
+    .userinfo__name-bio .userinfo__bio {
+        display: none;
+    }
+}

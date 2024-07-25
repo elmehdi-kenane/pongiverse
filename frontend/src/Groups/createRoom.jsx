@@ -116,7 +116,7 @@ const CreateRoom = (props) => {
           PROTECTED
         </button>
       </div>
-      <form action="" className="create-room-form" autocomplete="off" onSubmit={submitHandler}>
+      <form action="" className="create-room-form" autoComplete="off" onSubmit={submitHandler}>
         <input
           type="text"
           placeholder="Room Name"
