@@ -3,8 +3,9 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from myapp.models import customuser
 from chat.models import Friends
-from .models import TournamentMembers, Tournament, TournamentInvitation, Round, TournamentUserInfo
+from .models import TournamentMembers, Tournament, TournamentInvitation, Round, TournamentUserInfo, DisplayOpponent
 import random
+from django.db.models import Q
 from myapp.serializers import MyModelSerializer
 # from rest_framework.exceptions import AuthenticationFailed
 # from .serializers import UserSerializer
@@ -351,24 +352,59 @@ def get_game_members_round(request):
 					})
 			if roundquarterfinal is not None:
 				for quartermember in TournamentUserInfo.objects.filter(round=roundquarterfinal):
-					quartermembers.append({
-						'id' : quartermember.user.id,
-						'name' : quartermember.user.username,
-						'level': 2,  # Assuming level is static for now
-						'image': quartermember.user.avatar.path,
-						'position': quartermember.position
-					})
+					if quartermember.user is not None:
+						quartermembers.append({
+							'id' : quartermember.user.id,
+							'name' : quartermember.user.username,
+							'level': 2,  # Assuming level is static for now
+							'image': quartermember.user.avatar.path,
+							'position': quartermember.position
+						})
+					else:
+						quartermembers.append({
+							'id' : -1,
+							'name' : '',
+							'level': 2,  # Assuming level is static for now
+							'image': '',
+							'position': quartermember.position
+						})
 			if roundsemierfinal is not None:
 				for semimember in TournamentUserInfo.objects.filter(round=roundsemierfinal):
-					semimembers.append({
-						'id' : semimember.user.id,
-						'name' : semimember.user.username,
-						'level': 2,  # Assuming level is static for now
-						'image': semimember.user.avatar.path,
-						'position': semimember.position
-					})
+					if semimember.user is not None:
+						semimembers.append({
+							'id' : semimember.user.id,
+							'name' : semimember.user.username,
+							'level': 2,  # Assuming level is static for now
+							'image': semimember.user.avatar.path,
+							'position': semimember.position
+						})
+					else :
+						semimembers.append({
+							'id' : -1,
+							'name' : '',
+							'level': 2,  # Assuming level is static for now
+							'image': '',
+							'position': semimember.position
+						})
+
 			winnermember = TournamentUserInfo.objects.filter(round=winner).first()
 			if winnermember is not None:
-				winnerdict.update({'id': winnermember.user.id, 'name' : winnermember.user.username, 'level' : 2, 'image' : winnermember.user.avatar.path, 'position' : winnermember.position})
+				if winnermember.user is not None:
+					winnerdict.update({'id': winnermember.user.id, 'name' : winnermember.user.username, 'level' : 2, 'image' : winnermember.user.avatar.path, 'position' : winnermember.position})
+				else:
+					winnerdict.update({'id': -1, 'name' : '', 'level' : 2, 'image' : '', 'position' : winnermember.position})
 	response.data = {'roundsixteen' : sixteenmembers, 'roundquarter' : quartermembers, 'roundsemi' : semimembers, 'winner' : winnerdict}
+	return response
+
+@api_view(['POST'])
+def get_opponent(request):
+	print("YESHSHSHSH")
+	response = Response()
+	username = request.data.get('user')
+	user = customuser.objects.filter(username=username).first()
+	opponent = DisplayOpponent.objects.filter(Q(user1=user) | Q(user2=user)).first()
+	if opponent is not None:
+		response.data = {'Case' : 'exist', 'user1' : opponent.user1.username, 'user2' : opponent.user2.username, 'time' : opponent.created_at}
+	else:
+		response.data = {'Case' : 'does not exist'}
 	return response

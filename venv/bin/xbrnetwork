@@ -1,4 +1,4 @@
-#!/Users/rennacir/Desktop/ft_transcendence/venv/bin/python3
+#!/mnt/c/Users/ennac/Desktop/ft_transcendence/venv/bin/python3
 # EASY-INSTALL-ENTRY-SCRIPT: 'autobahn==23.6.2','console_scripts','xbrnetwork'
 import re
 import sys

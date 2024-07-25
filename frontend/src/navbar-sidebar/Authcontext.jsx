@@ -133,7 +133,6 @@ export const AuthProvider = ({children}) => {
 				const blob = await response.blob();
 				const image = URL.createObjectURL(blob)
 				setUserImg(image)
-				// console.log('USER IMAGE IS THIS : ', image)
 			} catch (e) {
 				console.log("something wrong with fetch")
 			}
@@ -184,7 +183,7 @@ export const AuthProvider = ({children}) => {
 				setSocket(newSocket)
 			}
 			// newSocket.onmessage = (event) => {
-			// 	let data = JSON.parse(event.data)
+		// 	let data = JSON.parse(event.data)
 			// 	let type = data.type
 			// 	if (type === 'tournament_started'){
 			// 		console.log("IN AUTH CONTEXT")

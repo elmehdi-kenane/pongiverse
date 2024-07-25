@@ -28,7 +28,6 @@ import json
 
 class SignUpView(APIView):
 	parser_classes = (MultiPartParser, FormParser)
-
 	def post(self, request, *args, **kwargs):
 		print(f"datatata : {request.data}")
 		avatar = request.data.get('avatar')
@@ -101,17 +100,13 @@ class LoginView(APIView):
 		username = data.get('username', None)
 		password = data.get('password', None)
 		print(f"   username : {username}, password : {password}")
-		try:
-			user = customuser.objects.get(username=username)
-			if user.check_password(password):
-				data = get_tokens_for_user(user)
-				response.set_cookie('token', data['access'], httponly=True)
-				response.data = {"Case": "Login successfully"}
-				return response
-			else:
-				response.data = {"Case": "Invalid username or password!!"}
-				return response
-		except customuser.DoesNotExist:
+		user = authenticate(username=username, password=password)
+		if user is not None:
+			data = get_tokens_for_user(user)
+			response.set_cookie('token', data['access'], httponly=True)
+			response.data = {"Case": "Login successfully"}
+			return response
+		else:
 			response.data = {"Case": "Invalid username or password!!"}
 			return response
 
@@ -219,13 +214,12 @@ class ChangePasswordView(APIView):
 		if not email or not password:
 			return Response({"error": "Email and password are required."}, status=status.HTTP_400_BAD_REQUEST)
 		try:
-			user = get_user_model().objects.get(email=email)
-		except get_user_model().DoesNotExist:
+			user = customuser.objects.get(email=email)
+		except customuser.DoesNotExist:
 			return Response({"error": "No user found with this email."}, status=status.HTTP_404_NOT_FOUND)
-
 		if user.is_active:
 			try:
-				user.password = password
+				user.set_password(password)
 				user.save()
 				response.data = {"Case": "Password successfully changed"}
 				return response

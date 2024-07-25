@@ -143,9 +143,13 @@ function WaysSecondStep() {
 								placeholder="confirm your password"
 							/>
 							{errors.confirmPassword && <span>{errors.confirmPassword}</span>}
-							<button type="submit" className={styles["submitButton"]}>
+							{
+								exist ? <button type="submit" className={styles["submitButton"]} disabled>
+								Sign Up
+							</button> : <button type="submit" className={styles["submitButton"]}>
 								Sign Up
 							</button>
+							}
 						</form>
 					</div>
 				</div>

@@ -1,5 +1,5 @@
-
 import styles from '../assets/Tournament/tournamentbracket.module.css'
+import versus from '../assets/navbar-sidebar/Versus.svg';
 import SvgComponent from './SvgComponent';
 import SvgVerticalComponent from './SvgVerticalComponent'
 import { useLocation, useNavigate } from "react-router-dom";
@@ -19,8 +19,16 @@ function TournamentBracket() {
 	const [roundSemiFinalMembersImages, setroundSemiFinalMembersImages] = useState([])
 	const [winnerMemberImage, setwinnerMemberImage] = useState([])
 	const [isTournamentOwner, setIsTournamentOwner] = useState(false)
-	const [membersImages, setMemberImages] = useState([])
+	const [userOneToDisplay, setUserOneToDisplay] = useState('')
+	const [userTwoToDisplay, setUserTwoToDisplay] = useState('')
+	const [createdAt, setCreatedAt] = useState(null)
+	const [timeDiff, setTimeDiff] = useState(null);
 	const { user, socket } = useContext(AuthContext)
+
+	const findMemberByPosition = (roundmembers, name) => {
+		const index = roundmembers.findIndex(member => member.name === name);
+		return index
+	};
 
 	useEffect(() => {
 		const set_is_inside = async () => {
@@ -71,13 +79,14 @@ function TournamentBracket() {
 				return URL.createObjectURL(blob);
 			});
 			const images = await Promise.all(promises);
+			console.log("imageeeesssss", images)
 			setElements(images)
 		}
-		const gameMembersRounds = async () =>{
+		const gameMembersRounds = async () => {
 			const response = await fetch('http://localhost:8000/api/get-game-members-round', {
-				method : 'POST',
-				headers : {
-					'Content-type' : 'application/json'
+				method: 'POST',
+				headers: {
+					'Content-type': 'application/json'
 				},
 				body: JSON.stringify({
 					user: user
@@ -85,45 +94,102 @@ function TournamentBracket() {
 			});
 			if (response.ok) {
 				const data = await response.json();
+				console.log("----mohamed data : ", data)
 				setRoundSixteenMembers(data.roundsixteen)
 				setroundQuarterFinalMembers(data.roundquarter)
-				setroundSemiFinalMembers(data.semimembers)
+				setroundSemiFinalMembers(data.roundsemi)
 				setwinnerMember(data.winner)
-				if (roundSixteenMembers.length > 0)
-					fetchImages(roundSixteenMembers, setRoundSixteenMembersImages)
-				if (roundQuarterFinalMembers.length !== 0)
-					fetchImages(roundQuarterFinalMembers, setroundQuarterFinalMembersImages)
-				if (roundSemiFinalMembers.length !== 0)
-					fetchImages(roundSemiFinalMembers, setroundSemiFinalMembersImages)
+				if (data.roundsixteen.length > 0)
+					fetchImages(data.roundsixteen, setRoundSixteenMembersImages)
+				if (data.roundquarter.length > 0)
+					fetchImages(data.roundquarter, setroundQuarterFinalMembersImages)
+				if (data.roundsemi.length > 0)
+					fetchImages(data.roundsemi, setroundSemiFinalMembersImages)
 			} else {
 				console.error('Failed to fetch data');
 			}
 		}
+
+		const get_oponent = async () => {
+			const response = await fetch('http://localhost:8000/api/get-opponent', {
+				method: 'POST',
+				headers: {
+					'Content-type': 'application/json'
+				},
+				body: JSON.stringify({
+					user: user
+				})
+			});
+			if (response.ok) {
+				const data = await response.json();
+				console.log("DIIIB : ", data)
+				if (data.Case === 'exist') {
+					setUserOneToDisplay(data.user1)
+					setUserTwoToDisplay(data.user2)
+					setCreatedAt(new Date(data.time))
+				}
+			} else {
+				console.error('Failed to fetch data');
+			}
+		}
+
 		if (user) {
 			check_is_join()
 			set_is_inside()
+			get_oponent()
 		}
 	}, [user])
 
-	useEffect(() =>{
+	useEffect(() => {
 		if (socket && socket.readyState === WebSocket.OPEN) {
 			socket.onmessage = (event) => {
 				let data = JSON.parse(event.data)
 				let type = data.type
 				let message = data.message
 				console.log("DATA RECEIVED:", data)
-				// if (type == 'user_eliminated'){
-				// 	navigate("../game")
-				// }
+				if (type == 'you_and_your_user') {
+					console.log("YOU data : ", data)
+						setUserOneToDisplay(message.user1)
+						setUserTwoToDisplay(message.user2)
+						setCreatedAt(new Date(message.time))
+				}
 			}
 		}
-	},[socket])
+	}, [socket])
+
+	useEffect(() => {
+		if (createdAt) {
+			const interval = setInterval(() => {
+				const now = new Date();
+				const diffInSeconds = Math.floor((now - createdAt) / 1000);
+				if (diffInSeconds < 20) {
+					setTimeDiff(20 - diffInSeconds);
+				} else {
+					setTimeDiff(null);
+					// navigate("/signin");
+				}
+			}, 1000);
+			return () => clearInterval(interval);
+		}
+	}, [createdAt])
 
 	return (
 		<div className={styles['tournamentbracketpage']}>
+			{
+				userOneToDisplay && userTwoToDisplay && timeDiff &&
+				<div className={styles['display-components-div']}>
+					<div className={styles['display-components-div-players-data']}>
+						<img src={roundSixteenMembersImages[findMemberByPosition(roundSixteenMembers, userOneToDisplay)]} alt="" className={styles['display-components-div-players-data-image']} />
+						<img src={versus} className={styles['display-components-div-players-data-svg']} alt="" />
+						<img src={roundSixteenMembersImages[findMemberByPosition(roundSixteenMembers, userTwoToDisplay)]} alt="" className={styles['display-components-div-players-data-image']} />
+					</div>
+					<p className={styles['display-components-div-text']}>The game will start in {timeDiff}</p>
+				</div>
+			}
 			<div className={styles['normalSvg']}>
 				{/* <img src={<SvgComponent images={membersImages} />} alt="" /> */}
-				<SvgComponent images={roundSixteenMembersImages} />
+				<SvgComponent roundsixteenimages={roundSixteenMembersImages} roundsixteenmembers={roundSixteenMembers} roundquarterimages={roundQuarterFinalMembersImages} roundquartermembers={roundQuarterFinalMembers} />
+
 			</div>
 			<div className={styles['verticalSvg']}>
 				{/* <img src={<SvgVerticalComponent images={membersImages} />} alt="" /> */}

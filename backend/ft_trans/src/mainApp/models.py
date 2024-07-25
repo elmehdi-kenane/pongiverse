@@ -78,5 +78,10 @@ class Round(models.Model):
 
 class TournamentUserInfo(models.Model):
 	round = models.ForeignKey(Round, on_delete=models.CASCADE, related_name='tournamentuserinfo')
-	user = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='user', null=True, blank=True)
+	user = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='user', null=True)
 	position = models.PositiveIntegerField(default=0)
+
+class DisplayOpponent(models.Model):
+	user1 = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='DisplayOpponentUser1')
+	user2 = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='DisplayOpponentUser2')
+	created_at = models.DateTimeField(default=timezone.now, editable=False)
