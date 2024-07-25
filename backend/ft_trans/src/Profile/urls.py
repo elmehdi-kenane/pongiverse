@@ -7,4 +7,5 @@ urlpatterns = [
     path('friends/<str:username>', views.show_friends),
     path('firendwithdirects/<str:username>', views.friends_with_directs),
     path('getuserinfo', views.get_user_info),
+    path('updateUserPic', views.update_user_pic),
 ]

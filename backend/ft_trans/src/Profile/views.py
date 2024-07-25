@@ -4,6 +4,11 @@ from myapp.models import customuser
 from rest_framework.decorators import api_view
 from chat.models import Friends
 from myapp.models import customuser
+# import requests
+
+from myapp.serializers import MyModelSerializer
+from django.core.files.base import ContentFile
+import base64
 
 # Create your views here.
 @api_view (['GET'])
@@ -67,3 +72,37 @@ def get_user_info(request):
     if user is not None:
         response.data = {'username': user.username, 'level':2, 'avatar': user.avatar.path}
         return response
+
+
+def save_base64_image(base64_image):
+    # Extract the content type and the base64 data from the image string
+    format, imgstr = base64_image.split(';base64,')     
+    # Decode the base64 data
+    img_data = base64.b64decode(imgstr)
+    # Create a ContentFile object from the decoded image data
+    img_file = ContentFile(img_data, name='PicName.png')
+    
+    return img_file
+
+
+@api_view(['POST'])
+def update_user_pic(request):
+    username= request.data.get('user')
+    image_url = request.data.get('image')
+    image_file = save_base64_image(image_url)
+    print('image url --------------:' , image_file, '-----------------------')
+    user = customuser.objects.filter(username=username).first()
+    if user is not None:    
+        user.avatar = image_file
+        user.save()
+        response = Response()
+        response.data = {"case" : "Image Saved succesfully"}
+        return response
+
+
+
+        # dic= {
+        #     'avatar': image_file
+        # }
+        # serializer = MyModelSerializer(data=dic)
+        # if serializer.is_valid():
