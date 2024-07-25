@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 const SvgVerticalComponent = ({ images }) => {
 	const navigate = useNavigate()
-	console.log("YESSSS");
 	if (!images) {
 		navigate("../game/createtournament")
 	}

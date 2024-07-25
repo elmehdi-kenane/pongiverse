@@ -2,12 +2,15 @@ import { useEffect } from 'react';
 import avatar from './avatar.jpeg'
 import { useNavigate } from "react-router-dom";
 
-const SvgComponent = ({ images }) => {
+const SvgComponent = ({ roundsixteenimages, roundsixteenmembers, roundquarterimages, roundquartermembers }) => {
 	const navigate = useNavigate()
-	console.log("YESSSS");
-	if (!images) {
+	if (!roundsixteenimages) {
 		navigate("../game/createtournament")
 	}
+	const findMemberByPosition = (roundmembers, position) => {
+		const index = roundmembers.findIndex(member => member.position === position);
+		return index
+	};
 	return (
 		<svg width="1538" viewBox="0 0 1538 958" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<path d="M1463.08 426H1457.61V791.328L1356.57 905.453H184.187L83.1459 791.328V593.365H77.6823V673.253L52 702.245V819.333L172.276 955.113H351.625L390.151 911.621H416.817L378.291 955.113H415.177L453.703 911.621H481.682L443.156 955.113H480.041L518.567 911.621H546.547L508.02 955.113H544.906L583.432 911.621H611.411L572.885 955.113H609.77L648.297 911.621H676.276L637.75 955.113H674.64L713.161 911.621H829.234L867.755 955.113H904.645L866.119 911.621H894.099L932.625 955.113H969.51L930.984 911.621H958.963L997.489 955.113H1034.38L995.849 911.621H1023.83L1062.36 955.113H1099.24L1060.72 911.621H1088.7L1127.22 955.113H1164.11L1125.58 911.621H1152.25L1190.77 955.113H1370.12L1490.4 819.333V702.245L1463.08 671.401V426Z" fill="#442D6A" />
@@ -25,39 +28,49 @@ const SvgComponent = ({ images }) => {
 			</g>
 			<path d="M407.197 312.818L392.612 288.247H273.197V314.247V347.247V374.247H392.612L407.197 348.14V330.479V312.818Z" stroke="white" strokeOpacity="0.68" strokeWidth="1.5" />
 			<path d="M407.197 331.747H257.197" stroke="white" strokeOpacity="0.68" strokeWidth="1.5" />
-			<path d="M306.963 291H283.037C279.151 291 276 294.151 276 298.037V321.963C276 325.849 279.151 329 283.037 329H306.963C310.849 329 314 325.849 314 321.963V298.037C314 294.151 310.849 291 306.963 291Z" fill="#D9D9D9" fillOpacity="0.09" />
-			<path d="M306.963 334H283.037C279.151 334 276 337.151 276 341.037V364.963C276 368.849 279.151 372 283.037 372H306.963C310.849 372 314 368.849 314 364.963V341.037C314 337.151 310.849 334 306.963 334Z" fill="#D9D9D9" fillOpacity="0.09" />
+			<path d="M306.963 291H283.037C279.151 291 276 294.151 276 298.037V321.963C276 325.849 279.151 329 283.037 329H306.963C310.849 329 314 325.849 314 321.963V298.037C314 294.151 310.849 291 306.963 291Z" fill="#D9D9D9" fillOpacity="0.09" /> {/* player number 17 */}
+			{
+				findMemberByPosition(roundquartermembers, 17) !== -1 && (
+					<foreignObject x="274" y="291" width="40" height="40">
+						<picture>
+							<source srcSet={roundquarterimages[findMemberByPosition(roundquartermembers, 17)]} media="(max-width: 600px)" />
+							<img src={roundquarterimages[findMemberByPosition(roundquartermembers, 17)]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
+						</picture>
+					</foreignObject>
+				)
+			}
+			<path d="M306.963 334H283.037C279.151 334 276 337.151 276 341.037V364.963C276 368.849 279.151 372 283.037 372H306.963C310.849 372 314 368.849 314 364.963V341.037C314 337.151 310.849 334 306.963 334Z" fill="#D9D9D9" fillOpacity="0.09" />{/* player number 18 */}
 			<path d="M563.197 418.675L548.83 399.247H431.197V419.805V445.898V467.247H548.83L563.197 446.604V432.64V418.675Z" stroke="white" strokeOpacity="0.68" strokeWidth="1.5" />
 			<path d="M473.197 414.247H445.197C442.435 414.247 440.197 416.486 440.197 419.247V447.247C440.197 450.008 442.435 452.247 445.197 452.247H473.197C475.958 452.247 478.197 450.008 478.197 447.247V419.247C478.197 416.486 475.958 414.247 473.197 414.247Z" fill="#D9D9D9" fillOpacity="0.09" />
 			<path d="M563.197 520.675L548.83 501.247H431.197V521.805V547.898V569.247H548.83L563.197 548.604V534.64V520.675Z" stroke="white" strokeOpacity="0.68" strokeWidth="1.5" />
 			<path d="M440 521C440 518.238 442.239 516 445 516H473C475.762 516 478 518.238 478 521V549C478 551.761 475.762 554 473 554H445C442.239 554 440 551.761 440 549V521Z" fill="#D9D9D9" fillOpacity="0.09" />
 			<path d="M762 475.39L747.523 462.247H629V476.154V493.805V508.247H747.523L762 494.283V484.836V475.39Z" stroke="white" strokeOpacity="0.68" strokeWidth="1.5" />
-			<path d="M666.963 466H643.037C639.151 466 636 469.151 636 473.037V496.963C636 500.849 639.151 504 643.037 504H666.963C670.849 504 674 500.849 674 496.963V473.037C674 469.151 670.849 466 666.963 466Z" fill="#D9D9D9" fillOpacity="0.09" />
-			<path d="M739.963 343H716.037C712.151 343 709 346.151 709 350.037V373.963C709 377.849 712.151 381 716.037 381H739.963C743.849 381 747 377.849 747 373.963V350.037C747 346.151 743.849 343 739.963 343Z" fill="#D9D9D9" fillOpacity="0.09" />
+			<path d="M666.963 466H643.037C639.151 466 636 469.151 636 473.037V496.963C636 500.849 639.151 504 643.037 504H666.963C670.849 504 674 500.849 674 496.963V473.037C674 469.151 670.849 466 666.963 466Z" fill="#D9D9D9" fillOpacity="0.09" />{/* player number 29 */}
+			<path d="M739.963 343H716.037C712.151 343 709 346.151 709 350.037V373.963C709 377.849 712.151 381 716.037 381H739.963C743.849 381 747 377.849 747 373.963V350.037C747 346.151 743.849 343 739.963 343Z" fill="#D9D9D9" fillOpacity="0.09" />{/* player winner */}
 			<path d="M407.197 616.818L392.612 592.247H273.197V618.247V651.247V678.247H392.612L407.197 652.14V634.479V616.818Z" stroke="white" strokeOpacity="0.68" strokeWidth="1.5" />
 			<path d="M407.197 635.747H257.197" stroke="white" strokeOpacity="0.68" strokeWidth="1.5" />
-			<path d="M306.963 595H283.037C279.151 595 276 598.151 276 602.037V625.963C276 629.849 279.151 633 283.037 633H306.963C310.849 633 314 629.849 314 625.963V602.037C314 598.151 310.849 595 306.963 595Z" fill="#D9D9D9" fillOpacity="0.09" />
-			<path d="M306.963 638H283.037C279.151 638 276 641.151 276 645.037V668.963C276 672.849 279.151 676 283.037 676H306.963C310.849 676 314 672.849 314 668.963V645.037C314 641.151 310.849 638 306.963 638Z" fill="#D9D9D9" fillOpacity="0.09" />
+			<path d="M306.963 595H283.037C279.151 595 276 598.151 276 602.037V625.963C276 629.849 279.151 633 283.037 633H306.963C310.849 633 314 629.849 314 625.963V602.037C314 598.151 310.849 595 306.963 595Z" fill="#D9D9D9" fillOpacity="0.09" /> {/* player number 19 */}
+			<path d="M306.963 638H283.037C279.151 638 276 641.151 276 645.037V668.963C276 672.849 279.151 676 283.037 676H306.963C310.849 676 314 672.849 314 668.963V645.037C314 641.151 310.849 638 306.963 638Z" fill="#D9D9D9" fillOpacity="0.09" />  {/* player number 20 */}
 			<path d="M249.197 388.818L234.612 364.247H115.197V390.247V423.247V450.247H234.612L249.197 424.14V406.479V388.818Z" stroke="white" strokeOpacity="0.68" strokeWidth="1.5" />
 			<path d="M249.197 407.747H115.197" stroke="#B9A9B8" />
 			<path d="M148.963 367H125.037C121.151 367 118 370.151 118 374.037V397.963C118 401.849 121.151 405 125.037 405H148.963C152.849 405 156 401.849 156 397.963V374.037C156 370.151 152.849 367 148.963 367Z" fill="#D9D9D9" fillOpacity="0.09" /> {/* player number 3 */}
 			{
-				images && images.length > 2 && (
+				findMemberByPosition(roundsixteenmembers, 3) !== -1 && (
 					<foreignObject x="118" y="366" width="40" height="40">
 						<picture>
-							<source srcSet={images[0]} media="(max-width: 600px)" />
-							<img src={images[0]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
+							<source srcSet={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 3)]} media="(max-width: 600px)" />
+							<img src={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 3)]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
 						</picture>
 					</foreignObject>
 				)
 			}
 			<path d="M148.963 410H125.037C121.151 410 118 413.151 118 417.037V440.963C118 444.849 121.151 448 125.037 448H148.963C152.849 448 156 444.849 156 440.963V417.037C156 413.151 152.849 410 148.963 410Z" fill="#D9D9D9" fillOpacity="0.09" /> {/* player number 4 */}
 			{
-				images && images.length > 3 && (
+				findMemberByPosition(roundsixteenmembers, 4) !== -1 && (
 					<foreignObject x="118" y="409" width="40" height="40">
 						<picture>
-							<source srcSet={images[0]} media="(max-width: 600px)" />
-							<img src={images[0]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
+							<source srcSet={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 4)]} media="(max-width: 600px)" />
+							<img src={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 4)]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
 						</picture>
 					</foreignObject>
 				)
@@ -67,22 +80,22 @@ const SvgComponent = ({ images }) => {
 			<path d="M249.197 559.747H115.197" stroke="white" strokeOpacity="0.68" strokeWidth="1.5" />
 			<path d="M148.963 519H125.037C121.151 519 118 522.151 118 526.037V549.963C118 553.849 121.151 557 125.037 557H148.963C152.849 557 156 553.849 156 549.963V526.037C156 522.151 152.849 519 148.963 519Z" fill="#D9D9D9" fillOpacity="0.09" />  {/* player number 5 */}
 			{
-				images && images.length > 4 && (
+				findMemberByPosition(roundsixteenmembers, 5) !== -1 && (
 					<foreignObject x="118" y="518" width="40" height="40">
 						<picture>
-							<source srcSet={images[0]} media="(max-width: 600px)" />
-							<img src={images[0]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
+							<source srcSet={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 5)]} media="(max-width: 600px)" />
+							<img src={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 5)]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
 						</picture>
 					</foreignObject>
 				)
 			}
 			<path d="M148.963 562H125.037C121.151 562 118 565.151 118 569.037V592.963C118 596.849 121.151 600 125.037 600H148.963C152.849 600 156 596.849 156 592.963V569.037C156 565.151 152.849 562 148.963 562Z" fill="#D9D9D9" fillOpacity="0.09" /> {/* player number 6 */}
 			{
-				images && images.length > 5 && (
+				findMemberByPosition(roundsixteenmembers, 6) !== -1 && (
 					<foreignObject x="118" y="561" width="40" height="40">
 						<picture>
-							<source srcSet={images[0]} media="(max-width: 600px)" />
-							<img src={images[0]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
+							<source srcSet={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 6)]} media="(max-width: 600px)" />
+							<img src={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 6)]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
 						</picture>
 					</foreignObject>
 				)
@@ -91,22 +104,22 @@ const SvgComponent = ({ images }) => {
 			<path d="M249.197 711.747H115.197" stroke="white" strokeOpacity="0.68" strokeWidth="1.5" />
 			<path d="M148.963 671H125.037C121.151 671 118 674.151 118 678.037V701.963C118 705.849 121.151 709 125.037 709H148.963C152.849 709 156 705.849 156 701.963V678.037C156 674.151 152.849 671 148.963 671Z" fill="#D9D9D9" fillOpacity="0.09" />{/* player number 7 */}
 			{
-				images && images.length > 6 && (
+				findMemberByPosition(roundsixteenmembers, 7) !== -1 && (
 					<foreignObject x="118" y="670" width="40" height="40">
 						<picture>
-							<source srcSet={images[0]} media="(max-width: 600px)" />
-							<img src={images[0]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
+							<source srcSet={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 7)]} media="(max-width: 600px)" />
+							<img src={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 7)]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
 						</picture>
 					</foreignObject>
 				)
 			}
 			<path d="M148.963 714H125.037C121.151 714 118 717.151 118 721.037V744.963C118 748.849 121.151 752 125.037 752H148.963C152.849 752 156 748.849 156 744.963V721.037C156 717.151 152.849 714 148.963 714Z" fill="#D9D9D9" fillOpacity="0.09" /> {/* player number 8 */}
 			{
-				images && images.length > 7 && (
+				findMemberByPosition(roundsixteenmembers, 8) !== -1 && (
 					<foreignObject x="118" y="713" width="40" height="40">
 						<picture>
-							<source srcSet={images[0]} media="(max-width: 600px)" />
-							<img src={images[0]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
+							<source srcSet={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 8)]} media="(max-width: 600px)" />
+							<img src={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 8)]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
 						</picture>
 					</foreignObject>
 				)
@@ -115,22 +128,32 @@ const SvgComponent = ({ images }) => {
 			<path d="M249.197 255.747H115.197" stroke="white" strokeOpacity="0.68" strokeWidth="1.5" />
 			<path d="M148.963 215H125.037C121.151 215 118 218.151 118 222.037V245.963C118 249.849 121.151 253 125.037 253H148.963C152.849 253 156 249.849 156 245.963V222.037C156 218.151 152.849 215 148.963 215Z" fill="#D9D9D9" fillOpacity="0.09" /> {/* player number 1 */}
 			{
-				images && images.length > 0 && (
+				findMemberByPosition(roundsixteenmembers, 1) !== -1 && (
 					<foreignObject x="118" y="214" width="40" height="40">
 						<picture>
-							<source srcSet={images[0]} media="(max-width: 600px)" />
-							<img src={images[0]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
+							<source srcSet={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 1)]} media="(max-width: 600px)" />
+							<img src={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 1)]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
 						</picture>
 					</foreignObject>
 				)
 			}
 			<path d="M148.963 258H125.037C121.151 258 118 261.151 118 265.037V288.963C118 292.849 121.151 296 125.037 296H148.963C152.849 296 156 292.849 156 288.963V265.037C156 261.151 152.849 258 148.963 258Z" fill="#D9D9D9" fillOpacity="0.09" /> {/* player number 2 */}
 			{
-				images && images.length > 1 && (
+				roundsixteenimages && roundsixteenimages.length > 1 && (
 					<foreignObject x="118" y="257" width="40" height="40">
 						<picture>
-							<source srcSet={images[0]} media="(max-width: 600px)" />
-							<img src={images[0]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
+							<source srcSet={roundsixteenimages[1]} media="(max-width: 600px)" />
+							<img src={roundsixteenimages[1]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
+						</picture>
+					</foreignObject>
+				)
+			}
+			{
+				findMemberByPosition(roundsixteenmembers, 2) !== -1 && (
+					<foreignObject x="118" y="257" width="40" height="40">
+						<picture>
+							<source srcSet={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 2)]} media="(max-width: 600px)" />
+							<img src={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 2)]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
 						</picture>
 					</foreignObject>
 				)
@@ -169,22 +192,22 @@ const SvgComponent = ({ images }) => {
 			<path d="M1293 408.5L1427 408.5" stroke="#B9A9B8" />
 			<path d="M1417.96 368H1394.04C1390.15 368 1387 371.151 1387 375.037V398.963C1387 402.849 1390.15 406 1394.04 406H1417.96C1421.85 406 1425 402.849 1425 398.963V375.037C1425 371.151 1421.85 368 1417.96 368Z" fill="#D9D9D9" fillOpacity="0.09" /> {/* player number 11 */}
 			{
-				images && images.length > 10 && (
+				findMemberByPosition(roundsixteenmembers, 11) !== -1 && (
 					<foreignObject x="1385" y="367" width="40" height="40">
 						<picture>
-							<source srcSet={images[0]} media="(max-width: 600px)" />
-							<img src={images[0]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
+							<source srcSet={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 11)]} media="(max-width: 600px)" />
+							<img src={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 11)]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
 						</picture>
 					</foreignObject>
 				)
 			}
 			<path d="M1417.96 411H1394.04C1390.15 411 1387 414.151 1387 418.037V441.963C1387 445.849 1390.15 449 1394.04 449H1417.96C1421.85 449 1425 445.849 1425 441.963V418.037C1425 414.151 1421.85 411 1417.96 411Z" fill="#D9D9D9" fillOpacity="0.09" /> {/* player number 12 */}
 			{
-				images && images.length > 11 && (
+				findMemberByPosition(roundsixteenmembers, 12) !== -1 && (
 					<foreignObject x="1385" y="410" width="40" height="40">
 						<picture>
-							<source srcSet={images[0]} media="(max-width: 600px)" />
-							<img src={images[0]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
+							<source srcSet={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 12)]} media="(max-width: 600px)" />
+							<img src={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 12)]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
 						</picture>
 					</foreignObject>
 				)
@@ -194,22 +217,22 @@ const SvgComponent = ({ images }) => {
 			<path d="M1293 560.5L1427 560.5" stroke="white" strokeOpacity="0.68" strokeWidth="1.5" />
 			<path d="M1417.96 520H1394.04C1390.15 520 1387 523.151 1387 527.037V550.963C1387 554.849 1390.15 558 1394.04 558H1417.96C1421.85 558 1425 554.849 1425 550.963V527.037C1425 523.151 1421.85 520 1417.96 520Z" fill="#D9D9D9" fillOpacity="0.09" /> {/* player number 13 */}
 			{
-				images && images.length > 12 && (
+				findMemberByPosition(roundsixteenmembers, 13) !== -1 && (
 					<foreignObject x="1385" y="519" width="40" height="40">
 						<picture>
-							<source srcSet={images[0]} media="(max-width: 600px)" />
-							<img src={images[0]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
+							<source srcSet={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 13)]} media="(max-width: 600px)" />
+							<img src={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 13)]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
 						</picture>
 					</foreignObject>
 				)
 			}
 			<path d="M1417.96 563H1394.04C1390.15 563 1387 566.151 1387 570.037V593.963C1387 597.849 1390.15 601 1394.04 601H1417.96C1421.85 601 1425 597.849 1425 593.963V570.037C1425 566.151 1421.85 563 1417.96 563Z" fill="#D9D9D9" fillOpacity="0.09" /> {/* player number 14 */}
 			{
-				images && images.length > 13 && (
+				findMemberByPosition(roundsixteenmembers, 14) !== -1 && (
 					<foreignObject x="1385" y="562" width="40" height="40">
 						<picture>
-							<source srcSet={images[0]} media="(max-width: 600px)" />
-							<img src={images[0]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
+							<source srcSet={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 14)]} media="(max-width: 600px)" />
+							<img src={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 14)]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
 						</picture>
 					</foreignObject>
 				)
@@ -218,22 +241,22 @@ const SvgComponent = ({ images }) => {
 			<path d="M1293 712.5L1427 712.5" stroke="white" strokeOpacity="0.68" strokeWidth="1.5" />
 			<path d="M1417.96 672H1394.04C1390.15 672 1387 675.151 1387 679.037V702.963C1387 706.849 1390.15 710 1394.04 710H1417.96C1421.85 710 1425 706.849 1425 702.963V679.037C1425 675.151 1421.85 672 1417.96 672Z" fill="#D9D9D9" fillOpacity="0.09" /> {/* player number 15 */}
 			{
-				images && images.length > 14 && (
+				findMemberByPosition(roundsixteenmembers, 15) !== -1 && (
 					<foreignObject x="1385" y="671" width="40" height="40">
 						<picture>
-							<source srcSet={images[0]} media="(max-width: 600px)" />
-							<img src={images[0]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
+							<source srcSet={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 15)]} media="(max-width: 600px)" />
+							<img src={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 15)]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
 						</picture>
 					</foreignObject>
 				)
 			}
 			<path d="M1417.96 715H1394.04C1390.15 715 1387 718.151 1387 722.037V745.963C1387 749.849 1390.15 753 1394.04 753H1417.96C1421.85 753 1425 749.849 1425 745.963V722.037C1425 718.151 1421.85 715 1417.96 715Z" fill="#D9D9D9" fillOpacity="0.09" /> {/* player number 16 */}
 			{
-				images && images.length > 15 && (
+				findMemberByPosition(roundsixteenmembers, 16) !== -1 && (
 					<foreignObject x="1385" y="714" width="40" height="40">
 						<picture>
-							<source srcSet={images[0]} media="(max-width: 600px)" />
-							<img src={images[0]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
+							<source srcSet={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 16)]} media="(max-width: 600px)" />
+							<img src={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 16)]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
 						</picture>
 					</foreignObject>
 				)
@@ -242,22 +265,22 @@ const SvgComponent = ({ images }) => {
 			<path d="M1293 256.5L1427 256.5" stroke="white" strokeOpacity="0.68" strokeWidth="1.5" />
 			<path d="M1417.96 216H1394.04C1390.15 216 1387 219.151 1387 223.037V246.963C1387 250.849 1390.15 254 1394.04 254H1417.96C1421.85 254 1425 250.849 1425 246.963V223.037C1425 219.151 1421.85 216 1417.96 216Z" fill="#D9D9D9" fillOpacity="0.09" /> {/* player number 9 */}
 			{
-				images && images.length > 8 && (
+				findMemberByPosition(roundsixteenmembers, 9) !== -1 && (
 					<foreignObject x="1385" y="215" width="40" height="40">
 						<picture>
-							<source srcSet={images[0]} media="(max-width: 600px)" />
-							<img src={images[0]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
+							<source srcSet={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 9)]} media="(max-width: 600px)" />
+							<img src={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 9)]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
 						</picture>
 					</foreignObject>
 				)
 			}
 			<path d="M1417.96 259H1394.04C1390.15 259 1387 262.151 1387 266.037V289.963C1387 293.849 1390.15 297 1394.04 297H1417.96C1421.85 297 1425 293.849 1425 289.963V266.037C1425 262.151 1421.85 259 1417.96 259Z" fill="#D9D9D9" fillOpacity="0.09" /> {/* player number 10 */}
 			{
-				images && images.length > 9 && (
+				findMemberByPosition(roundsixteenmembers, 10) !== -1 && (
 					<foreignObject x="1385" y="258" width="40" height="40">
 						<picture>
-							<source srcSet={images[0]} media="(max-width: 600px)" />
-							<img src={images[0]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
+							<source srcSet={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 10)]} media="(max-width: 600px)" />
+							<img src={roundsixteenimages[findMemberByPosition(roundsixteenmembers, 10)]} alt="Description of the image" width="40" height="40" style={{ borderRadius: '5px' }} />
 						</picture>
 					</foreignObject>
 				)

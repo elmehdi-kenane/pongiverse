@@ -3,12 +3,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from myapp.models import customuser
 from chat.models import Friends
-from .models import TournamentMembers
-from .models import Tournament
-from .models import TournamentMembers
-from .models import TournamentInvitation
 from .models import GameCustomisation
+from .models import TournamentMembers, Tournament, TournamentInvitation, Round, TournamentUserInfo, DisplayOpponent
 import random
+from django.db.models import Q
 from myapp.serializers import MyModelSerializer
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError, AccessToken
 # from rest_framework.exceptions import AuthenticationFailed
@@ -301,21 +299,11 @@ def is_started_and_not_finshed(request):
 	response = Response()
 	user = customuser.objects.filter(username=username).first()
 	for member in TournamentMembers.objects.filter(user=user):
-		if member.tournament.is_started == True and member.tournament.is_finished == False:
+		if member.tournament.is_started == True and member.tournament.is_finished == False and member.is_eliminated == False:
 			response.data = {'Case' : 'yes'}
 			return response
 	response.data = {'Case' : 'no'}
 	return response
-# @api_view(['POST'])
-# def is_tournament_advanced(request):
-# 	tournament_id = request.data.get('tournament_id')
-# 	response = Response()
-# 	tournament = Tournament.objects.filter(tournament_id=tournament_id).first()
-# 	if tournament.is_advanced == True:
-# 		response.data = {'Case' : 'tournament_advanced'}
-# 		return response
-# 	response.data = {'Case' : 'tournament_not_advanced'}
-# 	return response
 
 @api_view(['POST'])
 def get_tournament_size(request):
@@ -377,3 +365,102 @@ def get_customize_game(request):
 		return Response({'data' : None})
 	except TokenError as e:
 		return Response({'data' : None})
+
+@api_view(['POST'])
+def set_is_inside(request):
+	response = Response()
+	is_inside = request.data.get('is_inside')
+	print(f"----- get to is inside {is_inside}---------------")
+	username = request.data.get('user')
+	user = customuser.objects.filter(username=username).first()
+	for member in TournamentMembers.objects.filter(user=user):
+		if member.tournament.is_started == False or (member.tournament.is_started == True and member.tournament.is_finished == False and member.is_eliminated == False):
+			member.is_inside = is_inside
+			member.save()
+			response.data = {'Case' : 'yes'}
+			return response
+	response.data = {'Case' : 'no'}
+	return response
+
+@api_view(['POST'])
+def get_game_members_round(request):
+	username = request.data.get('user')
+	user = customuser.objects.filter(username=username).first()
+	response = Response()
+	for member in TournamentMembers.objects.filter(user=user):
+		if member.tournament.is_started == True and member.tournament.is_finished == False and member.is_eliminated == False:
+			roundsixteen = Round.objects.filter(tournament=member.tournament, type="ROUND 16").first()
+			roundquarterfinal = Round.objects.filter(tournament=member.tournament, type="QUARTERFINAL").first()
+			roundsemierfinal = Round.objects.filter(tournament=member.tournament, type="SEMIFINAL").first()
+			winner = Round.objects.filter(tournament=member.tournament, type="WINNER").first()
+			sixteenmembers = []
+			quartermembers = []
+			semimembers = []
+			winnerdict = {}
+			if roundsixteen is not None:
+				for sixteenmember in TournamentUserInfo.objects.filter(round=roundsixteen):
+					sixteenmembers.append({
+						'id' : sixteenmember.user.id,
+						'name' : sixteenmember.user.username,
+						'level': 2,  # Assuming level is static for now
+						'image': sixteenmember.user.avatar.path,
+						'position': sixteenmember.position
+					})
+			if roundquarterfinal is not None:
+				for quartermember in TournamentUserInfo.objects.filter(round=roundquarterfinal):
+					if quartermember.user is not None:
+						quartermembers.append({
+							'id' : quartermember.user.id,
+							'name' : quartermember.user.username,
+							'level': 2,  # Assuming level is static for now
+							'image': quartermember.user.avatar.path,
+							'position': quartermember.position
+						})
+					else:
+						quartermembers.append({
+							'id' : -1,
+							'name' : '',
+							'level': 2,  # Assuming level is static for now
+							'image': '',
+							'position': quartermember.position
+						})
+			if roundsemierfinal is not None:
+				for semimember in TournamentUserInfo.objects.filter(round=roundsemierfinal):
+					if semimember.user is not None:
+						semimembers.append({
+							'id' : semimember.user.id,
+							'name' : semimember.user.username,
+							'level': 2,  # Assuming level is static for now
+							'image': semimember.user.avatar.path,
+							'position': semimember.position
+						})
+					else :
+						semimembers.append({
+							'id' : -1,
+							'name' : '',
+							'level': 2,  # Assuming level is static for now
+							'image': '',
+							'position': semimember.position
+						})
+
+			winnermember = TournamentUserInfo.objects.filter(round=winner).first()
+			if winnermember is not None:
+				if winnermember.user is not None:
+					winnerdict.update({'id': winnermember.user.id, 'name' : winnermember.user.username, 'level' : 2, 'image' : winnermember.user.avatar.path, 'position' : winnermember.position})
+				else:
+					winnerdict.update({'id': -1, 'name' : '', 'level' : 2, 'image' : '', 'position' : winnermember.position})
+	response.data = {'roundsixteen' : sixteenmembers, 'roundquarter' : quartermembers, 'roundsemi' : semimembers, 'winner' : winnerdict}
+	return response
+
+@api_view(['POST'])
+def get_opponent(request):
+	print("YESHSHSHSH")
+	response = Response()
+	username = request.data.get('user')
+	user = customuser.objects.filter(username=username).first()
+	opponent = DisplayOpponent.objects.filter(Q(user1=user) | Q(user2=user)).first()
+	if opponent is not None:
+		response.data = {'Case' : 'exist', 'user1' : opponent.user1.username, 'user2' : opponent.user2.username, 'time' : opponent.created_at}
+	else:
+		response.data = {'Case' : 'does not exist'}
+	return response

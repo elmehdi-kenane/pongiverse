@@ -173,7 +173,6 @@ export const AuthProvider = ({children}) => {
 				const blob = await response.blob();
 				const image = URL.createObjectURL(blob)
 				setUserImg(image)
-				// console.log('USER IMAGE IS THIS : ', image)
 			} catch (e) {
 				console.log("something wrong with fetch")
 			}

@@ -9,6 +9,7 @@ from chat import chat_consumers
 from asgiref.sync import sync_to_async
 from myapp.models import customuser
 from chat.models import Friends
+import socket
 
 # from mainApp.models import Match
 # from mainApp.models import ActiveMatch
@@ -32,76 +33,84 @@ async def get_friends(username):
 
 class ChatConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
-		await self.accept()
+		# self.address = '127.0.0.1'
+		# self.port = 8000
+		# self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		# self.socket.connect((self.address, self.port))
+		# await self.accept()
 		cookiess = self.scope.get('cookies', {})
 		token = cookiess.get('token')
 		decoded_token = AccessToken(token)
 		payload_data = decoded_token.payload
 		user_id = payload_data.get('user_id')
 		user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
-		username = user.username
-		tmp_username = username
-		user.is_online = True
-		await sync_to_async(user.save)()
-		user_channels[username] = self.channel_name
-		channel_layer = get_channel_layer()
-		friends = await sync_to_async(list)(Friends.objects.filter(user=user))
-		for friend in friends:
-			friend_username = await sync_to_async(lambda: friend.friend.username)()
-			friend_is_online = await sync_to_async(lambda: friend.friend.is_online)()
-			channel_name = user_channels.get(friend_username)
-			print(f"USER CHANNEL ON CONNECT IS : {channel_name}")
-			if channel_name and friend_is_online and not user.is_playing:
-				await self.channel_layer.send(
-					channel_name,
-					{
-						'type': 'connected_again',
-						'message': {
-								'user': username,
-								'userInfos': {
-									'id': user.id,
-									'name': user.username,
-									'level': 2,
-									'image': user.avatar.path,
-									# 'is_playing': user.is_playing
-									# {'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path}
+		if user is not None:
+			await self.accept()
+			username = user.username
+			tmp_username = username
+			user.is_online = True
+			await sync_to_async(user.save)()
+			user_channels[username] = self.channel_name
+			channel_layer = get_channel_layer()
+			friends = await sync_to_async(list)(Friends.objects.filter(user=user))
+			print(f"ALL THE USERS CHANNEL_NAMES : {user_channels}")
+			for friend in friends:
+				friend_username = await sync_to_async(lambda: friend.friend.username)()
+				friend_is_online = await sync_to_async(lambda: friend.friend.is_online)()
+				channel_name = user_channels.get(friend_username)
+				print(f"USER CHANNEL ON CONNECT IS : {channel_name}")
+				if channel_name and friend_is_online and not user.is_playing:
+					await self.channel_layer.send(
+						channel_name,
+						{
+							'type': 'connected_again',
+							'message': {
+									'user': username,
+									'userInfos': {
+										'id': user.id,
+										'name': user.username,
+										'level': 2,
+										'image': user.avatar.path,
+									}
 								}
-							}
-					}
-				)
-			if channel_name and friend_is_online:
+						}
+					)
+				if channel_name and friend_is_online:
+					await self.channel_layer.send(
+						channel_name,
+						{
+							'type': 'connected_again_tourn',
+							'message': {
+									'user': username,
+									'userInfos': {
+										'id': user.id,
+										'name': user.username,
+										'level': 2,
+										'image': user.avatar.path,
+									}
+								}
+						}
+					)
+			for username, channel_name in user_channels.items():
+				user = await sync_to_async(customuser.objects.filter(username=username).first)()
 				await self.channel_layer.send(
 					channel_name,
 					{
 						'type': 'connected_again_tourn',
 						'message': {
-								'user': username,
-								'userInfos': {
-									'id': user.id,
-									'name': user.username,
-									'level': 2,
-									'image': user.avatar.path,
-								}
+							'user': tmp_username,
+							'userInfos': {
+								'id': user.id,
+								'name': user.username,
+								'level': 2,
+								'image': user.avatar.path,
 							}
-					}
-				)
-		for username, channel_name in user_channels.items():
-			user = await sync_to_async(customuser.objects.filter(username=username).first)()
-			await self.channel_layer.send(
-				channel_name,
-				{
-					'type': 'connected_again_tourn',
-					'message': {
-						'user': tmp_username,
-						'userInfos': {
-							'id': user.id,
-							'name': user.username,
-							'level': 2,
-							'image': user.avatar.path,
 						}
 					}
-				}
-			)
+				)
+		else:
+			print("YESSSSSSSSSSS")
+			# self.socket.close()
 
 	async def receive(self, text_data):
 		data = json.loads(text_data)
@@ -160,6 +169,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		elif data['type'] == 'destroy-tournament': await tournament_consumers.destroy_tournament(self, data, user_channels)
 		elif data['type'] == 'leave-tournament': await tournament_consumers.leave_tournament(self, data, user_channels)
 		elif data['type'] == 'start-tournament': await tournament_consumers.start_tournament(self, data, user_channels)
+		elif data['type'] == 'Round-16-timer': await tournament_consumers.Round_16_timer(self, data, user_channels)
+		elif data['type'] == 'check-round-16-players': await tournament_consumers.check_round_16_players(self, data, user_channels)
 
 	async def disconnect(self, close_code):
 		await tournament_consumers.disconnected(self, user_channels)
@@ -545,4 +556,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	async def tournament_started(self, event):
 		await self.send(text_data=json.dumps({
 			'type' : 'tournament_started',
+		}))
+	async def warn_members(self, event):
+		await self.send(text_data=json.dumps({
+			'type' : 'warn_members',
+		}))
+
+	async def user_eliminated(self, event):
+		await self.send(text_data=json.dumps({
+			'type' : 'user_eliminated',
+		}))
+
+	async def you_and_your_user(self, event):
+		await self.send(text_data=json.dumps({
+			'type' : 'you_and_your_user',
+			'message' : event['message']
 		}))

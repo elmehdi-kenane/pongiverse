@@ -18,7 +18,7 @@ function CreateTournament() {
 	const [membersImages, setMemberImages] = useState([])
 	const navigate = useNavigate()
 	const location = useLocation()
-	const { user, userImages, allGameFriends, socket, setAllGameFriends } = useContext(AuthContext)
+	const { user, userImages, allGameFriends, socket, setAllGameFriends , publicCheckAuth } = useContext(AuthContext)
 	const allGameFriendsRef = useRef(allGameFriends);
 	const divRef = useRef(null);
 	const divRef2 = useRef(null);
@@ -27,6 +27,10 @@ function CreateTournament() {
 	const isOpen = () => {
 		setOpen(!open);
 	}
+
+	// useEffect(() => {
+	//   publicCheckAuth()
+	// }, [])
 
 	const handleInviteClick = (name) => {
 		if (socket && socket.readyState === WebSocket.OPEN) {
@@ -109,48 +113,62 @@ function CreateTournament() {
 				console.error('Failed to fetch data');
 			}
 		}
+		const set_is_inside = async () => {
+			const response = await fetch(`http://localhost:8000/api/set-is-inside`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					user: user,
+					is_inside: true
+				})
+			})
+		}
+
+		const check_is_join = async () => {
+			const response = await fetch(`http://localhost:8000/api/is-joining-tournament`, {
+				method: "POST",
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					user: user
+				})
+			});
+			if (response.ok) {
+				const data = await response.json();
+				if (data.Case === 'yes')
+					get_members()
+				else
+					navigate("../game")
+			} else {
+				console.error('Failed to fetch data');
+			}
+		}
+		const check_is_started_and_not_finished = async () => {
+			const response = await fetch(`http://localhost:8000/api/is-started-and-not-finshed`, {
+				method: "POST",
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					user: user
+				})
+			});
+			if (response.ok) {
+				const data = await response.json();
+				if (data.Case === 'yes')
+					navigate('../game/tournamentbracket');
+				else
+					check_is_join()
+			} else {
+				console.error('Failed to fetch data');
+			}
+		}
 		if (user) {
-			const check_is_join = async () => {
-				const response = await fetch(`http://localhost:8000/api/is-joining-tournament`, {
-					method: "POST",
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({
-						user: user
-					})
-				});
-				if (response.ok) {
-					const data = await response.json();
-					if (data.Case === 'yes')
-						get_members()
-					else
-						navigate("../game")
-				} else {
-					console.error('Failed to fetch data');
-				}
-			}
-			const check_is_started_and_not_finished = async () => {
-				const response = await fetch(`http://localhost:8000/api/is-started-and-not-finshed`, {
-					method: "POST",
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({
-						user: user
-					})
-				});
-				if (response.ok) {
-					const data = await response.json();
-					if (data.Case === 'yes')
-						navigate('../game/tournamentbracket');
-					else
-						check_is_join()
-				} else {
-					console.error('Failed to fetch data');
-				}
-			}
 			check_is_started_and_not_finished()
+			set_is_inside()
 		}
 	}, [user])
 
@@ -268,6 +286,12 @@ function CreateTournament() {
 					if (!userExists)
 						setAllGameFriends([...currentAllGameFriends, message.userInfos])
 				} else if (type === 'tournament_started') {
+					console.log("YESSS")
+					if (socket && socket.readyState === WebSocket.OPEN) {
+						socket.send(JSON.stringify({
+							type: 'Round-16-timer',
+						}))
+					}
 					navigate('../game/tournamentbracket');
 				}
 			}
@@ -413,7 +437,7 @@ function CreateTournament() {
 							<div className={styles["up-buttons"]}>
 								<button className={styles["up-button"]} onClick={isOpen} ref={inviteRef2}>Invite Friend</button>
 								{
-									tournamentMembers.length === 16 ? <button className={styles["up-button"]} onClick={handleStart}>Start</button> : <button className={styles["up-button-disabled"]} onClick={handleStart} disabled>Start</button>
+									tournamentMembers.length > 0 ? <button className={styles["up-button"]} onClick={handleStart}>Start</button> : <button className={styles["up-button-disabled"]} onClick={handleStart} disabled>Start</button>
 								}
 							</div>
 							: <div className={styles["up-buttons"]}>
@@ -829,7 +853,7 @@ function CreateTournament() {
 										<button className={styles["button"]} onClick={isOpen} ref={inviteRef}>Invite Friend</button>
 									</div>
 									{
-										tournamentMembers.length === 16 ? <button className={styles["button"]} onClick={handleStart}>Start</button> : <button className={styles["button-disabled"]} onClick={handleStart} disabled>Start</button>
+										tournamentMembers.length > 0 ? <button className={styles["button"]} onClick={handleStart}>Start</button> : <button className={styles["button-disabled"]} onClick={handleStart} disabled>Start</button>
 									}
 								</div>
 								{open && <InviteFriendComp class="Invite-friend-popup-up" refs={divRef2} />}
