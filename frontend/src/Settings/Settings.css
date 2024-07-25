@@ -49,6 +49,7 @@
 }
 .settings__leftside .pic-name img {
     height: 40px;
+    border-radius: 50%;
 }
 
 .settings-page .settings__leftside .left__email{

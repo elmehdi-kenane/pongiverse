@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import NavbarIconSearch from "./NavbarIconSearch";
 import NavbarprofNotifs from "./NavbarProfNotifs";
-
+import ChatContext from "../Groups/ChatContext";
 import AuthContext from "./Authcontext";
 
 
@@ -10,7 +10,7 @@ function Navbar({ Icons, handleExapandSidebar, searchbar, handleSearchBar }) {
     const {isGlass} = useContext(AuthContext);
 
     return (
-        <div className={(isGlass) ?"navbar profile-blur":"navbar"}>
+        <div className={(isGlass) ?"navbar blur":"navbar"}>
             <NavbarIconSearch
                 Icons={Icons}
                 handleExapandSidebar={handleExapandSidebar}

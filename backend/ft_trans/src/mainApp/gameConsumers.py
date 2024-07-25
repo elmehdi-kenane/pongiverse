@@ -271,10 +271,10 @@ async def backUpData(self, data, rooms):
 ##### join to a an existing room or a new one ##### =====> /game
 @sync_to_async
 def generate_unique_room_id(self):
-    while True:
-        room_id = random.randint(1000000, 1000000000)  # Adjust the range as needed
-        if not ActiveMatch.objects.filter(room_id=room_id).exists() and not Match.objects.filter(id=room_id).exists():
-            return room_id
+	while True:
+		room_id = random.randint(1000000, 1000000000)  # Adjust the range as needed
+		if not ActiveMatch.objects.filter(room_id=room_id).exists() and not Match.objects.filter(id=room_id).exists():
+			return room_id
 
 @sync_to_async
 def set_to_true(self, user):
@@ -447,17 +447,17 @@ async def joinRoom(self, data, rooms, user_channels):
         print(f"PLAYER 1 IS : {user.username} {user.is_playing}")
 
 async def set_game(self, room, users):
-    await asyncio.create_task(startedGameSignal(self, room, users))
+	await asyncio.create_task(startedGameSignal(self, room, users))
 
 async def startedGameSignal(self, room, users):
-    await self.channel_layer.group_send(str(room['id']), {
-            'type': 'gameReady',
-            'message': {
-                'room' : room,
-                'users': users
-            }
-        }
-    )
+	await self.channel_layer.group_send(str(room['id']), {
+			'type': 'gameReady',
+			'message': {
+				'room' : room,
+				'users': users
+			}
+		}
+	)
 
 async def quitRoom(self, data, rooms, user_channels):
     # print(f"INSIDE THE QUIT THE RANDOM GAME : {data['message']}")
@@ -1289,14 +1289,14 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
     await runOverGame(self, room, ballProps, rooms, user_channels)
 
 async def startGame(self, data, rooms, user_channels):
-    room = rooms.get(str(data['message']['roomID']))
-    if room:
-        ballProps = {
-            "velocityX": 5,
-            "velocityY": 5,
-            "speed": 5
-        }
-        await asyncio.create_task(runOverGame(self, room, ballProps, rooms, user_channels))
+	room = rooms.get(str(data['message']['roomID']))
+	if room:
+		ballProps = {
+			"velocityX": 5,
+			"velocityY": 5,
+			"speed": 5
+		}
+		await asyncio.create_task(runOverGame(self, room, ballProps, rooms, user_channels))
 
 ##### when the game already started and some or all players getout from the playing page ##### =====> /play/:id
 

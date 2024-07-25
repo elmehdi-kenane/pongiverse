@@ -8,7 +8,7 @@ function SidebarLaptop({ Icons }) {
     const {isGlass} = useContext(AuthContext);
 
     return (
-        <div className={(isGlass) ?"profile-blur sidebar":"sidebar"}>
+        <div className={(isGlass) ?"blur sidebar":"sidebar"}>
             <div className="sidebar-navigations" id="sidebar-dashboard">
                 <div className="sidebar-icons">
                     <Link to="dashboard">
@@ -63,5 +63,5 @@ function SidebarLaptop({ Icons }) {
         </div>
     );
 }
- 
+
 export default SidebarLaptop;

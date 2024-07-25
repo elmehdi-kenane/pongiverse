@@ -19,7 +19,8 @@ function ForgotPassword() {
 	const [errors, setErrors] = useState({})
 	let attempts = 0;
 	const [code, setCode] = useState(-12);
-	const [inputCode, setInputCode] = useState(-140);
+	const [
+		Code, setInputCode] = useState(-140);
 	const [exist, SetExist] = useState('');
 	const navigate = useNavigate();
 	const MySwal = withReactContent(Swal);
@@ -45,7 +46,7 @@ function ForgotPassword() {
 				}
 			}).then(response => {
 				if (response.data.Case === "Email already exist") {
-					client.post('/ForgetPassword/', data, {
+					client.post('/auth/ForgetPassword/', data, {
 						headers: {
 							'Content-Type': 'application/json',
 						}
@@ -57,15 +58,17 @@ function ForgotPassword() {
 							title: 'Type the Code',
 							width: '400px',
 							input: 'text',
-							inputPlaceholder: 'Type something...',
+							inputPlaceholder: 'Type The Code ...',
 							showCancelButton: true,
 							cancelButtonColor: '#913DCE',
 							allowOutsideClick: false,
 							confirmButtonText: 'Submit',
 							confirmButtonColor: '#913DCE',
 							customClass: {
+								popup: styles['popup-style'],
 								container: styles['blur-background'] ,
 								input: styles['custom-input'],
+								title : styles['popup-title-style']
 							},
 						}).then((result) => {
 							if (result.isConfirmed) {
@@ -136,8 +139,7 @@ function ForgotPassword() {
 						<div className={styles["bodyPage"]}>
 							<div className={styles["signUpContainer"]}>
 								<h1 className={styles["title"]}>Forgot your password?</h1>
-								<h3 className={styles["h3_title"]}>Enter the email address associated with your account,and we'll
-									send you a link to reset your password.</h3>
+								<h3 className={styles["h3_title"]}>Enter the email address associated with your account, and we'll send you a code to reset your password.</h3>
 								<form className={styles["signUpForm"]} onSubmit={handleNextClick} noValidate>
 									<input className={styles["inputs"]} type="email" name='email' value={data.email} onChange={handleChange} placeholder="enter your email" />
 									{errors.email && <span>{errors.email}</span>}

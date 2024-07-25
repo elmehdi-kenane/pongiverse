@@ -30,7 +30,7 @@ function SignUpForm() {
 		const validationErrors = {}
 		if (!data.email.trim()) {
 			validationErrors.email = "email is required"
-		} else if (!/\S+@\S+\.\S+/.test(data.email)) {
+		} else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data.email)) {
 			validationErrors.email = "email is not valid"
 		}
 

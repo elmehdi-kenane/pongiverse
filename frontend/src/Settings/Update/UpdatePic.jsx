@@ -6,7 +6,7 @@ import bg1 from "../assets/bg1.jpg"
 function UpdatePic(props) {
     
     const [backgndPic, setBackgndPic] = useState(bg1);
-    const {userPic} = useContext(AuthContext)
+    const {userImg, dfltPic} = useContext(AuthContext)
 
     const UpdateBgPic = (event) => {
       if (event.target.files && event.target.files[0]) {
@@ -18,12 +18,12 @@ function UpdatePic(props) {
   return (
     <div>
         <div className="update"> 
-            <img src={userPic} alt="UserPic"/>
+            <img src={userImg ? userImg : dfltPic} alt="userImg"/>
             <p className='title-pic'> Upload a new picture </p>
             <div className="update__btn" onClick={() => props.setAdjust(true)}> Update </div>
         </div>
         <div className="update"> 
-            <img  src={backgndPic} alt="UserPic"/>
+            <img  src={backgndPic} alt="userBg"/>
             <p className='title-pic'> Upload a new walppaper </p>
             <div className="update__btn" onClick={() => document.getElementById('fileInput').click()}> Update 
                 <input

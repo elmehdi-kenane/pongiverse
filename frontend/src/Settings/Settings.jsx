@@ -8,14 +8,14 @@ import AuthContext from '../navbar-sidebar/Authcontext';
 function Settings() {
 
   const [isInfo, setIsInfo] = useState(true);
-  const {userPic} = useContext(AuthContext);
+  const {userImg, dfltPic, user} = useContext(AuthContext);
 
   return (
     <div className='settings-page'>
       <div className="settings__leftside">
         <div className='pic-name'>
-            <img src={userPic} alt='UserPic'/>
-            <p> Maverick </p>
+            <img src={userImg ? userImg : dfltPic} alt='userImg'/>
+            <p> {user} </p>
         </div>
         <p className='left__email'>
             maverick144@gmail.com
@@ -25,7 +25,7 @@ function Settings() {
         <div className={!isInfo ? 'left__security btn-active':'left__security'} onClick={()=>{setIsInfo(false)}}> Security </div>
       </div>
       {isInfo && <PersonalInfo />}
-      {!isInfo &&<Security />}
+      {!isInfo && <Security />}
     </div>
   )
 }

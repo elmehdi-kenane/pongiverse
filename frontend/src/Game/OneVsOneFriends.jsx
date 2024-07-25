@@ -78,7 +78,7 @@ const OneVsOneFriends = () => {
 							level: message.users[0].level
 						})
 					}
-					friendsSection.current.remove()
+					// friendsSection.current.remove()
 					setExpandFriends(false)
 					setGameStarted(false)
 					setRoomID(message.room.id)
@@ -283,12 +283,12 @@ const OneVsOneFriends = () => {
 		<div className='onevsone'>
 			<div className='onevsone-dashboard'>
 				<div className='onevsone-dashboard-opponents'>
-					<div className='onevsone-invite-friends' ref={friendsSection}>
+					{!allSet && <div className='onevsone-invite-friends'>
 						<div onClick={expandFriendsList} style={{display: 'flex', flexDirection: 'row', cursor: 'pointer', position: 'relative'}}>
 							<img src={Icons.gameInvite} alt="" style={{width: '20%', paddingLeft: '5px'}} />
 							<div className='invite-friends-button'>invite friend</div>
 						</div>
-					</div>
+					</div>}
 					{expandFriends && (<div className='expand-friends' ref={expandFriendList}>
 						{(allGameFriends.length && !loading) ? allGameFriends.map((user, key) => {
 							return (<div key={user.id} className='game-friend-list'>

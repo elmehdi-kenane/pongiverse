@@ -469,12 +469,19 @@ body {
 }
 
 @media screen and (max-width: 280px) {
-  .no-notifications-dropdown {
-    position: fixed;
-    top: 50px;
-    width: 80%;
-    left: 20%;
-  }
+    .no-notifications-dropdown {
+        position: fixed;
+        top: 50px;
+        width: 80%;
+        left: 20%;
+    }
+
+    .notifications-container {
+        position: fixed;
+        top: 50px;
+        width: 80%;
+        left: 20%;
+    }
 
   .notifications-container {
     position: fixed;

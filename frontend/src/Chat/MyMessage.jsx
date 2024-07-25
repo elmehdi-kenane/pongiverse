@@ -1,14 +1,15 @@
 import { useEffect } from 'react'
-import './Chat.css'
-import Avatar from './avatar.svg'
+import * as ChatIcons from '../assets/chat/media'
+
+import "../assets/chat/Chat.css";
 
 const MyMessage = (props) => {
     return (
-        <div className="message-row__my-message">
-            <div className="message-row__mymessage__text my-message" >
+        <div className="my-message-row message-row">
+            <div className="my-message-content message-content" >
                 {props.content}
             </div>
-            <img  className="message-row__mymessage__avatar" src={Avatar} alt="" />
+            <img  className="my-message-avatar" src={props.avatar} alt="" />
         </div>
     )
 }

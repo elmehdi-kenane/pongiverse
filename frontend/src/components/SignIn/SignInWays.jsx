@@ -1,143 +1,168 @@
-import React from 'react';
-import logo42 from '../../assets/SignUp/42_logo.svg'
-import { useEffect } from 'react';
-import googleIcon from '../../assets/SignUp/googleIcon.png'
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from '../../assets/SignUp/SignUpPage.module.css'
-import { GoogleOAuthProvider, useGoogleLogin, GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from "jwt-decode";
-import axios from 'axios';
-import Cookies from 'js-cookie';
+import logo42 from '../../assets/SignUp/42_logo.svg'
+import logoGoogle from '../../assets/SignIn/GoogleIcon.svg'
 import Swal from 'sweetalert2';
 
-import { useNavigate } from 'react-router-dom';
-axios.defaults.xsrfCookieName = "csrftoken";
-axios.defaults.xsrfHeaderName = "X-CSRFToken";
-const client = axios.create({
-	baseURL: "http://localhost:8000",
-});
-
 function SignInWays() {
+	const [googleAuthUrl, setGoogleAuthUrl] = useState('')
+	const [intraAuthUrl, setIntraAuthUrl] = useState('')
+	const [googleCode, setGoogleCode] = useState('')
+	const [intraCode, setIntraCode] = useState('')
+	const navigate = useNavigate()
 
-	const navigate = useNavigate();
-	const CLIENT_ID = 'u-s4t2ud-fcffc65b4899785b254efb0f6527c2d4493781c1e7792364b758f426b18a2598';
-	const REDIRECT_URI = 'http://localhost:3000/signin';
-	const handleLogin = () => {
-		window.location.href = `https://api.intra.42.fr/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
-	};
-
-	const fetchAccessToken = (code) => {
-		axios.post('https://api.intra.42.fr/oauth/token', {
-			grant_type: 'authorization_code',
-			client_id: CLIENT_ID,
-			client_secret: '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',
-			code: code,
-			redirect_uri: REDIRECT_URI
-		}).then(response => {
-			fetchUserData(response.data.access_token);
-		}).catch(error => {
-			console.error('Error fetching access token:', error);
-		});
-	};
-
-	const fetchUserData = (accessToken) => {
-		axios.get('https://api.intra.42.fr/v2/me', {
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			}
-		}).then(response => {
-			const user_data = response.data
-			client.post('/auth/googleLogin/', user_data, {
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				withCredentials: true
-			}).then(response => {
-				if (response.data.Case === "Login successfully") {
-					navigate('/mainpage');
-				} else if (response.data.Case === "Invalid username or password!!") {
-					Swal.fire({
-						text: 'No account exist with this email',
-						icon: 'error',
-					});
-				}
-			})
-				.catch(error => {
-					console.error('There was an error!', error);
-				});
-		}).catch(error => {
-			console.error('Error fetching user data:', error);
-		});
-	};
 
 	useEffect(() => {
-		const urlParams = new URLSearchParams(window.location.search);
-		const code = urlParams.get('code');
-
-		if (code) {
-			fetchAccessToken(code);
-			const urlWithoutCode = window.location.href.split('?')[0];
-			window.history.replaceState({}, document.title, urlWithoutCode);
-		}
-	}, []);
-
-
-	const handleSuccess = (credentialResponse) => {
-		const decoded = jwtDecode(credentialResponse.credential);
-		const data = {
-			email: decoded.email,
+		const getQueryParam = (name) => {
+			const urlParams = new URLSearchParams(window.location.search);
+			return urlParams.get(name);
 		};
-		client.post('/auth/googleLogin/', data, {
+		const extracted_code = getQueryParam('code');
+		const fullUrl = window.location.href;
+		if (extracted_code && fullUrl && fullUrl.includes("email")) {
+			setGoogleCode(extracted_code)
+			console.log("ewahaaa")
+		}
+		else if (extracted_code) {
+			console.log("ewahaaa intra")
+			setIntraCode(extracted_code)
+		}
+	}, [])
+
+	const verify_email = async (email) => {
+		console.log("the dta : ", email)
+		const response = await fetch(`http://localhost:8000/auth/googleLogin/`, {
+			method: "POST",
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			withCredentials: true
-		}).then(response => {
-			if (response.data.Case === "Login successfully") {
+			credentials: 'include',
+			body: JSON.stringify({
+				email: email
+			})
+		});
+		if (response.ok) {
+			const data = await response.json();
+			console.log("ftft : ")
+			if (data.Case === "Login successfully") {
 				navigate('/mainpage');
-			} else if (response.data.Case === "Invalid username or password!!") {
-				alert("there is no account")
+			} else if (data.Case === "Invalid username or password!!") {
+				Swal.fire({
+					text: 'There is no account',
+					icon: 'error',
+				});
 			}
-		})
-			.catch(error => {
-				console.error('There was an error!', error);
-			});
-	};
-
-	const handleError = () => {
-		console.log('Google login failed');
-	};
-
-
-	function CustomGoogleButton() {
-
-		const login = useGoogleLogin({
-			onSuccess: handleSuccess,
-			onError: handleError,
-		  });
-		return (
-		<button  onClick={login}>
-		Sign in with Google
-		</button>
-		);
+		} else {
+			console.error('Failed to fetch data');
 		}
+	}
 
+	useEffect(() => {
+		const google_get_data = async () => {
+			const response = await fetch(`http://localhost:8000/auth/google-login-get-token/`, {
+				method: "POST",
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					code: googleCode
+				})
+			});
+			if (response.ok) {
+				const response_data = await response.json();
+				verify_email(response_data.email)
+			} else {
+				console.error('Failed to fetch data');
+			}
+		}
+		if (googleCode) {
+			const urlWithoutCode = window.location.href.split('?')[0];
+			window.history.replaceState({}, document.title, urlWithoutCode);
+			google_get_data()
+		}
+	}, [googleCode])
+
+	useEffect(() => {
+		const intra_get_data = async () => {
+			const response = await fetch(`http://localhost:8000/auth/intra-login-get-token/`, {
+				method: "POST",
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					code: intraCode
+				})
+			});
+			if (response.ok) {
+				const response_data = await response.json();
+				verify_email(response_data.email)
+			} else {
+				console.error('Failed to fetch data');
+			}
+		}
+		if (intraCode) {
+			const urlWithoutCode = window.location.href.split('?')[0];
+			window.history.replaceState({}, document.title, urlWithoutCode);
+			intra_get_data()
+		}
+	}, [intraCode])
+
+	useEffect(() => {
+		if (googleAuthUrl)
+			window.location.href = googleAuthUrl;
+		if (intraAuthUrl) {
+			window.location.href = intraAuthUrl;
+		}
+	}, [googleAuthUrl, intraAuthUrl])
+
+	const handleGoogleClick = () => {
+		const getGoogleUrl = async () => {
+			const response = await fetch(`http://localhost:8000/auth/google-get-url`, {
+				method: "GET",
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			});
+			if (response.ok) {
+				const data = await response.json();
+				setGoogleAuthUrl(data.code);
+			} else {
+				console.error('Failed to fetch data');
+			}
+		}
+		getGoogleUrl()
+	}
+	const handleIntraClick = () => {
+		const getIntraUrl = async () => {
+			const response = await fetch(`http://localhost:8000/auth/intra-get-url`, {
+				method: "GET",
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			});
+			if (response.ok) {
+				const data = await response.json();
+				setIntraAuthUrl(data.code);
+			} else {
+				console.error('Failed to fetch data');
+			}
+		}
+		getIntraUrl()
+	}
 	return (
 		<>
-			<div className={styles["Intra"]}>
+			<div className={styles["Intra"]} onClick={handleIntraClick}>
 				<img className={styles["intraLogo"]} src={logo42} alt="" />
-				<button className={styles["IntraButton"]} onClick={handleLogin} >Sign In With Intra</button>
+				<button className={styles["IntraButton"]} >Sign In With Intra</button>
 			</div>
-			<div className={styles["Google"]}>
-				<GoogleOAuthProvider clientId="295320971655-s5ood5a528rk815h85f2pancufc342of.apps.googleusercontent.com">
-					<GoogleLogin
-						onSuccess={handleSuccess}
-						onError={handleError}
-					/>
-					{/* <CustomGoogleButton /> */}
-				</GoogleOAuthProvider>
+			<div className={styles["Google"]} onClick={handleGoogleClick}>
+				<img className={styles["googleLogo"]} src={logoGoogle} alt="" />
+				<button className={styles["GoogleButton"]}>Sign In with google</button>
 			</div>
 		</>
+
 	);
 }
 
-export default SignInWays;
+export default SignInWays

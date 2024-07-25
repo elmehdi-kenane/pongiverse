@@ -25,6 +25,7 @@ export const AuthProvider = ({children}) => {
 	let [allGameNotifs, setAllGameNotifs] = useState([])
 	let [notifsImgs, setNotifsImgs] = useState([])
 	let allGameFriendsRef = useRef(allGameFriends)
+	let [isBlur, setIsBlur] = useState(false)
 
 	
 	// Glass Background State --------------------------------------------
@@ -34,6 +35,7 @@ export const AuthProvider = ({children}) => {
 	//-- Glass Background
 	const [isReport, setIsReport] = useState(false);
 	const [isBlock, setIsBlock] = useState(false);
+	const [isChatBlur, setIsChartBlur] = useState(false);
 
 	const [reportValue, setReportValue] = useState(null);
 	const reportContentRef = useRef(null);
@@ -41,7 +43,7 @@ export const AuthProvider = ({children}) => {
 	const blockContentRef = useRef(null);
 	
 
-	const [userPic, setUserPic] = useState(userPc);
+	const [dfltPic, setDfltPic] = useState(userPc);
 	const [nickName, setNickName] = useState("Maverick");
 	const [bio, setBio] = useState("Lorem ipsum dolor sit amet consectetur adipisicing elit.");
 	const [country, setCountry] = useState("Morocco");
@@ -56,7 +58,7 @@ export const AuthProvider = ({children}) => {
 
 	// Glass Background Effect
 	useEffect (()=> {
-		if (!isReport && !isBlock)
+		if (!isReport && !isBlock && !isBlur)
 			setIsGlass(false);
 		else
 			setIsGlass(true);
@@ -171,7 +173,6 @@ export const AuthProvider = ({children}) => {
 				const blob = await response.blob();
 				const image = URL.createObjectURL(blob)
 				setUserImg(image)
-				// console.log('USER IMAGE IS THIS : ', image)
 			} catch (e) {
 				console.log("something wrong with fetch")
 			}
@@ -242,6 +243,7 @@ export const AuthProvider = ({children}) => {
 		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && !socket && user) {
 			const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
 			newSocket.onopen = () => {
+				// console.log("Socket created and Opened")
 				setSocket(newSocket)
 			}
 			newSocket.onmessage = (event) => {
@@ -311,6 +313,7 @@ export const AuthProvider = ({children}) => {
 			response = await response.json()
 			if (response.Case !== "Invalid token") {
 				setUser(response.data.username)
+				console.log("USER USERNSME: ",response.data.username)
 			} else {
 				setUser('')
 				navigate('/signin')
@@ -352,14 +355,17 @@ export const AuthProvider = ({children}) => {
 		blockRef:blockRef,
 		blockContentRef:blockContentRef,
 		// User Credintials
-		userPic:userPic,
-		setUserPic:setUserPic,
+		dfltPic:dfltPic,
+		setDfltPic:setDfltPic,
 		nickName:nickName,
 		bio:bio,
 		country,country,
 		setNickName:setNickName,
 		setBio:setBio,
 		setCountry:setCountry,
+		// chat blur
+		isBlur:isBlur,
+		setIsBlur:setIsBlur,
 		// gameNotif: gameNotif
 	}
 
