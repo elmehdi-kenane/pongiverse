@@ -333,6 +333,7 @@ export const AuthProvider = ({children}) => {
 		socketRecreated: socketRecreated,
 		setSocketRecreated: setSocketRecreated,
 		userImg: userImg,
+		setUserImg:setUserImg,
 		allGameFriends: allGameFriends,
 		setAllGameFriends: setAllGameFriends,
 		loading: loading,
