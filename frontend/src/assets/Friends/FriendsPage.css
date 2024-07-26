@@ -1,9 +1,22 @@
 :root {
-    --toastify-toast-width: max-content;
-    --toastify-toast-min-width: max-content;
-    --toastify-toast-max-width: max-content;
-    --toastify-toast-min-height: max-content;
-    --toastify-toast-max-height: max-content;
+    --toastify-toast-min-height: 120px;
+    --toastify-toast-max-height: 125px;
+    --toastify-toast-width: 325px;
+    --toastify-color-light: #913DCE;
+}
+
+.Toastify__toast-container {
+    min-width: 325px;
+    width: 325px;
+    height: 125px;
+}
+
+.Toastify__toast, .Toastify__toast-body, .Toastify__toast-container {
+    padding: 0;
+}
+
+.Toastify__close-button {
+    margin: 3px;
 }
 
 .embla {
@@ -75,6 +88,7 @@
     color: white;
     margin: 20px 0;
     font-weight: bold;
+    min-width: max-content;
     font-size: x-large;
 }
 
@@ -202,7 +216,7 @@
     }
 }
 
-@media (min-width: 1440px) {
+@media (min-width: 1441px) {
     .optionBar {
         display: none;
     }
@@ -211,6 +225,9 @@
 @media (max-width: 425px) {
     .optionBtns button {
         font-size: 5vw;
+    }
+    .FriendManagement {
+        font-size: 3vw;
     }
 }
 
@@ -230,6 +247,17 @@
     font-weight: 600;
     border-radius: 5px;
     font-size: 1vw;
+}
+
+.redCercle {
+    width: 5px;
+    height: 5px;
+    background-color: red;
+    border-radius: 100%;
+    position: relative;
+    margin-top: -7px;
+    margin-bottom: 1px;
+    left: 100%;
 }
 
 .optionBtns button:hover {

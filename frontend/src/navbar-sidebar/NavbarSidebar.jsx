@@ -29,7 +29,7 @@ function NavbarSidebar() {
             <NotificationPopupCard secondUsername={friendReqUsername} />,
             {
                 position: "top-center",
-                autoClose: 5000,
+                autoClose: false,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -48,6 +48,7 @@ function NavbarSidebar() {
 
         if (data.type === 'recieve-friend-request') {
             setNewRecievedFriendReqNotif(true);
+            console.log("inside recieve-friend-request condition:", newRecievedFriendReqNotif);
             setRemoveFriendReqNotif(false);
             setFriendReqUsername(data.message.second_username);
         }
@@ -59,7 +60,7 @@ function NavbarSidebar() {
         }
         else
             console.log("unknown notif type");
-    }, [data]);
+    }, [data.message.to_user, data.type]);
 
     useEffect(() => {
         { console.log("path url:", location.pathname) }
@@ -75,7 +76,7 @@ function NavbarSidebar() {
                 :
                 console.log("there's no newRecievedFriendReqNotif")
         }
-    }, [data.message.to_user, data.type]);
+    }, [newRecievedFriendReqNotif]);
 
 	useEffect(() => {
 		privateCheckAuth()

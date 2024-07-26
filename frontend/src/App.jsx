@@ -69,7 +69,7 @@ const App = () => {
                     </SocketDataContextProvider>
                     <ToastContainer
                         position="top-right"
-                        autoClose={5000}
+                        autoClose={false}
                         limit={1}
                         hideProgressBar={false}
                         newestOnTop={false}

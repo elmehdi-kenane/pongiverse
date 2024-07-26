@@ -2,5 +2,5 @@
 __pycache__
 migrations
 backend/ft_trans/src/uploads
-backend/ft_trans/src/db.sqlite3
+db.sqlite3
 /.vscode
