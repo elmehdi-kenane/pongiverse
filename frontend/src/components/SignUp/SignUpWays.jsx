@@ -4,6 +4,7 @@ import styles from '../../assets/SignUp/SignUpPage.module.css'
 import logo42 from '../../assets/SignUp/42_logo.svg'
 import logoGoogle from '../../assets/SignIn/GoogleIcon.svg'
 import Swal from 'sweetalert2';
+import toast, { Toaster } from 'react-hot-toast';
 
 
 function SignUpWays() {
@@ -45,10 +46,7 @@ function SignUpWays() {
 		if (response.ok) {
 			const data = await response.json();
 			if (data.Case === "Email already exist") {
-				Swal.fire({
-					text: 'Email already used',
-					icon: 'error',
-				});
+				toast.error("'Email already used", {duration: 2000,});
 			} else if (data.Case === "Email does not exist") {
 				const userData = {
 					email: email,

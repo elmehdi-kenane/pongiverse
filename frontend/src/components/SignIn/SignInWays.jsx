@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import styles from '../../assets/SignUp/SignUpPage.module.css'
 import logo42 from '../../assets/SignUp/42_logo.svg'
 import logoGoogle from '../../assets/SignIn/GoogleIcon.svg'
-import Swal from 'sweetalert2';
+import toast, { Toaster } from 'react-hot-toast';
+
 
 function SignInWays() {
 	const [googleAuthUrl, setGoogleAuthUrl] = useState('')
@@ -48,10 +49,7 @@ function SignInWays() {
 			if (data.Case === "Login successfully") {
 				navigate('/mainpage');
 			} else if (data.Case === "Invalid username or password!!") {
-				Swal.fire({
-					text: 'There is no account',
-					icon: 'error',
-				});
+				toast.error("There is no account", {duration: 2000,});
 			}
 		} else {
 			console.error('Failed to fetch data');
@@ -152,6 +150,10 @@ function SignInWays() {
 	}
 	return (
 		<>
+			<Toaster
+				position="top-center" // Default position for all toasts if not specified individually
+				reverseOrder={false} // Set to true to reverse the order of toasts
+			/>
 			<div className={styles["Intra"]} onClick={handleIntraClick}>
 				<img className={styles["intraLogo"]} src={logo42} alt="" />
 				<button className={styles["IntraButton"]} >Sign In With Intra</button>

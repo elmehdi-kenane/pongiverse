@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from '../../assets/SignUp/SignUpPage.module.css'
-import  { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 
 import Cookies from 'js-cookie';
 import { Link } from 'react-router-dom';
@@ -37,7 +38,10 @@ function SignInForm() {
 				if (data.Case === "Login successfully") {
 					navigate('/mainpage');
 				} else if (data.Case === "Invalid username or password!!") {
-					alert(data.Case);
+					toast.error(data.Case, {
+						duration: 4000,
+						className: styles['center-toast'] // Apply custom class
+					  });
 				}
 			})
 			.catch(error => {
@@ -47,12 +51,16 @@ function SignInForm() {
 
 	return (
 		<>
+			<Toaster
+				position="top-center"
+				reverseOrder={false}
+			/>
 			<input className={styles["inputs"]} value={data.username} onChange={handleChange} type="text" name='username' placeholder="enter your username" />
 			<input className={styles["inputs"]} type="password" name='password' value={data.password} onChange={handleChange} placeholder="enter your password" />
-			<Link className={styles["forget"]}  to="/ForgotPassword">Forget your password?</Link>
-			<button className={styles["submitButton"]} onClick={handleSubmit}>Next</button>
+			<Link className={styles["forget"]} to="/ForgotPassword">Forget your password?</Link>
+			<button className={styles["submitButton"]} onClick={handleSubmit}>Sign In</button>
 		</>
-  );
+	);
 }
 
 export default SignInForm;

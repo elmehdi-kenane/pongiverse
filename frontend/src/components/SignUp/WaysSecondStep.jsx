@@ -63,10 +63,16 @@ function WaysSecondStep() {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		const validationErrors = {};
+				const regex = /^(?!\d)[a-zA-Z0-9_]{4,10}$/;
+		const containsSingleUnderscore = (nextdata.username.match(/_/g) || []).length <= 1;
 		if (!nextdata.username.trim()) {
-			validationErrors.username = "username is required";
-		} else if (nextdata.username.length > 10){
-			validationErrors.username = "username is too long";
+			validationErrors.username = "username is required"
+		} else if (!regex.test(nextdata.username) || !containsSingleUnderscore || exist) {
+			if (!regex.test(nextdata.username) || !containsSingleUnderscore)
+				validationErrors.username = "Invalid Username"
+			else
+				validationErrors.username = "Username Already Used"
+
 		}
 		if (!nextdata.password.trim()) {
 			validationErrors.password = "password is required";
@@ -124,7 +130,6 @@ function WaysSecondStep() {
 								placeholder="enter a username"
 							/>
 							{errors.username && <span>{errors.username}</span>}
-							{exist && <span>Username already used</span>}
 							<input
 								className={styles["inputs"]}
 								type="password"
@@ -143,9 +148,7 @@ function WaysSecondStep() {
 							/>
 							{errors.confirmPassword && <span>{errors.confirmPassword}</span>}
 							{
-								exist ? <button type="submit" className={styles["submitButton"]} disabled>
-								Sign Up
-							</button> : <button type="submit" className={styles["submitButton"]}>
+								<button type="submit" className={styles["submitButton"]}>
 								Sign Up
 							</button>
 							}
