@@ -1,7 +1,8 @@
 from django.db.models import Q
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Room, Membership, Message, Directs, Friends, RoomInvitation
+from .models import Room, Membership, Message, Directs, RoomInvitation
+from friends.models import Friendship
 from myapp.models import customuser ###########
 
 
@@ -86,7 +87,7 @@ def direct_messages(request):
 def list_all_friends(request):
     if request.method == 'POST' :
         user = customuser.objects.get(username=(request.data).get('user'))
-        friends = Friends.objects.filter(user=user)
+        friends = Friendship.objects.filter(user=user)
         room = Room.objects.get(name= request.data.get('room'))
         all_friend = []
         for friend in friends:

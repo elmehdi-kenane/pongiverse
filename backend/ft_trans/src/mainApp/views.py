@@ -2,7 +2,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from myapp.models import customuser
-from chat.models import Friends
+from friends.models import Friendship
 from .models import GameCustomisation
 from .models import TournamentMembers, Tournament, TournamentInvitation, Round, TournamentUserInfo, DisplayOpponent
 import random
@@ -88,7 +88,7 @@ def online_friends(request):
 	user = customuser.objects.get(username=username)
 	allFriends = []
 	print(f"is_online {user.is_online}, is_playing {user.is_playing}, username {user.username}")
-	for user_id in Friends.objects.filter(user=user):
+	for user_id in Friendship.objects.filter(user=user):
 		print(f"is_online {user_id.friend.is_online}, is_playing {user_id.friend.is_playing}, username {user_id.friend.username}")
 		if user_id.friend.is_online and not user_id.friend.is_playing: ####################  and user_id.friend.is_playing
 			image_path = user_id.friend.avatar.path

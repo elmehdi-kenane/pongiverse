@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from "react";
+ import { useState, useEffect, useContext, useRef } from "react";
 import styles from '../assets/Tournament/tournament.module.css'
 import avatar from './avatar.svg'
 import clock from './clock.svg'

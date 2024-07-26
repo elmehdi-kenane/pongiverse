@@ -10,7 +10,7 @@ import Solo from "./Game/Solo";
 import OneVersusOne from "./Game/OneVersusOne";
 import Rooms from "./Groups/roomsPage";
 import PlayMatch from "./Game/OneVsOnePlayMatch";
-import Friends from "./Friends/Friends";
+import Friends from "./Friends/FriendsPage";
 import Dashboard from "./Dashboard/Dashboard";
 import Profile from "./Profile/Profile";
 import WaysSecondStep from "./components/SignUp/WaysSecondStep";
@@ -37,6 +37,9 @@ import TwoVsTwoCreateOrJoin from "./Game/TwoVsTwoCreateOrJoin";
 import GameSettings from "./Game/GameSettings";
 import Settings from "./Settings/Settings";
 import Bot from "./Game/Bot";
+import { ToastContainer, Bounce } from 'react-toastify';
+import { SocketDataContextProvider } from './navbar-sidebar/SocketDataContext';
+
 
 const App = () => {
   return (
@@ -44,6 +47,8 @@ const App = () => {
       <Router>
         <AuthProvider>
           <ChatProvider>
+          <SocketDataContextProvider>
+
             <Routes>
               <Route path="/" element={<HomePage />} exact />
               <Route path="/signup" element={<SignUpPage />} />
@@ -111,10 +116,24 @@ const App = () => {
                 />
               </Route>
             </Routes>
+            </SocketDataContextProvider>
+                    <ToastContainer
+                        position="top-right"
+                        autoClose={5000}
+                        limit={1}
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                        theme="light"
+                        transition={Bounce} />
           </ChatProvider>
         </AuthProvider>
       </Router>
     </div>
   );
 };
-export default App;
+export default App

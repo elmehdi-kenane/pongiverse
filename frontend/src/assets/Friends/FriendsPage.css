@@ -1,0 +1,422 @@
+:root {
+    --toastify-toast-width: max-content;
+    --toastify-toast-min-width: max-content;
+    --toastify-toast-max-width: max-content;
+    --toastify-toast-min-height: max-content;
+    --toastify-toast-max-height: max-content;
+}
+
+.embla {
+  overflow: hidden;
+}
+.embla__container {
+  display: flex;
+  gap: 1%;
+}
+
+.embla__container_centered {
+  justify-content: center;
+}
+
+.embla {
+    width: 95%;
+    align-self: center;
+    min-width: 145px;
+}
+
+.embla__slide {
+  flex: 0 0 19.2%;
+}
+
+.embla__buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 50%;
+    position: absolute;
+    right: calc(25% - 42px);
+    top: 255px;
+    z-index: 101;
+}
+
+.FriendPage {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    margin: 0 auto;
+    width: 50%;
+}
+
+@media (max-width: 768px) {
+    .embla__buttons {
+        display: flex;
+        justify-content: space-between;
+        width: 50%;
+        position: absolute;
+        right: calc(25%);
+        top: 275px;
+        z-index: 101;
+    }
+    .FriendPage {
+        width: 80%;
+    }
+
+}
+
+.embla__buttons button {
+    background-color: #D9D9D9;
+    border: none;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    border-radius: 100%;
+}
+
+.FriendsPageHeader {
+    color: white;
+    margin: 20px 0;
+    font-weight: bold;
+    font-size: x-large;
+}
+
+.Suggestions {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 30px;
+}
+
+.Carousel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 auto;
+    overflow-x: auto;
+    gap: 30px;
+}
+
+.SuggestionFriendCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    background-color: rgba(58,25,82,1);
+    font-weight: 500;
+    border-radius: 10px;
+    width: 20%;
+    max-width: 188px;
+    min-width: 145px;
+    height: 170px;
+    padding: 20px;
+}
+
+.Profile {
+    width: 50px;
+}
+
+.FriendBtn {
+    background-color: #D9D9D9;
+    border: none;
+    border-radius: 5px;
+    padding: 7px 12px;
+    color: #4D4EA6;
+    font-weight: 600;
+}
+
+.FriendBtn:hover {
+    color: #D9D9D9;
+    background-color: #4D4EA6;
+    cursor: pointer;
+}
+.Suggestions .FriendBtn:hover {
+    filter: drop-shadow(#4D4EA6 0 0 5px);
+}
+
+.friendPageSections {
+    background-color: white;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    /* height: auto;
+    width: auto; */
+    gap: 10px;
+    min-height: 764px;
+    padding: 5px 0;
+    border-radius: 10px;
+    overflow: scroll;
+}
+
+.friendSection .FriendsPageHeader {
+    background-color: rgba(58, 25, 82, 1);
+    border-radius: 10px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    padding: 15px 0;
+    z-index: 99;
+    margin: 0;
+}
+
+.friendSection {
+    width: 48%;
+    height: 48%;
+    /* margin: 5px; */
+    background-color: rgba(58, 25, 82, 1);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+    overflow: scroll;
+    position: relative;
+    /* filter: drop-shadow(black 0 0 4px); */
+}
+
+.friendSuggestionsEmpty {
+    color: white;
+    font-weight: 600;
+    font-size: 20px;
+    height: 40px;
+    margin-top: 60px;
+    align-self: center;
+}
+
+.friendSection .friendPageEmptyList {
+    margin-top: 20px;
+}
+
+@media (max-width: 1440px) {
+    .optionBar {
+        display: flex;
+        align-self: center;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: max-content;
+    }
+    .friendPageSections {
+        display: none;
+    }
+}
+
+@media (min-width: 1440px) {
+    .optionBar {
+        display: none;
+    }
+}
+
+@media (max-width: 425px) {
+    .optionBtns button {
+        font-size: 5vw;
+    }
+}
+
+.optionBtns {
+    background-color: white;
+    padding: 10px;
+    display: flex;
+    gap: 5px;
+    border-radius: 5px;
+}
+
+.optionBtns button {
+    padding: 10px;
+    border: 1.5px solid #4D4EA6;
+    color: #4D4EA6;
+    background-color: transparent;
+    font-weight: 600;
+    border-radius: 5px;
+    font-size: 1vw;
+}
+
+.optionBtns button:hover {
+    box-shadow: 0px 0px 5px #4D4EA6;
+}
+
+.optionBtns button.selectedBtn {
+    background-color: #4D4EA6;
+    color: white;
+}
+
+.FriendManagement {
+    color: white;
+    background-color: rgba(58, 25, 82, 1);
+    margin-top: 10px;
+    border-radius: 5px;
+    border: 1px solid white;
+    height: 600px;
+    overflow: scroll;
+    width: 100%;
+}
+
+.Friends, .FriendRequests, .SentRequests, .BlockedAccounts {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    color: white;
+    align-items: center;
+    border-radius: 10px;
+    gap: 8px;
+    margin: 20px 0;
+    width: 100%;
+}
+
+.FriendCard,
+.RecievedFriendReqCard,
+.SentFriendReqCard,
+.BlockedAccountCard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+    font-weight: 600;
+    padding: 5px 10px;
+    margin: 5px 0;
+    border: 2px solid #D9D9D9;
+    background-color: rgba(234, 211, 214, 0);
+    border-radius: 9px;
+}
+
+.FriendCard:hover,
+.RecievedFriendReqCard:hover,
+.SentFriendReqCard:hover,
+.BlockedAccountCard:hover {
+    background-color: rgba(234, 211, 214, 0.1);
+}
+
+.ProfileName {
+    display: flex;
+    align-items: center;
+    color: white;
+    gap: 10px;
+}
+
+.ProfileName .lvl {
+    font-size: small;
+    font-weight: 300;
+}
+.Profile {
+    border-radius: 100%;
+    border: 1px solid #D9D9D9;
+    width: 40px;
+    height: 40px;
+}
+
+.SentFriendReqCardUsername {
+    font-weight: 600;
+    font-size: 17px;
+}
+
+.SentFriendReqCardSendAt {
+    font-weight: 400;
+    font-size: 14px;
+    color: #D9D9D9;
+}
+
+.SuggestionFriendCard .ProfileName {
+    flex-direction: column;
+    gap: 0px;
+}
+
+.RecievedFriendReqCard .GroupFriendBtn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.FriendBtn.detailsClosed {
+    background-color: transparent;
+    padding: 5px;
+}
+.FriendBtn.detailsClosed:hover {
+    background-color: #913dce;
+    /* border-radius: 100%; */
+    padding: 5px;
+}
+
+.FriendBtn.detailsOpened {
+    background-color: #913dce;
+    /* border-radius: 100%; */
+    padding: 5px;
+}
+
+.optionsFriendCard {
+    background-color: #913dce;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    position: absolute;
+    padding: 7px;
+    border-radius: 7px;
+    margin-top: 140px;
+    left: 70%;
+    box-shadow: -3px -2px 20px 6px rgb(21 17 17 / 63%);
+}
+
+.lastTwoElements {
+    margin-bottom: 277px;
+}
+
+.optionsFriendCard button {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 3px;
+    border: 1px solid white;
+    background-color: transparent;
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+    font-weight: 600;
+    text-align: start;
+}
+
+.optionsFriendCard button:hover {
+    background-color: white;
+    color: #913DCE;
+}
+
+.FriendBtn.Remove, .FriendBtn.Cancel, .FriendBtn.Unblock {
+    background-color: transparent;
+    box-shadow:0px 0px 0px 1px #EAD3D6 inset;
+    color: #EAD3D6;
+    font-weight: 500;
+}
+
+.FriendBtn.Remove:hover, .FriendBtn.Cancel:hover, .FriendBtn.Unblock:hover {
+    color: #250939;
+    background-color: #EAD3D6;
+}
+
+.FriendBtn.Confirm {
+    background-color: #913DCE;
+    color: #EAD3D6;
+    font-weight: 500;
+}
+.FriendBtn.Confirm:hover {
+    color: #913DCE;
+    filter: drop-shadow(#913DCE 0 0 20px);
+    background-color: #EAD3D6;
+}
+
+.FriendRequests .Carousel, .SentRequests .Carousel, .BlockedAccounts .Carousel{
+    flex-direction: column;
+    overflow: hidden;
+    overflow-y: scroll;
+    gap: 8px;
+    background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
+    border-radius: 10px;
+    padding: 10px;
+}
+
+::-webkit-scrollbar {
+    width: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #fff;
+    border-radius: 10px;
+}

@@ -6,7 +6,7 @@ import asyncio
 import math
 from rest_framework_simplejwt.tokens import AccessToken
 import datetime
-from chat.models import Friends
+from friends.models import Friendship
 from myapp.models import customuser
 from .models import Match, ActiveMatch, PlayerState, Tournament, TournamentMembers, TournamentInvitation, Round, TournamentUserInfo, TournamentWarnNotifications, DisplayOpponent
 from asgiref.sync import sync_to_async
@@ -66,7 +66,7 @@ async def create_tournament(self, data, user_channels):
 		if not is_started:
 			flag = 1337
 			break
-	friends = await sync_to_async(list)(Friends.objects.filter(user=user))
+	friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
 	for friend in friends:
 		friend_username = await sync_to_async(lambda: friend.friend.username)()
 		channel_name = user_channels.get(friend_username)
@@ -313,7 +313,7 @@ async def destroy_tournament(self, data, user_channels):
 		channel_name = user_channels.get(username)
 		await self.channel_layer.group_discard(group_name, channel_name)
 	await sync_to_async(tournament.delete)()
-	friends = await sync_to_async(list)(Friends.objects.filter(user=user))
+	friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
 	for friend in friends:
 		friend_username = await sync_to_async(lambda: friend.friend.username)()
 		channel_name = user_channels.get(friend_username)
@@ -360,7 +360,7 @@ async def send_user_eliminated_after_delay(self, tournament, user_channels):
 			await sync_to_async(member.user.save)()
 			channel_name = user_channels.get(username)
 			await self.channel_layer.group_discard(group_name, channel_name)
-			friends = await sync_to_async(list)(Friends.objects.filter(user=member.user))
+			friends = await sync_to_async(list)(Friendship.objects.filter(user=member.user))
 			for friend in friends:
 				friend_username = await sync_to_async(lambda: friend.friend.username)()
 				channel_name = user_channels.get(friend_username)

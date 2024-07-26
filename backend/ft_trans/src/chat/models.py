@@ -25,10 +25,6 @@ class Membership(models.Model):
 	roles = models.TextField(default='member')
 	joined_at = models.DateTimeField(auto_now_add=True)
 
-class Friends(models.Model):
-  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_friends')
-  friend = models.ForeignKey(User, on_delete=models.CASCADE)
-  isBlocked = models.BooleanField(default=False)
 
 class Directs(models.Model):
   sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='direct_sender')

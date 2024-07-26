@@ -1,5 +1,5 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
-from chat.models import Friends
+from friends.models import Friendship
 from myapp.models import customuser
 from asgiref.sync import sync_to_async
 from rest_framework_simplejwt.tokens import TokenError, AccessToken
