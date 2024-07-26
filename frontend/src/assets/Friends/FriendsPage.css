@@ -1,3 +1,11 @@
+:root {
+    --toastify-toast-width: max-content;
+    --toastify-toast-min-width: max-content;
+    --toastify-toast-max-width: max-content;
+    --toastify-toast-min-height: max-content;
+    --toastify-toast-max-height: max-content;
+}
+
 .embla {
   overflow: hidden;
 }

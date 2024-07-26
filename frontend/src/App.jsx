@@ -1,6 +1,7 @@
 import './assets/navbar-sidebar/index.css'
 import NavbarSidebar from './navbar-sidebar/NavbarSidebar';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { ToastContainer, Bounce } from 'react-toastify';
 import { AuthProvider } from './navbar-sidebar/Authcontext';
 import { SocketDataContextProvider } from './navbar-sidebar/SocketDataContext';
 import SignIn from './homepage/SignIn'
@@ -36,6 +37,8 @@ const App = () => {
 		<div className="page">
 			<Router>
 				<AuthProvider>
+                    <SocketDataContextProvider>
+
 					<Routes>
 						<Route path="/" element={<HomePage />} exact />
 						<Route path="/testest" element={<LoginGoogleTest />} exact />
@@ -63,6 +66,20 @@ const App = () => {
 							<Route path="game/tournamentbracket" element={<TournamentBracket />} />
 						</Route>
 					</Routes>
+                    </SocketDataContextProvider>
+                    <ToastContainer
+                        position="top-right"
+                        autoClose={5000}
+                        limit={1}
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                        theme="light"
+                        transition={Bounce} />
 				</AuthProvider>
 			</Router>
 		</div>

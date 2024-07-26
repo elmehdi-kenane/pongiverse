@@ -180,17 +180,21 @@ export const AuthProvider = ({children}) => {
 		}
 		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && !socket && user) {
 			const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
+            // // Connection opened
 			newSocket.onopen = () => {
-				setSocket(newSocket)
+                setSocket(newSocket)
+                console.log('WebSocket connection opened');
 			}
-			// newSocket.onmessage = (event) => {
-			// 	let data = JSON.parse(event.data)
-			// 	let type = data.type
-			// 	if (type === 'tournament_started'){
-			// 		console.log("IN AUTH CONTEXT")
-			// 	}
-			// }
-		} else if ((location.pathname === '/' || location.pathname === '/signup' || location.pathname === '/signin' || location.pathname === '/SecondStep' ||  location.pathname === '/WaysSecondStep' || location.pathname === '/ForgotPassword' || location.pathname === '/ChangePassword') && socket) {
+            // Listen for errors
+            newSocket.onerror = (error) => {
+                console.error('WebSocket error: ', error);
+            };
+
+            // Connection closed
+            newSocket.onclose = () => {
+                console.log('WebSocket connection closed');
+            };
+        } else if ((location.pathname === '/' || location.pathname === '/signup' || location.pathname === '/signin' || location.pathname === '/SecondStep' ||  location.pathname === '/WaysSecondStep' || location.pathname === '/ForgotPassword' || location.pathname === '/ChangePassword') && socket) {
 			if (socket) {
 				console.log("socket closed succefully")
 				socket.close()

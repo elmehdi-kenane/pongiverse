@@ -6,21 +6,6 @@ import logoGoogle from '../../assets/SignIn/GoogleIcon.svg'
 import Swal from 'sweetalert2';
 
 
-<<<<<<< HEAD
-	const fetchAccessToken =  (code) => {
-		axios.post('https://api.intra.42.fr/oauth/token', {
-			grant_type: 'authorization_code',
-			client_id: CLIENT_ID,
-			client_secret: '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',
-			code: code,
-			redirect_uri: REDIRECT_URI
-		}).then(response => {
-			fetchUserData(response.data.access_token);
-		}).catch(error => {
-			console.error('Error fetching access token:', error);
-		});
-	};
-=======
 function SignUpWays() {
 	const [googleAuthUrl, setGoogleAuthUrl] = useState('')
 	const [intraAuthUrl, setIntraAuthUrl] = useState('')
@@ -44,7 +29,6 @@ function SignUpWays() {
 			setIntraCode(extracted_code)
 		}
 	}, [])
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 
 	const verify_email = async (email, picture) => {
 		console.log("the dta : ", email)

@@ -81,26 +81,40 @@ html, body {
     border-radius: 10px;
     border: 2px solid white;
     padding: 10px;
-    margin-top: 60px;
+    /* margin-top: 60px; */
+    min-width: 300px;
     width: 13%;
+    height: max-content;
+    max-width: max-content;
     gap: 5px;
     position: absolute;
-    left: 83%;
+    right: 70px;
     z-index: 99;
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     align-items: center;
 }
 
+.NotificationPopupCardBtn {
+    align-self: flex-end;
+}
+
+.NotificationPopupCardBtn button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+    color: white;
+    background-color: transparent;
+    border: 1px solid white;
+    padding: 4px;
+    border-radius: 6px;
+}
 .NotificationPopupCard div {
     display: flex;
     gap: 5px;
     align-items: center;
-}
-
-.NotificationPopupCard button {
-    border: none;
-    background-color: transparent;
 }
 
 .CheckCircleIcon {
@@ -442,6 +456,23 @@ html, body {
 }
 
 @media screen and (max-width: 768px) {
+    .NotificationPopupCard {
+            padding: 5px;
+            min-width: 300px;
+            width: 13%;
+            height: max-content;
+            max-width: max-content;
+            gap: 2px;
+            right: 25%;
+            z-index: 99;
+            /* margin-top: 20px; */
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+    .NotificationPopupHeader p, .NotificationPopupUsername, .NotificationPopupCardBtn button {
+        /* font-size: 10px; */
+    }
 
     .navbar {
         margin-top: 2px;

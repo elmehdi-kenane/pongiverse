@@ -13,15 +13,12 @@
 	overflow-y: auto;
 }
 
-<<<<<<< HEAD
-=======
 .title-and-destroy{
 	display: flex;
 	justify-content: space-between;
 	margin-right: 8%;
 	align-items: center;
 }
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 
 .tournament-title {
 	margin-left: 8%;
@@ -29,8 +26,6 @@
 	font-weight: bold;
 }
 
-<<<<<<< HEAD
-=======
 .destroy-button{
 	border: none;
 	background-color: #913dce;
@@ -42,7 +37,6 @@
 	width: 130px;
 }
 
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 .line {
 	margin-top: 1%;
 	width: 85%;
@@ -58,15 +52,10 @@
 	gap: 1.5%;
 	margin-top: 3%;
 	margin-left: 8%;
-<<<<<<< HEAD
-}
-
-=======
 	align-items: center;
 }
 
 
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 .little-line {
 	width: 1px;
 	height: 60%;
@@ -75,11 +64,8 @@
 
 .tournament-id-title,
 .players-number-title {
-<<<<<<< HEAD
-=======
 	display: inline;
 	white-space: nowrap;
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	font-size: 90%;
 	color: white;
 }
@@ -108,8 +94,6 @@
 	font-size: 20px;
 }
 
-<<<<<<< HEAD
-=======
 .up-button-disabled {
 	background-color: #913dce;
 	border-radius: 7px;
@@ -133,7 +117,6 @@
 	font-size: 20px;
 }
 
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 .tournament-members {
 	position: relative;
 	display: flex;
@@ -144,20 +127,13 @@
 	justify-content: center;
 	gap: 20px;
 	padding-top: 2%;
-<<<<<<< HEAD
-	overflow: auto;
-=======
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	scrollbar-color: transparent transparent;
 	height: 600px;
 }
 
 .player {
 	width: calc(90% / 4);
-<<<<<<< HEAD
-=======
 	position: relative;
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	max-width: 380px;
 	height: 120px;
 	display: flex;
@@ -168,8 +144,6 @@
 	column-gap: 20px;
 }
 
-<<<<<<< HEAD
-=======
 .disconnected-div
 {
 	position: absolute;
@@ -201,7 +175,6 @@
 	font-size: 12px;
 }
 
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 .down-popup-button {
 	position: relative;
 }
@@ -215,11 +188,7 @@
 	transform: translate(-50%, -50%);
 	width: 90%;
 	overflow: auto;
-<<<<<<< HEAD
-	background-color: rgba(255, 255, 255, 0.7);
-=======
 	background-color: #1b062a;
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 }
 
 
@@ -232,19 +201,11 @@
 	z-index: 1;
 	left: 117%;
 	bottom: -216px;
-<<<<<<< HEAD
-	height: 531px;
-	transform: translate(-50%, -50%);
-	width: 350px;
-	overflow: auto;
-	background-color: rgba(255, 255, 255, 0.7);
-=======
 	height: 534px;
 	transform: translate(-50%, -50%);
 	width: 350px;
 	overflow: auto;
 	background-color: #1b062a;
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 }
 
 .friend {
@@ -255,8 +216,6 @@
 	padding: 0 5px;
 	align-items: center;
 }
-<<<<<<< HEAD
-=======
 .error-container{
 	margin-top: 10%;
 }
@@ -265,7 +224,6 @@
 	color: #B00020;
 	font-size: 20px;
 }
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 
 .friend-data {
 	display: flex;
@@ -287,20 +245,12 @@
 }
 
 .friend-name {
-<<<<<<< HEAD
-	color: black;
-=======
 	color: rgb(255, 255, 255);
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	font-size: 14px;
 }
 
 .friend-status {
-<<<<<<< HEAD
-	color: black;
-=======
 	color: rgb(255, 255, 255);
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	font-size: 12px;
 	opacity: 0.7;
 }
@@ -330,8 +280,6 @@
 	color: white;
 }
 
-<<<<<<< HEAD
-=======
 .down-buttons
 {
 	display: flex;
@@ -340,7 +288,6 @@
 	column-gap: 30px;
 }
 
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 .buttons {
 	display: flex;
 	justify-content: space-around;
@@ -360,8 +307,6 @@
 	font-size: 20px;
 }
 
-<<<<<<< HEAD
-=======
 .button-disabled {
 	background-color: #913dce;
 	border-radius: 7px;
@@ -438,7 +383,6 @@
 font-size: 15px;
 }
 
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 @media (min-width: 1440px) {
 
 	.tournament-page {
@@ -485,13 +429,9 @@ font-size: 15px;
 		column-gap: 20px;
 	}
 
-<<<<<<< HEAD
-
-=======
 	.tournament-title{
 		font-size: 27px;
 	}
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	.Invite-friend-popup-up {
 		display: flex;
 		flex-direction: column;
@@ -503,11 +443,7 @@ font-size: 15px;
 		transform: translate(-50%, -50%);
 		width: 300px;
 		overflow: auto;
-<<<<<<< HEAD
-		background-color: rgba(255, 255, 255, 0.7);
-=======
 		background-color: #1b062a;
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	}
 
 	.friend {
@@ -545,8 +481,6 @@ font-size: 15px;
 		font-size: 20px;
 	}
 
-<<<<<<< HEAD
-=======
 	.up-button-disabled {
 		background-color: #913dce;
 		border-radius: 7px;
@@ -570,7 +504,6 @@ font-size: 15px;
 		font-size: 20px;
 	}
 
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 }
 
 
@@ -578,12 +511,9 @@ font-size: 15px;
 	.player {
 		width: 300px;
 	}
-<<<<<<< HEAD
-=======
 	.tournament-title{
 		font-size: 25px;
 	}
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 }
 
 @media (max-width: 852px) {
@@ -597,10 +527,6 @@ font-size: 15px;
 
 @media (max-width: 578px) {
 
-<<<<<<< HEAD
-
-=======
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	.player {
 		width: 300px;
 		column-gap: 10px;
@@ -609,8 +535,6 @@ font-size: 15px;
 	.buttons {
 		margin-top: 20%;
 	}
-<<<<<<< HEAD
-=======
 	.tournament-title{
 		font-size: 22px;
 	}
@@ -619,7 +543,6 @@ font-size: 15px;
 		height: 30px;
 		width: 100px;
 	}
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 }
 
 @media (max-width: 400px) {
@@ -655,11 +578,7 @@ font-size: 15px;
 		transform: translate(-50%, -50%);
 		width: 200px;
 		overflow: auto;
-<<<<<<< HEAD
-		background-color: rgba(255, 255, 255, 0.7);
-=======
 		background-color: #1b062a;
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	}
 
 	.friend {
@@ -686,32 +605,17 @@ font-size: 15px;
 
 	.tournament-id {
 		display: flex;
-<<<<<<< HEAD
-		column-gap: 10px;
-	}
-
-
-
-	.players-number {
-		display: flex;
-		column-gap: 10px;
-=======
 		column-gap: 50px;
 	}
 
 	.players-number {
 		display: flex;
 		column-gap: 30px;
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	}
 
 	.tournament-title {
 		margin-top: 5%;
-<<<<<<< HEAD
-		font-size: 25px;
-=======
 		font-size: 18px;
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	}
 
 	.up-buttons {
@@ -728,9 +632,6 @@ font-size: 15px;
 		border-radius: 7px;
 		color: white;
 		border: none;
-<<<<<<< HEAD
-		height: 40px;
-=======
 		height: 30px;
 		width: 85px;
 		padding: 0 5px;
@@ -754,7 +655,6 @@ font-size: 15px;
 		color: white;
 		border: none;
 		height: 30px;
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 		width: 85px;
 		padding: 0 5px;
 		font-size: 13px;
@@ -788,13 +688,10 @@ font-size: 15px;
 		gap: 5px;
 		height: 800px;
 	}
-<<<<<<< HEAD
-=======
 	.tournament-title {
 		margin-top: 5%;
 		font-size: 13px;
 	}
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 
 	.player {
 		height: 70px;
@@ -810,11 +707,7 @@ font-size: 15px;
 		transform: translate(-50%, -50%);
 		width: 90%;
 		overflow: auto;
-<<<<<<< HEAD
-		background-color: rgba(255, 255, 255, 0.7);
-=======
 		background-color: #1b062a;
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	}
 
 	.friend-invite-button {
@@ -833,30 +726,21 @@ font-size: 15px;
 		column-gap: 10px;
 	}
 
-<<<<<<< HEAD
-=======
 	.avatar{
 		height: 60px;
 		width: 60px;
 	}
 
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	.up-button {
 		background-color: #913dce;
 		border-radius: 7px;
 		color: white;
 		border: none;
-<<<<<<< HEAD
-		height: 30px;
-=======
 		height: 25px;
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 		width: 85px;
 		padding: 0 5px;
 		font-size: 10px;
 	}
-<<<<<<< HEAD
-=======
 	.up-button-disabled {
 		background-color: #913dce;
 		border-radius: 7px;
@@ -878,5 +762,4 @@ font-size: 15px;
 		font-size: 10px;
 
 	}
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 }

@@ -23,14 +23,10 @@ function SecondStep() {
 	const [errors, setErrors] = useState({})
 	const location = useLocation();
 	const data = location.state || {};
-<<<<<<< HEAD
-	const [exist, setExist] = useState(false);		
-=======
 	if (!data.email || !data.password) {
 		navigate("/signup");
 	}
 	const [exist, setExist] = useState(false);
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 	const handleInputChange = (e) => {
 		e.preventDefault();
 		if (e.target.name === 'avatar') {
@@ -72,12 +68,6 @@ function SecondStep() {
 		const validationErrors = {}
 		if (!nextdata.username.trim()) {
 			validationErrors.username = "username is required"
-<<<<<<< HEAD
-		} else if (nextdata.username.length > 10)
-		{
-			validationErrors.username = "username is too long"
-		}
-=======
 		} else if (nextdata.username.length > 10) {
 			validationErrors.username = "username is too long"
 		}
@@ -92,7 +82,6 @@ function SecondStep() {
 		// 		}
 		// 	}
 		// }
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 		setErrors(validationErrors)
 		if (Object.keys(validationErrors).length === 0) {
 			const formData = new FormData();
@@ -104,44 +93,16 @@ function SecondStep() {
 			client.post('/auth/signup/', formData, {
 				headers: {
 					'Content-Type': 'multipart/form-data',
-<<<<<<< HEAD
-				}
-			}).then(response => {
-					if (response.data.Case === "Sign up successfully"){
-						navigate('/signin');
-					}
-				})
-=======
 				}
 			}).then(response => {
 				if (response.data.Case === "Sign up successfully") {
 					navigate('/signin');
 				}
 			})
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 				.catch(error => {
 					console.error('There was an error!', error);
 				});
 		}
-<<<<<<< HEAD
-	};
-	return (
-		<div className={styles["body_page"]}>
-			<div className={styles["mainPage"]}>
-				<Header/>
-				<div className={styles["SecondStepContainer"]}>
-						<div className={styles["signUpContainer"]}>
-						<h1 className={styles["title"]}>Next Step</h1>
-						<form className={styles["signUpForm"]} onSubmit={handleSubmit} noValidate>
-							<input className={styles["inputs"]} type="text" name='username' value={nextdata.username} onChange={handleInputChange} placeholder="enter a username" />
-							{exist && <span>Username already used</span>}
-							{errors.username && <span>{errors.username}</span>}
-							<input type="file" name="avatar" id="image-upload" accept="image/*" onChange={handleInputChange} className={styles["image-upload"]} />
-							<label htmlFor="image-upload">Choose a file</label>
-							<button type="submit" className={styles["submitButton"]}>Sign Up</button>
-						</form>
-						</div>
-=======
 	}
 		const getAvatarUrl = (file) => {
 			return file ? URL.createObjectURL(file) : null;
@@ -175,7 +136,6 @@ function SecondStep() {
 							</form>
 						</div>
 					</div>
->>>>>>> d9244a1f3aad9aa9c9c1376e7371c70df57218cc
 				</div>
 			</div>
 		);

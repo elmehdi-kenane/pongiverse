@@ -1,4 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react'
+import { toast, Bounce } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+import { useLocation } from 'react-router-dom'
 import Navbar from './Navbar'
 import Sidebar from './Sidebar'
 import * as Icons from '../assets/navbar-sidebar'
@@ -10,9 +13,69 @@ import { Outlet } from 'react-router-dom'
 
 function NavbarSidebar() {
 	const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
+    const location = useLocation()
 	const [searchbar, setSearchBar] = useState(false);
-	let { user, privateCheckAuth, setUser } = useContext(AuthContext)
+    let { user, socket, privateCheckAuth, setUser } = useContext(AuthContext)
 	let navigate = useNavigate()
+    const [newRecievedFriendReqNotif, setNewRecievedFriendReqNotif] = useState(false);
+    const [friendReqUsername, setFriendReqUsername] = useState('');
+    const [removeFriendReqNotif, setRemoveFriendReqNotif] = useState(false);
+    const data = useContext(SocketDataContext);
+
+    const notify = () => {
+        console.log("+++++++++ call notify +++++++++")
+        setNewRecievedFriendReqNotif(false)
+        toast(
+            <NotificationPopupCard secondUsername={friendReqUsername} />,
+            {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+            }
+        );
+    };
+
+    useEffect(() => {
+        console.log("============ socket-notif-start ============");
+        console.log(data.message, data.type);
+        console.log("============ socket-notif-end ============");
+
+        if (data.type === 'recieve-friend-request') {
+            setNewRecievedFriendReqNotif(true);
+            setRemoveFriendReqNotif(false);
+            setFriendReqUsername(data.message.second_username);
+        }
+        else if (data.type === 'confirm-friend-request' && data.message.second_username === friendReqUsername) {
+            setRemoveFriendReqNotif(true);
+        }
+        else if (data.type === 'remove-friend-request' && data.message.second_username === friendReqUsername) {
+            setRemoveFriendReqNotif(true);
+        }
+        else
+            console.log("unknown notif type");
+    }, [data]);
+
+    useEffect(() => {
+        { console.log("path url:", location.pathname) }
+        { console.log("newRecievedFriendReqNotif: ", newRecievedFriendReqNotif, "location.pathname !== '/mainpage/friends'", location.pathname !== '/mainpage/friends') }
+        {
+            (newRecievedFriendReqNotif && location.pathname !== '/mainpage/friends') ?
+                (
+                    // removeFriendReqNotif ?
+                    //     console.log("current notif should be disappears")
+                    //     :
+                    notify()
+                )
+                :
+                console.log("there's no newRecievedFriendReqNotif")
+        }
+    }, [data.message.to_user, data.type]);
 
 	useEffect(() => {
 		privateCheckAuth()

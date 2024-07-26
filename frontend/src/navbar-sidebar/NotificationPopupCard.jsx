@@ -59,12 +59,13 @@ const NotificationPopupCard = ({ secondUsername }) => {
                     <span className="NotificationPopupUsername">{secondUsername}</span> sent you a friend request
                 </p>
             </div>
-            <div>
+            <div className="NotificationPopupCardBtn">
                 <button onClick={handleConfirmFriendReq}>
                     <CheckCircleIcon sx={{ fontSize: 25 }} className='CheckCircleIcon'></CheckCircleIcon>
+                    Accept
                 </button>
                 <button onClick={handleCancelFriendReq}>
-                    <CancelOutlinedIcon sx={{ fontSize: 30 }} className='CancelOutlinedIcon'></CancelOutlinedIcon>
+                    <CancelOutlinedIcon sx={{ fontSize: 25 }} className='CancelOutlinedIcon'></CancelOutlinedIcon>
                 </button>
             </div>
         </div>
