@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import AuthContext from '../navbar-sidebar/Authcontext'
 import Profile from '../assets/Friends/profile.png';
 
@@ -16,8 +16,6 @@ const SuggestionFriendCard = ({ currentUsername, secondUsername, avatar}) => {
     //         socket.send(JSON.stringify(requestData));
     //     }
     // }
-    
-    // 
     const handleAddFriendReq = () => {
     fetch('http://localhost:8000/friends/add_friend_request/', {
         method: 'POST',
@@ -80,7 +78,12 @@ const SuggestionFriendCard = ({ currentUsername, secondUsername, avatar}) => {
                 <div className="lvl">1.5lvl</div>
             </div>
                 {friendRequestBtn ?
-                        <div style={{ fontSize: "small", marginTop: "10px" }}>Request Sent</div>
+                <>
+                    <div style={{ fontSize: "small", marginTop: "10px" }}>Request Sent</div>
+                    <div className="loadingBox">
+                        <div className="loadingLine"></div>
+                    </div>
+                </>
                         // <button className="FriendBtn Add" onClick={handleCancelFriendReq}>X</button>
                     :
                     <button className="FriendBtn Add" onClick={handleAddFriendReq}>Add friend</button>

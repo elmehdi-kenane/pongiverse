@@ -29,7 +29,7 @@ function NavbarSidebar() {
             <NotificationPopupCard secondUsername={friendReqUsername} />,
             {
                 position: "top-center",
-                autoClose: false,
+                autoClose: 5000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,

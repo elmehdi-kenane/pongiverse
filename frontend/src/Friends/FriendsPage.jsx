@@ -165,7 +165,7 @@ const Friends = () => {
                     const updatedFriendSuggestions = prevFriendSuggestions.filter(suggestion => suggestion.username !== message.second_username);
                     return updatedFriendSuggestions;
                 });
-            }, 3000);
+            }, 1000);
             if (selectedButton !== "Sent_Requests")
                 setRedCercle('send-friend-request');
         }
