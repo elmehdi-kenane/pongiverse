@@ -14,7 +14,7 @@ const Rooms = () => {
   const [createRoom, setCreateRoom] = useState(false);
   const [joinRoom, setJoinRoom] = useState(false);
   // const { isBlur, setIsBlur } = useContext(ChatContext);
-  const { user, socket, isBlur, setIsBlur } = useContext(AuthContext);
+  const { user, chatSocket, isBlur, setIsBlur } = useContext(AuthContext);
   const [myRooms, setMyRooms] = useState([]);
   const [roomInvitations, setRoomInvitations] = useState([]);
   const [myRoomsIcons, setMyRoomsIcons] = useState([]);
@@ -174,16 +174,16 @@ const Rooms = () => {
   //add user to channel Group
   useEffect(() => {
     const addUserChannelGroup = () => {
-      socket.send(
+      chatSocket.send(
         JSON.stringify({
           type: "addUserChannelGroup",
           user: user,
         })
       );
     };
-    if (socket && socket.readyState === WebSocket.OPEN && user)
+    if (chatSocket && chatSocket.readyState === WebSocket.OPEN && user)
       addUserChannelGroup();
-  }, [socket, user]);
+  }, [chatSocket, user]);
 
   //update myRooms array When a new Memeber join
   const newUserJoinedChatRoom = (data) => {
@@ -285,8 +285,8 @@ const Rooms = () => {
   };
 
   useEffect(() => {
-    if (socket) {
-      socket.onmessage = (e) => {
+    if (chatSocket) {
+      chatSocket.onmessage = (e) => {
         let data = JSON.parse(e.data);
         console.log("data recived from socket :", data);
         if (data.type === "newRoomJoin") newUserJoinedChatRoom(data.room);
@@ -317,7 +317,7 @@ const Rooms = () => {
           roomInvitationsAcceptedUpdater(data.data);
       };
     }
-  }, [socket]);
+  }, [chatSocket]);
 
   return (
     <div className="rooms-page">
@@ -411,6 +411,7 @@ const Rooms = () => {
                       name={room.name}
                       index={index}
                       topic={room.topic}
+                      roomId={room.id}
                       roomIcons={myRoomsIcons}
                       membersCount={room.membersCount}
                     />

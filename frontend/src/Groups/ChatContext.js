@@ -16,16 +16,15 @@ export const ChatProvider = ({ children }) => {
   const [selectedChatRoom, setSelectedChatRoom] = useState({
     name: "",
     memberCount: "",
-    icon: '',
+    icon: "",
     roomId: "",
   });
   const [selectedDirect, setSelectedDirect] = useState({
     name: "",
-    status : "",
-    avatar : "",
-  })
+    status: "",
+    avatar: "",
+  });
 
-  
   useEffect(() => {
     const fetchImages = async () => {
       const promises = directConversations.map(async (user) => {
@@ -45,7 +44,6 @@ export const ChatProvider = ({ children }) => {
       setDirectsImages(images);
     };
     if (directConversations) {
-      
       fetchImages();
     }
   }, [directConversations]);
@@ -53,7 +51,7 @@ export const ChatProvider = ({ children }) => {
   useEffect(() => {
     const fetchImages = async () => {
       const promises = chatRoomConversations.map(async (room) => {
-        console.log(room.name)
+        console.log(room.name);
         const response = await fetch(`http://localhost:8000/api/getImage`, {
           method: "POST",
           headers: {
@@ -93,7 +91,7 @@ export const ChatProvider = ({ children }) => {
           `http://localhost:8000/profile/firendwithdirects/${user}`
         );
         const data = await response.json();
-        console.log(data)
+        console.log(data);
         setDirectConversations(data);
         console.log("inside the context Friends: ", data);
       } catch (error) {
@@ -114,13 +112,13 @@ export const ChatProvider = ({ children }) => {
     setDirectConversations: setDirectConversations,
     setSelectedChatRoom: setSelectedChatRoom,
     selectedChatRoom: selectedChatRoom,
-    directsImages : directsImages,
-    chatRoomIcons:chatRoomIcons,
-    setDirectsImages : setDirectsImages,
-    selectedDirect : selectedDirect,
+    directsImages: directsImages,
+    chatRoomIcons: chatRoomIcons,
+    setDirectsImages: setDirectsImages,
+    selectedDirect: selectedDirect,
     setSelectedDirect: setSelectedDirect,
-    isHome:isHome,
-    setIsHome:setIsHome,
+    isHome: isHome,
+    setIsHome: setIsHome,
   };
   return (
     <ChatContext.Provider value={contextData}>{children}</ChatContext.Provider>

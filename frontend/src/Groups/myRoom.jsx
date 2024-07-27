@@ -7,7 +7,7 @@ import ChatRoomInvitee from './chatRoomInvitee'
 import { useNavigate } from "react-router-dom";
 
 const MyRoom = (props) => {
-  const {socket, user} = useContext(AuthContext)
+  const {chatSocket, user} = useContext(AuthContext)
   const {
     setIsHome,
     setSelectedChatRoom,
@@ -33,8 +33,8 @@ const MyRoom = (props) => {
   };
 
   const leaveRoomSubmitHandler = () =>{
-    if(socket) {
-      socket.send(JSON.stringify({
+    if(chatSocket) {
+      chatSocket.send(JSON.stringify({
         type: 'leaveRoom',
         message : {
           user : user,
@@ -45,8 +45,8 @@ const MyRoom = (props) => {
   }
 
   const changeRoomNameSubmitHandler = () => {
-    if(socket) {
-      socket.send(JSON.stringify({
+    if(chatSocket) {
+      chatSocket.send(JSON.stringify({
         type : 'changeRoomName',
         message : {
           room : props.name,
@@ -74,8 +74,8 @@ const MyRoom = (props) => {
     }
   }
   const updateRoomAvatarSubmitHandler = () => {
-    if(socket) {
-      socket.send(JSON.stringify({
+    if(chatSocket) {
+      chatSocket.send(JSON.stringify({
         type : 'changeRoomAvatar',
         message : {
           room : props.name,
@@ -129,9 +129,9 @@ const MyRoom = (props) => {
   }, [inviteMember])
 
   const onClickDeleteChatRoomHandler = () => {
-    if(socket) {
+    if(chatSocket) {
       console.log("inside delete chat room")
-      socket.send(JSON.stringify({
+      chatSocket.send(JSON.stringify({
         type : 'deleteChatRoom',
         message : {
           room : props.name
@@ -142,6 +142,7 @@ const MyRoom = (props) => {
     }
   }
   const navigateToChatRoom = () => {
+    console.log("chat room id:",props.roomId)
     setSelectedChatRoom({
       name: props.name,
       memberCount: props.membersCount,

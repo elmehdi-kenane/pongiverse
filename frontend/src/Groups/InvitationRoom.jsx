@@ -2,10 +2,10 @@ import { useContext } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
 
 const InvitationRoom = (props) => {
-  const { socket, user } = useContext(AuthContext);
+  const { chatSocket, user } = useContext(AuthContext);
   const onClickAcceptInvitaion = () => {
-    if (socket) {
-      socket.send(
+    if (chatSocket) {
+      chatSocket.send(
         JSON.stringify({
           type: "roomInvitationAccepted",
           message: {
@@ -18,8 +18,8 @@ const InvitationRoom = (props) => {
   };
 
   const onClickCanelRoomInvitation = () => {
-    if (socket) {
-      socket.send(
+    if (chatSocket) {
+      chatSocket.send(
         JSON.stringify({
           type: "roomInvitationCancelled",
           message: {

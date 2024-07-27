@@ -5,7 +5,7 @@ import "../assets/chat/Groups.css";
 import {useClickOutSide} from "../Chat/chatConversation"
 
 const CreateRoom = (props) => {
-  const { socket } = useContext(AuthContext);
+  const { chatSocket } = useContext(AuthContext);
   const { user } = useContext(AuthContext);
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
@@ -47,7 +47,7 @@ const CreateRoom = (props) => {
       errorContainers.confirmPassword = "Password not match";
     setErrors(errorContainers);
     if (Object.keys(errorContainers).length === 0) {
-      socket.send(
+      chatSocket.send(
         JSON.stringify({
           type: "createChatRoom",
           user: user,

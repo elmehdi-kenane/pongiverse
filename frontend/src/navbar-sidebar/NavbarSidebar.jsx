@@ -23,7 +23,6 @@ function NavbarSidebar() {
     const data = useContext(SocketDataContext);
 
     const notify = () => {
-        console.log("+++++++++ call notify +++++++++")
         setNewRecievedFriendReqNotif(false)
         toast(
             <NotificationPopupCard secondUsername={friendReqUsername} />,
@@ -42,10 +41,6 @@ function NavbarSidebar() {
     };
 
     useEffect(() => {
-        console.log("============ socket-notif-start ============");
-        console.log(data.message, data.type);
-        console.log("============ socket-notif-end ============");
-
         if (data.type === 'recieve-friend-request') {
             setNewRecievedFriendReqNotif(true);
             setRemoveFriendReqNotif(false);
@@ -58,22 +53,16 @@ function NavbarSidebar() {
             setRemoveFriendReqNotif(true);
         }
         else
-            console.log("unknown notif type");
+            console.log("");
     }, [data]);
 
     useEffect(() => {
-        { console.log("path url:", location.pathname) }
-        { console.log("newRecievedFriendReqNotif: ", newRecievedFriendReqNotif, "location.pathname !== '/mainpage/friends'", location.pathname !== '/mainpage/friends') }
         {
             (newRecievedFriendReqNotif && location.pathname !== '/mainpage/friends') ?
                 (
-                    // removeFriendReqNotif ?
-                    //     console.log("current notif should be disappears")
-                    //     :
                     notify()
                 )
-                :
-                console.log("there's no newRecievedFriendReqNotif")
+                : console.log("")
         }
     }, [data.message.to_user, data.type]);
 

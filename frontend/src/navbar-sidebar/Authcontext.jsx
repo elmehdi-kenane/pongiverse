@@ -26,6 +26,8 @@ export const AuthProvider = ({children}) => {
 	let [notifsImgs, setNotifsImgs] = useState([])
 	let allGameFriendsRef = useRef(allGameFriends)
 	let [isBlur, setIsBlur] = useState(false)
+	//chat socket ------------------------------------
+	let [chatSocket, setChatSocket] = useState(null);
 
 	
 	// Glass Background State --------------------------------------------
@@ -240,36 +242,38 @@ export const AuthProvider = ({children}) => {
 				console.error('There has been a problem with your fetch operation:', error);
 			}
 		}
-		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && !socket && user) {
+		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && location.pathname !== '/mainpage/chat' && location.pathname !== "/mainpage/chat" && location.pathname !== "/mainpage/groups" && !socket && user) {
 			const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
 			newSocket.onopen = () => {
-				// console.log("Socket created and Opened")
 				setSocket(newSocket)
 			}
 			newSocket.onmessage = (event) => {
 				let data = JSON.parse(event.data)
 				let type = data.type
-				// let message = data.message
 				let uname = data.username
-				// if (type === 'user_disconnected') {
-				// 	const currentAllGameFriends = allGameFriendsRef.current;
-				// 	console.log("user disconnected : ", allGameFriends)
-				// 	let uname = data.username
-				// 	setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname));
-				// }
-				// if (type === 'connected_again') {
-				// 	const currentAllGameFriends = allGameFriendsRef.current;
-				// 	console.log("user connected : ", allGameFriends)
-				// 	console.log("VISITED CONNECTED AGAIN")
-				// 	sendUserData(uname, currentAllGameFriends)
-				// }
 			}
-		} else if ((location.pathname === '/' || location.pathname === '/signup' || location.pathname === '/signin' || location.pathname === '/SecondStep' ||  location.pathname === '/WaysSecondStep' || location.pathname === '/ForgotPassword' || location.pathname === '/ChangePassword') && socket) {
+		} else if ((location.pathname === '/' || location.pathname === '/signup' || location.pathname === '/signin' || location.pathname === '/SecondStep' ||  location.pathname === '/WaysSecondStep' || location.pathname === '/ForgotPassword' || location.pathname === '/ChangePassword' || location.pathname === "/mainpage/chat" || location.pathname === "/mainpage/groups") && socket) {
 			if (socket) {
-				console.log("socket closed succefully")
 				socket.close()
 				setSocket(null)
 			}
+		}
+		if ( (location.pathname === "/mainpage/chat" || location.pathname === "/mainpage/groups") && !chatSocket && user) {
+		  const newChatSocket = new WebSocket(`ws://localhost:8000/ws/chat_socket`);
+		  newChatSocket.onopen = () => {
+			console.log("chat Socket Created and opened");
+			setChatSocket(newChatSocket);
+		  };
+		  newChatSocket.onmessage = (event) => {
+					let data = JSON.parse(event.data)
+			console.log("connection hereeee", data)
+		  }
+		} else if ( location.pathname !== "/mainpage/chat" && location.pathname !== "/mainpage/groups") {
+		  if (chatSocket) {
+			console.log("chat Socket Closed")
+			chatSocket.close();
+			setChatSocket(null);
+		  }
 		}
 
 	}, [location.pathname, user])
@@ -367,6 +371,9 @@ export const AuthProvider = ({children}) => {
 		isBlur:isBlur,
 		setIsBlur:setIsBlur,
 		// gameNotif: gameNotif
+		//chat socket
+		chatSocket: chatSocket,
+		setChatSocket: setChatSocket
 	}
 
 	return (

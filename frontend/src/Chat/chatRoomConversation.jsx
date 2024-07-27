@@ -6,22 +6,22 @@ import MyMessage from "./myMessage";
 import OtherMessage from "./otherMessage";
 import {useClickOutSide} from "../Chat/chatConversation"
 import SendMessage from "./sendMessage";
-const ChatRoomConversation = () => {
+const ChatRoomConversation = (props) => {
   const { selectedChatRoom, setSelectedChatRoom } = useContext(ChatContext);
   const [showChatRoomOptions, setShowChatRoomOptions] = useState(false);
   const [messages, setMessages] = useState([]);
   const [messageToSend, setMessageToSend] = useState("");
   const [recivedMessage, setRecivedMessage] = useState(null);
-  const { user, socket, userImg } = useContext(AuthContext);
+  const { user, chatSocket, userImg } = useContext(AuthContext);
   const messageEndRef = useRef(null);
 
   const sendMessage = () => {
     if (
-      socket &&
-      socket.readyState === WebSocket.OPEN &&
+      chatSocket &&
+      chatSocket.readyState === WebSocket.OPEN &&
       messageToSend.trim() !== ""
     ) {
-      socket.send(
+      chatSocket.send(
         JSON.stringify({
           type: "message",
           data: {
@@ -39,7 +39,7 @@ const ChatRoomConversation = () => {
     const fetchMessages = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/chatAPI/channels/messages/${selectedChatRoom.roomId}`
+          `http://localhost:8000/chatAPI/chatRoom/messages/${selectedChatRoom.roomId}`
         );
         const data = await response.json();
         if (data) setMessages(data);
@@ -52,12 +52,13 @@ const ChatRoomConversation = () => {
       fetchMessages();
     }
   }, [selectedChatRoom]);
+
   useEffect(()=> {
     console.log(showChatRoomOptions, "hhhhhhh")
   },[showChatRoomOptions])
   useEffect(() => {
-    if (socket) {
-      socket.onmessage = (e) => {
+    if (chatSocket) {
+      chatSocket.onmessage = (e) => {
         let data = JSON.parse(e.data);
         if (data.type === "newMessage") {
           setRecivedMessage(data.data);
@@ -65,7 +66,7 @@ const ChatRoomConversation = () => {
         }
       };
     }
-  }, [socket]);
+  }, [chatSocket]);
 
   useEffect(() => {
     if (recivedMessage !== null) {
@@ -91,11 +92,13 @@ const ChatRoomConversation = () => {
             src={ChatIcons.arrowLeft}
             alt=""
             className="conversation-back-arrow"
-            onClick={() =>
+            onClick={() => {
               setSelectedChatRoom({
                 name: "",
                 status: "",
-              })
+              });
+              props.setSelectedItem("")
+            }
             }
           />
           <img

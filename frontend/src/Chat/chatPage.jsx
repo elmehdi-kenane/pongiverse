@@ -113,7 +113,7 @@ const Chat = () => {
             <ChatConversation />
           ) : !isHome &&
             Object.values(selectedChatRoom).every((value) => value !== "") ? (
-            <ChatRoomConversation />
+            <ChatRoomConversation setSelectedItem={handleSelectItem} setSelectedChatRoom={setSelectedChatRoom} />
           ) : (
             ""
           )}

@@ -41,14 +41,18 @@ import { ToastContainer, Bounce } from 'react-toastify';
 import { SocketDataContextProvider } from './navbar-sidebar/SocketDataContext';
 
 
+const ChatGroupsWrapper = ({ element }) => (
+  <ChatProvider>
+    {element}
+  </ChatProvider>
+);
+
 const App = () => {
   return (
     <div className="page">
       <Router>
         <AuthProvider>
-          <ChatProvider>
           <SocketDataContextProvider>
-
             <Routes>
               <Route path="/" element={<HomePage />} exact />
               <Route path="/signup" element={<SignUpPage />} />
@@ -61,79 +65,47 @@ const App = () => {
                 <Route path="dashboard" element={<Dashboard />} />
                 <Route path="profile" element={<Profile />} />
                 <Route path="settings" element={<Settings />} />
-                <Route path="chat" element={<Chat />} />
+                <Route path="chat" element={<ChatGroupsWrapper element={<Chat />} />} />
                 <Route path="friends" element={<Friends />} />
-                <Route path="groups" element={<Rooms />} />
+                <Route path="groups" element={<ChatGroupsWrapper element={<Rooms />} />} />
                 <Route path="game" element={<Modes />} />
                 <Route path="game/board" element={<GameSettings />} />
                 <Route path="game/solo" element={<Solo />} />
                 <Route path="game/solo/computer" element={<Bot />} />
                 <Route path="game/solo/1vs1" element={<OneVersusOne />} />
-                <Route
-                  path="game/solo/1vs1/random"
-                  element={<OneVsOneRandom />}
-                />
-                <Route
-                  path="game/solo/1vs1/friends"
-                  element={<OneVsOneFriends />}
-                />
-                <Route
-                  path="game/solo/1vs1/create-or-join"
-                  element={<OneVsOneCreateOrJoin />}
-                />
+                <Route path="game/solo/1vs1/random" element={<OneVsOneRandom />} />
+                <Route path="game/solo/1vs1/friends" element={<OneVsOneFriends />} />
+                <Route path="game/solo/1vs1/create-or-join" element={<OneVsOneCreateOrJoin />} />
                 <Route path="game/solo/2vs2" element={<TwoVersusTwo />} />
-                <Route
-                  path="game/solo/2vs2/random"
-                  element={<TwoVsTwoRandom />}
-                />
-                <Route
-                  path="game/solo/2vs2/friends"
-                  element={<TwoVsTwoFriends />}
-                />
-                <Route
-                  path="game/solo/2vs2/create-or-join"
-                  element={<TwoVsTwoCreateOrJoin />}
-                />
-                <Route
-                  path="play/1vs1/:roomID"
-                  element={<OneVsOnePlayMatch />}
-                />
-                <Route
-                  path="play/2vs2/:roomID"
-                  element={<TwoVsTwoPlayMatch />}
-                />
-                <Route
-                  path="game/createtournament"
-                  element={<CreateTournament />}
-                />
-                <Route
-                  path="game/jointournament"
-                  element={<JoinTournament />}
-                />
-                <Route
-                  path="game/tournamentbracket"
-                  element={<TournamentBracket />}
-                />
+                <Route path="game/solo/2vs2/random" element={<TwoVsTwoRandom />} />
+                <Route path="game/solo/2vs2/friends" element={<TwoVsTwoFriends />} />
+                <Route path="game/solo/2vs2/create-or-join" element={<TwoVsTwoCreateOrJoin />} />
+                <Route path="play/1vs1/:roomID" element={<OneVsOnePlayMatch />} />
+                <Route path="play/2vs2/:roomID" element={<TwoVsTwoPlayMatch />} />
+                <Route path="game/createtournament" element={<CreateTournament />} />
+                <Route path="game/jointournament" element={<JoinTournament />} />
+                <Route path="game/tournamentbracket" element={<TournamentBracket />} />
               </Route>
             </Routes>
-            </SocketDataContextProvider>
-                    <ToastContainer
-                        position="top-right"
-                        autoClose={5000}
-                        limit={1}
-                        hideProgressBar={false}
-                        newestOnTop={false}
-                        closeOnClick
-                        rtl={false}
-                        pauseOnFocusLoss
-                        draggable
-                        pauseOnHover
-                        theme="light"
-                        transition={Bounce} />
-          </ChatProvider>
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              limit={1}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+              transition={Bounce}
+            />
+          </SocketDataContextProvider>
         </AuthProvider>
       </Router>
     </div>
   );
 };
-export default App
+
+export default App;

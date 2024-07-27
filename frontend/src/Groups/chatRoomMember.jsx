@@ -2,10 +2,10 @@ import { useContext } from "react";
 import * as ChatIcons from "../assets/chat/media";
 import AuthContext from "../navbar-sidebar/Authcontext";
 const ChatRoomMember = (props) => {
-    const {socket} = useContext(AuthContext)
+    const {chatSocket} = useContext(AuthContext)
     const onClickAddMemberAdmin = () => {
-        if(socket) {
-            socket.send(JSON.stringify({
+        if(chatSocket) {
+            chatSocket.send(JSON.stringify({
                 type: 'addRoomMemberAdmin',
                 message: {
                     room : props.roomName,

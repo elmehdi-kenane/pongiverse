@@ -6,12 +6,12 @@ const JoinRoom = (props) => {
   const [isProtected, setIsProtected] = useState(false)
   const [roomName, setRoomName] = useState('')
   const [roomPassword, setRoomPassword] = useState('')
-  const {socket, user} = useContext(AuthContext)
+  const {chatSocket, user} = useContext(AuthContext)
 
   const joinRoomSubmitHandler = (e) => {
     e.preventDefault()
 
-    socket.send(JSON.stringify({
+    chatSocket.send(JSON.stringify({
       type : 'joinChatRoom',
       user: user,
       name : roomName,

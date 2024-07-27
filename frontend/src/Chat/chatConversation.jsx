@@ -27,7 +27,7 @@ const ChatConversation = () => {
   const [recivedMessage, setRecivedMessage] = useState(null);
   const [messageToSend, setMessageToSend] = useState("");
   const [showDirectOptions, setShowDirectOptions] = useState(false);
-  const { user, socket, userImg } = useContext(AuthContext);
+  const { user, chatSocket, userImg } = useContext(AuthContext);
   const messageEndRef = useRef(null);
   const selectedDirectRef = useRef(selectedDirect);
   const navigate = useNavigate();
@@ -39,12 +39,12 @@ const ChatConversation = () => {
   const sendMessage = () => {
     console.log(messageToSend)
     if (
-      socket &&
-      socket.readyState === WebSocket.OPEN &&
+      chatSocket &&
+      chatSocket.readyState === WebSocket.OPEN &&
       messageToSend.trim() !== ""
     ) {
       console.log(messageToSend)
-      socket.send(
+      chatSocket.send(
         JSON.stringify({
           type: "directMessage",
           data: {
@@ -90,8 +90,8 @@ const ChatConversation = () => {
   }, [selectedDirect]);
 
   useEffect(() => {
-    if (socket) {
-      socket.onmessage = (e) => {
+    if (chatSocket) {
+      chatSocket.onmessage = (e) => {
         let data = JSON.parse(e.data);
         if (data.type === "newDirect") {
           const currentDirect = selectedDirectRef.current;
@@ -109,7 +109,7 @@ const ChatConversation = () => {
         }
       };
     }
-  }, [socket]);
+  }, [chatSocket]);
 
   useEffect(() => {
     if (recivedMessage !== null) {
@@ -125,9 +125,9 @@ const ChatConversation = () => {
   }, [messages]);
 
   const inviteFriend = () => {
-    if (socket && socket.readyState === WebSocket.OPEN) {
+    if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
       console.log("inside join");
-      socket.send(
+      chatSocket.send(
         JSON.stringify({
           type: "inviteFriendGame",
           message: {
@@ -157,6 +157,7 @@ const ChatConversation = () => {
                 avatar: "",
                 status: "",
               })
+              
             }
           />
           <img
