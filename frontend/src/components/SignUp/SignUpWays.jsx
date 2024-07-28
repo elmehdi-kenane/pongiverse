@@ -26,7 +26,6 @@ function SignUpWays() {
 			console.log("ewahaaa")
 		}
 		else if (extracted_code) {
-			console.log("ewahaaa intra")
 			setIntraCode(extracted_code)
 		}
 	}, [])
@@ -46,7 +45,7 @@ function SignUpWays() {
 		if (response.ok) {
 			const data = await response.json();
 			if (data.Case === "Email already exist") {
-				toast.error("'Email already used", {duration: 2000,});
+				toast.error("Email already used", { duration: 2000, });
 			} else if (data.Case === "Email does not exist") {
 				const userData = {
 					email: email,
@@ -153,6 +152,10 @@ function SignUpWays() {
 	}
 	return (
 		<>
+			<Toaster
+				position="top-center" // Default position for all toasts if not specified individually
+				reverseOrder={false} // Set to true to reverse the order of toasts
+			/>
 			<div className={styles["Intra"]} onClick={handleIntraClick}>
 				<img className={styles["intraLogo"]} src={logo42} alt="" />
 				<button className={styles["IntraButton"]} >Sign In With Intra</button>

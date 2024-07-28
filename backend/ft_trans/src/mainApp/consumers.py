@@ -384,7 +384,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 #             'type': 'connection_established',
 #             'message': 'You are now connected!'
 #         }))
-    
+
 #     async def receive(self, text_data):
 #         data = json.loads(text_data)
 
@@ -429,7 +429,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 #             'type': 'abortedGame',
 #             'message': event['message']
 #         }))
-    
+
 #     async def playersReady(self, event):
 #         await self.send(text_data=json.dumps({
 #             'type': 'playersReady',
