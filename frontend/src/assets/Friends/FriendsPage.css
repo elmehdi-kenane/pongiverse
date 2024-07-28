@@ -30,10 +30,17 @@
 
 .embla {
   overflow: hidden;
+height: 170px;
+    min-height: 170px;
 }
+
+.emblaUndisplayble {
+    display: none;
+}
+
 .embla__container {
   display: flex;
-  gap: 1%;
+  gap: 3%;
 }
 
 .embla__container_centered {
@@ -41,7 +48,7 @@
 }
 
 .embla {
-    width: 95%;
+    width: 100%;
     align-self: center;
     min-width: 145px;
 }
@@ -53,35 +60,51 @@
 .embla__buttons {
     display: flex;
     justify-content: space-between;
-    width: 50%;
-    position: absolute;
-    right: calc(25% - 42px);
-    top: 255px;
+    width: 97%;
+        position: relative;
+        margin: 0 auto;
+        /* right: calc(25% - 42px); */
+        top: -109px;
     z-index: 101;
 }
 
+.disableEmblaBtns {
+    display: none;
+}
 .FriendPage {
     display: flex;
     flex-direction: column;
     gap: 40px;
     margin: 0 auto;
-    width: 50%;
+    width: 70%;
+    overflow: auto;
+}
+    
+@media (max-width: 1440px) {
+    .FriendPage {
+        width: 85%;
+    }
 }
 
 @media (max-width: 768px) {
     .embla__buttons {
         display: flex;
         justify-content: space-between;
-        width: 50%;
-        position: absolute;
-        right: calc(25%);
-        top: 275px;
+        width: 97%;
+            position: relative;
+            margin: 0 auto;
+            /* right: calc(25% - 42px); */
+            top: -109px;
         z-index: 101;
     }
+    
     .FriendPage {
         width: 80%;
     }
 
+    .disableEmblaBtns {
+        display: none;
+    }
 }
 
 .embla__buttons button {
@@ -95,10 +118,14 @@
 
 .FriendsPageHeader {
     color: white;
-    margin: 20px 0;
+    /* margin: 20px 0; */
     font-weight: bold;
     min-width: max-content;
     font-size: x-large;
+}
+
+.SuggestionsHeader {
+    margin-top: 15px;
 }
 
 .Suggestions {
@@ -189,42 +216,39 @@
 }
 
 .friendPageSections {
-    background-color: white;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    /* height: auto;
-    width: auto; */
     gap: 10px;
-    min-height: 764px;
-    padding: 5px 0;
+    min-height: max-content;
+    height: max-content;
+    margin-bottom: 130px;
     border-radius: 10px;
-    overflow: scroll;
 }
 
 .friendSection .FriendsPageHeader {
     background-color: rgba(58, 25, 82, 1);
-    border-radius: 10px;
+    /* border-radius: 10px; */
     text-align: center;
     position: sticky;
     top: 0;
     width: 100%;
     padding: 15px 0;
     z-index: 99;
-    margin: 0;
+    margin-bottom: 7px;
 }
 
 .friendSection {
     width: 48%;
-    height: 48%;
+    height: 400px;
     /* margin: 5px; */
-    background-color: rgba(58, 25, 82, 1);
+    /* background-color: rgba(58, 25, 82, 1); */
     color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-radius: 10px;
+    /* border-radius: 10px; */
     overflow: scroll;
     position: relative;
     /* filter: drop-shadow(black 0 0 4px); */
@@ -235,62 +259,96 @@
     font-weight: 600;
     font-size: 20px;
     height: 40px;
-    margin-top: 60px;
+    margin: 20px;
     align-self: center;
 }
 
-.friendSection .friendPageEmptyList {
-    margin-top: 20px;
+.friendPageEmptyList {
+    padding: 20px;
+    text-align: center;
+    color: gainsboro;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(58, 25, 82, 1);
 }
 
-@media (max-width: 1440px) {
+@media (max-width: 425px) {
+    .friendPageEmptyList {
+        font-size: 5vw;
+    }
     .optionBar {
         display: flex;
         align-self: center;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        width: max-content;
+        width: 97%;
     }
     .friendPageSections {
         display: none;
     }
+    .FriendPage {
+        width: 100%;
+        gap: 20px;
+    }
 }
 
-@media (min-width: 1441px) {
+@media (min-width: 426px) {
     .optionBar {
         display: none;
     }
 }
 
-@media (max-width: 425px) {
-    .optionBtns button {
-        font-size: 5vw;
+@media (min-width: 426px) and (max-width: 768px) {
+    .optionBar {
+        display: none;
     }
+
+    .FriendPage {
+        width: 85%;
+    }
+
+    .friendSection {
+        width: 100%;
+    }
+}
+
+@media (max-width: 425px) {
     .FriendManagement {
         font-size: 3vw;
+    }
+
+    .embla__buttons {
+        display: none;
+    }
+
+    .FriendsPageHeader {
+        font-size: 20px;
     }
 }
 
 .optionBtns {
-    background-color: white;
+    background-color: #3A245C;
     padding: 10px;
     display: flex;
+    justify-content: space-between;
+    width: 100%;
     gap: 5px;
     border-radius: 5px;
 }
 
 .optionBtns button {
-    padding: 10px;
-    border: 1.5px solid #4D4EA6;
-    color: #4D4EA6;
-    background-color: transparent;
+    padding: 7px;
+    border: none;
+    color: white;
+    background-color: #250939;
     font-weight: 600;
     border-radius: 5px;
-    font-size: 1vw;
+    width: 25%;
+    font-size: 3vw;
 }
 
-.redCercle {
+/* .redCercle {
     width: 5px;
     height: 5px;
     background-color: red;
@@ -299,24 +357,23 @@
     margin-top: -7px;
     margin-bottom: 1px;
     left: 100%;
-}
+} */
 
 .optionBtns button:hover {
     box-shadow: 0px 0px 5px #4D4EA6;
 }
 
 .optionBtns button.selectedBtn {
-    background-color: #4D4EA6;
-    color: white;
+    color: #1E1E1E;
+    background-color: white;
 }
 
 .FriendManagement {
     color: white;
-    background-color: rgba(58, 25, 82, 1);
     margin-top: 10px;
+    margin-bottom: 100px;
     border-radius: 5px;
-    border: 1px solid white;
-    height: 600px;
+    height: max-content;
     overflow: scroll;
     width: 100%;
 }
@@ -329,7 +386,6 @@
     align-items: center;
     border-radius: 10px;
     gap: 8px;
-    margin: 20px 0;
     width: 100%;
 }
 
@@ -340,13 +396,14 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 90%;
+    width: 100%;
     font-weight: 600;
     padding: 5px 10px;
-    margin: 5px 0;
-    border: 2px solid #D9D9D9;
-    background-color: rgba(234, 211, 214, 0);
-    border-radius: 9px;
+    margin: 2px 0;
+        /* border: 2px solid #D9D9D9; */
+        /* background-color: rgba(234, 211, 214, 0); */
+        background-color: rgba(58, 25, 82, 1);
+        /* border-radius: 9px; */
 }
 
 .FriendCard:hover,

@@ -4,7 +4,6 @@ import SocketDataContext from '../navbar-sidebar/SocketDataContext'
 import { useState } from 'react'
 import { useContext } from 'react'
 import { useEffect } from 'react'
-import { useCallback } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 import {
     PrevButton,
@@ -27,7 +26,6 @@ const Friends = () => {
     const [recievedRequests, setRecievedRequests] = useState([]);
     const [friendSuggestions, setFriendSuggestions] = useState([]);
     const [selectedButton, setSelectedButton] = useState('Friends');
-    const [redCercle, setRedCercle] = useState('');
 
     const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false })
 
@@ -40,12 +38,6 @@ const Friends = () => {
 
     const handlesSelectedButton = (selectedButton) => {
         setSelectedButton(selectedButton);
-        if (selectedButton === "Sent_Requests" && redCercle === "send-friend-request")
-            setRedCercle('')
-        else if (selectedButton === "Friends" && (redCercle === "unblock-friend" || redCercle === "confirm-friend-request"))
-            setRedCercle('')
-        else if (selectedButton === "Blocked_Accounts" && redCercle === "block-friend")
-            setRedCercle('')
     }
 
     useEffect(() => {
@@ -108,8 +100,6 @@ const Friends = () => {
                 const updatedBlockedFriends = [message, ...prevBlockedFriends];
                 return updatedBlockedFriends;
             });
-            if (selectedButton !== "Blocked_Accounts")
-                setRedCercle('block-friend');
         }
         else if (type === 'unblock-friend') {
             setFriends((prevFriends) => {
@@ -124,8 +114,6 @@ const Friends = () => {
                 const updatedBlockedFriends = prevBlockedFriends.filter(UnblockedFriend => UnblockedFriend.second_username !== message.second_username);
                 return updatedBlockedFriends;
             });
-            if (selectedButton !== "Friends")
-                setRedCercle('unblock-friend');
         }
         else if (type === 'remove-friend-request') {
             setRecievedRequests((prevRecievedRequests) => {
@@ -152,8 +140,6 @@ const Friends = () => {
                 const updatedFriends = [message, ...prevFriends];
                 return updatedFriends;
             });
-            if (selectedButton !== "Friends")
-                setRedCercle('confirm-friend-request');
         }
         else if (type === 'send-friend-request') {
             setSentRequests((prevSentRequests) => {
@@ -166,8 +152,6 @@ const Friends = () => {
                     return updatedFriendSuggestions;
                 });
             }, 1000);
-            if (selectedButton !== "Sent_Requests")
-                setRedCercle('send-friend-request');
         }
         else if (type === 'recieve-friend-request') {
             setRecievedRequests((prevRecievedRequests) => {
@@ -232,12 +216,12 @@ const Friends = () => {
 
   return (
       <div className="FriendPage">
-          <h3 className="FriendsPageHeader">{user} Suggestions List</h3>
+          <h3 className="FriendsPageHeader SuggestionsHeader">{user} Suggestions List</h3>
           {
               friendSuggestions.length === 0 &&
-              <div className="friendSuggestionsEmpty">friend suggestions Empty</div>
+              <div className="friendSuggestionsEmpty">friend suggestions Empty :/</div>
           }
-          <div className="embla">
+          <div className={`embla ${friendSuggestions.length === 0 ? "emblaUndisplayble" : ""}`}>
               <div className="embla__viewport" ref={emblaRef}>
                   <div className={`embla__container ${(prevBtnDisabled && nextBtnDisabled) ? "embla__container_centered" : ""}`}>
                       {
@@ -247,7 +231,7 @@ const Friends = () => {
                               ))
                       }
                   </div>
-                  <div className="embla__buttons">
+                  <div className={`embla__buttons ${(prevBtnDisabled && nextBtnDisabled) ? "disableEmblaBtns" : ""}`}>
                       <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled}>Prev</PrevButton>
                       <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled}>Next</NextButton>
                   </div>
@@ -277,7 +261,7 @@ const Friends = () => {
                   }
               </div>
               <div className="friendSection">
-                  <h3 className="FriendsPageHeader">Friend Requests</h3>
+                  <h3 className="FriendsPageHeader">Pending</h3>
                   {
                       recievedRequests.length === 0 ?
                           <div className="friendPageEmptyList">
@@ -290,7 +274,7 @@ const Friends = () => {
                   }
               </div>
               <div className="friendSection">
-                  <h3 className="FriendsPageHeader">Sent Requests</h3>
+                  <h3 className="FriendsPageHeader">Requests</h3>
                   {
                       sentRequests.length === 0 ?
                           <div className="friendPageEmptyList">
@@ -303,7 +287,7 @@ const Friends = () => {
                   }
               </div>
               <div className="friendSection">
-                  <h3 className="FriendsPageHeader">Blocked Accounts</h3>
+                  <h3 className="FriendsPageHeader">Blocked</h3>
                   {blockedFriends.length === 0 ?
                       <div className="friendPageEmptyList">
                           There are no blocked Accounts.
@@ -317,11 +301,10 @@ const Friends = () => {
           </div>
           <div className="optionBar">
               <div className="optionBtns">
-                  {console.log(redCercle)}
-                  <button className={`${(selectedButton === "Friends") ? "selectedBtn" : ""}`} onClick={() => { handlesSelectedButton("Friends") }}><div className={`${(redCercle === "unblock-friend" || redCercle === "confirm-friend-request") ? "redCercle" : ""}`}></div>Friends</button>
-                  <button className={`${(selectedButton === "Friend_Requests") ? "selectedBtn" : ""}`} onClick={() => { handlesSelectedButton("Friend_Requests") }}>Friend Requests</button>
-                  <button className={`${(selectedButton === "Sent_Requests") ? "selectedBtn" : ""}`} onClick={() => { handlesSelectedButton("Sent_Requests") }}><div className={`${redCercle === "send-friend-request" ? "redCercle" : ""}`}></div>Sent Requests</button>
-                  <button className={`${(selectedButton === "Blocked_Accounts") ? "selectedBtn" : ""}`} onClick={() => { handlesSelectedButton("Blocked_Accounts") }}><div className={`${redCercle === "block-friend" ? "redCercle" : ""}`}></div>Blocked Accounts</button>
+                  <button className={`${(selectedButton === "Friends") ? "selectedBtn" : ""}`} onClick={() => { handlesSelectedButton("Friends") }}>Friends</button>
+                  <button className={`${(selectedButton === "Friend_Requests") ? "selectedBtn" : ""}`} onClick={() => { handlesSelectedButton("Friend_Requests") }}>Pending</button>
+                  <button className={`${(selectedButton === "Sent_Requests") ? "selectedBtn" : ""}`} onClick={() => { handlesSelectedButton("Sent_Requests") }}>Requests</button>
+                  <button className={`${(selectedButton === "Blocked_Accounts") ? "selectedBtn" : ""}`} onClick={() => { handlesSelectedButton("Blocked_Accounts") }}>Blocked</button>
               </div>
               {
                   <div className="FriendManagement">
