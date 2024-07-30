@@ -43,10 +43,12 @@
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	top: 0;
+	left: 50%;
+	transform: translate(-50%, 0);
 	gap: 20px;
 	width: 400px;
-	height: 150px;
-	top: 300px;
+	height: 200px;
 	background-color: #1b062a;
 	z-index: 999;
 	border-radius: 8px;
@@ -59,10 +61,13 @@
 }
 
 .change-player-username-input{
-	height: 30px;
-	border: 2px blue solid;
+	height: 40px;
+	padding: 5px 0;
 	border-radius: 5px;
 	width: 80%;
+	border: 1.5px solid black;
+	box-sizing: border-box;
+	text-indent: 10px;
 }
 
 .change-player-buttons{
@@ -174,6 +179,7 @@
 	scrollbar-color: transparent transparent;
 	height: 600px;
 }
+
 
 .player {
 	width: calc(90% / 4);
@@ -462,7 +468,12 @@ font-size: 15px;
 		flex-direction: column;
 		overflow-y: auto;
 	}
+}
 
+@media (max-width: 1440px){
+	.change-player-username{
+		left: 39%;
+	}
 }
 
 @media (max-width: 1170px) {

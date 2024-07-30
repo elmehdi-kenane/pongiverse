@@ -10,7 +10,6 @@ const Modes = () => {
 	let { socket, user, setAllGameNotifs,
 		allGameNotifs, notifsImgs } = useContext(AuthContext)
 
-
 		useEffect(() =>{
 			const check_is_join = async () => {
 				const response = await fetch(`http://localhost:8000/api/is-joining-tournament`, {
@@ -110,6 +109,7 @@ const Modes = () => {
 					setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message])
 					setRoomID(message.roomID)
 				} else if (type === 'tournament_created') {
+					console.log("YESSSSSSSSS")
 					navigate("createtournament")
 				}
 			}

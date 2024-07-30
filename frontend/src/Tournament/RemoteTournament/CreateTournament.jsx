@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext, useRef } from "react";
-import styles from '../assets/Tournament/tournament.module.css'
-import avatar from './avatar.svg'
-import clock from './clock.svg'
-import invitefriend from './friend_invite.svg'
-import AuthContext from '../navbar-sidebar/Authcontext'
+import styles from '../../assets/Tournament/tournament.module.css'
+import avatar from '../avatar.svg'
+import clock from '../clock.svg'
+import invitefriend from '../friend_invite.svg'
+import AuthContext from '../../navbar-sidebar/Authcontext'
 import withReactContent from 'sweetalert2-react-content'
 import { useNavigate, useLocation } from "react-router-dom";
 import Swal from 'sweetalert2';
@@ -422,11 +422,16 @@ function CreateTournament() {
 					</div>
 					<div className={styles["line"]}></div>
 					<div className={styles["tournament-infos"]}>
-						<div className={styles["tournament-id"]}>
-							<h4 className={styles["tournament-id-title"]}>Tournament ID:</h4>
-							<h5 className={styles["tournament-id-value"]}>{tournamentId}</h5>
-						</div>
-						<div className={styles["little-line"]}></div>
+						{
+							isTournamentOwner &&
+							<>
+								<div className={styles["tournament-id"]}>
+									<h4 className={styles["tournament-id-title"]}>Tournament ID:</h4>
+									<h5 className={styles["tournament-id-value"]}>{tournamentId}</h5>
+								</div>
+								<div className={styles["little-line"]}></div>
+							</>
+						}
 						<div className={styles["players-number"]}>
 							<h4 className={styles["players-number-title"]}>Players:</h4>
 							<h5 className={styles["players-number-value"]}>{tournamentMembers.length}/16</h5>
@@ -501,7 +506,6 @@ function CreateTournament() {
 									<div className={styles["disconnected-div"]}>
 										<p>diconnected</p>
 										{
-
 											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[2].name)}>Kick out</button>
 										}
 									</div>

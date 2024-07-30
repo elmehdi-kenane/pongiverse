@@ -19,12 +19,12 @@ import ChangePassword from "./components/SignIn/ChangePassword";
 import SignInPage from "./components/SignIn/SignInPage";
 import SignUpPage from "./components/SignUp/SignUpPage";
 import SecondStep from "./components/SignUp/SecondStep";
-import CreateTournament from "./Tournament/CreateTournament";
-import JoinTournament from "./Tournament/JoinTournament";
+import CreateTournament from "./Tournament/RemoteTournament/CreateTournament";
+import JoinTournament from "./Tournament/RemoteTournament/JoinTournament";
 import OneVsOneRandom from "./Game/OneVsOneRandom";
 import OneVsOneFriends from "./Game/OneVsOneFriends";
 import OneVsOneCreateOrJoin from "./Game/OneVsOneCreateOrJoin";
-import TournamentBracket from "./Tournament/TournamentBracket";
+import TournamentBracket from "./Tournament/RemoteTournament/TournamentBracket";
 import LoginGoogleTest from "./components/SignIn/LoginGoogleTest";
 import { ChatProvider } from "./Groups/ChatContext";
 import Chat from "./Chat/chatPage";
@@ -37,7 +37,7 @@ import TwoVsTwoCreateOrJoin from "./Game/TwoVsTwoCreateOrJoin";
 import GameSettings from "./Game/GameSettings";
 import Settings from "./Settings/Settings";
 import Bot from "./Game/Bot";
-import LocalTournamentFillMembers from "./Tournament/LocalTournamentFillMembers";
+import LocalTournamentFillMembers from "./Tournament/LocalTournament/LocalTournamentFillMembers";
 
 const App = () => {
 	return (

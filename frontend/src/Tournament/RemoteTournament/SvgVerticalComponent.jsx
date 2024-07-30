@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import avatar from './avatar.jpeg'
+import avatar from '../avatar.jpeg'
 import { useNavigate } from "react-router-dom";
 
 const SvgVerticalComponent = ({ images }) => {
