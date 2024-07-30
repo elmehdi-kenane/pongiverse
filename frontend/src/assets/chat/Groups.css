@@ -197,8 +197,9 @@
 .join-room-container,
 .create-room-container {
   position: absolute;
-  color: black;
-  background-color: #d9d9d9;
+  color: #ccc;
+  background-color: #1b062a;
+  border: #826aed solid 2px;
   left: 50%;
   top: 400px;
   transform: translate(-50%, -50%);
@@ -216,25 +217,37 @@
 .join-room-header {
   font-size: 22px;
   font-weight: 500;
-  color: #913dce;
+  color: #ccc;
 }
 
 .join-room-visibility-buttons {
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  gap: 5px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+
 }
 .join-room-visibility-text {
 }
-.join-room-visibility-labels {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
+
+.custom-switch.ant-switch-checked {
+  background-color: #f4effa;
 }
 
-.join-room-visibility-check {
-  gap: 5px;
-  display: flex;
+.custom-switch {
+  background-color: green;
+}
+
+.custom-switch .ant-switch-inner {
+  color: #f8db00; /* Text color for both states */
+}
+.custom-switch .ant-switch-inner .ant-switch-inner-checked {
+  color: black;
+}
+
+.custom-switch .ant-switch-handle::before{
+  background-color: #913dce;
 }
 
 .join-room-form {
@@ -248,7 +261,7 @@
   width: 100%;
   padding: 10px 0px;
   text-indent: 10px;
-  border: 1px solid black;
+  border: 1px solid #ccc;
   border-radius: 5px;
   font-weight: 300;
   background-color: transparent;
@@ -268,12 +281,13 @@
   width: 50%;
   padding: 10px 0px;
   border: none;
-  background-color: transparent;
-  outline: 1px solid black;
+  background-color: #2f084b;
+  outline: 1px solid #ccc;
   outline-offset: -1px;
   border-radius: 5px;
   font-weight: 550;
   cursor: pointer;
+  color: #ccc;
 }
 
 /*CreateRoom*/
@@ -789,6 +803,7 @@
   background-color: #1f0935;
   color: white;
 }
+
 
 @media screen and (min-width: 1440px) {
   .rooms-wrapper {

@@ -1,3 +1,4 @@
+import 'react-toastify/dist/ReactToastify.css';
 import "./assets/navbar-sidebar/index.css";
 import NavbarSidebar from "./navbar-sidebar/NavbarSidebar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -87,11 +88,11 @@ const App = () => {
                 <Route path="game/tournamentbracket" element={<TournamentBracket />} />
               </Route>
             </Routes>
-            <ToastContainer
+            {/* <ToastContainer
               position="top-right"
               autoClose={5000}
               limit={1}
-              hideProgressBar={false}
+              hideProgressBar={true}
               newestOnTop={false}
               closeOnClick
               rtl={false}
@@ -100,7 +101,7 @@ const App = () => {
               pauseOnHover
               theme="light"
               transition={Bounce}
-            />
+            /> */}
           </SocketDataContextProvider>
         </AuthProvider>
       </Router>

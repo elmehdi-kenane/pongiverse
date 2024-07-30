@@ -5,6 +5,7 @@ import ChatContext from "./ChatContext";
 import ChatRoomMember from "./chatRoomMember";
 import ChatRoomInvitee from './chatRoomInvitee'
 import { useNavigate } from "react-router-dom";
+import { leaveRoomSubmitHandler } from "./roomHandler";
 
 const MyRoom = (props) => {
   const {chatSocket, user} = useContext(AuthContext)
@@ -32,17 +33,6 @@ const MyRoom = (props) => {
     setShowSettings(true);
   };
 
-  const leaveRoomSubmitHandler = () =>{
-    if(chatSocket) {
-      chatSocket.send(JSON.stringify({
-        type: 'leaveRoom',
-        message : {
-          user : user,
-          room: props.name
-        }
-      }))
-    }
-  }
 
   const changeRoomNameSubmitHandler = () => {
     if(chatSocket) {
@@ -302,7 +292,7 @@ const MyRoom = (props) => {
             >
               CANCEL
             </button>
-            <button className="room-leave-confirm-button" onClick={leaveRoomSubmitHandler}>CONFIRM</button>
+            <button className="room-leave-confirm-button" onClick={()=>leaveRoomSubmitHandler(props.name, user, chatSocket)}>CONFIRM</button>
           </div>
         </div>
       )}

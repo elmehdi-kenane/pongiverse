@@ -8,6 +8,13 @@
   display: none;
 }
 
+:root {
+  --toastify-toast-top: 90px;
+  --toastify-color-progress-light: #bb86fc;
+  --toastify-color-transparent: rgba(255, 255, 255, 1);
+  --toastify-font-family: "IBM Plex Sans", sans-serif;;
+}
+
 .chat-page {
   width: 100%;
   height: 100%;
@@ -329,7 +336,6 @@ textarea.conversation-input::placeholder {
 .conversation-emoji-picker,
 .conversation-file-upload {
   opacity: .6;
-  /* width: 25px; */
   height: 35px;
   cursor: pointer;
 }
@@ -348,6 +354,11 @@ textarea.conversation-input::placeholder {
   height: 35px;
   cursor: pointer;
 }
+
+.toast-container {
+  padding: 0;
+}
+
 @media screen and (min-width: 1444px) {
   .chat-container {
     width: 1440px;

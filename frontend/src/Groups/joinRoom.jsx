@@ -1,6 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import {useClickOutSide} from "../Chat/chatConversation"
+import { Switch } from 'antd';
+// import 'antd/dist/reset.css'
+
 
 const JoinRoom = (props) => {
   const [isProtected, setIsProtected] = useState(false)
@@ -29,14 +32,7 @@ const JoinRoom = (props) => {
           Please Select Room Visibility:{" "}
         </div>
         <div className="join-room-visibility-labels">
-          <label className="join-room-visibility-check">
-            Public
-            <input type="radio" checked={!isProtected} name="radio" onChange={() => setIsProtected(false)}/>
-          </label>
-          <label className="join-room-visibility-check">
-          </label>
-            Protected
-            <input type="radio" checked={isProtected} name="radio" onChange={() => setIsProtected(true)}/>
+        <Switch defaultChecked={true} checkedChildren="Public" unCheckedChildren="Protected" className="custom-switch"/>
         </div>
       </div>
       <form action="" onSubmit={joinRoomSubmitHandler} className="join-room-form">
