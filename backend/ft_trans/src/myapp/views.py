@@ -339,7 +339,7 @@ def SignInIntraGetUserData(request):
 		code = request.data.get('code')
 		response = Response()
 		client_id = 'u-s4t2ud-fcffc65b4899785b254efb0f6527c2d4493781c1e7792364b758f426b18a2598'
-		client_secret = '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'
+		client_secret = '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'
 		redirect_uri = 'http://localhost:3000/signin'
 		token_url = 'https://api.intra.42.fr/oauth/token'
 		payload = {
@@ -405,7 +405,7 @@ def SignUpIntraGetUserData(request):
 		code = request.data.get('code')
 		response = Response()
 		client_id = 'u-s4t2ud-c5d50d0148bff2ac03dbdadd313e919f7799e35329997235b2427e1cef984e18'
-		client_secret = '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'
+		client_secret = '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'
 		redirect_uri = 'http://localhost:3000/signup'
 		token_url = 'https://api.intra.42.fr/oauth/token'
 		payload = {

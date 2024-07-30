@@ -33,11 +33,6 @@ async def get_friends(username):
 
 class ChatConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
-		# self.address = '127.0.0.1'
-		# self.port = 8000
-		# self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		# self.socket.connect((self.address, self.port))
-		# await self.accept()
 		cookiess = self.scope.get('cookies', {})
 		token = cookiess.get('token')
 		decoded_token = AccessToken(token)
@@ -369,41 +364,41 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			'message': event['message']
 		}))
 	##################################### (CHAT) #####################################
-	async def broadcast_message(self, event):
-		await self.send(text_data=json.dumps(event['data']))
-	async def send_message(self, event):
-		data = event['message']
-		timestamp = data.timestamp.isoformat()
-		message  = {
-			'type':'newMessage',
-			'data': {
-				'id':data.id,
-				'content':data.content,
-				'sender' : data.sender.username,
-				'date' : timestamp,
-			}
-		}
-		await self.send(text_data=json.dumps(message))
-	async def newRoomJoin(self, event):
-		data = event['data']
-		print(data)
-		message  = {
-			'type':'newRoomJoin',
-			'room' : data
-		}
-		await self.send(text_data=json.dumps(message))
-	async def send_direct(self, event):
-		data = event['data']
-		message = {
-			'type' : 'newDirect',
-			'data' : {
-				'sender': data['sender'],
-				'reciver': data['reciver'],
-				'content': data['message'],
-			}
-		}
-		print(message)
-		await self.send(text_data=json.dumps(message))
+	# async def broadcast_message(self, event):
+	# 	await self.send(text_data=json.dumps(event['data']))
+	# async def send_message(self, event):
+	# 	data = event['message']
+	# 	timestamp = data.timestamp.isoformat()
+	# 	message  = {
+	# 		'type':'newMessage',
+	# 		'data': {
+	# 			'id':data.id,
+	# 			'content':data.content,
+	# 			'sender' : data.sender.username,
+	# 			'date' : timestamp,
+	# 		}
+	# 	}
+	# 	await self.send(text_data=json.dumps(message))
+	# async def newRoomJoin(self, event):
+	# 	data = event['data']
+	# 	print(data)
+	# 	message  = {
+	# 		'type':'newRoomJoin',
+	# 		'room' : data
+	# 	}
+	# 	await self.send(text_data=json.dumps(message))
+	# async def send_direct(self, event):
+	# 	data = event['data']
+	# 	message = {
+	# 		'type' : 'newDirect',
+	# 		'data' : {
+	# 			'sender': data['sender'],
+	# 			'reciver': data['reciver'],
+	# 			'content': data['message'],
+	# 		}
+	# 	}
+	# 	print(message)
+	# 	await self.send(text_data=json.dumps(message))
 
 
 

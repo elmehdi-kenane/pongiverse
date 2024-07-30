@@ -23,12 +23,6 @@ async def add_user_channel_group(self, data):
 
 
 async def create_chat_room(self, data):
-    print(data["user"])
-    print(data["message"]["name"])
-    print("topic", data["message"]["topic"])
-    print("visibility", data["message"]["roomVisibility"])
-    print("password", data["message"]["password"])
-
     user_name = data["user"]
     room_name = data["message"]["name"]
     image_data = base64.b64decode(data["message"]["icon"])
@@ -426,8 +420,11 @@ async def direct_message(self, data, user_channels):
         sender=sender, reciver=reciver, message=data["data"]["message"]
     )
     channel_name = user_channels.get(data["data"]["reciver"])
+    print(channel_name)
     mychannel_name = user_channels.get(data["data"]["sender"])
+    print(mychannel_name)
     if channel_name:
+        print("the others message", channel_name)
         await self.channel_layer.send(
             channel_name,
             {
@@ -440,6 +437,7 @@ async def direct_message(self, data, user_channels):
             },
         )
     if mychannel_name:
+        print("my message", mychannel_name)
         await self.channel_layer.send(
             mychannel_name,
             {

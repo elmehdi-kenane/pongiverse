@@ -1,18 +1,28 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 from myapp.models import customuser ###########
 from asgiref.sync import sync_to_async
-from .models import Room, Membership, Message
+from rest_framework_simplejwt.tokens import AccessToken
 import json
 from . import chat_consumers
 
+user_channels = {}
+
 class ChatConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
-		await self.accept()
-		message = {
-				'type': 'connected',
-				'message': 'chat connection established'
-			}
-		await self.send(json.dumps(message))
+		cookiess = self.scope.get('cookies', {})
+		token = cookiess.get('token')
+		decoded_token = AccessToken(token)
+		payload_data = decoded_token.payload
+		user_id = payload_data.get('user_id')
+		user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
+		if user is not None:
+			await self.accept()
+			user_channels[user.username] = self.channel_name
+			message = {
+					'type': 'connected',
+					'message': 'chat connection established'
+				}
+			await self.send(json.dumps(message))
 
 	async def receive(self, text_data):
 		data = json.loads(text_data)
@@ -33,6 +43,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 	async def broadcast_message(self, event):
 		await self.send(text_data=json.dumps(event['data']))
+	
 	async def send_message(self, event):
 		data = event['message']
 		timestamp = data.timestamp.isoformat()
@@ -46,6 +57,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			}
 		}
 		await self.send(text_data=json.dumps(message))
+	
 	async def newRoomJoin(self, event):
 		data = event['data']
 		print(data)
@@ -54,6 +66,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			'room' : data
 		}
 		await self.send(text_data=json.dumps(message))
+	
 	async def send_direct(self, event):
 		data = event['data']
 		message = {
@@ -64,5 +77,4 @@ class ChatConsumer(AsyncWebsocketConsumer):
 				'content': data['message'],
 			}
 		}
-		print(message)
 		await self.send(text_data=json.dumps(message))

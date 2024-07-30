@@ -7,5 +7,6 @@ urlpatterns = [
     path('allRoomMembers/<str:chat_room_name>', views.all_chat_room_memebers, name='all-chat-room-memebers'),
     path('listAllFriends', views.list_all_friends, name='list-all-friends'),
     path('Directs/messages', views.direct_messages, name='channel-messages'),
-    path('roomInviations/<str:username>', views.rooms_invitations, name='room-invitations'),
+    path('chatRoomInvitations/<str:username>', views.rooms_invitations, name='room-invitations'),
+    path('suggestedChatRooms/<str:username>', views.suggested_chat_rooms, name='suggested-chat-rooms'),
 ]

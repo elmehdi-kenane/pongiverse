@@ -120,3 +120,26 @@ def rooms_invitations(request, username):
             all_invitations.append(invitaion_data)
         return Response(all_invitations)
     return Response({'error': 'Invalid request method'}, status=400)
+
+
+@api_view(['GET'])
+def suggested_chat_rooms(request, username):
+    if request.method == 'GET':
+        user = customuser.objects.get(username=username)
+        memberships = Membership.objects.filter(user=user)
+        print(memberships)
+        rooms = []
+        for membership in memberships:
+            room_data = {
+                'id': membership.room.id,
+                'role' : membership.roles,
+                'name': membership.room.name,
+                'topic': membership.room.topic,
+                'icon_url':membership.room.icon.path,
+                'membersCount': membership.room.members_count,
+            }
+            rooms.append(room_data)
+        print(user.username," rooms: ",rooms)
+        return Response(rooms)
+
+    return Response({'error': 'Invalid request method'}, status=400)
