@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from myapp.models import customuser
 from rest_framework.decorators import api_view
+from rest_framework import status
 from chat.models import Friends
 from myapp.models import customuser
 # import requests
@@ -9,6 +10,7 @@ from myapp.models import customuser
 from myapp.serializers import MyModelSerializer
 from django.core.files.base import ContentFile
 import base64
+
 
 # Create your views here.
 @api_view (['GET'])
@@ -81,16 +83,14 @@ def save_base64_image(base64_image):
     img_data = base64.b64decode(imgstr)
     # Create a ContentFile object from the decoded image data
     img_file = ContentFile(img_data, name='PicName.png')
-    
     return img_file
-
 
 @api_view(['POST'])
 def update_user_pic(request):
     username= request.data.get('user')
     image_url = request.data.get('image')
     image_file = save_base64_image(image_url)
-    print('image url --------------:' , image_file, '-----------------------')
+    # print('image url --------------:' , image_file, '-----------------------')
     user = customuser.objects.filter(username=username).first()
     if user is not None:    
         user.avatar = image_file
@@ -98,11 +98,34 @@ def update_user_pic(request):
         response = Response()
         response.data = {"case" : "Image Saved succesfully"}
         return response
-
-
-
         # dic= {
         #     'avatar': image_file
         # }
         # serializer = MyModelSerializer(data=dic)
         # if serializer.is_valid():
+
+def check_used_username(new_username):
+    check = customuser.objects.filter(username=new_username).first()
+    if check is None:
+        return new_username
+    else:
+        return None
+
+@api_view(['POST'])
+def update_username(request):
+    username = request.data.get('user')
+    new_username = check_used_username(request.data.get('new_username'))
+    if new_username is not None:
+        user = customuser.objects.filter(username=username).first()
+        if user is not None:
+            user.username = new_username
+            user.save()
+            success_response = Response(data={"case": "username saved successfully"}, status=status.HTTP_200_OK)
+            return success_response
+        else:
+            error_response = Response(data={"error": "Failed to save username"}, status=status.HTTP_400_BAD_REQUEST)
+            return error_response
+    else:
+        error_response = Response(data={"error": "Username already exist"}, status=status.HTTP_400_BAD_REQUEST)
+        return error_response
+        
