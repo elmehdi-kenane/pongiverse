@@ -4,9 +4,9 @@ import Avatar from 'react-avatar-edit'
 
 function AdjustPic(props) {
 
-  const { dfltPic , setDfltPic} = useContext(AuthContext)
+  const {dfltPic , setDfltPic} = useContext(AuthContext)
+  const {user , userImg, setUserImg} = useContext(AuthContext)
 
-  const { user , userImg, setUserImg} = useContext(AuthContext)
   const [src, setSrc] = useState(null)
   const [preview, setPreview] = useState(dfltPic)
 
@@ -24,16 +24,15 @@ function AdjustPic(props) {
         })
       });
       const res = await response.json()
-      console.log("response : ", res);
+      console.log("response : ", res.case);
+      setUserImg(preview);
     }
   }
-
 
   const handleConfirmClick = () => {
     props.setAdjust(false);
     setDfltPic(preview);
     UpdatePic(preview);
-    setUserImg(preview);
   }
   const handleCancelClick = () => {
     props.setAdjust(false);
@@ -44,8 +43,6 @@ function AdjustPic(props) {
   const onCrop = view => {
     setPreview(view);
   }
-
-
 
   return (
     <div className='adjustpic'>
@@ -60,7 +57,7 @@ function AdjustPic(props) {
         closeIconColor='white'
         label="Choose a file"
         labelStyle={{
-          fontSize: "18px", cursor: "pointer", padding: "5px", fontWeight: "500",
+          fontSize: "15px", cursor: "pointer", padding: "5px", fontWeight: "500",
           color: "white", border: "1px solid white"
         }}
         onClose={onClose}
