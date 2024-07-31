@@ -5,8 +5,6 @@ import { friends } from "../assets/navbar-sidebar";
 import * as Icons from '../assets/navbar-sidebar'
 import { useReducer } from "react";
 
-import userPc from "../Settings/assets/Group.svg"
-
 const AuthContext = createContext();
 
 export default AuthContext;
@@ -42,13 +40,6 @@ export const AuthProvider = ({children}) => {
 	const blockRef = useRef(null);
 	const blockContentRef = useRef(null);
 	
-
-	const [dfltPic, setDfltPic] = useState(userPc);
-	const [nickName, setNickName] = useState("Maverick");
-	const [bio, setBio] = useState("Lorem ipsum dolor sit amet consectetur adipisicing elit.");
-	const [country, setCountry] = useState("Morocco");
-
-
 
 	let [hideNavSideBar, setHideNavSideBar] = useState(false)
 	let [gameCustomize, setGameCustomize] = useState(['#FFFFFF', '#1C00C3', '#5241AB', false])
@@ -355,15 +346,6 @@ export const AuthProvider = ({children}) => {
 		setIsBlock:setIsBlock,
 		blockRef:blockRef,
 		blockContentRef:blockContentRef,
-		// User Credintials
-		dfltPic:dfltPic,
-		setDfltPic:setDfltPic,
-		nickName:nickName,
-		bio:bio,
-		country,country,
-		setNickName:setNickName,
-		setBio:setBio,
-		setCountry:setCountry,
 		// chat blur
 		isBlur:isBlur,
 		setIsBlur:setIsBlur,
