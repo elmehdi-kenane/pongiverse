@@ -3,22 +3,23 @@ import './Settings.css'
 import PersonalInfo from './PersonalInfo'
 import Security from './Security';
 import AuthContext from '../navbar-sidebar/Authcontext';
-
+import ProfileContext from '../Profile/ProfileWrapper';
 
 function Settings() {
 
   const [isInfo, setIsInfo] = useState(true);
-  const {userImg, dfltPic, user} = useContext(AuthContext);
+  const {user} = useContext(AuthContext);
+  const {userPic, userEmail} = useContext(ProfileContext);
 
   return (
     <div className='settings-page'>
       <div className="settings__leftside">
         <div className='pic-name'>
-            <img src={userImg ? userImg : dfltPic} alt='userImg'/>
+            <img src={userPic} alt='userImg'/>
             <p> {user} </p>
         </div>
         <p className='left__email'>
-            maverick144@gmail.com
+            {userEmail}
         </p>
         <div className={isInfo ? 'left__pers-info btn-active':'left__pers-info'}
             onClick={()=>{setIsInfo(true)}}> Personal Info </div>

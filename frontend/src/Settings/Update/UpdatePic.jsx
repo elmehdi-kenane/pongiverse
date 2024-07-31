@@ -1,40 +1,74 @@
-import React, { useState, useContext} from 'react'
+import React, { useState, useContext } from 'react'
 import AuthContext from '../../navbar-sidebar/Authcontext';
-import bg1 from "../assets/bg1.jpg"
+import ProfileContext from '../../Profile/ProfileWrapper';
 
 
 function UpdatePic(props) {
-    
-    const [backgndPic, setBackgndPic] = useState(bg1);
-    const {userImg, dfltPic} = useContext(AuthContext)
 
-    const UpdateBgPic = (event) => {
-      if (event.target.files && event.target.files[0]) {
-          setBackgndPic(URL.createObjectURL(event.target.files[0]));
-          // console.log(URL.createObjectURL(event.target.files[0]))
+  const { user } = useContext(AuthContext)
+  const { userPic, userBg, setUserBg } = useContext(ProfileContext)
+
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
+  const UpdateBgPic = async (event) => {
+    if (event.target.files && event.target.files[0]) {
+      const newBg = event.target.files[0];
+      const base64Bg = await convertToBase64(newBg);
+      try {
+        const response = await fetch('http://localhost:8000/profile/updateUserBg', {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user: user,
+            image: base64Bg,
+          })
+        });
+        const res = await response.json()
+        if (response.ok){
+          // console.log(res.case);
+          setUserBg(base64Bg);
+        }
+        else
+          console.log(res.error);
+      } catch (error) {
+        console.log(error);
       }
     }
+  }
 
   return (
     <div>
-        <div className="update"> 
-            <img src={userImg ? userImg : dfltPic} alt="userImg"/>
-            <p className='title-pic'> Upload a new picture </p>
-            <div className="update__btn" onClick={() => props.setAdjust(true)}> Update </div>
+      <div className="update">
+        <img src={userPic} alt="userImg" />
+        <p className='title-pic'> Upload a new picture </p>
+        <div className="update__btn" onClick={() => props.setAdjust(true)}> Update </div>
+      </div>
+      <div className="update">
+        <img src={userBg} alt="userBg" />
+        <p className='title-pic'> Upload a new walppaper </p>
+        <div className="update__btn" onClick={() => document.getElementById('fileInput').click()}> Update
+          <input
+            id="fileInput"
+            type="file"
+            accept="image/*"
+            onChange={UpdateBgPic}
+            style={{ display: 'none' }}
+          />
         </div>
-        <div className="update"> 
-            <img  src={backgndPic} alt="userBg"/>
-            <p className='title-pic'> Upload a new walppaper </p>
-            <div className="update__btn" onClick={() => document.getElementById('fileInput').click()}> Update 
-                <input
-                    id="fileInput"
-                    type="file"
-                    accept="image/*"
-                    onChange={UpdateBgPic}
-                    style={{ display: 'none' }}
-                    />
-            </div>
-        </div>
+      </div>
     </div>
   )
 }

@@ -7,8 +7,7 @@ function UpdateNkName() {
     const inputRef = useRef(null);
     const iconRef = useRef(null);
 
-    const { user, nickName, setNickName } = useContext(AuthContext)
-
+    const {user, setUser} = useContext(AuthContext)
 
     useEffect(() => {
         if (inputRef.current)
@@ -31,28 +30,31 @@ function UpdateNkName() {
     }, [])
 
     const updateUserName = async (newUserName) => {
-        const response = await fetch('http://localhost:8000/profile/updateUserName', {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                user: user,
-                new_username: newUserName,
-            })
-        });
-        if (response.status === 200) {
-            console.log("response : ", response.data);
+        try {
+            const response = await fetch('http://localhost:8000/profile/updateUserName', {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user: user,
+                    new_username: newUserName,
+                })
+            });
+            const res = await response.json()
+            if (response.ok)
+                console.log("response : ", res.case);
+            else
+                console.log("error : ", res.error);
+            setUser(newUserName)
+        } catch (error) {
+            console.log(error);
         }
-        else {
-            console.log("error : ", response.data);
-        }
-        setNickName(newUserName)
     }
 
     const onUpdate = () => {
         if (isUpdate)
-            if (inputRef.current.value) 
+            if (inputRef.current.value)
                 updateUserName(inputRef.current.value)
         setIsUpdate(!isUpdate);
     }
@@ -67,7 +69,7 @@ function UpdateNkName() {
     return (
         <div className="update">
             <p className='title'> NickName </p>
-            {!isUpdate && <p className='update__info'> {nickName} </p>}
+            {!isUpdate && <p className='update__info'> {user} </p>}
             {isUpdate && <input type="text"
                 className="update__input"
                 placeholder='Enter new Nickname... '

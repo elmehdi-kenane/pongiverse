@@ -1,18 +1,19 @@
 import React, { useState, useContext, useEffect } from 'react'
-import AuthContext from '../../navbar-sidebar/Authcontext'
 import Avatar from 'react-avatar-edit'
+import AuthContext from '../../navbar-sidebar/Authcontext'
+import ProfileContext from '../../Profile/ProfileWrapper'
 
 function AdjustPic(props) {
 
-  const {dfltPic , setDfltPic} = useContext(AuthContext)
-  const {user , userImg, setUserImg} = useContext(AuthContext)
+  const { user } = useContext(AuthContext)
+  const { userPic, setUserPic } = useContext(ProfileContext);
 
   const [src, setSrc] = useState(null)
-  const [preview, setPreview] = useState(dfltPic)
+  const [preview, setPreview] = useState(userPic)
+  const [check, setCheck] = useState(userPic)
 
   const UpdatePic = async (updatedPic) => {
-    if (updatedPic != dfltPic) {
-      console.log('updatedPic ::: ', updatedPic)
+    try {
       const response = await fetch('http://localhost:8000/profile/updateUserPic', {
         method: "POST",
         headers: {
@@ -24,24 +25,30 @@ function AdjustPic(props) {
         })
       });
       const res = await response.json()
-      console.log("response : ", res.case);
-      setUserImg(preview);
+      if (response.ok){
+        // console.log(res.case);
+        setUserPic(preview);
+      }
+      else
+        console.log(res.error);
+    } catch (error) {
+      console.log(error);
     }
   }
 
   const handleConfirmClick = () => {
+    if (preview != check)
+      UpdatePic(preview);
     props.setAdjust(false);
-    setDfltPic(preview);
-    UpdatePic(preview);
+  }
+  const onCrop = view => {
+    setPreview(view);
   }
   const handleCancelClick = () => {
     props.setAdjust(false);
   }
   const onClose = () => {
     props.setAdjust(false);
-  }
-  const onCrop = view => {
-    setPreview(view);
   }
 
   return (

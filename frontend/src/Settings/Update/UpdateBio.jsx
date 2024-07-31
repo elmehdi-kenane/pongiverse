@@ -1,5 +1,6 @@
 import React, { useRef, useState ,useEffect, useContext} from 'react'
 import AuthContext from '../../navbar-sidebar/Authcontext';
+import ProfileContext from '../../Profile/ProfileWrapper';
 
 function UpdateBio() {
     const [isUpdate, setIsUpdate] = useState(false);
@@ -7,10 +8,9 @@ function UpdateBio() {
     const inputRef = useRef(null);
     const iconRef = useRef(null);
 
-    const {bio} = useContext(AuthContext)
-    const {setBio} = useContext(AuthContext)
+    const {userBio, setUserBio} = useContext(ProfileContext)
 
-  
+
     useEffect(() =>{
         if (inputRef.current)
             inputRef.current.focus();
@@ -41,14 +41,14 @@ function UpdateBio() {
   const handleInputKeyDown = (event) => {
     if (event.key === 'Enter'){
       if (inputRef.current.value)
-        setBio(inputRef.current.value)
+        setUserBio(inputRef.current.value)
       setIsUpdate(false);
     }
   }
   const onUpdate = () => {
     if (isUpdate){
       if (inputRef.current.value)
-        setBio(inputRef.current.value)
+        setUserBio(inputRef.current.value)
     }
     setIsUpdate(!isUpdate);
   }
@@ -57,8 +57,8 @@ function UpdateBio() {
           <p className='title'> Bio </p>
           {!isUpdate && 
             <div className='update__bio'>
-              <p className='update__info'> {truncateString(bio)} </p>
-              <p className='update__info-hover shadow-bg'> {bio} </p>
+              <p className='update__info'> {truncateString(userBio)} </p>
+              <p className='update__info-hover shadow-bg'> {userBio} </p>
             </div>
           }
           {isUpdate && 
