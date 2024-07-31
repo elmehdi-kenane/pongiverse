@@ -66,15 +66,28 @@ def friends_with_directs(request, username):
         data.append(friend_data)
     return Response(data)
 
+
+#**----------------------------------------** 
+
 @api_view(['POST'])
-def get_user_info(request):
+def getUserData(request):
     username = request.data.get('user')
-    response = Response()
     user = customuser.objects.filter(username=username).first()
     if user is not None:
-        response.data = {'username': user.username, 'level':2, 'avatar': user.avatar.path}
-        return response
+        user_data = {'pic': user.avatar.path,
+                     'bg': user.background_pic.path,
+                     'level': user.level,
+                     'email' : user.email,
+                     'password' : user.password,
 
+                     }
+        success_response = Response(data={"userData": user_data}, status=status.HTTP_200_OK)
+        return success_response
+    else:
+        err_response = Response(data={"error": "Error Getting UserData"}, status=status.HTTP_400_BAD_REQUEST)
+        return err_response
+
+#**----------------------------------------** 
 
 def save_base64_image(base64_image):
     # Extract the content type and the base64 data from the image string
@@ -82,7 +95,7 @@ def save_base64_image(base64_image):
     # Decode the base64 data
     img_data = base64.b64decode(imgstr)
     # Create a ContentFile object from the decoded image data
-    img_file = ContentFile(img_data, name='PicName.png')
+    img_file = ContentFile(img_data, name='Picture.png')
     return img_file
 
 @api_view(['POST'])
@@ -95,14 +108,28 @@ def update_user_pic(request):
     if user is not None:    
         user.avatar = image_file
         user.save()
-        response = Response()
-        response.data = {"case" : "Image Saved succesfully"}
-        return response
-        # dic= {
-        #     'avatar': image_file
-        # }
-        # serializer = MyModelSerializer(data=dic)
-        # if serializer.is_valid():
+        success_res = Response(data={"case": "userPic saved successfully"}, status=status.HTTP_200_OK)
+        return success_res
+    else:
+        error_response = Response(data={"error": "Failed to save userPic"}, status=status.HTTP_400_BAD_REQUEST)
+        return error_response
+
+@api_view(['POST'])
+def update_user_bg(request):
+    username= request.data.get('user')
+    image_url = request.data.get('image')
+    image_file = save_base64_image(image_url)
+    user = customuser.objects.filter(username=username).first()
+    if user is not None:    
+        user.background_pic = image_file
+        user.save()
+        success_res = Response(data={"case": "userBg saved successfully"}, status=status.HTTP_200_OK)
+        return success_res
+    else:
+        error_response = Response(data={"error": "Failed to save userBg"}, status=status.HTTP_400_BAD_REQUEST)
+        return error_response
+
+#**----------------------------------------** 
 
 def check_used_username(new_username):
     check = customuser.objects.filter(username=new_username).first()
@@ -114,6 +141,7 @@ def check_used_username(new_username):
 @api_view(['POST'])
 def update_username(request):
     username = request.data.get('user')
+    print("--------", request.data.get('user'), "--------")
     new_username = check_used_username(request.data.get('new_username'))
     if new_username is not None:
         user = customuser.objects.filter(username=username).first()
