@@ -79,6 +79,7 @@ h1, h3, p{
 }
 .userinfo__pic img {
     height: 160px;
+    width: 160px;
     border-radius: 50%;
     border: #826aed solid 2px;
 }

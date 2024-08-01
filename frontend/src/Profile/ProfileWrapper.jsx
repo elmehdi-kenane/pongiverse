@@ -14,11 +14,11 @@ export const ProfileWrapper = ({ child }) => {
     const { user } = useContext(AuthContext);
     const [userPic, setUserPic] = useState(mavPic);
     const [userBg, setUserBg] = useState(bg);
-    const [userEmail, setUserEmail] = useState(null);
+    const [userEmail, setUserEmail] = useState('');
     // const [userPwd, setUserPwd] = useState(null);
-    const [userBio, setUserBio] = useState(null);
+    const [userBio, setUserBio] = useState('');
     const [userLevel, setUserLevel] = useState(null);
-    const [userCountry, setUserCountry] = useState("Morocco");
+    const [userCountry, setUserCountry] = useState(null);
 
     useEffect(() => {
         const getUserData = async () => {
@@ -66,10 +66,11 @@ export const ProfileWrapper = ({ child }) => {
         if (userData){
             getUserPic(userData.pic, setUserPic)
             getUserPic(userData.bg, setUserBg)
-            setUserEmail(userData.email)
             setUserBio(userData.bio)
-            // setUserPwd(userData.password)
+            setUserEmail(userData.email)
             setUserLevel(userData.level)
+            // setUserPwd(userData.password)
+            setUserCountry(userData.country)
         }
     }, [userData])
 
