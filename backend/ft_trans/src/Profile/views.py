@@ -67,7 +67,7 @@ def friends_with_directs(request, username):
     return Response(data)
 
 
-#**----------------------------------------** 
+#**--------------------- UserData ---------------------** 
 
 @api_view(['POST'])
 def getUserData(request):
@@ -76,10 +76,10 @@ def getUserData(request):
     if user is not None:
         user_data = {'pic': user.avatar.path,
                      'bg': user.background_pic.path,
+                     'bio': user.bio,
                      'level': user.level,
                      'email' : user.email,
                      'password' : user.password,
-
                      }
         success_response = Response(data={"userData": user_data}, status=status.HTTP_200_OK)
         return success_response
@@ -87,9 +87,9 @@ def getUserData(request):
         err_response = Response(data={"error": "Error Getting UserData"}, status=status.HTTP_400_BAD_REQUEST)
         return err_response
 
-#**----------------------------------------** 
+#**------------------ UserPic - UserBg ------------------** 
 
-def save_base64_image(base64_image):
+def save_base64_image(base64_image): # Save the Base64 Image as a file
     # Extract the content type and the base64 data from the image string
     format, imgstr = base64_image.split(';base64,')     
     # Decode the base64 data
@@ -114,6 +114,7 @@ def update_user_pic(request):
         error_response = Response(data={"error": "Failed to save userPic"}, status=status.HTTP_400_BAD_REQUEST)
         return error_response
 
+
 @api_view(['POST'])
 def update_user_bg(request):
     username= request.data.get('user')
@@ -129,7 +130,7 @@ def update_user_bg(request):
         error_response = Response(data={"error": "Failed to save userBg"}, status=status.HTTP_400_BAD_REQUEST)
         return error_response
 
-#**----------------------------------------** 
+#**--------------------- UserName ---------------------** 
 
 def check_used_username(new_username):
     check = customuser.objects.filter(username=new_username).first()
@@ -141,7 +142,6 @@ def check_used_username(new_username):
 @api_view(['POST'])
 def update_username(request):
     username = request.data.get('user')
-    print("--------", request.data.get('user'), "--------")
     new_username = check_used_username(request.data.get('new_username'))
     if new_username is not None:
         user = customuser.objects.filter(username=username).first()
@@ -156,4 +156,20 @@ def update_username(request):
     else:
         error_response = Response(data={"error": "Username already exist"}, status=status.HTTP_400_BAD_REQUEST)
         return error_response
+        
+#**--------------------- UserBio ---------------------** 
+
+@api_view(['POST'])
+def update_user_bio(request):
+    username = request.data.get('user')
+    user_bio = request.data.get('bio')
+    user = customuser.objects.filter(username=username).first()
+    if user is not None:
+        user.bio = user_bio
+        user.save()
+        success_res = Response(data={'case': 'userBio Saved Successfully'}, status=status.HTTP_200_OK)
+        return success_res
+    else:
+        err_res = Response(data={'error': 'Failed to save userBio'}, status=status.HTTP_400_BAD_REQUEST)
+        return err_res
         
