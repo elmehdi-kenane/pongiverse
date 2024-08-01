@@ -42,11 +42,12 @@ function UpdateNkName() {
                 })
             });
             const res = await response.json()
-            if (response.ok)
+            if (response.ok){
                 console.log("response : ", res.case);
+                setUser(newUserName)
+            }
             else
                 console.log("error : ", res.error);
-            setUser(newUserName)
         } catch (error) {
             console.log(error);
         }

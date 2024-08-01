@@ -170,10 +170,11 @@
 .update .update__bio {
     position: relative;
     cursor: pointer;
+    /* border: white solid 1px; */
 }
 .update .update__bio .update__info-hover {
     position: absolute;
-    top: -23px;
+    top: 0px;
     opacity: 0;
     padding: 5px;
     font-size: 15px;
@@ -182,6 +183,7 @@
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 5px;
     cursor: pointer;
+    z-index: 4;
 }
 .update .update__bio:hover .update__info-hover{
     opacity: 1;
