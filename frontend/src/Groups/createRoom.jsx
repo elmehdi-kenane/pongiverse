@@ -3,7 +3,9 @@ import AuthContext from "../navbar-sidebar/Authcontext";
 import * as ChatIcons from "../assets/chat/media";
 import "../assets/chat/Groups.css";
 import { useClickOutSide } from "../Chat/chatConversation";
-
+import CloseIcon from "@mui/icons-material/Close";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import { toast } from "react-toastify";
 const CreateRoom = (props) => {
   const { chatSocket } = useContext(AuthContext);
   const { user } = useContext(AuthContext);
@@ -15,12 +17,8 @@ const CreateRoom = (props) => {
     password: "",
     confirmPassword: "",
   });
-  const [roomVisibility, setRoomVisibility] = useState("public-room");
-
-  const handleVisibilityChange = (selectedVisibility) => {
-    setRoomVisibility(selectedVisibility);
-    setErrors({});
-  };
+  const [roomVisibility, setRoomVisibility] = useState("public-visibility");
+  const [step, setStep] = useState(1);
 
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
@@ -30,8 +28,8 @@ const CreateRoom = (props) => {
     });
   };
 
-  const submitHandler = (e) => {
-    e.preventDefault();
+  const submitHandler = () => {
+    console.log("inside submit handler");
     let errorContainers = {};
 
     if (!formData.name.trim()) {
@@ -60,7 +58,7 @@ const CreateRoom = (props) => {
     }
 
     setErrors(errorContainers);
-
+    console.log(errorContainers);
     if (Object.keys(errorContainers).length === 0) {
       chatSocket.send(
         JSON.stringify({
@@ -111,119 +109,182 @@ const CreateRoom = (props) => {
 
   return (
     <div className="create-room-container" ref={nodeDom}>
-
-      <div className="create-room-header">Create a Room</div>
-
-      {/* <div className="room-visibility">Visibility:</div> */}
-      {/* <div className="room-visibility-btns">
-        <button
-          className={
-            roomVisibility === "public-room" ? "selected-room" : "public-room"
-          }
-          onClick={() => handleVisibilityChange("public-room")}
-        >
-          PUBLIC
-        </button>
-        <button
-          className={
-            roomVisibility === "private-room" ? "selected-room" : "private-room"
-          }
-          onClick={() => handleVisibilityChange("private-room")}
-        >
-          PRIVATE
-        </button>
-        <button
-          className={
-            roomVisibility === "protected-room"
-              ? "selected-room"
-              : "protected-room"
-          }
-          onClick={() => handleVisibilityChange("protected-room")}
-        >
-          PROTECTED
-        </button>
+      <div className="create-room-header">
+        <h1 className="create-room-title">Create Chat Room</h1>
+        <CloseIcon className="create-room-close-icon" onClick={props.onClose} />
       </div>
-      <form
-        action=""
-        className="create-room-form"
-        autoComplete="off"
-        onSubmit={submitHandler}
-      >
-        <input
-          type="text"
-          placeholder="Room Name"
-          name="name"
-          onChange={onChangeHandler}
-        />
-        {errors.name && <span id="create-room-errors">{errors.name}</span>}
-        <input
-          type="text"
-          placeholder="Room Topic"
-          name="topic"
-          onChange={onChangeHandler}
-        />
-        {errors.topic && (
-          <span ref={errorRef} id="create-room-errors">
-            {errors.topic}
-          </span>
-        )}
-        {roomVisibility === "protected-room" && (
-          <>
-            <input
-              type="password"
-              placeholder="Room Password"
-              value={formData.password}
-              name="password"
-              onChange={onChangeHandler}
-            />
-            {errors.password && (
-              <span id="create-room-errors">{errors.password}</span>
+      {step === 1 && (
+        <>
+          <div className="create-room-visibility-options">
+            <div
+              className={
+                roomVisibility === "private-visibility"
+                  ? "create-room-option create-room-option-selected"
+                  : "create-room-option"
+              }
+              onClick={() => setRoomVisibility("private-visibility")}
+            >
+              <img
+                src={ChatIcons.privateVisibility}
+                alt="Private"
+                className="private-option-icon visibility-option-icon"
+              />
+              <div className="create-room-option-text">Private</div>
+            </div>
+            <div
+              className={
+                roomVisibility === "public-visibility"
+                  ? "create-room-option create-room-option-selected"
+                  : "create-room-option"
+              }
+              onClick={() => setRoomVisibility("public-visibility")}
+            >
+              <img
+                src={ChatIcons.publicVisibility}
+                alt="Public"
+                className="public-option-icon visibility-option-icon"
+              />
+              <div className="create-room-option-text">Public</div>
+            </div>
+            <div
+              className={
+                roomVisibility === "protected-visibility"
+                  ? "create-room-option create-room-option-selected"
+                  : "create-room-option"
+              }
+              onClick={() => setRoomVisibility("protected-visibility")}
+            >
+              <img
+                src={ChatIcons.protectedVisibility}
+                alt="Protected"
+                className="protected-option-icon visibility-option-icon"
+              />
+              <div className="create-room-option-text">Protected</div>
+            </div>
+          </div>
+          <div className="create-room-actions">
+            <button
+              className="create-room-cancel-button"
+              onClick={props.onClose}
+            >
+              Cancel
+            </button>
+            <button
+              className="create-room-next-button"
+              onClick={() => setStep(2)}
+            >
+              Next
+            </button>
+          </div>
+        </>
+      )}
+
+      {step === 2 && (
+        <>
+          <div className="create-room-input-container">
+            <div className="create-room-icon-wrapper">
+              <img
+                src={ChatIcons.PlaceHolder}
+                alt="Chat Room Icon"
+                className="create-room-icon-placeholder"
+              />
+              <div className="create-room-change-icon">
+                <CameraAltIcon className="create-room-camera-icon" />
+                <div>Select Room Icon</div>
+              </div>
+            </div>
+            <div className="create-room-inputs">
+              <input
+                type="text"
+                className="create-room-name-input"
+                placeholder="Enter room name"
+                // onChange={}
+              />
+              {errors.name && (
+                <span id="create-room-errors">{errors.name}</span>
+              )}
+              <textarea
+                className="create-room-topic-input"
+                placeholder="Enter room topic"
+              ></textarea>
+              {errors.topic && (
+                <span id="create-room-errors">
+                  {errors.topic}
+                </span>
+              )}
+            </div>
+          </div>
+          <div className="create-room-actions-next">
+            <button
+              className="create-room-cancel-button"
+              onClick={() => setStep(1)}
+            >
+              Previous
+            </button>
+            {roomVisibility === "private-visibility" ? (
+              <button
+                className="create-room-next-button"
+                onClick={() => setStep(2)}
+              >
+                Next
+              </button>
+            ) : (
+              <button
+                className="create-room-create-button create-room-create-button-active"
+                onClick={submitHandler}
+              >
+                Create
+              </button>
             )}
-            <input
-              type="password"
-              value={formData.confirmPassword}
-              placeholder="Confirm Room Password"
-              name="confirmPassword"
-              onChange={onChangeHandler}
-            />
-            {errors.confirmPassword && (
-              <span id="create-room-errors">{errors.confirmPassword}</span>
-            )}
-          </>
-        )}
-        <div className="room-image-container">
-          <img
-            src={ChatIcons.PlaceHolder}
-            alt=""
-            className="default-room-avatar"
-            onClick={handleImageClick}
-          />
-          <input
-            placeholder="wwww"
-            type="file"
-            name="avatar"
-            accept="image/png, image/jpeg"
-            id="room-image"
-            ref={fileInputRef}
-            onChange={onChangeAvatar}
-          />
-        </div>
-        {errors.icon && (
-              <span id="create-room-errors">{errors.icon}</span>
-            )}
-      </form>
-      <div className="create-room-btns">
-        <button
-          onClick={props.onClose}
-          type="button"
-          className="cancel-create-room"
-        >
-          Cancel
-        </button>
-        <button className="create-room" type="submit" onClick={submitHandler}>
-          Create
-        </button>
-      </div> */}
+          </div>
+          <span ref={errorRef} style={{display:'none'}}></span>
+        </>
+      )}
+      {step === 3 && (
+        <>
+          <div className="create-room-input-container">
+            <div className="create-room-icon-wrapper">
+              <img
+                src={ChatIcons.PlaceHolder}
+                alt="Chat Room Icon"
+                className="create-room-icon-placeholder"
+              />
+              <div className="create-room-change-icon">
+                <CameraAltIcon className="create-room-camera-icon" />
+                <div>Select Room Icon</div>
+              </div>
+            </div>
+            <div className="create-room-inputs">
+              <input
+                type="text"
+                className="create-room-name-input"
+                placeholder="Enter room name"
+              />
+              {errors.name && (
+                <span id="create-room-errors">{errors.name}</span>
+              )}
+              <textarea
+                className="create-room-topic-input"
+                placeholder="Enter room topic"
+              ></textarea>
+            </div>
+          </div>
+          <div className="create-room-actions-next">
+            <button
+              className="create-room-cancel-button"
+              onClick={() => setStep(1)}
+            >
+              Previous
+            </button>
+            <button
+              className="create-room-create-button create-room-create-button-active"
+              onClick={submitHandler}
+            >
+              Create
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };

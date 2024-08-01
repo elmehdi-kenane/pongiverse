@@ -207,13 +207,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  padding: 25px 10px;
   border-radius: 5px;
   width: 425px;
 }
 
-.create-room-header,
+/* .create-room-header, */
 .join-room-header {
   font-size: 22px;
   font-weight: 500;
@@ -226,7 +224,6 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-evenly;
-
 }
 .join-room-visibility-text {
 }
@@ -235,9 +232,8 @@
   background-color: #ccc;
   border-radius: 5px;
 }
-.ant-switch.ant-switch-checked  {
+.ant-switch.ant-switch-checked {
   background-color: #913dce;
-
 }
 
 .ant-switch-checked {
@@ -256,7 +252,7 @@
 }
 
 .ant-switch.ant-switch-checked:hover:not(.ant-switch-disabled) {
-  background:#913dce;
+  background: #913dce;
   outline: none;
   border-color: #826aed;
   box-shadow: 0 0 10px #826aed;
@@ -269,7 +265,6 @@
   border-color: #826aed;
   box-shadow: 0 0 10px #826aed;
 }
-
 
 .join-room-form {
   width: 100%;
@@ -303,7 +298,7 @@
   padding: 10px 0px;
   border: none;
   background-color: #2f084b;
-  outline: .5px solid #ccc;
+  outline: 0.5px solid #ccc;
   outline-offset: -1px;
   border-radius: 5px;
   font-weight: 550;
@@ -318,7 +313,7 @@
 
 /*CreateRoom*/
 
-.room-visibility {
+/* .room-visibility {
   border-radius: 5px;
   width: 100%;
   display: flex;
@@ -377,7 +372,6 @@ span#create-room-errors {
   color: white;
   width: 100%;
   padding: 10px 10px;
-  /* text-indent: 10px; */
   outline: 1px solid #ccc;
   border: none;
   border-radius: 5px;
@@ -394,8 +388,6 @@ span#create-room-errors {
 }
 
 input#room-image {
-  /* bac */
-  /* display: none; */
   border: none;
   outline: none;
 }
@@ -419,8 +411,266 @@ input#room-image {
   display: flex;
   justify-content: center;
   gap: 15px;
+} */
+
+.create-room-container {
+  overflow: hidden;
+  gap: 20px;
+  padding: 15px;
+  /* height: 245px; */
+}
+.create-room-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  /* height: 50px; */
 }
 
+.create-room-title {
+  color: white;
+  font-size: 20px;
+  letter-spacing: 1px;
+  margin: 0 auto;
+}
+
+.create-room-close-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #826aed;
+  height: 32px !important;
+  width: 32px !important;
+  cursor: pointer;
+}
+
+.create-room-visibility-options {
+  display: flex;
+  width: 100%;
+  gap: 3px;
+  justify-content: space-evenly;
+  animation: first-load-visibility-options .5s forwards;
+}
+
+.create-room-option {
+  height: 105px;
+  gap: 5px;
+  cursor: pointer;
+  width: 33%;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: border 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  opacity: .5;
+}
+
+.create-room-option-selected {
+  border: 1.5px solid #3d3076;
+  transform: scale(1.05);
+  opacity: 1;
+  box-shadow: 0 0 10px #3d3076;
+}
+
+
+.visibility-option {
+  width: 50px;
+}
+.create-room-actions {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  /* animation: first-load-visibility-options .5s forwards; */
+  animation: first-load-input-container .5s forwards;
+}
+.create-room-actions-next {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  animation: first-load-visibility-options .5s forwards;
+  /* animation: first-load-input-container .5s forwards; */
+}
+
+.create-room-cancel-button,
+.create-room-next-button,
+.create-room-create-button {
+  color: white;
+  border: none;
+  border-radius: 5px;
+  height: 35px;
+  width: 125px;
+  border: #ccc 1px solid;
+  cursor: pointer;
+  font-size: 15px;
+}
+.create-room-cancel-button:hover,
+.create-room-next-button:hover {
+  border: none;
+  transform: scale(1.05);
+}
+.create-room-cancel-button {
+  background-color: #2f084b;
+}
+.create-room-next-button{
+  background-color: #826aed;
+}
+.create-room-create-button {
+  background-color: #826aed;
+  /* opacity: .5; */
+  /* cursor: not-allowed; */
+}
+
+
+.create-room-input-container {
+  display: flex;
+  gap: 10px;
+  width: 100%; /* Initial width */
+  /* transition: width 10s ease-in-out; */
+  animation: first-load-input-container .5s forwards;
+}
+
+@keyframes first-load-input-container {
+  from {
+    transform: translateX(15%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes first-load-visibility-options {
+  from {
+    transform: translateX(-15%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.create-room-icon-wrapper {
+  display:flex;
+  position: relative;
+  width: 75px;
+  height: 75px;
+  border-radius: 15px;
+}
+
+.create-room-icon-placeholder {
+  width: 75px;
+  height: 75px;
+  outline: 1px solid #ccc;
+  outline-offset: -1px;
+  border-radius: 15px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 35px #3d3076;
+
+}
+
+.create-room-icon-placeholder:hover {
+  opacity: .7;
+}
+
+.create-room-camera-icon {
+  width: 25px;
+  height: 25px;
+
+}
+
+.create-room-change-icon {
+  cursor: pointer;
+  border-radius: 15px;
+  height: 0;
+  width: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(0, 0);
+  color: white;
+  overflow: hidden;
+  background-color: rgba(93, 93, 93, 0.9);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 10px;
+  text-align: center;
+  gap: 1px;
+  font-weight: 600;
+}
+
+.create-room-icon-wrapper:hover .create-room-change-icon {
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  overflow: visible;
+}
+
+
+.create-room-inputs {
+  display: flex;
+  width: 100%;
+  gap: 5px;
+  flex-direction: column;
+}
+
+input.create-room-name-input {
+  border: none;
+  padding: 7px 10px;
+  background-color:transparent;
+  border-radius: 5px;
+  color: white;
+  outline: none;
+  font-size: 15px; 
+  background-color: rgba(204, 204, 204, .2);
+}
+
+input.create-room-name-input::placeholder {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 14px;
+}
+input.create-room-name-input:focus {
+  border-color: #913dce;
+  box-shadow: 0 0 10px #3d3076;
+
+}
+
+textarea.create-room-topic-input {
+  font-family: "IBM Plex Sans", sans-serif;
+  height: 70px;
+  resize:none;
+  outline: none;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  background-color: rgba(204, 204, 204, .2);
+  color: white;
+  font-size: 15px;
+}
+
+textarea.create-room-topic-input:focus {
+  border-color: #913dce;
+  box-shadow: 0 0 07px #3d3076;
+
+}
+
+textarea.create-room-topic-input::placeholder {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 14px;
+}
+
+span#create-room-errors {
+  font-size: 10px;
+  margin-top: -5px;
+}
 /*MyRooms*/
 
 .room-container {
@@ -817,7 +1067,6 @@ input#room-image {
   color: white;
 }
 
-
 @media screen and (min-width: 1440px) {
   .rooms-wrapper {
     width: 1360px;
@@ -856,12 +1105,12 @@ input#room-image {
   }
   .empty-rooms-slider {
     font-size: 14px;
-    text-align:center;
+    text-align: center;
   }
   .suggested-rooms-slider {
     --items-per-screen: 2;
   }
-  
+
   .invitations-rooms-slider {
     --items-per-screen: 2;
   }
@@ -926,9 +1175,8 @@ input#room-image {
     font-size: 14px;
   }
 
-
   .join-room-form input {
-    text-indent: 5px
+    text-indent: 5px;
   }
 
   .join-room-form input::placeholder {
@@ -947,42 +1195,40 @@ input#room-image {
     width: 100%;
   }
 
-
   .room-visibility {
   }
-  
+
   .room-visibility-btns {
     flex-direction: column;
     gap: 5px;
   }
-  
+
   .public-room,
   .private-room,
   .protected-room {
     width: 100%;
   }
-  
+
   .selected-room {
     width: 100%;
   }
-  
+
   .create-room-form {
     gap: 5px;
   }
-  
+
   #create-room-errors {
   }
-  
+
   .create-room-form input {
-    text-indent:5px
+    text-indent: 5px;
   }
-  
+
   .create-room-form input::placeholder {
     font-size: 12px;
   }
-  
+
   .create-room-btns {
     flex-direction: column;
   }
-  
 }
