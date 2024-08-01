@@ -79,10 +79,7 @@ const FriendCard = ({ isLastTwoElements, currentUsername, secondUsername, avatar
                 {secondUsername}
             </div>
             {isMenuOpen ?
-                <>
-                    <button className="FriendBtn detailsOpened" onClick={toggleMenu} ref={buttonRef}>
-                        <img src={ThreeDots} alt="ThreeDots" />
-                    </button>
+                <div className="optionsWrapper">
                     <div className={`optionsFriendCard ${isLastTwoElements ? "lastTwoElements" : ""}`} ref={menuRef}>
                         <button>
                             <ChatBubbleIcon />
@@ -101,7 +98,10 @@ const FriendCard = ({ isLastTwoElements, currentUsername, secondUsername, avatar
                             Block
                         </button>
                     </div>
-                </>
+                    <button className="FriendBtn detailsOpened" onClick={toggleMenu} ref={buttonRef}>
+                        <img src={ThreeDots} alt="ThreeDots" />
+                    </button>
+                </div>
                 :
                 <button className="FriendBtn detailsClosed" onClick={toggleMenu}>
                     <img src={ThreeDots} alt="ThreeDots" />

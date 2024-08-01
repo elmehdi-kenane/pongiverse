@@ -217,6 +217,7 @@ const Friends = () => {
             const res = await response.json();
             if (res)
                 setBlockedFriends(res);
+            
         };
         if (user) getBlockedList();
     }, [user]);
@@ -254,6 +255,11 @@ const Friends = () => {
                           </div>
                           :
                           <>
+                            {/* <FriendCard isLastTwoElements={false} currentUsername={user} secondUsername={"test"}></FriendCard>
+                            <FriendCard isLastTwoElements={false} currentUsername={user} secondUsername={"test"}></FriendCard>
+                            <FriendCard isLastTwoElements={false} currentUsername={user} secondUsername={"test"}></FriendCard>
+                            <FriendCard isLastTwoElements={true} currentUsername={user} secondUsername={"test"}></FriendCard>
+                            <FriendCard isLastTwoElements={true} currentUsername={user} secondUsername={"test"}></FriendCard> */}
                               {
                                   friends.slice(0, (friends.length - 2)).map((request, index) => (
                                       <FriendCard key={index} isLastTwoElements={false} currentUsername={user} secondUsername={request.username} avatar={request.avatar}></FriendCard>
@@ -261,11 +267,10 @@ const Friends = () => {
                               }
                               {
                                   friends.slice(-2).map((request, index) => (
-                                      <FriendCard key={index} isLastTwoElements={friends.length > 2 ? true : false} currentUsername={user} secondUsername={request.username} avatar={request.avatar}></FriendCard>
+                                      <FriendCard key={index} isLastTwoElements={friends.length > 3 ? true : false} currentUsername={user} secondUsername={request.username} avatar={request.avatar}></FriendCard>
                                   ))
                               }
-                              <div className="itemsWrapper">
-                              </div>
+                              <div className="spaceLeft"></div>
                           </>
                   }
               </div>
@@ -281,8 +286,7 @@ const Friends = () => {
                               {recievedRequests.map((request, index) => (
                                   <RecievedFriendReqCard key={index} currentUsername={user} secondUsername={request.username} send_at={request.send_at} avatar={request.avatar}></RecievedFriendReqCard>
                               ))}
-                              <div className="itemsWrapper">
-                              </div>
+                              <div className="spaceLeft"></div>
                           </>
                   }
               </div>
@@ -298,7 +302,7 @@ const Friends = () => {
                               {sentRequests.map((request, index) => (
                                   <SentFriendReqCard key={index} currentUsername={user} secondUsername={request.username} send_at={request.send_at} avatar={request.avatar}></SentFriendReqCard>
                               ))}
-                              <div className="itemsWrapper">
+                              <div className="spaceLeft">
                               </div>
                           </>
                   }
@@ -312,9 +316,9 @@ const Friends = () => {
                       :
                       <>
                           {blockedFriends.map((blockedFriend, index) => (
-                              <BlockedAccountCard key={index} secondUsername={blockedFriend.second_username} avatar={blockedFriend.avatar}></BlockedAccountCard>
+                              <BlockedAccountCard key={index} secondUsername={blockedFriend.username} avatar={blockedFriend.avatar}></BlockedAccountCard>
                           ))}
-                          <div className="itemsWrapper">
+                          <div className="spaceLeft">
                           </div>
                       </>
                   }
@@ -387,9 +391,13 @@ const Friends = () => {
                                           There are no blocked Accounts.
                                       </div>
                                       :
-                                      blockedFriends.map((blockedFriend, index) => (
-                                          <BlockedAccountCard key={index} secondUsername={blockedFriend.second_username} avatar={blockedFriend.avatar}></BlockedAccountCard>
-                                      ))
+                                      <>
+                                          {console.log("tessst")}
+                                          {console.log("blockedFriends", blockedFriends)}
+                                      {blockedFriends.map((blockedFriend, index) => (
+                                          <BlockedAccountCard key={index} secondUsername={blockedFriend.username} avatar={blockedFriend.avatar}></BlockedAccountCard>
+                                      ))}
+                                      </>
                               }
                           </div>
                       )}
