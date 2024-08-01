@@ -38,7 +38,7 @@ const WebSocketComponent = () => {
 		return () => {
 			console.log("here")
 			if (!a) {
-				socket.close();
+				// socket.close();
 				a = true
 			}
 		};

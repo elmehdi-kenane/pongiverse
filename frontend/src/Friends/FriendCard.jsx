@@ -15,8 +15,6 @@ const FriendCard = ({ isLastTwoElements, currentUsername, secondUsername, avatar
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolling, setIsScrolling] = useState(false);
     // const { user } = useContext(AuthContext)
-    console.log("currentUsername", currentUsername);
-    console.log("secondUsername", secondUsername);
     const handleBlockFriend = () => {
         fetch('http://localhost:8000/friends/block_friend/', {
             method: 'POST',
@@ -74,8 +72,6 @@ const FriendCard = ({ isLastTwoElements, currentUsername, secondUsername, avatar
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
-    console.log("+++++++++++++++++++++++++++++++");
-    console.log(secondUsername);
     return (
         <div className="FriendCard">
             <div className="ProfileName">

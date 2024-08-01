@@ -18,7 +18,7 @@ function NavbarSidebar() {
     let { user, socket, privateCheckAuth, setUser } = useContext(AuthContext)
 	let navigate = useNavigate()
     const [newRecievedFriendReqNotif, setNewRecievedFriendReqNotif] = useState(false);
-    const [friendReqUsername, setFriendReqUsername] = useState('');
+    const [friendReq, setFriendReq] = useState('');
     const [removeFriendReqNotif, setRemoveFriendReqNotif] = useState(false);
     const data = useContext(SocketDataContext);
 
@@ -26,7 +26,7 @@ function NavbarSidebar() {
         console.log("+++++++++ call notify +++++++++")
         setNewRecievedFriendReqNotif(false)
         toast(
-            <NotificationPopupCard secondUsername={friendReqUsername} />,
+            <NotificationPopupCard secondUsername={friendReq.username} avatar={friendReq.avatar} />,
             {
                 position: "top-center",
                 autoClose: 5000,
@@ -50,12 +50,12 @@ function NavbarSidebar() {
             setNewRecievedFriendReqNotif(true);
             console.log("inside recieve-friend-request condition:", newRecievedFriendReqNotif);
             setRemoveFriendReqNotif(false);
-            setFriendReqUsername(data.message.second_username);
+            setFriendReq(data.message);
         }
-        else if (data.type === 'confirm-friend-request' && data.message.second_username === friendReqUsername) {
+        else if (data.type === 'confirm-friend-request' && data.message.username === friendReq.username) {
             setRemoveFriendReqNotif(true);
         }
-        else if (data.type === 'remove-friend-request' && data.message.second_username === friendReqUsername) {
+        else if (data.type === 'remove-friend-request' && data.message.username === friendReq.username) {
             setRemoveFriendReqNotif(true);
         }
         else

@@ -20,6 +20,9 @@ def get_friend_list(request, username):
     user = customuser.objects.filter(username=username).first()
     friend_objs = Friendship.objects.filter(user=user, isBlocked=False)
     friends_ser = friendSerializer(friend_objs, many=True)
+    print("+++++++++++++++++++++++++++")
+    print(friends_ser.data)
+    print("+++++++++++++++++++++++++++")
     return Response(friends_ser.data)
 
 @api_view(['GET'])
@@ -36,28 +39,20 @@ def get_friend_suggestions(request, username):
     
     user_objs = customuser.objects.exclude(username=user.username)
     user_ser_list = customuserSerializer(user_objs, many=True)
-    print("user_ser_list.data")
-    print(user_ser_list.data)
     
     friend_objs = Friendship.objects.filter(user=user)
     friends_ser = friendSerializer(friend_objs, many=True)
-    print("friends_ser.data")
-    print(friends_ser.data)
 
     sent_requests_objs = FriendRequest.objects.filter(from_user=user, status="sent")
     sent_reqs_ser = friendRequestSerializer(sent_requests_objs, many=True)
-    print("sent_reqs_ser.data")
-    print(sent_reqs_ser.data)
 
-    received_requests_objs = FriendRequest.objects.filter(to_user=user, status="recieved")
+    received_requests_objs = FriendRequest.objects.filter(from_user=user, status="recieved")
     received_reqs_ser = friendRequestSerializer(received_requests_objs, many=True)
-    print("received_reqs_ser.data")
-    print(received_reqs_ser.data)
 
     exclude_ids = set()
-    exclude_ids.update([friend['second_username'] for friend in friends_ser.data])
-    exclude_ids.update([req['second_username'] for req in sent_reqs_ser.data])
-    exclude_ids.update([req['second_username'] for req in received_reqs_ser.data])
+    exclude_ids.update([friend['username'] for friend in friends_ser.data])
+    exclude_ids.update([req['username'] for req in sent_reqs_ser.data])
+    exclude_ids.update([req['username'] for req in received_reqs_ser.data])
 
     suggestion_list = [user for user in user_ser_list.data if user['username'] not in exclude_ids]
     print("suggestion_list")
@@ -96,17 +91,23 @@ def add_friend_request(request):
     FriendReqObj = FriendRequest.objects.get(from_user=to_user, to_user=from_user)
     request_ser = friendRequestSerializer(FriendReqObj)
     to_user_id = to_user.id
+    print("Sending to recieve_friend_request......")
+    print(f"friends_group", to_user_id)
+    print(f"username", from_username)
+    print(f"send_at", request_ser.data['send_at'])
+    print(f"avatar", request_ser.data['avatar'])
     async_to_sync(channel_layer.group_send)(
         f"friends_group{to_user_id}",
         {
             'type': 'recieve_friend_request',
             'message': {
-                'second_username': from_username,
+                'username': from_username,
                 'send_at': request_ser.data['send_at'],
                 'avatar': request_ser.data['avatar']
             }
         }
     )
+    print("Sending to recieve_friend_request is COMPLETED ------------------")
     FriendReqObj = FriendRequest.objects.get(from_user=from_user, to_user=to_user)
     request_ser = friendRequestSerializer(FriendReqObj)
     from_user_id = from_user.id
@@ -115,7 +116,7 @@ def add_friend_request(request):
         {
             'type': 'send_friend_request',
             'message': {
-                'second_username': to_username,
+                'username': to_username,
                 'avatar': request_ser.data['avatar'],
                 'send_at': request_ser.data['send_at']
             }
@@ -149,7 +150,7 @@ def cancel_friend_request(request):
         {
             'type': 'cancel_friend_request',
             'message': {
-                'second_username': to_username,
+                'username': to_username,
                 'send_at': sent_request_ser.data['send_at'],
                 'avatar': sent_request_ser.data['avatar']
             }
@@ -160,7 +161,7 @@ def cancel_friend_request(request):
         {
             'type': 'remove_friend_request',
             'message': {
-                'second_username': from_username,
+                'username': from_username,
                 'send_at': recieved_request_ser.data['send_at'],
                 'avatar': recieved_request_ser.data['avatar']
             }
@@ -198,7 +199,7 @@ def confirm_friend_request(request):
         {
             'type': 'friend_request_accepted',
             'message': {
-                'second_username': to_username,
+                'username': to_username,
                 'send_at': request_accepted_ser.data['send_at'],
                 'avatar': request_accepted_ser.data['avatar']
             }
@@ -209,7 +210,7 @@ def confirm_friend_request(request):
         {
             'type': 'confirm_friend_request',
             'message': {
-                'second_username': from_username,
+                'username': from_username,
                 'send_at': confirm_request_ser.data['send_at'],
                 'avatar': confirm_request_ser.data['avatar']
             }
@@ -237,14 +238,18 @@ def remove_friendship(request):
         f"friends_group{from_user_id}",
         {
             'type': 'remove_friendship',
-            'message': to_username
+            'message': {
+                'username': to_username,
+            }
         }
     )
     async_to_sync(channel_layer.group_send)(
         f"friends_group{to_user_id}",
         {
             'type': 'remove_friendship',
-            'message': from_username
+            'message': {
+                'username': from_username,
+            }
         }
     )
     return Response({"success": "Friendship removed successfully."})
@@ -274,7 +279,7 @@ def block_friend(request):
         {
             'type': 'block_friend',
             'message': {
-                'second_username': to_username,
+                'username': to_username,
                 'avatar': friend_ser_from.data['avatar']
             }
         }
@@ -316,7 +321,7 @@ def unblock_friend(request):
         {
             'type': 'unblock_friend',
             'message': {
-                'second_username': to_username,
+                'username': to_username,
                 'avatar': friend_ser_from.data['avatar']
             }
         }
@@ -326,7 +331,7 @@ def unblock_friend(request):
         {
             'type': 'unblock_friend',
             'message': {
-                'second_username': from_username,
+                'username': from_username,
                 'avatar': friend_ser_to.data['avatar']
             }
         }

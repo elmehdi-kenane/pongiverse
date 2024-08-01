@@ -136,6 +136,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		}))
 
 	async def recieve_friend_request(self, event):
+		print("recieve-friend-request handler")
+		print(self)
+		print("================ self ================")
 		await self.send(text_data=json.dumps({
 			'type': 'recieve-friend-request',
 			'message': event['message']

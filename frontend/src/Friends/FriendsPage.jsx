@@ -69,7 +69,10 @@ const Friends = () => {
             );
             const res = await response.json();
             if (res)
+            {
                 setFriends(res);
+                console.log(friends);
+            }
         };
         if (user) getFriends();
     }, [user]);
@@ -81,19 +84,19 @@ const Friends = () => {
         console.log("the type is", type);
         if (type === 'cancel-friend-request') {
             setSentRequests((prevSentRequests) => {
-                const updatedSentRequests = prevSentRequests.filter(SentRequest => SentRequest.second_username !== message.second_username);
+                const updatedSentRequests = prevSentRequests.filter(SentRequest => SentRequest.username !== message.username);
                 return updatedSentRequests;
             });
         }
         else if (type === 'remove-friendship') {
             setFriends((prevFriends) => {
-                const updatedFriends = prevFriends.filter(Friend => Friend.friend !== message.friend);
+                const updatedFriends = prevFriends.filter(Friend => Friend.username !== message.username);
                 return updatedFriends;
             });
         }
         else if (type === 'block-friend') {
             setFriends((prevFriends) => {
-                const updatedFriends = prevFriends.filter(Friend => Friend.second_username !== message.second_username);
+                const updatedFriends = prevFriends.filter(Friend => Friend.username !== message.username);
                 return updatedFriends;
             });
             setBlockedFriends((prevBlockedFriends) => {
@@ -103,7 +106,7 @@ const Friends = () => {
         }
         else if (type === 'unblock-friend') {
             setFriends((prevFriends) => {
-                const friendExists = prevFriends.some(friend => friend.second_username === message.second_username);
+                const friendExists = prevFriends.some(friend => friend.username === message.username);
                 if (!friendExists) {
                     const updatedFriends = [message, ...prevFriends];
                     return updatedFriends;
@@ -111,13 +114,13 @@ const Friends = () => {
                     return prevFriends;
             });
             setBlockedFriends((prevBlockedFriends) => {
-                const updatedBlockedFriends = prevBlockedFriends.filter(UnblockedFriend => UnblockedFriend.second_username !== message.second_username);
+                const updatedBlockedFriends = prevBlockedFriends.filter(UnblockedFriend => UnblockedFriend.username !== message.username);
                 return updatedBlockedFriends;
             });
         }
         else if (type === 'remove-friend-request') {
             setRecievedRequests((prevRecievedRequests) => {
-                const updatedRecievedRequests = prevRecievedRequests.filter(RecievedRequest => RecievedRequest.friend !== message.friend);
+                const updatedRecievedRequests = prevRecievedRequests.filter(RecievedRequest => RecievedRequest.username !== message.username);
                 return updatedRecievedRequests;
             });
         }
@@ -148,7 +151,7 @@ const Friends = () => {
             });
             setTimeout(() => {
                 setFriendSuggestions((prevFriendSuggestions) => {
-                    const updatedFriendSuggestions = prevFriendSuggestions.filter(suggestion => suggestion.username !== message.second_username);
+                    const updatedFriendSuggestions = prevFriendSuggestions.filter(suggestion => suggestion.username !== message.username);
                     return updatedFriendSuggestions;
                 });
             }, 1000);
@@ -157,6 +160,10 @@ const Friends = () => {
             setRecievedRequests((prevRecievedRequests) => {
                 const updatedRecievedRequests = [message, ...prevRecievedRequests];
                 return updatedRecievedRequests;
+            });
+            setFriendSuggestions((prevFriendSuggestions) => {
+                const updatedFriendSuggestions = prevFriendSuggestions.filter(suggestion => suggestion.username !== message.username);
+                return updatedFriendSuggestions;
             });
         }
         else
@@ -249,14 +256,16 @@ const Friends = () => {
                           <>
                               {
                                   friends.slice(0, (friends.length - 2)).map((request, index) => (
-                                      <FriendCard key={index} isLastTwoElements={false} currentUsername={user} secondUsername={request.second_username} avatar={request.avatar}></FriendCard>
+                                      <FriendCard key={index} isLastTwoElements={false} currentUsername={user} secondUsername={request.username} avatar={request.avatar}></FriendCard>
                                   ))
                               }
                               {
                                   friends.slice(-2).map((request, index) => (
-                                      <FriendCard key={index} isLastTwoElements={friends.length > 2 ? true : false} currentUsername={user} secondUsername={request.second_username} avatar={request.avatar}></FriendCard>
+                                      <FriendCard key={index} isLastTwoElements={friends.length > 2 ? true : false} currentUsername={user} secondUsername={request.username} avatar={request.avatar}></FriendCard>
                                   ))
                               }
+                              <div className="itemsWrapper">
+                              </div>
                           </>
                   }
               </div>
@@ -268,9 +277,13 @@ const Friends = () => {
                               There are no pending friend requests.
                           </div>
                           :
-                          recievedRequests.map((request, index) => (
-                              <RecievedFriendReqCard key={index} currentUsername={user} secondUsername={request.second_username} send_at={request.send_at} avatar={request.avatar}></RecievedFriendReqCard>
-                          ))
+                          <>
+                              {recievedRequests.map((request, index) => (
+                                  <RecievedFriendReqCard key={index} currentUsername={user} secondUsername={request.username} send_at={request.send_at} avatar={request.avatar}></RecievedFriendReqCard>
+                              ))}
+                              <div className="itemsWrapper">
+                              </div>
+                          </>
                   }
               </div>
               <div className="friendSection">
@@ -281,9 +294,13 @@ const Friends = () => {
                               There are no sent friend requests.
                           </div>
                           :
-                          sentRequests.map((request, index) => (
-                              <SentFriendReqCard key={index} currentUsername={user} secondUsername={request.second_username} send_at={request.send_at} avatar={request.avatar}></SentFriendReqCard>
-                          ))
+                          <>
+                              {sentRequests.map((request, index) => (
+                                  <SentFriendReqCard key={index} currentUsername={user} secondUsername={request.username} send_at={request.send_at} avatar={request.avatar}></SentFriendReqCard>
+                              ))}
+                              <div className="itemsWrapper">
+                              </div>
+                          </>
                   }
               </div>
               <div className="friendSection">
@@ -293,9 +310,13 @@ const Friends = () => {
                           There are no blocked Accounts.
                       </div>
                       :
-                      blockedFriends.map((blockedFriend, index) => (
-                          <BlockedAccountCard key={index} secondUsername={blockedFriend.second_username} avatar={blockedFriend.avatar}></BlockedAccountCard>
-                      ))
+                      <>
+                          {blockedFriends.map((blockedFriend, index) => (
+                              <BlockedAccountCard key={index} secondUsername={blockedFriend.second_username} avatar={blockedFriend.avatar}></BlockedAccountCard>
+                          ))}
+                          <div className="itemsWrapper">
+                          </div>
+                      </>
                   }
               </div>
           </div>
@@ -319,12 +340,12 @@ const Friends = () => {
                                       <>
                                           {
                                               friends.slice(0, (friends.length - 2)).map((request, index) => (
-                                                  <FriendCard key={index} isLastTwoElements={false} currentUsername={user} secondUsername={request.second_username} avatar={request.avatar}></FriendCard>
+                                                  <FriendCard key={index} isLastTwoElements={false} currentUsername={user} secondUsername={request.username} avatar={request.avatar}></FriendCard>
                                               ))
                                           }
                                           {
                                               friends.slice(-2).map((request, index) => (
-                                                  <FriendCard key={index} isLastTwoElements={friends.length > 2 ? true : false} currentUsername={user} secondUsername={request.second_username} avatar={request.avatar}></FriendCard>
+                                                  <FriendCard key={index} isLastTwoElements={friends.length > 2 ? true : false} currentUsername={user} secondUsername={request.username} avatar={request.avatar}></FriendCard>
                                               ))
                                           }
                                       </>
@@ -340,7 +361,7 @@ const Friends = () => {
                                       </div>
                                       :
                                       recievedRequests.map((request, index) => (
-                                          <RecievedFriendReqCard key={index} currentUsername={user} secondUsername={request.second_username} send_at={request.send_at} avatar={request.avatar}></RecievedFriendReqCard>
+                                          <RecievedFriendReqCard key={index} currentUsername={user} secondUsername={request.username} send_at={request.send_at} avatar={request.avatar}></RecievedFriendReqCard>
                                       ))
                               }
                           </div>)}
@@ -353,7 +374,7 @@ const Friends = () => {
                                       </div>
                                       :
                                       sentRequests.map((request, index) => (
-                                          <SentFriendReqCard key={index} currentUsername={user} secondUsername={request.second_username} send_at={request.send_at} avatar={request.avatar}></SentFriendReqCard>
+                                          <SentFriendReqCard key={index} currentUsername={user} secondUsername={request.username} send_at={request.send_at} avatar={request.avatar}></SentFriendReqCard>
                                       ))
                               }
                           </div>)}

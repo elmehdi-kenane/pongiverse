@@ -5,7 +5,7 @@ import Profile from '../assets/Friends/profile.png';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 
-const NotificationPopupCard = ({ secondUsername }) => {
+const NotificationPopupCard = ({ secondUsername, avatar}) => {
     const { user } = useContext(AuthContext)
     const [removeFriendReqNotif, setRemoveFriendReqNotif] = useState(false);
 

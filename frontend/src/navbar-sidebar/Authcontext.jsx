@@ -192,12 +192,12 @@ export const AuthProvider = ({children}) => {
 
             // Connection closed
             newSocket.onclose = () => {
-                console.log('WebSocket connection closed');
+                console.log('ALL MY GAME NOTIFS ARE :  ');
             };
         } else if ((location.pathname === '/' || location.pathname === '/signup' || location.pathname === '/signin' || location.pathname === '/SecondStep' ||  location.pathname === '/WaysSecondStep' || location.pathname === '/ForgotPassword' || location.pathname === '/ChangePassword') && socket) {
 			if (socket) {
 				console.log("socket closed succefully")
-				socket.close()
+				// socket.close()
 				setSocket(null)
 			}
 		}

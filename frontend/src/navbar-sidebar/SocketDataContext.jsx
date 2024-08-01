@@ -10,6 +10,7 @@ export const SocketDataContextProvider = ({ children }) => {
     const [data, setData] = useState({ message: 'messageStart', type: 'typeStart' });
     useEffect(() => {
         if (socket) {
+            console.log(".............. NEW MESSAGE FROM BACKEND ..............");
             socket.onmessage = (e) => {
                 const parsedData = JSON.parse(e.data);
                 const data =
@@ -20,6 +21,8 @@ export const SocketDataContextProvider = ({ children }) => {
                 setData(data)
             }
         }
+        else
+            console.log("socket", socket, "doesn't exist");
     }, [socket]);
     return (
         <SocketDataContext.Provider value={data}>
