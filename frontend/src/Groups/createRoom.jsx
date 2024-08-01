@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import * as ChatIcons from "../assets/chat/media";
 import "../assets/chat/Groups.css";
-import {useClickOutSide} from "../Chat/chatConversation"
+import { useClickOutSide } from "../Chat/chatConversation";
 
 const CreateRoom = (props) => {
   const { chatSocket } = useContext(AuthContext);
@@ -16,7 +16,6 @@ const CreateRoom = (props) => {
     confirmPassword: "",
   });
   const [roomVisibility, setRoomVisibility] = useState("public-room");
-
 
   const handleVisibilityChange = (selectedVisibility) => {
     setRoomVisibility(selectedVisibility);
@@ -33,30 +32,46 @@ const CreateRoom = (props) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    const errorContainers = {};
-    if (!formData.name.trim())
-      errorContainers.name = "Channel name is required";
-    if (!formData.topic.trim())
-      errorContainers.topic = "Channel topic is invalid";
-    if (roomVisibility === "protected-room" && !formData.password.trim())
-      errorContainers.password = "Password is required";
+    let errorContainers = {};
+
+    if (!formData.name.trim()) {
+      errorContainers.name = "Please enter a chat room name.";
+    } else if (formData.name.length > 10)
+      errorContainers.name = "Chat room name must be at most 10 characters.";
+
+    if (!formData.topic.trim()) {
+      errorContainers.topic = "Please enter a chat room topic.";
+    } else if (formData.topic.length < 50 || formData.topic.length > 60)
+      errorContainers.topic =
+        "chat room topic should be between 50 and 60 characters.";
+
+    if (!formData.icon) {
+      errorContainers.icon = "Please select an image for the chat room.";
+    }
+    if (roomVisibility === "protected-room" && !formData.password.trim()) {
+      errorContainers.password = "Please enter a password.";
+    }
+
     if (
       roomVisibility === "protected-room" &&
       formData.password !== formData.confirmPassword
-    )
-      errorContainers.confirmPassword = "Password not match";
+    ) {
+      errorContainers.confirmPassword = "Passwords do not match.";
+    }
+
     setErrors(errorContainers);
+
     if (Object.keys(errorContainers).length === 0) {
       chatSocket.send(
         JSON.stringify({
           type: "createChatRoom",
           user: user,
-          message : {
-            name : formData.name,
-            topic : formData.topic,
-            icon : formData.icon,
-            roomVisibility : roomVisibility,
-            password : formData.password
+          message: {
+            name: formData.name,
+            topic: formData.topic,
+            icon: formData.icon,
+            roomVisibility: roomVisibility,
+            password: formData.password,
           },
         })
       );
@@ -66,12 +81,12 @@ const CreateRoom = (props) => {
 
   const onChangeAvatar = (e) => {
     const file = e.target.files[0];
-    console.log("the file image: ",file)
+    console.log("the file image: ", file);
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
         const imageUrl = e.target.result;
-        const base64Image = reader.result.split(',')[1];
+        const base64Image = reader.result.split(",")[1];
         setFormData({
           ...formData,
           icon: base64Image,
@@ -84,13 +99,23 @@ const CreateRoom = (props) => {
       reader.readAsDataURL(file);
     }
   };
-  let nodeDom = useClickOutSide(props.onClose)
-  
+  let nodeDom = useClickOutSide(props.onClose);
+  const fileInputRef = useRef(null);
+  let errorRef = useClickOutSide(() => setErrors({}));
+
+  const handleImageClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
   return (
     <div className="create-room-container" ref={nodeDom}>
+
       <div className="create-room-header">Create a Room</div>
-      <div className="room-visibility">Visibility:</div>
-      <div className="room-visibility-btns">
+
+      {/* <div className="room-visibility">Visibility:</div> */}
+      {/* <div className="room-visibility-btns">
         <button
           className={
             roomVisibility === "public-room" ? "selected-room" : "public-room"
@@ -109,14 +134,21 @@ const CreateRoom = (props) => {
         </button>
         <button
           className={
-            roomVisibility === "protected-room" ? "selected-room" : "protected-room"
+            roomVisibility === "protected-room"
+              ? "selected-room"
+              : "protected-room"
           }
           onClick={() => handleVisibilityChange("protected-room")}
         >
           PROTECTED
         </button>
       </div>
-      <form action="" className="create-room-form" autoComplete="off" onSubmit={submitHandler}>
+      <form
+        action=""
+        className="create-room-form"
+        autoComplete="off"
+        onSubmit={submitHandler}
+      >
         <input
           type="text"
           placeholder="Room Name"
@@ -130,12 +162,17 @@ const CreateRoom = (props) => {
           name="topic"
           onChange={onChangeHandler}
         />
-        {errors.topic && <span id="create-room-errors">{errors.topic}</span>}
+        {errors.topic && (
+          <span ref={errorRef} id="create-room-errors">
+            {errors.topic}
+          </span>
+        )}
         {roomVisibility === "protected-room" && (
           <>
             <input
               type="password"
-              placeholder="Channel Password"
+              placeholder="Room Password"
+              value={formData.password}
               name="password"
               onChange={onChangeHandler}
             />
@@ -144,7 +181,8 @@ const CreateRoom = (props) => {
             )}
             <input
               type="password"
-              placeholder="Confirm Channel Password"
+              value={formData.confirmPassword}
+              placeholder="Confirm Room Password"
               name="confirmPassword"
               onChange={onChangeHandler}
             />
@@ -154,31 +192,38 @@ const CreateRoom = (props) => {
           </>
         )}
         <div className="room-image-container">
-          <label htmlFor="room-image" id="room-avatar-label">
-            Upload Room Icon
-          </label>
-          <input
-            type="file"
-            name="avatar"
-            accept="image/png, image/jpeg"
-            id="room-image"
-            onChange={onChangeAvatar}
-          />
           <img
             src={ChatIcons.PlaceHolder}
             alt=""
             className="default-room-avatar"
+            onClick={handleImageClick}
+          />
+          <input
+            placeholder="wwww"
+            type="file"
+            name="avatar"
+            accept="image/png, image/jpeg"
+            id="room-image"
+            ref={fileInputRef}
+            onChange={onChangeAvatar}
           />
         </div>
-        <div className="create-room-btns">
-          <button onClick={props.onClose}  type='button' className="cancel-create-room">
-            CANCEL
-          </button>
-          <button className="create-room" type="submit">
-            CREATE
-          </button>
-        </div>
+        {errors.icon && (
+              <span id="create-room-errors">{errors.icon}</span>
+            )}
       </form>
+      <div className="create-room-btns">
+        <button
+          onClick={props.onClose}
+          type="button"
+          className="cancel-create-room"
+        >
+          Cancel
+        </button>
+        <button className="create-room" type="submit" onClick={submitHandler}>
+          Create
+        </button>
+      </div> */}
     </div>
   );
 };

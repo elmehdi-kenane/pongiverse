@@ -102,6 +102,7 @@ const Modes = () => {
 				let data = JSON.parse(event.data)
 				let type = data.type
 				let message = data.message
+				console.log("DKHEL MODESS: ", type)
 				if (type === 'goToGamingPage') {
 					console.log("navigating now")
 					navigate(`/mainpage/game/solo/1vs1/friends`)
@@ -111,6 +112,11 @@ const Modes = () => {
 					setRoomID(message.roomID)
 				} else if (type === 'tournament_created') {
 					navigate("createtournament")
+				}else if (type === 'socket_close'){
+					console.log("SOCKEEEET CLOSSSSSEEEE AHMEDDDD")
+					socket.close()
+				}else if (type === 'connected_again'){
+					console.log("CONNECETDDDDDD AGAAAAAIN")
 				}
 			}
 		}

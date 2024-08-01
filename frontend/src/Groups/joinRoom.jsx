@@ -24,6 +24,11 @@ const JoinRoom = (props) => {
   }
 
   let nodeDom = useClickOutSide(props.onClose)
+
+  const handleSwitchChange = (checked) => {
+    setIsProtected(!checked);
+  };
+
   return (
     <div className="join-room-container" ref={nodeDom}>
       <div className="join-room-header">Join a Room</div>
@@ -32,19 +37,19 @@ const JoinRoom = (props) => {
           Please Select Room Visibility:{" "}
         </div>
         <div className="join-room-visibility-labels">
-        <Switch defaultChecked={true} checkedChildren="Public" unCheckedChildren="Protected" className="custom-switch"/>
+        <Switch defaultChecked={true} checkedChildren="Public" unCheckedChildren="Protected" onChange={handleSwitchChange} className="custom-switch" />
         </div>
       </div>
-      <form action="" onSubmit={joinRoomSubmitHandler} className="join-room-form">
+      <form action="" onSubmit={joinRoomSubmitHandler} className="join-room-form" autocomplete="off">
         <input type="text" placeholder="Room name"  value={roomName} onChange={(e)=> setRoomName(e.target.value)} />
-        {isProtected ? <input type="text" placeholder="Password" value={roomPassword} onChange={(e)=> setRoomPassword(e.target.value)}  /> : ""}
+        {isProtected ? <input type="password" placeholder="Password" value={roomPassword} onChange={(e)=> setRoomPassword(e.target.value)}  /> : ""}
+      </form>
       <div className="join-room-buttons">
         <button className="join-room-cancel" type="button" onClick={props.onClose}>
-          CANCEL
+          Cancel
         </button>
-        <button className="join-room-submit" type="submit" onClick={joinRoomSubmitHandler} >JOIN</button>
+        <button className="join-room-submit" type="submit" onClick={joinRoomSubmitHandler} >Join</button>
       </div>
-      </form>
     </div>
   );
 };

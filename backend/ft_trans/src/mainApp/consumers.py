@@ -45,6 +45,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			tmp_username = username
 			user.is_online = True
 			await sync_to_async(user.save)()
+			if user_channels.get(username):
+				await self.channel_layer.send(user_channels[username], {
+					'type' : 'socket_close'
+				})
 			user_channels[username] = self.channel_name
 			self.group_name = f"friends_group{user_id}"
 			await self.channel_layer.group_add(self.group_name, self.channel_name)
@@ -55,7 +59,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 				friend_username = await sync_to_async(lambda: friend.friend.username)()
 				friend_is_online = await sync_to_async(lambda: friend.friend.is_online)()
 				channel_name = user_channels.get(friend_username)
-				print(f"USER CHANNEL ON CONNECT IS : {channel_name}")
+				# print(f"USER CHANNEL ON CONNECT IS : {channel_name}")
 				if channel_name and friend_is_online and not user.is_playing:
 					await self.channel_layer.send(
 						channel_name,
@@ -362,6 +366,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		await self.send(text_data=json.dumps({
 			'type': 'connected_again',
 			'message': event['message']
+		}))
+
+	async def socket_close(self, event):
+		print("----------JA L SOCKET CLOSE----------")
+		await self.send(text_data=json.dumps({
+			'type': 'socket_close'
 		}))
 	##################################### (CHAT) #####################################
 	# async def broadcast_message(self, event):
