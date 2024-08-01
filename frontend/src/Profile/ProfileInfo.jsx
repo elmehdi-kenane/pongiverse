@@ -7,7 +7,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import IsFriends from './FriendOptions/IsFriends';
 import Report from './Report/Report';
 
-import mavSvg from "./assets/Group.svg"
 // import clan from "./assets/Frame.svg"
 // import clan4 from "./assets/Frame4.svg"
 import clan5 from "./assets/Frame5.svg"
@@ -26,9 +25,7 @@ function ProfileInfo(props) {
       {isOwnProfile ? <EditIcon className='userinfo__edit info-position'/> : <IsFriends />}
       
       <div className="userinfo__pic">
-        {
-          userPic ? <img src={userPic} alt="Player" /> : <img src={mavSvg} alt="Player" />
-        }
+          <img src={userPic} alt="Player" /> 
         <div className="is-online no-select"> Online </div>
       </div>
       <div className="userinfo__name-bio">

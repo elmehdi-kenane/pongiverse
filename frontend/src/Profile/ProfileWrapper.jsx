@@ -16,7 +16,7 @@ export const ProfileWrapper = ({ child }) => {
     const [userBg, setUserBg] = useState(bg);
     const [userEmail, setUserEmail] = useState(null);
     // const [userPwd, setUserPwd] = useState(null);
-    const [userBio, setUserBio] = useState("Lorem ipsum dolor sit amet consectetur adipisicing elit.");
+    const [userBio, setUserBio] = useState(null);
     const [userLevel, setUserLevel] = useState(null);
     const [userCountry, setUserCountry] = useState("Morocco");
 
@@ -67,6 +67,7 @@ export const ProfileWrapper = ({ child }) => {
             getUserPic(userData.pic, setUserPic)
             getUserPic(userData.bg, setUserBg)
             setUserEmail(userData.email)
+            setUserBio(userData.bio)
             // setUserPwd(userData.password)
             setUserLevel(userData.level)
         }
