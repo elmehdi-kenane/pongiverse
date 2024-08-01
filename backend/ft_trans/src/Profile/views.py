@@ -10,6 +10,7 @@ from myapp.models import customuser
 from myapp.serializers import MyModelSerializer
 from django.core.files.base import ContentFile
 import base64
+from django.contrib.auth import authenticate
 
 
 # Create your views here.
@@ -77,9 +78,10 @@ def getUserData(request):
         user_data = {'pic': user.avatar.path,
                      'bg': user.background_pic.path,
                      'bio': user.bio,
-                     'level': user.level,
                      'email' : user.email,
+                     'level': user.level,
                      'password' : user.password,
+                     'country': user.country,
                      }
         success_response = Response(data={"userData": user_data}, status=status.HTTP_200_OK)
         return success_response
@@ -173,3 +175,35 @@ def update_user_bio(request):
         err_res = Response(data={'error': 'Failed to save userBio'}, status=status.HTTP_400_BAD_REQUEST)
         return err_res
         
+#**--------------------- UserCountry ---------------------** 
+
+@api_view(['POST'])
+def update_user_country(request):
+    username = request.data.get('user')
+    user_country = request.data.get('country')
+    user = customuser.objects.filter(username=username).first()
+    if user is not None:
+        user.country = user_country
+        user.save()
+        success_res = Response(data={'case': 'userCountry Saved Successfully'}, status=status.HTTP_200_OK)
+        return success_res
+    else:
+        err_res = Response(data={'error': 'Failed to save userCountry'}, status=status.HTTP_400_BAD_REQUEST)
+        return err_res
+        
+#**--------------------- UserPassword ---------------------** 
+
+@api_view(["POST"])
+def update_user_password(request):
+    username = request.data.get('user')
+    user_old_pwd = request.data.get('old_pwd')
+    user_new_pwd = request.data.get('new_pwd')
+    user = authenticate(username=username, password=user_old_pwd)
+    if user is not None:
+        user.password = user_new_pwd
+        user.save()
+        success_res = Response(data={'case':'userPwd Updated Successfully'}, status=status.HTTP_200_OK)
+        return success_res
+    else:
+        err_res = Response(data={'err': 'wrong-pwd'}, status=status.HTTP_401_UNAUTHORIZED)
+        return err_res

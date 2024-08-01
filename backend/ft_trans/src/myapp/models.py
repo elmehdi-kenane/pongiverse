@@ -23,3 +23,4 @@ class customuser(AbstractUser):
 
 	background_pic = models.ImageField(upload_to='uploads/', default=default_bg)
 	bio = models.CharField(max_length=150, default='')
+	country = models.CharField(max_length=10, default='MA')

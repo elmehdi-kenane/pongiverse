@@ -12,4 +12,5 @@ urlpatterns = [
     path('updateUserBg', views.update_user_bg),
     path('updateUserName', views.update_username),
     path('updateUserBio', views.update_user_bio),
+    path('updateUserCountry', views.update_user_country),
 ]
