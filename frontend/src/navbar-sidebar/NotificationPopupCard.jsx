@@ -54,7 +54,7 @@ const NotificationPopupCard = ({ secondUsername, avatar}) => {
     return (
         <div className={`NotificationPopupCard ${removeFriendReqNotif ? "NotificationPopupCardDesappeared" : ""}`}>
             <div className='NotificationPopupHeader'>
-                <img src={Profile} alt="Profile" />
+                <img src={avatar} alt="Profile" className="Profile" />
                 <p>
                     <span className="NotificationPopupUsername">{secondUsername}</span> sent you a friend request
                 </p>
