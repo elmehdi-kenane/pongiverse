@@ -29,6 +29,10 @@ function ForgotPassword() {
 		setData({ ...data, [e.target.name]: e.target.value });
 	};
 
+	const handleBack = () =>{
+		navigate("/signin")
+	}
+
 	const handleNextClick = (e) => {
 		e.preventDefault();
 		const validationErrors = {}
@@ -145,8 +149,8 @@ function ForgotPassword() {
 									{errors.email && <span>{errors.email}</span>}
 									{exist && <span>{exist}</span>}
 									<button type="submit" className={styles["submitButton"]}>Send Reset Code</button>
-									<button className={styles["CancelButton"]}>Go Back</button>
 								</form>
+									<button className={styles["CancelButton"]} onClick={handleBack}>Go Back</button>
 							</div>
 						</div>
 					</div>

@@ -63,7 +63,7 @@ function WaysSecondStep() {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		const validationErrors = {};
-				const regex = /^(?!\d)[a-zA-Z0-9_]{4,10}$/;
+		const regex = /^(?!\d)[a-zA-Z0-9_]{4,8}$/;
 		const containsSingleUnderscore = (nextdata.username.match(/_/g) || []).length <= 1;
 		if (!nextdata.username.trim()) {
 			validationErrors.username = "username is required"

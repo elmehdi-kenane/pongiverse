@@ -25,6 +25,7 @@ import OneVsOneRandom from "./Game/OneVsOneRandom";
 import OneVsOneFriends from "./Game/OneVsOneFriends";
 import OneVsOneCreateOrJoin from "./Game/OneVsOneCreateOrJoin";
 import TournamentBracket from "./Tournament/RemoteTournament/TournamentBracket";
+import LocalTournamentBracket from "./Tournament/LocalTournament/LocalTournamentBracket";
 import LoginGoogleTest from "./components/SignIn/LoginGoogleTest";
 import { ChatProvider } from "./Groups/ChatContext";
 import Chat from "./Chat/chatPage";
@@ -109,6 +110,10 @@ const App = () => {
 								<Route
 									path="game/tournamentbracket"
 									element={<TournamentBracket />}
+								/>
+								<Route
+									path="game/localtournamentbracket"
+									element={<LocalTournamentBracket />}
 								/>
 								<Route
 									path="game/localtournamentfillmembers"

@@ -112,6 +112,12 @@ const Modes = () => {
 					console.log("YESSSSSSSSS")
 					navigate("createtournament")
 				}
+				else if (type === 'connected_again'){
+					console.log("YOUR FRIEND IS LOGED AGAIN")
+				}
+				else if (type === 'hmed'){
+					console.log("hmed received")
+				}
 			}
 		}
 	}, [socket])

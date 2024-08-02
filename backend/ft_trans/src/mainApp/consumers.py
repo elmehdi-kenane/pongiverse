@@ -50,7 +50,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			tmp_username = username
 			user.is_online = True
 			await sync_to_async(user.save)()
+			channel_namee = user_channels.get(username)
+			if channel_namee:
+				print(f"**[Previous channel_name 2]: {channel_namee}")
+				print(f"THIS IS THE OLD CHANNEL NAME =======> {username}")
+				await self.channel_layer.send(channel_namee, {
+					'type': 'hmed'
+				})
 			user_channels[username] = self.channel_name
+			print(f"**[Current channel_name]: {user_channels[username]}")
+			print(f"**[USER CHANNELS]: {user_channels}")
 			channel_layer = get_channel_layer()
 			friends = await sync_to_async(list)(Friends.objects.filter(user=user))
 			print(f"ALL THE USERS CHANNEL_NAMES : {user_channels}")
@@ -309,6 +318,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		await self.send(text_data=json.dumps({
 			'type': 'connected_again',
 			'message': event['message']
+		}))
+	async def hmed(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'hmed'
 		}))
 	##################################### (CHAT) #####################################
 	async def broadcast_message(self, event):

@@ -38,7 +38,6 @@ async def disconnected(self, user_channels):
 			if is_started == False or (is_started == True and is_finished == False and is_eliminated == False):
 				member.is_inside = False
 				await sync_to_async(member.save)()
-		user_channels.pop(username, None)
 		channel_layer = get_channel_layer()
 		user = await sync_to_async(customuser.objects.filter(username=username).first)()
 		#### in case of logout
