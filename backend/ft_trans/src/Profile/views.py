@@ -205,5 +205,5 @@ def update_user_password(request):
         success_res = Response(data={'case':'userPwd Updated Successfully'}, status=status.HTTP_200_OK)
         return success_res
     else:
-        err_res = Response(data={'err': 'wrong-pwd'}, status=status.HTTP_401_UNAUTHORIZED)
+        err_res = Response(data={'error': 'wrong-pwd'}, status=status.HTTP_401_UNAUTHORIZED)
         return err_res
