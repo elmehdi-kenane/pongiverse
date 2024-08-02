@@ -87,6 +87,10 @@ const Friends = () => {
                 const updatedSentRequests = prevSentRequests.filter(SentRequest => SentRequest.username !== message.username);
                 return updatedSentRequests;
             });
+            setFriendSuggestions((prevSuggestions) => {
+                const updatedSuggestions = [message, ...prevSuggestions];
+                return updatedSuggestions;
+            });
         }
         else if (type === 'remove-friendship') {
             setFriends((prevFriends) => {
@@ -122,6 +126,10 @@ const Friends = () => {
             setRecievedRequests((prevRecievedRequests) => {
                 const updatedRecievedRequests = prevRecievedRequests.filter(RecievedRequest => RecievedRequest.username !== message.username);
                 return updatedRecievedRequests;
+            });
+            setFriendSuggestions((prevSuggestions) => {
+                const updatedSuggestions = [message, ...prevSuggestions];
+                return updatedSuggestions;
             });
         }
         else if (type === 'friend-request-accepted') {
