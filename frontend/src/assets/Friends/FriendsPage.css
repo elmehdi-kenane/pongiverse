@@ -28,6 +28,57 @@
     margin: 3px;
 }
 
+@media (max-width: 425px) {
+    .Toastify__toast-container {
+        width: 100%;
+        min-width: 100%;
+        height: 200px;
+    }
+
+    .Toastify__toast-body {
+        overflow: auto;
+        width: 100%;
+    }
+    
+    .Toastify__toast {
+        width: 80%;
+        overflow: auto;
+        max-height: max-content;
+        min-height: auto;
+        height: auto;
+        padding-bottom: 10px;
+        border-radius: 10px;
+        margin: 0 auto;
+    }
+    
+    .Toastify__toast-body>div:last-child {
+        width: 100%;
+        min-width: 100%;
+        overflow: auto;
+    }
+
+    .NotificationPopupCard {
+        width: 100%;
+        min-width: 100%;
+        max-width: 100%;
+        align-items: center;
+    }
+
+    .NotificationPopupHeader {
+        flex-direction: column;
+    }
+
+    .NotificationPopupHeader p {
+        /* font-size: 5vw; */
+    }
+}
+
+@media (max-width: 240px) {
+    .Toastify__toast-body>div:last-child {
+        width: 80%;
+        min-width: 80%;
+    }
+}
 .embla {
   overflow: hidden;
 height: 170px;
