@@ -201,6 +201,7 @@ def update_user_password(request):
     user = authenticate(username=username, password=user_old_pwd)
     if user is not None:
         user.password = user_new_pwd
+        user.set_password(user_new_pwd)
         user.save()
         success_res = Response(data={'case':'userPwd Updated Successfully'}, status=status.HTTP_200_OK)
         return success_res
