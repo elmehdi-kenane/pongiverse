@@ -7,21 +7,6 @@ const CreateRoomVisibilityOptions = (props) => {
       <div className="create-room-visibility-options">
         <div
           className={
-            props.roomVisibility === "private-visibility"
-              ? "create-room-option create-room-option-selected"
-              : "create-room-option"
-          }
-          onClick={() => props.setRoomVisibility("private-visibility")}
-        >
-          <img
-            src={ChatIcons.privateVisibility}
-            alt="Private"
-            className="private-option-icon visibility-option-icon"
-          />
-          <div className="create-room-option-text">Private</div>
-        </div>
-        <div
-          className={
             props.roomVisibility === "public-visibility"
               ? "create-room-option create-room-option-selected"
               : "create-room-option"
@@ -37,6 +22,21 @@ const CreateRoomVisibilityOptions = (props) => {
         </div>
         <div
           className={
+            props.roomVisibility === "private-visibility"
+              ? "create-room-option create-room-option-selected"
+              : "create-room-option"
+          }
+          onClick={() => props.setRoomVisibility("private-visibility")}
+        >
+          <img
+            src={ChatIcons.privateVisibility}
+            alt="Private"
+            className="private-option-icon visibility-option-icon"
+          />
+          <div className="create-room-option-text">Private</div>
+        </div>
+        {/* <div
+          className={
             props.roomVisibility === "protected-visibility"
               ? "create-room-option create-room-option-selected"
               : "create-room-option"
@@ -49,7 +49,7 @@ const CreateRoomVisibilityOptions = (props) => {
             className="protected-option-icon visibility-option-icon"
           />
           <div className="create-room-option-text">Protected</div>
-        </div>
+        </div> */}
       </div>
       <div className="create-room-actions">
         <button className="create-room-cancel-button" onClick={props.onClose}>

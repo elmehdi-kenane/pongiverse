@@ -144,8 +144,8 @@ const MyRoom = (props) => {
   }
 
   return (
-    <div className="room-container">
-      <div className="room-header" onClick={navigateToChatRoom}>
+    <div className="my-room-container">
+      {/* <div className="room-header" onClick={navigateToChatRoom}>
         <img src={props.roomIcons[props.index]} className="room-avatar" alt="" />
         <div className="room-info">
           <div className="room-name">{props.name}</div>
@@ -295,7 +295,31 @@ const MyRoom = (props) => {
             <button className="room-leave-confirm-button" onClick={()=>leaveRoomSubmitHandler(props.name, user, chatSocket)}>CONFIRM</button>
           </div>
         </div>
-      )}
+      )} */}
+      <div className="my-room-header">
+        {/* <img src={ChatIcons.roomCover} alt="" className="my-room-cover"/> */}
+        <div className="my-room-info">
+          <img src={props.roomIcons[props.index]} alt="" className="my-room-icon" />
+        </div>
+      </div>
+      <div className="my-room-name-and-topic">
+          <div className="my-room-name">Discovery</div>
+          <div className="my-room-topic">Lorem ipsum dolor sit amet, consectetur adipiscing elit est.</div>
+      </div>
+      <div className="room-actions">
+        <button className="room-leave-button" onClick={() => setLeaveRoom(true)}>
+          Leave Room
+        </button>
+        { props.role === 'admin' ?
+          <>
+          <img
+          src={ChatIcons.RoomSettings}
+          className="room-settings-icon"
+          onClick={showRoomSettings}
+          />
+          </> : ''
+        }
+      </div>
     </div>
   );
 };
