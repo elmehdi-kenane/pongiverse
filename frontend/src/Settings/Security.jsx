@@ -30,7 +30,7 @@ function Security() {
             </div>
           </>
         }
-        {isPwd && <UpdatePwd />}
+        {isPwd && <UpdatePwd cancelPwd={setIsPwd}/>}
         {isTF && <TwoFaq />}
       </div>
     </div>

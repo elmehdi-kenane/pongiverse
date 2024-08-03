@@ -1,11 +1,7 @@
 import React, { useContext, useRef, useState } from 'react'
 import AuthContext from '../../navbar-sidebar/Authcontext';
 
-function UpdatePwd() {
-
-  const [oldPwd, setOldPwd] = useState(null);
-  const [newPwd, setNewPwd] = useState(null);
-  const [cfmPwd, setCfmPwd] = useState(null);
+function UpdatePwd(props) {
 
   const oldPRef = useRef(null);
   const newPRef = useRef(null);
@@ -13,11 +9,26 @@ function UpdatePwd() {
 
   const { user } = useContext(AuthContext);
 
+  const cancelPwd = () => {
+    props.cancelPwd(false);
+  }
+
+  const checkPwd = (oldPwd, newPwd, cfmPwd) => {
+    if (!oldPwd || !newPwd || !cfmPwd)
+      return (false, console.error('Error: Da5al ga3 lpasswords'))
+    else if (newPwd !== cfmPwd)
+      return (false, console.error('Error: Passwords do not match!'))
+    else if (newPwd === oldPwd)
+      return (false, console.error('Error: Old password and new passwords are identical!'))
+    return true
+  }
+
   const updatePassword = async () => {
-    setOldPwd(oldPRef.current.value)
-    setNewPwd(newPRef.current.value)
-    setCfmPwd(cfmPRef.current.value)
-    if (oldPwd && newPwd && cfmPwd) {
+    const oldPwd = oldPRef.current.value;
+    const newPwd = newPRef.current.value;
+    const cfmPwd = cfmPRef.current.value;
+
+    if (checkPwd(oldPwd, newPwd, cfmPwd)) {
       try {
         const response = await fetch('http://localhost:8000/profile/updatePassword', {
           method: "POST",
@@ -35,13 +46,11 @@ function UpdatePwd() {
           console.log(res.case);
         }
         else
-          console.log(res.error);
+          console.error(res.error);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     }
-    else
-      console.log("error : da5al ga3 lpasswords");
   }
 
   return (
@@ -70,7 +79,7 @@ function UpdatePwd() {
           ref={cfmPRef}
         />
         <div className="pwd__submit">
-          <button className='submit-button submit__cancel'> Cancel </button>
+          <button className='submit-button submit__cancel' onClick={cancelPwd}> Cancel </button>
           <button className='submit-button' onClick={updatePassword}> Update </button>
         </div>
       </div>
