@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
-import * as ChatIcons from "../assets/chat/media";
 import "../assets/chat/Groups.css";
 import { useClickOutSide } from "../Chat/chatConversation";
 import CloseIcon from "@mui/icons-material/Close";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import CreateRoomVisibilityOptions from "./createRoomVisibilityOptions";
+import CreateRoomForm from "./createRoomForm";
+import CreateRoomPassword from "./createRoomPassword";
 import { toast } from "react-toastify";
 const CreateRoom = (props) => {
   const { chatSocket } = useContext(AuthContext);
@@ -22,6 +23,12 @@ const CreateRoom = (props) => {
 
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
+    if (
+      (name === "name" && value.length > 10) ||
+      (name === "topic" && value.length > 60)
+    ) {
+      return;
+    }
     setFormData({
       ...formData,
       [name]: value,
@@ -43,15 +50,15 @@ const CreateRoom = (props) => {
       errorContainers.topic =
         "chat room topic should be between 50 and 60 characters.";
 
-    if (!formData.icon) {
-      errorContainers.icon = "Please select an image for the chat room.";
-    }
-    if (roomVisibility === "protected-room" && !formData.password.trim()) {
+    if (
+      roomVisibility === "protected-visibility" &&
+      !formData.password.trim()
+    ) {
       errorContainers.password = "Please enter a password.";
     }
 
     if (
-      roomVisibility === "protected-room" &&
+      roomVisibility === "protected-visibility" &&
       formData.password !== formData.confirmPassword
     ) {
       errorContainers.confirmPassword = "Passwords do not match.";
@@ -77,7 +84,7 @@ const CreateRoom = (props) => {
     }
   };
 
-  const onChangeAvatar = (e) => {
+  const onChangeIcon = (e) => {
     const file = e.target.files[0];
     console.log("the file image: ", file);
     if (file) {
@@ -90,9 +97,10 @@ const CreateRoom = (props) => {
           icon: base64Image,
         });
         const placeHolder = document.getElementsByClassName(
-          "default-room-avatar"
+          "create-room-icon-placeholder"
         )[0];
-        placeHolder.src = imageUrl;
+        if(placeHolder)
+          placeHolder.src = imageUrl;
       };
       reader.readAsDataURL(file);
     }
@@ -114,177 +122,35 @@ const CreateRoom = (props) => {
         <CloseIcon className="create-room-close-icon" onClick={props.onClose} />
       </div>
       {step === 1 && (
-        <>
-          <div className="create-room-visibility-options">
-            <div
-              className={
-                roomVisibility === "private-visibility"
-                  ? "create-room-option create-room-option-selected"
-                  : "create-room-option"
-              }
-              onClick={() => setRoomVisibility("private-visibility")}
-            >
-              <img
-                src={ChatIcons.privateVisibility}
-                alt="Private"
-                className="private-option-icon visibility-option-icon"
-              />
-              <div className="create-room-option-text">Private</div>
-            </div>
-            <div
-              className={
-                roomVisibility === "public-visibility"
-                  ? "create-room-option create-room-option-selected"
-                  : "create-room-option"
-              }
-              onClick={() => setRoomVisibility("public-visibility")}
-            >
-              <img
-                src={ChatIcons.publicVisibility}
-                alt="Public"
-                className="public-option-icon visibility-option-icon"
-              />
-              <div className="create-room-option-text">Public</div>
-            </div>
-            <div
-              className={
-                roomVisibility === "protected-visibility"
-                  ? "create-room-option create-room-option-selected"
-                  : "create-room-option"
-              }
-              onClick={() => setRoomVisibility("protected-visibility")}
-            >
-              <img
-                src={ChatIcons.protectedVisibility}
-                alt="Protected"
-                className="protected-option-icon visibility-option-icon"
-              />
-              <div className="create-room-option-text">Protected</div>
-            </div>
-          </div>
-          <div className="create-room-actions">
-            <button
-              className="create-room-cancel-button"
-              onClick={props.onClose}
-            >
-              Cancel
-            </button>
-            <button
-              className="create-room-next-button"
-              onClick={() => setStep(2)}
-            >
-              Next
-            </button>
-          </div>
-        </>
+        <CreateRoomVisibilityOptions
+          formData={formData}
+          setStep={setStep}
+          roomVisibility={roomVisibility}
+          setRoomVisibility={setRoomVisibility}
+          onClose={props.onClose}
+        />
       )}
-
       {step === 2 && (
-        <>
-          <div className="create-room-input-container">
-            <div className="create-room-icon-wrapper">
-              <img
-                src={ChatIcons.PlaceHolder}
-                alt="Chat Room Icon"
-                className="create-room-icon-placeholder"
-              />
-              <div className="create-room-change-icon">
-                <CameraAltIcon className="create-room-camera-icon" />
-                <div>Select Room Icon</div>
-              </div>
-            </div>
-            <div className="create-room-inputs">
-              <input
-                type="text"
-                className="create-room-name-input"
-                placeholder="Enter room name"
-                // onChange={}
-              />
-              {errors.name && (
-                <span id="create-room-errors">{errors.name}</span>
-              )}
-              <textarea
-                className="create-room-topic-input"
-                placeholder="Enter room topic"
-              ></textarea>
-              {errors.topic && (
-                <span id="create-room-errors">
-                  {errors.topic}
-                </span>
-              )}
-            </div>
-          </div>
-          <div className="create-room-actions-next">
-            <button
-              className="create-room-cancel-button"
-              onClick={() => setStep(1)}
-            >
-              Previous
-            </button>
-            {roomVisibility === "private-visibility" ? (
-              <button
-                className="create-room-next-button"
-                onClick={() => setStep(2)}
-              >
-                Next
-              </button>
-            ) : (
-              <button
-                className="create-room-create-button create-room-create-button-active"
-                onClick={submitHandler}
-              >
-                Create
-              </button>
-            )}
-          </div>
-          <span ref={errorRef} style={{display:'none'}}></span>
-        </>
-      )}
-      {step === 3 && (
-        <>
-          <div className="create-room-input-container">
-            <div className="create-room-icon-wrapper">
-              <img
-                src={ChatIcons.PlaceHolder}
-                alt="Chat Room Icon"
-                className="create-room-icon-placeholder"
-              />
-              <div className="create-room-change-icon">
-                <CameraAltIcon className="create-room-camera-icon" />
-                <div>Select Room Icon</div>
-              </div>
-            </div>
-            <div className="create-room-inputs">
-              <input
-                type="text"
-                className="create-room-name-input"
-                placeholder="Enter room name"
-              />
-              {errors.name && (
-                <span id="create-room-errors">{errors.name}</span>
-              )}
-              <textarea
-                className="create-room-topic-input"
-                placeholder="Enter room topic"
-              ></textarea>
-            </div>
-          </div>
-          <div className="create-room-actions-next">
-            <button
-              className="create-room-cancel-button"
-              onClick={() => setStep(1)}
-            >
-              Previous
-            </button>
-            <button
-              className="create-room-create-button create-room-create-button-active"
-              onClick={submitHandler}
-            >
-              Create
-            </button>
-          </div>
-        </>
-      )}
+        <CreateRoomForm
+          setFormData={setFormData}
+          formData={formData}
+          setStep={setStep}
+          roomVisibility={roomVisibility}
+          errors={errors}
+          submitHandler={submitHandler}
+          onChangeHandler={onChangeHandler}
+          onChangeIcon={onChangeIcon}
+          />
+        )}
+      {step === 3 && <CreateRoomPassword
+          formData={formData}
+          setStep={setStep}
+          errors={errors}
+          submitHandler={submitHandler}
+          onChangeHandler={onChangeHandler}
+
+      />}
+      <span ref={errorRef} style={{ display: "none" }}></span>
     </div>
   );
 };

@@ -417,13 +417,12 @@ input#room-image {
   overflow: hidden;
   gap: 20px;
   padding: 15px;
-  /* height: 245px; */
 }
+
 .create-room-header {
   display: flex;
   align-items: center;
   width: 100%;
-  /* height: 50px; */
 }
 
 .create-room-title {
@@ -481,7 +480,6 @@ input#room-image {
   display: flex;
   justify-content: center;
   gap: 15px;
-  /* animation: first-load-visibility-options .5s forwards; */
   animation: first-load-input-container .5s forwards;
 }
 .create-room-actions-next {
@@ -490,44 +488,49 @@ input#room-image {
   justify-content: center;
   gap: 15px;
   animation: first-load-visibility-options .5s forwards;
-  /* animation: first-load-input-container .5s forwards; */
 }
 
 .create-room-cancel-button,
 .create-room-next-button,
+.create-room-next-button-active,
 .create-room-create-button {
   color: white;
-  border: none;
   border-radius: 5px;
   height: 35px;
   width: 125px;
   border: #ccc 1px solid;
   cursor: pointer;
   font-size: 15px;
+  opacity: 1;
 }
+
+.create-room-next-button-active{
+  background-color: #826aed;
+}
+.create-room-next-button {
+  background-color: #826aed;
+  opacity: .5;
+  border: none;
+  cursor: auto;
+}
+
 .create-room-cancel-button:hover,
-.create-room-next-button:hover {
+.create-room-next-button-active:hover {
   border: none;
   transform: scale(1.05);
 }
 .create-room-cancel-button {
   background-color: #2f084b;
 }
-.create-room-next-button{
-  background-color: #826aed;
-}
 .create-room-create-button {
   background-color: #826aed;
-  /* opacity: .5; */
-  /* cursor: not-allowed; */
 }
 
 
 .create-room-input-container {
   display: flex;
   gap: 10px;
-  width: 100%; /* Initial width */
-  /* transition: width 10s ease-in-out; */
+  width: 100%;
   animation: first-load-input-container .5s forwards;
 }
 
@@ -622,9 +625,19 @@ input#room-image {
   flex-direction: column;
 }
 
+.create-room-name-input-wrapper {
+  width: 100%;
+  display: flex;
+  /* background-color: red; */
+  position: relative;
+}
+
+input.create-room-password-input,
+input.create-room-confirm-password-input,
 input.create-room-name-input {
+  width: 100%;
   border: none;
-  padding: 7px 10px;
+  padding: 9px 10px;
   background-color:transparent;
   border-radius: 5px;
   color: white;
@@ -632,18 +645,36 @@ input.create-room-name-input {
   font-size: 15px; 
   background-color: rgba(204, 204, 204, .2);
 }
-
+input.create-room-password-input::placeholder,
+input.create-room-confirm-password-input::placeholder,
 input.create-room-name-input::placeholder {
   font-family: "IBM Plex Sans", sans-serif;
-  font-size: 14px;
+  font-size: 13px;
 }
-input.create-room-name-input:focus {
-  border-color: #913dce;
-  box-shadow: 0 0 10px #3d3076;
 
+input.create-room-password-input:focus,
+input.create-room-confirm-password-input:focus,
+input.create-room-name-input:focus {
+  box-shadow: 0 0 10px #3d3076;
+}
+
+.create-room-name-character-count {
+  position: absolute;
+  font-size: 10px;
+  bottom: 3px;
+  right: 3px;
+  opacity: .5;
+}
+
+.create-room-topic-input-wrapper {
+  width: 100%;
+  position: relative;
+  height: 70%;
+  display: flex;
 }
 
 textarea.create-room-topic-input {
+  width: 100%;
   font-family: "IBM Plex Sans", sans-serif;
   height: 70px;
   resize:none;
@@ -659,19 +690,79 @@ textarea.create-room-topic-input {
 textarea.create-room-topic-input:focus {
   border-color: #913dce;
   box-shadow: 0 0 07px #3d3076;
-
 }
 
 textarea.create-room-topic-input::placeholder {
   font-family: "IBM Plex Sans", sans-serif;
-  font-size: 14px;
+  font-size: 13px;
+}
+
+.create-room-topic-character-count {
+  position: absolute;
+  font-size: 10px;
+  bottom: 3px;
+  right: 3px;
+  opacity: .5;
 }
 
 span#create-room-errors {
   font-size: 10px;
   margin-top: -5px;
 }
+
+
+.create-room-password-input-container {
+  width: 100%;
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  animation: first-load-input-container .5s forwards;
+}
+
+.create-room-selected-icon-wrapper {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+}
+.create-room-selected-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+}
+
+
+.create-room-password-inputs {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.create-room-info {
+  margin-top: -8px;
+}
+
+.create-room-name {
+  color: white;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+.create-room-topic {
+  width: 90%;
+  font-size: 12px;
+  margin-top: -6px;
+}
+
+.create-room-password-actions {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  animation: first-load-visibility-options .5s forwards;
+} 
 /*MyRooms*/
+
+
 
 .room-container {
   position: relative;
