@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from '../../assets/SignUp/SignUpPage.module.css'
+import '../SignIn/signinexample.css'
 import logo42 from '../../assets/SignUp/42_logo.svg'
 import logoGoogle from '../../assets/SignIn/GoogleIcon.svg'
 import Swal from 'sweetalert2';
@@ -21,10 +21,8 @@ function SignUpWays() {
 		};
 		const extracted_code = getQueryParam('code');
 		const fullUrl = window.location.href;
-		if (extracted_code && fullUrl && fullUrl.includes("email")) {
+		if (extracted_code && fullUrl && fullUrl.includes("email"))
 			setGoogleCode(extracted_code)
-			console.log("ewahaaa")
-		}
 		else if (extracted_code) {
 			setIntraCode(extracted_code)
 		}
@@ -156,13 +154,9 @@ function SignUpWays() {
 				position="top-center" // Default position for all toasts if not specified individually
 				reverseOrder={false} // Set to true to reverse the order of toasts
 			/>
-			<div className={styles["Intra"]} onClick={handleIntraClick}>
-				<img className={styles["intraLogo"]} src={logo42} alt="" />
-				<button className={styles["IntraButton"]} >Sign In With Intra</button>
-			</div>
-			<div className={styles["Google"]} onClick={handleGoogleClick}>
-				<img className={styles["googleLogo"]} src={logoGoogle} alt="" />
-				<button className={styles["GoogleButton"]}>Sign In with google</button>
+			<div className='authentication-signup-ways'>
+				<img src={logoGoogle} onClick={handleGoogleClick} alt="" />
+				<img src={logo42} onClick={handleIntraClick} alt="" />
 			</div>
 		</>
 

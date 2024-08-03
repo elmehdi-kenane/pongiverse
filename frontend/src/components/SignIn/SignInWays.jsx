@@ -49,7 +49,7 @@ function SignInWays() {
 			if (data.Case === "Login successfully") {
 				navigate('/mainpage');
 			} else if (data.Case === "Invalid username or password!!") {
-				toast.error("There is no account", {duration: 2000,});
+				toast.error("There is no account", { duration: 2000, });
 			}
 		} else {
 			console.error('Failed to fetch data');
@@ -154,13 +154,9 @@ function SignInWays() {
 				position="top-center" // Default position for all toasts if not specified individually
 				reverseOrder={false} // Set to true to reverse the order of toasts
 			/>
-			<div className={styles["Intra"]} onClick={handleIntraClick}>
-				<img className={styles["intraLogo"]} src={logo42} alt="" />
-				<button className={styles["IntraButton"]} >Sign In With Intra</button>
-			</div>
-			<div className={styles["Google"]} onClick={handleGoogleClick}>
-				<img className={styles["googleLogo"]} src={logoGoogle} alt="" />
-				<button className={styles["GoogleButton"]}>Sign In with google</button>
+			<div className='authentication-signin-ways'>
+				<img onClick={handleGoogleClick} src={logoGoogle} alt="" />
+				<img onClick={handleIntraClick} src={logo42} alt="" />
 			</div>
 		</>
 

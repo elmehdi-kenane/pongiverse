@@ -52,6 +52,7 @@ body {
 	max-width: 500px;
 	border-radius: 10px;
 	background-color: white;
+	gap: 10px;
 }
 
 .Google {
@@ -172,7 +173,6 @@ body {
 	width: 85%;
 	height: 50px;
 	padding-top: 10px;
-	margin-top: 10px;
 	padding-bottom: 10px;
 	border: 1.5px solid black;
 	border-radius: 10px;
@@ -189,7 +189,6 @@ body {
 
 .submitButton {
 	border-radius: 10px;
-	margin-top: 20px;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	border: 0.5px solid var(--blak);

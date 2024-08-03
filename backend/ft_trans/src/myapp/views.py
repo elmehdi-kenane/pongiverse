@@ -24,6 +24,7 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from urllib.parse import urlencode
 import json
+import os
 
 
 class SignUpView(APIView):
@@ -243,7 +244,7 @@ class TestView(APIView):
 @api_view(['GET'])
 def SignInGoogleGetUrl(request):
 	response = Response()
-	client_id = '295320971655-s5ood5a528rk815h85f2pancufc342of.apps.googleusercontent.com'
+	client_id = os.getenv('GOOGLE_SIGNIN_CLIENT_ID')
 	redirect_uri = 'http://localhost:3000/signin'
 	scope = 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'
 	response_type = 'code'
@@ -262,7 +263,7 @@ def SignInGoogleGetUrl(request):
 @api_view(['GET'])
 def SignInIntraGetUrl(request):
 	response = Response()
-	client_id = 'u-s4t2ud-fcffc65b4899785b254efb0f6527c2d4493781c1e7792364b758f426b18a2598'
+	client_id = os.getenv('INTRA_SIGNIN_CLIENT_ID')
 	redirect_uri = 'http://localhost:3000/signin'
 	auth_url = 'https://api.intra.42.fr/oauth/authorize'
 	response_type = 'code'
@@ -275,9 +276,9 @@ def SignInGoogleGetUserData(request):
 	try :
 		code = request.data.get('code')
 		response = Response()
-		client_id = '295320971655-s5ood5a528rk815h85f2pancufc342of.apps.googleusercontent.com'
+		client_id = os.getenv('GOOGLE_SIGNIN_CLIENT_ID')
 		redirect_uri = 'http://localhost:3000/signin'
-		client_secret = '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'
+		client_secret = os.getenv('GOOGLE_SIGNIN_SECRET_ID')
 		token_url = 'https://oauth2.googleapis.com/token'
 		payload = {
 			'code': code,
@@ -305,8 +306,8 @@ def SignInGoogleGetUserData(request):
 @api_view(['GET'])
 def SignUpGoogleGetUrl(request):
 	response = Response()
-	client_id = '571941928482-b8jr8007vd334l591r30stnfm26ua6qo.apps.googleusercontent.com'
-	redirect_uri = 'http://localhost:3000/signup'
+	client_id = os.getenv('GOOGLE_SIGNUP_CLIENT_ID')
+	redirect_uri = 'http://localhost:3000/signin'
 	scope = 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'
 	response_type = 'code'
 	auth_url = 'https://accounts.google.com/o/oauth2/auth'
@@ -325,8 +326,8 @@ def SignUpGoogleGetUrl(request):
 @api_view(['GET'])
 def SignUpIntraGetUrl(request):
 	response = Response()
-	client_id = 'u-s4t2ud-c5d50d0148bff2ac03dbdadd313e919f7799e35329997235b2427e1cef984e18'
-	redirect_uri = 'http://localhost:3000/signup'
+	client_id = os.getenv('INTRA_SIGNUP_CLIENT_ID')
+	redirect_uri = 'http://localhost:3000/signin'
 	auth_url = 'https://api.intra.42.fr/oauth/authorize'
 	response_type = 'code'
 	auth_url_with_params = f'{auth_url}?client_id={client_id}&redirect_uri={redirect_uri}&response_type={response_type}'
@@ -338,8 +339,8 @@ def SignInIntraGetUserData(request):
 	try :
 		code = request.data.get('code')
 		response = Response()
-		client_id = 'u-s4t2ud-fcffc65b4899785b254efb0f6527c2d4493781c1e7792364b758f426b18a2598'
-		client_secret = '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'
+		client_id = os.getenv('INTRA_SIGNIN_CLIENT_ID')
+		client_secret = os.getenv('INTRA_SIGNIN_SECRET_ID')
 		redirect_uri = 'http://localhost:3000/signin'
 		token_url = 'https://api.intra.42.fr/oauth/token'
 		payload = {
@@ -372,9 +373,9 @@ def SignUpGoogleGetUserData(request):
 	try :
 		code = request.data.get('code')
 		response = Response()
-		client_id = '571941928482-b8jr8007vd334l591r30stnfm26ua6qo.apps.googleusercontent.com'
-		redirect_uri = 'http://localhost:3000/signup'
-		client_secret = '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'
+		client_id = os.getenv('GOOGLE_SIGNUP_CLIENT_ID')
+		redirect_uri = 'http://localhost:3000/signin'
+		client_secret = os.getenv('GOOGLE_SIGNUP_SECRET_ID')
 		token_url = 'https://oauth2.googleapis.com/token'
 		payload = {
 			'code': code,
@@ -404,9 +405,9 @@ def SignUpIntraGetUserData(request):
 	try :
 		code = request.data.get('code')
 		response = Response()
-		client_id = 'u-s4t2ud-c5d50d0148bff2ac03dbdadd313e919f7799e35329997235b2427e1cef984e18'
-		client_secret = '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'
-		redirect_uri = 'http://localhost:3000/signup'
+		client_id = os.getenv('INTRA_SIGNUP_CLIENT_ID')
+		client_secret = os.getenv('GOOGLE_SIGNUP_SECRET_ID')
+		redirect_uri = 'http://localhost:3000/signin'
 		token_url = 'https://api.intra.42.fr/oauth/token'
 		payload = {
 			'grant_type': 'authorization_code',

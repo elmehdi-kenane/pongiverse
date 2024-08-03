@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import styles from '../../assets/SignUp/SignUpPage.module.css'
 import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
+import './signinexample.css'
 
 import Cookies from 'js-cookie';
 import { Link } from 'react-router-dom';
@@ -39,9 +39,9 @@ function SignInForm() {
 					navigate('/mainpage');
 				} else if (data.Case === "Invalid username or password!!") {
 					toast.error(data.Case, {
-						duration: 4000,
-						className: styles['center-toast'] // Apply custom class
-					  });
+						duration: 1000,
+					});
+					setData({ ...data, 'password': '' });
 				}
 			})
 			.catch(error => {
@@ -52,13 +52,15 @@ function SignInForm() {
 	return (
 		<>
 			<Toaster
-				position="top-center"
+				// position="top-right"
 				reverseOrder={false}
 			/>
-			<input className={styles["inputs"]} value={data.username} onChange={handleChange} type="text" name='username' placeholder="enter your username" />
-			<input className={styles["inputs"]} type="password" name='password' value={data.password} onChange={handleChange} placeholder="enter your password" />
-			<Link className={styles["forget"]} to="/ForgotPassword">Forget your password?</Link>
-			<button className={styles["submitButton"]} onClick={handleSubmit}>Sign In</button>
+			<input className='authentication-signin-input' type="text" value={data.username} onChange={handleChange} name='username' placeholder='Enter your username' />
+			<input className='authentication-signin-input' type="password" name='password' value={data.password} onChange={handleChange} placeholder='Enter your password' />
+			<div className='authentication-signin-forget-password-div'>
+				<Link className='authentication-signin-forget-password' to="/ForgotPassword">Forget your password?</Link>
+			</div>
+			<button className='authentication-signin-button' onClick={handleSubmit}>Sign In</button>
 		</>
 	);
 }

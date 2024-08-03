@@ -2,7 +2,7 @@ import React from 'react';
 import styles from '../../assets/SignUp/SignUpPage.module.css'
 import Header from './Header';
 import SignUpWays from './SignUpWays'
-import SignUpFrom from './SignUpFrom'
+import SignUpFrom from './SignUpForm'
 import { Link } from 'react-router-dom';
 
 function SignUpPage(props) {

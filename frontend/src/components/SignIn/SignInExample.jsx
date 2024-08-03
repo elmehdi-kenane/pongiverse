@@ -7,10 +7,8 @@ import pingPongBg from './ping_pong_bg.jpg'
 import { Link } from 'react-router-dom';
 import SignInForm from './SignInForm';
 import SignInWays from './SignInWays';
-import SignUpForm from '../SignUp/SignUpForm';
-import SignUpWays from '../SignUp/SignUpWays';
 
-function SignInPage() {
+function SignInExample() {
 	const [isSingIn, setIsSignIn] = useState(true)
 
 	const handleSignUpSwitch = () => {
@@ -29,13 +27,19 @@ function SignInPage() {
 							<div className="authentication-signup-title-div">
 								<p className='authentication-signup-title'>Sign Up</p>
 							</div>
-							<SignUpForm/>
+							<input type='email' className='authentication-signup-input' placeholder='Enter your email' />
+							<input type='password' className='authentication-signup-input' placeholder='Enter a password' />
+							<input type='password' className='authentication-signup-input' placeholder='Confirm your password' />
+							<button className='authentication-signup-button'>Sign Up</button>
 							<div className='authentication-signup-line'>
 								<div className='authentication-signup-little-line'></div>
 								<p className='authentication-signup-or'>Or</p>
 								<div className='authentication-signup-little-line'></div>
 							</div>
-							<SignUpWays/>
+							<div className='authentication-signup-ways'>
+								<img src={logoGoogle} alt="" />
+								<img src={logo42} alt="" />
+							</div>
 							<p className='authentication-signup-have-account'>Already have an account? <Link onClick={handleSignUpSwitch} className='authentication-signup-have-account-link' >Sign In</Link></p>
 						</div>
 					</div>
@@ -68,4 +72,4 @@ function SignInPage() {
 	);
 }
 
-export default SignInPage
+export default SignInExample

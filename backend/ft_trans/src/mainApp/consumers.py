@@ -66,6 +66,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			for friend in friends:
 				friend_username = await sync_to_async(lambda: friend.friend.username)()
 				friend_is_online = await sync_to_async(lambda: friend.friend.is_online)()
+				print(f"friend username : {friend_username}")
 				channel_name = user_channels.get(friend_username)
 				print(f"USER CHANNEL ON CONNECT IS : {channel_name}")
 				if channel_name and friend_is_online and not user.is_playing:

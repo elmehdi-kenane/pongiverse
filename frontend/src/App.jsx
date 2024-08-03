@@ -39,6 +39,7 @@ import GameSettings from "./Game/GameSettings";
 import Settings from "./Settings/Settings";
 import Bot from "./Game/Bot";
 import LocalTournamentFillMembers from "./Tournament/LocalTournament/LocalTournamentFillMembers";
+import SignInExample from "./components/SignIn/SignInExample";
 
 const App = () => {
 	return (
@@ -48,8 +49,9 @@ const App = () => {
 					<ChatProvider>
 						<Routes>
 							<Route path="/" element={<HomePage />} exact />
-							<Route path="/signup" element={<SignUpPage />} />
+							{/* <Route path="/signup" element={<SignUpPage />} /> */}
 							<Route path="/signin" element={<SignInPage />} />
+							<Route path="/signinexample" element={<SignInExample />} />
 							<Route path="/SecondStep" element={<SecondStep />} />
 							<Route path="/WaysSecondStep" element={<WaysSecondStep />} />
 							<Route path="/ForgotPassword" element={<ForgotPassword />} />

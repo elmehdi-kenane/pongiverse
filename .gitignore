@@ -19,3 +19,4 @@ Network Persistent State
 notes.txt
 SharedStorage
 TransportSecurity
+.env
