@@ -278,20 +278,6 @@ const Rooms = () => {
         <div className={isBlur ? "rooms-wrapper blur" : "rooms-wrapper"}>
           <div className="rooms-actions-buttons-container">
             <div
-              className="join-room-button"
-              onClick={() => {
-                setJoinRoom(true);
-                setIsBlur(true);
-              }}
-            >
-              <img
-                src={ChatIcons.JoinChannel}
-                alt=""
-                className="join-room-icon"
-              />
-              <div className="join-room-text">Join a Room</div>
-            </div>
-            <div
               className="create-room-button"
               onClick={() => {
                 setCreateRoom(true);

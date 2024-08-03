@@ -77,7 +77,7 @@ const CreateRoomForm = (props) => {
               onChange={props.onChangeHandler}
             ></textarea>
             <div className="create-room-topic-character-count">
-              ({props.formData.topic.length}/60)
+              ({props.formData.topic.length}/100)
             </div>
           </div>
           {props.errors.topic && (

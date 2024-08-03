@@ -3,16 +3,13 @@ import * as ChatIcons from "../assets/chat/media";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import ChatContext from "./ChatContext";
 import ChatRoomMember from "./chatRoomMember";
-import ChatRoomInvitee from './chatRoomInvitee'
+import ChatRoomInvitee from "./chatRoomInvitee";
 import { useNavigate } from "react-router-dom";
 import { leaveRoomSubmitHandler } from "./roomHandler";
 
 const MyRoom = (props) => {
-  const {chatSocket, user} = useContext(AuthContext)
-  const {
-    setIsHome,
-    setSelectedChatRoom,
-  } = useContext(ChatContext);
+  const { chatSocket, user } = useContext(AuthContext);
+  const { setIsHome, setSelectedChatRoom } = useContext(ChatContext);
   const [showSettings, setShowSettings] = useState(false);
   const [leaveRoom, setLeaveRoom] = useState(false);
   const [changeRoomName, setChangeRoomName] = useState(false);
@@ -20,41 +17,40 @@ const MyRoom = (props) => {
   const [deleteRoom, setDeletRoom] = useState(false);
   const [addRoomAdmin, setAddRoomAdmin] = useState(false);
   const [inviteMember, setInviteMember] = useState(false);
-  const [newRoomName, setNewRoomName] = useState('')
-  const [newRoomIcon, setnewRoomIcon] = useState(null)
-  const [allChatRoomMembers,setAllChatRoomMembers] = useState([])
-  const [allFriends,setAllFriends] = useState([])
+  const [newRoomName, setNewRoomName] = useState("");
+  const [newRoomIcon, setnewRoomIcon] = useState(null);
+  const [allChatRoomMembers, setAllChatRoomMembers] = useState([]);
+  const [allFriends, setAllFriends] = useState([]);
   const navigate = useNavigate();
-
-
 
   const showRoomSettings = () => {
     console.log("i clicked show settings");
     setShowSettings(true);
   };
 
-
   const changeRoomNameSubmitHandler = () => {
-    if(chatSocket) {
-      chatSocket.send(JSON.stringify({
-        type : 'changeRoomName',
-        message : {
-          room : props.name,
-          newName : newRoomName
-        }
-      }))
-      setChangeRoomName(false)
-      setShowSettings(false)
+    if (chatSocket) {
+      chatSocket.send(
+        JSON.stringify({
+          type: "changeRoomName",
+          message: {
+            room: props.name,
+            newName: newRoomName,
+          },
+        })
+      );
+      setChangeRoomName(false);
+      setShowSettings(false);
     }
-  }
+  };
   const onChangeChangeRoomAvatar = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
         const imageUrl = e.target.result;
-        const base64Image = reader.result.split(',')[1];
-        setnewRoomIcon(base64Image)
+        const base64Image = reader.result.split(",")[1];
+        setnewRoomIcon(base64Image);
         const placeHolder = document.getElementsByClassName(
           "live-updated-room-avatar"
         )[0];
@@ -62,112 +58,127 @@ const MyRoom = (props) => {
       };
       reader.readAsDataURL(file);
     }
-  }
+  };
   const updateRoomAvatarSubmitHandler = () => {
-    if(chatSocket) {
-      chatSocket.send(JSON.stringify({
-        type : 'changeRoomAvatar',
-        message : {
-          room : props.name,
-          newIcon : newRoomIcon
-        }
-      }))
+    if (chatSocket) {
+      chatSocket.send(
+        JSON.stringify({
+          type: "changeRoomAvatar",
+          message: {
+            room: props.name,
+            newIcon: newRoomIcon,
+          },
+        })
+      );
     }
-    setUpdateRoomAvatar(false)
-    setShowSettings(false)
-  }
+    setUpdateRoomAvatar(false);
+    setShowSettings(false);
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     const fetchAllChatRoomMembers = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/chatAPI/allRoomMembers/${props.name}`)
-        const data = await response.json()
-        console.log("all chat room: ", data)
-        setAllChatRoomMembers(data)
-      } catch(error) {
-        console.log(error)
+        const response = await fetch(
+          `http://localhost:8000/chatAPI/allRoomMembers/${props.name}`
+        );
+        const data = await response.json();
+        console.log("all chat room: ", data);
+        setAllChatRoomMembers(data);
+      } catch (error) {
+        console.log(error);
       }
-
+    };
+    if (addRoomAdmin) {
+      fetchAllChatRoomMembers();
     }
-    if(addRoomAdmin) {
-      fetchAllChatRoomMembers()
-    }
-  }, [addRoomAdmin])
+  }, [addRoomAdmin]);
 
-  useEffect(()=>{
-
+  useEffect(() => {
     const fetchAllFriends = async () => {
       try {
-        const response = await fetch('http://localhost:8000/chatAPI/listAllFriends', {
-          method: 'POST',
-          headers : {
-            "Content-Type": "application/json",
-          },
-          body : JSON.stringify ({
-            user : user,
-            room : props.name,
-          })
-        })
-        const data = await response.json()
-        setAllFriends(data)
+        const response = await fetch(
+          "http://localhost:8000/chatAPI/listAllFriends",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              user: user,
+              room: props.name,
+            }),
+          }
+        );
+        const data = await response.json();
+        setAllFriends(data);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-    }
-    if(inviteMember)
-      fetchAllFriends()
-  }, [inviteMember])
+    };
+    if (inviteMember) fetchAllFriends();
+  }, [inviteMember]);
 
   const onClickDeleteChatRoomHandler = () => {
-    if(chatSocket) {
-      console.log("inside delete chat room")
-      chatSocket.send(JSON.stringify({
-        type : 'deleteChatRoom',
-        message : {
-          room : props.name
-        }
-      }))
-      setDeletRoom(false)
-      setShowSettings(false)
+    if (chatSocket) {
+      console.log("inside delete chat room");
+      chatSocket.send(
+        JSON.stringify({
+          type: "deleteChatRoom",
+          message: {
+            room: props.name,
+          },
+        })
+      );
+      setDeletRoom(false);
+      setShowSettings(false);
     }
-  }
+  };
   const navigateToChatRoom = () => {
-    console.log("chat room id:",props.roomId)
+    console.log("chat room id:", props.roomId);
     setSelectedChatRoom({
       name: props.name,
       memberCount: props.membersCount,
       icon: props.roomIcons[props.index],
       roomId: props.roomId,
     });
-    setIsHome(false)
-    navigate(`/mainpage/chat`)
-  }
+    setIsHome(false);
+    navigate(`/mainpage/chat`);
+  };
 
   return (
     <div className="my-room-container">
-      {/* <div className="room-header" onClick={navigateToChatRoom}>
-        <img src={props.roomIcons[props.index]} className="room-avatar" alt="" />
-        <div className="room-info">
-          <div className="room-name">{props.name}</div>
-          <div className="room-member-count">{props.membersCount} Members</div>
+      <div className="my-room-header">
+        <div className="my-room-cover-wrapper"></div>
+        <div className="my-room-info">
+          <img
+            src={props.roomIcons[props.index]}
+            alt=""
+            className="my-room-icon"
+          />
         </div>
       </div>
-      <div className="room-topic">
-        {props.topic}
+      <div className="my-room-name-and-topic">
+        <div className="my-room-name">{props.name}</div>
+        <div className="my-room-topic">{props.topic}</div>
       </div>
       <div className="room-actions">
-        <button className="room-leave-button" onClick={() => setLeaveRoom(true)}>
+        <button
+          className="room-leave-button"
+          onClick={() => setLeaveRoom(true)}
+        >
           Leave Room
         </button>
-        { props.role === 'admin' ?
+        {props.role === "admin" ? (
           <>
-          <img
-          src={ChatIcons.RoomSettings}
-          className="room-settings-icon"
-          onClick={showRoomSettings}
-          />
-          </> : ''
-        }
+            <img
+              src={ChatIcons.RoomSettings}
+              className="room-settings-icon"
+              onClick={showRoomSettings}
+            />
+          </>
+        ) : (
+          ""
+        )}
       </div>
       {showSettings && (
         <div className="room-settings-menu">
@@ -202,7 +213,10 @@ const MyRoom = (props) => {
             >
               Invite a Member
             </div>
-            <div className="room-settings-delete-room" onClick={() => setDeletRoom(true)}>
+            <div
+              className="room-settings-delete-room"
+              onClick={() => setDeletRoom(true)}
+            >
               Delete Room
             </div>
           </div>
@@ -211,7 +225,12 @@ const MyRoom = (props) => {
       {changeRoomName && (
         <div className="room-change-name-wrapper">
           <div className="room-change-name-title">Enter Room Name</div>
-          <input type="text" className="change-room-name-input" placeholder={props.name} onChange={(e)=> setNewRoomName(e.target.value)}/>
+          <input
+            type="text"
+            className="change-room-name-input"
+            placeholder={props.name}
+            onChange={(e) => setNewRoomName(e.target.value)}
+          />
           <div className="room-change-name-buttons">
             <button onClick={() => setChangeRoomName(false)}>Cancel</button>
             <button onClick={changeRoomNameSubmitHandler}>Update</button>
@@ -251,8 +270,12 @@ const MyRoom = (props) => {
             className="room-add-admin-close-button"
             onClick={() => setAddRoomAdmin(false)}
           />
-          {allChatRoomMembers.map((memeber , index) => (
-            <ChatRoomMember  key={index} name={memeber.name} roomName={props.name}/>
+          {allChatRoomMembers.map((memeber, index) => (
+            <ChatRoomMember
+              key={index}
+              name={memeber.name}
+              roomName={props.name}
+            />
           ))}
         </div>
       )}
@@ -265,7 +288,11 @@ const MyRoom = (props) => {
             onClick={() => setInviteMember(false)}
           />
           {allFriends.map((friend, index) => (
-            <ChatRoomInvitee key={index} name= {friend.name} roomName={props.name}/>
+            <ChatRoomInvitee
+              key={index}
+              name={friend.name}
+              roomName={props.name}
+            />
           ))}
         </div>
       )}
@@ -292,34 +319,17 @@ const MyRoom = (props) => {
             >
               CANCEL
             </button>
-            <button className="room-leave-confirm-button" onClick={()=>leaveRoomSubmitHandler(props.name, user, chatSocket)}>CONFIRM</button>
+            <button
+              className="room-leave-confirm-button"
+              onClick={() =>
+                leaveRoomSubmitHandler(props.name, user, chatSocket)
+              }
+            >
+              CONFIRM
+            </button>
           </div>
         </div>
-      )} */}
-      <div className="my-room-header">
-        {/* <img src={ChatIcons.roomCover} alt="" className="my-room-cover"/> */}
-        <div className="my-room-info">
-          <img src={props.roomIcons[props.index]} alt="" className="my-room-icon" />
-        </div>
-      </div>
-      <div className="my-room-name-and-topic">
-          <div className="my-room-name">Discovery</div>
-          <div className="my-room-topic">Lorem ipsum dolor sit amet, consectetur adipiscing elit est.</div>
-      </div>
-      <div className="room-actions">
-        <button className="room-leave-button" onClick={() => setLeaveRoom(true)}>
-          Leave Room
-        </button>
-        { props.role === 'admin' ?
-          <>
-          <img
-          src={ChatIcons.RoomSettings}
-          className="room-settings-icon"
-          onClick={showRoomSettings}
-          />
-          </> : ''
-        }
-      </div>
+      )}
     </div>
   );
 };
