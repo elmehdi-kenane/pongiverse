@@ -166,9 +166,37 @@
     margin-top: 10px;
     margin-bottom: 10px;
 }
+.update__pwd .pwd__submit .submit-button:hover{
+    background-color: #826aed;
+    border: none;
+    transition: ease-in 0.2s;
+}
 
 .update__pwd .pwd__submit .submit__cancel{
     background-color: #2f084b;
+}
+.update__pwd .pwd__submit .submit__cancel:hover{
+    background-color: #52127f;
+}
+
+/*------------ Loading ------------*/
+
+.settings-page .settings__security .update__lodaing {
+    display: flex;
+    flex-direction: column;
+    /* border: #ccc solid 1px; */
+    height: 180px;
+    align-items: center;
+    padding: 15px 20px;
+}
+.update__lodaing .loading__title {
+    color: white;
+}
+.settings__security .update__lodaing .loading__ctr {
+    display: flex;
+    height: 50px;
+    width: 100%;
+    border: white 1px solid;
 }
 
 /*------------------ TFQ ------------------*/
@@ -381,7 +409,6 @@
 .adjustpic .adjustpic__submit button:nth-child(2) {
     background: #826aed;
 }
-
 
 @media (min-width: 1440px) {
     .settings-page {

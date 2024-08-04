@@ -1,11 +1,14 @@
 import React, { useContext, useRef, useState } from 'react'
 import AuthContext from '../../navbar-sidebar/Authcontext';
+import Loading from '../../Game/Loading';
 
 function UpdatePwd(props) {
 
   const oldPRef = useRef(null);
   const newPRef = useRef(null);
   const cfmPRef = useRef(null);
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const { user } = useContext(AuthContext);
 
@@ -53,37 +56,64 @@ function UpdatePwd(props) {
     }
   }
 
-  return (
-    <div className='update__pwd'>
-      <div className="pwd__title__input">
+  const handleEnterClick = (event) => {
+    if (event.key === 'Enter')
+      updatePassword()
+  }
+
+  const InputsPwd = () => {
+    return (
+      <div className='update__pwd'>
+       <div className="pwd__title__input">
         <h3 className='pwd__title'> CURRENT PASSWORD </h3>
         <input type="text"
           className="update__input"
+          onKeyDown={handleEnterClick}
           maxLength={50}
           ref={oldPRef}
-        />
+          />
       </div>
       <div className="pwd__title__input">
         <h3 className='pwd__title'> NEW PASSWORD </h3>
         <input type="text"
           className="update__input"
+          onKeyDown={handleEnterClick}
           maxLength={50}
           ref={newPRef}
-        />
+          />
       </div>
       <div className="pwd__title__input">
         <h3 className='pwd__title'> CONFIRM NEW PASSWORD </h3>
         <input type="text"
           className="update__input"
           maxLength={50}
+          onKeyDown={handleEnterClick}
           ref={cfmPRef}
-        />
+          />
         <div className="pwd__submit">
           <button className='submit-button submit__cancel' onClick={cancelPwd}> Cancel </button>
           <button className='submit-button' onClick={updatePassword}> Update </button>
         </div>
       </div>
     </div>
+    )
+  }
+
+  const LoadingPwd = () =>{
+    return (
+      <div className='update__lodaing'>
+        <h1 className='loading__title'> Loading </h1>
+        <div className='loading__ctr'>
+          <Loading />
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <>
+      {isLoading ? <InputsPwd /> : <LoadingPwd/>}
+    </>
   )
 }
 
