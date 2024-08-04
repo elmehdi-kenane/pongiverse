@@ -12,8 +12,8 @@ const BlockedAccountCard = ({ secondUsername, avatar}) => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                from_username: secondUsername,
-                to_username: user,
+                to_username: secondUsername,
+                from_username: user,
             }),
         })
             .then(response => response.json())

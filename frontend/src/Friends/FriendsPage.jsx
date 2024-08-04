@@ -87,16 +87,23 @@ const Friends = () => {
                 const updatedSentRequests = prevSentRequests.filter(SentRequest => SentRequest.username !== message.username);
                 return updatedSentRequests;
             });
-            setFriendSuggestions((prevSuggestions) => {
-                const updatedSuggestions = [message, ...prevSuggestions];
-                return updatedSuggestions;
-            });
+            // delay added because when cancel clicked immediately after add friend that make bad ui
+            setTimeout(() => {
+                setFriendSuggestions((prevSuggestions) => {
+                    const updatedSuggestions = [message, ...prevSuggestions];
+                    return updatedSuggestions;
+                });
+            }, 1000);
         }
         else if (type === 'remove-friendship') {
             setFriends((prevFriends) => {
-                const updatedFriends = prevFriends.filter(Friend => Friend.username !== message.username);
+                const updatedFriends = prevFriends.filter(Friend => Friend.friend_username !== message.username);
                 return updatedFriends;
             });
+            setFriendSuggestions((prevSuggestions) => {
+                const updatedSuggestions = [message, ...prevSuggestions];
+                return updatedSuggestions;
+            });            
         }
         else if (type === 'block-friend') {
             setFriends((prevFriends) => {
@@ -108,14 +115,30 @@ const Friends = () => {
                 return updatedBlockedFriends;
             });
         }
-        else if (type === 'unblock-friend') {
+        else if (type === 'unblocker-move-to-suggestions') {
+            setFriendSuggestions((prevSuggestions) => {
+                const updatedSuggestions = [message, ...prevSuggestions];
+                return updatedSuggestions;
+            });
+            setBlockedFriends((prevBlockedFriends) => {
+                const updatedBlockedFriends = prevBlockedFriends.filter(UnblockedFriend => UnblockedFriend.friend_username !== message.username);
+                return updatedBlockedFriends;
+            });
+        }
+        else if (type === 'unblocker-friend') {
+            setBlockedFriends((prevBlockedFriends) => {
+                const updatedBlockedFriends = prevBlockedFriends.filter(UnblockedFriend => UnblockedFriend.username !== message.username);
+                return updatedBlockedFriends;
+            });
+        }
+        else if (type === 'unblocked-friend') {
+            setFriendSuggestions((prevSuggestions) => {
+                const updatedSuggestions = [message, ...prevSuggestions];
+                return updatedSuggestions;
+            });
             setFriends((prevFriends) => {
-                const friendExists = prevFriends.some(friend => friend.username === message.username);
-                if (!friendExists) {
-                    const updatedFriends = [message, ...prevFriends];
-                    return updatedFriends;
-                } else
-                    return prevFriends;
+                const updatedFriends = prevFriends.filter(Friend => Friend.username !== message.username);
+                return updatedFriends;
             });
             setBlockedFriends((prevBlockedFriends) => {
                 const updatedBlockedFriends = prevBlockedFriends.filter(UnblockedFriend => UnblockedFriend.username !== message.username);
@@ -270,12 +293,12 @@ const Friends = () => {
                             <FriendCard isLastTwoElements={true} currentUsername={user} secondUsername={"test"}></FriendCard> */}
                               {
                                   friends.slice(0, (friends.length - 2)).map((request, index) => (
-                                      <FriendCard key={index} isLastTwoElements={false} currentUsername={user} secondUsername={request.username} avatar={request.avatar}></FriendCard>
+                                      <FriendCard key={index} isLastTwoElements={false} currentUsername={user} secondUsername={request.friend_username} avatar={request.avatar}></FriendCard>
                                   ))
                               }
                               {
                                   friends.slice(-2).map((request, index) => (
-                                      <FriendCard key={index} isLastTwoElements={friends.length > 3 ? true : false} currentUsername={user} secondUsername={request.username} avatar={request.avatar}></FriendCard>
+                                      <FriendCard key={index} isLastTwoElements={friends.length > 3 ? true : false} currentUsername={user} secondUsername={request.friend_username} avatar={request.avatar}></FriendCard>
                                   ))
                               }
                               <div className="spaceLeft"></div>
@@ -324,7 +347,7 @@ const Friends = () => {
                       :
                       <>
                           {blockedFriends.map((blockedFriend, index) => (
-                              <BlockedAccountCard key={index} secondUsername={blockedFriend.username} avatar={blockedFriend.avatar}></BlockedAccountCard>
+                              <BlockedAccountCard key={index} secondUsername={blockedFriend.friend_username} avatar={blockedFriend.avatar}></BlockedAccountCard>
                           ))}
                           <div className="spaceLeft">
                           </div>
@@ -352,12 +375,12 @@ const Friends = () => {
                                       <>
                                           {
                                               friends.slice(0, (friends.length - 2)).map((request, index) => (
-                                                  <FriendCard key={index} isLastTwoElements={false} currentUsername={user} secondUsername={request.username} avatar={request.avatar}></FriendCard>
+                                                  <FriendCard key={index} isLastTwoElements={false} currentUsername={user} secondUsername={request.friend_username} avatar={request.avatar}></FriendCard>
                                               ))
                                           }
                                           {
                                               friends.slice(-2).map((request, index) => (
-                                                  <FriendCard key={index} isLastTwoElements={friends.length > 2 ? true : false} currentUsername={user} secondUsername={request.username} avatar={request.avatar}></FriendCard>
+                                                  <FriendCard key={index} isLastTwoElements={friends.length > 2 ? true : false} currentUsername={user} secondUsername={request.friend_username} avatar={request.avatar}></FriendCard>
                                               ))
                                           }
                                       </>
@@ -400,10 +423,8 @@ const Friends = () => {
                                       </div>
                                       :
                                       <>
-                                          {console.log("tessst")}
-                                          {console.log("blockedFriends", blockedFriends)}
                                       {blockedFriends.map((blockedFriend, index) => (
-                                          <BlockedAccountCard key={index} secondUsername={blockedFriend.username} avatar={blockedFriend.avatar}></BlockedAccountCard>
+                                          <BlockedAccountCard key={index} secondUsername={blockedFriend.friend_username} avatar={blockedFriend.avatar}></BlockedAccountCard>
                                       ))}
                                       </>
                               }

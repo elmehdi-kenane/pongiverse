@@ -136,9 +136,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		}))
 
 	async def recieve_friend_request(self, event):
-		print("recieve-friend-request handler")
-		print(self)
-		print("================ self ================")
 		await self.send(text_data=json.dumps({
 			'type': 'recieve-friend-request',
 			'message': event['message']
@@ -180,9 +177,21 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			'message': event['message']
 		}))
 
-	async def unblock_friend(self, event):
+	async def unblocker(self, event):
 		await self.send(text_data=json.dumps({
-			'type': 'unblock-friend',
+			'type': 'unblocker-friend',
+			'message': event['message']
+		}))
+
+	async def unblocker_move_to_suggestions(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'unblocker-move-to-suggestions',
+			'message': event['message']
+		}))
+	
+	async def unblocked(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'unblocked-friend',
 			'message': event['message']
 		}))
 
