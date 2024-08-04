@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import styles from "../../assets/SignUp/WaysSecondStep.module.css";
-import Header from "./Header";
+import "../../assets/SignUp/WaysSecondStep.css";
 import { useLocation } from "react-router-dom";
+import logo from '../../assets/SignUp/logo.svg'
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
@@ -24,7 +24,7 @@ function WaysSecondStep() {
 	const [errors, setErrors] = useState({});
 	const location = useLocation();
 	const data = location.state || {};
-	if (!data.email || !data.avatar){
+	if (!data.email || !data.avatar) {
 		navigate("/signup");
 	}
 	const handleInputChange = (e) => {
@@ -59,6 +59,11 @@ function WaysSecondStep() {
 			avatar: data.avatar,
 		}));
 	}, [data.email, data.avatar]);
+
+	const handd = (e) =>{
+		e.preventDefault();
+
+	}
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -110,54 +115,64 @@ function WaysSecondStep() {
 	};
 
 	return (
-		<div className={styles["body_page"]}>
-			<div className={styles["mainPage"]}>
-				<Header />
-				<div className={styles["bodyPage"]}>
-					<div className={styles["signUpContainer"]}>
-						<h1 className={styles["title"]}>Next Step</h1>
-						<form
-							className={styles["signUpForm"]}
-							onSubmit={handleSubmit}
-							noValidate
-						>
-							<input
-								className={styles["inputs"]}
-								type="text"
-								value={nextdata.username}
-								name="username"
-								onChange={handleInputChange}
-								placeholder="enter a username"
-							/>
-							{errors.username && <span>{errors.username}</span>}
-							<input
-								className={styles["inputs"]}
-								type="password"
-								name="password"
-								value={nextdata.password}
-								onChange={handleInputChange}
-								placeholder="enter a password"
-							/>
-							{errors.password && <span>{errors.password}</span>}
-							<input
-								className={styles["inputs"]}
-								type="password"
-								name="confirmPassword"
-								onChange={handleInputChange}
-								placeholder="confirm your password"
-							/>
-							{errors.confirmPassword && <span>{errors.confirmPassword}</span>}
-							{
-								<button type="submit" className={styles["submitButton"]}>
-								Sign Up
-							</button>
-							}
-						</form>
-					</div>
-				</div>
+		<div className="ways-second-step-page">
+			<div className='ways-second-step-navbar'>
+				<img src={logo} alt="" />
+			</div>
+			<div className="ways-second-step-form-div">
+				<form className="ways-second-step-form" onSubmit={handleSubmit} noValidate>
+					<input type="text" value={nextdata.username} name="username" onChange={handleInputChange} className='ways-second-step-input' placeholder='Enter a username' />
+					{errors.username && <span>{errors.username}</span>}
+					<input type="password" name="password" value={nextdata.password} onChange={handleInputChange} className='ways-second-step-input' placeholder="enter a password"/>
+					{errors.password && <span>{errors.password}</span>}
+					<input className='ways-second-step-input' type="password" name="confirmPassword" onChange={handleInputChange} placeholder="enter a password" />
+					{errors.confirmPassword && <span>{errors.confirmPassword}</span>}
+					<button type="submit" className='ways-second-step-button' >Sign Up</button>
+				</form>
 			</div>
 		</div>
 	);
 }
 
 export default WaysSecondStep;
+
+
+
+
+{/* <form
+className={styles["signUpForm"]}
+onSubmit={handleSubmit}
+
+>
+<input
+	className={styles["inputs"]}
+	type="text"
+	value={nextdata.username}
+	name="username"
+	onChange={handleInputChange}
+	placeholder="enter a username"
+/>
+{errors.username && <span>{errors.username}</span>}
+<input
+	className={styles["inputs"]}
+	type="password"
+	name="password"
+	value={nextdata.password}
+	onChange={handleInputChange}
+	placeholder="enter a password"
+/>
+{errors.password && <span>{errors.password}</span>}
+<input
+	className={styles["inputs"]}
+	type="password"
+	name="confirmPassword"
+	onChange={handleInputChange}
+	placeholder="confirm your password"
+/>
+{errors.confirmPassword && <span>{errors.confirmPassword}</span>}
+{
+	<button type="submit" className={styles["submitButton"]}>
+		Sign Up
+	</button>
+}
+</form> */}

@@ -151,8 +151,11 @@ function SignUpWays() {
 	return (
 		<>
 			<Toaster
-				position="top-center" // Default position for all toasts if not specified individually
+				position="top-left" // Default position for all toasts if not specified individually
 				reverseOrder={false} // Set to true to reverse the order of toasts
+				containerStyle={
+					{top: '10px'}
+				}
 			/>
 			<div className='authentication-signup-ways'>
 				<img src={logoGoogle} onClick={handleGoogleClick} alt="" />

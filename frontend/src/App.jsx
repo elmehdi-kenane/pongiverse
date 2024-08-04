@@ -49,7 +49,7 @@ const App = () => {
 					<ChatProvider>
 						<Routes>
 							<Route path="/" element={<HomePage />} exact />
-							{/* <Route path="/signup" element={<SignUpPage />} /> */}
+							<Route path="/signup" element={<SignUpPage />} />
 							<Route path="/signin" element={<SignInPage />} />
 							<Route path="/signinexample" element={<SignInExample />} />
 							<Route path="/SecondStep" element={<SecondStep />} />

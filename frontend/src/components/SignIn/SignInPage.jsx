@@ -9,13 +9,9 @@ import SignInForm from './SignInForm';
 import SignInWays from './SignInWays';
 import SignUpForm from '../SignUp/SignUpForm';
 import SignUpWays from '../SignUp/SignUpWays';
+import { useNavigate } from 'react-router-dom';
 
 function SignInPage() {
-	const [isSingIn, setIsSignIn] = useState(true)
-
-	const handleSignUpSwitch = () => {
-		setIsSignIn(!isSingIn)
-	}
 
 	return (
 		<div className='authentication-page'>
@@ -23,27 +19,7 @@ function SignInPage() {
 				<img src={logo} alt="" />
 			</div>
 			<div className='authentication-container'>
-				<div className={`authentication-signupdiv ${isSingIn ? 'hide' : 'show'}`}>
-					<div className='authentication-signup'>
-						<div className='authentication-signup-form'>
-							<div className="authentication-signup-title-div">
-								<p className='authentication-signup-title'>Sign Up</p>
-							</div>
-							<SignUpForm/>
-							<div className='authentication-signup-line'>
-								<div className='authentication-signup-little-line'></div>
-								<p className='authentication-signup-or'>Or</p>
-								<div className='authentication-signup-little-line'></div>
-							</div>
-							<SignUpWays/>
-							<p className='authentication-signup-have-account'>Already have an account? <Link onClick={handleSignUpSwitch} className='authentication-signup-have-account-link' >Sign In</Link></p>
-						</div>
-					</div>
-					<div className='authentication-signup-rightdesign'>
-						<img src={pingPongBg} alt="" />
-					</div>
-				</div>
-				<div className={`authentication-signindiv ${isSingIn ? 'show' : 'hide'}`}>
+				<div className='authentication-signindiv'>
 					<div className='authentication-signin-leftdesign'>
 						<img src={pingPongBg} alt="" />
 					</div>
@@ -59,7 +35,7 @@ function SignInPage() {
 								<div className='authentication-signin-little-line'></div>
 							</div>
 							<SignInWays/>
-							<p className='authentication-signin-dont-have-account'>Don't have an account? <Link onClick={handleSignUpSwitch} className='authentication-signin-dont-have-account-link' >Sign up</Link></p>
+							<p className='authentication-signin-dont-have-account'>Don't have an account? <Link to="/signup" className='authentication-signin-dont-have-account-link' >Sign up</Link></p>
 						</div>
 					</div>
 				</div>
