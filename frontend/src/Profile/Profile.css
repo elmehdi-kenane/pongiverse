@@ -476,7 +476,7 @@ h1, h3, p{
 .report__footer .report-submit .submit__cancel:hover {
     border: none;
     background-color: #52127f;
-    transition: ease-in  0.3s;
+    transition: ease-in  0.2s;
 }
 .report__footer .report-submit .submit__report {
     background-color: #826aed;
