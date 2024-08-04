@@ -88,7 +88,7 @@ const App = () => {
                 <Route path="game/tournamentbracket" element={<TournamentBracket />} />
               </Route>
             </Routes>
-            {/* <ToastContainer
+            <ToastContainer
               position="top-right"
               autoClose={5000}
               limit={1}
@@ -101,7 +101,7 @@ const App = () => {
               pauseOnHover
               theme="light"
               transition={Bounce}
-            /> */}
+            />
           </SocketDataContextProvider>
         </AuthProvider>
       </Router>

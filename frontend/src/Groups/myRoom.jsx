@@ -6,10 +6,11 @@ import ChatRoomMember from "./chatRoomMember";
 import ChatRoomInvitee from "./chatRoomInvitee";
 import { useNavigate } from "react-router-dom";
 import { leaveRoomSubmitHandler } from "./roomHandler";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
 
 const MyRoom = (props) => {
   const { chatSocket, user } = useContext(AuthContext);
-  const { setIsHome, setSelectedChatRoom } = useContext(ChatContext);
+  const { setIsHome, setSelectedChatRoom, chatRoomConversationsRef,  setChatRoomConversations} = useContext(ChatContext);
   const [showSettings, setShowSettings] = useState(false);
   const [leaveRoom, setLeaveRoom] = useState(false);
   const [changeRoomName, setChangeRoomName] = useState(false);
@@ -133,6 +134,20 @@ const MyRoom = (props) => {
       setShowSettings(false);
     }
   };
+  const moveObjectToFront = (name) => {
+    setChatRoomConversations((prevArray) => {
+      // Find the index of the object by name
+      const index = prevArray.findIndex((obj) => obj.name === name);
+      if (index === -1) return prevArray;
+
+      // Remove the object from its current position
+      const [objectToMove] = prevArray.splice(index, 1);
+
+      // Add the object to the beginning of the array
+      return [objectToMove, ...prevArray];
+    });
+  };
+
   const navigateToChatRoom = () => {
     console.log("chat room id:", props.roomId);
     setSelectedChatRoom({
@@ -141,6 +156,7 @@ const MyRoom = (props) => {
       icon: props.roomIcons[props.index],
       roomId: props.roomId,
     });
+    moveObjectToFront(props.name)
     setIsHome(false);
     navigate(`/mainpage/chat`);
   };
@@ -148,17 +164,19 @@ const MyRoom = (props) => {
   return (
     <div className="my-room-container">
       <div className="my-room-header">
+        <CameraAltIcon className="my-room-cover-edit-icon" />
         <div className="my-room-cover-wrapper"></div>
         <div className="my-room-info">
           <img
             src={props.roomIcons[props.index]}
             alt=""
             className="my-room-icon"
+            onClick={navigateToChatRoom}
           />
         </div>
       </div>
       <div className="my-room-name-and-topic">
-        <div className="my-room-name">{props.name}</div>
+        <div className="my-room-name" onClick={navigateToChatRoom}>{props.name}</div>
         <div className="my-room-topic">{props.topic}</div>
       </div>
       <div className="room-actions">

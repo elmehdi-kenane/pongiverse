@@ -25,7 +25,7 @@ const CreateRoom = (props) => {
     const { name, value } = e.target;
     if (
       (name === "name" && value.length > 10) ||
-      (name === "topic" && value.length > 100)
+      (name === "topic" && value.length > 80)
     ) {
       return;
     }
@@ -46,7 +46,7 @@ const CreateRoom = (props) => {
 
     if (!formData.topic.trim()) {
       errorContainers.topic = "Please enter a chat room topic.";
-    } else if (formData.topic.length < 50 || formData.topic.length > 100)
+    } else if (formData.topic.length < 50 || formData.topic.length > 80)
       errorContainers.topic =
         "chat room topic should be between 50 and 60 characters.";
 

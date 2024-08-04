@@ -155,7 +155,7 @@ useEffect(() => {
       fetchDirectsWithMessage();
     if(user && location.pathname === '/mainpage/groups') {
       fetchChatRoomInvitations()
-      fetchSuggestedChatRooms()
+      // fetchSuggestedChatRooms()
     }
     
     }
@@ -180,7 +180,8 @@ useEffect(() => {
     chatRoomInvitationsIcons:chatRoomInvitationsIcons,
     suggestedChatRooms: suggestedChatRooms,
     setSuggestedChatRooms: setSuggestedChatRooms,
-    suggestedChatRoomsIcons:suggestedChatRoomsIcons
+    suggestedChatRoomsIcons:suggestedChatRoomsIcons,
+    chatRoomConversationsRef: chatRoomConversationsRef
   };
   return (
     <ChatContext.Provider value={contextData}>{children}</ChatContext.Provider>

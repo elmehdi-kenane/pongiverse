@@ -23,8 +23,9 @@ const Rooms = () => {
     setChatRoomInvitations,
     chatRoomInvitationsIcons,
     suggestedChatRooms,
+    chatRoomConversationsRef
   } = useContext(ChatContext);
-  const myChatRoomsRef = useRef(chatRoomConversations);
+  // const myChatRoomsRef = useRef(chatRoomConversations);
   const roomInvitationsRef = useRef(chatRoomInvitations);
 
   //hande scroller handler (My Rooms)
@@ -105,7 +106,7 @@ const Rooms = () => {
 
   //update chatRoomConversations array When a new Memeber join
   const newUserJoinedChatRoom = (data) => {
-    const allMyChatRooms = myChatRoomsRef.current;
+    const allMyChatRooms = chatRoomConversationsRef.current;
     const roomExists = allMyChatRooms.some(
       (myroom) => myroom.name === data.name
     );
@@ -126,7 +127,7 @@ const Rooms = () => {
 
   //update chatRoomConversations Array if an Memeber leave
   const memeberLeaveChatRoomUpdater = (data) => {
-    const allMyChatRooms = myChatRoomsRef.current;
+    const allMyChatRooms = chatRoomConversationsRef.current;
     console.log("data", data);
     if (data && data.user === user) {
       const updatedRooms = allMyChatRooms.filter(
@@ -146,7 +147,7 @@ const Rooms = () => {
 
   //update chat Room Name if Changed
   const chatRoomNameChangedUpdater = (data) => {
-    const allMyChatRooms = myChatRoomsRef.current;
+    const allMyChatRooms = chatRoomConversationsRef.current;
     const updatedRooms = allMyChatRooms.map((room) => {
       if (room.name === data.name) {
         return { ...room, name: data.newName };
@@ -158,7 +159,7 @@ const Rooms = () => {
   };
 
   const chatRoomIconChanged = (data) => {
-    const allMyChatRooms = myChatRoomsRef.current;
+    const allMyChatRooms = chatRoomConversationsRef.current;
     const updatedRooms = allMyChatRooms.map((room) => {
       if (room.name === data.name) {
         return { ...room, icon_url: data.iconPath };
@@ -170,7 +171,7 @@ const Rooms = () => {
   };
 
   const chatRoomAdminAdded = (data) => {
-    const allMyChatRooms = myChatRoomsRef.current;
+    const allMyChatRooms = chatRoomConversationsRef.current;
     const updatedRooms = allMyChatRooms.map((room) => {
       if (room.name === data.name) return { ...room, role: "admin" };
       return room;
@@ -179,7 +180,7 @@ const Rooms = () => {
   };
 
   const roomInvitationsAcceptedUpdater = (data) => {
-    const allMyChatRooms = myChatRoomsRef.current;
+    const allMyChatRooms = chatRoomConversationsRef.current;
     const allRoomInvites = roomInvitationsRef.current;
     console.log("data recive if the invite accepted", data);
     if (user === data.user) {
@@ -199,7 +200,7 @@ const Rooms = () => {
   };
 
   const chatRoomDeletedUpdater = (data) => {
-    const allMyChatRooms = myChatRoomsRef.current;
+    const allMyChatRooms = chatRoomConversationsRef.current;
     const updatedRooms = allMyChatRooms.filter(
       (room) => room.name !== data.name
     );
@@ -220,7 +221,7 @@ const Rooms = () => {
         else if (data.type === "incorrectPassword")
           console.log("incorrect password");
         else if (data.type === "newRoomCreated") {
-          const allMyChatRooms = myChatRoomsRef.current;
+          const allMyChatRooms = chatRoomConversationsRef.current;
           setChatRoomConversations([...allMyChatRooms, data.room]);
         } else if (data.type === "memberleaveChatRoom")
           memeberLeaveChatRoomUpdater(data.message);
@@ -243,21 +244,6 @@ const Rooms = () => {
 
   return (
     <div className="rooms-page">
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        transition={Slide}
-        // transition: Slide
-        className="toast-container"
-        />
       <div className="rooms-page-content">
         {joinRoom && (
           <JoinRoom
@@ -277,7 +263,10 @@ const Rooms = () => {
         )}
         <div className={isBlur ? "rooms-wrapper blur" : "rooms-wrapper"}>
           <div className="rooms-actions-buttons-container">
-            <div
+          </div>
+          <div className="rooms-header-wrapper">
+          <div className="rooms-header">Your Rooms</div>
+          <div
               className="create-room-button"
               onClick={() => {
                 setCreateRoom(true);
@@ -292,7 +281,6 @@ const Rooms = () => {
               <div className="create-room-text">Create a Room</div>
             </div>
           </div>
-          <div className="rooms-header">Your Rooms</div>
           <div className="my-rooms-row">
             {chatRoomConversations.length > 4 ? (
               <>
