@@ -5,6 +5,8 @@ import Security from './Security';
 import AuthContext from '../navbar-sidebar/Authcontext';
 import ProfileContext from '../Profile/ProfileWrapper';
 
+import toast, { Toaster } from 'react-hot-toast';
+
 function Settings() {
 
   const [isInfo, setIsInfo] = useState(true);
@@ -13,6 +15,7 @@ function Settings() {
 
   return (
     <div className='settings-page'>
+      <Toaster />
       <div className="settings__leftside">
         <div className='pic-name'>
             <img src={userPic} alt='userImg'/>

@@ -1,6 +1,9 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import AuthContext from '../../navbar-sidebar/Authcontext';
 import Loading from '../../Game/Loading';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import toast, { Toaster } from 'react-hot-toast';
 
 function UpdatePwd(props) {
 
@@ -12,13 +15,14 @@ function UpdatePwd(props) {
 
   const { user } = useContext(AuthContext);
 
-  const cancelPwd = () => {
-    props.cancelPwd(false);
-  }
+  const notifyErr = (err) => toast.error(err);
+  const notifySuc = (suc) => toast.success(suc);
 
   const checkPwd = (oldPwd, newPwd, cfmPwd) => {
-    if (!oldPwd || !newPwd || !cfmPwd)
-      return (false, console.error('Error: Da5al ga3 lpasswords'))
+    if (!oldPwd || !newPwd || !cfmPwd){
+      notifyErr('Error: Da5al ga3 lpasswords'); 
+      return (false)
+    }
     else if (newPwd !== cfmPwd)
       return (false, console.error('Error: Passwords do not match!'))
     else if (newPwd === oldPwd)
@@ -32,6 +36,7 @@ function UpdatePwd(props) {
     const cfmPwd = cfmPRef.current.value;
 
     if (checkPwd(oldPwd, newPwd, cfmPwd)) {
+      setIsLoading(true);
       try {
         const response = await fetch('http://localhost:8000/profile/updatePassword', {
           method: "POST",
@@ -46,63 +51,81 @@ function UpdatePwd(props) {
         });
         const res = await response.json()
         if (response.ok) {
-          console.log(res.case);
+          notifySuc(res.case); 
+          // console.log(res.case);
         }
         else
-          console.error(res.error);
+          notifyErr(res.error);
       } catch (error) {
         console.error(error);
       }
     }
+    setIsLoading(false);
   }
 
-  const handleEnterClick = (event) => {
-    if (event.key === 'Enter')
-      updatePassword()
-  }
 
+  const PwdInput = (props) => {
+    const [showEye, setShowEye] = useState(false)
+    const [showPwd, setShowPwd] = useState(false)
+    const inputRef = props.refr;
+    const handleEnterClick = (event) => {
+      if (event.key === 'Enter')
+        updatePassword()
+      setShowEye(true);
+      if (!inputRef.current.value)
+        setShowEye(false);
+    }
+    const handleShowPwd = () => {
+      setShowPwd(!showPwd);
+    };
+    return (
+      <div className="input__ctr">
+        <input
+          type={showPwd ? 'text' : 'password'}
+          className="pwd__input"
+          onKeyDown={handleEnterClick}
+          maxLength={50}
+          ref={inputRef}
+        />
+        {showEye &&
+          <div className="pwd__eye" onClick={handleShowPwd}>
+            {showPwd ? <VisibilityOffIcon /> : <VisibilityIcon />}
+          </div>
+        }
+      </div>
+    )
+  }
+  const cancelPwd = () => {
+    props.cancelPwd(false);
+  }
   const InputsPwd = () => {
     return (
       <div className='update__pwd'>
-       <div className="pwd__title__input">
-        <h3 className='pwd__title'> CURRENT PASSWORD </h3>
-        <input type="text"
-          className="update__input"
-          onKeyDown={handleEnterClick}
-          maxLength={50}
-          ref={oldPRef}
-          />
-      </div>
-      <div className="pwd__title__input">
-        <h3 className='pwd__title'> NEW PASSWORD </h3>
-        <input type="text"
-          className="update__input"
-          onKeyDown={handleEnterClick}
-          maxLength={50}
-          ref={newPRef}
-          />
-      </div>
-      <div className="pwd__title__input">
-        <h3 className='pwd__title'> CONFIRM NEW PASSWORD </h3>
-        <input type="text"
-          className="update__input"
-          maxLength={50}
-          onKeyDown={handleEnterClick}
-          ref={cfmPRef}
-          />
-        <div className="pwd__submit">
-          <button className='submit-button submit__cancel' onClick={cancelPwd}> Cancel </button>
-          <button className='submit-button' onClick={updatePassword}> Update </button>
+
+        <div className="pwd__title__input">
+          <h3 className='pwd__title'> CURRENT PASSWORD </h3>
+          <PwdInput refr={oldPRef} />
+        </div>
+        <div className="pwd__title__input">
+          <h3 className='pwd__title'> NEW PASSWORD </h3>
+          <PwdInput refr={newPRef} />
+        </div>
+        <div className="pwd__title__input">
+          <h3 className='pwd__title'> CONFIRM NEW PASSWORD </h3>
+          <PwdInput refr={cfmPRef} />
+          <div className="pwd__submit">
+            <button className='submit-button submit__cancel' onClick={cancelPwd}> Cancel </button>
+            <button className='submit-button' onClick={updatePassword}> Update </button>
+          </div>
         </div>
       </div>
-    </div>
     )
   }
 
-  const LoadingPwd = () =>{
+  const LoadingPwd = () => {
     return (
       <div className='update__lodaing'>
-        <h1 className='loading__title'> Loading </h1>
+        <h1 className='loading__title'> Loading... </h1>
         <div className='loading__ctr'>
           <Loading />
         </div>
@@ -112,7 +135,7 @@ function UpdatePwd(props) {
 
   return (
     <>
-      {isLoading ? <InputsPwd /> : <LoadingPwd/>}
+      {!isLoading ? <InputsPwd /> : <LoadingPwd />}
     </>
   )
 }

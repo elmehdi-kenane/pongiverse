@@ -9,6 +9,10 @@
     overflow-y: scroll;
 }
 
+:root {
+    --dark-gray: color-mix( in oklab, hsl( 215 calc( 1 * 8.8%) 73.3% / 1) 100%, black 0% );;
+}
+
 .purple-bg {
     background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
     box-shadow: 0 0px 20px 0 rgb(130, 106, 237, 0.5) ;
@@ -51,6 +55,7 @@
 }
 .settings__leftside .pic-name img {
     height: 40px;
+    width: 40px;
     border-radius: 50%;
 }
 
@@ -128,12 +133,32 @@
 }
 
 .settings-page .settings__security .update__pwd .pwd__title{
-    color: color-mix( in oklab, hsl( 215 calc( 1 * 8.8%) 73.3% / 1) 100%, black 0% );
+    color: var(--dark-gray);
     width: 100%;
     text-align: start;
     margin-bottom: 10px;
 }
-.settings-page .settings__security .update__pwd .update__input{
+.settings-page .settings__security .update__pwd .input__ctr{
+    position: relative;
+    /* border: white 1px solid; */
+    margin-bottom: 15px;
+}
+.update__pwd .input__ctr .pwd__eye{
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    color: var(--dark-gray);
+    cursor: pointer;
+    transform: translateY(-50%);
+}
+.update__pwd .input__ctr .pwd__eye svg{
+    width: 17px;
+    height: 17px;
+}
+
+.update__pwd .input__ctr .pwd__input{
     padding-left: 5px;
     width: 100%;
     height: 40px;
@@ -143,7 +168,6 @@
     border-radius: 5px;
     color : white;
     font-size: 17px;
-    margin-bottom: 15px;
     max-width: 500px;
 }
 
@@ -187,16 +211,21 @@
     /* border: #ccc solid 1px; */
     height: 180px;
     align-items: center;
-    padding: 15px 20px;
+    justify-content: space-evenly;
+    padding-bottom: 20px;
 }
 .update__lodaing .loading__title {
     color: white;
+    /* margin-bottom: 10px; */
 }
 .settings__security .update__lodaing .loading__ctr {
     display: flex;
     height: 50px;
-    width: 100%;
-    border: white 1px solid;
+    width: 70%;
+    border: white 3px solid;
+    border-radius: 10px;
+    position: relative;
+    z-index: 2;
 }
 
 /*------------------ TFQ ------------------*/
