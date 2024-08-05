@@ -11,7 +11,7 @@ import Report from './Report/Report';
 // import clan4 from "./assets/Frame4.svg"
 import clan5 from "./assets/Frame5.svg"
 
-function ProfileInfo(props) {
+function ProfileInfo() {
   
   const { user } = useContext(AuthContext);
   const {userBio, userPic, userLevel, userBg} = useContext(ProfileContext);
