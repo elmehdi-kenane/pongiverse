@@ -7,12 +7,6 @@
 	--gri: #716365;
 }
 
-body {
-	background-color: #250939;
-	font-family: "IBM Plex Sans", sans-serif;
-	margin: 0 auto;
-	padding: 0;
-}
 
 .body_page {
 	display: flex;

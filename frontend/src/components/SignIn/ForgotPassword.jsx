@@ -1,4 +1,4 @@
-import styles from '../../assets/SignIn/ForgotPassword.module.css'
+import '../../assets/SignIn/ForgotPassword.css'
 import Header from '../SignUp/Header';
 import React, { useState, useEffect } from 'react';
 import withReactContent from 'sweetalert2-react-content'
@@ -29,21 +29,20 @@ function ForgotPassword() {
 		setData({ ...data, [e.target.name]: e.target.value });
 	};
 
-	const handleBack = () =>{
+	const handleBack = () => {
 		navigate("/signin")
 	}
 
 	const handleNextClick = (e) => {
 		e.preventDefault();
 		const validationErrors = {}
-		if (!data.email.trim()){
-			validationErrors.email = "email is required waaahmed"
-		}else if(!/\S+@\S+\.\S+/.test(data.email)){
+		if (!data.email.trim()) {
+			validationErrors.email = "email is required"
+		} else if (!/\S+@\S+\.\S+/.test(data.email)) {
 			validationErrors.email = "email is not valid"
 		}
 		setErrors(validationErrors)
-		if (Object.keys(validationErrors).length === 0)
-		{
+		if (Object.keys(validationErrors).length === 0) {
 			client.post('/auth/checkemail/', data, {
 				headers: {
 					'Content-Type': 'application/json',
@@ -69,10 +68,10 @@ function ForgotPassword() {
 							confirmButtonText: 'Submit',
 							confirmButtonColor: '#913DCE',
 							customClass: {
-								popup: styles['popup-style'],
-								container: styles['blur-background'] ,
-								input: styles['custom-input'],
-								title : styles['popup-title-style']
+								popup: 'popup-style',
+								container: 'blur-background',
+								input: 'custom-input',
+								title: 'popup-title-style'
 							},
 						}).then((result) => {
 							if (result.isConfirmed) {
@@ -116,8 +115,8 @@ function ForgotPassword() {
 						confirmButtonText: 'Submit',
 						confirmButtonColor: '#913DCE',
 						customClass: {
-							container: styles['blur-background'] ,
-							input: styles['custom-input'],
+							container: 'blur-background',
+							input: 'custom-input',
 						},
 					}).then((result) => {
 						if (result.isConfirmed) {
@@ -136,27 +135,38 @@ function ForgotPassword() {
 	};
 
 	return (
-		<div className={styles["full_page"]}>
-				<div className={styles["body_page"]}>
-					<div className={styles["mainPage"]}>
-						<Header />
-						<div className={styles["bodyPage"]}>
-							<div className={styles["signUpContainer"]}>
-								<h1 className={styles["title"]}>Forgot your password?</h1>
-								<h3 className={styles["h3_title"]}>Enter the email address associated with your account, and we'll send you a code to reset your password.</h3>
-								<form className={styles["signUpForm"]} onSubmit={handleNextClick} noValidate>
-									<input className={styles["inputs"]} type="email" name='email' value={data.email} onChange={handleChange} placeholder="enter your email" />
-									{errors.email && <span>{errors.email}</span>}
-									{exist && <span>{exist}</span>}
-									<button type="submit" className={styles["submitButton"]}>Send Reset Code</button>
-								</form>
-									<button className={styles["CancelButton"]} onClick={handleBack}>Go Back</button>
-							</div>
-						</div>
-					</div>
-				</div>
+		<div className='forgot-password-page'>
+			<div className='forgot-password-form'>
+				<h1 className='forgot-password-title'>Forgot your password?</h1>
+				<p className='forgot-password-description'>Enter the email address associated with your account, and we'll send you a code to reset your password</p>
+				<input type="text" className='forgot-password-input' name='email' value={data.email} onChange={handleChange} placeholder='Enter Your Email' />
+				{errors.email && <span>{errors.email}</span>}
+				<button onClick={handleNextClick} className='forgot-password-button'>Send rest code</button>
+				<button className='forgot-password-button' onClick={handleBack}>Back</button>
+			</div>
 		</div>
 	);
 }
+
+{/* <div className={styles["full_page"]}>
+	<div className={styles["body_page"]}>
+		<div className={styles["mainPage"]}>
+			<Header />
+			<div className={styles["bodyPage"]}>
+				<div className={styles["signUpContainer"]}>
+					<h1 className={styles["title"]}>Forgot your password?</h1>
+					<h3 className={styles["h3_title"]}>Enter the email address associated with your account, and we'll send you a code to reset your password.</h3>
+					<form className={styles["signUpForm"]} onSubmit={handleNextClick} noValidate>
+						<input className={styles["inputs"]} type="email" name='email' value={data.email} onChange={handleChange} placeholder="enter your email" />
+						{errors.email && <span>{errors.email}</span>}
+						{exist && <span>{exist}</span>}
+						<button type="submit" className={styles["submitButton"]}>Send Reset Code</button>
+					</form>
+					<button className={styles["CancelButton"]} onClick={handleBack}>Go Back</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div> */}
 
 export default ForgotPassword;

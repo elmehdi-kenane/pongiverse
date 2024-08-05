@@ -25,6 +25,9 @@ from asgiref.sync import async_to_sync
 from urllib.parse import urlencode
 import json
 import os
+import certifi
+
+
 
 
 class SignUpView(APIView):
@@ -191,6 +194,7 @@ class VerifyTokenView(APIView):
 					response.data = {"Case" : "Invalid token"}
 					return response
 
+os.environ['SSL_CERT_FILE'] = certifi.where()
 class ForgetPasswordView(APIView):
 	def post(self, request, format=None):
 		response = Response()
