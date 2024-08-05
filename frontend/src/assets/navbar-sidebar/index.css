@@ -10,7 +10,6 @@ body {
   background-color: #211336;
   font-family: "IBM Plex Sans", sans-serif;
   overflow: hidden;
-  /* box-shadow:0px 0px 0px 10px black inset; */
 }
 
 .page {
@@ -81,7 +80,6 @@ body {
     border-radius: 10px;
     border: 2px solid white;
     padding: 10px;
-    /* margin-top: 60px; */
     min-width: 300px;
     width: 13%;
     height: max-content;

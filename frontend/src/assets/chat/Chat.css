@@ -73,6 +73,10 @@ input.chat-search-input {
 input.chat-search-input::placeholder {
   font-size: 12px;
 }
+input.chat-search-input:focus {
+  outline-color: #913DCE;
+  opacity: .7;
+}
 .chat-switch-button-wrapper {
   width: 100%;
   display: flex;
@@ -89,10 +93,12 @@ button.rooms-switch-button {
   height: 30px;
   border-radius: 5px;
   font-weight: 500;
+  cursor: pointer;
 }
 
 button.direct-switch-button-active,
 button.rooms-switch-button-active {
+  cursor: pointer;
   width: 50%;
   border: none;
   background-color: #6652c0;
@@ -295,7 +301,7 @@ button.rooms-switch-button-active {
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  gap: 5px;
+  gap: 2px;
   padding: 5px;
   width: 100%;
   background-color: hsla(276, 73%, 13%, 0.8);
@@ -326,18 +332,22 @@ textarea.conversation-input {
   align-content: center;
   overflow: hidden;
   color: white;
+  font-family: "IBM Plex Sans", sans-serif;
 }
 
 textarea.conversation-input::placeholder {
+  font-family: "IBM Plex Sans", sans-serif;
   color: white;
   opacity: .8;
+  color: #ccc;
 }
 
 .conversation-emoji-picker,
 .conversation-file-upload {
   opacity: .6;
-  height: 35px;
+  height: 26px;
   cursor: pointer;
+  margin-bottom: 5px;
 }
 .conversation-emoji-container-hidden {
   display: none;
@@ -353,6 +363,7 @@ textarea.conversation-input::placeholder {
   width: 35px;
   height: 35px;
   cursor: pointer;
+  opacity: .7;
 }
 
 .toast-container {

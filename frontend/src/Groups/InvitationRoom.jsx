@@ -1,5 +1,7 @@
 import { useContext } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
+import CancelIcon from "@mui/icons-material/Cancel";
+import * as ChatIcons from "../assets/chat/media";
 
 const InvitationRoom = (props) => {
   const { chatSocket, user } = useContext(AuthContext);
@@ -31,35 +33,23 @@ const InvitationRoom = (props) => {
     }
   };
   return (
-    <div className="invitation-room-container">
-      <div className="invitation-room-details">
-        <img
-          src={props.room_icon[props.index]}
-          className="invitation-room-avatar"
-          alt=""
-        />
-        <div className="invitation-room-infos">
-          <div className="invitation-room-name">{props.name}</div>
-          <div className="invitation-room-member-count">
-            {props.membersCount} Members
-          </div>
-        </div>
-      </div>
-      <div className="invitation-room-actions">
-        <button
-          className="room-invitation-accept"
-          onClick={onClickAcceptInvitaion}
-        >
-          Accept
-        </button>
-        <button
-          className="room-invitation-cancel"
-          onClick={onClickCanelRoomInvitation}
-        >
-          Cancel
-        </button>
+    <div className="room-ivnitation-wrapper">
+    <div className="room-invitations-infos">
+      <img
+        src={props.roomIcon}
+        alt=""
+        className="room-invitation-room-icon"
+      />
+      <div className="room-invitation-details">
+        <div className="room-invitation-name">{props.name}</div>
+        <div className="room-invitation-members">{props.members} {parseInt(props.members) > 1 ? "Members" : "Member"}</div>
       </div>
     </div>
+    <div className="room-invitation-button-actions">
+      <CancelIcon className="room-invitation-cancel-icon" onClick={onClickCanelRoomInvitation}/>
+      <button className="room-invitation-accept-button" onClick={onClickAcceptInvitaion}>Accept</button>
+    </div>
+  </div>
   );
 };
 

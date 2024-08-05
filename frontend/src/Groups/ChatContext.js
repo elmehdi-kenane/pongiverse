@@ -155,7 +155,7 @@ useEffect(() => {
       fetchDirectsWithMessage();
     if(user && location.pathname === '/mainpage/groups') {
       fetchChatRoomInvitations()
-      // fetchSuggestedChatRooms()
+      fetchSuggestedChatRooms()
     }
     
     }

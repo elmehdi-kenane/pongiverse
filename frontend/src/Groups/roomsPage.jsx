@@ -7,9 +7,11 @@ import CreateRoom from "./createRoom";
 import JoinRoom from "./joinRoom";
 import ChatContext from "./ChatContext";
 import * as ChatIcons from "../assets/chat/media";
-import { Slide, ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "../assets/chat/Groups.css";
-
+import NotificationAddIcon from "@mui/icons-material/NotificationAdd";
+import { useClickOutSide } from "../Chat/chatConversation";
+import CloseIcon from "@mui/icons-material/Close";
 const Rooms = () => {
   const [createRoom, setCreateRoom] = useState(false);
   const [joinRoom, setJoinRoom] = useState(false);
@@ -23,11 +25,11 @@ const Rooms = () => {
     setChatRoomInvitations,
     chatRoomInvitationsIcons,
     suggestedChatRooms,
-    chatRoomConversationsRef
+    chatRoomConversationsRef,
   } = useContext(ChatContext);
   // const myChatRoomsRef = useRef(chatRoomConversations);
   const roomInvitationsRef = useRef(chatRoomInvitations);
-
+  const [showRoomNotifications, setShowRoomNotifications] = useState(false);
   //hande scroller handler (My Rooms)
   const onClickScroller = (handle, numberOfRooms) => {
     const slider = document.getElementsByClassName("rooms-slider")[0];
@@ -213,11 +215,9 @@ const Rooms = () => {
         let data = JSON.parse(e.data);
         console.log("data recived from socket :", data);
         if (data.type === "newRoomJoin") newUserJoinedChatRoom(data.room);
-        else if (data.type === "alreadyJoined")
-          toast("Room Already Joined");
+        else if (data.type === "alreadyJoined") toast("Room Already Joined");
         else if (data.type === "privateRoom") toast("Private Room");
-        else if (data.type === "roomNotFound")
-          toast("Room Not Found");
+        else if (data.type === "roomNotFound") toast("Room Not Found");
         else if (data.type === "incorrectPassword")
           console.log("incorrect password");
         else if (data.type === "newRoomCreated") {
@@ -241,6 +241,13 @@ const Rooms = () => {
       };
     }
   }, [chatSocket]);
+  const handleClickOutside = () => {
+    setShowRoomNotifications(false);
+    setIsBlur(false);
+  };
+  let notifRef = useClickOutSide(() => {
+    handleClickOutside();
+  });
 
   return (
     <div className="rooms-page">
@@ -261,12 +268,49 @@ const Rooms = () => {
             }}
           />
         )}
+        <div
+          ref={notifRef}
+          className={
+            showRoomNotifications
+              ? "rooms-notifications-container-active"
+              : "rooms-notifications-container"
+          }
+        >
+          <div className="room-invitation-header">
+            <h3 className="room-invition-title">Room Invitations</h3>
+            <CloseIcon
+              className="create-room-close-icon"
+              onClick={() => {
+                setShowRoomNotifications(false);
+                setIsBlur(false);
+              }}
+            />
+          </div>
+          {chatRoomInvitations.length ? 
+        (chatRoomInvitations.map((room, index) => (
+            <InvitationRoom
+            roomIcon = {chatRoomInvitationsIcons[index]}
+            name={room.name}
+            members={room.membersCount}
+            />
+        )))
+    
+          : 
+          <div className="room-ivnitation-wrapper-empty"> You currently have no chat room invitations </div>}
+        </div>
         <div className={isBlur ? "rooms-wrapper blur" : "rooms-wrapper"}>
           <div className="rooms-actions-buttons-container">
+            <NotificationAddIcon
+              className="rooms-notifications-icon"
+              onClick={() => {
+                setShowRoomNotifications(true);
+                setIsBlur(true);
+              }}
+            />
           </div>
           <div className="rooms-header-wrapper">
-          <div className="rooms-header">Your Rooms</div>
-          <div
+            <div className="rooms-header">Your Rooms</div>
+            <div
               className="create-room-button"
               onClick={() => {
                 setCreateRoom(true);
@@ -370,8 +414,8 @@ const Rooms = () => {
               )}
             </div>
           </div>
-          <div className="rooms-header">Room Invitations</div>
-          <div className="invitations-room-row">
+          {/* <div className="rooms-header">Room Invitations</div> */}
+          {/* <div className="invitations-room-row">
             {chatRoomInvitations.length > 4 ? (
               <>
                 <img
@@ -417,7 +461,7 @@ const Rooms = () => {
                 </div>
               )}
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

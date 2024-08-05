@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import {useClickOutSide} from "../Chat/chatConversation"
-import { Switch } from 'antd';
+// import { Switch } from 'antd';
 // import 'antd/dist/reset.css'
 
 
@@ -37,7 +37,6 @@ const JoinRoom = (props) => {
           Please Select Room Visibility:{" "}
         </div>
         <div className="join-room-visibility-labels">
-        <Switch defaultChecked={true} checkedChildren="Public" unCheckedChildren="Protected" onChange={handleSwitchChange} className="custom-switch" />
         </div>
       </div>
       <form action="" onSubmit={joinRoomSubmitHandler} className="join-room-form" autocomplete="off">
