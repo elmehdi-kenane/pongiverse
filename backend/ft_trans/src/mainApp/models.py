@@ -7,19 +7,47 @@ from myapp.models import customuser
 import random
 
 class Match(models.Model):
-	mode = models.CharField(max_length=255)
-	room_id = models.PositiveBigIntegerField(unique=True)
-	team1_player1 = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='team1_player1')
-	team1_player2 = models.ForeignKey(customuser, on_delete=models.CASCADE, null=True, related_name='team1_player2')
-	team2_player1 = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='team2_player1')
-	team2_player2 = models.ForeignKey(customuser, on_delete=models.CASCADE, null=True, related_name='team2_player2')
-	team1_score = models.PositiveIntegerField(default=0)
-	team2_score = models.PositiveIntegerField(default=0)
-	team1_status = models.CharField(max_length=255)
-	team2_status = models.CharField(max_length=255)
-	date_started = models.DateTimeField(default=timezone.now)
-	date_ended = models.DateTimeField(default=timezone.now)
-	match_status = models.CharField(max_length=255)
+    mode = models.CharField(max_length=255)
+    room_id = models.PositiveBigIntegerField(unique=True)
+    team1_player1 = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='team1_player1')
+    team1_player2 = models.ForeignKey(customuser, on_delete=models.CASCADE, null=True, related_name='team1_player2')
+    team2_player1 = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='team2_player1')
+    team2_player2 = models.ForeignKey(customuser, on_delete=models.CASCADE, null=True, related_name='team2_player2')
+    # team1_player1_score = models.PositiveIntegerField(default=0)
+    # team1_player2_score = models.PositiveIntegerField(default=0)
+    # team2_player1_score = models.PositiveIntegerField(default=0)
+    # team2_player2_score = models.PositiveIntegerField(default=0)
+    # team1_player1_score = models.PositiveIntegerField(default=0)
+    # team1_player2_score = models.PositiveIntegerField(default=0)
+    # team2_player1_score = models.PositiveIntegerField(default=0)
+    # team2_player2_score = models.PositiveIntegerField(default=0)
+    team1_score = models.PositiveIntegerField(default=0)
+    team2_score = models.PositiveIntegerField(default=0)
+    team1_status = models.CharField(max_length=255)
+    team2_status = models.CharField(max_length=255)
+    date_started = models.DateTimeField(default=timezone.now)
+    date_ended = models.DateTimeField(default=timezone.now)
+    match_status = models.CharField(max_length=255)
+    duration = models.PositiveIntegerField(default=0)
+
+class MatchStatistics(models.Model):
+    match = models.ForeignKey(Match, on_delete=models.CASCADE, related_name='match')
+    team1_player1_score = models.PositiveIntegerField(default=0)
+    team1_player2_score = models.PositiveIntegerField(default=0, null=True, blank=True)
+    team2_player1_score = models.PositiveIntegerField(default=0)
+    team2_player2_score = models.PositiveIntegerField(default=0, null=True, blank=True)
+    team1_player1_hit = models.PositiveIntegerField(default=0)
+    team1_player2_hit = models.PositiveIntegerField(default=0, null=True, blank=True)
+    team2_player1_hit = models.PositiveIntegerField(default=0)
+    team2_player2_hit = models.PositiveIntegerField(default=0, null=True, blank=True)
+    team1_player1_rating = models.PositiveIntegerField(default=0)
+    team1_player2_rating = models.PositiveIntegerField(default=0, null=True, blank=True)
+    team2_player1_rating = models.PositiveIntegerField(default=0)
+    team2_player2_rating = models.PositiveIntegerField(default=0, null=True, blank=True)
+    team1_player1_level = models.PositiveIntegerField(default=0)
+    team1_player2_level = models.PositiveIntegerField(default=0, null=True, blank=True)
+    team2_player1_level = models.PositiveIntegerField(default=0)
+    team2_player2_level = models.PositiveIntegerField(default=0, null=True, blank=True)
 
 class ActiveMatch(models.Model):
 	mode = models.CharField(max_length=255)
@@ -45,9 +73,10 @@ class NotifPlayer(models.Model):
 	player = models.ForeignKey(customuser, on_delete=models.CASCADE)
 
 class GameNotifications(models.Model):
-	active_match = models.ForeignKey(ActiveMatch, on_delete=models.CASCADE, related_name='game_notify_active_match')
-	user = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='notify_user')
-	target = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='notify_target')
+    active_match = models.ForeignKey(ActiveMatch, on_delete=models.CASCADE, related_name='game_notify_active_match')
+    user = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='notify_user')
+    target = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='notify_target')
+    mode = models.CharField(max_length=255)
 # room_id_manager = RoomIDManager()
 
 class Tournament(models.Model):
@@ -67,6 +96,15 @@ class TournamentInvitation(models.Model):
 	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='Invitation_tournament')
 	sender = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='sender')
 	receiver = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='receiver')
+   
+
+class GameCustomisation(models.Model):
+    user = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='customize_board')
+    paddle_color = models.CharField(max_length=255)
+    ball_color = models.CharField(max_length=255)
+    board_color = models.CharField(max_length=255)
+    ball_effect = models.BooleanField(default=False)
+
 
 class TournamentWarnNotifications(models.Model):
 	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='TournamentWarnNotifications')
@@ -78,5 +116,10 @@ class Round(models.Model):
 
 class TournamentUserInfo(models.Model):
 	round = models.ForeignKey(Round, on_delete=models.CASCADE, related_name='tournamentuserinfo')
-	user = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='user', null=True, blank=True)
+	user = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='user', null=True)
 	position = models.PositiveIntegerField(default=0)
+
+class DisplayOpponent(models.Model):
+	user1 = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='DisplayOpponentUser1')
+	user2 = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='DisplayOpponentUser2')
+	created_at = models.DateTimeField(default=timezone.now, editable=False)

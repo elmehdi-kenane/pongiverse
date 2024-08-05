@@ -15,7 +15,7 @@ function NavbarSidebar() {
 	const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
     const location = useLocation()
 	const [searchbar, setSearchBar] = useState(false);
-    let { user, socket, privateCheckAuth, setUser } = useContext(AuthContext)
+    let { user, socket, privateCheckAuth, setUser, hideNavSideBar } = useContext(AuthContext)
 	let navigate = useNavigate()
     const [newRecievedFriendReqNotif, setNewRecievedFriendReqNotif] = useState(false);
     const [friendReq, setFriendReq] = useState('');
@@ -23,7 +23,6 @@ function NavbarSidebar() {
     const data = useContext(SocketDataContext);
 
     const notify = () => {
-        console.log("+++++++++ call notify +++++++++")
         setNewRecievedFriendReqNotif(false)
         toast(
             <NotificationPopupCard secondUsername={friendReq.username} avatar={friendReq.avatar} />,
@@ -42,10 +41,6 @@ function NavbarSidebar() {
     };
 
     useEffect(() => {
-        console.log("============ socket-notif-start ============");
-        console.log(data.message, data.type);
-        console.log("============ socket-notif-end ============");
-
         if (data.type === 'recieve-friend-request') {
             setNewRecievedFriendReqNotif(true);
             console.log("inside recieve-friend-request condition:", newRecievedFriendReqNotif);
@@ -63,76 +58,70 @@ function NavbarSidebar() {
     }, [data.message.to_user, data.type]);
 
     useEffect(() => {
-        { console.log("path url:", location.pathname) }
-        { console.log("newRecievedFriendReqNotif: ", newRecievedFriendReqNotif, "location.pathname !== '/mainpage/friends'", location.pathname !== '/mainpage/friends') }
         {
             (newRecievedFriendReqNotif && location.pathname !== '/mainpage/friends') ?
                 (
-                    // removeFriendReqNotif ?
-                    //     console.log("current notif should be disappears")
-                    //     :
                     notify()
                 )
-                :
-                console.log("there's no newRecievedFriendReqNotif")
+                : console.log("")
         }
     }, [newRecievedFriendReqNotif]);
 
-	useEffect(() => {
-		privateCheckAuth()
-	}, [])
+  useEffect(() => {
+    privateCheckAuth();
+  }, []);
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 768) {
+      setSidebarIsOpen(false);
+      setSearchBar(false);
+    }
+  });
 
-	window.addEventListener('resize', () => {
-		if (window.innerWidth > 768) {
-			setSidebarIsOpen(false);
-			setSearchBar(false);
-		}
-	});
+  const handleExapandSidebar = () => {
+    setSidebarIsOpen(!sidebarIsOpen);
+  };
 
-	const handleExapandSidebar = () => {
-		setSidebarIsOpen(!sidebarIsOpen)
-	}
+  const handleSearchBar = () => {
+    setSearchBar(!searchbar);
+  };
 
-	const handleSearchBar = () => {
-		setSearchBar(!searchbar);
-	}
-
-	let logout = async (e) => {
-		e.preventDefault();
-
-		try {
-			let response = await fetch('http://localhost:8000/api/logout', {
-				method: 'POST',
-				credentials: 'include',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-			})
-			let content = await response.json()
-			if (content.message) {
-				setUser('')
-				navigate('/signin')
-			}
-		} catch (e) {
-			console.log('Error in network or URL')
-		}
-	}
-	return (
-		<>
-			<Navbar
-				Icons={Icons}
-				searchbar={searchbar}
-				setSearchBar={setSearchBar}
-				handleSearchBar={handleSearchBar}
-			/>
-			<div className='sidebarWrapper'>
-				<Sidebar
-					Icons={Icons}
-				/>
-				<Outlet />
-			</div>
-		</>
-	);
+  let logout = async (e) => {
+    e.preventDefault();
+    try {
+      let response = await fetch("http://localhost:8000/api/logout", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      let content = await response.json();
+      if (content.message) {
+        setUser("");
+        navigate("/signin");
+      }
+    } catch (e) {
+      console.log("Error in network or URL");
+    }
+  };
+  return (
+    <>
+      {!hideNavSideBar && (
+        <Navbar
+          Icons={Icons}
+          searchbar={searchbar}
+          setSearchBar={setSearchBar}
+          handleSearchBar={handleSearchBar}
+        />
+      )}
+      {
+        <div className="sidebarWrapper">
+          {!hideNavSideBar && <Sidebar Icons={Icons} />}
+          <Outlet />
+        </div>
+      }
+    </>
+  );
 }
 
 export default NavbarSidebar;

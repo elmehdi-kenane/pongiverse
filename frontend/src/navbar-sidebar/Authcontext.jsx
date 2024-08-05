@@ -5,6 +5,8 @@ import { friends } from "../assets/navbar-sidebar";
 import * as Icons from '../assets/navbar-sidebar'
 import { useReducer } from "react";
 
+import userPc from "../Settings/assets/Group.svg"
+
 const AuthContext = createContext();
 
 export default AuthContext;
@@ -23,6 +25,46 @@ export const AuthProvider = ({children}) => {
 	let [allGameNotifs, setAllGameNotifs] = useState([])
 	let [notifsImgs, setNotifsImgs] = useState([])
 	let allGameFriendsRef = useRef(allGameFriends)
+	let [isBlur, setIsBlur] = useState(false)
+	//chat socket ------------------------------------
+	let [chatSocket, setChatSocket] = useState(null);
+
+	
+	// Glass Background State --------------------------------------------
+	const [isGlass, setIsGlass] = useState(false);
+	
+	// Imad's States --------------------------------------------
+	//-- Glass Background
+	const [isReport, setIsReport] = useState(false);
+	const [isBlock, setIsBlock] = useState(false);
+	const [isChatBlur, setIsChartBlur] = useState(false);
+
+	const [reportValue, setReportValue] = useState(null);
+	const reportContentRef = useRef(null);
+	const blockRef = useRef(null);
+	const blockContentRef = useRef(null);
+	
+
+	const [userPic, setUserPic] = useState(userPc);
+	const [nickName, setNickName] = useState("Maverick");
+	const [bio, setBio] = useState("Lorem ipsum dolor sit amet consectetur adipisicing elit.");
+	const [country, setCountry] = useState("Morocco");
+
+
+
+	let [hideNavSideBar, setHideNavSideBar] = useState(false)
+	let [gameCustomize, setGameCustomize] = useState(['#FFFFFF', '#1C00C3', '#5241AB', false])
+	const oneVsOneIdRegex = /^\/mainpage\/play\/1vs1\/\d+$/
+	const twoVsTwoIdRegex = /^\/mainpage\/play\/2vs2\/\d+$/
+
+
+	// Glass Background Effect
+	useEffect (()=> {
+		if (!isReport && !isBlock && !isBlur)
+			setIsGlass(false);
+		else
+			setIsGlass(true);
+	}, [isReport, isBlock])
 
 	useEffect(() => {
 		allGameFriendsRef.current = allGameFriends;
@@ -90,7 +132,6 @@ export const AuthProvider = ({children}) => {
 					})
 				})
 				let friends = await response.json()
-				console.log("ALL MY FRIENDS ARE : ", friends.message)
 				if (friends.message.length)
 					setAllGameFriends(friends.message)
 				setLoading(false)
@@ -111,9 +152,10 @@ export const AuthProvider = ({children}) => {
 					})
 				})
 				let friends = await response.json()
-				console.log("ALL MY GAME NOTIFS ARE : ", friends.message)
-				if (friends.message.length)
+				if (friends.message.length) {
+					console.log(friends.message)
 					setAllGameNotifs(friends.message)
+				}
 			} catch (e) {
 				console.log("something wrong with fetch")
 			}
@@ -133,7 +175,20 @@ export const AuthProvider = ({children}) => {
 				const blob = await response.blob();
 				const image = URL.createObjectURL(blob)
 				setUserImg(image)
-				// console.log('USER IMAGE IS THIS : ', image)
+			} catch (e) {
+				console.log("something wrong with fetch")
+			}
+		}
+		
+		const getGameCustomize = async () => {
+			try {
+				let response = await fetch('http://localhost:8000/api/getCustomizeGame', {
+					credentials: 'include'
+				})
+				const res = await response.json()
+				console.log(res)
+				if (res.data)
+					setGameCustomize(res.data)
 			} catch (e) {
 				console.log("something wrong with fetch")
 			}
@@ -144,13 +199,22 @@ export const AuthProvider = ({children}) => {
 		else
 			setAllGameNotifs([])
 
-		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && user && !userImg)
-			getUserImage()
-
-		if ((location.pathname === '/mainpage/game/solo/1vs1/friends' || location.pathname === '/mainpage/game/createtournament') && user)
+		if ((location.pathname === '/mainpage/game/solo/1vs1/friends' || location.pathname === '/mainpage/game/createtournament' || location.pathname === '/mainpage/game/solo/2vs2/friends') && user)
 			getAllGameFriends()
 		else
 			setAllGameFriends([])
+
+		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && user && !userImg)
+			getUserImage()
+
+		if ((location.pathname === '/mainpage/game/board' || oneVsOneIdRegex.test(location.pathname) || twoVsTwoIdRegex.test(location.pathname)) && user)
+			getGameCustomize()
+
+		if (oneVsOneIdRegex.test(location.pathname) || twoVsTwoIdRegex.test(location.pathname) || location.pathname === '/mainpage/game/solo/computer')
+			setHideNavSideBar(true)
+		else
+			setHideNavSideBar(false)
+
 	}, [location.pathname, user])
 
 	useEffect(() => {
@@ -159,7 +223,7 @@ export const AuthProvider = ({children}) => {
 			if (!userExists)
 				setAllGameFriends([...currentAllGameFriends, newUser])
 			// setAllGameFriends(prevFriends => [...prevFriends, newUser]);
-		  };
+		};
 		async function sendUserData(uname, currentAllGameFriends){
 			try {
 				let response = await fetch('http://localhost:8000/api/get_user', {
@@ -178,12 +242,10 @@ export const AuthProvider = ({children}) => {
 				console.error('There has been a problem with your fetch operation:', error);
 			}
 		}
-		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && !socket && user) {
+		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && location.pathname !== '/mainpage/chat' && location.pathname !== "/mainpage/chat" && location.pathname !== "/mainpage/groups" && !socket && user) {
 			const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
-            // // Connection opened
 			newSocket.onopen = () => {
-                setSocket(newSocket)
-                console.log('WebSocket connection opened');
+				setSocket(newSocket)
 			}
             // Listen for errors
             newSocket.onerror = (error) => {
@@ -198,8 +260,33 @@ export const AuthProvider = ({children}) => {
 			if (socket) {
 				console.log("socket closed succefully")
 				// socket.close()
+		// 	newSocket.onmessage = (event) => {
+		// 		let data = JSON.parse(event.data)
+		// 		let type = data.type
+		// 		let uname = data.username
+		// 	}
+		// } else if ((location.pathname === '/' || location.pathname === '/signup' || location.pathname === '/signin' || location.pathname === '/SecondStep' ||  location.pathname === '/WaysSecondStep' || location.pathname === '/ForgotPassword' || location.pathname === '/ChangePassword' || location.pathname === "/mainpage/chat" || location.pathname === "/mainpage/groups") && socket) {
+		// 	if (socket) {
+		// 		socket.close()
 				setSocket(null)
 			}
+		}
+		if ( (location.pathname === "/mainpage/chat" || location.pathname === "/mainpage/groups") && !chatSocket && user) {
+		  const newChatSocket = new WebSocket(`ws://localhost:8000/ws/chat_socket`);
+		  newChatSocket.onopen = () => {
+			console.log("chat Socket Created and opened");
+			setChatSocket(newChatSocket);
+		  };
+		  newChatSocket.onmessage = (event) => {
+					let data = JSON.parse(event.data)
+			console.log("connection hereeee", data)
+		  }
+		} else if ( location.pathname !== "/mainpage/chat" && location.pathname !== "/mainpage/groups") {
+		  if (chatSocket) {
+			console.log("chat Socket Closed")
+			chatSocket.close();
+			setChatSocket(null);
+		  }
 		}
 
 	}, [location.pathname, user])
@@ -243,6 +330,7 @@ export const AuthProvider = ({children}) => {
 			response = await response.json()
 			if (response.Case !== "Invalid token") {
 				setUser(response.data.username)
+				console.log("USER USERNSME: ",response.data.username)
 			} else {
 				setUser('')
 				navigate('/signin')
@@ -268,8 +356,37 @@ export const AuthProvider = ({children}) => {
 		userImages: userImages,
 		setAllGameNotifs: setAllGameNotifs,
 		allGameNotifs: allGameNotifs,
-		notifsImgs: notifsImgs
+		notifsImgs: notifsImgs,
+		gameCustomize: gameCustomize,
+		hideNavSideBar: hideNavSideBar,
+		// Profile Settings
+		isGlass:isGlass,
+		setIsGlass:setIsGlass,
+		isReport: isReport,
+		setIsReport: setIsReport,
+		reportContentRef: reportContentRef,
+		reportValue: reportValue,
+		setReportValue: setReportValue,
+		isBlock: isBlock,
+		setIsBlock:setIsBlock,
+		blockRef:blockRef,
+		blockContentRef:blockContentRef,
+		// User Credintials
+		userPic:userPic,
+		setUserPic:setUserPic,
+		nickName:nickName,
+		bio:bio,
+		country,country,
+		setNickName:setNickName,
+		setBio:setBio,
+		setCountry:setCountry,
+		// chat blur
+		isBlur:isBlur,
+		setIsBlur:setIsBlur,
 		// gameNotif: gameNotif
+		//chat socket
+		chatSocket: chatSocket,
+		setChatSocket: setChatSocket
 	}
 
 	return (

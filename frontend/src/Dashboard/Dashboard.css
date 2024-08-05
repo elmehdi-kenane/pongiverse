@@ -1,0 +1,554 @@
+.dashpage {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    /* border: white solid 1px; */
+    overflow-y: scroll;
+    gap : 20px;
+    padding-top:00px;
+}
+
+
+.dash--space{
+    gap: 15px;
+    padding: 0 15px;
+}
+.dash--bkborder {
+    border-radius: 3px;
+    background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
+}
+
+.dash--win-color {
+    color: #f4effa;
+    font-weight: 550;
+}
+.dash--lost-color {
+    color: #826aed;
+    font-weight: 550;
+    /* color: #8884d8 ;*/
+}
+/* -------HEAD------ */
+
+.dashpage .dashpage__head {
+    display: flex;
+    height: 100px;
+    /* border: purple solid 2px; */
+}
+
+.dashpage .dashpage__head .head__game-stats {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    flex-direction: column;
+    padding: 5px;
+}
+
+.dashpage .dashpage__head .head__game-stats .game { /* <p>Games<p/> */
+    color: white;
+    font-size: 15px;
+    font-weight: 550;
+}
+.head__game-stats .head__games-value-pic {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: white;
+}
+.head__game-stats .head__games-value-pic img{
+    height: 17px;
+    width: 17px;
+}
+
+.head__game-stats .head__game-stats__percentage { /* Percentage Values */
+    display: flex;
+    justify-content: space-between;
+    margin: -15px 5px 0 5px; 
+    width: 80%;
+}
+.head__game-stats__percentage .pic-percentage {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.head__game-stats__percentage .pic-percentage svg{
+    height: 18px;
+    width: 18px;
+}
+
+.head__game-stats .head__game-stats__line { /* Line Percentage */
+    margin-top: 2px;
+    width: 80%;
+    display: flex;
+    height: 15px;
+    border-radius: 6px;
+    animation: moving 2s ease-in-out;
+}
+
+@keyframes moving {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 80%;
+    }
+}
+
+.head__game-stats .head__game-stats__line .left-side{
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    background-color: #f4effa;
+}
+.head__game-stats .head__game-stats__line .right-side{
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #826aed
+;
+}
+
+.head__game-stats .head__game-stats__statistics {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+}
+
+/* --------------------------BODY------------------------- */
+
+.dashpage .dashpage__body {
+    display: flex;
+    width: 100%;
+    height: 540px;
+    /* border: purple solid 2px; */
+}
+
+/* -------statistics------- */
+
+.dashpage .dashpage__body .dashpage__body__statistics {
+    width: 67%;
+    padding: 10px 10px;
+}
+.dashpage__body__statistics .statistics-head-button{
+    display: flex;
+    height: 50px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dashpage .dashpage__body .dashpage__body__statistics h1 {
+    color: white;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-left: 7px;
+}
+.dashpage .dashpage__body .dashpage__body__statistics .chart-icon {
+    color: #826aed;
+    height: 30px;
+    width: 30px;
+    background: #f4effa;
+    border-radius: 40%;
+    margin: 30px 4px 0 0;
+}
+.dashpage .dashpage__body .dashpage__body__statistics .chart-icon:hover {
+    background: #826aed;
+    color: #f4effa;
+    cursor: pointer;
+    transition: ease-in 0.2s;
+}
+.dashpage .dashpage__body .dashpage__body__statistics .line-graph {
+    margin: 20px 0 0 0;
+    height: 450px;
+    width: 100%;
+    /* border: white 1px solid; */
+}
+
+/* -------rank------- */
+
+.rank-classment {
+    width: 32.8%;
+    display: flex;
+}
+
+.dashpage .dashpage__body .dashpage__body__rank{
+    width: 100%;
+}
+.dashpage .dashpage__body .dashpage__body__rank h1{
+    color: white;
+    font-size: 25px;
+    letter-spacing: 1px;
+    font-weight: 600;
+    padding: 10px;
+    border-bottom: #250939 solid 10px;
+    text-align: center;
+}
+
+.dashpage__body__rank .dashpage__body__rank__title{
+    display: flex;
+    color: white;
+    border-bottom: #250939 solid 3px;
+}
+
+.dashpage__body__rank .dashpage__body__rank__title .title {
+    padding: 8px;
+    width: 100%;
+    text-align: center;
+    background: #5f4582;
+    /* background: #775C9E; */
+    border-right: black solid 0.5px;
+}
+
+.dashpage__body__rank .dashpage__body__rank__title .title:hover {
+    background: rgb(247, 239, 255);
+    color: #5f4582;
+    transition: ease-in 0.2s;
+    cursor: pointer;
+}
+
+.dashpage__body__rank .dashpage__body__rank__classment {
+    display: flex;
+    flex-direction: column;
+    /* border: solid 1px white; */
+    height: 438px;
+    overflow-y: scroll;
+}
+
+.dashpage__body__rank .dashpage__body__rank__classment p:hover,
+.dashpage__body__rank .dashpage__body__rank__classment:hover {
+    cursor: pointer;
+}
+
+.dashpage__body__rank__classment .player__classment{
+    display: flex;
+    color: white;
+    /* border: solid 1px white; */
+    height: 44.2px;
+    align-items: center;
+    border-bottom: #250939 solid 3px;
+}
+
+.dashpage__body__rank__classment .player__classment:hover{
+    background-color: #250939;
+    transition: ease-in 0.2s;
+    box-shadow: 0 2px 30px 0 #250939;
+}
+
+.dashpage__body__rank__classment .player__classment .player__pos_pic{
+    display: flex;
+    width: 110px;
+    align-items: center;
+    justify-content: space-between;
+    /* border: white solid 1px; */
+    margin-left: 5px;
+}
+
+.player__pos_pic .winners {
+    padding: 5px;
+    font-weight: 500;
+    color: black;
+    border-radius: 3px;
+}
+
+.winner--1 {
+    background-color: gold;
+}
+
+.winner--2 {
+    background-color: silver;
+}
+
+.winner--3 {
+    background-color: #CD7F32; /* Bronze Color*/
+}
+
+
+.dashpage__body__rank__classment .player__classment .player__pos_pic img{
+    border-radius: 50%;
+    width: 35px;
+    margin-left: 5px;
+}
+
+.dashpage__body__rank__classment .player__classment .player__name_level{
+    display: flex;
+    padding: 10px;
+    width: 100%;
+    justify-content: space-between;
+    word-break: break-all;
+    /* border: white 1px solid; */
+}
+
+.player__name_level--champions{
+    font-weight: 550;
+    font-size: 17px;
+}
+
+/* ------FOOTER------ */
+
+.dashpage .dashpage__footer {
+    width: 100%;
+    height: 300px;
+    display: flex;
+    margin-bottom: 100px;
+}
+
+.footer__single-match,
+.footer__multiplayer-match,
+.footer__tournament-match {
+    /* border: white solid 2px; */
+    width: 33%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 10px;
+    gap: 10px;
+    /* border: 1px solid rgba( 255, 255, 255, 0.18 ); */
+}
+
+.footer__titles {
+    color: white;
+    font-size: 23px;
+    margin-bottom: 8px;
+}
+
+.footer__result {   /* result of all footer matches */
+    display: flex;
+    height: 60px;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    color: white;
+    
+    background: rgba( 255, 255, 255, 0.25 );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    box-shadow: 0 2px 30px 0 #250939;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+}
+
+.footer__result:hover{
+    transition: ease-in 0.2s;
+    box-shadow: 0 2px 30px 0 #5f4582;
+    cursor: pointer;
+}
+.footer__result:hover p{
+    cursor: pointer;
+}
+
+/* Single Match */
+
+.footer__single-match .single-match__result img {
+    width: 45px;
+}
+
+/* Multiplayer Match */
+
+.footer__multiplayer-match .multiplayer-match__result .multiplayer-pics {
+    display: flex;
+    gap : 3px;
+}
+
+.multiplayer-match__result .multiplayer-pics img:nth-child(1) {
+    margin-bottom: 15px;
+}
+
+.multiplayer-match__result .multiplayer-pics img:nth-child(2) {
+    margin-top: 15px;
+}
+
+.multiplayer-match__result .multiplayer-pics img{
+    width: 40px;
+}
+
+/* Tournament Match */
+
+.footer__tournament-match .tournament-match__result img {
+    width: 45px;
+}
+
+/* Pagination */
+
+.expand-more {
+    color: white;
+    margin-top: -2px;
+}
+
+.expand-less {
+    color: #250939;
+    margin-top: -2px;
+}
+
+.expand-more:hover,
+.expand-less:hover {
+    color: #775C9E;
+    cursor: pointer;
+}
+
+@media (min-width: 1440px) {
+    .dashpage {
+        width: 1400px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 950px) {
+
+    /* Body rank Classment */
+    .dashpage__body__rank__classment .player__classment .player__pos_pic{
+        width: 90px;
+    }
+    .player__pos_pic .winners {
+        padding: 2px;
+        font-weight:400;
+    }
+    .dashpage__body__rank__classment .player__classment .player__pos_pic img{
+        width: 32px;
+    }
+    
+    .dashpage__body__rank__classment .player__classment .player__name_level{
+        padding: 13px;
+        font-size: 11.5px;
+    }
+    .player__name_level--champions{
+        font-weight: 450;
+        font-size: 12px;
+    }
+    
+    /* Footer */
+
+    .footer__titles {
+        font-size: 19px;
+        font-weight: 500;
+        margin-bottom: 10px;
+    }
+
+    .footer__result p{
+        font-size: 13px;
+    }
+
+    .footer__tournament-match .tournament-match__result img,
+    .footer__single-match .single-match__result img {
+        width: 40px;
+    }
+
+    .footer__multiplayer-match .multiplayer-match__result .multiplayer-pics {
+        gap : 0px;
+    }
+    .multiplayer-match__result .multiplayer-pics img{
+        width: 30px;
+    }
+}
+
+@media (min-width: 768px) {
+    .footer__tournament-match2{
+        display: none;
+    }
+}
+
+@media (max-width:768px) {
+    
+    .footer__tournament-match {
+        display: none;
+    }
+    
+    .dashpage {
+        gap : 15px;
+        padding-top:20px;
+    }
+
+    .dashpage .dashpage__head {
+        height: 90px;
+        flex-shrink: 0;
+    }
+
+    .dashpage .dashpage__body {
+        height: 820px;
+        flex-direction: column;
+    }
+
+    /* Statistics */
+    .dashpage .dashpage__body .dashpage__body__statistics {
+        width: 100%;
+        padding: 10px 10px;
+    }
+    .dashpage .dashpage__body .dashpage__body__statistics h1 {
+        font-size: 25px;
+        font-weight: 500;
+    }
+    .dashpage .dashpage__body .dashpage__body__statistics .line-graph {
+        height: 200px;
+    }
+    
+    /* Rank */
+    
+    .rank-classment {
+        width: 100%;
+        gap: 15px;
+    }
+    .dashpage .dashpage__body .dashpage__body__rank{
+        width: 60%;
+    }
+    .dashpage .dashpage__body .dashpage__body__rank h1{
+        font-weight: 500;
+        padding: 5px;
+        border-bottom: #250939 solid 5px;
+    }
+    .footer__tournament-match2 {
+        width: 40%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0 10px;
+        gap: 10px;
+        /* border: 1px solid rgba( 255, 255, 255, 0.18 ); */
+    }
+    .footer__tournament-match2 h1 {
+        margin-top: 25px;
+        margin-bottom: 15px;
+        font-size: 20px;
+    }
+    .footer__tournament-match2 .tournament-match__result img {
+        width: 45px;
+    }
+    
+    .dashpage__footer {
+        margin-top: 10px;
+    }
+    .footer__single-match,
+    .footer__multiplayer-match{
+        width: 50%;
+    }
+}
+
+@media (max-width: 550px) {
+    /* Head */
+    .dashpage .dashpage__head {
+        /* flex-wrap: wrap; */
+        gap: 0.5%;
+    }
+    .dashpage .dashpage__head .dashpage__head__element {
+        font-size: 10px;
+        width: 49.75%;
+        height: 25px;
+        margin-bottom: 2px;
+    }
+
+    /* Body */
+    .dashpage .dashpage__body {
+        height: 1400px;
+    }
+    .rank-classment {
+        flex-direction: column;
+    }
+    .dashpage .dashpage__body .dashpage__body__rank,
+    .footer__tournament-match2,
+    .footer__single-match,
+    .footer__multiplayer-match{
+        width: 100%;
+    }
+    .dashpage .dashpage__footer {
+        flex-direction: column;
+        height: 700px;
+        margin-top: 0;
+    }
+}
