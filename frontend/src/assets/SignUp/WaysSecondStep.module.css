@@ -1,0 +1,139 @@
+/* .ways-second-step-page{
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100vh;
+}
+
+
+.ways-second-step-navbar {
+	display: flex;
+	width: 100%;
+	height: 60px;
+	margin-left: 10%;
+	margin-top: 20px;
+}
+
+.ways-second-step-form-div{
+	display: flex;
+	width: 100%;
+	height: 1200px;
+	justify-content: center;
+	align-items: center;
+	overflow: auto;
+}
+
+.ways-second-step-form{
+	width: 30%;
+	height: 400px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+}
+
+.ways-second-step-input {
+	width: 60%;
+	height: 60px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: rgba(255, 255, 255, 0.2);
+	border: none;
+	text-indent: 15px;
+	color: white;
+	font-size: medium;
+}
+
+.ways-second-step-input:hover {
+	background-color: rgba(255, 255, 255, 0.5);
+}
+
+.ways-second-step-input:focus {
+	outline: none;
+	border-color: transparent;
+	background-color: rgba(255, 255, 255, 0.5);
+}
+
+.ways-second-step-input:active {
+	border: none;
+	outline: none;
+}
+
+.ways-second-step-button {
+	width: 60%;
+	height: 60px;
+	border: none;
+	font-size: 20px;
+	font-weight: bold;
+	cursor: pointer;
+	color: white;
+	background-color: #913DCE;
+}
+
+.ways-second-step-button:active {
+	background-color: black;
+}
+
+@media (min-width: 1441px){
+	.ways-second-step-form{
+		width: 800px;
+		min-width: 430px;
+		height: 400px;
+	}
+}
+
+@media (max-width: 1440px) {
+	.ways-second-step-form{
+		width: 50%;
+		height: 400px;
+	}
+}
+@media (max-width: 1024px) {
+	.ways-second-step-form{
+		width: 80%;
+		height: 400px;
+	}
+}
+
+@media (max-width: 600px) {
+	.ways-second-step-form{
+		width: 100%;
+		height: 400px;
+	}
+}
+
+@media (max-width: 300px) {
+	.ways-second-step-form{
+		width: 100%;
+		height: 400px;
+	}
+	.ways-second-step-input::placeholder {
+		font-size: 12px;
+	}
+
+	.ways-second-step-form{
+		width: 95%;
+		height: 400px;
+	}
+
+	.ways-second-step-form-div{
+		align-items: initial;
+	}
+
+}
+
+@media (max-width: 240px) {
+
+	.ways-second-step-navbar {
+		width: 100%;
+		height: 50px;
+		margin-left: 7%;
+		margin-top: 10px;
+	}
+
+	.ways-second-step-form{
+		margin-top: -20px;
+	}
+} */
