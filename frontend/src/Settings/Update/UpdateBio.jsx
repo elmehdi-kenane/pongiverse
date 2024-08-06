@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
 import AuthContext from '../../navbar-sidebar/Authcontext';
 import ProfileContext from '../../Profile/ProfileWrapper';
+import EditIcon from '@mui/icons-material/Edit';
 
 function UpdateBio() {
   const [isUpdate, setIsUpdate] = useState(false);
@@ -89,11 +90,13 @@ function UpdateBio() {
       {isUpdate &&
         <textarea type="text"
           className="update__input input-bio"
-          placeholder='Enter new bio... '
+          placeholder='Enter new Bio... '
           maxLength={100}
           onKeyDown={handleInputKeyDown}
           ref={inputRef} />}
-      <div className="update__btn" onClick={onUpdate} ref={iconRef}> {submit} </div>
+      <div className="update__btn" onClick={onUpdate} ref={iconRef}>  <p> {submit} </p>
+        <EditIcon /> 
+      </div>
     </div>
   )
 }

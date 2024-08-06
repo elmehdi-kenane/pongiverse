@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
 import AuthContext from '../../navbar-sidebar/Authcontext';
+import EditIcon from '@mui/icons-material/Edit';
 
 function UpdateNkName() {
     const [isUpdate, setIsUpdate] = useState(false);
@@ -77,7 +78,9 @@ function UpdateNkName() {
                 maxLength={8}
                 onKeyDown={handleInputKeyDown}
                 ref={inputRef} />}
-            <div className="update__btn" onClick={onUpdate} ref={iconRef}> {submit} </div>
+            <div className="update__btn" onClick={onUpdate} ref={iconRef}> <p> {submit} </p>
+              <EditIcon /> 
+            </div>
         </div>
     )
 }

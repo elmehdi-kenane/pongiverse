@@ -3,7 +3,7 @@ import AuthContext from '../../navbar-sidebar/Authcontext';
 import Loading from '../../Game/Loading';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 function UpdatePwd(props) {
 
@@ -19,16 +19,18 @@ function UpdatePwd(props) {
   const notifySuc = (suc) => toast.success(suc);
 
   const checkPwd = (oldPwd, newPwd, cfmPwd) => {
-    if (!oldPwd || !newPwd || !cfmPwd){
-      notifyErr('Error: Da5al ga3 lpasswords'); 
-      return (false)
-    }
-    else if (newPwd !== cfmPwd)
-      return (false, console.error('Error: Passwords do not match!'))
-    else if (newPwd === oldPwd)
-      return (false, console.error('Error: Old password and new passwords are identical!'))
-    return true
-  }
+    if (!oldPwd || !newPwd || !cfmPwd)
+      return (notifyErr('You need to fill all the password!'), false);
+    if (oldPwd.length < 8)
+      return (notifyErr('Wrong Current Password!'), false);
+    if (newPwd !== cfmPwd) 
+      return (notifyErr('New Passwords Do Not Match!'), false);
+    if (newPwd.length < 8 || cfmPwd.length < 8)
+      return (notifyErr('New Passwords Needs To Be At Least 8 Characters Long!'), false);
+    if (newPwd === oldPwd)
+      return (notifyErr('Old Password And New Passwords Are Identical!'), false);
+    return true;
+  };
 
   const updatePassword = async () => {
     const oldPwd = oldPRef.current.value;
@@ -51,12 +53,13 @@ function UpdatePwd(props) {
         });
         const res = await response.json()
         if (response.ok) {
-          notifySuc(res.case); 
+          notifySuc(res.case);
           // console.log(res.case);
         }
         else
           notifyErr(res.error);
       } catch (error) {
+        notifyErr(error);
         console.error(error);
       }
     }

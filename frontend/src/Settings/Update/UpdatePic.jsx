@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react'
 import AuthContext from '../../navbar-sidebar/Authcontext';
 import ProfileContext from '../../Profile/ProfileWrapper';
+import EditIcon from '@mui/icons-material/Edit';
 
 
 function UpdatePic(props) {
@@ -54,12 +55,15 @@ function UpdatePic(props) {
       <div className="update">
         <img src={userPic} alt="userImg" />
         <p className='title-pic'> Upload a new picture </p>
-        <div className="update__btn" onClick={() => props.setAdjust(true)}> Update </div>
+        <div className="update__btn" onClick={() => props.setAdjust(true)}> <p> Update </p>
+          <EditIcon /> 
+        </div>
       </div>
       <div className="update">
         <img src={userBg} alt="userBg" />
         <p className='title-pic'> Upload a new walppaper </p>
-        <div className="update__btn" onClick={() => document.getElementById('fileInput').click()}> Update
+        <div className="update__btn" onClick={() => document.getElementById('fileInput').click()}> <p> Update </p>
+          <EditIcon />
           <input
             id="fileInput"
             type="file"

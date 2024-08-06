@@ -43,7 +43,6 @@
 .settings-page .settings__leftside {
     display: flex;
     flex-direction: column;
-    height: 400px;
     width: 25%;
     /* border: #8edf34 solid 1px; */
     color: white;
@@ -51,6 +50,7 @@
 .settings__leftside .pic-name{
     display: flex;
     align-items: center;
+    margin-bottom: 5px;
     gap: 10px;
 }
 .settings__leftside .pic-name img {
@@ -65,6 +65,7 @@
     /* text-align: center; */
     border-bottom: #ccc 0.5px solid;
     margin-bottom: 20px;
+    font-size: 17px;
 }
 
 .settings-page .settings__leftside .left__security,
@@ -76,6 +77,7 @@
     width: 100%;
     border-radius: 10px;
     cursor: pointer;
+    font-size: 18px;
 }
 
 
@@ -355,6 +357,7 @@
 /*---- Update Btn ----*/
 
 .update .update__btn {
+    display: flex;
     background-color: #826aed;
     border: white 1px solid;
     border-radius: 10px;
@@ -443,5 +446,105 @@
     .settings-page {
         width: 1400px;
         margin: 0 auto;
+    }
+}
+
+@media (max-width: 1000px) {
+    .settings-page {
+        flex-direction: column;
+        justify-content: start;
+    }
+    
+    .settings-page .settings__security,
+    .settings-page .settings__leftside {
+        width: 90%;
+        align-self: center;
+    }
+    .settings__leftside .pic-name {
+        font-size: 20px;
+        height: 50px;
+        width: 50px;
+    }
+    .settings-page .settings__personal-info {
+        margin-bottom: 0px;
+        align-self: center;
+        width: 90%;
+        margin-bottom: 280px;
+    }
+}
+
+@media (max-width: 768px) {
+    .settings__header {
+        font-size: 25px;
+    }
+    .update {
+        padding: 0 20px 0 20px;
+        gap: 10px;
+    }
+    .update .update__btn {
+        padding: 8px 15px;
+    }
+    .update .update__btn:hover {
+        padding: 9px 17px;
+    }
+    .update .update__info {
+        font-size: 14px;
+        font-weight: 450;
+    }
+    .update .title {
+        width: 85px;
+        font-size: 14px;
+        margin-right: 10px;
+    }
+    .personal-info__update .update .title-pic {
+        font-size: 14px;
+    }
+}
+@media (min-width: 570px) {
+    .update .update__btn svg{
+        display: none;
+    }
+}
+@media (max-width: 570px) {
+
+    .update {
+        padding: 0 15px 0 15px;
+    }
+    .settings-page .settings__security,
+    .settings-page .settings__personal-info,
+    .settings-page .settings__leftside {
+        width: 100%;
+    }
+
+    .update .update__btn svg{
+        display:block;
+    }
+    .update .update__btn p{
+        display: none;
+    }
+    .update .update__btn svg{
+        height: 22.5px;
+        width: 22.5px;
+    }
+    .update .update__btn {
+        padding: 4px 4px;
+    }
+    .update .update__btn:hover {
+        padding: 5.5px 5.5px;
+    }
+    .personal-info__update .country-space {
+        /* display: flex;
+        flex-direction: column; */
+    }
+
+    .personal-info__update .update img {
+        height: 50px;
+        width: 50px;
+        margin-right: 5px;
+    }
+    .personal-info__update .update + .update img {
+        margin-right: 5px;
+        height: 45px;
+        width: 60px;
     }
 }
