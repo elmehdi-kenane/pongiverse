@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from '../../assets/SignUp/SignUpPage.module.css'
+import styles from '../../assets/SignIn/authentication.module.css'
 import logo42 from '../../assets/SignUp/42_logo.svg'
 import logoGoogle from '../../assets/SignIn/GoogleIcon.svg'
 import toast, { Toaster } from 'react-hot-toast';
@@ -150,11 +150,7 @@ function SignInWays() {
 	}
 	return (
 		<>
-			<Toaster
-				position="top-center" // Default position for all toasts if not specified individually
-				reverseOrder={false} // Set to true to reverse the order of toasts
-			/>
-			<div className='authentication-signin-ways'>
+			<div className={styles['authentication-signin-ways']}>
 				<img onClick={handleGoogleClick} src={logoGoogle} alt="" />
 				<img onClick={handleIntraClick} src={logo42} alt="" />
 			</div>

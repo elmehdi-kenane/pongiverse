@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../SignIn/signinexample.css'
+import styles from '../../assets/SignIn/authentication.module.css'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 axios.defaults.xsrfCookieName = "csrftoken";
@@ -65,14 +65,14 @@ function SignUpForm() {
 	}
 	return (
 		<>
-			<input type='email' className='authentication-signup-input' name='email' value={data.email} onChange={handleChange} placeholder='Enter your email' />
+			<input type='email' className={styles['authentication-signup-input']} name='email' value={data.email} onChange={handleChange} placeholder='Enter your email' />
 			{errors.email && <span>{errors.email}</span>}
 			{exist && <span>Email Already exist</span>}
-			<input type='password' className='authentication-signup-input' value={data.password} name='password' onChange={handleChange}  placeholder='Enter a password' />
+			<input type='password' className={styles['authentication-signup-input']} value={data.password} name='password' onChange={handleChange}  placeholder='Enter a password' />
 			{errors.password && <span>{errors.password}</span>}
-			<input type='password' className='authentication-signup-input' name='confirmPassword' onChange={handleChange} placeholder='Confirm your password' />
+			<input type='password' className={styles['authentication-signup-input']} name='confirmPassword' onChange={handleChange} placeholder='Confirm your password' />
 			{errors.confirmPassword && <span>{errors.confirmPassword}</span>}
-			<button className='authentication-signup-button' onClick={handleNextClick} >Sign Up</button>
+			<button className={styles['authentication-signup-button']} onClick={handleNextClick} >Sign Up</button>
 		</>
 	);
 }

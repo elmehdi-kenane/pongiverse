@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
-import './signinexample.css'
+import styles from '../../assets/SignIn/authentication.module.css'
 
 import Cookies from 'js-cookie';
 import { Link } from 'react-router-dom';
@@ -51,16 +51,12 @@ function SignInForm() {
 
 	return (
 		<>
-			<Toaster
-				// position="top-right"
-				reverseOrder={false}
-			/>
-			<input className='authentication-signin-input' type="text" value={data.username} onChange={handleChange} name='username' placeholder='Enter your username' />
-			<input className='authentication-signin-input' type="password" name='password' value={data.password} onChange={handleChange} placeholder='Enter your password' />
-			<div className='authentication-signin-forget-password-div'>
-				<Link className='authentication-signin-forget-password' to="/ForgotPassword">Forget your password?</Link>
+			<input className={styles['authentication-signin-input']} type="text" value={data.username || ''} onChange={handleChange} name='username' placeholder='Enter your username' />
+			<input className={styles['authentication-signin-input']} type="password" name='password' value={data.password || ''} onChange={handleChange} placeholder='Enter your password' />
+			<div className={styles['authentication-signin-forget-password-div']}>
+				<Link className={styles['authentication-signin-forget-password']} to="/ForgotPassword">Forget your password?</Link>
 			</div>
-			<button className='authentication-signin-button' onClick={handleSubmit}>Sign In</button>
+			<button className={styles['authentication-signin-button']} onClick={handleSubmit}>Sign In</button>
 		</>
 	);
 }

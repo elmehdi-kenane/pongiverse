@@ -97,10 +97,7 @@ function LocalTournamentFillMembers() {
 
 	return (
 		<div className={styles["tournament-page"]}>
-			<Toaster
-				position="top-center"
-				reverseOrder={false}
-			/>
+			<Toaster/>
 			<div className={styles["tournament-page-content"]}>
 				<div className={styles["title-and-destroy"]}>
 					<h1 className={styles["tournament-title"]}>Tournament Creation</h1>

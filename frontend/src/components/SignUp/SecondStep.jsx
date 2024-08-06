@@ -3,6 +3,7 @@ import Header from './Header';
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
+import logo from '../../assets/SignUp/logo.svg'
 import { useNavigate } from 'react-router-dom';
 import imagePlaceholder from '../../assets/SignUp/imagePlaceholder.svg'
 import toast, { Toaster } from 'react-hot-toast';
@@ -101,7 +102,7 @@ function SecondStep() {
 					console.error('There was an error!', error);
 				});
 		}
-		else if (errors.username){
+		else if (errors.username) {
 			notifyError(errors.username)
 		}
 	}
@@ -110,34 +111,25 @@ function SecondStep() {
 	};
 
 	return (
-		<div className={styles["body_page"]}>
-			<Toaster
-				position="top-right"
-				reverseOrder={false}
-			/>
-			<div className={styles["mainPage"]}>
-				<Header />
-				<div className={styles["SecondStepContainer"]}>
-					<div className={styles["signUpContainer"]}>
-						<h1 className={styles["title"]}>Next Step</h1>
-						<form className={styles["signUpForm"]} onSubmit={handleSubmit} noValidate>
-							<input className={styles["inputs"]} type="text" name='username' value={nextdata.username} onChange={handleInputChange} placeholder="enter a username" />
-							{exist && <span className={styles["spans"]}>Username already used</span>}
-							<div className={styles["imageField"]}>
-								<input type="file" name="avatar" id="image-upload" accept="image/*" onChange={handleInputChange} className={styles["image-upload"]} />
-								<label htmlFor="image-upload" className={styles["image-label"]} >Choose a file</label>
-								<div className={styles["display-image"]}>
-									{
-										!nextdata.avatar ? <img src={imagePlaceholder} alt="" /> : <img src={getAvatarUrl(nextdata.avatar)} alt="" />
-									}
-								</div>
-							</div>
-							<div className={styles["image-spans"]}>
-								<span className={styles["optional"]}>(optional)</span>
-							</div>
-							<button type="submit" className={styles["submitButton"]}>Sign Up</button>
-						</form>
+		<div className={styles["second-step-page"]}>
+			<div className={styles["second-step-navbar"]}>
+				<img src={logo} alt="" />
+			</div>
+			<div className={styles["second-step-form-div"]}>
+				<div className={styles["second-step-form"]}>
+					<div className={styles["second-step-form-inputs-and-image-display"]}>
+						<div className={styles["second-step-form-inputs"]}>
+							<input type="text" value={nextdata.username} name='username' className={styles["second-step-form-inputs-input"]} onChange={handleInputChange} placeholder='Enter a username' />
+							<input type="file" name="avatar" id="image-upload" className={styles["second-step-form-inputs-image"]} accept="image/*" onChange={handleInputChange} />
+							<label className={styles["second-step-form-inputs-image-label"]} htmlFor="image-upload">Upload your image</label>
+						</div>
+						<div className={styles["second-step-form-display-image"]}>
+							{
+								!nextdata.avatar ? <img src={imagePlaceholder} className={styles["second-step-form-image-default"]} alt="" /> : <img src={getAvatarUrl(nextdata.avatar)} alt="" />
+							}
+						</div>
 					</div>
+					<button className={styles["second-step-form-button"]}>Sign Up</button>
 				</div>
 			</div>
 		</div>
@@ -145,3 +137,36 @@ function SecondStep() {
 }
 
 export default SecondStep;
+
+{/* <div className={styles["imageField"]}>
+	<input type="file" name="avatar" id="image-upload" accept="image/*" onChange={handleInputChange} className={styles["image-upload"]} />
+	<label htmlFor="image-upload" className={styles["image-label"]} >Choose a file</label>
+	<div className={styles["display-image"]}>
+		{
+			!nextdata.avatar ? <img src={imagePlaceholder} alt="" /> : <img src={getAvatarUrl(nextdata.avatar)} alt="" />
+		}
+	</div>
+</div> */}
+
+
+// .signUpForm .imageField {
+// 	width: 85%;
+// 	display: flex;
+// 	align-items: center;
+// 	justify-content: center;
+// 	gap: 5px;
+// }
+
+
+// .image-label {
+// 	width: 85%;
+// 	height: 50px;
+// 	padding-top: 12px;
+// 	padding-bottom: 10px;
+// 	border: 1.5px solid black;
+// 	border-radius: 10px;
+// 	box-sizing: border-box;
+// 	opacity: 1;
+// 	font-size: 15px;
+// 	text-indent: 10px;
+// }

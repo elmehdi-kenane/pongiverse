@@ -1,38 +1,41 @@
-import { useState } from 'react';
-import '../SignIn/signinexample.css'
-import logo42 from '../../assets/SignUp/42_logo.svg'
-import logo from '../../assets/SignUp/logo.svg'
-import logoGoogle from '../../assets/SignIn/GoogleIcon.svg'
-import pingPongBg from '../SignIn/ping_pong_bg.jpg'
+import React from 'react';
+import styles from '../../assets/SignIn/authentication.module.css'
+import Header from './Header';
+import SignUpWays from './SignUpWays'
+import SignUpForm from './SignUpForm'
 import { Link } from 'react-router-dom';
-import SignUpForm from './SignUpForm';
-import SignUpWays from './SignUpWays';
+import logo from '../../assets/SignUp/logo.svg'
+import toast, { Toaster } from 'react-hot-toast';
+import pingPongBg from '../SignIn/ping_pong_bg.jpg'
 
-function SignInPage() {
+function SignUpPage(props) {
+	const handleSignUpSwitch = () => {
+	}
 
 	return (
-		<div className='authentication-page'>
-			<div className='authentication-navbar'>
+		<div className={styles['authentication-page']}>
+			<Toaster/>
+			<div className={styles['authentication-navbar']}>
 				<img src={logo} alt="" />
 			</div>
-			<div className='authentication-container'>
-				<div className={'authentication-signupdiv'}>
-					<div className='authentication-signup'>
-						<div className='authentication-signup-form'>
-							<div className="authentication-signup-title-div">
-								<p className='authentication-signup-title'>Sign Up</p>
+			<div className={styles['authentication-container']}>
+				<div className={styles['authentication-signupdiv']}>
+					<div className={styles['authentication-signup']}>
+						<div className={styles['authentication-signup-form']}>
+							<div className={styles["authentication-signup-title-div"]}>
+								<p className={styles['authentication-signup-title']}>Sign Up</p>
 							</div>
 							<SignUpForm/>
-							<div className='authentication-signup-line'>
-								<div className='authentication-signup-little-line'></div>
-								<p className='authentication-signup-or'>Or</p>
-								<div className='authentication-signup-little-line'></div>
+							<div className={styles['authentication-signup-line']}>
+								<div className={styles['authentication-signup-little-line']}></div>
+								<p className={styles['authentication-signup-or']}>Or</p>
+								<div className={styles['authentication-signup-little-line']}></div>
 							</div>
 							<SignUpWays/>
-							<p className='authentication-signup-have-account'>Already have an account? <Link to="/signin" className='authentication-signup-have-account-link' >Sign In</Link></p>
+							<p className={styles['authentication-signup-have-account']}>Already have an account? <Link to="/signin" className={styles['authentication-signup-have-account-link']} >Sign In</Link></p>
 						</div>
 					</div>
-					<div className='authentication-signup-rightdesign'>
+					<div className={styles['authentication-signup-rightdesign']}>
 						<img src={pingPongBg} alt="" />
 					</div>
 				</div>
@@ -41,4 +44,4 @@ function SignInPage() {
 	);
 }
 
-export default SignInPage
+export default SignUpPage;

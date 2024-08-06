@@ -1,139 +1,167 @@
-/* .ways-second-step-page{
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+:root {
+	--hmed: #EAD3D6;
+	--white: #ffffff;
+	--blak: #211336;
+	--gri: #716365;
+}
+
+body
+{
+	background-color: #250939;
+	font-family: "IBM Plex Sans", sans-serif;
+	margin: 0 auto;
+	padding: 0;
+	/* overflow: hidden; */
+}
+
+.body_page
+{
 	display: flex;
-	flex-direction: column;
+	justify-content: center;
 	width: 100%;
 	height: 100vh;
 }
 
-
-.ways-second-step-navbar {
+.mainPage
+{
 	display: flex;
-	width: 100%;
-	height: 60px;
-	margin-left: 10%;
-	margin-top: 20px;
+	width: 80%;
+	flex-direction: column;
+	height: 100vh;
 }
 
-.ways-second-step-form-div{
+.navBar
+{
+	background-color: #250939;
 	display: flex;
-	width: 100%;
-	height: 1200px;
-	justify-content: center;
+	justify-content: space-between;
+}
+
+.homeLogo , .logo
+{
+	background: transparent;
+	border: none;
+	cursor: pointer;
+}
+
+.homeLogo
+{
+	margin-top: 15px;
+}
+
+.logo
+{
+	margin-top: 3px;
+}
+
+.bodyPage
+{
+	display: flex;
+	height: 100vh;
+	flex-direction: column;
 	align-items: center;
-	overflow: auto;
+	justify-content: center;
 }
 
-.ways-second-step-form{
-	width: 30%;
-	height: 400px;
+.signUpContainer
+{
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
 	align-items: center;
-	gap: 10px;
-}
-
-.ways-second-step-input {
-	width: 60%;
-	height: 60px;
-	display: flex;
 	justify-content: center;
+	width: 100%;
+	max-width: 500px;
+	border-radius: 10px;
+	background-color: white;
+}
+
+
+.signUpForm
+{
+	display:flex;
+	flex-direction: column;
 	align-items: center;
-	background-color: rgba(255, 255, 255, 0.2);
-	border: none;
-	text-indent: 15px;
-	color: white;
-	font-size: medium;
+	width: 100%;
 }
 
-.ways-second-step-input:hover {
-	background-color: rgba(255, 255, 255, 0.5);
+.signUpContainer .firstInput
+{
+	width: 85%;
+	height: 50px;
+	padding-top: 10px;
+	margin-top: -5px;
+	padding-bottom: 10px;
+	border: 1.5px solid black;
+	border-radius: 10px;
+	box-sizing: border-box;
+	text-indent: 10px;
 }
 
-.ways-second-step-input:focus {
-	outline: none;
-	border-color: transparent;
-	background-color: rgba(255, 255, 255, 0.5);
+.signUpContainer .inputs
+{
+	width: 85%;
+	height: 50px;
+	padding-top: 10px;
+	margin-top: 10px;
+	padding-bottom: 10px;
+	border: 1.5px solid black;
+	border-radius: 10px;
+	box-sizing: border-box;
+	text-indent: 10px;
 }
 
-.ways-second-step-input:active {
-	border: none;
-	outline: none;
+.inputs::placeholder, .firstInput::placeholder
+{
+	opacity: 1;
+	font-size: 15px;
+	text-indent: 10px;
 }
 
-.ways-second-step-button {
-	width: 60%;
-	height: 60px;
-	border: none;
+.submitButton
+{
+	border-radius: 10px;
+	margin-top: 20px;
+	margin-bottom: 30px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border: 0.5px solid var(--blak);
+	border-radius: 10px;
 	font-size: 20px;
 	font-weight: bold;
-	cursor: pointer;
-	color: white;
+	color: var(--white);
 	background-color: #913DCE;
+	cursor: pointer;
+	width: 85%;
 }
 
-.ways-second-step-button:active {
-	background-color: black;
+span
+{
+	color: red;
+	font-size: 14px;
+}
+.submitButton:active
+{
+	background-color: var(--blak);
 }
 
-@media (min-width: 1441px){
-	.ways-second-step-form{
-		width: 800px;
-		min-width: 430px;
-		height: 400px;
-	}
-}
-
-@media (max-width: 1440px) {
-	.ways-second-step-form{
-		width: 50%;
-		height: 400px;
-	}
-}
-@media (max-width: 1024px) {
-	.ways-second-step-form{
-		width: 80%;
-		height: 400px;
-	}
-}
-
-@media (max-width: 600px) {
-	.ways-second-step-form{
-		width: 100%;
-		height: 400px;
-	}
-}
-
-@media (max-width: 300px) {
-	.ways-second-step-form{
-		width: 100%;
-		height: 400px;
-	}
-	.ways-second-step-input::placeholder {
-		font-size: 12px;
-	}
-
-	.ways-second-step-form{
+@media (max-width: 500px)
+{
+	/* body
+	{
+		background-color: #250939;
+		font-family: "IBM Plex Sans", sans-serif;
+		margin: 0 auto;
+		padding: 0;
+		overflow: hidden;
 		width: 95%;
-		height: 400px;
+		min-width: 200px;
+		height: 100vh;
+	} */
+	.signUpContainer
+	{
+		width: 100%;
 	}
-
-	.ways-second-step-form-div{
-		align-items: initial;
-	}
-
 }
 
-@media (max-width: 240px) {
-
-	.ways-second-step-navbar {
-		width: 100%;
-		height: 50px;
-		margin-left: 7%;
-		margin-top: 10px;
-	}
-
-	.ways-second-step-form{
-		margin-top: -20px;
-	}
-} */

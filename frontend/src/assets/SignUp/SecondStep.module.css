@@ -1,206 +1,140 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
-
-:root {
-	--hmed: #EAD3D6;
-	--white: #ffffff;
-	--blak: #211336;
-	--gri: #716365;
-}
-
-
-.body_page {
+.second-step-page {
 	display: flex;
-	justify-content: center;
-	width: 100%;
-	height: 100vh;
-	overflow-y: auto;
-}
-
-.mainPage {
-	display: flex;
-	width: 80%;
 	flex-direction: column;
-	height: 100vh;
+	width: 100%;
+	height: 100vh
 }
 
-.navBar {
-	background-color: #250939;
+.second-step-navbar {
 	display: flex;
-	justify-content: space-between;
+	width: 100%;
+	height: 60px;
+	margin-left: 10%;
+	margin-top: 20px;
 }
 
-.homeLogo,
-.logo {
-	background: transparent;
-	border: none;
-	cursor: pointer;
-}
-
-.homeLogo {
-	margin-top: 15px;
-}
-
-.logo {
-	margin-top: 3px;
-}
-
-.SecondStepContainer {
-	display: flex;
+.second-step-form-div{
 	width: 100%;
 	height: 1000px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	flex-direction: column;
+}
+
+.second-step-form {
+	width: 20%;
+	/* height: 400px; */
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	/* gap: 10px; */
+}
+
+.second-step-form-inputs-and-image-display{
+	width: 100%;
+	height: 100%;
+	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 
-.signUpContainer {
+.second-step-form-inputs {
 	display: flex;
+	width: 100%;
 	flex-direction: column;
-	align-items: center;
 	justify-content: center;
-	width: 100%;
-	max-width: 500px;
-	border-radius: 10px;
-	background-color: white;
-	margin-bottom: 10px;
-}
-
-
-.signUpForm {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	width: 100%;
 	gap: 10px;
 }
 
-.title {
-	font-size: 25px;
-	margin-top: 15px;
+.second-step-form-display-image {
+	width: 30%;
+	border: 1.5px solid white;
+	border-radius: 5px;
 }
 
-.signUpContainer .firstInput {
-	width: 85%;
-	height: 50px;
-	padding-top: 10px;
-	margin-top: -5px;
-	padding-bottom: 10px;
-	border: 1.5px solid black;
-	border-radius: 10px;
-	box-sizing: border-box;
-	text-indent: 10px;
-}
-
-.signUpContainer .inputs {
-	width: 85%;
-	height: 50px;
-	padding-top: 10px;
-	margin-top: 10px;
-	padding-bottom: 10px;
-	border: 1.5px solid black;
-	border-radius: 10px;
-	box-sizing: border-box;
-	text-indent: 10px;
-}
-
-.signUpForm .imageField {
-	width: 85%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 5px;
-}
-
-.display-image {
-	border: 1.5px solid var(--blak);
-	border-radius: 10px;
-	width: 50px;
-	height: 50px;
-}
-
-.display-image img {
+.second-step-form-image-default {
 	width: 100%;
 	height: 100%;
-	border-radius: 9px;
 }
 
-.inputs::placeholder,
-.firstInput::placeholder {
+.second-step-form-inputs-input {
+	width: 85%;
+	height: 50px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: rgba(255, 255, 255, 0.2);
+	border: none;
+	text-indent: 10px;
+	color: white;
+	font-size: medium;
+}
+
+.second-step-form-inputs-image-label {
+	width: 85%;
+	height: 50px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: rgba(255, 255, 255, 0.2);
+	border: none;
+	color: white;
+	font-size: medium;
+	cursor: pointer;
+}
+
+.second-step-form-inputs-input:hover,
+.second-step-form-inputs-image-label:hover {
+	background-color: rgba(255, 255, 255, 0.5);
+}
+
+.second-step-form-inputs-input:focus,
+.second-step-form-inputs-image-label:focus {
+	outline: none;
+	border-color: transparent;
+	background-color: rgba(255, 255, 255, 0.5);
+}
+
+.second-step-form-inputs-input:active,
+.second-step-form-inputs-image-label:active {
+	border: none;
+	outline: none;
+}
+
+.second-step-form-inputs-input::placeholder {
 	opacity: 1;
 	font-size: 15px;
 	text-indent: 10px;
+	color: #EAD3D6;
 }
 
-.submitButton {
-	border-radius: 10px;
-	/* margin-top: 10px; */
-	margin-bottom: 20px;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	border: 0.5px solid var(--blak);
-	border-radius: 10px;
-	font-size: 20px;
-	font-weight: bold;
-	color: var(--white);
-	background-color: #913DCE;
-	cursor: pointer;
-	width: 85%;
-}
-
-.image-upload {
+.second-step-form-inputs-image {
 	display: none;
 }
 
-.image-label {
-	width: 85%;
-	height: 50px;
-	padding-top: 12px;
-	padding-bottom: 10px;
-	border: 1.5px solid black;
-	border-radius: 10px;
-	box-sizing: border-box;
-	opacity: 1;
-	font-size: 15px;
-	text-indent: 10px;
+.second-step-form-button {
+	width: 100%;
+	height: 60px;
+	border: none;
+	font-size: 20px;
+	font-weight: bold;
+	cursor: pointer;
+	color: white;
+	background-color: #913DCE;
+	margin-top: 20px;
 }
 
-.spans {
-	color: red;
-	font-size: 14px;
+.second-step-form-button:active {
+	background-color: black;
 }
 
-.submitButton:active {
-	background-color: var(--blak);
-}
-
-.image-spans {
-	width: 85%;
-	display: flex;
-	justify-content: space-between;
-}
-
-.image-spans .optional {
-	color: black;
-}
-
-
-@media (max-width: 300px) {
-	/* .mainPage {
+@media (max-width: 240px) {
+	.forgot-password-navbar {
 		width: 100%;
-	} */
-
-	.title {
-		font-size: 20px;
-		margin-top: 15px;
-	}
-
-	/* .SecondStepContainer {
-		width: 100%;
-	} */
-
-	.signUpContainer,
-	.SecondStepContainer,
-	.mainPage {
-		width: 100%;
+		height: 50px;
+		margin-left: 7%;
+		margin-top: 10px;
 	}
 }
