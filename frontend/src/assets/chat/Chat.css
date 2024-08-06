@@ -485,3 +485,8 @@ textarea.conversation-input::placeholder {
     width: 100%;
   }
 }
+
+
+.none-conversation-selected {
+  background-color: red;
+}

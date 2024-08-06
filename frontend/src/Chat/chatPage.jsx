@@ -115,7 +115,7 @@ const Chat = () => {
             Object.values(selectedChatRoom).every((value) => value !== "") ? (
             <ChatRoomConversation setSelectedItem={handleSelectItem} setSelectedChatRoom={setSelectedChatRoom} />
           ) : (
-            ""
+            <div className="none-conversation-selected">Hellow</div>
           )}
         </div>
       </div>
