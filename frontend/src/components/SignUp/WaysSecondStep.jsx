@@ -4,6 +4,7 @@ import Header from "./Header";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
+import logo from '../../assets/SignUp/logo.svg'
 import { useNavigate } from "react-router-dom";
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
@@ -24,7 +25,7 @@ function WaysSecondStep() {
 	const [errors, setErrors] = useState({});
 	const location = useLocation();
 	const data = location.state || {};
-	if (!data.email || !data.avatar){
+	if (!data.email || !data.avatar) {
 		navigate("/signup");
 	}
 	const handleInputChange = (e) => {
@@ -112,10 +113,11 @@ function WaysSecondStep() {
 	return (
 		<div className={styles["body_page"]}>
 			<div className={styles["mainPage"]}>
-				<Header />
+				<div className={styles['ways-second-step-navbar']}>
+					<img src={logo} alt="" />
+				</div>
 				<div className={styles["bodyPage"]}>
 					<div className={styles["signUpContainer"]}>
-						<h1 className={styles["title"]}>Next Step</h1>
 						<form
 							className={styles["signUpForm"]}
 							onSubmit={handleSubmit}
@@ -149,8 +151,8 @@ function WaysSecondStep() {
 							{errors.confirmPassword && <span>{errors.confirmPassword}</span>}
 							{
 								<button type="submit" className={styles["submitButton"]}>
-								Sign Up
-							</button>
+									Sign Up
+								</button>
 							}
 						</form>
 					</div>

@@ -6,7 +6,7 @@ import SignUpForm from './SignUpForm'
 import { Link } from 'react-router-dom';
 import logo from '../../assets/SignUp/logo.svg'
 import toast, { Toaster } from 'react-hot-toast';
-import pingPongBg from '../SignIn/ping_pong_bg.jpg'
+import pingPongBg from '../SignIn/pping.png'
 
 function SignUpPage(props) {
 	const handleSignUpSwitch = () => {

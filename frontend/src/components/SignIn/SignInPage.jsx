@@ -3,7 +3,7 @@ import styles from '../../assets/SignIn/authentication.module.css'
 import logo42 from '../../assets/SignUp/42_logo.svg'
 import logo from '../../assets/SignUp/logo.svg'
 import logoGoogle from '../../assets/SignIn/GoogleIcon.svg'
-import pingPongBg from './ping_pong_bg.jpg'
+import pingPongBg from './pping.png'
 import { Link } from 'react-router-dom';
 import SignInForm from './SignInForm';
 import SignInWays from './SignInWays';
@@ -15,7 +15,7 @@ function SignInPage() {
 
 	return (
 		<div className={styles['authentication-page']}>
-			<Toaster />	
+			<Toaster />
 			<div className={styles['authentication-navbar']}>
 				<img src={logo} alt="" />
 			</div>

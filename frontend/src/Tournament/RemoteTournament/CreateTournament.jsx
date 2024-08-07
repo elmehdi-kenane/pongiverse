@@ -6,7 +6,9 @@ import invitefriend from '../friend_invite.svg'
 import AuthContext from '../../navbar-sidebar/Authcontext'
 import withReactContent from 'sweetalert2-react-content'
 import { useNavigate, useLocation } from "react-router-dom";
+import toast, { Toaster } from 'react-hot-toast';
 import Swal from 'sweetalert2';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 
 function CreateTournament() {
@@ -18,7 +20,7 @@ function CreateTournament() {
 	const [membersImages, setMemberImages] = useState([])
 	const navigate = useNavigate()
 	const location = useLocation()
-	const { user, userImages, allGameFriends, socket, setAllGameFriends , publicCheckAuth } = useContext(AuthContext)
+	const { user, userImages, allGameFriends, socket, setAllGameFriends, publicCheckAuth } = useContext(AuthContext)
 	const allGameFriendsRef = useRef(allGameFriends);
 	const divRef = useRef(null);
 	const divRef2 = useRef(null);
@@ -44,6 +46,20 @@ function CreateTournament() {
 			}))
 		}
 	};
+
+	const copyTournamentId = () => {
+		navigator.clipboard.writeText(tournamentId).then(
+			() => {
+				toast.success('Tournament Id copied successfuly', {
+					position: 'top-center',
+					duration: 1000,
+				});
+			},
+			(err) => {
+				console.error('Failed to copy: ', err);
+			}
+		);
+	}
 
 	const Destroy_tournament = () => {
 		Swal.fire({
@@ -412,6 +428,7 @@ function CreateTournament() {
 	return (
 		<>
 			<div className={styles["tournament-page"]}>
+				<Toaster/>
 				<div className={styles["tournament-page-content"]}>
 					<div className={styles["title-and-destroy"]}>
 						<h1 className={styles["tournament-title"]}>Tournament Creation</h1>
@@ -427,7 +444,10 @@ function CreateTournament() {
 							<>
 								<div className={styles["tournament-id"]}>
 									<h4 className={styles["tournament-id-title"]}>Tournament ID:</h4>
-									<h5 className={styles["tournament-id-value"]}>{tournamentId}</h5>
+									<div className={styles["tournament-id-value-and-icon"]}>
+										<h5 className={styles["tournament-id-value"]} onClick={copyTournamentId}>{tournamentId}</h5>
+										<ContentCopyIcon onClick={copyTournamentId}/>
+									</div>
 								</div>
 								<div className={styles["little-line"]}></div>
 							</>

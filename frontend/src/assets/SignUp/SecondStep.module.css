@@ -13,18 +13,21 @@
 	margin-top: 20px;
 }
 
-.second-step-form-div{
+.second-step-form-div {
+
+
 	width: 100%;
 	height: 1000px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
+	overflow: auto;
 }
 
 .second-step-form {
-	width: 20%;
-	/* height: 400px; */
+	width: 460px;
+	height: 400px;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -32,35 +35,30 @@
 	/* gap: 10px; */
 }
 
-.second-step-form-inputs-and-image-display{
-	width: 100%;
-	height: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+
+
+
+.second-step-form-display-image {
+	width: 50px;
+	height: 50px;
+	border: 1.5px solid white;
+	border-radius: 5px;
+}
+
+.second-step-form-image-default {
+	width: 50px;
+	height: 50px;
 }
 
 .second-step-form-inputs {
 	display: flex;
 	width: 100%;
 	flex-direction: column;
-	justify-content: center;
-	gap: 10px;
-}
-
-.second-step-form-display-image {
-	width: 30%;
-	border: 1.5px solid white;
-	border-radius: 5px;
-}
-
-.second-step-form-image-default {
-	width: 100%;
-	height: 100%;
+	gap: 20px;
 }
 
 .second-step-form-inputs-input {
-	width: 85%;
+	width: 100%;
 	height: 50px;
 	display: flex;
 	justify-content: center;
@@ -73,7 +71,7 @@
 }
 
 .second-step-form-inputs-image-label {
-	width: 85%;
+	width: calc(100% - 50px);
 	height: 50px;
 	display: flex;
 	justify-content: center;
@@ -85,20 +83,17 @@
 	cursor: pointer;
 }
 
-.second-step-form-inputs-input:hover,
-.second-step-form-inputs-image-label:hover {
+.second-step-form-inputs-input:hover {
 	background-color: rgba(255, 255, 255, 0.5);
 }
 
-.second-step-form-inputs-input:focus,
-.second-step-form-inputs-image-label:focus {
+.second-step-form-inputs-input:focus {
 	outline: none;
 	border-color: transparent;
 	background-color: rgba(255, 255, 255, 0.5);
 }
 
-.second-step-form-inputs-input:active,
-.second-step-form-inputs-image-label:active {
+.second-step-form-inputs-input:active {
 	border: none;
 	outline: none;
 }
@@ -110,13 +105,18 @@
 	color: #EAD3D6;
 }
 
+.second-step-form-inputs-image-input {
+	display: flex;
+	gap: 6px;
+}
+
 .second-step-form-inputs-image {
 	display: none;
 }
 
 .second-step-form-button {
 	width: 100%;
-	height: 60px;
+	height: 50px;
 	border: none;
 	font-size: 20px;
 	font-weight: bold;
@@ -130,6 +130,34 @@
 	background-color: black;
 }
 
+
+.second-step-form {
+	width: 460px;
+	height: 400px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	/* gap: 10px; */
+}
+
+@media (max-width: 500px) {
+	.second-step-form {
+		width: 90%;
+	}
+}
+
+@media (max-width: 300px) {
+	.second-step-form-inputs-image-label {
+		font-size: 12px;
+		padding-left: 2px;
+	}
+
+	.second-step-form-inputs-input::placeholder {
+		font-size: 12px;
+	}
+}
+
 @media (max-width: 240px) {
 	.forgot-password-navbar {
 		width: 100%;
@@ -137,4 +165,10 @@
 		margin-left: 7%;
 		margin-top: 10px;
 	}
+
+	.second-step-form-div {
+		justify-content: initial;
+		flex-direction: column;
+	}
+
 }

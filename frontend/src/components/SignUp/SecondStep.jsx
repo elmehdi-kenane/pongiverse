@@ -117,19 +117,20 @@ function SecondStep() {
 			</div>
 			<div className={styles["second-step-form-div"]}>
 				<div className={styles["second-step-form"]}>
-					<div className={styles["second-step-form-inputs-and-image-display"]}>
-						<div className={styles["second-step-form-inputs"]}>
-							<input type="text" value={nextdata.username} name='username' className={styles["second-step-form-inputs-input"]} onChange={handleInputChange} placeholder='Enter a username' />
+					<div className={styles["second-step-form-inputs"]}>
+						<input type="text" value={nextdata.username} name='username' className={styles["second-step-form-inputs-input"]} onChange={handleInputChange} placeholder='Enter a username' />
+						{exist && <span className={styles["spans"]}>Username already used</span>}
+						<div className={styles["second-step-form-inputs-image-input"]}>
 							<input type="file" name="avatar" id="image-upload" className={styles["second-step-form-inputs-image"]} accept="image/*" onChange={handleInputChange} />
-							<label className={styles["second-step-form-inputs-image-label"]} htmlFor="image-upload">Upload your image</label>
-						</div>
-						<div className={styles["second-step-form-display-image"]}>
-							{
-								!nextdata.avatar ? <img src={imagePlaceholder} className={styles["second-step-form-image-default"]} alt="" /> : <img src={getAvatarUrl(nextdata.avatar)} alt="" />
-							}
+							<label className={styles["second-step-form-inputs-image-label"]} htmlFor="image-upload">Upload your image (Optional)</label>
+							<div className={styles["second-step-form-display-image"]}>
+								{
+									!nextdata.avatar ? <img src={imagePlaceholder} className={styles["second-step-form-image-default"]} alt="" /> : <img className={styles["second-step-form-image-default"]}	 src={getAvatarUrl(nextdata.avatar)} alt="" />
+								}
+							</div>
 						</div>
 					</div>
-					<button className={styles["second-step-form-button"]}>Sign Up</button>
+					<button className={styles["second-step-form-button"]} onClick={handleSubmit}>Sign Up</button>
 				</div>
 			</div>
 		</div>
