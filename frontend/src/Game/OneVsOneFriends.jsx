@@ -29,37 +29,28 @@ const OneVsOneFriends = () => {
 		userImages, setAllGameFriends } = useContext(AuthContext)
 	const allGameFriendsRef = useRef(allGameFriends);
 
-	useEffect(() => {
-		privateCheckAuth()
-	}, [])
+	let isOut = false
+	const userRef = useRef(user)
+    const roomIdRef = useRef(tmpRoomID)
+    const socketRef = useRef(socket)
 
-	useEffect(() => {
-		if (socket) {
-			if (socketRecreated && user) {
-				console.log("INSIDE RESTABISHMENT")
-				socket.send(JSON.stringify({
-					type: 'dataBackUp',
-					message: {
-						user: user,
-						roomID: roomID,
-					}
-				}))
-				setSocketRecreated(false)
-			} else if (!socketRecreated && user) {
-				if (socket && socket.readyState === WebSocket.OPEN && user) {
-					console.log("CHECKING IF PLAYER IN ROOM")
-					socket.send(JSON.stringify({
-						type: 'isPlayerInAnyRoom',
-						message: {
-							user: user,
-							mode: '1vs1',
-							type: 'friends'
-						}
-					}))
+    useEffect(() => {
+        privateCheckAuth()
+    }, [])
+
+    useEffect(() => {
+		if (socket && socket.readyState === WebSocket.OPEN && user) {
+			console.log("CHECKING IF PLAYER IN ROOM")
+			socket.send(JSON.stringify({
+				type: 'isPlayerInAnyRoom',
+				message: {
+					user: user,
+					mode: '1vs1',
+					type: 'friends'
 				}
-			}
+			}))
 		}
-	}, [socketRecreated, socket, user])
+	}, [socket, user])
 
 	useEffect(() => {
 		if (socket && socket.readyState === WebSocket.OPEN) {
@@ -87,7 +78,7 @@ const OneVsOneFriends = () => {
 							level: message.users[0].level
 						})
 					}
-					friendsSection.current.remove()
+					// friendsSection.current.remove()
 					setExpandFriends(false)
 					setGameStarted(false)
 					setRoomID(message.room.id)
@@ -96,6 +87,7 @@ const OneVsOneFriends = () => {
 					console.log("ALL SET BROTHER")
 				} else if (type === "playersReady") {
 					console.log("inside playersReady")
+					setLoadMatch(false)
 					setAllSet(true)
 				} else if (type === "playerNo") {
 					console.log("inside playerNo")
@@ -194,7 +186,10 @@ const OneVsOneFriends = () => {
 
 	useEffect(() => {
 		allGameFriendsRef.current = allGameFriends;
-	  }, [allGameFriends]);
+		userRef.current = user;
+		roomIdRef.current = tmpRoomID;
+		socketRef.current = socket;
+	}, [allGameFriends, user, tmpRoomID, socket]);
 
 	// useEffect(() => {
 	//     console.log(allGameFriends)
@@ -202,7 +197,7 @@ const OneVsOneFriends = () => {
 
 	const cancelTheGame = () => {
 		// setSelectedFriends([])
-		if (socket && socket.readyState === WebSocket.OPEN) {
+		if (socket && socket.readyState === WebSocket.OPEN && user) {
 			console.log("inside quit")
 			socket.send(JSON.stringify({
 				type: 'quit',
@@ -211,7 +206,7 @@ const OneVsOneFriends = () => {
 					id: tmpRoomID
 				}
 			}))
-			navigate(`../game/solo`)  // CHANGE LATER TO THIS ROUTE "game/solo/1vs1" !!!!!!!! DO NOT FORGET
+			navigate(`../game/solo/1vs1`)  // CHANGE LATER TO THIS ROUTE "game/solo/1vs1" !!!!!!!! DO NOT FORGET
 			// setGameStarted(false)
 			// setTmpRoomID(false)
 		} else
@@ -219,7 +214,7 @@ const OneVsOneFriends = () => {
 	}
 
 	const inviteNewFriend = (friend) => {
-		if (socket && socket.readyState === WebSocket.OPEN) {
+		if (socket && socket.readyState === WebSocket.OPEN && user) {
 			console.log("inside join")
 			socket.send(JSON.stringify({
 				type: 'inviteFriendGame',
@@ -240,21 +235,60 @@ const OneVsOneFriends = () => {
 	const expandFriendsList = () => {
 		setExpandFriends(!expandFriends)
 	}
+	
+	useEffect(() => {
+        return () => {
+            if (isOut) {
+                const user = userRef.current
+                const socket = socketRef.current
+                const roomID = roomIdRef.current
+                console.log("USER IS GETTING OUT ", user, roomID, socket)
+                if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
+                    socket.send(JSON.stringify({
+                        type: 'quit',
+                        message: {
+                            user: user,
+                            id: roomID
+                        }
+                    }))
+                }
+            } else
+                isOut = true
+        }
+    }, [])
 
 	useEffect(() => {
-		console.log(allGameFriends)
-	}, [allGameFriends])
+        const handleBeforeUnload = (event) => {
+            const user = userRef.current
+            const socket = socketRef.current
+            const roomID = roomIdRef.current
+            console.log("INSIDE THE MATCH : ", user, roomID, socket)
+            if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
+                socket.send(JSON.stringify({
+                    type: 'quit',
+                    message: {
+                        user: user,
+                        id: roomID
+                    }
+                }))
+            }
+        }
+        window.addEventListener('beforeunload', handleBeforeUnload)
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload)
+        }
+    }, [])
 
 	return (
 		<div className='onevsone'>
 			<div className='onevsone-dashboard'>
 				<div className='onevsone-dashboard-opponents'>
-					<div className='onevsone-invite-friends' ref={friendsSection}>
+					{!allSet && <div className='onevsone-invite-friends'>
 						<div onClick={expandFriendsList} style={{display: 'flex', flexDirection: 'row', cursor: 'pointer', position: 'relative'}}>
 							<img src={Icons.gameInvite} alt="" style={{width: '20%', paddingLeft: '5px'}} />
 							<div className='invite-friends-button'>invite friend</div>
 						</div>
-					</div>
+					</div>}
 					{expandFriends && (<div className='expand-friends' ref={expandFriendList}>
 						{(allGameFriends.length && !loading) ? allGameFriends.map((user, key) => {
 							return (<div key={user.id} className='game-friend-list'>
@@ -297,10 +331,15 @@ const OneVsOneFriends = () => {
 							<p>level 6.5</p>
 						</div>
 					</div>
-					<div className='onevsone-dashboard-logo-friends'>
-						{(allSet) ? (
-							<img id='versus-logo' src={Icons.versus} alt="profile-pic" />
-						) : ''}
+					<div className={(!allSet && loadMatch) ? 'onevsone-dashboard-logo onevsone-dashboard-logo-loading' : 'onevsone-dashboard-logo'} >
+					{(!loadMatch && allSet) ? (<img id='versus-logo' src={Icons.versus} alt="profile-pic" />) : (loadMatch && !allSet) ? (
+						<>
+							<div id='paddle-1' ></div>
+							<div id='net' ></div>
+							<div id='ball' ></div>
+							<div id='paddle-2' ></div>
+						</>
+					) : ''}
 					</div>
 					<div className='onevsone-dashboard-opponent'>
 						{enemyInfos ? (

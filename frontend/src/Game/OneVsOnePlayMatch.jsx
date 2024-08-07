@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useContext, useState } from 'react';
 import AuthContext from '../navbar-sidebar/Authcontext'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -160,6 +159,26 @@ const OneVsOnePlayMatch = () => {
 
     let particles = [];
 
+    const [playersInfos, setPlayersInfos] = useState([
+        {
+          totalScore: 0,
+          score: 0,
+          hit: 0,
+          accuracy: 0,
+          rating: 0,
+        },
+        {
+          totalScore: 0,
+          score: 0,
+          hit: 0,
+          accuracy: 0,
+          rating: 0
+        },
+        {
+          time: 0,
+        }
+      ])
+
     // const radius = Math.random() + 0.8
         
 
@@ -179,18 +198,18 @@ const OneVsOnePlayMatch = () => {
         // };
         // particles.push(particle);
 
-    function createParticle(x, y) {
-        let particle = {
-          x,
-          y,
-          radius: Math.random() + 0.2, // Random radius between 1 and 3 ====> Math.random() * 2 + 1
-          color: `hsl(${Math.random() * 40 + 20}, 100%, 50%)`, // Random hue for fire-like colors ====> `hsl(${Math.random() * 40 + 20}, 100%, 50%)`
-          speedX: Math.random() - 0.8, // Random horizontal speed between -3 and 3
-          speedY: Math.random() - 0.8, // Random vertical speed between -3 and 3
-          life: Math.random() * 50 + 40 // Random lifetime between 50 and 100 frames
-        };
-        particles.push(particle);
-      }
+function createParticle(x, y) {
+    let particle = {
+        x,
+        y,
+        radius: Math.random() + 0.2, // Random radius between 1 and 3 ====> Math.random() * 2 + 1
+        color: `hsl(${Math.random() * 40 + 20}, 100%, 50%)`, // Random hue for fire-like colors ====> `hsl(${Math.random() * 40 + 20}, 100%, 50%)`
+        speedX: Math.random() - 0.8, // Random horizontal speed between -3 and 3
+        speedY: Math.random() - 0.8, // Random vertical speed between -3 and 3
+        life: Math.random() * 50 + 40 // Random lifetime between 50 and 100 frames
+    };
+    particles.push(particle);
+    }
 
     useEffect(() => {
         privateCheckAuth()
@@ -515,6 +534,7 @@ const OneVsOnePlayMatch = () => {
                 } else if (type === "roomNotExist") {
                     navigate("../game/solo/1vs1")
                 } else if (type === "finishedGame") {
+                    let allPlayersStats = [...playersInfos]
                     setUserName1(message.user1)
                     setUserName2(message.user2)
                     setScore1(message.playerScore1)
@@ -522,7 +542,21 @@ const OneVsOnePlayMatch = () => {
                     setGameFinished(true)
                     gamefinishedAborted(message)
                     setTime(message.time)
+                    allPlayersStats[0].totalScore = message.score[0]
+                    allPlayersStats[1].totalScore = message.score[1]
+                    allPlayersStats[0].score = message.selfScore[0]
+                    allPlayersStats[1].score = message.selfScore[1]
+                    allPlayersStats[0].hit = message.hit[0]
+                    allPlayersStats[1].hit = message.hit[1]
+                    allPlayersStats[0].accuracy = message.accuracy[0]
+                    allPlayersStats[1].accuracy = message.accuracy[1]
+                    allPlayersStats[0].rating = message.rating[0]
+                    allPlayersStats[1].rating = message.rating[1]
+                    allPlayersStats[2].time = message.time
+                    setPlayersInfos(allPlayersStats)
+                    console.log("playerNo when it is finished : ", playerNo)
                 } else if (type === "abortedGame") {
+                    let allPlayersStats = [...playersInfos]
                     setUserName1(message.user1)
                     setUserName2(message.user2)
                     setScore1(message.playerScore1)
@@ -530,6 +564,18 @@ const OneVsOnePlayMatch = () => {
                     setGameAborted(true)
                     gamefinishedAborted(message)
                     setTime(message.time)
+                    allPlayersStats[0].totalScore = message.score[0]
+                    allPlayersStats[1].totalScore = message.score[1]
+                    allPlayersStats[0].score = message.selfScore[0]
+                    allPlayersStats[1].score = message.selfScore[1]
+                    allPlayersStats[0].hit = message.hit[0]
+                    allPlayersStats[1].hit = message.hit[1]
+                    allPlayersStats[0].accuracy = message.accuracy[0]
+                    allPlayersStats[1].accuracy = message.accuracy[1]
+                    allPlayersStats[0].rating = message.rating[0]
+                    allPlayersStats[1].rating = message.rating[1]
+                    allPlayersStats[2].time = message.time
+                    setPlayersInfos(allPlayersStats)
                 }
                 else if (type === "playersInfos")
                     setPlayersPics(message.users)
@@ -541,7 +587,6 @@ const OneVsOnePlayMatch = () => {
         return () => {
             if (isOut) {
                 if (socket && socket.readyState === WebSocket.OPEN) {
-                    // window.alert(user, roomID)
                     socket.send(JSON.stringify({
                         type: 'playerChangedPage',
                         message: {
@@ -589,7 +634,6 @@ const OneVsOnePlayMatch = () => {
 
     const startTimer = () => {
         timer = setInterval(() => {
-            // console.log("TIME IS ", isGameStarted)
             if (isGameStarted)
                 setTime(prevTime => prevTime + 1);
             else
@@ -656,37 +700,131 @@ const OneVsOnePlayMatch = () => {
         }
     }, [])
 
+    const exitOneVsOneGame = () => {
+        navigate('../game/solo/1vs1')
+    }
+
     return (
-        <div className='onevsone-pm' ref={wrapperRef} >
-            {gameFinished ? (<div style={{fontWeight:"bolder", textAlign:"center", color:"white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}><p>GAME FINISHED</p></div>) : gameAborted ? (<div style={{fontWeight:"bolder", textAlign:"center", color:"white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}><p>GAME ABORTED</p></div>) : ''}
-            <div ref={resultRef} className='onevsone-pm-infos' >
-                <div>
-                    {playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[0].avatar}`} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
-                    <div style={{textAlign:"center"}} ><p>{userName1}</p></div>
-                </div>
-                <div>
-                    <p>{score1}</p>
-                    <div className='onevsone-pm-infos-stats' >
-                        <div>
-                            {/* <img src={Icons.logout} alt="" onClick={(!gameFinished && !gameAborted) ? exitTheGame : undefined} /> */}
-                            <p>Goal: 5</p>
-                            <div onClick={(!gameFinished && !gameAborted) ? exitTheGame : undefined} >
-                                <img src={Icons.logout} alt="" />
-                                <p>Exit</p>
-                            </div>
+        <>
+            {(gameFinished || gameAborted) && (
+                <div className='onevsone' style={{position: 'relative'}} >
+                {(gameFinished && user === userName1) ? ((playersInfos[0].totalScore > playersInfos[1].totalScore) ? (
+                    <>
+                        <div className='winner_cup' >
+                            <img src={Icons.winnerCup} alt="winner cup" />
                         </div>
-                        <div>{formatTime(time)}</div>
+                        <p className='winner_congrats' >WINNER WINNER CHICKEN DINNER!</p>
+                    </>
+                ) : (
+                    <p className='loser_support' >BETTER LUCK NEXT TIME!</p>
+                )) : (gameFinished && user === userName2) ? ((playersInfos[1].totalScore > playersInfos[0].totalScore) ? (
+                    <>
+                        <div className='winner_cup' >
+                            <img src={Icons.winnerCup} alt="winner cup" />
+                        </div>
+                        <p className='winner_congrats' >WINNER WINNER CHICKEN DINNER!</p>
+                    </>
+                ) : (
+                    <p className='loser_support' >BETTER LUCK NEXT TIME!</p>
+                )) : (
+                    <p className='loser_support' >GAME ABORTED!</p>
+                )}
+
+                {/* {(playerScore1 > playerScore2 && playerNo === 1) && (
+                        <div className='winner_cup' >
+                            <img src={Icons.winnerCup} alt="winner cup" />
+                        </div>
+                    )}
+                {(playerScore1 > playerScore2 && playerNo === 1) ? (<p className='winner_congrats' >WINNER WINNER CHICKEN DINNER!</p>) : (<p className='loser_support' >BETTER LUCK NEXT TIME!</p>)} */}
+                <div className='gameStats_container' >
+                    <div className='gameStats_playerInfos' >
+                    <div className='gameStats_playerInfos-details' >
+                        <div>
+                        {playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[0].avatar}`} alt="" />) : (<img src={Icons.solidGrey} alt="" />)}
+                        <p>{userName1}</p>
+                        </div>
+                        <div>
+                        <p>{userName2}</p>
+                        {playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[1].avatar}`} alt="" />) : (<img src={Icons.solidGrey} alt="" />)}
+                        </div>
                     </div>
-                    <p>{score2}</p>
+                    </div>
+                    <div className='gameStats_details' >
+                    <div>
+                        <p>{playersInfos[0].totalScore}</p>
+                        <p>Score</p>
+                        <p>{playersInfos[1].totalScore}</p>
+                    </div>
+                    </div>
+                    <div className='gameStats_details' >
+                    <div>
+                        <p>{playersInfos[0].score}</p>
+                        <p>Goals</p>
+                        <p>{playersInfos[1].score}</p>
+                    </div>
+                    </div>
+                    <div className='gameStats_details' >
+                    <div>
+                        <p>{playersInfos[0].hit}</p>
+                        <p>Hit</p>
+                        <p>{playersInfos[1].hit}</p>
+                    </div>
+                    </div>
+                    <div className='gameStats_details' >
+                    <div>
+                        {(playersInfos[0].hit) ?
+                        (<p>{Math.floor((playersInfos[0].score / playersInfos[0].hit ) * 100)}%</p>) :
+                        (<p>0%</p>)
+                        }
+                        <p>Accuracy</p>
+                        {(playersInfos[1].hit) ?
+                        (<p>{Math.floor((playersInfos[1].score / playersInfos[1].hit ) * 100)}%</p>) :
+                        (<p>0%</p>)
+                        }
+                    </div>
+                    </div>
+                    <div className='gameStats_details' >
+                    <div>
+                        <p>{playersInfos[0].rating}</p>
+                        <p>Rating</p>
+                        <p>{playersInfos[1].rating}</p>
+                    </div>
+                    </div>
                 </div>
-                <div>
-                    <div style={{textAlign:"center"}}><p>{userName2}</p></div>
-                    {playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[1].avatar}`} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
+                <div className='stats-selects stats-selects-modes' >
+                    <button onClick={exitOneVsOneGame} >Exit</button>
                 </div>
-            </div>
-            <canvas ref={canvasRef} ></canvas>
-            {/* {(!gameFinished && !gameAborted) && (<button onClick={exitTheGame} style={{position:'absolute', top:"250px", right:"50%", color:"black", padding:"10px"}}>exit</button>)} */}
-        </div>
+                </div>)}
+            {(!gameFinished && !gameAborted) && (<div className='onevsone-pm' ref={wrapperRef} >
+                {gameFinished ? (<div style={{fontWeight:"bolder", textAlign:"center", color:"white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}><p>GAME FINISHED</p></div>) : gameAborted ? (<div style={{fontWeight:"bolder", textAlign:"center", color:"white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}><p>GAME ABORTED</p></div>) : ''}
+                <div ref={resultRef} className='onevsone-pm-infos' >
+                    <div>
+                        {playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[0].avatar}`} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
+                        <div style={{textAlign:"center"}} ><p>{userName1}</p></div>
+                    </div>
+                    <div>
+                        <p>{score1}</p>
+                        <div className='onevsone-pm-infos-stats' >
+                            <div>
+                                {/* <img src={Icons.logout} alt="" onClick={(!gameFinished && !gameAborted) ? exitTheGame : undefined} /> */}
+                                <p>Goal: 5</p>
+                                <div onClick={(!gameFinished && !gameAborted) ? exitTheGame : undefined} >
+                                    <img src={Icons.logout} alt="" />
+                                    <p>Exit</p>
+                                </div>
+                            </div>
+                            <div>{formatTime(time)}</div>
+                        </div>
+                        <p>{score2}</p>
+                    </div>
+                    <div>
+                        <div style={{textAlign:"center"}}><p>{userName2}</p></div>
+                        {playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[1].avatar}`} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
+                    </div>
+                </div>
+                <canvas ref={canvasRef} ></canvas>
+            </div>)}
+        </>
     );
 };
 

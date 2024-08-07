@@ -28,7 +28,6 @@ import json
 
 class SignUpView(APIView):
 	parser_classes = (MultiPartParser, FormParser)
-
 	def post(self, request, *args, **kwargs):
 		print(f"datatata : {request.data}")
 		avatar = request.data.get('avatar')
@@ -101,17 +100,13 @@ class LoginView(APIView):
 		username = data.get('username', None)
 		password = data.get('password', None)
 		print(f"   username : {username}, password : {password}")
-		try:
-			user = customuser.objects.get(username=username)
-			if user.check_password(password):
-				data = get_tokens_for_user(user)
-				response.set_cookie('token', data['access'], httponly=True)
-				response.data = {"Case": "Login successfully"}
-				return response
-			else:
-				response.data = {"Case": "Invalid username or password!!"}
-				return response
-		except customuser.DoesNotExist:
+		user = authenticate(username=username, password=password)
+		if user is not None:
+			data = get_tokens_for_user(user)
+			response.set_cookie('token', data['access'], httponly=True)
+			response.data = {"Case": "Login successfully"}
+			return response
+		else:
 			response.data = {"Case": "Invalid username or password!!"}
 			return response
 
@@ -220,13 +215,12 @@ class ChangePasswordView(APIView):
 		if not email or not password:
 			return Response({"error": "Email and password are required."}, status=status.HTTP_400_BAD_REQUEST)
 		try:
-			user = get_user_model().objects.get(email=email)
-		except get_user_model().DoesNotExist:
+			user = customuser.objects.get(email=email)
+		except customuser.DoesNotExist:
 			return Response({"error": "No user found with this email."}, status=status.HTTP_404_NOT_FOUND)
-
 		if user.is_active:
 			try:
-				user.password = password
+				user.set_password(password)
 				user.save()
 				response.data = {"Case": "Password successfully changed"}
 				return response
@@ -328,13 +322,24 @@ def SignUpGoogleGetUrl(request):
 	return response
 
 
+@api_view(['GET'])
+def SignUpIntraGetUrl(request):
+	response = Response()
+	client_id = 'u-s4t2ud-c5d50d0148bff2ac03dbdadd313e919f7799e35329997235b2427e1cef984e18'
+	redirect_uri = 'http://localhost:3000/signup'
+	auth_url = 'https://api.intra.42.fr/oauth/authorize'
+	response_type = 'code'
+	auth_url_with_params = f'{auth_url}?client_id={client_id}&redirect_uri={redirect_uri}&response_type={response_type}'
+	response.data = {'code' : auth_url_with_params}
+	return response
+
 @api_view(['POST'])
 def SignInIntraGetUserData(request):
 	try :
 		code = request.data.get('code')
 		response = Response()
 		client_id = 'u-s4t2ud-fcffc65b4899785b254efb0f6527c2d4493781c1e7792364b758f426b18a2598'
-		client_secret = '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'
+		client_secret = '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'
 		redirect_uri = 'http://localhost:3000/signin'
 		token_url = 'https://api.intra.42.fr/oauth/token'
 		payload = {
@@ -361,16 +366,6 @@ def SignInIntraGetUserData(request):
 		print(f"Exception: {str(e)}")
 		return Response({'error': str(e)}, status=500)
 
-@api_view(['GET'])
-def SignUpIntraGetUrl(request):
-	response = Response()
-	client_id = 'u-s4t2ud-c5d50d0148bff2ac03dbdadd313e919f7799e35329997235b2427e1cef984e18'
-	redirect_uri = 'http://localhost:3000/signup'
-	auth_url = 'https://api.intra.42.fr/oauth/authorize'
-	response_type = 'code'
-	auth_url_with_params = f'{auth_url}?client_id={client_id}&redirect_uri={redirect_uri}&response_type={response_type}'
-	response.data = {'code' : auth_url_with_params}
-	return response
 
 @api_view(['POST'])
 def SignUpGoogleGetUserData(request):
@@ -410,7 +405,7 @@ def SignUpIntraGetUserData(request):
 		code = request.data.get('code')
 		response = Response()
 		client_id = 'u-s4t2ud-c5d50d0148bff2ac03dbdadd313e919f7799e35329997235b2427e1cef984e18'
-		client_secret = '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'
+		client_secret = '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'
 		redirect_uri = 'http://localhost:3000/signup'
 		token_url = 'https://api.intra.42.fr/oauth/token'
 		payload = {

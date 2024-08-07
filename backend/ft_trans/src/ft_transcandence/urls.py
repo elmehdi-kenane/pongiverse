@@ -22,7 +22,8 @@ urlpatterns = [
     path('api/', include('mainApp.urls')),
     path('auth/', include('myapp.urls')),
     path('chatAPI/',include('chat.urls')),
+    # path('users/', include('Profile.urls')),
+    path('profile/', include('Profile.urls')),
     path('friends/',include('friends.urls')),
-    path('users/', include('Profile.urls'))
     # path('admin/', admin.site.urls),
 ]

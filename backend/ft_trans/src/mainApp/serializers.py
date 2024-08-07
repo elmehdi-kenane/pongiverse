@@ -1,6 +1,14 @@
 # from rest_framework import serializers
 # from .models import User
 
+from rest_framework import serializers
+from .models import DisplayOpponent
+
+class DisplayOpponentSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = DisplayOpponent
+		fields = ['user1', 'user2', 'created_at']
+
 # class UserSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = User
@@ -16,4 +24,3 @@
 #             instance.set_password(password)
 #         instance.save()
 #         return instance
-            

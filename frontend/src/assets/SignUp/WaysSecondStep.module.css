@@ -148,7 +148,7 @@ span
 
 @media (max-width: 500px)
 {
-	body
+	/* body
 	{
 		background-color: #250939;
 		font-family: "IBM Plex Sans", sans-serif;
@@ -158,7 +158,7 @@ span
 		width: 95%;
 		min-width: 200px;
 		height: 100vh;
-	}
+	} */
 	.signUpContainer
 	{
 		width: 100%;
