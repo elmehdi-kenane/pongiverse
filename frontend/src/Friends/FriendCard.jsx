@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect, useContext } from 'react';
 
-import Profile from '../assets/Friends/profile.png';
 import ThreeDots from '../assets/Friends/dots-vertical.svg';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
@@ -9,12 +8,11 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 import AuthContext from '../navbar-sidebar/Authcontext'
 
-const FriendCard = ({ isLastTwoElements, currentUsername, secondUsername, avatar}) => {
+const FriendCard = ({ isLastTwoElements, secondUsername, avatar}) => {
     const menuRef = useRef(null);
     const buttonRef = useRef(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isScrolling, setIsScrolling] = useState(false);
-    // const { user } = useContext(AuthContext)
+    const { user } = useContext(AuthContext)
     const handleBlockFriend = () => {
         fetch('http://localhost:8000/friends/block_friend/', {
             method: 'POST',
@@ -22,7 +20,7 @@ const FriendCard = ({ isLastTwoElements, currentUsername, secondUsername, avatar
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                from_username: currentUsername,
+                from_username: user,
                 to_username: secondUsername,
             }),
         })
@@ -35,7 +33,6 @@ const FriendCard = ({ isLastTwoElements, currentUsername, secondUsername, avatar
             });
     };
 
-
     const handleRemoveFriendship = () => {
         fetch('http://localhost:8000/friends/remove_friendship/', {
             method: 'POST',
@@ -43,7 +40,7 @@ const FriendCard = ({ isLastTwoElements, currentUsername, secondUsername, avatar
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                from_username: currentUsername,
+                from_username: user,
                 to_username: secondUsername,
             }),
         })

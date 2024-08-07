@@ -1,8 +1,10 @@
 import { formatDistanceToNowStrict } from 'date-fns';
+import { CancelFriendRequest } from './utils';
+import AuthContext from '../navbar-sidebar/Authcontext'
+import { useContext } from 'react'
 
-import Profile from '../assets/Friends/profile.png';
-
-const RecievedFriendReqCard = ({ currentUsername, secondUsername, send_at, avatar }) => {
+const RecievedFriendReqCard = ({ secondUsername, send_at, avatar }) => {
+    const { user } = useContext(AuthContext);
     const handleConfirmFriendReq = () => {
         fetch('http://localhost:8000/friends/confirm_friend_request/', {
             method: 'POST',
@@ -11,7 +13,7 @@ const RecievedFriendReqCard = ({ currentUsername, secondUsername, send_at, avata
             },
             body: JSON.stringify({
                 from_username: secondUsername,
-                to_username: currentUsername,
+                to_username: user,
             }),
         })
             .then(response => response.json())
@@ -23,23 +25,7 @@ const RecievedFriendReqCard = ({ currentUsername, secondUsername, send_at, avata
             });
     };
     const handleCancelFriendReq = () => {
-        fetch('http://localhost:8000/friends/cancel_friend_request/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                from_username: secondUsername,
-                to_username: currentUsername,
-            }),
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
+        CancelFriendRequest(user, secondUsername);
     };
     return (
         <div className="RecievedFriendReqCard">

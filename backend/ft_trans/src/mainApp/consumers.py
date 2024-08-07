@@ -28,6 +28,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
 		username = user.username
 		self.group_name = f"friends_group{user_id}"
+		print("self.channel_name: ", self.channel_name)
 		await self.channel_layer.group_add(self.group_name, self.channel_name)
 		tmp_username = username
 		user.is_online = True

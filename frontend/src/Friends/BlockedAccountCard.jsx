@@ -1,7 +1,5 @@
-import { useContext, useState } from 'react'
+import { useContext } from 'react'
 import AuthContext from '../navbar-sidebar/Authcontext'
-
-import Profile from '../assets/Friends/profile.png';
 
 const BlockedAccountCard = ({ secondUsername, avatar}) => {
     const { user } = useContext(AuthContext)
