@@ -474,11 +474,6 @@
 	}
 }
 
-/* @media (max-width: 1440px){
-	.change-player-username{
-		left: 39%;
-	}
-} */
 
 @media (max-width: 1170px) {
 
@@ -496,7 +491,7 @@
 	}
 
 	.player {
-		width: 350px;
+		width: 320px;
 		height: 120px;
 		display: flex;
 		align-items: center;
@@ -507,7 +502,7 @@
 	}
 
 	.player-opened {
-		width: 350px;
+		width: 320px;
 		height: 120px;
 		display: flex;
 		align-items: center;
@@ -601,6 +596,10 @@
 		width: 300px;
 	}
 
+	.player-opened{
+		width: 300px;
+	}
+
 	.tournament-title {
 		font-size: 25px;
 	}
@@ -639,12 +638,22 @@
 		width: 40%;
 		column-gap: 4px;
 	}
+
+	.player-opened {
+		width: 40%;
+		column-gap: 4px;
+	}
 }
 
 
 @media (max-width: 578px) {
 
 	.player {
+		width: 300px;
+		column-gap: 10px;
+	}
+
+	.player-opened {
 		width: 300px;
 		column-gap: 10px;
 	}
@@ -675,6 +684,9 @@
 @media (max-width: 400px) {
 
 	.player {
+		width: 300px;
+	}
+	.player-opened {
 		width: 300px;
 	}
 
@@ -836,6 +848,11 @@
 	}
 
 	.player {
+		height: 70px;
+		column-gap: 5px;
+	}
+
+	.player-opened {
 		height: 70px;
 		column-gap: 5px;
 	}

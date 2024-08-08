@@ -193,7 +193,7 @@ function TournamentBracket() {
 			</div>
 			<div className={styles['verticalSvg']}>
 				{/* <img src={<SvgVerticalComponent images={membersImages} />} alt="" /> */}
-				<SvgVerticalComponent images={roundSixteenMembersImages} />
+				<SvgVerticalComponent roundsixteenimages={roundSixteenMembersImages} roundsixteenmembers={roundSixteenMembers} roundquarterimages={roundQuarterFinalMembersImages} roundquartermembers={roundQuarterFinalMembers} />
 			</div>
 		</div>
 	);

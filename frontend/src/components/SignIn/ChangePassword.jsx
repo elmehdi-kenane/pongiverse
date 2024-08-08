@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useNavigate, useLocation } from 'react-router-dom';
+import logo from '../../assets/SignUp/logo.svg'
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 const client = axios.create({
@@ -25,11 +26,11 @@ function ChangePassword() {
 	const location = useLocation();
 	const mydata = location.state || {};
 
-	useEffect(() =>{
+	useEffect(() => {
 		if (!mydata.email) {
 			navigate("/forgotpassword");
 		}
-	},[mydata])
+	}, [mydata])
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -53,8 +54,7 @@ function ChangePassword() {
 				}
 			}).then(response => {
 				if (response.data.Case === "Password successfully changed") {
-					alert("password changed")
-					navigate('/login');
+					navigate('/signin');
 				}
 			})
 				.catch(error => {
@@ -66,7 +66,9 @@ function ChangePassword() {
 	return (
 		<div className={styles["body_page"]}>
 			<div className={styles["mainPage"]}>
-				<Header />
+				<div className={styles['change-password-navbar']}>
+					<img src={logo} alt="" />
+				</div>
 				<div className={styles["bodyPage"]}>
 					<div className={styles["FPasswordContainer"]}>
 						<h1 className={styles["title"]}>Change Your Password</h1>

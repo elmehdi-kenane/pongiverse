@@ -3,9 +3,9 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import * as Icons from '../assets/navbar-sidebar'
 import AuthContext from '../navbar-sidebar/Authcontext'
 import styles from '../assets/Game/gamemodes.module.css'
-import playSoloImage from '../assets/Game/playSoloMode.png'
-import createTournamentImage from '../assets/Game/createTournamentMode.png'
-import joinTournamentImage from '../assets/Game/joinTournamentMode.png'
+import playSoloImage from '../assets/Game/playSoloMode.svg'
+import createTournamentImage from '../assets/Game/createTournamentMode.svg'
+import joinTournamentImage from '../assets/Game/joinTournamentMode.svg'
 
 const Modes = () => {
 	const navigate = useNavigate()
