@@ -25,7 +25,7 @@ const RecievedFriendReqCard = ({ secondUsername, send_at, avatar }) => {
             });
     };
     const handleCancelFriendReq = () => {
-        CancelFriendRequest(user, secondUsername);
+        CancelFriendRequest(user, secondUsername, 'remove');
     };
     return (
         <div className="RecievedFriendReqCard">

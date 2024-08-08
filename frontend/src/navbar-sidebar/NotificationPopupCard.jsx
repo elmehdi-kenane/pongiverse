@@ -10,7 +10,7 @@ const NotificationPopupCard = ({ secondUsername, avatar}) => {
     const [removeFriendReqNotif, setRemoveFriendReqNotif] = useState(false);
 
     const handleConfirmFriendReq = () => {
-        CancelFriendRequest(user, secondUsername);
+        CancelFriendRequest(user, secondUsername, 'remove');
         setRemoveFriendReqNotif(true);
     };
     

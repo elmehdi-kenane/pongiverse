@@ -120,13 +120,14 @@ def add_friend_request(request):
 def cancel_friend_request(request):
     from_username = request.data['from_username']
     to_username = request.data['to_username']
+    event_type = request.data['eventType']
     from_user = customuser.objects.get(username=from_username)
     to_user = customuser.objects.get(username=to_username)
     try:
-        friend_request = FriendRequest.objects.get(from_user=from_user, to_user=to_user, status="sent")
+        friend_request = FriendRequest.objects.get(from_user=from_user, to_user=to_user)
         sent_request_ser = friendRequestSerializer(friend_request)
         friend_request.delete()
-        friend_request = FriendRequest.objects.get(from_user=to_user, to_user=from_user, status="recieved")
+        friend_request = FriendRequest.objects.get(from_user=to_user, to_user=from_user)
         recieved_request_ser = friendRequestSerializer(friend_request)
         friend_request.delete()
     except FriendRequest.DoesNotExist:
@@ -137,7 +138,7 @@ def cancel_friend_request(request):
     async_to_sync(channel_layer.group_send)(
         f"friends_group{from_user_id}",
         {
-            'type': 'cancel_friend_request',
+            'type': 'cancel_friend_request' if event_type == 'cancel' else 'remove_friend_request',
             'message': {
                 'username': to_username,
                 'send_at': sent_request_ser.data['send_at'],
@@ -148,7 +149,7 @@ def cancel_friend_request(request):
     async_to_sync(channel_layer.group_send)(
         f"friends_group{to_user_id}",
         {
-            'type': 'remove_friend_request',
+            'type': 'cancel_friend_request' if event_type == 'remove' else 'remove_friend_request',
             'message': {
                 'username': from_username,
                 'send_at': recieved_request_ser.data['send_at'],
@@ -310,6 +311,7 @@ def unblock_friend(request):
     to_user_id = to_user.id
     channel_layer = get_channel_layer()
     if (friendship_obj is not None and friendship_obj.isBlocked is True):
+        print("friendship_obj is not None and friendship_obj.isBlocked is True")
         async_to_sync(channel_layer.group_send)(
             f"friends_group{from_user_id}",
             {
@@ -321,6 +323,7 @@ def unblock_friend(request):
             }
         )
     else:
+        print("else")
         async_to_sync(channel_layer.group_send)(
             f"friends_group{from_user_id}",
             {

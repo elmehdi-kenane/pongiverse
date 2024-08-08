@@ -43,7 +43,6 @@ function NavbarSidebar() {
     useEffect(() => {
         if (data.type === 'recieve-friend-request') {
             setNewRecievedFriendReqNotif(true);
-            console.log("inside recieve-friend-request condition:", newRecievedFriendReqNotif);
             setRemoveFriendReqNotif(false);
             setFriendReq(data.message);
         }

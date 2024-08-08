@@ -39,34 +39,40 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		payload_data = decoded_token.payload
 		user_id = payload_data.get('user_id')
 		user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
-		username = user.username
-		self.group_name = f"friends_group{user_id}"
-		print("self.channel_name: ", self.channel_name)
-		await self.channel_layer.group_add(self.group_name, self.channel_name)
-		tmp_username = username
-		user.is_online = True
-		await sync_to_async(user.save)()
-		user_channels[username] = self.channel_name
-		channel_layer = get_channel_layer()
-		friends = await sync_to_async(list)(Friends.objects.filter(user=user))
-		print(f"ALL THE USERS CHANNEL_NAMES : {user_channels}")
-		for friend in friends:
-			friend_username = await sync_to_async(lambda: friend.friend.username)()
-			friend_is_online = await sync_to_async(lambda: friend.friend.is_online)()
-			channel_name = user_channels.get(friend_username)
-			print(f"USER CHANNEL ON CONNECT IS : {channel_name}")
-			if channel_name and friend_is_online and not user.is_playing:
-				await self.channel_layer.send(
-					channel_name,
-					{
-						'type': 'connected_again',
-						'message': {
-								'user': username,
-								'userInfos': {
-									'id': user.id,
-									'name': user.username,
-									'level': 2,
-									'image': user.avatar.path,
+		if user is not None:
+			await self.accept()
+			username = user.username
+			tmp_username = username
+			user.is_online = True
+			await sync_to_async(user.save)()
+			if user_channels.get(username):
+				await self.channel_layer.send(user_channels[username], {
+					'type' : 'socket_close'
+				})
+			user_channels[username] = self.channel_name
+			self.group_name = f"friends_group{user_id}"
+			await self.channel_layer.group_add(self.group_name, self.channel_name)
+			channel_layer = get_channel_layer()
+			friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
+			print(f"ALL THE USERS CHANNEL_NAMES : {user_channels}")
+			for friend in friends:
+				friend_username = await sync_to_async(lambda: friend.friend.username)()
+				friend_is_online = await sync_to_async(lambda: friend.friend.is_online)()
+				channel_name = user_channels.get(friend_username)
+				# print(f"USER CHANNEL ON CONNECT IS : {channel_name}")
+				if channel_name and friend_is_online and not user.is_playing:
+					await self.channel_layer.send(
+						channel_name,
+						{
+							'type': 'connected_again',
+							'message': {
+									'user': username,
+									'userInfos': {
+										'id': user.id,
+										'name': user.username,
+										'level': 2,
+										'image': user.avatar.path,
+									}
 								}
 						}
 					)

@@ -6,7 +6,7 @@ import { useContext } from 'react'
 const SentFriendReqCard = ({ secondUsername, send_at, avatar }) => {
     const { user } = useContext(AuthContext);
     const handleCancelFriendReq = () => {
-        CancelFriendRequest(user, secondUsername);
+        CancelFriendRequest(user, secondUsername, 'cancel');
     };
 
     return (

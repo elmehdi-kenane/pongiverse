@@ -1,4 +1,4 @@
-export const CancelFriendRequest = (currentUsername, secondUsername) => {
+export const CancelFriendRequest = (currentUsername, secondUsername, eventType) => {
     fetch('http://localhost:8000/friends/cancel_friend_request/', {
         method: 'POST',
         headers: {
@@ -7,6 +7,7 @@ export const CancelFriendRequest = (currentUsername, secondUsername) => {
         body: JSON.stringify({
             from_username: currentUsername,
             to_username: secondUsername,
+            eventType: eventType,
         }),
     })
         .then(response => response.json())
