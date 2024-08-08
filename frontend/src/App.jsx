@@ -39,7 +39,6 @@ import GameSettings from "./Game/GameSettings";
 import Settings from "./Settings/Settings";
 import Bot from "./Game/Bot";
 import LocalTournamentFillMembers from "./Tournament/LocalTournament/LocalTournamentFillMembers";
-import SignInExample from "./components/SignIn/SignInExample";
 
 const App = () => {
 	return (

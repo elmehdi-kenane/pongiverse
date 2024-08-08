@@ -20,7 +20,7 @@ function CreateTournament() {
 	const [membersImages, setMemberImages] = useState([])
 	const navigate = useNavigate()
 	const location = useLocation()
-	const { user, userImages, allGameFriends, socket, setAllGameFriends, publicCheckAuth } = useContext(AuthContext)
+	const { user, userImages, allGameFriends, socket, setAllGameFriends} = useContext(AuthContext)
 	const allGameFriendsRef = useRef(allGameFriends);
 	const divRef = useRef(null);
 	const divRef2 = useRef(null);
@@ -29,10 +29,6 @@ function CreateTournament() {
 	const isOpen = () => {
 		setOpen(!open);
 	}
-
-	// useEffect(() => {
-	//   publicCheckAuth()
-	// }, [])
 
 	const handleInviteClick = (name) => {
 		if (socket && socket.readyState === WebSocket.OPEN) {

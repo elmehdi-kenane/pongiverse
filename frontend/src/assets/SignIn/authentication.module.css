@@ -373,6 +373,12 @@
 	}
 } */
 
+@media (min-width: 1200px){
+	.authentication-container{
+		min-width: 1100px;
+	}
+}
+
 @media (min-width:1024px){
 	.authentication-signindiv,
 	.authentication-signupdiv {
@@ -381,7 +387,7 @@
 	}
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1023px) {
 
 	.authentication-signindiv,
 	.authentication-signupdiv {
@@ -408,7 +414,7 @@
 
 	.authentication-signindiv,
 	.authentication-signupdiv {
-		width: 95%;
+		width: 100%;
 		justify-content: center;
 	}
 
