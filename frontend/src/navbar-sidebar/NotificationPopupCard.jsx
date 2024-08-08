@@ -10,29 +10,28 @@ const NotificationPopupCard = ({ secondUsername, avatar}) => {
     const [removeFriendReqNotif, setRemoveFriendReqNotif] = useState(false);
 
     const handleConfirmFriendReq = () => {
-        CancelFriendRequest(user, secondUsername, 'remove');
-        setRemoveFriendReqNotif(true);
+      fetch("http://localhost:8000/friends/confirm_friend_request/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from_username: secondUsername,
+          to_username: user,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Success:", data);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
     };
     
     const handleCancelFriendReq = () => {
-        fetch('http://localhost:8000/friends/cancel_friend_request/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                from_username: secondUsername,
-                to_username: user,
-            }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-        setRemoveFriendReqNotif(true)
+        CancelFriendRequest(user, secondUsername, 'remove');
+        setRemoveFriendReqNotif(true);
     };
     
     return (

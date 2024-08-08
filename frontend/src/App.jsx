@@ -54,40 +54,81 @@ const App = () => {
       <Router>
         <AuthProvider>
           <SocketDataContextProvider>
-            <Routes>
-              <Route path="/" element={<HomePage />} exact />
-              <Route path="/signup" element={<SignUpPage />} />
-              <Route path="/signin" element={<SignInPage />} />
-              <Route path="/SecondStep" element={<SecondStep />} />
-              <Route path="/WaysSecondStep" element={<WaysSecondStep />} />
-              <Route path="/ForgotPassword" element={<ForgotPassword />} />
-              <Route path="/ChangePassword" element={<ChangePassword />} />
-              <Route path="/mainpage" element={<NavbarSidebar />}>
-                <Route path="dashboard" element={<Dashboard />} />
-                <Route path="profile" element={<Profile />} />
-                <Route path="settings" element={<Settings />} />
-                <Route path="chat" element={<ChatGroupsWrapper element={<Chat />} />} />
-                <Route path="friends" element={<Friends />} />
-                <Route path="groups" element={<ChatGroupsWrapper element={<Rooms />} />} />
-                <Route path="game" element={<Modes />} />
-                <Route path="game/board" element={<GameSettings />} />
-                <Route path="game/solo" element={<Solo />} />
-                <Route path="game/solo/computer" element={<Bot />} />
-                <Route path="game/solo/1vs1" element={<OneVersusOne />} />
-                <Route path="game/solo/1vs1/random" element={<OneVsOneRandom />} />
-                <Route path="game/solo/1vs1/friends" element={<OneVsOneFriends />} />
-                <Route path="game/solo/1vs1/create-or-join" element={<OneVsOneCreateOrJoin />} />
-                <Route path="game/solo/2vs2" element={<TwoVersusTwo />} />
-                <Route path="game/solo/2vs2/random" element={<TwoVsTwoRandom />} />
-                <Route path="game/solo/2vs2/friends" element={<TwoVsTwoFriends />} />
-                <Route path="game/solo/2vs2/create-or-join" element={<TwoVsTwoCreateOrJoin />} />
-                <Route path="play/1vs1/:roomID" element={<OneVsOnePlayMatch />} />
-                <Route path="play/2vs2/:roomID" element={<TwoVsTwoPlayMatch />} />
-                <Route path="game/createtournament" element={<CreateTournament />} />
-                <Route path="game/jointournament" element={<JoinTournament />} />
-                <Route path="game/tournamentbracket" element={<TournamentBracket />} />
-              </Route>
-            </Routes>
+            <ChatProvider>
+              <Routes>
+                <Route path="/" element={<HomePage />} exact />
+                <Route path="/signup" element={<SignUpPage />} />
+                <Route path="/signin" element={<SignInPage />} />
+                <Route path="/SecondStep" element={<SecondStep />} />
+                <Route path="/WaysSecondStep" element={<WaysSecondStep />} />
+                <Route path="/ForgotPassword" element={<ForgotPassword />} />
+                <Route path="/ChangePassword" element={<ChangePassword />} />
+                <Route path="/mainpage" element={<NavbarSidebar />}>
+                  <Route path="dashboard" element={<Dashboard />} />
+                  <Route path="profile" element={<Profile />} />
+                  <Route path="settings" element={<Settings />} />
+                  <Route
+                    path="chat"
+                    element={<ChatGroupsWrapper element={<Chat />} />}
+                  />
+                  <Route path="friends" element={<Friends />} />
+                  <Route
+                    path="groups"
+                    element={<ChatGroupsWrapper element={<Rooms />} />}
+                  />
+                  <Route path="game" element={<Modes />} />
+                  <Route path="game/board" element={<GameSettings />} />
+                  <Route path="game/solo" element={<Solo />} />
+                  <Route path="game/solo/computer" element={<Bot />} />
+                  <Route path="game/solo/1vs1" element={<OneVersusOne />} />
+                  <Route
+                    path="game/solo/1vs1/random"
+                    element={<OneVsOneRandom />}
+                  />
+                  <Route
+                    path="game/solo/1vs1/friends"
+                    element={<OneVsOneFriends />}
+                  />
+                  <Route
+                    path="game/solo/1vs1/create-or-join"
+                    element={<OneVsOneCreateOrJoin />}
+                  />
+                  <Route path="game/solo/2vs2" element={<TwoVersusTwo />} />
+                  <Route
+                    path="game/solo/2vs2/random"
+                    element={<TwoVsTwoRandom />}
+                  />
+                  <Route
+                    path="game/solo/2vs2/friends"
+                    element={<TwoVsTwoFriends />}
+                  />
+                  <Route
+                    path="game/solo/2vs2/create-or-join"
+                    element={<TwoVsTwoCreateOrJoin />}
+                  />
+                  <Route
+                    path="play/1vs1/:roomID"
+                    element={<OneVsOnePlayMatch />}
+                  />
+                  <Route
+                    path="play/2vs2/:roomID"
+                    element={<TwoVsTwoPlayMatch />}
+                  />
+                  <Route
+                    path="game/createtournament"
+                    element={<CreateTournament />}
+                  />
+                  <Route
+                    path="game/jointournament"
+                    element={<JoinTournament />}
+                  />
+                  <Route
+                    path="game/tournamentbracket"
+                    element={<TournamentBracket />}
+                  />
+                </Route>
+              </Routes>
+            </ChatProvider>
             <ToastContainer
               position="top-right"
               autoClose={5000}
