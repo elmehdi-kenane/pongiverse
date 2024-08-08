@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react'
 import AuthContext from './Authcontext'
-import { CancelFriendRequest } from '../Friends/utils';
+import { cancelFriendRequest, confirmFriendRequest } from "../Friends/utils";
 
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
@@ -9,28 +9,12 @@ const NotificationPopupCard = ({ secondUsername, avatar}) => {
     const { user } = useContext(AuthContext)
     const [removeFriendReqNotif, setRemoveFriendReqNotif] = useState(false);
 
-    const handleConfirmFriendReq = () => {
-        fetch('http://localhost:8000/friends/confirm_friend_request/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                from_username: secondUsername,
-                to_username: user,
-            }),
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-    };
+  const handleConfirmFriendReq = () => {
+    confirmFriendRequest(user, secondUsername);
+  };
     
     const handleCancelFriendReq = () => {
-        CancelFriendRequest(user, secondUsername, 'remove');
+        cancelFriendRequest(user, secondUsername, "remove");
         setRemoveFriendReqNotif(true);
     };
     

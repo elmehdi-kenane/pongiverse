@@ -1,12 +1,12 @@
 import { formatDistanceToNowStrict } from 'date-fns';
-import { CancelFriendRequest } from './utils';
+import { cancelFriendRequest } from "./utils";
 import AuthContext from '../navbar-sidebar/Authcontext'
 import { useContext } from 'react'
 
 const SentFriendReqCard = ({ secondUsername, send_at, avatar }) => {
     const { user } = useContext(AuthContext);
     const handleCancelFriendReq = () => {
-        CancelFriendRequest(user, secondUsername, 'cancel');
+        cancelFriendRequest(user, secondUsername, "cancel");
     };
 
     return (

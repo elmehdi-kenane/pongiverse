@@ -166,10 +166,10 @@ def confirm_friend_request(request):
     from_user = customuser.objects.get(username=from_username)
     to_user = customuser.objects.get(username=to_username)
     try:
-        friend_request = FriendRequest.objects.get(from_user=from_user, to_user=to_user, status="sent")
+        friend_request = FriendRequest.objects.get(from_user=from_user, to_user=to_user, status="recieved")
         request_accepted_ser = friendRequestSerializer(friend_request)
         friend_request.delete()
-        friend_request = FriendRequest.objects.get(from_user=to_user, to_user=from_user, status="recieved")
+        friend_request = FriendRequest.objects.get(from_user=to_user, to_user=from_user, status="sent")
         confirm_request_ser = friendRequestSerializer(friend_request)
         friend_request.delete() 
     except FriendRequest.DoesNotExist:
@@ -187,7 +187,7 @@ def confirm_friend_request(request):
     async_to_sync(channel_layer.group_send)(
         f"friends_group{from_user_id}",
         {
-            'type': 'friend_request_accepted',
+            'type': 'confirm_friend_request',
             'message': {
                 'friend_username': to_username,
                 'send_at': request_accepted_ser.data['send_at'],
@@ -198,7 +198,7 @@ def confirm_friend_request(request):
     async_to_sync(channel_layer.group_send)(
         f"friends_group{to_user_id}",
         {
-            'type': 'confirm_friend_request',
+            'type': 'friend_request_accepted',
             'message': {
                 'friend_username': from_username,
                 'send_at': confirm_request_ser.data['send_at'],
