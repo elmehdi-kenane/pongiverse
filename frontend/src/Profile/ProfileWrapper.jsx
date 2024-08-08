@@ -2,6 +2,7 @@ import { createContext, useEffect, useState, useContext } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import mavPic from "../Settings/assets/Group.svg"
 import bg from "./assets/bg1.jpg"
+import { useParams } from 'react-router-dom';
 
 const ProfileContext = createContext();
 
@@ -10,15 +11,17 @@ export default ProfileContext;
 export const ProfileWrapper = ({ child }) => {
 
     const [userData, setUserData] = useState(null)
-
     const { user } = useContext(AuthContext);
+    
+    const {userId} = useParams();
     const [userPic, setUserPic] = useState(mavPic);
     const [userBg, setUserBg] = useState(bg);
     const [userEmail, setUserEmail] = useState('');
-    // const [userPwd, setUserPwd] = useState(null);
     const [userBio, setUserBio] = useState('');
     const [userLevel, setUserLevel] = useState(null);
     const [userCountry, setUserCountry] = useState(null);
+
+    const [checkUser, setCheckUser] = useState(true);
 
     useEffect(() => {
         const getUserData = async () => {
@@ -29,7 +32,7 @@ export const ProfileWrapper = ({ child }) => {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        user: user
+                        user: userId
                     })
                 });
                 const res = await response.json()
@@ -37,15 +40,17 @@ export const ProfileWrapper = ({ child }) => {
                     // console.log("Response userData : ", res.userData);
                     setUserData(res.userData);
                 }
-                else
+                else{
+                    setCheckUser(false);
                     console.log("Error : ", res.error);
+                }
             } catch (error) {
                 console.log("Error: ", error);
             }
         }
-        if (user)
+        if (userId)
             getUserData();
-    }, [user])
+    }, [userId])
 
     useEffect(() => {
         const getUserPic = async (picPath, fnc) => {
@@ -69,12 +74,12 @@ export const ProfileWrapper = ({ child }) => {
             setUserBio(userData.bio)
             setUserEmail(userData.email)
             setUserLevel(userData.level)
-            // setUserPwd(userData.password)
             setUserCountry(userData.country)
         }
     }, [userData])
 
     let userInfoData = {
+        userId:userId,
         userPic: userPic,
         setUserPic: setUserPic,
         userBg: userBg,
@@ -87,6 +92,9 @@ export const ProfileWrapper = ({ child }) => {
         setUserLevel: setUserLevel,
         userCountry: userCountry,
         setUserCountry: setUserCountry,
+
+        checkUser:checkUser,
+        setCheckUser:setCheckUser,
 
     };
     return (

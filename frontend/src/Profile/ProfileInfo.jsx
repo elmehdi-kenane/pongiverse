@@ -1,12 +1,12 @@
 import {React, useContext, useEffect, useState} from 'react'
+import { Link } from 'react-router-dom';
+
 import AuthContext from '../navbar-sidebar/Authcontext';
 import ProfileContext from './ProfileWrapper';
 
 import EditIcon from '@mui/icons-material/Edit';
-
 import IsFriends from './FriendOptions/IsFriends';
 import Report from './Report/Report';
-
 // import clan from "./assets/Frame.svg"
 // import clan4 from "./assets/Frame4.svg"
 import clan5 from "./assets/Frame5.svg"
@@ -14,15 +14,18 @@ import clan5 from "./assets/Frame5.svg"
 function ProfileInfo() {
   
   const { user } = useContext(AuthContext);
-  const {userBio, userPic, userLevel, userBg} = useContext(ProfileContext);
+  const {userId ,userBio, userPic, userLevel, userBg} = useContext(ProfileContext);
 
-    const isOwnProfile = false;
-    // const [isOwnProfile, setIsOwnProfile] = useState(false);
+  const isOwnProfile = user === userId;
 
   return (
     <div className="profile-userinfo purple-glass" style={{backgroundImage: `url(${userBg})`}}>
 
-      {isOwnProfile ? <EditIcon className='userinfo__edit info-position'/> : <IsFriends />}
+      {isOwnProfile ? 
+      <Link to="/mainpage/settings" className="info-position">
+        <EditIcon className='userinfo__edit info-position'/>
+      </Link> :
+      <IsFriends />}
       
       <div className="userinfo__pic">
           <img src={userPic} alt="Player" /> 
@@ -30,7 +33,7 @@ function ProfileInfo() {
       </div>
       <div className="userinfo__name-bio">
         <div className="userinfo__name-avatar">
-          <h1 className="userinfo__name"> {user && user} </h1>
+          <h1 className="userinfo__name"> {userId} </h1>
           <div className="userinfo__avatar">
               <img src={clan5} alt="Avatar" />
               <p className='avatar-desc filter-glass'> Avatar Level 5 </p>
@@ -44,4 +47,3 @@ function ProfileInfo() {
 }
 
 export default ProfileInfo
-
