@@ -201,6 +201,7 @@ body {
   width: 180px;
   left: -140px;
   border-radius: 20px;
+  z-index: 5;
 }
 
 .navbar .profile-notifications #profile-icon {
