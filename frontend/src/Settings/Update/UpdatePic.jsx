@@ -1,13 +1,12 @@
 import React, { useState, useContext } from 'react'
 import AuthContext from '../../navbar-sidebar/Authcontext';
-import ProfileContext from '../../Profile/ProfileWrapper';
 import EditIcon from '@mui/icons-material/Edit';
-
+import SettingsContext from '../SettingsWrapper';
 
 function UpdatePic(props) {
 
   const { user } = useContext(AuthContext)
-  const { userPic, userBg, setUserBg } = useContext(ProfileContext)
+  const { userPic, userBg, setUserBg } = useContext(SettingsContext)
 
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {

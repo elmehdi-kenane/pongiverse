@@ -1,12 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react'
 import Avatar from 'react-avatar-edit'
 import AuthContext from '../../navbar-sidebar/Authcontext'
-import ProfileContext from '../../Profile/ProfileWrapper'
+import SettingsContext from '../SettingsWrapper'
 
 function AdjustPic(props) {
 
   const { user } = useContext(AuthContext)
-  const { userPic, setUserPic } = useContext(ProfileContext);
+  const { userPic, setUserPic } = useContext(SettingsContext);
 
   const [src, setSrc] = useState(null)
   const [preview, setPreview] = useState(userPic)
@@ -36,18 +36,18 @@ function AdjustPic(props) {
     }
   }
 
+  const onCrop = view => {
+    setPreview(view);
+  }
+  const onClose = () => {
+    props.setAdjust(false);
+  }
   const handleConfirmClick = () => {
     if (preview != check)
       UpdatePic(preview);
     props.setAdjust(false);
   }
-  const onCrop = view => {
-    setPreview(view);
-  }
   const handleCancelClick = () => {
-    props.setAdjust(false);
-  }
-  const onClose = () => {
     props.setAdjust(false);
   }
 
@@ -65,11 +65,12 @@ function AdjustPic(props) {
         label="Choose a file"
         labelStyle={{
           fontSize: "15px", cursor: "pointer", padding: "5px", fontWeight: "500",
-          color: "white", border: "1px solid white"
+          color: "white", border: "1px solid white", borderRadius: "5px"
         }}
         onClose={onClose}
         onCrop={onCrop}
         src={src}
+        // cropRadius={50}
       />
       <div className='adjustpic__submit'>
         <button onClick={handleCancelClick}> Cancel </button>

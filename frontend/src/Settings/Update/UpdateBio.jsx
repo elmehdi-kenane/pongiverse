@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
 import AuthContext from '../../navbar-sidebar/Authcontext';
-import ProfileContext from '../../Profile/ProfileWrapper';
 import EditIcon from '@mui/icons-material/Edit';
+import SettingsContext from '../SettingsWrapper';
 
 function UpdateBio() {
   const [isUpdate, setIsUpdate] = useState(false);
@@ -10,7 +10,7 @@ function UpdateBio() {
   const iconRef = useRef(null);
 
   const { user } = useContext(AuthContext)
-  const { userBio, setUserBio } = useContext(ProfileContext)
+  const { userBio, setUserBio } = useContext(SettingsContext)
 
 
   useEffect(() => {

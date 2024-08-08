@@ -3,15 +3,15 @@ import './Settings.css'
 import PersonalInfo from './PersonalInfo'
 import Security from './Security';
 import AuthContext from '../navbar-sidebar/Authcontext';
-import ProfileContext from '../Profile/ProfileWrapper';
 
 import toast, { Toaster } from 'react-hot-toast';
+import SettingsContext from './SettingsWrapper';
 
 function Settings() {
 
   const [isInfo, setIsInfo] = useState(true);
   const {user} = useContext(AuthContext);
-  const {userPic, userEmail} = useContext(ProfileContext);
+  const {userPic, userEmail} = useContext(SettingsContext);
 
   return (
     <div className='settings-page'>

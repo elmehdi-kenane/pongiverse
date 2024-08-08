@@ -1,12 +1,12 @@
 import React, { useContext, useState } from "react";
 import ReactFlagsSelect from "react-flags-select";
-import ProfileContext from '../../Profile/ProfileWrapper';
 import AuthContext from "../../navbar-sidebar/Authcontext";
+import SettingsContext from "../SettingsWrapper";
 
 const CountrySelector = () => {
 
   const {user} = useContext(AuthContext);
-  const { userCountry, setUserCountry } = useContext(ProfileContext);
+  const { userCountry, setUserCountry } = useContext(SettingsContext);
 
   const updateCountry = async (country) => {
     try {
