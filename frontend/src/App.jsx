@@ -14,6 +14,7 @@ import Friends from "./Friends/Friends";
 import Dashboard from "./Dashboard/Dashboard";
 import Profile from "./Profile/Profile";
 import {ProfileWrapper} from "./Profile/ProfileWrapper";
+import { SettingsWrapper } from "./Settings/SettingsWrapper";
 import WaysSecondStep from "./components/SignUp/WaysSecondStep";
 import ForgotPassword from "./components/SignIn/ForgotPassword";
 import ChangePassword from "./components/SignIn/ChangePassword";
@@ -55,8 +56,8 @@ const App = () => {
               <Route path="/ChangePassword" element={<ChangePassword />} />
               <Route path="/mainpage" element={<NavbarSidebar />}>
                 <Route path="dashboard" element={<Dashboard />} />
-                <Route path="profile" element={<ProfileWrapper child={<Profile />} />} />
-                <Route path="settings" element={<ProfileWrapper child={<Settings />} />} />
+                <Route path="profile/:userId" element={<ProfileWrapper child={<Profile />} />} />
+                <Route path="settings" element={<SettingsWrapper child={<Settings />} />} />
                 <Route path="chat" element={<Chat />} />
                 <Route path="friends" element={<Friends />} />
                 <Route path="groups" element={<Rooms />} />
