@@ -80,7 +80,6 @@ def getUserData(request):
                      'bio': user.bio,
                      'email' : user.email,
                      'level': user.level,
-                     'password' : user.password,
                      'country': user.country,
                      }
         success_response = Response(data={"userData": user_data}, status=status.HTTP_200_OK)
