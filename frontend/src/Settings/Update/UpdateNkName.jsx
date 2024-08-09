@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
 import AuthContext from '../../navbar-sidebar/Authcontext';
 import EditIcon from '@mui/icons-material/Edit';
+import toast from 'react-hot-toast';
 
 function UpdateNkName() {
     const [isUpdate, setIsUpdate] = useState(false);
@@ -8,7 +9,10 @@ function UpdateNkName() {
     const inputRef = useRef(null);
     const iconRef = useRef(null);
 
-    const {user, setUser} = useContext(AuthContext)
+    const { user, setUser } = useContext(AuthContext)
+
+    const notifySuc = (suc) => toast.success(suc);
+    const notifyErr = (err) => toast.error(err);
 
     useEffect(() => {
         if (inputRef.current)
@@ -43,13 +47,14 @@ function UpdateNkName() {
                 })
             });
             const res = await response.json()
-            if (response.ok){
-                console.log("response : ", res.case);
+            if (response.ok) {
+                notifySuc(res.case);
                 setUser(newUserName)
             }
             else
-                console.log("error : ", res.error);
+                notifyErr(res.error);
         } catch (error) {
+            notifyErr(error);
             console.log(error);
         }
     }
@@ -79,7 +84,7 @@ function UpdateNkName() {
                 onKeyDown={handleInputKeyDown}
                 ref={inputRef} />}
             <div className="update__btn" onClick={onUpdate} ref={iconRef}> <p> {submit} </p>
-              <EditIcon /> 
+                <EditIcon />
             </div>
         </div>
     )

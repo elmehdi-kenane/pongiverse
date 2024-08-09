@@ -2,15 +2,19 @@ import React, { useState, useContext, useEffect } from 'react'
 import Avatar from 'react-avatar-edit'
 import AuthContext from '../../navbar-sidebar/Authcontext'
 import SettingsContext from '../SettingsWrapper'
+import toast from 'react-hot-toast';
 
 function AdjustPic(props) {
 
-  const { user } = useContext(AuthContext)
+  const { user, setUserImg } = useContext(AuthContext)
   const { userPic, setUserPic } = useContext(SettingsContext);
 
   const [src, setSrc] = useState(null)
   const [preview, setPreview] = useState(userPic)
   const [check, setCheck] = useState(userPic)
+
+  const notifySuc = (suc) => toast.success(suc);
+  const notifyErr = (err) => toast.error(err);
 
   const UpdatePic = async (updatedPic) => {
     try {
@@ -25,13 +29,15 @@ function AdjustPic(props) {
         })
       });
       const res = await response.json()
-      if (response.ok){
-        // console.log(res.case);
-        setUserPic(preview);
+      if (response.ok) {
+        notifySuc(res.case);
+        setUserPic(preview); // SettingsContext
+        setUserImg(preview); // AuthContext
       }
       else
-        console.log(res.error);
+        notifyErr(res.error);
     } catch (error) {
+      notifyErr(error);
       console.log(error);
     }
   }
@@ -70,7 +76,7 @@ function AdjustPic(props) {
         onClose={onClose}
         onCrop={onCrop}
         src={src}
-        // cropRadius={50}
+      // cropRadius={50}
       />
       <div className='adjustpic__submit'>
         <button onClick={handleCancelClick}> Cancel </button>

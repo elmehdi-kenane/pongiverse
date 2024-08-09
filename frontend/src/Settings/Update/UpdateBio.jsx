@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect, useContext } from 'react'
 import AuthContext from '../../navbar-sidebar/Authcontext';
 import EditIcon from '@mui/icons-material/Edit';
 import SettingsContext from '../SettingsWrapper';
+import toast from 'react-hot-toast';
 
 function UpdateBio() {
   const [isUpdate, setIsUpdate] = useState(false);
@@ -12,6 +13,8 @@ function UpdateBio() {
   const { user } = useContext(AuthContext)
   const { userBio, setUserBio } = useContext(SettingsContext)
 
+  const notifySuc = (suc) => toast.success(suc);
+  const notifyErr = (err) => toast.error(err);
 
   useEffect(() => {
     if (inputRef.current)
@@ -48,12 +51,13 @@ function UpdateBio() {
       });
       const res = await response.json()
       if (response.ok) {
-        // console.log(res.case)
+        notifySuc(res.case)
         setUserBio(bio)
       }
       else
-        console.log(res.error)
+        notifyErr(res.error)
     } catch (error) {
+      notifyErr(error);
       console.log(error);
     }
   }
@@ -95,7 +99,7 @@ function UpdateBio() {
           onKeyDown={handleInputKeyDown}
           ref={inputRef} />}
       <div className="update__btn" onClick={onUpdate} ref={iconRef}>  <p> {submit} </p>
-        <EditIcon /> 
+        <EditIcon />
       </div>
     </div>
   )

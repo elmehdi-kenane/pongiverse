@@ -2,11 +2,15 @@ import React, { useState, useContext } from 'react'
 import AuthContext from '../../navbar-sidebar/Authcontext';
 import EditIcon from '@mui/icons-material/Edit';
 import SettingsContext from '../SettingsWrapper';
+import toast from 'react-hot-toast';
 
 function UpdatePic(props) {
 
   const { user } = useContext(AuthContext)
   const { userPic, userBg, setUserBg } = useContext(SettingsContext)
+
+  const notifySuc = (suc) => toast.success(suc);
+  const notifyErr = (err) => toast.error(err);
 
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -38,13 +42,14 @@ function UpdatePic(props) {
         });
         const res = await response.json()
         if (response.ok){
-          // console.log(res.case);
+          notifySuc(res.case);
           setUserBg(base64Bg);
         }
         else
-          console.log(res.error);
+          notifyErr(res.error);
       } catch (error) {
-        console.log(error);
+        notifyErr(error);
+        console.error(error);
       }
     }
   }
