@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import "../assets/chat/Groups.css";
 import { useClickOutSide } from "../Chat/chatConversation";
@@ -6,7 +6,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import CreateRoomVisibilityOptions from "./createRoomVisibilityOptions";
 import CreateRoomForm from "./createRoomForm";
 import CreateRoomPassword from "./createRoomPassword";
-import { toast } from "react-toastify";
+
 const CreateRoom = (props) => {
   const { chatSocket } = useContext(AuthContext);
   const { user } = useContext(AuthContext);
@@ -36,14 +36,12 @@ const CreateRoom = (props) => {
   };
 
   const submitHandler = () => {
-    console.log("inside submit handler");
     let errorContainers = {};
 
     if (!formData.name.trim()) {
       errorContainers.name = "Please enter a chat room name.";
     } else if (formData.name.length > 10)
       errorContainers.name = "Chat room name must be at most 10 characters.";
-
     if (!formData.topic.trim()) {
       errorContainers.topic = "Please enter a chat room topic.";
     } else if (formData.topic.length < 50 || formData.topic.length > 80)
@@ -99,27 +97,32 @@ const CreateRoom = (props) => {
         const placeHolder = document.getElementsByClassName(
           "create-room-icon-placeholder"
         )[0];
-        if(placeHolder)
-          placeHolder.src = imageUrl;
+        if (placeHolder) placeHolder.src = imageUrl;
       };
       reader.readAsDataURL(file);
     }
   };
-  let nodeDom = useClickOutSide(props.onClose);
   const fileInputRef = useRef(null);
   let errorRef = useClickOutSide(() => setErrors({}));
-
+  
   const handleImageClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
+  
+  const closeCreatePopUp = () => {
+    console.log("hereeeeeeeee");
+    props.setIsBlur(false);
+    props.setCreateRoom(false);
+  }
 
+  let createRoomRef = useClickOutSide(closeCreatePopUp);
   return (
-    <div className="create-room-container" ref={nodeDom}>
+    <div className="create-room-container" ref={createRoomRef}>
       <div className="create-room-header">
         <h1 className="create-room-title">Create Chat Room</h1>
-        <CloseIcon className="create-room-close-icon" onClick={props.onClose} />
+        <CloseIcon className="create-room-close-icon" onClick={()=>closeCreatePopUp()} />
       </div>
       {step === 1 && (
         <CreateRoomVisibilityOptions
@@ -140,16 +143,17 @@ const CreateRoom = (props) => {
           submitHandler={submitHandler}
           onChangeHandler={onChangeHandler}
           onChangeIcon={onChangeIcon}
-          />
-        )}
-      {step === 3 && <CreateRoomPassword
+        />
+      )}
+      {step === 3 && (
+        <CreateRoomPassword
           formData={formData}
           setStep={setStep}
           errors={errors}
           submitHandler={submitHandler}
           onChangeHandler={onChangeHandler}
-
-      />}
+        />
+      )}
       <span ref={errorRef} style={{ display: "none" }}></span>
     </div>
   );

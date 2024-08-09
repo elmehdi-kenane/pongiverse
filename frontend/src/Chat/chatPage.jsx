@@ -5,6 +5,7 @@ import AuthContext from "../navbar-sidebar/Authcontext";
 import ChatConversation from "./chatConversation";
 import ChatRoomConversation from "./chatRoomConversation";
 import { useContext, useEffect, useState } from "react";
+import * as ChatIcons from "../assets/chat/media/index";
 
 const Chat = () => {
   const {
@@ -115,7 +116,12 @@ const Chat = () => {
             Object.values(selectedChatRoom).every((value) => value !== "") ? (
             <ChatRoomConversation setSelectedItem={handleSelectItem} setSelectedChatRoom={setSelectedChatRoom} />
           ) : (
-            <div className="none-conversation-selected">Hellow</div>
+            <div className="chat-window-empty">
+              <div className="chat-window-empty-wrapper">
+              <img src={ChatIcons.emptyChatIcon} alt="" className="empty-chat-icon"/>
+              <p className="chat-window-empty-message"> Begin a conversation with a friend to see it show up here!</p>
+              </div>
+            </div>
           )}
         </div>
       </div>

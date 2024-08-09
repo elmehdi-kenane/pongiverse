@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import * as ChatIcons from "../assets/chat/media";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import ChatContext from "./ChatContext";
@@ -161,10 +161,39 @@ const MyRoom = (props) => {
     navigate(`/mainpage/chat`);
   };
 
+  const fileInputRef = useRef(null);
+
+  const handleContainerClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const onChangeIcon = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const imageUrl = e.target.result;
+        const placeHolder = document.getElementsByClassName(
+          "my-room-cover-wrapper"
+        )[0];
+        if(placeHolder)
+          placeHolder.style.backgroundImage = `url(${imageUrl})`;
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="my-room-container">
       <div className="my-room-header">
-        <CameraAltIcon className="my-room-cover-edit-icon" />
+        <div className="my-room-cover-edit-wrapper" onClick={handleContainerClick}>
+          <CameraAltIcon className="my-room-cover-edit-icon" />
+          <input type="file" 
+                  ref={fileInputRef}
+                  style={{ display: "none" }}
+              onChange={onChangeIcon}
+              />
+        </div>
         <div className="my-room-cover-wrapper"></div>
         <div className="my-room-info">
           <img

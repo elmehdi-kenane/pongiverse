@@ -1,6 +1,5 @@
 import * as ChatIcons from "../assets/chat/media";
 
-
 const CreateRoomVisibilityOptions = (props) => {
   return (
     <>
@@ -35,21 +34,6 @@ const CreateRoomVisibilityOptions = (props) => {
           />
           <div className="create-room-option-text">Private</div>
         </div>
-        {/* <div
-          className={
-            props.roomVisibility === "protected-visibility"
-              ? "create-room-option create-room-option-selected"
-              : "create-room-option"
-          }
-          onClick={() => props.setRoomVisibility("protected-visibility")}
-        >
-          <img
-            src={ChatIcons.protectedVisibility}
-            alt="Protected"
-            className="protected-option-icon visibility-option-icon"
-          />
-          <div className="create-room-option-text">Protected</div>
-        </div> */}
       </div>
       <div className="create-room-actions">
         <button className="create-room-cancel-button" onClick={props.onClose}>
