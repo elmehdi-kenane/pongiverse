@@ -109,10 +109,10 @@ def update_user_pic(request):
     if user is not None:    
         user.avatar = image_file
         user.save()
-        success_res = Response(data={"case": "userPic saved successfully"}, status=status.HTTP_200_OK)
+        success_res = Response(data={"case": "Picture updated successfully"}, status=status.HTTP_200_OK)
         return success_res
     else:
-        error_response = Response(data={"error": "Failed to save userPic"}, status=status.HTTP_400_BAD_REQUEST)
+        error_response = Response(data={"error": "Failed to update picture"}, status=status.HTTP_400_BAD_REQUEST)
         return error_response
 
 
@@ -125,10 +125,10 @@ def update_user_bg(request):
     if user is not None:    
         user.background_pic = image_file
         user.save()
-        success_res = Response(data={"case": "userBg saved successfully"}, status=status.HTTP_200_OK)
+        success_res = Response(data={"case": "Walppaper updated successfully"}, status=status.HTTP_200_OK)
         return success_res
     else:
-        error_response = Response(data={"error": "Failed to save userBg"}, status=status.HTTP_400_BAD_REQUEST)
+        error_response = Response(data={"error": "Failed to update walppaper"}, status=status.HTTP_400_BAD_REQUEST)
         return error_response
 
 #**--------------------- UserName ---------------------** 
@@ -149,13 +149,13 @@ def update_username(request):
         if user is not None:
             user.username = new_username
             user.save()
-            success_response = Response(data={"case": "username saved successfully"}, status=status.HTTP_200_OK)
+            success_response = Response(data={"case": "NickName updated successfully"}, status=status.HTTP_200_OK)
             return success_response
         else:
-            error_response = Response(data={"error": "Failed to save username"}, status=status.HTTP_400_BAD_REQUEST)
+            error_response = Response(data={"error": "Failed to save NickName"}, status=status.HTTP_400_BAD_REQUEST)
             return error_response
     else:
-        error_response = Response(data={"error": "Username already exist"}, status=status.HTTP_400_BAD_REQUEST)
+        error_response = Response(data={"error": "NickName already exist"}, status=status.HTTP_400_BAD_REQUEST)
         return error_response
         
 #**--------------------- UserBio ---------------------** 
@@ -168,10 +168,10 @@ def update_user_bio(request):
     if user is not None:
         user.bio = user_bio
         user.save()
-        success_res = Response(data={'case': 'userBio Saved Successfully'}, status=status.HTTP_200_OK)
+        success_res = Response(data={'case': 'Bio updated successfully'}, status=status.HTTP_200_OK)
         return success_res
     else:
-        err_res = Response(data={'error': 'Failed to save userBio'}, status=status.HTTP_400_BAD_REQUEST)
+        err_res = Response(data={'error': 'Failed to update bio'}, status=status.HTTP_400_BAD_REQUEST)
         return err_res
         
 #**--------------------- UserCountry ---------------------** 
@@ -184,10 +184,10 @@ def update_user_country(request):
     if user is not None:
         user.country = user_country
         user.save()
-        success_res = Response(data={'case': 'userCountry Saved Successfully'}, status=status.HTTP_200_OK)
+        success_res = Response(data={'case': 'New Country updated successfully'}, status=status.HTTP_200_OK)
         return success_res
     else:
-        err_res = Response(data={'error': 'Failed to save userCountry'}, status=status.HTTP_400_BAD_REQUEST)
+        err_res = Response(data={'error': 'Failed to update new country'}, status=status.HTTP_400_BAD_REQUEST)
         return err_res
         
 #**--------------------- UserPassword ---------------------** 
@@ -202,8 +202,8 @@ def update_user_password(request):
         user.password = user_new_pwd
         user.set_password(user_new_pwd)
         user.save()
-        success_res = Response(data={'case':'userPwd Updated Successfully'}, status=status.HTTP_200_OK)
+        success_res = Response(data={'case':'New password updated successfully'}, status=status.HTTP_200_OK)
         return success_res
     else:
-        err_res = Response(data={'error': 'Wrong Current Password!'}, status=status.HTTP_401_UNAUTHORIZED)
+        err_res = Response(data={'error': 'Wrong current password!'}, status=status.HTTP_401_UNAUTHORIZED)
         return err_res
