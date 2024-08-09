@@ -95,7 +95,6 @@ export const ProfileWrapper = ({ child }) => {
 
         checkUser:checkUser,
         setCheckUser:setCheckUser,
-
     };
     return (
         <ProfileContext.Provider value={userInfoData}> {child} </ProfileContext.Provider>
