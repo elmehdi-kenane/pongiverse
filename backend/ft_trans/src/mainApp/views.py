@@ -109,6 +109,7 @@ def notifs_friends(request):
 
 @api_view(['POST'])
 def serve_image(request):
+	print(f"*************// : {request.data}")
 	if (request.data).get('image'):
 		with open(request.data['image'], 'rb') as image_file:
 			if image_file:
@@ -241,8 +242,9 @@ def get_notifications(request):
 	if invitations is not None:
 		for notification in invitations:
 			Notifications.append({
+				'tournament_id': notification.tournament.tournament_id,
 				'sender': notification.sender.username,
-				'tournament_id': notification.tournament.tournament_id
+				'sender_image' : notification.sender.avatar.path
 			})
 	response = Response()
 	response.data = {'notifications': Notifications}
@@ -454,7 +456,6 @@ def get_game_members_round(request):
 
 @api_view(['POST'])
 def get_opponent(request):
-	print("YESHSHSHSH")
 	response = Response()
 	username = request.data.get('user')
 	user = customuser.objects.filter(username=username).first()
@@ -463,4 +464,18 @@ def get_opponent(request):
 		response.data = {'Case' : 'exist', 'user1' : opponent.user1.username, 'user2' : opponent.user2.username, 'time' : opponent.created_at}
 	else:
 		response.data = {'Case' : 'does not exist'}
+	return response
+
+@api_view(['POST'])
+def get_number_of_members_in_a_round(request):
+	response = Response()
+	round_type = request.data.get('round_type')
+	tournament_id = request.data.get('tournament_id')
+	tournament = Tournament.objects.filter(tournament_id=tournament_id).first()
+	round = Round.objects.filter(tournament=tournament, type=round_type).first()
+	if round is not None:
+		number_of_members = TournamentUserInfo.objects.filter(round=round).count()
+		response.data = {'Case': 'Tournament round found', 'number_of_members' : number_of_members}
+		return response
+	response.data = {'Case': 'Tournament round not found'}
 	return response

@@ -12,6 +12,8 @@ const Modes = () => {
 	const [soloModeSelected, setSoloModeSelected] = useState(false)
 	const [createTournamentModeSelected, setcreateTournamentModeSelected] = useState(false)
 	const [joinTournamentModeSelected, setJoinTournamentModeSelected] = useState(false)
+	const [TournamentInviteNotifications, setTournamentInviteNotifications] = useState([])
+	const [TournamentInviteNotificationsImages, setTournamentInviteNotificationsImages] = useState([])
 	const [enableButton, setEnableButton] = useState(false)
 	const [gameNotif, setGameNotif] = useState([])
 	const [roomID, setRoomID] = useState(null)
@@ -57,13 +59,58 @@ const Modes = () => {
 				console.error('Failed to fetch data');
 			}
 		}
-		if (user)
+
+
+		const getNotifications = async () => {
+			const response = await fetch(`http://localhost:8000/api/get-notifications`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					user: user,
+				})
+			})
+			const res = await response.json()
+			console.log("reskh :", res.notifications)
+			setTournamentInviteNotifications(res.notifications)
+			console.log("RESSS :", res)
+		}
+
+		if (user){
 			check_is_started_and_not_finished()
+			getNotifications()
+		}
 	}, [user])
 
 	const goToSoloPage = () => {
 		navigate("../game/solo")
 	}
+
+	useEffect(() => {
+		console.log("WAS HERE")
+		const fetchImages = async () => {
+			const promises = TournamentInviteNotifications.map(async (user) => {
+				const response = await fetch(`http://localhost:8000/api/getImage`, {
+					method: "POST",
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						image: user.sender_image
+					})
+				});
+				const blob = await response.blob();
+				return URL.createObjectURL(blob);
+			});
+			const images = await Promise.all(promises);
+			setTournamentInviteNotificationsImages(images)
+		};
+		if (TournamentInviteNotifications.length > 0){
+			console.log("LENGHT: ", TournamentInviteNotifications.length)
+			fetchImages()
+		}
+	}, [TournamentInviteNotifications])
 
 	const GoToTournamentPage = async () => {
 		if (socket && socket.readyState === WebSocket.OPEN) {
@@ -79,29 +126,28 @@ const Modes = () => {
 	const JoinTournament = async () => {
 		navigate("jointournament")
 	}
-	useEffect(() => {
-		if (socket && socket.readyState === WebSocket.OPEN) {
-			socket.onmessage = (event) => {
-				let data = JSON.parse(event.data)
-				let type = data.type
-				let message = data.message
-				if (type === 'goToGamingPage') {
-					console.log("navigating now")
-					console.log("")
-					if (message.mode === '1vs1')
-						navigate(`/mainpage/game/solo/1vs1/friends`)
-					else {
-
-						navigate(`/mainpage/game/solo/2vs2/friends`)
-					}
-				} else if (type === 'receiveFriendGame') {
-					console.log("RECEIVED A GAME REQUEST")
-					setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message])
-					setRoomID(message.roomID)
-				}
-			}
-		}
-	}, [socket])
+	// useEffect(() => {
+	// 	if (socket && socket.readyState === WebSocket.OPEN) {
+	// 		socket.onmessage = (event) => {
+	// 			let data = JSON.parse(event.data)
+	// 			let type = data.type
+	// 			let message = data.message
+	// 			if (type === 'goToGamingPage') {
+	// 				console.log("navigating now")
+	// 				console.log("")
+	// 				if (message.mode === '1vs1')
+	// 					navigate(`/mainpage/game/solo/1vs1/friends`)
+	// 				else {
+	// 					navigate(`/mainpage/game/solo/2vs2/friends`)
+	// 				}
+	// 			} else if (type === 'receiveFriendGame') {
+	// 				console.log("RECEIVED A GAME REQUEST")
+	// 				setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message])
+	// 				setRoomID(message.roomID)
+	// 			}
+	// 		}
+	// 	}
+	// }, [socket])
 
 	useEffect(() => {
 		if (socket && socket.readyState === WebSocket.OPEN) {
@@ -117,7 +163,6 @@ const Modes = () => {
 					setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message])
 					setRoomID(message.roomID)
 				} else if (type === 'tournament_created') {
-					console.log("YESSSSSSSSS")
 					navigate("createtournament")
 				}
 				else if (type === 'connected_again') {
@@ -125,6 +170,13 @@ const Modes = () => {
 				}
 				else if (type === 'hmed') {
 					console.log("hmed received")
+				}else if (type === 'invited_to_tournament') {
+					console.log("YOU HAVE BEEN INVITED BY " + data.message.user + " TO TOURNAMENT N: ", data.message.tournament_id)
+					const notif = {'tournament_id': data.message.tournament_id , 'sender' : data.message.sender, 'sender_image' : data.message.sender_image``}
+					setTournamentInviteNotifications((prevTournamentInviteNotifications) => [...prevTournamentInviteNotifications, notif]);
+				}
+				else if (type == 'accepted_invitation'){
+					navigate("/mainpage/game/createtournament");
 				}
 			}
 		}
@@ -195,17 +247,17 @@ const Modes = () => {
 	}
 
 	const handleSelect = (type) => {
-		if (type === 'play_solo'){
+		if (type === 'play_solo') {
 			setSoloModeSelected(true)
 			setcreateTournamentModeSelected(false)
 			setJoinTournamentModeSelected(false)
 			setEnableButton(true)
-		}else if (type === 'create_tournament'){
+		} else if (type === 'create_tournament') {
 			setSoloModeSelected(false)
 			setcreateTournamentModeSelected(true)
 			setJoinTournamentModeSelected(false)
 			setEnableButton(true)
-		}else if (type === 'join_tournament'){
+		} else if (type === 'join_tournament') {
 			setSoloModeSelected(false)
 			setcreateTournamentModeSelected(false)
 			setJoinTournamentModeSelected(true)
@@ -221,10 +273,85 @@ const Modes = () => {
 		if (joinTournamentModeSelected)
 			JoinTournament()
 	}
+	/// tournament handle accept
+	const tournamentHandleAccept = async (tournament_id) => {
+		const response = await fetch(`http://localhost:8000/api/get-tournament-size`, {
+			method: "POST",
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				tournament_id: tournament_id
+			})
+		});
+		if (response.ok) {
+			const data = await response.json();
+			if (data.Case === 'Tournament_started') {
+				Swal.fire({
+					icon: "warning",
+					position: "top-end",
+					title: "Tournament is already started",
+					showConfirmButton: false,
+					customClass: {
+						popup: styles['error-container'],
+						title: styles['title-swal'],
+					},
+					timer: 1500
+				});
+			} else if (data.Case === 'Tournament_is_full') {
+				Swal.fire({
+					icon: "warning",
+					position: "top-end",
+					title: "Tournament is full",
+					showConfirmButton: false,
+					customClass: {
+						popup: styles['error-container'],
+						title: styles['title-swal'],
+					},
+					timer: 1500
+				});
+			} else {
+				if (socket && socket.readyState === WebSocket.OPEN) {
+					try {
+						await socket.send(
+							JSON.stringify({
+								type: 'accept-tournament-invitation',
+								message: {
+									user: user,
+									tournament_id: tournament_id
+								}
+							})
+						);
+					} catch (error) {
+						console.error("Error sending message:", error);
+					}
+				}
+			}
+		} else {
+			console.error('Failed to fetch data');
+		}
+	};
+
+	// Tournamet hahndle deny
+	const TournamentHandleDeny = (sender, tournament_id) => {
+		setTournamentInviteNotifications((prevTournamentInviteNotifications) => prevTournamentInviteNotifications.filter((notif)=> notif.sender !== sender));
+		if (socket && socket.readyState === WebSocket.OPEN) {
+			socket.send(JSON.stringify({
+				type: 'deny-tournament-invitation',
+				message: {
+					user: user,
+					sender: sender,
+					tournament_id: tournament_id
+				}
+			}))
+		}
+
+	}
+
 
 	return (
 		<div className={styles['game-modes-page']}>
-			{/* <div className='cancel-game-invite-request'>
+			<div className='cancel-game-invite-request'>
 				{(allGameNotifs.length) ? (
 					<div className='game-invitations'>
 						{allGameNotifs.map((user, key) => {
@@ -254,7 +381,32 @@ const Modes = () => {
 					</div>
 				) : ''
 				}
-			</div> */}
+			</div>
+			<div className='cancel-game-invite-request'>
+				{(TournamentInviteNotifications.length) ? (
+					<div className='game-invitations'>
+						{TournamentInviteNotifications.map((user, key) => {
+							return ((
+								<div key={key} className='game-invitation'>
+									<img src={TournamentInviteNotificationsImages[key]} alt="profile-pic" />
+									<div className='user-infos'>
+										<span> {user.sender} invited you to a tournament</span>
+									</div>
+									<div className='accept-refuse'>
+										<div onClick={() => tournamentHandleAccept(user.tournament_id)}>
+											<img src={Icons.copied} alt="accept-icon" />
+										</div>
+										<div onClick={() => TournamentHandleDeny(user.sender, user.tournament_id)}>
+											<img src={Icons.cancel} alt="refuse-icon" />
+										</div>
+									</div>
+								</div>
+							))
+						})}
+					</div>
+				) : ''
+				}
+			</div>
 			<div className={`${styles['play-solo-mode']} ${soloModeSelected ? styles['mode-selected'] : ''}`} onClick={() => handleSelect('play_solo')}>
 				<div className={styles['play-solo-mode-image']}>
 					<img src={playSoloImage} alt="" />
@@ -285,7 +437,7 @@ const Modes = () => {
 						discover various tournaments with different challenges.</p>
 				</div>
 			</div>
-			<div className={`${styles['game-modes-page-button']} ${(soloModeSelected || createTournamentModeSelected || joinTournamentModeSelected) ? styles['game-modes-page-button-selected'] : ''}`}	onClick={handleButtonClick}>
+			<div className={`${styles['game-modes-page-button']} ${(soloModeSelected || createTournamentModeSelected || joinTournamentModeSelected) ? styles['game-modes-page-button-selected'] : ''}`} onClick={handleButtonClick}>
 				<button disabled={!enableButton}>Next</button>
 			</div>
 		</div>

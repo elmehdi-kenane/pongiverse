@@ -140,6 +140,7 @@ async def create_tournament(self, data, user_channels):
 
 
 async def invite_friend(self, data, user_channels):
+	print("111111111111111111")
 	invited_user = data['message']['invited']
 	sender_user = data['message']['user']
 	tournament_id = data['message']['tournament_id']
@@ -151,7 +152,7 @@ async def invite_friend(self, data, user_channels):
 		tournament = await sync_to_async(Tournament.objects.filter(tournament_id=tournament_id).first)()
 		tournamentInvite = await sync_to_async(TournamentInvitation.objects.filter(tournament=tournament, sender=sender, receiver=receiver).first)()
 		if tournamentInvite is None:
-			print(f"sender : {sender.username}, receiver : {receiver.username}, tournament : {tournament.tournament_id}")
+			print(f"sender : {sender.username}, receiver : {receiver.username}, tournament : {tournament.tournament_id}, sender_image: {sender.avatar.path}")
 			tournamentInv = TournamentInvitation(tournament=tournament, sender=sender, receiver=receiver)
 			await sync_to_async(tournamentInv.save)()
 			await self.channel_layer.send(
@@ -160,7 +161,8 @@ async def invite_friend(self, data, user_channels):
 							'type': 'invited_to_tournament',
 							'message': {
 								'tournament_id' : tournament_id,
-								'user' : sender_user
+								'sender' : sender_user,
+								'sender_image' : sender.avatar.path
 							}
 						}
 					)

@@ -373,6 +373,14 @@
 	animation: fadeInRight 0.5s ease-in-out forwards;
 }
 
+.destroy-popup{
+	background-color: #1b062a;
+}
+
+.destroy-popup-title{
+	color: white;
+}
+
 .invite-notif-text {
 	margin-top: 5px;
 	text-align: center;

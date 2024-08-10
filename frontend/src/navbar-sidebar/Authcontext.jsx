@@ -27,10 +27,10 @@ export const AuthProvider = ({children}) => {
 	let allGameFriendsRef = useRef(allGameFriends)
 	let [isBlur, setIsBlur] = useState(false)
 
-	
+
 	// Glass Background State --------------------------------------------
 	const [isGlass, setIsGlass] = useState(false);
-	
+
 	// Imad's States --------------------------------------------
 	//-- Glass Background
 	const [isReport, setIsReport] = useState(false);
@@ -41,7 +41,7 @@ export const AuthProvider = ({children}) => {
 	const reportContentRef = useRef(null);
 	const blockRef = useRef(null);
 	const blockContentRef = useRef(null);
-	
+
 
 	const [userPic, setUserPic] = useState(userPc);
 	const [nickName, setNickName] = useState("Maverick");
@@ -177,7 +177,7 @@ export const AuthProvider = ({children}) => {
 				console.log("something wrong with fetch")
 			}
 		}
-		
+
 		const getGameCustomize = async () => {
 			try {
 				let response = await fetch('http://localhost:8000/api/getCustomizeGame', {
@@ -251,6 +251,8 @@ export const AuthProvider = ({children}) => {
 				let type = data.type
 				// let message = data.message
 				let uname = data.username
+				if (type === 'hmed')
+					console.log("hmed received")
 				// if (type === 'user_disconnected') {
 				// 	const currentAllGameFriends = allGameFriendsRef.current;
 				// 	console.log("user disconnected : ", allGameFriends)

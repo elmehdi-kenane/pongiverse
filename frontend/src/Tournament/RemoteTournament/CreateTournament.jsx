@@ -20,7 +20,7 @@ function CreateTournament() {
 	const [membersImages, setMemberImages] = useState([])
 	const navigate = useNavigate()
 	const location = useLocation()
-	const { user, userImages, allGameFriends, socket, setAllGameFriends} = useContext(AuthContext)
+	const { user, userImages, allGameFriends, socket, setAllGameFriends } = useContext(AuthContext)
 	const allGameFriendsRef = useRef(allGameFriends);
 	const divRef = useRef(null);
 	const divRef2 = useRef(null);
@@ -60,12 +60,14 @@ function CreateTournament() {
 	const Destroy_tournament = () => {
 		Swal.fire({
 			title: "Are you sure?",
-			text: "You won't be able to revert this!",
-			icon: "warning",
 			showCancelButton: true,
 			confirmButtonColor: "#3085d6",
 			cancelButtonColor: "#d33",
 			confirmButtonText: "Yes, Destroy it!",
+			customClass: {
+				popup: styles['destroy-popup'],
+				title : styles['destroy-popup-title'],
+			}
 		}).then((result) => {
 			if (result.isConfirmed) {
 				if (socket && socket.readyState === WebSocket.OPEN) {
@@ -424,7 +426,7 @@ function CreateTournament() {
 	return (
 		<>
 			<div className={styles["tournament-page"]}>
-				<Toaster/>
+				<Toaster />
 				<div className={styles["tournament-page-content"]}>
 					<div className={styles["title-and-destroy"]}>
 						<h1 className={styles["tournament-title"]}>Tournament Creation</h1>
@@ -442,7 +444,7 @@ function CreateTournament() {
 									<h4 className={styles["tournament-id-title"]}>Tournament ID:</h4>
 									<div className={styles["tournament-id-value-and-icon"]}>
 										<h5 className={styles["tournament-id-value"]} onClick={copyTournamentId}>{tournamentId}</h5>
-										<ContentCopyIcon onClick={copyTournamentId}/>
+										<ContentCopyIcon onClick={copyTournamentId} />
 									</div>
 								</div>
 								<div className={styles["little-line"]}></div>
