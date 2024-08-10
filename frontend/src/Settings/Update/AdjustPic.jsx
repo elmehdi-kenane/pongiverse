@@ -2,19 +2,15 @@ import React, { useState, useContext, useEffect } from 'react'
 import Avatar from 'react-avatar-edit'
 import AuthContext from '../../navbar-sidebar/Authcontext'
 import SettingsContext from '../SettingsWrapper'
-import toast from 'react-hot-toast';
 
 function AdjustPic(props) {
 
   const { user, setUserImg } = useContext(AuthContext)
-  const { userPic, setUserPic } = useContext(SettingsContext);
+  const { userPic, setUserPic, notifySuc, notifyErr} = useContext(SettingsContext);
 
   const [src, setSrc] = useState(null)
   const [preview, setPreview] = useState(userPic)
   const [check, setCheck] = useState(userPic)
-
-  const notifySuc = (suc) => toast.success(suc);
-  const notifyErr = (err) => toast.error(err);
 
   const UpdatePic = async (updatedPic) => {
     try {

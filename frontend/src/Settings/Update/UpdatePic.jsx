@@ -2,15 +2,11 @@ import React, { useState, useContext } from 'react'
 import AuthContext from '../../navbar-sidebar/Authcontext';
 import EditIcon from '@mui/icons-material/Edit';
 import SettingsContext from '../SettingsWrapper';
-import toast from 'react-hot-toast';
 
 function UpdatePic(props) {
 
   const { user } = useContext(AuthContext)
-  const { userPic, userBg, setUserBg } = useContext(SettingsContext)
-
-  const notifySuc = (suc) => toast.success(suc);
-  const notifyErr = (err) => toast.error(err);
+  const { userPic, userBg, setUserBg, notifySuc, notifyErr } = useContext(SettingsContext)
 
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {

@@ -1,7 +1,8 @@
 import { createContext, useEffect, useState, useContext } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
-import mavPic from "./assets/Group.svg"
-import bg from "./assets/bg1.jpg"
+import mavPic from "../assets/Profile/Group.svg"
+import bg from "../assets/Profile/bg1.jpg"
+import toast from 'react-hot-toast';
 
 const SettingsContext = createContext();
 
@@ -11,13 +12,16 @@ export const SettingsWrapper = ({ child }) => {
 
     const [userData, setUserData] = useState(null)
     const { user } = useContext(AuthContext);
-    
+
     const [userPic, setUserPic] = useState(mavPic);
     const [userBg, setUserBg] = useState(bg);
     const [userEmail, setUserEmail] = useState('');
     const [userBio, setUserBio] = useState('');
     const [userLevel, setUserLevel] = useState(null);
     const [userCountry, setUserCountry] = useState(null);
+
+    const notifySuc = (suc) => toast.success(suc);
+    const notifyErr = (err) => toast.error(err);
 
     useEffect(() => {
         const getUserData = async () => {
@@ -51,7 +55,7 @@ export const SettingsWrapper = ({ child }) => {
             try {
                 const response = await fetch(`http://localhost:8000/api/getImage`, {
                     method: "POST",
-                    headers: {'Content-Type': 'application/json',},
+                    headers: { 'Content-Type': 'application/json', },
                     body: JSON.stringify({
                         image: picPath
                     })
@@ -62,7 +66,7 @@ export const SettingsWrapper = ({ child }) => {
                 console.log("Error : ", error)
             }
         }
-        if (userData){
+        if (userData) {
             getUserPic(userData.pic, setUserPic)
             getUserPic(userData.bg, setUserBg)
             setUserBio(userData.bio)
@@ -85,6 +89,9 @@ export const SettingsWrapper = ({ child }) => {
         setUserLevel: setUserLevel,
         userCountry: userCountry,
         setUserCountry: setUserCountry,
+
+        notifySuc:notifySuc,
+        notifyErr:notifyErr
 
     };
     return (

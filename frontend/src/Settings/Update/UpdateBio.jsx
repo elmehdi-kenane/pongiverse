@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect, useContext } from 'react'
 import AuthContext from '../../navbar-sidebar/Authcontext';
 import EditIcon from '@mui/icons-material/Edit';
 import SettingsContext from '../SettingsWrapper';
-import toast from 'react-hot-toast';
 
 function UpdateBio() {
   const [isUpdate, setIsUpdate] = useState(false);
@@ -11,10 +10,7 @@ function UpdateBio() {
   const iconRef = useRef(null);
 
   const { user } = useContext(AuthContext)
-  const { userBio, setUserBio } = useContext(SettingsContext)
-
-  const notifySuc = (suc) => toast.success(suc);
-  const notifyErr = (err) => toast.error(err);
+  const { userBio, setUserBio, notifySuc, notifyErr } = useContext(SettingsContext)
 
   useEffect(() => {
     if (inputRef.current)

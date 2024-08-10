@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import AuthContext from '../../navbar-sidebar/Authcontext';
+import SettingsContext from '../SettingsWrapper';
 import Loading from '../../Game/Loading';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import toast from 'react-hot-toast';
 
 function UpdatePwd(props) {
 
@@ -14,9 +14,7 @@ function UpdatePwd(props) {
   const [isLoading, setIsLoading] = useState(false)
 
   const { user } = useContext(AuthContext);
-
-  const notifyErr = (err) => toast.error(err);
-  const notifySuc = (suc) => toast.success(suc);
+  const { notifySuc, notifyErr } = useContext(SettingsContext);
 
   const checkPwd = (oldPwd, newPwd, cfmPwd) => {
     if (!oldPwd || !newPwd || !cfmPwd)

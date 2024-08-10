@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
 import AuthContext from '../../navbar-sidebar/Authcontext';
+import SettingsContext from '../SettingsWrapper';
 import EditIcon from '@mui/icons-material/Edit';
-import toast from 'react-hot-toast';
 
 function UpdateNkName() {
     const [isUpdate, setIsUpdate] = useState(false);
@@ -9,10 +9,8 @@ function UpdateNkName() {
     const inputRef = useRef(null);
     const iconRef = useRef(null);
 
-    const { user, setUser } = useContext(AuthContext)
-
-    const notifySuc = (suc) => toast.success(suc);
-    const notifyErr = (err) => toast.error(err);
+    const { user, setUser} = useContext(AuthContext)
+    const { notifySuc, notifyErr} = useContext(SettingsContext)
 
     useEffect(() => {
         if (inputRef.current)
