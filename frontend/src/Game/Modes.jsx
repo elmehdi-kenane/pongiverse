@@ -79,6 +79,30 @@ const Modes = () => {
 	const JoinTournament = async () => {
 		navigate("jointournament")
 	}
+	// useEffect(() => {
+	// 	if (socket && socket.readyState === WebSocket.OPEN) {
+	// 		socket.onmessage = (event) => {
+	// 			let data = JSON.parse(event.data)
+	// 			let type = data.type
+	// 			let message = data.message
+	// 			if (type === 'goToGamingPage') {
+	// 				console.log("navigating now")
+	// 				console.log("")
+	// 				if (message.mode === '1vs1')
+	// 					navigate(`/mainpage/game/solo/1vs1/friends`)
+	// 				else {
+
+	// 					navigate(`/mainpage/game/solo/2vs2/friends`)
+	// 				}
+	// 			} else if (type === 'receiveFriendGame') {
+	// 				console.log("RECEIVED A GAME REQUEST")
+	// 				setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message])
+	// 				setRoomID(message.roomID)
+	// 			}
+	// 		}
+	// 	}
+	// }, [socket])
+
 	useEffect(() => {
 		if (socket && socket.readyState === WebSocket.OPEN) {
 			socket.onmessage = (event) => {
@@ -86,32 +110,12 @@ const Modes = () => {
 				let type = data.type
 				let message = data.message
 				if (type === 'goToGamingPage') {
-					console.log("navigating now")
-					console.log("")
+					// console.log("navigating now")
+					// navigate(`/mainpage/game/solo/1vs1/friends`)
 					if (message.mode === '1vs1')
 						navigate(`/mainpage/game/solo/1vs1/friends`)
-					else {
-
+					else
 						navigate(`/mainpage/game/solo/2vs2/friends`)
-					}
-				} else if (type === 'receiveFriendGame') {
-					console.log("RECEIVED A GAME REQUEST")
-					setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message])
-					setRoomID(message.roomID)
-				}
-			}
-		}
-	}, [socket])
-
-	useEffect(() => {
-		if (socket && socket.readyState === WebSocket.OPEN) {
-			socket.onmessage = (event) => {
-				let data = JSON.parse(event.data)
-				let type = data.type
-				let message = data.message
-				if (type === 'goToGamingPage') {
-					console.log("navigating now")
-					navigate(`/mainpage/game/solo/1vs1/friends`)
 				} else if (type === 'receiveFriendGame') {
 					console.log("RECEIVED A GAME REQUEST")
 					setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message])
@@ -224,7 +228,7 @@ const Modes = () => {
 
 	return (
 		<div className={styles['game-modes-page']}>
-			{/* <div className='cancel-game-invite-request'>
+			<div className='cancel-game-invite-request'>
 				{(allGameNotifs.length) ? (
 					<div className='game-invitations'>
 						{allGameNotifs.map((user, key) => {
@@ -254,7 +258,7 @@ const Modes = () => {
 					</div>
 				) : ''
 				}
-			</div> */}
+			</div>
 			<div className={`${styles['play-solo-mode']} ${soloModeSelected ? styles['mode-selected'] : ''}`} onClick={() => handleSelect('play_solo')}>
 				<div className={styles['play-solo-mode-image']}>
 					<img src={playSoloImage} alt="" />
