@@ -144,6 +144,7 @@ useEffect(() => {
           `http://localhost:8000/chatAPI/suggestedChatRooms/${user}`
         )
         let data = await response.json()
+        // console.log("suggested chat room", data);
         setSuggestedChatRooms(data)
       }
       catch (error) {

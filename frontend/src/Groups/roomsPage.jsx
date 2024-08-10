@@ -2,34 +2,28 @@ import { useContext, useEffect, useRef, useState } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import MyRoom from "./myRoom";
 import SuggestedRoom from "./suggestedRoom";
-import InvitationRoom from "./InvitationRoom";
 import CreateRoom from "./createRoom";
-import JoinRoom from "./joinRoom";
 import ChatContext from "./ChatContext";
 import * as ChatIcons from "../assets/chat/media";
 import { toast } from "react-toastify";
 import "../assets/chat/Groups.css";
 import NotificationAddIcon from "@mui/icons-material/NotificationAdd";
-import { useClickOutSide } from "../Chat/chatConversation";
-import CloseIcon from "@mui/icons-material/Close";
+import { Toaster } from 'react-hot-toast';
+import RoomsNotifications from "./roomsNotifications";
+
 const Rooms = () => {
   const [createRoom, setCreateRoom] = useState(false);
-  const [joinRoom, setJoinRoom] = useState(false);
   const { user, chatSocket, isBlur, setIsBlur } = useContext(AuthContext);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [showRoomNotifications, setShowRoomNotifications] = useState(false);
   const {
     chatRoomConversations,
     setChatRoomConversations,
     chatRoomIcons,
-    chatRoomInvitations,
     setChatRoomInvitations,
-    chatRoomInvitationsIcons,
     suggestedChatRooms,
     chatRoomConversationsRef,
   } = useContext(ChatContext);
-  // const myChatRoomsRef = useRef(chatRoomConversations);
-  const roomInvitationsRef = useRef(chatRoomInvitations);
-  const [showRoomNotifications, setShowRoomNotifications] = useState(false);
+
   //hande scroller handler (My Rooms)
   const onClickScroller = (handle, numberOfRooms) => {
     const slider = document.getElementsByClassName("rooms-slider")[0];
@@ -69,27 +63,6 @@ const Rooms = () => {
     }
   };
 
-  //hande scroller handler (Room Invitations)
-  const onClickScrollerInvitation = (handle, numberOfRooms) => {
-    const slider = document.getElementsByClassName(
-      "invitation-rooms-slider"
-    )[0];
-    let sliderIndex = parseInt(
-      getComputedStyle(slider).getPropertyValue("--invitation-slider-index")
-    );
-    let itemsPerScreen = parseInt(
-      getComputedStyle(slider).getPropertyValue("--items-per-screen")
-    );
-    if (handle === "left" && sliderIndex) {
-      slider.style.setProperty("--invitation-slider-index", sliderIndex - 1);
-    } else if (handle === "right") {
-      if (sliderIndex + 1 >= numberOfRooms / itemsPerScreen) {
-        sliderIndex = 0;
-        slider.style.setProperty("--invitation-slider-index", sliderIndex);
-      } else
-        slider.style.setProperty("--invitation-slider-index", sliderIndex + 1);
-    }
-  };
   // ######################################### Chat Room backend Handlers ###################################################################
 
   //add user to channel Group
@@ -241,88 +214,50 @@ const Rooms = () => {
       };
     }
   }, [chatSocket]);
-  const handleClickOutside = () => {
-    setShowRoomNotifications(false);
-    setIsBlur(false);
-  };
-  let notifRef = useClickOutSide(() => {
-    handleClickOutside();
-  });
 
   return (
     <div className="rooms-page">
+      <Toaster/>
       <div className="rooms-page-content">
-        {joinRoom && (
-          <JoinRoom
-            onClose={() => {
-              setJoinRoom(false);
-              setIsBlur(false);
-            }}
-          />
-        )}
         {createRoom && (
           <CreateRoom
-            onClose={() => {
-              setCreateRoom(false);
-              setIsBlur(false);
-            }}
+              setCreateRoom = {setCreateRoom}
+              setIsBlur = {setIsBlur}
           />
         )}
-        <div
-          ref={notifRef}
-          className={
-            showRoomNotifications
-              ? "rooms-notifications-container-active"
-              : "rooms-notifications-container"
-          }
-        >
-          <div className="room-invitation-header">
-            <h3 className="room-invition-title">Room Invitations</h3>
-            <CloseIcon
-              className="create-room-close-icon"
-              onClick={() => {
-                setShowRoomNotifications(false);
-                setIsBlur(false);
-              }}
-            />
-          </div>
-          {chatRoomInvitations.length ? 
-        (chatRoomInvitations.map((room, index) => (
-            <InvitationRoom
-            roomIcon = {chatRoomInvitationsIcons[index]}
-            name={room.name}
-            members={room.membersCount}
-            />
-        )))
-    
-          : 
-          <div className="room-ivnitation-wrapper-empty"> You currently have no chat room invitations </div>}
-        </div>
+        {
+          <RoomsNotifications
+            showRoomNotifications={showRoomNotifications}
+            setShowRoomNotifications = {setShowRoomNotifications}
+            setIsBlur = {setIsBlur}
+          />
+        }
         <div className={isBlur ? "rooms-wrapper blur" : "rooms-wrapper"}>
-          <div className="rooms-actions-buttons-container">
-            <NotificationAddIcon
-              className="rooms-notifications-icon"
-              onClick={() => {
-                setShowRoomNotifications(true);
-                setIsBlur(true);
-              }}
-            />
-          </div>
           <div className="rooms-header-wrapper">
             <div className="rooms-header">Your Rooms</div>
-            <div
-              className="create-room-button"
-              onClick={() => {
-                setCreateRoom(true);
-                setIsBlur(true);
-              }}
-            >
-              <img
-                src={ChatIcons.CreateChannel}
-                alt=""
-                className="create-room-icon"
+
+            <div className="create-room-side-buttons-wrapper">
+              <div
+                className="create-room-button"
+                onClick={() => {
+                  setCreateRoom(true);
+                  setIsBlur(true);
+                }}
+              >
+                <img
+                  src={ChatIcons.CreateChannel}
+                  alt=""
+                  className="create-room-icon"
+                />
+                <div className="create-room-text">Create a Room</div>
+              </div>
+              <NotificationAddIcon
+                className="rooms-notifications-icon"
+                onClick={() => {
+                  setShowRoomNotifications(true);
+                  setIsBlur(true);
+                }}
               />
-              <div className="create-room-text">Create a Room</div>
             </div>
           </div>
           <div className="my-rooms-row">
@@ -414,54 +349,6 @@ const Rooms = () => {
               )}
             </div>
           </div>
-          {/* <div className="rooms-header">Room Invitations</div> */}
-          {/* <div className="invitations-room-row">
-            {chatRoomInvitations.length > 4 ? (
-              <>
-                <img
-                  src={ChatIcons.leftHand}
-                  className="hande left-hande"
-                  onClick={() =>
-                    onClickScrollerInvitation(
-                      "left",
-                      chatRoomInvitations.length
-                    )
-                  }
-                />
-                <img
-                  src={ChatIcons.rightHand}
-                  className="hande right-hande"
-                  onClick={() =>
-                    onClickScrollerInvitation(
-                      "right",
-                      chatRoomInvitations.length
-                    )
-                  }
-                />
-              </>
-            ) : (
-              ""
-            )}
-            <div className="rooms-slider-container">
-              {chatRoomInvitations.length ? (
-                <div className="invitations-rooms-slider">
-                  {chatRoomInvitations.map((room, index) => (
-                    <InvitationRoom
-                      key={index}
-                      index={index}
-                      name={room.name}
-                      membersCount={room.membersCount}
-                      room_icon={chatRoomInvitationsIcons}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <div className="invitations-rooms-slider empty-rooms-slider">
-                  You currently have no chat room invitations
-                </div>
-              )}
-            </div>
-          </div> */}
         </div>
       </div>
     </div>

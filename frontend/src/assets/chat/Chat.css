@@ -165,10 +165,35 @@ button.rooms-switch-button-active {
     to right bottom,
     rgb(68, 45, 106),
     rgba(74, 37, 139, 0.5)
-  );
+    );
   width: 80%;
 }
 
+.chat-window-empty{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.chat-window-empty-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+img.empty-chat-icon {
+  fill: white;
+  width: 70px;
+  height: 70px;
+}
+
+.chat-window-empty-message {
+  opacity: .7;
+  font-size: 15px;
+  font-weight: 500;
+}
 .conversation-header {
   width: 100%;
   display: flex;

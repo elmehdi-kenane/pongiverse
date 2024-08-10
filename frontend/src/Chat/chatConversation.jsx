@@ -11,6 +11,8 @@ export let useClickOutSide = (handler) => {
   let domNode = useRef();
   useEffect(() => {
     let eventHandler = (event) => {
+      console.log("current dom: ",domNode.current)
+      console.log("Target" , event.target)
       if (domNode.current && !domNode.current.contains(event.target)) handler();
     };
     document.addEventListener("mousedown", eventHandler);

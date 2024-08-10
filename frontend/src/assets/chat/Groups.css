@@ -1393,8 +1393,8 @@ svg.my-room-cover-edit-icon:hover {
 
 
 svg.rooms-notifications-icon {
-  width: 25px;
-  height: 25px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
 }
 svg.rooms-notifications-icon:hover {
@@ -1508,4 +1508,10 @@ svg.room-invitation-cancel-icon {
   display: flex;
   opacity: .5;
   font-size: 12px;
+}
+
+.create-room-side-buttons-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
