@@ -225,9 +225,8 @@ const Rooms = () => {
               setIsBlur = {setIsBlur}
           />
         )}
-        {
+        {showRoomNotifications && 
           <RoomsNotifications
-            showRoomNotifications={showRoomNotifications}
             setShowRoomNotifications = {setShowRoomNotifications}
             setIsBlur = {setIsBlur}
           />

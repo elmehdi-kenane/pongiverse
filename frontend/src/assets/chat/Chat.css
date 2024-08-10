@@ -326,7 +326,7 @@ img.empty-chat-icon {
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  gap: 2px;
+  gap: 5px;
   padding: 5px;
   width: 100%;
   background-color: hsla(276, 73%, 13%, 0.8);

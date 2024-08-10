@@ -103,25 +103,27 @@ const CreateRoom = (props) => {
     }
   };
   const fileInputRef = useRef(null);
-  let errorRef = useClickOutSide(() => setErrors({}));
-  
   const handleImageClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
-  
+
+
   const closeCreatePopUp = () => {
-    console.log("hereeeeeeeee");
     props.setIsBlur(false);
     props.setCreateRoom(false);
   }
 
   let createRoomRef = useClickOutSide(closeCreatePopUp);
+  let errorRef = useClickOutSide(() => setErrors({}));
+  
+  
+
   return (
     <div className="create-room-container" ref={createRoomRef}>
       <div className="create-room-header">
-        <h1 className="create-room-title">Create Chat Room</h1>
+        <h1 className="create-room-title" >Create Chat Room</h1>
         <CloseIcon className="create-room-close-icon" onClick={()=>closeCreatePopUp()} />
       </div>
       {step === 1 && (

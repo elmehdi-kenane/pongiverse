@@ -1,11 +1,12 @@
-import { useContext} from "react";
+import { useContext } from "react";
 import { useClickOutSide } from "../Chat/chatConversation";
 import CloseIcon from "@mui/icons-material/Close";
 import InvitationRoom from "./InvitationRoom";
 import ChatContext from "./ChatContext";
 
 const RoomsNotifications = (props) => {
-  const {chatRoomInvitationsIcons,  chatRoomInvitations} = useContext(ChatContext)
+  const { chatRoomInvitationsIcons, chatRoomInvitations } =
+    useContext(ChatContext);
 
   const handleClickOutside = () => {
     props.setShowRoomNotifications(false);
@@ -16,14 +17,7 @@ const RoomsNotifications = (props) => {
   });
 
   return (
-    <div
-      ref={notifRef}
-      className={
-        props.showRoomNotifications
-          ? "rooms-notifications-container-active"
-          : "rooms-notifications-container"
-      }
-    >
+    <div ref={notifRef} className="rooms-notifications-container-active">
       <div className="room-invitation-header">
         <h3 className="room-invition-title">Room Invitations</h3>
         <CloseIcon
