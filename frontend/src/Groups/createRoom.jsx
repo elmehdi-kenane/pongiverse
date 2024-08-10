@@ -8,6 +8,7 @@ import CreateRoomForm from "./createRoomForm";
 import CreateRoomPassword from "./createRoomPassword";
 
 const CreateRoom = (props) => {
+  let errorsContainer = {};
   const { chatSocket } = useContext(AuthContext);
   const { user } = useContext(AuthContext);
   const [errors, setErrors] = useState({});
@@ -15,8 +16,6 @@ const CreateRoom = (props) => {
     name: "",
     topic: "",
     icon: null,
-    password: "",
-    confirmPassword: "",
   });
   const [roomVisibility, setRoomVisibility] = useState("public-visibility");
   const [step, setStep] = useState(1);
@@ -35,71 +34,66 @@ const CreateRoom = (props) => {
     });
   };
 
-  const submitHandler = () => {
-    let errorContainers = {};
+  const errorsChecker = () => {
 
     if (!formData.name.trim()) {
-      errorContainers.name = "Please enter a chat room name.";
+      errorsContainer.name = "Please enter a chat room name.";
     } else if (formData.name.length > 10)
-      errorContainers.name = "Chat room name must be at most 10 characters.";
+      errorsContainer.name = "Chat room name must be at most 10 characters.";
     if (!formData.topic.trim()) {
-      errorContainers.topic = "Please enter a chat room topic.";
+      errorsContainer.topic = "Please enter a chat room topic.";
     } else if (formData.topic.length < 50 || formData.topic.length > 80)
-      errorContainers.topic =
+      errorsContainer.topic =
         "chat room topic should be between 50 and 60 characters.";
+    setErrors(errorsContainer);
+  }
 
-    if (
-      roomVisibility === "protected-visibility" &&
-      !formData.password.trim()
-    ) {
-      errorContainers.password = "Please enter a password.";
-    }
-
-    if (
-      roomVisibility === "protected-visibility" &&
-      formData.password !== formData.confirmPassword
-    ) {
-      errorContainers.confirmPassword = "Passwords do not match.";
-    }
-
-    setErrors(errorContainers);
-    console.log(errorContainers);
-    if (Object.keys(errorContainers).length === 0) {
-      chatSocket.send(
-        JSON.stringify({
-          type: "createChatRoom",
-          user: user,
-          message: {
-            name: formData.name,
-            topic: formData.topic,
-            icon: formData.icon,
-            roomVisibility: roomVisibility,
-            password: formData.password,
-          },
-        })
-      );
-      props.onClose();
+  const submitHandler = () => {
+    errorsChecker()
+    if (Object.keys(errorsContainer).length === 0) {
+      const data = new FormData();
+      data.append('user', user);
+      data.append('name', formData.name);
+      data.append('topic', formData.topic);
+      data.append('icon', formData.icon);
+      data.append('visibility', roomVisibility === "public-visibility" ? 'public' : 'private')
+  
+      const chatRoomCreation = async () => {
+        console.log("inside the room creaction")
+        try {
+          const response =  await fetch('http://localhost:8000/chatAPI/createChatRoom', {
+            method: 'POST',
+            body: data,
+          })
+          const responseData  = await response.json();
+          console.log(responseData )
+        }
+        catch (error) {
+          console.log(error)
+        }
+      }
+      chatRoomCreation()
+      closeCreatePopUp();
     }
   };
 
+
   const onChangeIcon = (e) => {
-    const file = e.target.files[0];
-    console.log("the file image: ", file);
-    if (file) {
+    const icon = e.target.files[0];
+    if (icon) {
+      setFormData({
+        ...formData,
+        icon: icon,
+      });
       const reader = new FileReader();
       reader.onload = (e) => {
         const imageUrl = e.target.result;
-        const base64Image = reader.result.split(",")[1];
-        setFormData({
-          ...formData,
-          icon: base64Image,
-        });
         const placeHolder = document.getElementsByClassName(
           "create-room-icon-placeholder"
         )[0];
         if (placeHolder) placeHolder.src = imageUrl;
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(icon);
     }
   };
   const fileInputRef = useRef(null);
