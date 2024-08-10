@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState, useContext } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
-import mavPic from "../Settings/assets/Group.svg"
-import bg from "./assets/bg1.jpg"
+import mavPic from "../assets/Profile/Group.svg"
+import bg from "../assets/Profile/bg1.jpg"
 import { useParams } from 'react-router-dom';
 
 const ProfileContext = createContext();

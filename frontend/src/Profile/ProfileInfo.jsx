@@ -1,4 +1,4 @@
-import {React, useContext, useEffect, useState} from 'react'
+import {React, useContext} from 'react'
 import { Link } from 'react-router-dom';
 
 import AuthContext from '../navbar-sidebar/Authcontext';
@@ -7,9 +7,7 @@ import ProfileContext from './ProfileWrapper';
 import EditIcon from '@mui/icons-material/Edit';
 import IsFriends from './FriendOptions/IsFriends';
 import Report from './Report/Report';
-// import clan from "./assets/Frame.svg"
-// import clan4 from "./assets/Frame4.svg"
-import clan5 from "./assets/Frame5.svg"
+import clan5 from "../assets/Profile/Frame5.svg"
 
 function ProfileInfo() {
   

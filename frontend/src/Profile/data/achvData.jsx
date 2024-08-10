@@ -1,4 +1,4 @@
-import achvSvg from "../assets/achv.svg"
+import achvSvg from "../../assets/Profile/achv.svg"
 
 export const achv= [
     {
