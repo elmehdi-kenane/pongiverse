@@ -4,6 +4,7 @@ import SettingsContext from '../SettingsWrapper';
 import Loading from '../../Game/Loading';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { Link } from 'react-router-dom';
 
 function UpdatePwd(props) {
 
@@ -106,6 +107,9 @@ function UpdatePwd(props) {
         <div className="pwd__title__input">
           <h3 className='pwd__title'> CURRENT PASSWORD </h3>
           <PwdInput refr={oldPRef} />
+          <div className='pwd__forgot'>
+            <Link to='/ForgotPassword'> Forget your password? </Link>
+          </div>
         </div>
         <div className="pwd__title__input">
           <h3 className='pwd__title'> NEW PASSWORD </h3>

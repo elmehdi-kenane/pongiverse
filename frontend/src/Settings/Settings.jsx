@@ -4,7 +4,7 @@ import PersonalInfo from './PersonalInfo'
 import Security from './Security';
 import AuthContext from '../navbar-sidebar/Authcontext';
 
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import SettingsContext from './SettingsWrapper';
 
 function Settings() {

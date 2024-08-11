@@ -109,11 +109,12 @@
     width: 70%;
     padding-top: 5px;
     gap: 15px;
-    
+    margin-bottom: 550px;
 }
 
 .settings__security .security__update {
     display: flex;
+    /* border: #ccc solid 5px; */
     flex-direction: column;
     width: 100%;
     /* height: 400px; */
@@ -139,6 +140,16 @@
     width: 100%;
     text-align: start;
     margin-bottom: 10px;
+}
+.update__pwd .pwd__title__input .pwd__forgot {
+    display: flex;
+    justify-content: flex-end;
+    margin: -10px 0 10px;
+}
+.update__pwd .pwd__title__input .pwd__forgot a{
+    color: var(--dark-gray);
+    font-weight: 450;
+    font-size: 14px;
 }
 .settings-page .settings__security .update__pwd .input__ctr{
     position: relative;
