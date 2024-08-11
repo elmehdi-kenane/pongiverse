@@ -39,6 +39,7 @@ import TwoVsTwoCreateOrJoin from "./Game/TwoVsTwoCreateOrJoin";
 import GameSettings from "./Game/GameSettings";
 import Settings from "./Settings/Settings";
 import Bot from "./Game/Bot";
+import ErrorPage from "./ErrorPage/ErrorPage";
 
 const App = () => {
   return (
@@ -54,6 +55,7 @@ const App = () => {
               <Route path="/WaysSecondStep" element={<WaysSecondStep />} />
               <Route path="/ForgotPassword" element={<ForgotPassword />} />
               <Route path="/ChangePassword" element={<ChangePassword />} />
+              <Route path="/Error404" element={<ErrorPage />} />
               <Route path="/mainpage" element={<NavbarSidebar />}>
                 <Route path="dashboard" element={<Dashboard />} />
                 <Route path="profile/:userId" element={<ProfileWrapper child={<Profile />} />} />
