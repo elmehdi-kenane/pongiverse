@@ -20,7 +20,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
         if user is not None:
             await self.accept()
             username = user.username
-            tmp_username = username
+            # tmp_username = username
             user.is_online = True
             await sync_to_async(user.save)()
             if notifs_user_channels.get(username):
@@ -31,7 +31,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_add(self.group_name, self.channel_name)
             # channel_layer = get_channel_layer()
             friends = await sync_to_async(list)(Friends.objects.filter(user=user))
-            print(f"ALL THE USERS CHANNEL_NAMES : {notifs_user_channels}")
+            # print(f"ALL THE USERS CHANNEL_NAMES : {notifs_user_channels}")
             for friend in friends:
                 friend_username = await sync_to_async(lambda: friend.friend.username)()
                 friend_is_online = await sync_to_async(lambda: friend.friend.is_online)()
@@ -39,8 +39,11 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
                 if channel_name_list:
                     for channel_name in channel_name_list:
                     # channel_name = notifs_user_channels.get(friend_username)
-                        print(f"USER CHANNEL ON CONNECT IS : {channel_name}")
+                        # print(f"USER CHANNEL ON CONNECT IS : {channel_name}")
                         if channel_name and friend_is_online and not user.is_playing:
+                            # print("========++++++++=======")
+                            # print(channel_name)
+                            # print("========++++++++=======")
                             await self.channel_layer.send(
                                 channel_name,
                                 {
@@ -129,7 +132,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
             user = await sync_to_async(customuser.objects.filter(username=username).first)()
             #### in case of logout
             for username, channel_name_list in notifs_user_channels.items():
-                for channel_name in notifs_user_channels:
+                for channel_name in channel_name_list:
                     await self.channel_layer.send(
                         channel_name,
                         {
@@ -167,5 +170,11 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
     async def goToGamingPage(self, event):
         await self.send(text_data=json.dumps({
             'type': 'goToGamingPage',
+            'message': event['message']
+        }))
+
+    async def user_disconnected(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'user_disconnected',
             'message': event['message']
         }))

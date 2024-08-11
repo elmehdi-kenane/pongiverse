@@ -26,10 +26,10 @@ async def disconnected(self, user_channels):
 	user_id = payload_data.get('user_id')
 	if user_id:
 		user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
-		username = user.username
-		tmp_username = username
-		user.is_online = False
-		await sync_to_async(user.save)()
+		# username = user.username
+		# tmp_username = username
+		# user.is_online = False
+		# await sync_to_async(user.save)()
 		members = await sync_to_async(list)(TournamentMembers.objects.filter(user=user))
 		for member in members:
 			is_started = await sync_to_async(lambda: member.tournament.is_started)()
@@ -38,19 +38,19 @@ async def disconnected(self, user_channels):
 			if is_started == False or (is_started == True and is_finished == False and is_eliminated == False):
 				member.is_inside = False
 				await sync_to_async(member.save)()
-		channel_layer = get_channel_layer()
-		user = await sync_to_async(customuser.objects.filter(username=username).first)()
-		#### in case of logout
-		for username, channel_name in user_channels.items():
-			await self.channel_layer.send(
-				channel_name,
-				{
-					'type': 'user_disconnected',
-					'message': {
-						'user': tmp_username
-					}
-				}
-			)
+		# channel_layer = get_channel_layer()
+		# user = await sync_to_async(customuser.objects.filter(username=username).first)()
+		# #### in case of logout
+		# for username, channel_name in user_channels.items():
+		# 	await self.channel_layer.send(
+		# 		channel_name,
+		# 		{
+		# 			'type': 'user_disconnected',
+		# 			'message': {
+		# 				'user': tmp_username
+		# 			}
+		# 		}
+			# )
 
 async def create_tournament(self, data, user_channels):
 	print("hmededede")

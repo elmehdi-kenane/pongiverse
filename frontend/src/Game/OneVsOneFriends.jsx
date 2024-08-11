@@ -26,7 +26,7 @@ const OneVsOneFriends = () => {
 	let { privateCheckAuth, socket, user,
 		socketRecreated, setSocketRecreated,
 		userImg, loading, allGameFriends,
-		userImages, setAllGameFriends } = useContext(AuthContext)
+		userImages, setAllGameFriends, notifSocket } = useContext(AuthContext)
 	const allGameFriendsRef = useRef(allGameFriends);
 
 	let isOut = false
@@ -95,17 +95,6 @@ const OneVsOneFriends = () => {
 					setTmpRoomID(message.id)
 					setGameStarted(true)
 					// setChosenOne('quickMatch')
-				}
-				else if (type === 'user_disconnected') {
-					const currentAllGameFriends = allGameFriendsRef.current;
-					console.log("user disconnected : ", allGameFriends)
-					let uname = data.message.user
-					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname))
-				} else if (type === 'connected_again') {
-					const currentAllGameFriends = allGameFriendsRef.current;
-					const userExists = currentAllGameFriends.some(friend => friend.name === message.user)
-						if (!userExists)
-							setAllGameFriends([...currentAllGameFriends, message.userInfos])
 				} else if (type === 'alreadySearching') {
 					console.log("inside alreadySearching")
 					setPlayerNo(message.playerNo)
@@ -139,6 +128,28 @@ const OneVsOneFriends = () => {
 		}
 
 	}, [socket, allSet, roomID, tmpRoomID])
+
+	useEffect(() => {
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+			notifSocket.onmessage = (event) => {
+				let data = JSON.parse(event.data)
+				let type = data.type
+				let message = data.message
+				console.log('========', type, '========')
+				if (type === 'connected_again') {
+					const currentAllGameFriends = allGameFriendsRef.current;
+					const userExists = currentAllGameFriends.some(friend => friend.name === message.user)
+						if (!userExists)
+							setAllGameFriends([...currentAllGameFriends, message.userInfos])
+				} else if (type === 'user_disconnected') {
+					const currentAllGameFriends = allGameFriendsRef.current;
+					console.log("user disconnected : ", allGameFriends)
+					let uname = data.message.user
+					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname))
+				}
+			}
+		}
+	}, [notifSocket])
 
 	useEffect(() => {
 		allGameFriendsRef.current = allGameFriends;
