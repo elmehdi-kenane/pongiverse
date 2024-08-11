@@ -1311,7 +1311,7 @@ body {
 .cancel-game-invite-request {
   /* margin: 30px 0 100px 0; */
   position: absolute;
-  top: 20px;
+  top: 0;
   left: 100%;
   z-index: 100;
   transform: translate(-100%);

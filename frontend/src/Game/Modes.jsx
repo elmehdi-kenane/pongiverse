@@ -16,7 +16,7 @@ const Modes = () => {
 	const [gameNotif, setGameNotif] = useState([])
 	const [roomID, setRoomID] = useState(null)
 	let { socket, user, setAllGameNotifs,
-		allGameNotifs, notifsImgs } = useContext(AuthContext)
+		allGameNotifs, notifsImgs, notifSocket } = useContext(AuthContext)
 
 	useEffect(() => {
 		const check_is_join = async () => {
@@ -103,9 +103,40 @@ const Modes = () => {
 	// 	}
 	// }, [socket])
 
+	// useEffect(() => {
+	// 	if (socket && socket.readyState === WebSocket.OPEN) {
+	// 		socket.onmessage = (event) => {
+	// 			let data = JSON.parse(event.data)
+	// 			let type = data.type
+	// 			let message = data.message
+	// 			if (type === 'goToGamingPage') {
+	// 				// console.log("navigating now")
+	// 				// navigate(`/mainpage/game/solo/1vs1/friends`)
+	// 				if (message.mode === '1vs1')
+	// 					navigate(`/mainpage/game/solo/1vs1/friends`)
+	// 				else
+	// 					navigate(`/mainpage/game/solo/2vs2/friends`)
+	// 			} else if (type === 'receiveFriendGame') {
+	// 				console.log("RECEIVED A GAME REQUEST")
+	// 				setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message])
+	// 				setRoomID(message.roomID)
+	// 			} else if (type === 'tournament_created') {
+	// 				console.log("YESSSSSSSSS")
+	// 				navigate("createtournament")
+	// 			}
+	// 			else if (type === 'connected_again') {
+	// 				console.log("YOUR FRIEND IS LOGED AGAIN")
+	// 			}
+	// 			else if (type === 'hmed') {
+	// 				console.log("hmed received")
+	// 			}
+	// 		}
+	// 	}
+	// }, [socket])
+
 	useEffect(() => {
-		if (socket && socket.readyState === WebSocket.OPEN) {
-			socket.onmessage = (event) => {
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+			notifSocket.onmessage = (event) => {
 				let data = JSON.parse(event.data)
 				let type = data.type
 				let message = data.message
@@ -120,16 +151,22 @@ const Modes = () => {
 					console.log("RECEIVED A GAME REQUEST")
 					setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message])
 					setRoomID(message.roomID)
-				} else if (type === 'tournament_created') {
-					console.log("YESSSSSSSSS")
-					navigate("createtournament")
 				}
-				else if (type === 'connected_again') {
-					console.log("YOUR FRIEND IS LOGED AGAIN")
-				}
-				else if (type === 'hmed') {
-					console.log("hmed received")
-				}
+			}
+		}
+	}, [notifSocket])
+
+	useEffect(() => {
+		if (socket && socket.readyState === WebSocket.OPEN) {
+			socket.onmessage = (event) => {
+				let data = JSON.parse(event.data)
+				let type = data.type
+				if (type === 'hmed') {
+					console.log("WWWWWWWWWAAAAA HMEEEEEEEED")
+					socket.close()
+					// setSocket(null)
+				} else if (type === 'connected_again')
+					console.log('USER IS CONNECTED AGAIN')
 			}
 		}
 	}, [socket])
@@ -168,9 +205,9 @@ const Modes = () => {
 	const refuseInvitation = (creator) => {
 		let notifSelected = allGameNotifs.filter((user) => user.user === creator)
 		setAllGameNotifs(allGameNotifs.filter((user) => user.user !== creator))
-		if (socket && socket.readyState === WebSocket.OPEN) {
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
 			console.log("inside join")
-			socket.send(JSON.stringify({
+			notifSocket.send(JSON.stringify({
 				type: 'refuseInvitation',
 				message: {
 					user: notifSelected[0].user,
@@ -185,9 +222,9 @@ const Modes = () => {
 		let notifSelected = allGameNotifs.filter((user) => user.user === creator)
 		setAllGameNotifs(allGameNotifs.filter((user) => user.user !== creator))
 		console.log(creator, user, roomID)
-		if (socket && socket.readyState === WebSocket.OPEN) {
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
 			console.log("inside join")
-			socket.send(JSON.stringify({
+			notifSocket.send(JSON.stringify({
 				type: 'acceptInvitation',
 				message: {
 					user: notifSelected[0].user,

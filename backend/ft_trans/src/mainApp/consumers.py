@@ -10,6 +10,7 @@ from asgiref.sync import sync_to_async
 from myapp.models import customuser
 from chat.models import Friends
 import socket
+from .common import rooms, user_channels
 
 # from mainApp.models import Match
 # from mainApp.models import ActiveMatch
@@ -23,8 +24,8 @@ import socket
 # 	user.is_playing = False
 # 	user.save()
 
-rooms = {}
-user_channels = {}
+# rooms = {}
+# user_channels = {}
 
 async def get_friends(username):
 	user = await sync_to_async(customuser.objects.filter(username=username).first)()
@@ -138,8 +139,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		elif data['type'] == 'moveMouse':await gameConsumers.move_mouse(self, data, rooms)
 		elif data['type'] == 'userExited': await gameConsumers.user_exited(self, data, rooms)
 		elif data['type'] == 'inviteFriendGame': await gameConsumers.invite_friend(self, data, rooms, user_channels)
-		elif data['type'] == 'acceptInvitation': await gameConsumers.accept_game_invite(self, data, rooms, user_channels)
-		elif data['type'] == 'refuseInvitation': await gameConsumers.refuse_game_invite(self, data, rooms, user_channels)
+		# elif data['type'] == 'acceptInvitation': await gameConsumers.accept_game_invite(self, data, rooms, user_channels)
+		# elif data['type'] == 'refuseInvitation': await gameConsumers.refuse_game_invite(self, data, rooms, user_channels)
 		elif data['type'] == 'createRoom': await gameConsumers.create_new_room(self, data, rooms, user_channels)
 		elif data['type'] == 'checkingRoomCode': await gameConsumers.join_new_room(self, data, rooms, user_channels)
 		elif data['type'] == 'joinMp': await gameMultiplayerConsumers.join_room_mp(self, data, rooms, user_channels)    #### 2V2

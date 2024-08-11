@@ -2,7 +2,6 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from rest_framework_simplejwt.tokens import AccessToken
 from myapp.models import customuser
 from asgiref.sync import sync_to_async
-# from friends.models import Friendship
 from chat.models import Friends
 import json
 from . import game_notifs_consumers
@@ -98,6 +97,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 
         # if data['type'] == 'acceptInvitation': await game_notifs_consumers.onevsone_accept_invite(self, data)
         if data['type'] == 'acceptInvitation': await game_notifs_consumers.accept_game_invite(self, data, notifs_user_channels)
+        elif data['type'] == 'refuseInvitation': await game_notifs_consumers.refuse_game_invite(self, data, notifs_user_channels)
 
     async def disconnect(self, close_code):
         cookiess = self.scope.get('cookies', {})

@@ -103,26 +103,39 @@ async def accept_game_invite(self, data, notifs_user_channels):
             await self.channel_layer.group_add(str(room['id']), self.channel_name)
             channel_name = user_channels.get(data['message']['user'])
             if channel_name:
-                await self.channel_layer.group_add(str(room['id']), channel_name.channel_name)
+                await self.channel_layer.group_add(str(room['id']), channel_name)
             target_channel_list = notifs_user_channels.get(data['message']['target'])
+            # if target_channel_list:
+            #     for channel_name in target_channel_list:
+            #         # await self.channel_layer.group_add(str(room['id']), channel_name)
+            #         await self.channel_layer.send(channel_name, {
+            #             'type': 'goToGamingPage',
+            #             'message': {
+            #                 'mode': '1vs1'
+            #             }
+            #         })
             if target_channel_list:
                 for channel_name in target_channel_list:
                     # await self.channel_layer.group_add(str(room['id']), channel_name)
-                    await self.channel_layer.send(channel_name, {
-                        'type': 'goToGamingPage',
-                        'message': {
-                            'mode': '1vs1'
-                        }
-                    })
-            user_channel_list = notifs_user_channels.get(data['message']['user'])
-            if user_channel_list:
-                for channel_name in user_channel_list:
-                    await self.channel_layer.send(channel_name, {
-                        'type': 'goToGamingPage',
-                        'message': {
-                            'mode': '1vs1'
-                        }
-                    })
+                    if channel_name == self.channel_name:
+                        await self.channel_layer.send(channel_name, {
+                            'type': 'goToGamingPage',
+                            'message': {
+                                'mode': '1vs1'
+                            }
+                        })
+                        break
+            # user_channel_list = notifs_user_channels.get(data['message']['user'])
+            # if user_channel_list:
+            #     for channel_name in user_channel_list:
+            #         await self.channel_layer.send(channel_name, {
+            #             'type': 'goToGamingPage',
+            #             'message': {
+            #                 'mode': '1vs1'
+            #             }
+            #         })
+    
+
                     # await self.channel_layer.group_add(str(room['id']), channel_name)
             # await self.channel_layer.group_send(str(room['id']), {
             #     'type': 'goToGamingPage',
@@ -151,3 +164,27 @@ async def accept_game_invite(self, data, notifs_user_channels):
             player_notifs = await sync_to_async(list)(GameNotifications.objects.filter(target=friend))
             for player_notif in player_notifs:
                 await sync_to_async(player_notif.delete)()
+
+async def refuse_game_invite(self, data, notifs_user_channels):
+    for key, value in rooms.items():
+        if value['players'][0]['user'] == data['message']['user'] or value['players'][1]['user'] == data['message']['user']:
+            await self.send(text_data=json.dumps({
+                'type': 'alreadyPlaying',
+                'message': 'alreadyPlaying'
+            }))
+            return
+        if value['players'][0]['user'] == data['message']['target'] or value['players'][1]['user'] == data['message']['target']:
+            await self.send(text_data=json.dumps({
+                'type': 'alreadyPlaying',
+                'message': 'alreadyPlaying'
+            }))
+            return
+    creator = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
+    friend = await sync_to_async(customuser.objects.filter(username=data['message']['target']).first)()
+    active_match = await sync_to_async(ActiveMatch.objects.filter(room_id=data['message']['roomID']).first)()
+    if active_match:
+        is_invited = await sync_to_async(NotifPlayer.objects.filter(active_match=active_match, player=friend).first)()
+        if is_invited:
+            await sync_to_async(is_invited.delete)()
+            game_notif = await sync_to_async(GameNotifications.objects.filter(active_match=active_match, target=friend).first)()
+            await sync_to_async(game_notif.delete)()

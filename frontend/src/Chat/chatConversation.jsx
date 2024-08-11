@@ -126,7 +126,7 @@ const ChatConversation = () => {
 
   const inviteFriend = () => {
     if (socket && socket.readyState === WebSocket.OPEN) {
-      console.log("inside join");
+      // console.log("inside join");
       socket.send(
         JSON.stringify({
           type: "inviteFriendGame",

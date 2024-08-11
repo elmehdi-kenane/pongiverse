@@ -2,10 +2,11 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	width: 100%;
+	width: 1360px;
 	gap: 30px;
-	margin-top: 100px;
+	margin: 100px auto 0 auto;
 	overflow: auto;
+	position: relative;
 }
 
 
