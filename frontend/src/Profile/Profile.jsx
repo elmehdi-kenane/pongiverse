@@ -20,7 +20,7 @@ function Profile() {
     <>
       {isBlock && <Block />}
       {isReport && <ReportContent />}
-      {!checkUser && <Navigate to="/mainpage" />}
+      {!checkUser && <Navigate to="/Error404" />}
 
       {user &&
         <div className={(isReport || isBlock) ? 'profile-page profile-blur' : 'profile-page'}>
