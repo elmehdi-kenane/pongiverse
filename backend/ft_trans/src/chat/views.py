@@ -9,23 +9,30 @@ import imghdr
 @api_view(['POST'])
 def create_chat_room(request):
     if request.method == 'POST':
+        print(f"datatata : {request.data}")
         try:
             user = customuser.objects.get(username=request.data.get('user'))
         except customuser.DoesNotExist:
             return Response({'error': 'User not found'}, status=400)
         room = Room.objects.filter(name=request.data.get('name')).first()
         if not room :
-            image_type = imghdr.what(None, h=request.data.get('icon'))
-            if image_type is None:
-                print("Unsupported image type")
-                return
-            # image_file = ContentFile(image_data, name=f"{request.data.get('name')}.{image_type}")
-            new_room = Room.objects.create(name=request.data.get('name'), topic=request.data.get('topic'), icon=request.data.get('icon'), visiblity=request.data.get('visibility'))
+            new_room = Room.objects.create(name=request.data.get('name'), topic=request.data.get('topic'), icon=request.FILES.get('icon'), visiblity=request.data.get('visibility'))
             new_room.members_count += 1
+            new_room.save()
         elif room:
             return Response({'error':'Chat room name is taken. Try a different one.'})
         Membership.objects.create(user=user, room=new_room, roles="admin")
-        return Response({'type: chatRoomCreated'})
+        return Response({
+            'type': 'chatRoomCreated',
+            'room': {
+                "id": new_room.id,
+                "role": "admin",
+                "name": new_room.name,
+                "topic": new_room.topic,
+                "icon_url": new_room.icon.path,
+                "membersCount": new_room.members_count
+            }
+            })
     return Response({'error': 'Invalid request method'}, status=400)
 
 

@@ -10,27 +10,6 @@ const CreateRoomForm = (props) => {
     fileInputRef.current.click();
   };
 
-  const onChangeIcon = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const imageUrl = e.target.result;
-        const base64Image = reader.result.split(",")[1];
-        props.setFormData({
-          ...props.formData,
-          icon: base64Image,
-        });
-        const placeHolder = document.getElementsByClassName(
-          "create-room-icon-placeholder"
-        )[0];
-        if(placeHolder)
-          placeHolder.src = imageUrl;
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   return (
     <>
       <div className="create-room-input-container">
@@ -48,7 +27,7 @@ const CreateRoomForm = (props) => {
             type="file"
             ref={fileInputRef}
             style={{ display: "none" }}
-            onChange={onChangeIcon}
+            onChange={props.onChangeIcon}
           />
         </div>
         <div className="create-room-inputs">

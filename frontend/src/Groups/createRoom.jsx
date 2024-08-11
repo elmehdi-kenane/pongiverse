@@ -6,11 +6,12 @@ import CloseIcon from "@mui/icons-material/Close";
 import CreateRoomVisibilityOptions from "./createRoomVisibilityOptions";
 import CreateRoomForm from "./createRoomForm";
 import CreateRoomPassword from "./createRoomPassword";
+import ChatContext from "./ChatContext";
+import { toast } from "react-hot-toast";
 
 const CreateRoom = (props) => {
   let errorsContainer = {};
-  const { chatSocket } = useContext(AuthContext);
-  const { user } = useContext(AuthContext);
+  const { user, chatSocket } = useContext(AuthContext);
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     name: "",
@@ -19,6 +20,8 @@ const CreateRoom = (props) => {
   });
   const [roomVisibility, setRoomVisibility] = useState("public-visibility");
   const [step, setStep] = useState(1);
+  const { setChatRoomConversations, chatRoomConversationsRef } =
+    useContext(ChatContext);
 
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
@@ -35,7 +38,6 @@ const CreateRoom = (props) => {
   };
 
   const errorsChecker = () => {
-
     if (!formData.name.trim()) {
       errorsContainer.name = "Please enter a chat room name.";
     } else if (formData.name.length > 10)
@@ -46,37 +48,72 @@ const CreateRoom = (props) => {
       errorsContainer.topic =
         "chat room topic should be between 50 and 60 characters.";
     setErrors(errorsContainer);
-  }
+  };
 
   const submitHandler = () => {
-    errorsChecker()
+    errorsChecker();
     if (Object.keys(errorsContainer).length === 0) {
       const data = new FormData();
-      data.append('user', user);
-      data.append('name', formData.name);
-      data.append('topic', formData.topic);
-      data.append('icon', formData.icon);
-      data.append('visibility', roomVisibility === "public-visibility" ? 'public' : 'private')
-  
+      data.append("user", user);
+      data.append("name", formData.name);
+      data.append("topic", formData.topic);
+      console.log("the Icon: ", formData.icon);
+      data.append("icon", formData.icon);
+      data.append(
+        "visibility",
+        roomVisibility === "public-visibility" ? "public" : "private"
+      );
+      // const chatRoomCreation = async () => {
+      //   // Create a promise with toast.promise
+      //   toast.promise(
+      //     fetch("http://localhost:8000/chatAPI/createChatRoom", {
+      //       method: "POST",
+      //       body: data,
+      //     }).then(async (response) => {
+      //       const responseData = await response.json();
+      //       const currentChatRooms = chatRoomConversationsRef.current;
+      //       setChatRoomConversations([...currentChatRooms, responseData.room]);
+      //       return responseData;
+      //     }),
+      //     {
+      //       loading: "Room is being created...",
+      //       success: "Room created successfully!",
+      //       error: "Failed to create room.",
+      //     }
+      //   );
+      // };
       const chatRoomCreation = async () => {
-        console.log("inside the room creaction")
+        // Show the loading toast and handle the promise
+        const toastId = toast.loading("Room is being created...");
+        
         try {
-          const response =  await fetch('http://localhost:8000/chatAPI/createChatRoom', {
-            method: 'POST',
+          // Perform the fetch request
+          const response = await fetch("http://localhost:8000/chatAPI/createChatRoom", {
+            method: "POST",
             body: data,
-          })
-          const responseData  = await response.json();
-          console.log(responseData )
+          });
+          
+          // Handle the response
+          const responseData = await response.json();
+          const currentChatRooms = chatRoomConversationsRef.current;
+          setChatRoomConversations([...currentChatRooms, responseData.room]);
+          
+          // Simulate delay before showing the success toast
+          setTimeout(() => {
+            toast.success("Room created successfully!");
+            toast.dismiss(toastId); // Dismiss the loading toast
+          }, 1000); // Adjust the delay time (in milliseconds) as needed
+        } catch (error) {
+          // Handle error case
+          toast.error("Failed to create room.");
+          toast.dismiss(toastId); // Dismiss the loading toast
+          console.error('Error creating room:', error);
         }
-        catch (error) {
-          console.log(error)
-        }
-      }
-      chatRoomCreation()
+      };
+      chatRoomCreation();
       closeCreatePopUp();
     }
   };
-
 
   const onChangeIcon = (e) => {
     const icon = e.target.files[0];
@@ -96,29 +133,23 @@ const CreateRoom = (props) => {
       reader.readAsDataURL(icon);
     }
   };
-  const fileInputRef = useRef(null);
-  const handleImageClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
-
 
   const closeCreatePopUp = () => {
     props.setIsBlur(false);
     props.setCreateRoom(false);
-  }
+  };
 
   let createRoomRef = useClickOutSide(closeCreatePopUp);
   let errorRef = useClickOutSide(() => setErrors({}));
-  
-  
 
   return (
     <div className="create-room-container" ref={createRoomRef}>
       <div className="create-room-header">
-        <h1 className="create-room-title" >Create Chat Room</h1>
-        <CloseIcon className="create-room-close-icon" onClick={()=>closeCreatePopUp()} />
+        <h1 className="create-room-title">Create Chat Room</h1>
+        <CloseIcon
+          className="create-room-close-icon"
+          onClick={() => closeCreatePopUp()}
+        />
       </div>
       {step === 1 && (
         <CreateRoomVisibilityOptions
