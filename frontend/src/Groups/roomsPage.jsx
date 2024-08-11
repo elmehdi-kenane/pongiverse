@@ -188,15 +188,7 @@ const Rooms = () => {
         let data = JSON.parse(e.data);
         console.log("data recived from socket :", data);
         if (data.type === "newRoomJoin") newUserJoinedChatRoom(data.room);
-        else if (data.type === "alreadyJoined") toast("Room Already Joined");
-        else if (data.type === "privateRoom") toast("Private Room");
-        else if (data.type === "roomNotFound") toast("Room Not Found");
-        else if (data.type === "incorrectPassword")
-          console.log("incorrect password");
-        else if (data.type === "newRoomCreated") {
-          const allMyChatRooms = chatRoomConversationsRef.current;
-          setChatRoomConversations([...allMyChatRooms, data.room]);
-        } else if (data.type === "memberleaveChatRoom")
+        else if (data.type === "memberleaveChatRoom")
           memeberLeaveChatRoomUpdater(data.message);
         else if (data.type === "chatRoomNameChanged")
           chatRoomNameChangedUpdater(data.message);

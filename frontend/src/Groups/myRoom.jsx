@@ -7,6 +7,7 @@ import ChatRoomInvitee from "./chatRoomInvitee";
 import { useNavigate } from "react-router-dom";
 import { leaveRoomSubmitHandler } from "./roomHandler";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import toast from "react-hot-toast";
 
 const MyRoom = (props) => {
   const { chatSocket, user } = useContext(AuthContext);
@@ -29,21 +30,39 @@ const MyRoom = (props) => {
     setShowSettings(true);
   };
 
-  const changeRoomNameSubmitHandler = () => {
-    if (chatSocket) {
-      chatSocket.send(
-        JSON.stringify({
-          type: "changeRoomName",
-          message: {
-            room: props.name,
-            newName: newRoomName,
-          },
-        })
-      );
-      setChangeRoomName(false);
-      setShowSettings(false);
-    }
+  const chatRoomNameChangedUpdater = (data) => {
+    const allMyChatRooms = chatRoomConversationsRef.current;
+    const updatedRooms = allMyChatRooms.map((room) => {
+      if (room.id === data.id) {
+        return { ...room, name: data.newName };
+      }
+      return room;
+    });
+    console.log("update rooms: ", updatedRooms);
+    setChatRoomConversations(updatedRooms);
   };
+
+  const changeRoomNameSubmitHandler = () => {
+    const updateChatRoomName = async () => {
+      try {
+
+        const response = await fetch(`http://localhost:8000/chatAPI/chatRoomUpdateName/${props.roomId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name: newRoomName }),
+        })
+        const data = await response.json()
+        chatRoomNameChangedUpdater(data.data)
+        console.log(data)
+      } catch (error) {
+        toast(error)
+      }
+    }
+    updateChatRoomName()
+  };
+
   const onChangeChangeRoomAvatar = (e) => {
     const file = e.target.files[0];
     if (file) {
