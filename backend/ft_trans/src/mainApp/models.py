@@ -72,17 +72,19 @@ class NotifPlayer(models.Model):
 	active_match = models.ForeignKey(ActiveMatch, on_delete=models.CASCADE, related_name='notify_player')
 	player = models.ForeignKey(customuser, on_delete=models.CASCADE)
 
-class GameNotifications(models.Model):
-	active_match = models.ForeignKey(ActiveMatch, on_delete=models.CASCADE, related_name='game_notify_active_match')
-	user = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='notify_user')
-	target = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='notify_target')
-	mode = models.CharField(max_length=255)
-# room_id_manager = RoomIDManager()
-
 class Tournament(models.Model):
 	tournament_id = models.IntegerField(unique=True)
 	is_started = models.BooleanField(default=False)
 	is_finished = models.BooleanField(default=False)
+
+class GameNotifications(models.Model):
+	active_match = models.ForeignKey(ActiveMatch, on_delete=models.CASCADE, related_name='game_notify_active_match', null=True, default=None)
+	user = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='notify_user')
+	target = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='notify_target')
+	mode = models.CharField(max_length=255)
+	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='notify_tournament', null=True, default=None)
+# room_id_manager = RoomIDManager()
+
 
 
 class TournamentMembers(models.Model):
@@ -91,11 +93,6 @@ class TournamentMembers(models.Model):
 	is_owner = models.BooleanField(default=False)
 	is_eliminated = models.BooleanField(default=False)
 	is_inside = models.BooleanField(default=False)
-
-class TournamentInvitation(models.Model):
-	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='Invitation_tournament')
-	sender = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='sender')
-	receiver = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='receiver')
 
 
 class GameCustomisation(models.Model):

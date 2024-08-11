@@ -9,10 +9,10 @@ from chat import chat_consumers
 from asgiref.sync import sync_to_async
 from myapp.models import customuser
 from chat.models import Friends
+from mainApp.models import TournamentMembers
 import socket
 
 # from mainApp.models import Match
-# from mainApp.models import ActiveMatch
 # from mainApp.models import NotifPlayer
 # from mainApp.models import GameNotifications
 # -model- .objects.all().delete()
@@ -85,13 +85,21 @@ class ChatConsumer(AsyncWebsocketConsumer):
 								}
 						}
 					)
-				if channel_name and friend_is_online:
-					await self.channel_layer.send(
-						channel_name,
-						{
-							'type': 'connected_again_tourn',
-							'message': {
-									'user': username,
+			userinTournaments = await sync_to_async(list)(TournamentMembers.objects.filter(user=user))
+			for member in userinTournaments:
+				is_started = await sync_to_async(lambda: member.tournament.is_started)()
+				if is_started == False:
+					tournamentmembers = await sync_to_async(list)(TournamentMembers.objects.filter(tournament=member.tournament))
+					for tournamentmember in tournamentmembers:
+						memberusername = await sync_to_async(lambda: tournamentmember.user.username)()
+						channel_name = user_channels.get(memberusername)
+						if channel_name:
+							await self.channel_layer.send(
+							channel_name,
+							{
+								'type': 'connected_again_tourn',
+								'message': {
+									'user': tmp_username,
 									'userInfos': {
 										'id': user.id,
 										'name': user.username,
@@ -99,25 +107,25 @@ class ChatConsumer(AsyncWebsocketConsumer):
 										'image': user.avatar.path,
 									}
 								}
-						}
-					)
-			for username, channel_name in user_channels.items():
-				user = await sync_to_async(customuser.objects.filter(username=username).first)()
-				await self.channel_layer.send(
-					channel_name,
-					{
-						'type': 'connected_again_tourn',
-						'message': {
-							'user': tmp_username,
-							'userInfos': {
-								'id': user.id,
-								'name': user.username,
-								'level': 2,
-								'image': user.avatar.path,
 							}
-						}
-					}
-				)
+						)
+			# for username, channel_name in user_channels.items():
+			# 	user = await sync_to_async(customuser.objects.filter(username=username).first)()
+			# 	await self.channel_layer.send(
+			# 		channel_name,
+			# 		{
+			# 			'type': 'connected_again_tourn',
+			# 			'message': {
+			# 				'user': tmp_username,
+			# 				'userInfos': {
+			# 					'id': user.id,
+			# 					'name': user.username,
+			# 					'level': 2,
+			# 					'image': user.avatar.path,
+			# 				}
+			# 			}
+			# 		}
+			# 	)
 		else:
 			self.socket.close()
 

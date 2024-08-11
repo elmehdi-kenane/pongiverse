@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from myapp.models import customuser
 from chat.models import Friends
 from .models import GameCustomisation
-from .models import TournamentMembers, Tournament, TournamentInvitation, Round, TournamentUserInfo, DisplayOpponent
+from .models import TournamentMembers, Tournament, Round, TournamentUserInfo, DisplayOpponent
 import random
 from django.db.models import Q
 from myapp.serializers import MyModelSerializer
@@ -94,17 +94,6 @@ def online_friends(request):
 			image_path = user_id.friend.avatar.path
 			allFriends.append({'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path})
 	return Response({'message': allFriends})
-
-@api_view(['POST'])
-def notifs_friends(request):
-	username = request.data['user']
-	# print(f'user is {username}')
-	target = customuser.objects.get(username=username)
-	allNotifs = []
-	for gameNotif in GameNotifications.objects.filter(target=target):
-		# print(f'ROOM_ID WHEN FETCHING IS : {gameNotif.room_id}')
-		allNotifs.append({'user': gameNotif.user.username, 'avatar': gameNotif.user.avatar.path, 'roomID': gameNotif.active_match.room_id, 'mode': gameNotif.mode})
-	return Response({'message': allNotifs})
 
 
 @api_view(['POST'])
@@ -234,21 +223,19 @@ def get_tournament_member(request):
 		return response
 
 @api_view(['POST'])
-def get_notifications(request):
-	username = request.data.get('user')
-	receiver = customuser.objects.filter(username=username).first()
-	Notifications = []
-	invitations = TournamentInvitation.objects.filter(receiver=receiver)
-	if invitations is not None:
-		for notification in invitations:
-			Notifications.append({
-				'tournament_id': notification.tournament.tournament_id,
-				'sender': notification.sender.username,
-				'sender_image' : notification.sender.avatar.path
-			})
-	response = Response()
-	response.data = {'notifications': Notifications}
-	return response
+def notifs_friends(request):
+	username = request.data['user']
+	# print(f'user is {username}')
+	target = customuser.objects.get(username=username)
+	allNotifs = []
+	for gameNotif in GameNotifications.objects.filter(target=target):
+		# print(f'ROOM_ID WHEN FETCHING IS : {gameNotif.room_id}')
+		if gameNotif.active_match is not None:
+			allNotifs.append({'tournament_id' : '', 'user': gameNotif.user.username, 'avatar': gameNotif.user.avatar.path, 'roomID': gameNotif.active_match.room_id, 'mode': gameNotif.mode})
+		elif gameNotif.tournament is not None :
+			allNotifs.append({'tournament_id' : gameNotif.tournament.tournament_id, 'user': gameNotif.user.username, 'avatar': gameNotif.user.avatar.path, 'roomID': '', 'mode': gameNotif.mode})
+
+	return Response({'message': allNotifs})
 
 @api_view(['POST'])
 def get_tournament_data(request):

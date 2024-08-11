@@ -1160,11 +1160,11 @@ body {
   /* #paddle-1 {
         height: 20px;
     }
-    
+
     #paddle-2 {
         height: 20px;
     }
-    
+
     #ball {
         height: 5px;
         width: 5px;
@@ -1246,12 +1246,12 @@ body {
         height: 10px;
         width: 2px;
     }
-    
+
     #paddle-2 {
         height: 10px;
         width: 2px;
     }
-    
+
     #ball {
         height: 3px;
         width: 3px;
@@ -1314,7 +1314,7 @@ body {
   top: 20px;
   left: 100%;
   z-index: 100;
-  transform: translate(-100%);
+  transform: translate(-100%, -100%);
 }
 
 /* GAME INVITATION DESIGN */
@@ -2327,12 +2327,12 @@ body {
         height: 15px;
         width: 3px;
     }
-    
+
     #paddle-2 {
         height: 15px;
         width: 3px;
     }
-    
+
     #ball {
         height: 4px;
         width: 4px;
@@ -2373,11 +2373,11 @@ body {
   /* #paddle-1 {
         height: 20px;
     }
-    
+
     #paddle-2 {
         height: 20px;
     }
-    
+
     #ball {
         height: 5px;
         width: 5px;
@@ -2422,12 +2422,12 @@ body {
         height: 10px;
         width: 2px;
     }
-    
+
     #paddle-2 {
         height: 10px;
         width: 2px;
     }
-    
+
     #ball {
         height: 3px;
         width: 3px;
@@ -2447,12 +2447,12 @@ body {
         height: 10px;
         width: 2px;
     }
-    
+
     #paddle-2 {
         height: 10px;
         width: 2px;
     }
-    
+
     #ball {
         height: 3px;
         width: 3px;

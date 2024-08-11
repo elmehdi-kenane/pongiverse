@@ -8,7 +8,7 @@ from rest_framework_simplejwt.tokens import AccessToken
 import datetime
 from chat.models import Friends
 from myapp.models import customuser
-from .models import Match, ActiveMatch, PlayerState, Tournament, TournamentMembers, TournamentInvitation, Round, TournamentUserInfo, TournamentWarnNotifications, DisplayOpponent
+from .models import Match, ActiveMatch, PlayerState, Tournament, TournamentMembers, Round, TournamentUserInfo, TournamentWarnNotifications, DisplayOpponent, GameNotifications
 from asgiref.sync import sync_to_async
 from channels.layers import get_channel_layer
 from channels.generic.websocket import AsyncWebsocketConsumer
@@ -140,20 +140,19 @@ async def create_tournament(self, data, user_channels):
 
 
 async def invite_friend(self, data, user_channels):
-	print("111111111111111111")
-	invited_user = data['message']['invited']
+	target = data['message']['invited']
 	sender_user = data['message']['user']
 	tournament_id = data['message']['tournament_id']
 	channel_layer = get_channel_layer()
-	channel_name = user_channels.get(invited_user)
+	channel_name = user_channels.get(target)
 	if channel_name:
 		sender = await sync_to_async(customuser.objects.filter(username=sender_user).first)()
-		receiver = await sync_to_async(customuser.objects.filter(username=invited_user).first)()
+		receiver = await sync_to_async(customuser.objects.filter(username=target).first)()
 		tournament = await sync_to_async(Tournament.objects.filter(tournament_id=tournament_id).first)()
-		tournamentInvite = await sync_to_async(TournamentInvitation.objects.filter(tournament=tournament, sender=sender, receiver=receiver).first)()
-		if tournamentInvite is None:
+		TournamentGameNotify = await sync_to_async(GameNotifications.objects.filter(tournament=tournament, user=sender, target=receiver).first)()
+		if TournamentGameNotify is None:
 			print(f"sender : {sender.username}, receiver : {receiver.username}, tournament : {tournament.tournament_id}, sender_image: {sender.avatar.path}")
-			tournamentInv = TournamentInvitation(tournament=tournament, sender=sender, receiver=receiver)
+			tournamentInv = GameNotifications(tournament=tournament, user=sender, target=receiver, mode='TournamentInvitation')
 			await sync_to_async(tournamentInv.save)()
 			await self.channel_layer.send(
 						channel_name,
@@ -161,8 +160,10 @@ async def invite_friend(self, data, user_channels):
 							'type': 'invited_to_tournament',
 							'message': {
 								'tournament_id' : tournament_id,
-								'sender' : sender_user,
-								'sender_image' : sender.avatar.path
+								'user' : sender_user,
+								'avatar' : sender.avatar.path,
+								'roomID' : '',
+								'mode' : 'TournamentInvitation'
 							}
 						}
 					)
@@ -174,7 +175,7 @@ async def accept_invite(self, data, user_channels):
 	tournament = await sync_to_async(Tournament.objects.filter(tournament_id=tournament_id).first)()
 	member = await sync_to_async(TournamentMembers.objects.filter(user=user, tournament=tournament).first)()
 	if member is None:
-		invitations = await sync_to_async(lambda: TournamentInvitation.objects.filter(receiver=user))()
+		invitations = await sync_to_async(lambda: GameNotifications.objects.filter(target=user))()
 		await sync_to_async(invitations.delete)()
 		channel_layer = get_channel_layer()
 		user.is_playing = True
@@ -223,7 +224,7 @@ async def deny_invite(self, data, user_channels):
 	sender = await sync_to_async(customuser.objects.filter(username=data['message']['sender']).first)()
 	receiver = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
 	tournament = await sync_to_async(Tournament.objects.filter(tournament_id=data['message']['tournament_id']).first)()
-	tournamentInvite = await sync_to_async(TournamentInvitation.objects.filter(tournament=tournament, sender=sender, receiver=receiver).first)()
+	tournamentInvite = await sync_to_async(GameNotifications.objects.filter(tournament=tournament, user=sender, target=receiver).first)()
 	await sync_to_async(tournamentInvite.delete)()
 
 async def kick_player(self, data, user_channels):

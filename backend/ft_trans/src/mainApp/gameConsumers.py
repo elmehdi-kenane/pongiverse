@@ -1443,6 +1443,7 @@ async def invite_friend(self, data, rooms, user_channels):
                     await self.channel_layer.send(friend_channel, {
                         'type': 'receiveFriendGame',
                         'message': {
+                            'tournament_id' : '',
                             'user': data['message']['user'],
                             'avatar': user1.avatar.path,
                             'roomID': active_match.room_id,

@@ -401,7 +401,6 @@ function CreateTournament() {
 	const InviteFriendComp = (props) => {
 		return (
 			<div className={styles[props.class]} ref={props.refs}>
-				{/* <h3 className={styles["pop-up-title"]}></h3> */}
 				{
 					allGameFriends.length > 0 && allGameFriends.map((user, key) => {
 						if (user.name !== username) {

@@ -12,7 +12,6 @@ urlpatterns = [
 	path('getUserImage', views.user_image, name='image'),
 	path('tournament-members', views.tournament_members, name='tournament_members'),
 	path('started-tournament-members', views.started_tournament_members, name='started_tournament_members'),
-	path('get-notifications', views.get_notifications, name='get_notifications'),
 	path('get-tournament-member', views.get_tournament_member, name='get_tournament_member'),
 	path('get-tournament-data', views.get_tournament_data, name='get_tournament_member'),
 	path('get-tournament-suggestions', views.get_tournament_suggestions, name='get_tournament_suggestions'),
