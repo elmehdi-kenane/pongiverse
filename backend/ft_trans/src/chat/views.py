@@ -198,3 +198,63 @@ def suggested_chat_rooms(request, username):
         return Response(rooms)
 
     return Response({'error': 'Invalid request method'}, status=400)
+
+@api_view (['POST'])
+def direct_messages(request):
+    if request.method == 'POST':
+        print("THE USER IS" , (request.data).get('user'))
+        username = customuser.objects.get(username = (request.data).get('user'))
+
+        friend = customuser.objects.get(username = (request.data).get('friend'))
+        messages = Directs.objects.filter(Q(sender=username, reciver=friend) | Q(sender=friend, reciver=username))
+        data = []
+        for message in messages:
+            message_data = {
+                'id':message.id,
+                'sender' : message.sender.username,
+                'reciver' : message.reciver.username,
+                'content': message.message,
+                'date' : message.timestamp
+            }
+            data.append(message_data)
+        sorted_by_date = sorted(data, key=lambda x: x['date'])
+        return Response (sorted_by_date)
+    return Response({'error': 'Invalid request method'}, status=400)
+
+@api_view(['POST'])
+def list_all_friends(request):
+    if request.method == 'POST' :
+        user = customuser.objects.get(username=(request.data).get('user'))
+        friends = Friendship.objects.filter(user=user)
+        room = Room.objects.get(name= request.data.get('room'))
+        all_friend = []
+        for friend in friends:
+            print("the friend: ",friend)
+            friend_object = customuser.objects.get(id=friend.friend_id)
+            if not Membership.objects.filter(room=room, user=friend_object).exists():
+                friend_data = {
+                    'name' : friend_object.username,
+                    'avatar' : friend_object.avatar.path
+                }
+                all_friend.append(friend_data)
+        return Response (all_friend)
+    return Response({'error': 'Invalid request method'}, status=400)
+
+
+@api_view(['GET'])
+def rooms_invitations(request, username):
+    if request.method == 'GET':
+        user = customuser.objects.get(username=username)
+        invitations = RoomInvitation.objects.filter(user=user)
+        all_invitations = []
+        for invitaion in invitations :
+            room = Room.objects.get(id=invitaion.room_id)
+            invitaion_data = {
+                "name": room.name,
+                "topic": room.topic,
+                "icon_url": room.icon.path,
+                "membersCount": room.members_count,
+            }
+            all_invitations.append(invitaion_data)
+        return Response(all_invitations)
+    return Response({'error': 'Invalid request method'}, status=400)

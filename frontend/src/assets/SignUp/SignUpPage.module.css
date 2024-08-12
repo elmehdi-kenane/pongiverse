@@ -30,6 +30,10 @@ body {
 	height: 100vh;
 }
 
+.center-toast {
+	background-color: #4caf50;
+}
+
 
 .bodyPage {
 	display: flex;
@@ -48,6 +52,7 @@ body {
 	max-width: 500px;
 	border-radius: 10px;
 	background-color: white;
+	gap: 10px;
 }
 
 .Google {
@@ -146,8 +151,7 @@ body {
 	width: 100%;
 }
 
-.forget
-{
+.forget {
 	align-self: flex-end;
 	margin-right: 8%;
 	font-size: 13px;
@@ -169,7 +173,6 @@ body {
 	width: 85%;
 	height: 50px;
 	padding-top: 10px;
-	margin-top: 10px;
 	padding-bottom: 10px;
 	border: 1.5px solid black;
 	border-radius: 10px;
@@ -186,7 +189,6 @@ body {
 
 .submitButton {
 	border-radius: 10px;
-	margin-top: 20px;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	border: 0.5px solid var(--blak);
@@ -235,13 +237,12 @@ span {
 		cursor: pointer;
 	}
 
-	.logo img
-	{
+	.logo img {
 		height: 30px;
 		margin-top: 8px;
 	}
-	.homeLogo img
-	{
+
+	.homeLogo img {
 		margin-top: 3px;
 		height: 20px;
 	}
@@ -252,7 +253,7 @@ span {
 		justify-content: space-between;
 	}
 
-	.title{
+	.title {
 		font-size: 20px;
 	}
 }

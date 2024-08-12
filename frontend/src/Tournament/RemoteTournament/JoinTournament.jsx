@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
-import styles from '../assets/Tournament/jointournament.module.css'
+import styles from '../../assets/Tournament/jointournament.module.css'
 import SearchIcon from '@mui/icons-material/Search';
-import AuthContext from '../navbar-sidebar/Authcontext'
+import AuthContext from '../../navbar-sidebar/Authcontext'
 import { useNavigate, useLocation } from "react-router-dom";
 
 function JoinTournament() {

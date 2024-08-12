@@ -3,8 +3,10 @@ import Header from './Header';
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
+import logo from '../../assets/SignUp/logo.svg'
 import { useNavigate } from 'react-router-dom';
 import imagePlaceholder from '../../assets/SignUp/imagePlaceholder.svg'
+import toast, { Toaster } from 'react-hot-toast';
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 const client = axios.create({
@@ -62,26 +64,23 @@ function SecondStep() {
 		password: data.password
 	})), [data.email, data.password]);
 
+	const notifyError = (message) => toast.error(message, {
+		position: 'top-center',
+		duration: 6000,
+	});
+
+
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		const validationErrors = {}
+		const regex = /^(?!\d)[a-zA-Z0-9_]{4,10}$/;
+		const containsSingleUnderscore = (nextdata.username.match(/_/g) || []).length <= 1;
 		if (!nextdata.username.trim()) {
 			validationErrors.username = "username is required"
-		} else if (nextdata.username.length > 10) {
-			validationErrors.username = "username is too long"
+		} else if (!regex.test(nextdata.username) || !containsSingleUnderscore) {
+			validationErrors.username = "username must be satisfies : 4-10 characters long, only letters, digits, at most one underscore, not start with digit."
 		}
-		// if (nextdata.avatar) {
-		// 	const img = new Image();
-		// 	img.src = getAvatarUrl(nextdata.avatar);
-		// 	img.onload = () => {
-		// 		if (img.width < 100 || img.width > 500 || img.height < 100 || img.height > 500) {
-		// 			console.log("hmedddddd")
-		// 			validationErrors.avatar = "avatar dimesions is required"
-		// 			console.log("validate lengh : ", Object.keys(validationErrors).length)
-		// 		}
-		// 	}
-		// }
 		setErrors(validationErrors)
 		if (Object.keys(validationErrors).length === 0) {
 			const formData = new FormData();
@@ -103,42 +102,72 @@ function SecondStep() {
 					console.error('There was an error!', error);
 				});
 		}
+		else if (errors.username) {
+			notifyError(errors.username)
+		}
 	}
-		const getAvatarUrl = (file) => {
-			return file ? URL.createObjectURL(file) : null;
-		};
+	const getAvatarUrl = (file) => {
+		return file ? URL.createObjectURL(file) : null;
+	};
 
-		return (
-			<div className={styles["body_page"]}>
-				<div className={styles["mainPage"]}>
-					<Header />
-					<div className={styles["SecondStepContainer"]}>
-						<div className={styles["signUpContainer"]}>
-							<h1 className={styles["title"]}>Next Step</h1>
-							<form className={styles["signUpForm"]} onSubmit={handleSubmit} noValidate>
-								<input className={styles["inputs"]} type="text" name='username' value={nextdata.username} onChange={handleInputChange} placeholder="enter a username" />
-								{exist && <span className={styles["spans"]}>Username already used</span>}
-								{errors.username && <span className={styles["spans"]}>{errors.username}</span>}
-								<div className={styles["imageField"]}>
-									<input type="file" name="avatar" id="image-upload" accept="image/*" onChange={handleInputChange} className={styles["image-upload"]} />
-									<label htmlFor="image-upload" className={styles["image-label"]} >Choose a file</label>
-									<div className={styles["display-image"]}>
-										{
-											!nextdata.avatar ? <img src={imagePlaceholder} alt="" /> : <img src={getAvatarUrl(nextdata.avatar)} alt="" />
-										}
-									</div>
-								</div>
-								<div className={styles["image-spans"]}>
-									<span className={styles["optional"]}>(optional)</span>
-									{errors.avatar && <span className={styles["spans"]}>{errors.avatar}</span>}
-								</div>
-								<button type="submit" className={styles["submitButton"]}>Sign Up</button>
-							</form>
+	return (
+		<div className={styles["second-step-page"]}>
+			<div className={styles["second-step-navbar"]}>
+				<img src={logo} alt="" />
+			</div>
+			<div className={styles["second-step-form-div"]}>
+				<div className={styles["second-step-form"]}>
+					<div className={styles["second-step-form-inputs"]}>
+						<input type="text" value={nextdata.username} name='username' className={styles["second-step-form-inputs-input"]} onChange={handleInputChange} placeholder='Enter a username' />
+						{exist && <span className={styles["spans"]}>Username already used</span>}
+						<div className={styles["second-step-form-inputs-image-input"]}>
+							<input type="file" name="avatar" id="image-upload" className={styles["second-step-form-inputs-image"]} accept="image/*" onChange={handleInputChange} />
+							<label className={styles["second-step-form-inputs-image-label"]} htmlFor="image-upload">Upload your image (Optional)</label>
+							<div className={styles["second-step-form-display-image"]}>
+								{
+									!nextdata.avatar ? <img src={imagePlaceholder} className={styles["second-step-form-image-default"]} alt="" /> : <img className={styles["second-step-form-image-default"]}	 src={getAvatarUrl(nextdata.avatar)} alt="" />
+								}
+							</div>
 						</div>
 					</div>
+					<button className={styles["second-step-form-button"]} onClick={handleSubmit}>Sign Up</button>
 				</div>
 			</div>
-		);
-	}
+		</div>
+	);
+}
 
-	export default SecondStep;
+export default SecondStep;
+
+{/* <div className={styles["imageField"]}>
+	<input type="file" name="avatar" id="image-upload" accept="image/*" onChange={handleInputChange} className={styles["image-upload"]} />
+	<label htmlFor="image-upload" className={styles["image-label"]} >Choose a file</label>
+	<div className={styles["display-image"]}>
+		{
+			!nextdata.avatar ? <img src={imagePlaceholder} alt="" /> : <img src={getAvatarUrl(nextdata.avatar)} alt="" />
+		}
+	</div>
+</div> */}
+
+
+// .signUpForm .imageField {
+// 	width: 85%;
+// 	display: flex;
+// 	align-items: center;
+// 	justify-content: center;
+// 	gap: 5px;
+// }
+
+
+// .image-label {
+// 	width: 85%;
+// 	height: 50px;
+// 	padding-top: 12px;
+// 	padding-bottom: 10px;
+// 	border: 1.5px solid black;
+// 	border-radius: 10px;
+// 	box-sizing: border-box;
+// 	opacity: 1;
+// 	font-size: 15px;
+// 	text-indent: 10px;
+// }

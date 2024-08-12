@@ -3,6 +3,7 @@ import Header from '../SignUp/Header';
 import React, { useState, useEffect } from 'react';
 import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2';
+import logo from '../../assets/SignUp/logo.svg'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 axios.defaults.xsrfCookieName = "csrftoken";
@@ -29,17 +30,20 @@ function ForgotPassword() {
 		setData({ ...data, [e.target.name]: e.target.value });
 	};
 
+	const handleBack = () => {
+		navigate("/signin")
+	}
+
 	const handleNextClick = (e) => {
 		e.preventDefault();
 		const validationErrors = {}
-		if (!data.email.trim()){
+		if (!data.email.trim()) {
 			validationErrors.email = "email is required waaahmed"
-		}else if(!/\S+@\S+\.\S+/.test(data.email)){
+		} else if (!/\S+@\S+\.\S+/.test(data.email)) {
 			validationErrors.email = "email is not valid"
 		}
 		setErrors(validationErrors)
-		if (Object.keys(validationErrors).length === 0)
-		{
+		if (Object.keys(validationErrors).length === 0) {
 			client.post('/auth/checkemail/', data, {
 				headers: {
 					'Content-Type': 'application/json',
@@ -66,9 +70,9 @@ function ForgotPassword() {
 							confirmButtonColor: '#913DCE',
 							customClass: {
 								popup: styles['popup-style'],
-								container: styles['blur-background'] ,
+								container: styles['blur-background'],
 								input: styles['custom-input'],
-								title : styles['popup-title-style']
+								title: styles['popup-title-style']
 							},
 						}).then((result) => {
 							if (result.isConfirmed) {
@@ -112,7 +116,7 @@ function ForgotPassword() {
 						confirmButtonText: 'Submit',
 						confirmButtonColor: '#913DCE',
 						customClass: {
-							container: styles['blur-background'] ,
+							container: styles['blur-background'],
 							input: styles['custom-input'],
 						},
 					}).then((result) => {
@@ -133,24 +137,22 @@ function ForgotPassword() {
 
 	return (
 		<div className={styles["full_page"]}>
-				<div className={styles["body_page"]}>
-					<div className={styles["mainPage"]}>
-						<Header />
-						<div className={styles["bodyPage"]}>
-							<div className={styles["signUpContainer"]}>
-								<h1 className={styles["title"]}>Forgot your password?</h1>
-								<h3 className={styles["h3_title"]}>Enter the email address associated with your account, and we'll send you a code to reset your password.</h3>
-								<form className={styles["signUpForm"]} onSubmit={handleNextClick} noValidate>
-									<input className={styles["inputs"]} type="email" name='email' value={data.email} onChange={handleChange} placeholder="enter your email" />
-									{errors.email && <span>{errors.email}</span>}
-									{exist && <span>{exist}</span>}
-									<button type="submit" className={styles["submitButton"]}>Send Reset Code</button>
-									<button className={styles["CancelButton"]}>Go Back</button>
-								</form>
-							</div>
-						</div>
-					</div>
+			<div className={styles['forgot-password-navbar']}>
+				<img src={logo} alt="" />
+			</div>
+			<div className={styles["mainPage"]}>
+				<div className={styles["signUpContainer"]}>
+					<h1 className={styles["title"]}>Forgot your password?</h1>
+					<h3 className={styles["h3_title"]}>Enter the email address associated with your account, and we'll send you a code to reset your password.</h3>
+					<form className={styles["signUpForm"]} onSubmit={handleNextClick} noValidate>
+						<input className={styles["inputs"]} type="email" name='email' value={data.email} onChange={handleChange} placeholder="enter your email" />
+						{errors.email && <span>{errors.email}</span>}
+						{exist && <span>{exist}</span>}
+						<button type="submit" className={styles["submitButton"]}>Send Reset Code</button>
+					</form>
+					<button className={styles["CancelButton"]} onClick={handleBack}>Go Back</button>
 				</div>
+			</div>
 		</div>
 	);
 }

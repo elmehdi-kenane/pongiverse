@@ -10,6 +10,7 @@ body {
   background-color: #211336;
   font-family: "IBM Plex Sans", sans-serif;
   overflow: hidden;
+  /* box-shadow:0px 0px 0px 10px black inset; */
 }
 
 .page {
@@ -69,80 +70,6 @@ body {
   color: white;
   opacity: 0.7;
   text-indent: 50px;
-}
-
-.NotificationPopupCardDesappeared {
-    display: none;
-}
-
-.NotificationPopupCard {
-    background-color: #913DCE;
-    border-radius: 10px;
-    border: 2px solid white;
-    padding: 10px;
-    min-width: 300px;
-    width: 13%;
-    height: max-content;
-    max-width: max-content;
-    gap: 5px;
-    position: absolute;
-    right: 70px;
-    z-index: 99;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.NotificationPopupCardBtn {
-    align-self: flex-end;
-}
-
-.NotificationPopupCardBtn button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 3px;
-    color: white;
-    background-color: transparent;
-    border: 1px solid white;
-    padding: 4px;
-    border-radius: 6px;
-}
-.NotificationPopupCard div {
-    display: flex;
-    gap: 5px;
-    align-items: center;
-}
-
-.CheckCircleIcon {
-    background-color: white;
-    color: green;
-    border: none;
-    border-radius: 100%;
-}
-
-.CancelOutlinedIcon {
-    background-color: transparent;
-    border: none;
-    color: white;
-    border-radius: 100%;
-}
-
-.NotificationPopupHeader {
-    color: white;
-}
-
-.NotificationPopupHeader p {
-    color: white;
-    font-weight: 400;
-    font-size: medium;
-}
-
-.NotificationPopupUsername {
-    font-size: medium;
-    color: white;
-    font-weight: bold;
 }
 
 .search-bar input:focus {
@@ -453,23 +380,6 @@ body {
   .navbar {
     margin-top: 2px;
   }
-    .NotificationPopupCard {
-            padding: 5px;
-            min-width: 300px;
-            width: 13%;
-            height: max-content;
-            max-width: max-content;
-            gap: 2px;
-            right: 25%;
-            z-index: 99;
-            /* margin-top: 20px; */
-            display: flex;
-            justify-content: flex-start;
-            align-items: flex-start;
-        }
-    .NotificationPopupHeader p, .NotificationPopupUsername, .NotificationPopupCardBtn button {
-        /* font-size: 10px; */
-    }
 
   .sidebarWrapper {
     flex-direction: column;
@@ -1256,12 +1166,6 @@ body {
     }
     
     #ball {
-
-    .onevsone-dashboard-logo #paddle-2 {
-        height: 20px;
-    }
-
-    .onevsone-dashboard-logo #ball {
         height: 5px;
         width: 5px;
     } */
@@ -1407,7 +1311,7 @@ body {
 .cancel-game-invite-request {
   /* margin: 30px 0 100px 0; */
   position: absolute;
-  top: 20px;
+  top: 0;
   left: 100%;
   z-index: 100;
   transform: translate(-100%);

@@ -1,33 +1,47 @@
 import React from 'react';
-import styles from '../../assets/SignUp/SignUpPage.module.css'
+import styles from '../../assets/SignIn/authentication.module.css'
 import Header from './Header';
 import SignUpWays from './SignUpWays'
-import SignUpFrom from './SignUpFrom'
+import SignUpForm from './SignUpForm'
 import { Link } from 'react-router-dom';
+import logo from '../../assets/SignUp/logo.svg'
+import toast, { Toaster } from 'react-hot-toast';
+import pingPongBg from '../SignIn/pping.png'
 
 function SignUpPage(props) {
-  return (
-	<div className={styles["body_page"]}>
-		<div className={styles["mainPage"]}>
-			<Header/>
-			<div className={styles["bodyPage"]}>
-				<div className={styles["signUpContainer"]}>
-					<h1 className={styles["title"]}>Sign Up</h1>
-					<SignUpWays IntraTitle="Sign Up With Intra" GoogleTitle="Sign Up With Google" />
-					<div className={styles["withEmail"]}>
-						<div className={styles["lineBef"]}></div>
-						<div className={styles["withEmailP"]}>
-							<p>Sign Up With Email</p>
+	const handleSignUpSwitch = () => {
+	}
+
+	return (
+		<div className={styles['authentication-page']}>
+			<Toaster/>
+			<div className={styles['authentication-navbar']}>
+				<img src={logo} alt="" />
+			</div>
+			<div className={styles['authentication-container']}>
+				<div className={styles['authentication-signupdiv']}>
+					<div className={styles['authentication-signup']}>
+						<div className={styles['authentication-signup-form']}>
+							<div className={styles["authentication-signup-title-div"]}>
+								<p className={styles['authentication-signup-title']}>Sign Up</p>
+							</div>
+							<SignUpForm/>
+							<div className={styles['authentication-signup-line']}>
+								<div className={styles['authentication-signup-little-line']}></div>
+								<p className={styles['authentication-signup-or']}>Or</p>
+								<div className={styles['authentication-signup-little-line']}></div>
+							</div>
+							<SignUpWays/>
+							<p className={styles['authentication-signup-have-account']}>Already have an account? <Link to="/signin" className={styles['authentication-signup-have-account-link']} >Sign In</Link></p>
 						</div>
-						<div className={styles["lineAf"]}></div>
 					</div>
-					<SignUpFrom/>
-					<p className={styles['alradyHave']}>Already have an account? <Link to="/signin">Sign in</Link></p>
+					<div className={styles['authentication-signup-rightdesign']}>
+						<img src={pingPongBg} alt="" />
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-  );
+	);
 }
 
 export default SignUpPage;

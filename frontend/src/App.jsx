@@ -20,12 +20,13 @@ import ChangePassword from "./components/SignIn/ChangePassword";
 import SignInPage from "./components/SignIn/SignInPage";
 import SignUpPage from "./components/SignUp/SignUpPage";
 import SecondStep from "./components/SignUp/SecondStep";
-import CreateTournament from "./Tournament/CreateTournament";
-import JoinTournament from "./Tournament/JoinTournament";
+import CreateTournament from "./Tournament/RemoteTournament/CreateTournament";
+import JoinTournament from "./Tournament/RemoteTournament/JoinTournament";
 import OneVsOneRandom from "./Game/OneVsOneRandom";
 import OneVsOneFriends from "./Game/OneVsOneFriends";
 import OneVsOneCreateOrJoin from "./Game/OneVsOneCreateOrJoin";
-import TournamentBracket from "./Tournament/TournamentBracket";
+import TournamentBracket from "./Tournament/RemoteTournament/TournamentBracket";
+import LocalTournamentBracket from "./Tournament/LocalTournament/LocalTournamentBracket";
 import LoginGoogleTest from "./components/SignIn/LoginGoogleTest";
 import { ChatProvider } from "./Groups/ChatContext";
 import Chat from "./Chat/chatPage";
@@ -40,7 +41,7 @@ import Settings from "./Settings/Settings";
 import Bot from "./Game/Bot";
 import { ToastContainer, Bounce } from 'react-toastify';
 import { SocketDataContextProvider } from './navbar-sidebar/SocketDataContext';
-
+import LocalTournamentFillMembers from "./Tournament/LocalTournament/LocalTournamentFillMembers";
 
 const ChatGroupsWrapper = ({ element }) => (
   <ChatProvider>
@@ -86,6 +87,8 @@ const App = () => {
                 <Route path="game/createtournament" element={<CreateTournament />} />
                 <Route path="game/jointournament" element={<JoinTournament />} />
                 <Route path="game/tournamentbracket" element={<TournamentBracket />} />
+				<Route path="game/localtournamentbracket" element={<LocalTournamentBracket />}/>
+				<Route path="game/localtournamentfillmembers" element={<LocalTournamentFillMembers />}/>
               </Route>
             </Routes>
             <ToastContainer
@@ -108,5 +111,4 @@ const App = () => {
     </div>
   );
 };
-
 export default App;

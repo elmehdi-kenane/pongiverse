@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from '../../assets/SignUp/SignUpPage.module.css'
+import styles from '../../assets/SignIn/authentication.module.css'
 import logo42 from '../../assets/SignUp/42_logo.svg'
 import logoGoogle from '../../assets/SignIn/GoogleIcon.svg'
-import Swal from 'sweetalert2';
+import toast, { Toaster } from 'react-hot-toast';
+
 
 function SignInWays() {
 	const [googleAuthUrl, setGoogleAuthUrl] = useState('')
@@ -48,10 +49,7 @@ function SignInWays() {
 			if (data.Case === "Login successfully") {
 				navigate('/mainpage');
 			} else if (data.Case === "Invalid username or password!!") {
-				Swal.fire({
-					text: 'There is no account',
-					icon: 'error',
-				});
+				toast.error("There is no account", { duration: 2000, });
 			}
 		} else {
 			console.error('Failed to fetch data');
@@ -152,13 +150,9 @@ function SignInWays() {
 	}
 	return (
 		<>
-			<div className={styles["Intra"]} onClick={handleIntraClick}>
-				<img className={styles["intraLogo"]} src={logo42} alt="" />
-				<button className={styles["IntraButton"]} >Sign In With Intra</button>
-			</div>
-			<div className={styles["Google"]} onClick={handleGoogleClick}>
-				<img className={styles["googleLogo"]} src={logoGoogle} alt="" />
-				<button className={styles["GoogleButton"]}>Sign In with google</button>
+			<div className={styles['authentication-signin-ways']}>
+				<img onClick={handleGoogleClick} src={logoGoogle} alt="" />
+				<img onClick={handleIntraClick} src={logo42} alt="" />
 			</div>
 		</>
 

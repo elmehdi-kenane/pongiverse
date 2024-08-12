@@ -110,7 +110,6 @@ useEffect(() => {
         console.log(error);
       }
     };
-
     const fetchDirectsWithMessage = async () => {
       try {
         const response = await fetch(

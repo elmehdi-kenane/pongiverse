@@ -1,15 +1,9 @@
 import { useEffect } from 'react';
-import avatar from './avatar.jpeg'
+import avatar from '../avatar.svg'
 import { useNavigate } from "react-router-dom";
 
-const SvgVerticalComponent = ({ images }) => {
-	const navigate = useNavigate()
-	if (!images) {
-		navigate("../game/createtournament")
-	}
+const LocalSvgVerticalComponent = () => {
 	return (
-
-
 		<svg width="710" viewBox="0 0 1024 1251" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<path d="M798.753 506.454H781.1C781.1 506.454 777.384 561.636 819.038 561.636" stroke="#FFD700" strokeWidth="2" />
 			<path d="M856.975 506.454H873.699C873.699 506.454 877.57 561.636 837.155 561.636" stroke="#FFD700" strokeWidth="2" />
@@ -122,4 +116,4 @@ const SvgVerticalComponent = ({ images }) => {
 	);
 }
 
-export default SvgVerticalComponent
+export default LocalSvgVerticalComponent

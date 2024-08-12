@@ -1,0 +1,2 @@
+user_channels = {}
+rooms = {}

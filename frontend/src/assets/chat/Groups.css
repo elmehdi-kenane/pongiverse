@@ -1268,7 +1268,6 @@ svg.my-room-cover-edit-icon:hover {
   .suggested-rooms-slider {
     --items-per-screen: 2;
   }
-
   .invitations-rooms-slider {
     --items-per-screen: 2;
   }
@@ -1360,7 +1359,6 @@ svg.my-room-cover-edit-icon:hover {
     flex-direction: column;
     gap: 5px;
   }
-
   .public-room,
   .private-room,
   .protected-room {

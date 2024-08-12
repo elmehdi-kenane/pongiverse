@@ -511,7 +511,6 @@ textarea.conversation-input::placeholder {
   }
 }
 
-
 .none-conversation-selected {
   background-color: red;
 }
