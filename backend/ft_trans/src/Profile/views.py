@@ -70,9 +70,8 @@ def friends_with_directs(request, username):
 
 #**--------------------- UserData ---------------------** 
 
-@api_view(['POST'])
-def getUserData(request):
-    username = request.data.get('user')
+@api_view(['GET'])
+def getUserData(request, username):
     user = customuser.objects.filter(username=username).first()
     if user is not None:
         user_data = {'pic': user.avatar.path,
@@ -207,3 +206,17 @@ def update_user_password(request):
     else:
         err_res = Response(data={'error': 'Wrong current password!'}, status=status.HTTP_401_UNAUTHORIZED)
         return err_res
+
+#**--------------------- GetFriends User ---------------------** 
+
+@api_view(["GET"])
+def get_user_friends(request, userId):
+    users = customuser.objects.all()
+    user_data = []
+    for user in users:
+        if userId != user.username:
+            user_data.append({
+                'username': user.username,
+                'pic': user.avatar.path,
+            })
+    return Response(data={"allUserData": user_data}, status=status.HTTP_200_OK)
