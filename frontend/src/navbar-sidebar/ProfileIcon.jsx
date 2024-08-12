@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom';
 import AuthContext from './Authcontext';
+import MavSvg from "../assets/Profile/Group.svg"
 
 const ProfileIcon = ({ Icons, profileHandleDropDown, profileDropDownisOpen }) => {
 
@@ -9,7 +10,7 @@ const ProfileIcon = ({ Icons, profileHandleDropDown, profileDropDownisOpen }) =>
     return (
         <div id="profile-icon" onClick={profileHandleDropDown}>
             <a href="#">
-                <img src={userImg} alt="" />
+                <img src={userImg ? userImg : MavSvg} alt="" />
             </a>
             {profileDropDownisOpen && (<div className='profile-dropdown'>
                 <div className='dropdown-profile-name'>
