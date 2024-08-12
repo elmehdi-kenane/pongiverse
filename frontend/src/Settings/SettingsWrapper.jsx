@@ -26,14 +26,11 @@ export const SettingsWrapper = ({ child }) => {
     useEffect(() => {
         const getUserData = async () => {
             try {
-                const response = await fetch('http://localhost:8000/profile/getUserData', {
-                    method: "POST",
+                const response = await fetch(`http://localhost:8000/profile/getUserData/${user}`, {
+                    method: "GET",
                     headers: {
                         'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        user: user
-                    })
+                    }
                 });
                 const res = await response.json()
                 if (response.ok) {
