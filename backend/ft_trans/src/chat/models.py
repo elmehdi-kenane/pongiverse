@@ -8,7 +8,7 @@ class Room(models.Model):
   members = models.ManyToManyField(User, related_name='rooms', through='Membership')
   topic = models.TextField(blank=True)
   icon = models.ImageField(upload_to='uploads/')
-  # cover = models.ImageField(upload_to='uploads/')
+  cover = models.ImageField(upload_to='uploads/')
   members_count = models.IntegerField(default=0)
   visiblity = models.TextField(default='public')
   password = models.CharField(max_length=128)

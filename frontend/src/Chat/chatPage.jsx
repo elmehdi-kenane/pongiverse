@@ -28,13 +28,14 @@ const Chat = () => {
   const handleSelectItem = (itemName) => {
     setSelectedItem(itemName);
   };
-  
+
   return (
     <div className="chat-page">
       <div className="chat-container">
         <div
           className={
-            Object.values(selectedDirect).every((value) => value !== "") || Object.values(selectedChatRoom).every((value) => value !== "")
+            Object.values(selectedDirect).every((value) => value !== "") ||
+            Object.values(selectedChatRoom).every((value) => value !== "")
               ? "chat-sidebar-hidden"
               : "chat-sidebar"
           }
@@ -75,9 +76,7 @@ const Chat = () => {
                     key={key}
                     name={friend.name}
                     status={friend.is_online}
-                    lastMessage={
-                      "The correct format would typically be chatRoomConversations"
-                    }
+                    lastMessage={friend.lastMessage}
                     imageIndex={key}
                     isDirect={isHome}
                     setSelectedDirect={setSelectedDirect}
@@ -90,7 +89,8 @@ const Chat = () => {
                     key={key}
                     name={chatRoom.name}
                     lastMessage={
-                      "The correct format would typically be chatRoomConversations"}
+                      "The correct format would typically be chatRoomConversations"
+                    }
                     imageIndex={key}
                     isDirect={isHome}
                     membersCount={chatRoom.membersCount}
@@ -104,7 +104,8 @@ const Chat = () => {
         </div>
         <div
           className={
-            Object.values(selectedDirect).every((value) => value !== "") || Object.values(selectedChatRoom).every((value) => value !== "")
+            Object.values(selectedDirect).every((value) => value !== "") ||
+            Object.values(selectedChatRoom).every((value) => value !== "")
               ? "chat-window"
               : "chat-window-hidden"
           }
@@ -114,12 +115,22 @@ const Chat = () => {
             <ChatConversation />
           ) : !isHome &&
             Object.values(selectedChatRoom).every((value) => value !== "") ? (
-            <ChatRoomConversation setSelectedItem={handleSelectItem} setSelectedChatRoom={setSelectedChatRoom} />
+            <ChatRoomConversation
+              setSelectedItem={handleSelectItem}
+              setSelectedChatRoom={setSelectedChatRoom}
+            />
           ) : (
             <div className="chat-window-empty">
               <div className="chat-window-empty-wrapper">
-              <img src={ChatIcons.emptyChatIcon} alt="" className="empty-chat-icon"/>
-              <p className="chat-window-empty-message"> Begin a conversation with a friend to see it show up here!</p>
+                <img
+                  src={ChatIcons.emptyChatIcon}
+                  alt=""
+                  className="empty-chat-icon"
+                />
+                <p className="chat-window-empty-message">
+                  {" "}
+                  Begin a conversation with a friend to see it show up here!
+                </p>
               </div>
             </div>
           )}

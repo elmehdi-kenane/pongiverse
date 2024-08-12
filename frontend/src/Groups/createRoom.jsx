@@ -26,7 +26,7 @@ const CreateRoom = (props) => {
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
     if (
-      (name === "name" && value.length > 10) ||
+      (name === "name" && value.length > 18) ||
       (name === "topic" && value.length > 80)
     ) {
       return;
@@ -40,7 +40,7 @@ const CreateRoom = (props) => {
   const errorsChecker = () => {
     if (!formData.name.trim()) {
       errorsContainer.name = "Please enter a chat room name.";
-    } else if (formData.name.length > 10)
+    } else if (formData.name.length > 18)
       errorsContainer.name = "Chat room name must be at most 10 characters.";
     if (!formData.topic.trim()) {
       errorsContainer.topic = "Please enter a chat room topic.";
@@ -63,25 +63,6 @@ const CreateRoom = (props) => {
         "visibility",
         roomVisibility === "public-visibility" ? "public" : "private"
       );
-      // const chatRoomCreation = async () => {
-      //   // Create a promise with toast.promise
-      //   toast.promise(
-      //     fetch("http://localhost:8000/chatAPI/createChatRoom", {
-      //       method: "POST",
-      //       body: data,
-      //     }).then(async (response) => {
-      //       const responseData = await response.json();
-      //       const currentChatRooms = chatRoomConversationsRef.current;
-      //       setChatRoomConversations([...currentChatRooms, responseData.room]);
-      //       return responseData;
-      //     }),
-      //     {
-      //       loading: "Room is being created...",
-      //       success: "Room created successfully!",
-      //       error: "Failed to create room.",
-      //     }
-      //   );
-      // };
       const chatRoomCreation = async () => {
         // Show the loading toast and handle the promise
         const toastId = toast.loading("Room is being created...");

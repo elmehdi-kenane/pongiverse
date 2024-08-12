@@ -4,6 +4,9 @@ from myapp.models import customuser
 from rest_framework.decorators import api_view
 from friends.models import Friendship
 from myapp.models import customuser
+from chat.models import Directs
+from django.db.models import Q
+
 
 # Create your views here.
 @api_view (['GET'])
@@ -35,12 +38,15 @@ def show_friends(request, username):
     print(friends)
     return Response({"friends": friends})
 
-    # friends = Friendship.objects.filter(user=username)
-    # user_add_row = customuser.objects.get(username=user_to_add)
-    # user_sender_row = customuser.objects.get(username=sender)
-    # Friendship.objects.create(user=user_sender_row , friend=user_add_row)
-    # Friendship.objects.create(user=user_add_row , friend=user_sender_row)
-    # return Response({'message':'sucess'})
+def get_direct_last_message(username, friend):
+    user = customuser.objects.get(username=username)
+    friend = customuser.objects.get(username=friend)
+    last_message = Directs.objects.filter(
+        Q(sender=user, reciver=friend) | Q(sender=friend, reciver=user)
+    ).order_by('-timestamp').first()
+    if(last_message == None):
+        return ""
+    return last_message.message
 
 @api_view(['GET'])
 def friends_with_directs(request, username):
@@ -48,13 +54,15 @@ def friends_with_directs(request, username):
     friends = Friendship.objects.filter(user=user)
     data = []
     for friend in friends:
-        print("my friend name: ",friend.friend.username)
+        print("HHHHAHHHAHHAHHHAHA")
+        last_message = get_direct_last_message(username, friend.friend.username)
         friend_data = {
             'id' : friend.friend.id,
             'name' : friend.friend.username,
             'is_online' : friend.friend.is_online,
             'is_playing' : friend.friend.is_playing,
             'image' :friend.friend.avatar.path,
+            'lastMessage' : last_message,
         }
         data.append(friend_data)
     return Response(data)

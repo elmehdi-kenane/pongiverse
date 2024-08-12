@@ -117,7 +117,6 @@ def channel_messages(request, room_id):
 @api_view(['POST'])
 def direct_messages(request):
     if request.method == 'POST':
-        print("THE USER IS", (request.data).get('user'))
         username = customuser.objects.get(username=(request.data).get('user'))
 
         friend = customuser.objects.get(username=(request.data).get('friend'))

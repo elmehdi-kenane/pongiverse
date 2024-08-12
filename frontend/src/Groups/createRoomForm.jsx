@@ -41,7 +41,7 @@ const CreateRoomForm = (props) => {
               onChange={props.onChangeHandler}
             />
             <div className="create-room-name-character-count">
-              ({props.formData.name.length}/10)
+              ({props.formData.name.length}/18)
             </div>
           </div>
           {props.errors.name && (
