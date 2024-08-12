@@ -12,8 +12,8 @@ export const ProfileWrapper = ({ child }) => {
 
     const [userData, setUserData] = useState(null)
     const { user } = useContext(AuthContext);
-    
-    const {userId} = useParams();
+
+    const { userId } = useParams();
     const [userPic, setUserPic] = useState(mavPic);
     const [userBg, setUserBg] = useState(bg);
     const [userEmail, setUserEmail] = useState('');
@@ -26,24 +26,17 @@ export const ProfileWrapper = ({ child }) => {
     useEffect(() => {
         const getUserData = async () => {
             try {
-                const response = await fetch('http://localhost:8000/profile/getUserData', {
-                    method: "POST",
+                const response = await fetch(`http://localhost:8000/profile/getUserData/${userId}`, {
+                    method: "GET",
                     headers: {
                         'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        user: userId
-                    })
+                    }
                 });
                 const res = await response.json()
-                if (response.ok) {
-                    // console.log("Response userData : ", res.userData);
+                if (response.ok) 
                     setUserData(res.userData);
-                }
-                else{
+                else 
                     setCheckUser(false);
-                    console.log("Error : ", res.error);
-                }
             } catch (error) {
                 console.log("Error: ", error);
             }
@@ -57,7 +50,7 @@ export const ProfileWrapper = ({ child }) => {
             try {
                 const response = await fetch(`http://localhost:8000/api/getImage`, {
                     method: "POST",
-                    headers: {'Content-Type': 'application/json',},
+                    headers: { 'Content-Type': 'application/json', },
                     body: JSON.stringify({
                         image: picPath
                     })
@@ -68,7 +61,7 @@ export const ProfileWrapper = ({ child }) => {
                 console.log("Error : ", error)
             }
         }
-        if (userData){
+        if (userData) {
             getUserPic(userData.pic, setUserPic)
             getUserPic(userData.bg, setUserBg)
             setUserBio(userData.bio)
@@ -79,7 +72,7 @@ export const ProfileWrapper = ({ child }) => {
     }, [userData])
 
     let userInfoData = {
-        userId:userId,
+        userId: userId,
         userPic: userPic,
         setUserPic: setUserPic,
         userBg: userBg,
@@ -93,8 +86,8 @@ export const ProfileWrapper = ({ child }) => {
         userCountry: userCountry,
         setUserCountry: setUserCountry,
 
-        checkUser:checkUser,
-        setCheckUser:setCheckUser,
+        checkUser: checkUser,
+        setCheckUser: setCheckUser,
     };
     return (
         <ProfileContext.Provider value={userInfoData}> {child} </ProfileContext.Provider>

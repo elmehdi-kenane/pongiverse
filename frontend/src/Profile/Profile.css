@@ -748,6 +748,8 @@ h1, h3, p{
 }
 .classment__friend .friend__pic-name img {
     height: 35px;
+    width: 35px;
+    border-radius: 50%;
 }
 .classment__friend .friend__pic-name p {
     color: white;

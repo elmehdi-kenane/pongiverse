@@ -1,8 +1,5 @@
 import React, { useState } from 'react'
-import {Link} from "react-router-dom"
 
-import chatSvg from "../assets/navbar-sidebar/chat.svg"
-import { rankData } from '../Dashboard/helpers/rankData'
 import Pagination from "../Dashboard/helpers/Pagination"
 import BarGraph from "../Dashboard/charts/BarGraph"
 import LineGraph from '../Dashboard/charts/LineGraph'
@@ -12,6 +9,7 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 
 import { achv } from './data/achvData'
+import ProfileUserFriends from './Statistics/ProfileUserFriends'
 
   function ProfileUserStatistics(){
     const [isLineChart, setIsLineChart] = useState(false);
@@ -38,31 +36,6 @@ import { achv } from './data/achvData'
       </div>
     )
   }
-  
-  const ProfileUserFriends = () => {
-    return (
-      <div className='userstate__friends purple-glass-stats'>
-        <div className='userstate-header'><h1> Friends </h1> </div>
-        <div className="userfriends__classment">
-        {rankData.map((player, key) => {
-          return (
-            <div className='classment__friend' key={key}>
-              <Link className="friend__pic-name">
-                <img src={player.img} alt='playerImg'/>
-                <p> {player.name} </p>
-              </Link>
-              <Link className='chat__button no-select' to='/mainpage/chat'>
-                <img src={chatSvg} alt='chatIcon'/>
-                <p style={{cursor: 'pointer'}}> message </p>
-              </Link>
-            </div>
-          )
-        })}
-        </div>
-        <Pagination />
-      </div>
-    )
-  } 
   
   const ProfileUserAchievement = () => {
     return (
