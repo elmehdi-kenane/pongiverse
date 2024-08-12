@@ -23,7 +23,7 @@ function SignUpPage(props) {
 					<div className={styles['authentication-signup']}>
 						<div className={styles['authentication-signup-form']}>
 							<div className={styles["authentication-signup-title-div"]}>
-								<p className={styles['authentication-signup-title']}>Sign Up</p>
+								<p className={styles['authentication-signup-title']}>Sign up</p>
 							</div>
 							<SignUpForm/>
 							<div className={styles['authentication-signup-line']}>

@@ -27,7 +27,7 @@ function SignInPage() {
 					<div className={styles['authentication-signin']}>
 						<div className={styles['authentication-signin-form']}>
 							<div className={styles["authentication-signin-title-div"]}>
-								<p className={styles['authentication-signin-title']}>Sign In</p>
+								<p className={styles['authentication-signin-title']}>Sign in</p>
 							</div>
 							<SignInForm/>
 							<div className={styles['authentication-signin-line']}>
