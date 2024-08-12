@@ -36,7 +36,6 @@ function SignInPage() {
 								<div className={styles['authentication-signin-little-line']}></div>
 							</div>
 							<SignInWays/>
-							<p className={styles['authentication-signin-dont-have-account']}>Don't have an account? <Link to="/signup" className={styles['authentication-signin-dont-have-account-link']} >Sign up</Link></p>
 						</div>
 					</div>
 				</div>

@@ -314,7 +314,8 @@ async def destroy_tournament(self, data, user_channels):
 		member.user.is_playing = False
 		await sync_to_async(member.user.save)()
 		channel_name = user_channels.get(username)
-		await self.channel_layer.group_discard(group_name, channel_name)
+		if channel_name:
+			await self.channel_layer.group_discard(group_name, channel_name)
 	await sync_to_async(tournament.delete)()
 	friends = await sync_to_async(list)(Friends.objects.filter(user=user))
 	for friend in friends:

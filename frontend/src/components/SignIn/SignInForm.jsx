@@ -54,7 +54,8 @@ function SignInForm() {
 			<input className={styles['authentication-signin-input']} type="text" value={data.username || ''} onChange={handleChange} name='username' placeholder='Enter your username' />
 			<input className={styles['authentication-signin-input']} type="password" name='password' value={data.password || ''} onChange={handleChange} placeholder='Enter your password' />
 			<div className={styles['authentication-signin-forget-password-div']}>
-				<Link className={styles['authentication-signin-forget-password']} to="/ForgotPassword">Forget your password?</Link>
+				<Link to="/signup"  className={styles['authentication-signin-forget-password']} >Create Account</Link>
+				<Link className={styles['authentication-signin-forget-password']} to="/ForgotPassword">Forget password?</Link>
 			</div>
 			<button className={styles['authentication-signin-button']} onClick={handleSubmit}>Sign In</button>
 		</>

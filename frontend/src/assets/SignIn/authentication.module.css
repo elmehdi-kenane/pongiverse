@@ -104,7 +104,7 @@
 
 .authentication-signin-title {
 	color: rgb(255, 255, 255);
-	font-size: 30px;
+	font-size: 40px;
 	font-weight: bold;
 }
 
@@ -136,14 +136,20 @@
 	outline: none;
 }
 
+.authentication-signin-input::placeholder,
+.authentication-signup-input::placeholder {
+	font-size: 17px;
+	color: rgba(255, 255, 255, 0.7)
+}
+
 .authentication-signin-forget-password-div {
 	width: 90%;
 	display: flex;
-	justify-content: flex-end;
+	justify-content: space-between;
 }
 
 .authentication-signin-forget-password {
-	color: rgb(165, 165, 165);
+	color: rgba(255, 255, 255, 0.7);
 }
 
 .authentication-signin-forget-password:hover {
@@ -217,7 +223,7 @@
 }
 
 .authentication-signin-leftdesign {
-	width: 50%;
+	width: 60%;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -256,7 +262,7 @@
 .authentication-signup-title {
 	height: 50px;
 	color: rgb(255, 255, 255);
-	font-size: 30px;
+	font-size: 40px;
 	font-weight: bold;
 }
 
@@ -339,7 +345,7 @@
 }
 
 .authentication-signup-have-account {
-	margin-top: 60px;
+	margin-top: 40px;
 	color: white;
 }
 
@@ -350,7 +356,7 @@
 
 
 .authentication-signup-rightdesign {
-	width: 50%;
+	width: 60%;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
