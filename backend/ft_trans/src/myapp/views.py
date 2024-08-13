@@ -24,12 +24,16 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from urllib.parse import urlencode
 import json
+import os
+import certifi
+
+
 
 
 class SignUpView(APIView):
 	parser_classes = (MultiPartParser, FormParser)
 	def post(self, request, *args, **kwargs):
-		print(f"datatata : {request.data}")
+		#print(f"datatata : {request.data}")
 		avatar = request.data.get('avatar')
 		if avatar == 'null' or avatar is None:
 			my_dict = {
@@ -57,7 +61,7 @@ class SignUpView(APIView):
 			response.data = {"Case": "Sign up successfully", "data": data}
 			return response
 		else:
-			print(f"Serializer errors: {serializer.errors}")  # Add this line to print serializer errors
+			#print(f"Serializer errors: {serializer.errors}")  # Add this line to #print serializer errors
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class WaysSignUpView(APIView) :
@@ -73,7 +77,7 @@ class WaysSignUpView(APIView) :
 			image_content = image_response.content
 			if image_content:
 				image_file = InMemoryUploadedFile(ContentFile(image_content), None, 'image.jpg', 'image/jpeg', len(image_content), None)
-				print(f'IMAGE CONTENT IS : {image_file}')
+				#print(f'IMAGE CONTENT IS : {image_file}')
 				my_data['avatar'] = image_file
 		# else:
 			# response.data = {"Case" : "Error"}
@@ -99,7 +103,7 @@ class LoginView(APIView):
 		response = Response()
 		username = data.get('username', None)
 		password = data.get('password', None)
-		print(f"   username : {username}, password : {password}")
+		#print(f"   username : {username}, password : {password}")
 		user = authenticate(username=username, password=password)
 		if user is not None:
 			data = get_tokens_for_user(user)
@@ -162,7 +166,7 @@ class VerifyTokenView(APIView):
 			token = request.COOKIES.get('token')
 			decoded_token = AccessToken(token)
 			data = decoded_token.payload
-			# print(data)
+			# #print(data)
 			if not data.get('user_id'):
 				if username:
 					user = customuser.objects.filter(username=username).first()
@@ -190,6 +194,7 @@ class VerifyTokenView(APIView):
 					response.data = {"Case" : "Invalid token"}
 					return response
 
+os.environ['SSL_CERT_FILE'] = certifi.where()
 class ForgetPasswordView(APIView):
 	def post(self, request, format=None):
 		response = Response()
@@ -243,7 +248,7 @@ class TestView(APIView):
 @api_view(['GET'])
 def SignInGoogleGetUrl(request):
 	response = Response()
-	client_id = '295320971655-s5ood5a528rk815h85f2pancufc342of.apps.googleusercontent.com'
+	client_id = os.getenv('GOOGLE_SIGNIN_CLIENT_ID')
 	redirect_uri = 'http://localhost:3000/signin'
 	scope = 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'
 	response_type = 'code'
@@ -255,14 +260,14 @@ def SignInGoogleGetUrl(request):
 		'response_type': response_type,
 	}
 	auth_url_with_params = f'{auth_url}?{urlencode(params)}'
-	print(f"heyy : {auth_url_with_params}")
+	#print(f"heyy : {auth_url_with_params}")
 	response.data = {'code' : auth_url_with_params}
 	return response
 
 @api_view(['GET'])
 def SignInIntraGetUrl(request):
 	response = Response()
-	client_id = 'u-s4t2ud-fcffc65b4899785b254efb0f6527c2d4493781c1e7792364b758f426b18a2598'
+	client_id = os.getenv('INTRA_SIGNIN_CLIENT_ID')
 	redirect_uri = 'http://localhost:3000/signin'
 	auth_url = 'https://api.intra.42.fr/oauth/authorize'
 	response_type = 'code'
@@ -275,9 +280,9 @@ def SignInGoogleGetUserData(request):
 	try :
 		code = request.data.get('code')
 		response = Response()
-		client_id = '295320971655-s5ood5a528rk815h85f2pancufc342of.apps.googleusercontent.com'
+		client_id = os.getenv('GOOGLE_SIGNIN_CLIENT_ID')
 		redirect_uri = 'http://localhost:3000/signin'
-		client_secret = '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'
+		client_secret = os.getenv('GOOGLE_SIGNIN_SECRET_ID')
 		token_url = 'https://oauth2.googleapis.com/token'
 		payload = {
 			'code': code,
@@ -299,13 +304,13 @@ def SignInGoogleGetUserData(request):
 		user_picture = user_info_data.get('picture')
 		return Response({'email': user_email, 'picture': user_picture})
 	except Exception as e:
-		print(f"Exception: {str(e)}")
+		#print(f"Exception: {str(e)}")
 		return Response({'error': str(e)}, status=500)
 
 @api_view(['GET'])
 def SignUpGoogleGetUrl(request):
 	response = Response()
-	client_id = '571941928482-b8jr8007vd334l591r30stnfm26ua6qo.apps.googleusercontent.com'
+	client_id = os.getenv('GOOGLE_SIGNUP_CLIENT_ID')
 	redirect_uri = 'http://localhost:3000/signup'
 	scope = 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'
 	response_type = 'code'
@@ -317,7 +322,7 @@ def SignUpGoogleGetUrl(request):
 		'response_type': response_type,
 	}
 	auth_url_with_params = f'{auth_url}?{urlencode(params)}'
-	print(f"heyy : {auth_url_with_params}")
+	#print(f"heyy : {auth_url_with_params}")
 	response.data = {'code' : auth_url_with_params}
 	return response
 
@@ -325,7 +330,7 @@ def SignUpGoogleGetUrl(request):
 @api_view(['GET'])
 def SignUpIntraGetUrl(request):
 	response = Response()
-	client_id = 'u-s4t2ud-c5d50d0148bff2ac03dbdadd313e919f7799e35329997235b2427e1cef984e18'
+	client_id = os.getenv('INTRA_SIGNUP_CLIENT_ID')
 	redirect_uri = 'http://localhost:3000/signup'
 	auth_url = 'https://api.intra.42.fr/oauth/authorize'
 	response_type = 'code'
@@ -338,8 +343,8 @@ def SignInIntraGetUserData(request):
 	try :
 		code = request.data.get('code')
 		response = Response()
-		client_id = 'u-s4t2ud-fcffc65b4899785b254efb0f6527c2d4493781c1e7792364b758f426b18a2598'
-		client_secret = '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'
+		client_id = os.getenv('INTRA_SIGNIN_CLIENT_ID')
+		client_secret = os.getenv('INTRA_SIGNIN_SECRET_ID')
 		redirect_uri = 'http://localhost:3000/signin'
 		token_url = 'https://api.intra.42.fr/oauth/token'
 		payload = {
@@ -363,7 +368,7 @@ def SignInIntraGetUserData(request):
 		user_picture = image.get('link')
 		return Response({'email': user_email, 'picture': user_picture})
 	except Exception as e:
-		print(f"Exception: {str(e)}")
+		#print(f"Exception: {str(e)}")
 		return Response({'error': str(e)}, status=500)
 
 
@@ -372,9 +377,9 @@ def SignUpGoogleGetUserData(request):
 	try :
 		code = request.data.get('code')
 		response = Response()
-		client_id = '571941928482-b8jr8007vd334l591r30stnfm26ua6qo.apps.googleusercontent.com'
+		client_id = os.getenv('GOOGLE_SIGNUP_CLIENT_ID')
 		redirect_uri = 'http://localhost:3000/signup'
-		client_secret = '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'
+		client_secret = os.getenv('GOOGLE_SIGNUP_SECRET_ID')
 		token_url = 'https://oauth2.googleapis.com/token'
 		payload = {
 			'code': code,
@@ -396,7 +401,7 @@ def SignUpGoogleGetUserData(request):
 		user_picture = user_info_data.get('picture')
 		return Response({'email': user_email, 'picture': user_picture})
 	except Exception as e:
-		print(f"Exception: {str(e)}")
+		#print(f"Exception: {str(e)}")
 		return Response({'error': str(e)}, status=500)
 
 @api_view(['POST'])
@@ -404,8 +409,8 @@ def SignUpIntraGetUserData(request):
 	try :
 		code = request.data.get('code')
 		response = Response()
-		client_id = 'u-s4t2ud-c5d50d0148bff2ac03dbdadd313e919f7799e35329997235b2427e1cef984e18'
-		client_secret = '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'
+		client_id = os.getenv('INTRA_SIGNUP_CLIENT_ID')
+		client_secret = os.getenv('INTRA_SIGNUP_SECRET_ID')
 		redirect_uri = 'http://localhost:3000/signup'
 		token_url = 'https://api.intra.42.fr/oauth/token'
 		payload = {
@@ -429,5 +434,5 @@ def SignUpIntraGetUserData(request):
 		user_picture = image.get('link')
 		return Response({'email': user_email, 'picture': user_picture})
 	except Exception as e:
-		print(f"Exception: {str(e)}")
+		#print(f"Exception: {str(e)}")
 		return Response({'error': str(e)}, status=500)

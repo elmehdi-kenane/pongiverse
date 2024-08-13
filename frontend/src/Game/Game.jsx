@@ -91,7 +91,7 @@ const Game = () => {
 
     const startSearch = async () => {
         if (socket && socket.readyState === WebSocket.OPEN && !start) {
-            console.log("inside join")
+            // console.log("inside join")
             socket.send(JSON.stringify({
                 type: 'join',
                 message: {
@@ -100,7 +100,7 @@ const Game = () => {
             }))
             setStart(!start)
         } else if (socket && socket.readyState === WebSocket.OPEN && start) {
-            console.log("inside join")
+            // console.log("inside join")
             socket.send(JSON.stringify({
                 type: 'quit',
                 message: {

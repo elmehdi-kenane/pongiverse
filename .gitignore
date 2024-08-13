@@ -1,10 +1,14 @@
 env
 venv/
+.venv/
+env/
 __pycache__/
 migrations/
-uploads/
 db.sqlite3
-.vscode/
+uploads
+/.vscode
+.DS_Store
+README.md
 
 Backups/
 Cache/
@@ -16,3 +20,4 @@ Network Persistent State
 notes.txt
 SharedStorage
 TransportSecurity
+.env

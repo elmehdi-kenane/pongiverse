@@ -29,8 +29,7 @@ const OneVsOneCreateOrJoin = () => {
     const generateCodeRef = useRef(null)
     const navigate = useNavigate()
     let { privateCheckAuth, socket, user,
-        socketRecreated, setSocketRecreated,
-        userImg, loading } = useContext(AuthContext)
+        userImg, setAllGameNotifs } = useContext(AuthContext)
 
     let isOut = false
     const userRef = useRef(user)
@@ -89,6 +88,7 @@ const OneVsOneCreateOrJoin = () => {
                     setMatchCreated(true)
                     setMatchJoined(true)
                     setAllSet(true)
+                    // setAllGameNotifs([]) // SET ALL NOTIFICATIONS TO EMPTY ARRAY
                     console.log("ALL SET BROTHER")
                 } else if (type === "playersReady") {
                     console.log("inside playersReady")
@@ -99,37 +99,39 @@ const OneVsOneCreateOrJoin = () => {
                     setPlayerNo(message.playerNo)
                     setTmpRoomID(message.id)
                     setGameStarted(true)
-                }
-                else if (type === "playerInfos") {
-                console.log("inside playerInfos")
-                setPlayerNo(message.playerNo)
-                setTmpRoomID(message.id)
-                setExpandJoin(false)
-                setMatchCreated(true)
-                setGameStarted(true)
-                setLoadMatch(true) ////////////
-                if (!message.creator) {
-                    setExpandCreate(false)
-                    setMatchJoined(true)
-                } else
-                    setCodeToShare(message.id)
+                } else if (type === "playerInfos") {
+                    console.log("inside playerInfos")
+                    setPlayerNo(message.playerNo)
+                    setTmpRoomID(message.id)
+                    setExpandJoin(false)
+                    setMatchCreated(true)
+                    setGameStarted(true)
+                    setLoadMatch(true) ////////////
+                    if (!message.creator) {
+                        setExpandCreate(false)
+                        setMatchJoined(true)
+                    } else
+                        setCodeToShare(message.id)
                 } else if (type === 'alreadySearching') {
-                console.log("inside alreadySearching")
-                setPlayerNo(message.playerNo)
-                setTmpRoomID(message.id)
-                setExpandJoin(false)
-                setMatchCreated(true)
-                setGameStarted(true)
-                setLoadMatch(true)
-                if (!message.creator) {
-                    setExpandCreate(false)
-                    setMatchJoined(true)
-                } else
-                    setCodeToShare(message.id)
+                    console.log("inside alreadySearching")
+                    setPlayerNo(message.playerNo)
+                    setTmpRoomID(message.id)
+                    setExpandJoin(false)
+                    setMatchCreated(true)
+                    setGameStarted(true)
+                    setLoadMatch(true)
+                    if (!message.creator) {
+                        setExpandCreate(false)
+                        setMatchJoined(true)
+                    } else
+                        setCodeToShare(message.id)
                 } else if (type === 'invalidCode') {
-                inputRoomId.current.value = ''
-                setRoomIdIncorrect(true)
-                setCheckingCode(false)
+                    inputRoomId.current.value = ''
+                    setRoomIdIncorrect(true)
+                    setCheckingCode(false)
+                } else if (type === 'hmed') {
+					console.log("hmed received")
+                    socket.close()
                 }
             }
         }
@@ -179,6 +181,7 @@ const OneVsOneCreateOrJoin = () => {
                 }))
                 setMatchCreated(true)
                 setGameStarted(true)
+                // setAllGameNotifs([]) // SET ALL NOTIFICATIONS TO EMPTY ARRAY
             }
         }
     }

@@ -5,11 +5,11 @@ import * as Icons from '../assets/navbar-sidebar'
 
 
 const ChatRoomInvitee = (props) => {
-  const {socket} = useContext(AuthContext)
+  const {chatSocket} = useContext(AuthContext)
   const [isInviteSent, setIsInviteSent] = useState(false)
   const onClickInviteMember = () => {
-    if(socket) {
-      socket.send (JSON.stringify({
+    if(chatSocket) {
+      chatSocket.send (JSON.stringify({
         type: 'inviteChatRoomMember',
         message : {
           room : props.roomName,

@@ -1,17 +1,70 @@
-import React, { useContext, useState, useEffect } from "react";
-import Navbar from "./Navbar";
-import Sidebar from "./Sidebar";
-import * as Icons from "../assets/navbar-sidebar";
-import { useNavigate } from "react-router-dom";
-import AuthContext from "../navbar-sidebar/Authcontext";
-import { Outlet } from "react-router-dom";
+import React, { useContext, useState, useEffect } from 'react'
+import { toast, Bounce } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+import { useLocation } from 'react-router-dom'
+import Navbar from './Navbar'
+import Sidebar from './Sidebar'
+import * as Icons from '../assets/navbar-sidebar'
+import { useNavigate } from 'react-router-dom'
+import AuthContext from './Authcontext'
+import SocketDataContext from './SocketDataContext'
+import NotificationPopupCard from './NotificationPopupCard'
+import { Outlet } from 'react-router-dom'
 
 function NavbarSidebar() {
-  const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
-  const [searchbar, setSearchBar] = useState(false);
-  let { user, privateCheckAuth, setUser, hideNavSideBar } =
-    useContext(AuthContext);
-  let navigate = useNavigate();
+	const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
+    const location = useLocation()
+	const [searchbar, setSearchBar] = useState(false);
+    let { user, socket, privateCheckAuth, setUser, hideNavSideBar } = useContext(AuthContext)
+	let navigate = useNavigate()
+    const [newRecievedFriendReqNotif, setNewRecievedFriendReqNotif] = useState(false);
+    const [friendReqUsername, setFriendReqUsername] = useState('');
+    const [removeFriendReqNotif, setRemoveFriendReqNotif] = useState(false);
+    const data = useContext(SocketDataContext);
+
+    const notify = () => {
+        setNewRecievedFriendReqNotif(false)
+        toast(
+            <NotificationPopupCard secondUsername={friendReqUsername} />,
+            {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+            }
+        );
+    };
+
+    useEffect(() => {
+        if (data.type === 'recieve-friend-request') {
+            setNewRecievedFriendReqNotif(true);
+            setRemoveFriendReqNotif(false);
+            setFriendReqUsername(data.message.second_username);
+        }
+        else if (data.type === 'confirm-friend-request' && data.message.second_username === friendReqUsername) {
+            setRemoveFriendReqNotif(true);
+        }
+        else if (data.type === 'remove-friend-request' && data.message.second_username === friendReqUsername) {
+            setRemoveFriendReqNotif(true);
+        }
+        else
+            console.log("");
+    }, [data]);
+
+    useEffect(() => {
+        {
+            (newRecievedFriendReqNotif && location.pathname !== '/mainpage/friends') ?
+                (
+                    notify()
+                )
+                : console.log("")
+        }
+    }, [data.message.to_user, data.type]);
 
   useEffect(() => {
     privateCheckAuth();

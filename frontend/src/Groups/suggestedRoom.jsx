@@ -1,20 +1,28 @@
 import * as ChatIcons from "../assets/chat/media";
 
-const SuggestedRoom = () => {
+const SuggestedRoom = (props) => {
   return (
-    <div className="room-container">
-      <div className="room-header">
-        <img src={ChatIcons.RoomIcon} className="room-avatar" alt="" />
-        <div className="room-info">
-          <div className="room-name">No Hesi</div>
-          <div className="room-member-count">144 Member</div>
+    <div className="my-room-container">
+      <div className="my-room-header">
+        <div className="my-room-cover-wrapper"></div>
+        <div className="my-room-info">
+          <img
+            src={props.roomIcons[props.index]}
+            alt=""
+            className="my-room-icon"
+          />
         </div>
       </div>
-      <div className="room-topic">
-        Lorem Ipsum is simply Lorem Ipsum is Lorem Ipsum aa
+      <div className="my-room-name-and-topic">
+        <div className="my-room-name" >{props.name}</div>
+        <div className="my-room-topic">{props.topic}</div>
       </div>
       <div className="room-actions">
-        <button className="room-leave-button">Join Room</button>
+        <button
+          className="room-leave-button"
+        >
+          Join Room
+        </button>
       </div>
     </div>
   );

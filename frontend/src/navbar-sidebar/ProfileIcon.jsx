@@ -16,7 +16,7 @@ const ProfileIcon = ({ Icons, profileHandleDropDown, profileDropDownisOpen }) =>
                 <div className='dropdown-profile-name'>
                     <div id='dropdown-profile-pic'>
                         <Link to={`/mainpage/profile/${user}`}>
-                            <img src={userImg} alt="profile-pic" />
+                            <img src={userImg ? userImg : MavSvg} alt="profile-pic" />
                         </Link>
                     </div>
                     <div id='dropdown-profile-name'>

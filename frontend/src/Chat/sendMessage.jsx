@@ -78,19 +78,19 @@ const SendMessage = (props) => {
           !props.showDirectOptions ? setShowEmojiPicker(true) : ""
         }
       />
-      <img
+      {/* <img
         src={ChatIcons.fileUploadIcon}
         alt=""
         className="conversation-file-upload"
         onClick={handleFileUploadClick}
-      />
-       <input
+      /> */}
+       {/* <input
         type="file"
         ref={fileInputRef}
         className="file-input-hidden"
         style={{ display: 'none' }}
         onChange={handleFileChange}
-      />
+      /> */}
       <div
         className={
           showEmojiPicker

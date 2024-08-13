@@ -2,16 +2,13 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from myapp.models import customuser
 from rest_framework.decorators import api_view
-from rest_framework import status
-from chat.models import Friends
-from myapp.models import customuser
-# import requests
 
-from myapp.serializers import MyModelSerializer
+from rest_framework import status
 from django.core.files.base import ContentFile
 import base64
 from django.contrib.auth import authenticate
-
+from friends.models import Friendship
+from myapp.models import customuser
 
 # Create your views here.
 @api_view (['GET'])
@@ -27,33 +24,33 @@ def add_users(request, username):
     sender = username
     user_add_row = customuser.objects.get(username=user_to_add)
     user_sender_row = customuser.objects.get(username=sender)
-    isFriends = Friends.objects.filter(user=user_sender_row, friend=user_add_row).exists() or \
-        Friends.objects.filter(user=user_add_row, friend=user_sender_row).exists()
+    isFriends = Friendship.objects.filter(user=user_sender_row, friend=user_add_row).exists() or \
+        Friendship.objects.filter(user=user_add_row, friend=user_sender_row).exists()
     if(isFriends):
         print("already friends")
         return Response({'message':'already firends'})
-    Friends.objects.create(user=user_sender_row , friend=user_add_row)
-    Friends.objects.create(user=user_add_row , friend=user_sender_row)
+    Friendship.objects.create(user=user_sender_row , friend=user_add_row)
+    Friendship.objects.create(user=user_add_row , friend=user_sender_row)
     return Response({'message':'sucess'})
 
 @api_view(['GET'])
 def show_friends(request, username):
     user = customuser.objects.get(username=username)
-    friends = [user_id.user.username for user_id in Friends.objects.filter(user=user)]
+    friends = [user_id.user.username for user_id in Friendship.objects.filter(user=user)]
     print(friends)
     return Response({"friends": friends})
 
-    # friends = Friends.objects.filter(user=username)
+    # friends = Friendship.objects.filter(user=username)
     # user_add_row = customuser.objects.get(username=user_to_add)
     # user_sender_row = customuser.objects.get(username=sender)
-    # Friends.objects.create(user=user_sender_row , friend=user_add_row)
-    # Friends.objects.create(user=user_add_row , friend=user_sender_row)
+    # Friendship.objects.create(user=user_sender_row , friend=user_add_row)
+    # Friendship.objects.create(user=user_add_row , friend=user_sender_row)
     # return Response({'message':'sucess'})
 
 @api_view(['GET'])
 def friends_with_directs(request, username):
     user = customuser.objects.get(username=username)
-    friends = Friends.objects.filter(user=user)
+    friends = Friendship.objects.filter(user=user)
     data = []
     for friend in friends:
         print("my friend name: ",friend.friend.username)
@@ -78,7 +75,7 @@ def getUserData(request, username):
                      'bg': user.background_pic.path,
                      'bio': user.bio,
                      'email' : user.email,
-                     'level': user.level,
+                     'level': 0,
                      'country': user.country,
                      }
         success_response = Response(data={"userData": user_data}, status=status.HTTP_200_OK)

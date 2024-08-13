@@ -27,7 +27,7 @@ const ChatConversation = () => {
   const [recivedMessage, setRecivedMessage] = useState(null);
   const [messageToSend, setMessageToSend] = useState("");
   const [showDirectOptions, setShowDirectOptions] = useState(false);
-  const { user, socket, userImg } = useContext(AuthContext);
+  const { user, chatSocket, userImg, notifSocket, socket, setSocket } = useContext(AuthContext);
   const messageEndRef = useRef(null);
   const selectedDirectRef = useRef(selectedDirect);
   const navigate = useNavigate();
@@ -39,12 +39,12 @@ const ChatConversation = () => {
   const sendMessage = () => {
     console.log(messageToSend)
     if (
-      socket &&
-      socket.readyState === WebSocket.OPEN &&
+      chatSocket &&
+      chatSocket.readyState === WebSocket.OPEN &&
       messageToSend.trim() !== ""
     ) {
       console.log(messageToSend)
-      socket.send(
+      chatSocket.send(
         JSON.stringify({
           type: "directMessage",
           data: {
@@ -90,8 +90,8 @@ const ChatConversation = () => {
   }, [selectedDirect]);
 
   useEffect(() => {
-    if (socket) {
-      socket.onmessage = (e) => {
+    if (chatSocket) {
+      chatSocket.onmessage = (e) => {
         let data = JSON.parse(e.data);
         if (data.type === "newDirect") {
           const currentDirect = selectedDirectRef.current;
@@ -109,7 +109,7 @@ const ChatConversation = () => {
         }
       };
     }
-  }, [socket]);
+  }, [chatSocket]);
 
   useEffect(() => {
     if (recivedMessage !== null) {
@@ -124,10 +124,42 @@ const ChatConversation = () => {
     }
   }, [messages]);
 
+  /////////////////////////////////////////////////////////////////////////////
+
+  useEffect(() => {
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+			notifSocket.onmessage = (event) => {
+				let data = JSON.parse(event.data)
+				let type = data.type
+				let message = data.message
+				if (type === 'goToGamingPage') {
+					// console.log("navigating now")
+					// navigate(`/mainpage/game/solo/1vs1/friends`)
+          const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
+          newSocket.onopen = () => {
+            console.log("+++++++++++=======+++++++++")
+            console.log("GAME SOCKET OPENED AND NOW WE WILL MOVE TO FRIEND PAGE")
+            console.log("+++++++++++=======+++++++++")
+            setSocket(newSocket)
+            if (message.mode === '1vs1')
+              navigate(`/mainpage/game/solo/1vs1/friends`)
+            else
+              navigate(`/mainpage/game/solo/2vs2/friends`)
+            // console.log("GAME SOCKET OPENED SUCCEFULLY")
+          }
+				} else if (type === 'receiveFriendGame') {
+					console.log("RECEIVED A GAME REQUEST")
+					setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message])
+					setRoomID(message.roomID)
+				}
+			}
+		}
+	}, [notifSocket])
+
   const inviteFriend = () => {
-    if (socket && socket.readyState === WebSocket.OPEN) {
+    if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
       console.log("inside join");
-      socket.send(
+      notifSocket.send(
         JSON.stringify({
           type: "inviteFriendGame",
           message: {
@@ -138,6 +170,9 @@ const ChatConversation = () => {
       );
     }
   };
+
+  /////////////////////////////////////////////////////////////////////////////
+
   let domNode = useClickOutSide(() => {
     setShowDirectOptions(false);
   });
@@ -157,6 +192,7 @@ const ChatConversation = () => {
                 avatar: "",
                 status: "",
               })
+              
             }
           />
           <img
@@ -191,7 +227,7 @@ const ChatConversation = () => {
             />
             {showDirectOptions ? (
               <div className="direct-options-container">
-                <div className="view-profile-option">View Profile</div>
+                <div className="view-profile-option" onClick={()=> navigate('/mainpage/profile')}>View Profile</div>
                 <div className="block-friend-option">Block</div>
                 <div className="change-wallpaper-option">Wallpaper</div>
               </div>

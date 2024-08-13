@@ -4,9 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import * as Icons from '../assets/navbar-sidebar'
 
 const OneVersusOne = () => {
-    let { privateCheckAuth, socket, user,
-        socketRecreated, setSocketRecreated, allGameFriends,
-        loading, userImages} = useContext(AuthContext)
+    const [roomID, setRoomID] = useState(null)
+    let { privateCheckAuth, socket, user, setAllGameNotifs, allGameNotifs, notifsImgs, notifSocket } = useContext(AuthContext)
     const [selected, setSelected] = useState(0)
     const navigate = useNavigate()
 
@@ -39,8 +38,113 @@ const OneVersusOne = () => {
         }
     }
 
+    // FOR THE GAME NOTIFICATIONS - START -
+
+	useEffect(() => {
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+			notifSocket.onmessage = (event) => {
+				let data = JSON.parse(event.data)
+				let type = data.type
+				let message = data.message
+				if (type === 'goToGamingPage') {
+					// console.log("navigating now")
+					// navigate(`/mainpage/game/solo/1vs1/friends`)
+					if (message.mode === '1vs1')
+						navigate(`/mainpage/game/solo/1vs1/friends`)
+					else
+						navigate(`/mainpage/game/solo/2vs2/friends`)
+				} else if (type === 'receiveFriendGame') {
+					console.log("RECEIVED A GAME REQUEST")
+					setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message])
+					setRoomID(message.roomID)
+				}
+			}
+		}
+	}, [notifSocket])
+
+	useEffect(() => {
+		if (socket && socket.readyState === WebSocket.OPEN) {
+			socket.onmessage = (event) => {
+				let data = JSON.parse(event.data)
+				let type = data.type
+				if (type === 'hmed') {
+					console.log("WWWWWWWWWAAAAA HMEEEEEEEED")
+					socket.close()
+					// setSocket(null)
+				} else if (type === 'connected_again')
+					console.log('USER IS CONNECTED AGAIN')
+			}
+		}
+	}, [socket])
+
+	const refuseInvitation = (creator) => {
+		let notifSelected = allGameNotifs.filter((user) => user.user === creator)
+		setAllGameNotifs(allGameNotifs.filter((user) => user.user !== creator))
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+			console.log("inside join")
+			notifSocket.send(JSON.stringify({
+				type: 'refuseInvitation',
+				message: {
+					user: notifSelected[0].user,
+					target: user,
+					roomID: notifSelected[0].roomID
+				}
+			}))
+		}
+	}
+
+	const acceptInvitation = (creator) => {
+		let notifSelected = allGameNotifs.filter((user) => user.user === creator)
+		setAllGameNotifs(allGameNotifs.filter((user) => user.user !== creator))
+		console.log(creator, user, roomID)
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+			console.log("inside join")
+			notifSocket.send(JSON.stringify({
+				type: 'acceptInvitation',
+				message: {
+					user: notifSelected[0].user,
+					target: user,
+					roomID: notifSelected[0].roomID
+				}
+			}))
+		}
+	}
+
+	// FOR THE GAME NOTIFICATIONS - END -
+
     return (
         <div className='duelMode' >
+            <div className='cancel-game-invite-request'>
+				{(allGameNotifs.length) ? (
+					<div className='game-invitations'>
+						{allGameNotifs.map((user, key) => {
+							return ((
+								<div key={key} className='game-invitation'>
+									<img src={notifsImgs[key]} alt="profile-pic" />
+									<div className='user-infos'>
+										<span>{user.user}</span>
+										<span>level 2.5</span>
+									</div>
+									<div className='invitation-mode'>
+										<span>1</span>
+										<span>vs</span>
+										<span>1</span>
+									</div>
+									<div className='accept-refuse'>
+										<div onClick={() => acceptInvitation(user.user)}>
+											<img src={Icons.copied} alt="accept-icon" />
+										</div>
+										<div onClick={() => refuseInvitation(user.user)}>
+											<img src={Icons.cancel} alt="refuse-icon" />
+										</div>
+									</div>
+								</div>
+							))
+						})}
+					</div>
+				) : ''
+				}
+			</div>
             <div className='duelMode-modes' >
                 <div className={(selected === 1) ? 'duelMode-modes-quickMatch duelMode-modes-quickMatch-selected' : 'duelMode-modes-quickMatch'} onClick={quickMatch} >
                     <div>
