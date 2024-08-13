@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react'
 import chatSvg from "../../assets/navbar-sidebar/chat.svg"
 // import { rankData } from '../../Dashboard/helpers/rankData'
 import Pagination from "../../Dashboard/helpers/Pagination"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import MavSvg from "../../assets/Profile/Group.svg"
 
 import ProfileContext from '../ProfileWrapper'
@@ -46,7 +46,7 @@ const ProfileUserFriends = () => {
         });
         const res = await response.json()
         if (response.ok) {
-          console.log("Response allUserData : ", res.allUserData);
+          // console.log("Response allUserData : ", res.allUserData);
           setFriendsData(res.allUserData)
         }
         else 
@@ -59,6 +59,13 @@ const ProfileUserFriends = () => {
       getUserFriends()
   }, [userId])
 
+
+  const navigate = useNavigate();
+  const handleProfileClick = (username) => {
+    navigate(`/mainpage/profile/${username}`);
+    window.location.reload();
+  };
+
   return (
     <div className='userstate__friends purple-glass-stats'>
       <div className='userstate-header'><h1> Friends </h1> </div>
@@ -66,10 +73,14 @@ const ProfileUserFriends = () => {
         {friendsData.map((player, key) => {
           return (
             <div className='classment__friend' key={key}>
-              <Link className="friend__pic-name" to={`/mainpage/profile/${player.username}`}>
+              <div className="friend__pic-name" onClick={() => handleProfileClick(player.username)}>
                 <img src={userImages.length ? userImages[key] : MavSvg} alt='playerImg' />
                 <p> {player.username} </p>
-              </Link>
+              </div>
+              {/* <Link className="friend__pic-name" to={`/mainpage/profile/${player.username}`}>
+                <img src={userImages.length ? userImages[key] : MavSvg} alt='playerImg' />
+                <p> {player.username} </p>
+              </Link> */}
               <Link className='chat__button no-select' to='/mainpage/chat'>
                 <img src={chatSvg} alt='chatIcon' />
                 <p style={{ cursor: 'pointer' }}> message </p>

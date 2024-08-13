@@ -744,7 +744,7 @@ h1, h3, p{
     height: 100%;
     width: 100%;
     text-decoration: none;
-    /* border: #826aed solid */
+    /* border: #826aed solid 1px; */
 }
 .classment__friend .friend__pic-name img {
     height: 35px;
