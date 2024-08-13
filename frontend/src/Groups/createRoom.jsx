@@ -76,14 +76,14 @@ const CreateRoom = (props) => {
           
           // Handle the response
           const responseData = await response.json();
-          const currentChatRooms = chatRoomConversationsRef.current;
-          setChatRoomConversations([...currentChatRooms, responseData.room]);
           
           // Simulate delay before showing the success toast
           setTimeout(() => {
             toast.success("Room created successfully!");
             toast.dismiss(toastId); // Dismiss the loading toast
-          }, 1000); // Adjust the delay time (in milliseconds) as needed
+            const currentChatRooms = chatRoomConversationsRef.current;
+            setChatRoomConversations([...currentChatRooms, responseData.room]);
+          }, 2000); // Adjust the delay time (in milliseconds) as needed
         } catch (error) {
           // Handle error case
           toast.error("Failed to create room.");

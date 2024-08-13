@@ -9,9 +9,16 @@ import { leaveRoomSubmitHandler } from "./roomHandler";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import toast from "react-hot-toast";
 
+import ChangeChatRoomName from "./changeChatRoomName";
+import ChangeChatRoomIcon from "./changeChatRoomIcon";
 const MyRoom = (props) => {
   const { chatSocket, user } = useContext(AuthContext);
-  const { setIsHome, setSelectedChatRoom, chatRoomConversationsRef,  setChatRoomConversations} = useContext(ChatContext);
+  const {
+    setIsHome,
+    setSelectedChatRoom,
+    chatRoomConversationsRef,
+    setChatRoomConversations,
+  } = useContext(ChatContext);
   const [showSettings, setShowSettings] = useState(false);
   const [leaveRoom, setLeaveRoom] = useState(false);
   const [changeRoomName, setChangeRoomName] = useState(false);
@@ -25,11 +32,7 @@ const MyRoom = (props) => {
   const [allFriends, setAllFriends] = useState([]);
   const navigate = useNavigate();
 
-  const showRoomSettings = () => {
-    console.log("i clicked show settings");
-    setShowSettings(true);
-  };
-
+  //update the chat room name in the chatRoomConversatios array
   const chatRoomNameChangedUpdater = (data) => {
     const allMyChatRooms = chatRoomConversationsRef.current;
     const updatedRooms = allMyChatRooms.map((room) => {
@@ -42,54 +45,40 @@ const MyRoom = (props) => {
     setChatRoomConversations(updatedRooms);
   };
 
-  const changeRoomNameSubmitHandler = () => {
-    const updateChatRoomName = async () => {
-      try {
-
-        const response = await fetch(`http://localhost:8000/chatAPI/chatRoomUpdateName/${props.roomId}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ name: newRoomName }),
-        })
-        const data = await response.json()
-        chatRoomNameChangedUpdater(data.data)
-        console.log(data)
-      } catch (error) {
-        toast(error)
-      }
-    }
-    updateChatRoomName()
-  };
-
   const onChangeChangeRoomAvatar = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setnewRoomIcon(file);
       const reader = new FileReader();
       reader.onload = (e) => {
         const imageUrl = e.target.result;
-        const base64Image = reader.result.split(",")[1];
-        setnewRoomIcon(base64Image);
         const placeHolder = document.getElementsByClassName(
-          "live-updated-room-avatar"
+          "room-update-avatar-preview"
         )[0];
         placeHolder.src = imageUrl;
       };
       reader.readAsDataURL(file);
     }
   };
-  const updateRoomAvatarSubmitHandler = () => {
-    if (chatSocket) {
-      chatSocket.send(
-        JSON.stringify({
-          type: "changeRoomAvatar",
-          message: {
-            room: props.name,
-            newIcon: newRoomIcon,
-          },
-        })
+
+  //post new chat room icon to the backend
+  const changeRoomIconSubmitHandler = async () => {
+    const formData = new FormData();
+    formData.append("icon", newRoomIcon);
+    formData.append("room", props.roomId);
+    try {
+      const response = await fetch(
+        "http://localhost:8000/chatAPI/changeChatRoomIcon",
+        {
+          method: "POST",
+          body: formData,
+        }
       );
+      const data = await response.json();
+      if (response.ok) console.log(data);
+      else toast.error(data.error);
+    } catch (error) {
+      toast.error(data.error);
     }
     setUpdateRoomAvatar(false);
     setShowSettings(false);
@@ -175,7 +164,7 @@ const MyRoom = (props) => {
       icon: props.roomIcons[props.index],
       roomId: props.roomId,
     });
-    moveObjectToFront(props.name)
+    moveObjectToFront(props.name);
     setIsHome(false);
     navigate(`/mainpage/chat`);
   };
@@ -195,8 +184,7 @@ const MyRoom = (props) => {
         const placeHolder = document.getElementsByClassName(
           "my-room-cover-wrapper"
         )[0];
-        if(placeHolder)
-          placeHolder.style.backgroundImage = `url(${imageUrl})`;
+        if (placeHolder) placeHolder.style.backgroundImage = `url(${imageUrl})`;
       };
       reader.readAsDataURL(file);
     }
@@ -205,13 +193,17 @@ const MyRoom = (props) => {
   return (
     <div className="my-room-container">
       <div className="my-room-header">
-        <div className="my-room-cover-edit-wrapper" onClick={handleContainerClick}>
+        <div
+          className="my-room-cover-edit-wrapper"
+          onClick={handleContainerClick}
+        >
           <CameraAltIcon className="my-room-cover-edit-icon" />
-          <input type="file" 
-                  ref={fileInputRef}
-                  style={{ display: "none" }}
-              onChange={onChangeIcon}
-              />
+          <input
+            type="file"
+            ref={fileInputRef}
+            style={{ display: "none" }}
+            onChange={onChangeIcon}
+          />
         </div>
         <div className="my-room-cover-wrapper"></div>
         <div className="my-room-info">
@@ -224,7 +216,9 @@ const MyRoom = (props) => {
         </div>
       </div>
       <div className="my-room-name-and-topic">
-        <div className="my-room-name" onClick={navigateToChatRoom}>{props.name}</div>
+        <div className="my-room-name" onClick={navigateToChatRoom}>
+          {props.name}
+        </div>
         <div className="my-room-topic">{props.topic}</div>
       </div>
       <div className="room-actions">
@@ -239,7 +233,7 @@ const MyRoom = (props) => {
             <img
               src={ChatIcons.RoomSettings}
               className="room-settings-icon"
-              onClick={showRoomSettings}
+              onClick={() => setShowSettings(true)}
             />
           </>
         ) : (
@@ -288,46 +282,10 @@ const MyRoom = (props) => {
           </div>
         </div>
       )}
-      {changeRoomName && (
-        <div className="room-change-name-wrapper">
-          <div className="room-change-name-title">Enter Room Name</div>
-          <input
-            type="text"
-            className="change-room-name-input"
-            placeholder={props.name}
-            onChange={(e) => setNewRoomName(e.target.value)}
-          />
-          <div className="room-change-name-buttons">
-            <button onClick={() => setChangeRoomName(false)}>Cancel</button>
-            <button onClick={changeRoomNameSubmitHandler}>Update</button>
-          </div>
-        </div>
-      )}
-      {updateRoomAvatar && (
-        <div className="room-update-avatar-wrapper">
-          <div className="room-update-avatar-content">
-            <img
-              src={ChatIcons.RoomIcon}
-              alt=""
-              className="room-update-avatar-preview"
-            />
-            <label htmlFor="update-room-image" id="room-update-avatar-label">
-              Select an Image
-            </label>
-            <input
-              type="file"
-              name="avatar"
-              accept="image/png, image/jpeg"
-              id="update-room-image"
-              onChange={onChangeChangeRoomAvatar}
-            />
-          </div>
-          <div className="room-update-avatar-buttons">
-            <button onClick={() => setUpdateRoomAvatar(false)}>Cancel</button>
-            <button onClick={updateRoomAvatarSubmitHandler}>Save</button>
-          </div>
-        </div>
-      )}
+      {/*change Chat room Name*/}
+      {changeRoomName && <ChangeChatRoomName/>}
+      {/*change chat room name icon */}
+      {updateRoomAvatar && <ChangeChatRoomIcon/>}
       {addRoomAdmin && (
         <div className="room-add-admin-wrapper">
           <img

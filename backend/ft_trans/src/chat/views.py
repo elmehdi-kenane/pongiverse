@@ -6,6 +6,18 @@ from friends.models import Friendship
 from myapp.models import customuser
 import imghdr
 
+@api_view(['POST'])
+def chat_room_update_icon(request):
+    if request.method == 'POST':
+        try:
+            room = Room.objects.get(id=request.data.get('room'))
+        except Room.DoesNotExist:
+            return Response({'error': 'chat room name not found!'}, status=400)
+        room.icon = request.data.get('icon')
+        room.save()
+        return Response({'success': 'chat room icon changed successfully'}, status=200)
+    return Response({'error': 'Invalid request method'}, status=400)
+
 
 @api_view(['PATCH'])
 def chat_room_update_name(request, id):
@@ -22,7 +34,7 @@ def chat_room_update_name(request, id):
                          'data': {
                              'id': id,
                              'newName': room.name
-                         }})
+                         }}, status=200)
     return Response({'error': 'Invalid request method'}, status=400)
 
 
