@@ -1,4 +1,26 @@
+import ChatContext from "../../Context/ChatContext";
+import { useContext, useState } from "react";
+
 const ChangeChatRoomName = (props) => {
+  const [newRoomName, setNewRoomName] = useState("");
+  const {
+    chatRoomConversationsRef,
+    setChatRoomConversations,
+  } = useContext(ChatContext);
+  
+  //update the chat room name in the chatRoomConversatios array
+  const chatRoomNameChangedUpdater = (data) => {
+    const allMyChatRooms = chatRoomConversationsRef.current;
+    const updatedRooms = allMyChatRooms.map((room) => {
+      if (room.id === data.id) {
+        return { ...room, name: data.newName };
+      }
+      return room;
+    });
+    console.log("update rooms: ", updatedRooms);
+    setChatRoomConversations(updatedRooms);
+  };
+
   //post the new chat room name to backend
   const changeRoomNameSubmitHandler = () => {
     const updateChatRoomName = async () => {
@@ -20,8 +42,8 @@ const ChangeChatRoomName = (props) => {
       }
     };
     updateChatRoomName();
-    setChangeRoomName(false);
-    setShowSettings(false);
+    props.setChangeRoomName(false);
+    props.setShowSettings(false);
   };
   return (
     <div className="room-change-name-wrapper">
@@ -33,7 +55,7 @@ const ChangeChatRoomName = (props) => {
       onChange={(e) => setNewRoomName(e.target.value)}
     />
     <div className="room-change-name-buttons">
-      <button onClick={() => setChangeRoomName(false)}>Cancel</button>
+      <button onClick={() => props.setChangeRoomName(false)}>Cancel</button>
       <button onClick={changeRoomNameSubmitHandler}>Update</button>
     </div>
   </div>

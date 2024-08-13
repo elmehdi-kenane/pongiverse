@@ -1,5 +1,5 @@
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
-import * as ChatIcons from "../assets/chat/media";
+import * as ChatIcons from "../../assets/chat/media";
 import { useRef } from "react";
 
 const CreateRoomForm = (props) => {

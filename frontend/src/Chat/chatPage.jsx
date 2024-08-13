@@ -1,10 +1,10 @@
 import "../assets/chat/Chat.css";
 import ChatConversationItem from "./chatConversationItem";
-import ChatContext from "../Groups/ChatContext";
+import ChatContext from "../Context/ChatContext";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import ChatConversation from "./chatConversation";
 import ChatRoomConversation from "./chatRoomConversation";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import * as ChatIcons from "../assets/chat/media/index";
 
 const Chat = () => {

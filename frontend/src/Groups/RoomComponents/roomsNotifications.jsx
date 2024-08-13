@@ -1,8 +1,8 @@
 import { useContext } from "react";
-import { useClickOutSide } from "../Chat/chatConversation";
+import { useClickOutSide } from "../../Chat/chatConversation";
 import CloseIcon from "@mui/icons-material/Close";
 import InvitationRoom from "./InvitationRoom";
-import ChatContext from "./ChatContext";
+import ChatContext from "../../Context/ChatContext";
 
 const RoomsNotifications = (props) => {
   const { chatRoomInvitationsIcons, chatRoomInvitations } =

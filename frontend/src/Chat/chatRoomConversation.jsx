@@ -1,12 +1,11 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import * as ChatIcons from "../assets/chat/media/index";
-import ChatContext from "../Groups/ChatContext";
+import ChatContext from "../Context/ChatContext";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import MyMessage from "./myMessage";
 import OtherMessage from "./otherMessage";
 import { useClickOutSide } from "../Chat/chatConversation";
 import SendMessage from "./sendMessage";
-import { leaveRoomSubmitHandler } from "../Groups/roomHandler";
 
 const ChatRoomConversation = (props) => {
   const {
@@ -161,13 +160,6 @@ const ChatRoomConversation = (props) => {
             <div className="room-options-container">
               <div
                 className="leave-chat-room-option"
-                onClick={() =>
-                  leaveRoomSubmitHandler(
-                    selectedChatRoom.name,
-                    user,
-                    chatSocket
-                  )
-                }
               >
                 Leave Chat Room
               </div>

@@ -1,13 +1,14 @@
-import React, { useContext, useRef, useState } from "react";
-import AuthContext from "../navbar-sidebar/Authcontext";
-import "../assets/chat/Groups.css";
-import { useClickOutSide } from "../Chat/chatConversation";
+import React, { useContext, useState } from "react";
+import AuthContext from "../../navbar-sidebar/Authcontext";
+import { useClickOutSide } from "../../Chat/chatConversation";
 import CloseIcon from "@mui/icons-material/Close";
 import CreateRoomVisibilityOptions from "./createRoomVisibilityOptions";
 import CreateRoomForm from "./createRoomForm";
 import CreateRoomPassword from "./createRoomPassword";
-import ChatContext from "./ChatContext";
+import ChatContext from "../../Context/ChatContext";
 import { toast } from "react-hot-toast";
+
+import "../../assets/chat/Groups.css";
 
 const CreateRoom = (props) => {
   let errorsContainer = {};

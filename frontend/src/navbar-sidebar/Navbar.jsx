@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import NavbarIconSearch from "./NavbarIconSearch";
 import NavbarprofNotifs from "./NavbarProfNotifs";
-import ChatContext from "../Groups/ChatContext";
 import AuthContext from "./Authcontext";
 
 

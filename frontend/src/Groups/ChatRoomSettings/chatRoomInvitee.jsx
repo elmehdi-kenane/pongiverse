@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
-import * as ChatIcons from "../assets/chat/media";
-import AuthContext from "../navbar-sidebar/Authcontext";
-import * as Icons from '../assets/navbar-sidebar'
+import * as ChatIcons from "../../assets/chat/media";
+import AuthContext from "../../navbar-sidebar/Authcontext";
+import * as Icons from '../../assets/navbar-sidebar'
 
 
 const ChatRoomInvitee = (props) => {

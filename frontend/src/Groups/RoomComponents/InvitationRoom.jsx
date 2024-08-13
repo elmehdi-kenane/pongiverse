@@ -1,7 +1,6 @@
 import { useContext } from "react";
-import AuthContext from "../navbar-sidebar/Authcontext";
+import AuthContext from "../../navbar-sidebar/Authcontext";
 import CancelIcon from "@mui/icons-material/Cancel";
-import * as ChatIcons from "../assets/chat/media";
 
 const InvitationRoom = (props) => {
   const { chatSocket, user } = useContext(AuthContext);

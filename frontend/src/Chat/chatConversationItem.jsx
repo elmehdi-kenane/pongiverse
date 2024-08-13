@@ -1,6 +1,5 @@
-import { useContext, useEffect, useState } from "react";
-import * as ChatIcons from "../assets/chat/media/index";
-import ChatContext from "../Groups/ChatContext";
+import { useContext} from "react";
+import ChatContext from "../Context/ChatContext";
 
 const ChatConversationItem = (props) => {
   const { directsImages, chatRoomIcons } = useContext(ChatContext);

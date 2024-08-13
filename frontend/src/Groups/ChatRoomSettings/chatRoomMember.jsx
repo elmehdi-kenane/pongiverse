@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import * as ChatIcons from "../assets/chat/media";
-import AuthContext from "../navbar-sidebar/Authcontext";
+import * as ChatIcons from "../../assets/chat/media";
+import AuthContext from "../../navbar-sidebar/Authcontext";
 const ChatRoomMember = (props) => {
     const {chatSocket} = useContext(AuthContext)
     const onClickAddMemberAdmin = () => {

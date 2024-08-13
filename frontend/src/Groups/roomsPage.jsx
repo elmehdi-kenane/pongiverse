@@ -1,15 +1,14 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
-import MyRoom from "./myRoom";
-import SuggestedRoom from "./suggestedRoom";
-import CreateRoom from "./createRoom";
-import ChatContext from "./ChatContext";
+import MyRoom from "./RoomComponents/myRoom"
+import SuggestedRoom from "./RoomComponents/suggestedRoom";
+import CreateRoom from "./CreateRoom/createRoom";
+import ChatContext from "../Context/ChatContext";
 import * as ChatIcons from "../assets/chat/media";
-import { toast } from "react-toastify";
 import "../assets/chat/Groups.css";
 import NotificationAddIcon from "@mui/icons-material/NotificationAdd";
 import { Toaster } from 'react-hot-toast';
-import RoomsNotifications from "./roomsNotifications";
+import RoomsNotifications from "./RoomComponents/roomsNotifications";
 
 const Rooms = () => {
   const [createRoom, setCreateRoom] = useState(false);

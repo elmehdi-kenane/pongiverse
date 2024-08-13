@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import * as ChatIcons from "../assets/chat/media/index";
-import ChatContext from "../Groups/ChatContext";
+import ChatContext from "../Context/ChatContext";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import MyMessage from "./myMessage";
 import OtherMessage from "./otherMessage";
