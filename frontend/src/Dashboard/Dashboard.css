@@ -196,6 +196,10 @@
     /* background: #775C9E; */
     border-right: black solid 0.5px;
 }
+.dashpage__body__rank .dashpage__body__rank__title .select {
+    background: rgb(247, 239, 255);
+    color: #5f4582;
+}
 
 .dashpage__body__rank .dashpage__body__rank__title .title:hover {
     background: rgb(247, 239, 255);
