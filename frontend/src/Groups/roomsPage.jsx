@@ -1,13 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
-import MyRoom from "./RoomComponents/myRoom"
+import MyRoom from "./RoomComponents/myRoom";
 import SuggestedRoom from "./RoomComponents/suggestedRoom";
 import CreateRoom from "./CreateRoom/createRoom";
 import ChatContext from "../Context/ChatContext";
 import * as ChatIcons from "../assets/chat/media";
 import "../assets/chat/Groups.css";
 import NotificationAddIcon from "@mui/icons-material/NotificationAdd";
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
 import RoomsNotifications from "./RoomComponents/roomsNotifications";
 
 const Rooms = () => {
@@ -21,6 +21,7 @@ const Rooms = () => {
     setChatRoomInvitations,
     suggestedChatRooms,
     chatRoomConversationsRef,
+    chatRoomCovers
   } = useContext(ChatContext);
 
   //hande scroller handler (My Rooms)
@@ -78,72 +79,6 @@ const Rooms = () => {
       addUserChannelGroup();
   }, [chatSocket, user]);
 
-  //update chatRoomConversations array When a new Memeber join
-  const newUserJoinedChatRoom = (data) => {
-    const allMyChatRooms = chatRoomConversationsRef.current;
-    const roomExists = allMyChatRooms.some(
-      (myroom) => myroom.name === data.name
-    );
-    if (roomExists) {
-      console.log("room exist");
-      const updatedRooms = allMyChatRooms.map((room) => {
-        if (room.name === data.name) {
-          return { ...room, membersCount: data.membersCount };
-        }
-        return room;
-      });
-      setChatRoomConversations(updatedRooms);
-    } else {
-      console.log("room doesn't exist");
-      setChatRoomConversations([...allMyChatRooms, data]);
-    }
-  };
-
-  //update chatRoomConversations Array if an Memeber leave
-  const memeberLeaveChatRoomUpdater = (data) => {
-    const allMyChatRooms = chatRoomConversationsRef.current;
-    console.log("data", data);
-    if (data && data.user === user) {
-      const updatedRooms = allMyChatRooms.filter(
-        (myroom) => myroom.name !== data.name
-      );
-      setChatRoomConversations(updatedRooms);
-    } else {
-      const updatedRooms = allMyChatRooms.map((room) => {
-        if (room.name === data.name) {
-          return { ...room, membersCount: data.membersCount };
-        }
-        return room;
-      });
-      setChatRoomConversations(updatedRooms);
-    }
-  };
-
-  //update chat Room Name if Changed
-  const chatRoomNameChangedUpdater = (data) => {
-    const allMyChatRooms = chatRoomConversationsRef.current;
-    const updatedRooms = allMyChatRooms.map((room) => {
-      if (room.name === data.name) {
-        return { ...room, name: data.newName };
-      }
-      return room;
-    });
-    console.log("update rooms: ", updatedRooms);
-    setChatRoomConversations(updatedRooms);
-  };
-
-  const chatRoomIconChanged = (data) => {
-    const allMyChatRooms = chatRoomConversationsRef.current;
-    const updatedRooms = allMyChatRooms.map((room) => {
-      if (room.name === data.name) {
-        return { ...room, icon_url: data.iconPath };
-      }
-      return room;
-    });
-    console.log("update rooms: ", updatedRooms);
-    setChatRoomConversations(updatedRooms);
-  };
-
   const chatRoomAdminAdded = (data) => {
     const allMyChatRooms = chatRoomConversationsRef.current;
     const updatedRooms = allMyChatRooms.map((room) => {
@@ -173,29 +108,11 @@ const Rooms = () => {
     }
   };
 
-  const chatRoomDeletedUpdater = (data) => {
-    const allMyChatRooms = chatRoomConversationsRef.current;
-    const updatedRooms = allMyChatRooms.filter(
-      (room) => room.name !== data.name
-    );
-    setChatRoomConversations(updatedRooms);
-  };
-
   useEffect(() => {
     if (chatSocket) {
       chatSocket.onmessage = (e) => {
         let data = JSON.parse(e.data);
-        console.log("data recived from socket :", data);
-        if (data.type === "newRoomJoin") newUserJoinedChatRoom(data.room);
-        else if (data.type === "memberleaveChatRoom")
-          memeberLeaveChatRoomUpdater(data.message);
-        else if (data.type === "chatRoomNameChanged")
-          chatRoomNameChangedUpdater(data.message);
-        else if (data.type === "chatRoomAvatarChanged")
-          chatRoomIconChanged(data.message);
-        else if (data.type == "chatRoomDeleted")
-          chatRoomDeletedUpdater(data.message);
-        else if (data.type === "chatRoomAdminAdded")
+        if (data.type === "chatRoomAdminAdded")  
           chatRoomAdminAdded(data.message);
         else if (data.type === "roomInvitation") {
           const allInvitaions = roomInvitationsRef.current;
@@ -209,29 +126,26 @@ const Rooms = () => {
   return (
     <div className="rooms-page">
       <Toaster
-        containerStyle={{ marginTop: '51px' }}
+        containerStyle={{ marginTop: "51px" }}
         toastOptions={{
-          className: '',
+          className: "",
           style: {
-            top: '51px',
-            color: '#713200',
-            textAlign:'center',
-            fontSize: '14px'
+            color: "#713200",
+            textAlign: "center",
+            fontSize: "14px",
           },
-        }}/>
+        }}
+      />
       <div className="rooms-page-content">
         {createRoom && (
-          <CreateRoom
-              setCreateRoom = {setCreateRoom}
-              setIsBlur = {setIsBlur}
+          <CreateRoom setCreateRoom={setCreateRoom} setIsBlur={setIsBlur} />
+        )}
+        {showRoomNotifications && (
+          <RoomsNotifications
+            setShowRoomNotifications={setShowRoomNotifications}
+            setIsBlur={setIsBlur}
           />
         )}
-        {showRoomNotifications && 
-          <RoomsNotifications
-            setShowRoomNotifications = {setShowRoomNotifications}
-            setIsBlur = {setIsBlur}
-          />
-        }
         <div className={isBlur ? "rooms-wrapper blur" : "rooms-wrapper"}>
           <div className="rooms-header-wrapper">
             <div className="rooms-header">Your Rooms</div>
@@ -293,6 +207,7 @@ const Rooms = () => {
                       topic={room.topic}
                       roomId={room.id}
                       roomIcons={chatRoomIcons}
+                      chatRoomCovers={chatRoomCovers}
                       membersCount={room.membersCount}
                     />
                   ))}

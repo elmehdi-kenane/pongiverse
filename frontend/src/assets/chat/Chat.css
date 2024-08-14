@@ -132,7 +132,7 @@ button.rooms-switch-button-active {
 }
 
 .conversation-item-avatar {
-  width: 35px;
+  min-width: 35px;
   height: 35px;
   border-radius: 50px;
 }

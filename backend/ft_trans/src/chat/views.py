@@ -7,6 +7,50 @@ from myapp.models import customuser
 from django.core.files.storage import default_storage
 
 
+@api_view(["POST"])
+def leave_chat_room(request):
+    if (request.method == 'POST'):
+        # get the user by username
+        try:
+            user = customuser.objects.get(username=request.data.get('member'))
+        except customuser.DoesNotExist:
+            return Response({'error': {'Opps!, User not found'}}, status=404)
+        # get the room by name
+        try:
+            room = Room.objects.get(id=request.data.get('roomId'))
+        except Room.DoesNotExist:
+            return Response({'error': {'Opps!, Chat room not found'}}, status=404)
+        # get the room memeber query by username
+        try:
+            member_to_kick = Membership.objects.get(user=user, room=room)
+        except Membership.DoesNotExist:
+            return Response({'error': {'Opps!, Something went Wrong'}}, status=404)
+
+        member_roles = member_to_kick.roles
+        # cick the member from the room membership
+        member_to_kick.delete()
+        if member_roles == "admin":
+            print("the user is an admin")
+            all_members = Membership.objects.filter(room=room).order_by("joined_at")
+            admin_found = 0
+            for member in all_members:
+                if member.roles == "admin" and member_to_kick != member:
+                    admin_found += 1
+            if all_members and not admin_found:
+                all_members[0].roles = "admin"
+                new_admin = customuser.objects.get(id=all_members[0].user_id)
+                all_members[0].save()
+        room.members_count -= 1
+        if room.members_count == 0:
+            if room.icon.path and default_storage.exists(room.icon.path):
+                default_storage.delete(room.icon.path)
+            room.delete()
+        else:
+            room.save()
+        return Response({'success': 'You left chat room successfully', 'data': {'id': request.data.get('roomId'), 'user': request.data.get('member')}}, status=200)
+    return Response({'error': 'Invalid request method'}, status=400)
+
+
 @api_view(['DELETE'])
 def delete_chat_room(request, id):
     if request.method == 'DELETE':
@@ -20,8 +64,9 @@ def delete_chat_room(request, id):
         if room.icon.path and default_storage.exists(room.icon.path):
             default_storage.delete(room.icon.path)
         room.delete()
-        return Response({'success': 'chat room has been deleted successfully' , 'data' : {'roomId': id}}, status=200)
+        return Response({'success': 'chat room has been deleted successfully', 'data': {'roomId': id}}, status=200)
     return Response({'error': 'Invalid request method'}, status=400)
+
 
 @api_view(['POST'])
 def chat_room_update_icon(request):
@@ -101,6 +146,7 @@ def channel_list(request, username):
                 'topic': membership.room.topic,
                 'icon_url': membership.room.icon.path,
                 'membersCount': membership.room.members_count,
+                'cover': membership.room.cover.path
             }
             rooms.append(room_data)
         print(user.username, " rooms: ", rooms)
@@ -227,45 +273,48 @@ def suggested_chat_rooms(request, username):
 
     return Response({'error': 'Invalid request method'}, status=400)
 
-@api_view (['POST'])
+
+@api_view(['POST'])
 def direct_messages(request):
     if request.method == 'POST':
-        print("THE USER IS" , (request.data).get('user'))
-        username = customuser.objects.get(username = (request.data).get('user'))
+        print("THE USER IS", (request.data).get('user'))
+        username = customuser.objects.get(username=(request.data).get('user'))
 
-        friend = customuser.objects.get(username = (request.data).get('friend'))
-        messages = Directs.objects.filter(Q(sender=username, reciver=friend) | Q(sender=friend, reciver=username))
+        friend = customuser.objects.get(username=(request.data).get('friend'))
+        messages = Directs.objects.filter(
+            Q(sender=username, reciver=friend) | Q(sender=friend, reciver=username))
         data = []
         for message in messages:
             message_data = {
-                'id':message.id,
-                'sender' : message.sender.username,
-                'reciver' : message.reciver.username,
+                'id': message.id,
+                'sender': message.sender.username,
+                'reciver': message.reciver.username,
                 'content': message.message,
-                'date' : message.timestamp
+                'date': message.timestamp
             }
             data.append(message_data)
         sorted_by_date = sorted(data, key=lambda x: x['date'])
-        return Response (sorted_by_date)
+        return Response(sorted_by_date)
     return Response({'error': 'Invalid request method'}, status=400)
+
 
 @api_view(['POST'])
 def list_all_friends(request):
-    if request.method == 'POST' :
+    if request.method == 'POST':
         user = customuser.objects.get(username=(request.data).get('user'))
         friends = Friendship.objects.filter(user=user)
-        room = Room.objects.get(name= request.data.get('room'))
+        room = Room.objects.get(name=request.data.get('room'))
         all_friend = []
         for friend in friends:
-            print("the friend: ",friend)
+            print("the friend: ", friend)
             friend_object = customuser.objects.get(id=friend.friend_id)
             if not Membership.objects.filter(room=room, user=friend_object).exists():
                 friend_data = {
-                    'name' : friend_object.username,
-                    'avatar' : friend_object.avatar.path
+                    'name': friend_object.username,
+                    'avatar': friend_object.avatar.path
                 }
                 all_friend.append(friend_data)
-        return Response (all_friend)
+        return Response(all_friend)
     return Response({'error': 'Invalid request method'}, status=400)
 
 
@@ -275,7 +324,7 @@ def rooms_invitations(request, username):
         user = customuser.objects.get(username=username)
         invitations = RoomInvitation.objects.filter(user=user)
         all_invitations = []
-        for invitaion in invitations :
+        for invitaion in invitations:
             room = Room.objects.get(id=invitaion.room_id)
             invitaion_data = {
                 "name": room.name,

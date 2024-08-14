@@ -14,6 +14,7 @@ export const ChatProvider = ({ children }) => {
   const [directConversations, setDirectConversations] = useState([]);
   const [directsImages, setDirectsImages] = useState([]);
   const [chatRoomIcons, setChatRoomIcons] = useState([]);
+  const [chatRoomCovers, setChatRoomCovers] = useState([]);
   const [chatRoomInvitationsIcons, setChatRoomInvitionsIcons] = useState([]);
   const [suggestedChatRoomsIcons, setSuggestedChatRoomsIcons] = useState([]);
   const [isHome, setIsHome] = useState(true);
@@ -85,6 +86,17 @@ useEffect(() => {
     }
   }, [suggestedChatRooms]);
   
+  useEffect(() => {
+    const fetchChatRoomConversationsCovers = async () => {
+      const images = await fetchImages(chatRoomConversations, 'cover');
+      setChatRoomCovers(images);
+    };
+  
+    if (chatRoomConversations.length) {
+      fetchChatRoomConversationsCovers();
+    }
+  }, [chatRoomConversations]);
+
   useEffect(() => {
     const fetchChatRoomConversationsIcons = async () => {
       const images = await fetchImages(chatRoomConversations, 'icon_url');
@@ -181,7 +193,8 @@ useEffect(() => {
     suggestedChatRooms: suggestedChatRooms,
     setSuggestedChatRooms: setSuggestedChatRooms,
     suggestedChatRoomsIcons:suggestedChatRoomsIcons,
-    chatRoomConversationsRef: chatRoomConversationsRef
+    chatRoomConversationsRef: chatRoomConversationsRef,
+    chatRoomCovers:chatRoomCovers
   };
   return (
     <ChatContext.Provider value={contextData}>{children}</ChatContext.Provider>

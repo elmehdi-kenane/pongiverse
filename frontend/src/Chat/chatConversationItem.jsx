@@ -50,7 +50,7 @@ const ChatConversationItem = (props) => {
           </div>
         </div>
       </div>
-      <div className="conversation-item-last-msg-count">99</div>
+      <div className="conversation-item-last-msg-count">9</div>
     </div>
   );
 };

@@ -5,6 +5,7 @@ urlpatterns = [
     path('createChatRoom', views.create_chat_room, name='create-chat-room'),
     path('chatRoomUpdateName/<int:id>', views.chat_room_update_name, name='chat-room-update-name'),
     path('changeChatRoomIcon', views.chat_room_update_icon, name='chat-room-update-icon'),
+    path('leaveChatRoom', views.leave_chat_room, name='leave-chat-room'),
     path('deleteChatRoom/<int:id>', views.delete_chat_room, name='delete-chat-room'),
     path('chatRooms/<str:username>', views.channel_list, name='channel-list'),
     path('chatRoom/messages/<str:room_id>', views.channel_messages, name='channel-messages'),
