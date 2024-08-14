@@ -63,7 +63,7 @@ const ProfileUserFriends = () => {
   const navigate = useNavigate();
   const handleProfileClick = (username) => {
     navigate(`/mainpage/profile/${username}`);
-    window.location.reload();
+    // window.location.reload();
   };
 
   return (
