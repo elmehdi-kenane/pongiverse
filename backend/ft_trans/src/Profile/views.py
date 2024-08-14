@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from myapp.models import customuser
+from mainApp.models import UserMatchStatics
 from rest_framework.decorators import api_view
 
+from django.http import HttpResponse
 from rest_framework import status
 from django.core.files.base import ContentFile
 import base64
@@ -217,3 +219,36 @@ def get_user_friends(request, userId):
                 'pic': user.avatar.path,
             })
     return Response(data={"allUserData": user_data}, status=status.HTTP_200_OK)
+
+#**--------------------- GetUsers Data Ranking ---------------------** 
+
+@api_view(["GET"])
+def get_user_image(request, username):
+    user = customuser.objects.filter(username=username).first()
+    if user is not None:
+        with open(user.avatar.path, 'rb') as image_file:
+             if image_file:
+                return HttpResponse(image_file.read(), content_type='image/jpeg')
+             else:
+                 return Response("not found")
+
+@api_view(["GET"])
+def get_users_data(request, username):
+    # user = customuser.objects.filter(username=username).first()
+    users_data = UserMatchStatics.objects.all()
+    res_data = []
+    if users_data is not None:
+        for user in users_data:
+            res_data.append({
+                'username': user.player.username,
+                'wins': user.wins,
+                'lost': user.losts,
+                'level': user.level,
+                'xp': user.total_xp,
+                'goals': user.goals,
+            })
+        response = Response(data={"usersData": res_data}, status=status.HTTP_200_OK)
+        return response
+    else:
+        err_res = Response(data={'error': 'Error Getting UsersData!'}, status=status.HTTP_400_BAD_REQUEST)
+        return err_res
