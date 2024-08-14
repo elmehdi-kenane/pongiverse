@@ -14,4 +14,6 @@ urlpatterns = [
     path('Directs/messages', views.direct_messages, name='channel-messages'),
     path('chatRoomInvitations/<str:username>', views.rooms_invitations, name='room-invitations'),
     path('suggestedChatRooms/<str:username>', views.suggested_chat_rooms, name='suggested-chat-rooms'),
+    path('changeChatRoomCover', views.chat_room_update_cover, name='chat-room-update-cover'),
+
 ]

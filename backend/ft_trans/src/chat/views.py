@@ -1,11 +1,10 @@
 from django.db.models import Q
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Room, Membership, Message, Directs, RoomInvitation
+from .models import Room, Membership, Message, Directs, RoomInvitation, default_cover
 from friends.models import Friendship
 from myapp.models import customuser
 from django.core.files.storage import default_storage
-
 
 @api_view(["POST"])
 def leave_chat_room(request):
@@ -78,6 +77,18 @@ def chat_room_update_icon(request):
         room.icon = request.data.get('icon')
         room.save()
         return Response({'success': 'chat room icon changed successfully'}, status=200)
+    return Response({'error': 'Invalid request method'}, status=400)
+
+@api_view(['POST'])
+def chat_room_update_cover(request):
+    if request.method == 'POST':
+        try:
+            room = Room.objects.get(id=request.data.get('room'))
+        except Room.DoesNotExist:
+            return Response({'error': 'chat room name not found!'}, status=400)
+        room.cover = request.data.get('cover')
+        room.save()
+        return Response({'success': 'chat room cover changed successfully'}, status=200)
     return Response({'error': 'Invalid request method'}, status=400)
 
 

@@ -253,6 +253,7 @@ const Rooms = () => {
                       topic={room.topic}
                       roomId={room.id}
                       roomIcons={chatRoomIcons}
+                      chatRoomCovers={chatRoomCovers}
                       membersCount={room.membersCount}
                     />
                   ))}

@@ -28,7 +28,9 @@ const MyRoom = (props) => {
         name={props.name}
         topic={props.topic}
         role={props.role}
+        roomId={props.roomId}
         RoomSettings={ChatIcons.RoomSettings}
+        chatRoomCovers={props.chatRoomCovers}
       />
       {showSettings && (
         <ChatRoomSettings

@@ -16,7 +16,7 @@ const CreateRoom = (props) => {
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     name: "",
-    topic: "",
+    topic: "A friendly space to connect, share ideas, and enjoy meaningful conversations",
     icon: null,
   });
   const [roomVisibility, setRoomVisibility] = useState("public-visibility");

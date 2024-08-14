@@ -29,16 +29,16 @@ const MyRoomContent = (props) => {
 
   const udpateChatRoomCover = async () => {
     const formData = new FormData();
-    formData.append("id", props.roomId);
+    formData.append("room", props.roomId);
     formData.append("cover", cover);
     try {
-      const response = await fetch(``, {
+      const response = await fetch(`http://localhost:8000/chatAPI/changeChatRoomCover`, {
         method: "POST",
         body: formData,
       });
       const data = await response.json();
       if (response.ok) {
-        chatRoomCoverUpdater(data.data);
+        // chatRoomCoverUpdater(data.data);
         toast.success(data.success);
       } else toast.error(data.error);
     } catch (error) {
@@ -50,19 +50,11 @@ const MyRoomContent = (props) => {
     const file = event.target.files[0];
     if (file) {
       setConver(file);
+      console.log(file)
       udpateChatRoomCover();
-      // const reader = new FileReader();
-      // reader.onload = (e) => {
-      //   const imageUrl = e.target.result;
-      //   const placeHolder = document.getElementsByClassName(
-      //     "my-room-cover-wrapper"
-      //   )[0];
-      //   if (placeHolder) placeHolder.style.backgroundImage = `url(${imageUrl})`;
-      // };
-
-      // reader.readAsDataURL(file);
     }
   };
+
   return (
     <>
       <div className="my-room-header">
@@ -81,7 +73,7 @@ const MyRoomContent = (props) => {
         <div
           className="my-room-cover-wrapper"
           style={{
-            backgroundImage: `url(${props.chatRoomCovers[props.index] || './media/roomCover.png'})`,
+            backgroundImage: `url(${props.chatRoomCovers[props.index]})`,
           }}
         ></div>
         <div className="my-room-info">

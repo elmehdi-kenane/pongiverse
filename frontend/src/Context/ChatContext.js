@@ -52,7 +52,7 @@ useEffect(() => {
     });
     return await Promise.all(promises);
   };  
-
+  //Fetch Conversations images
   useEffect(() => {
     const fetchDirectConversationsImages = async () => {
       const images = await fetchImages(directConversations, 'image');
@@ -63,18 +63,19 @@ useEffect(() => {
       fetchDirectConversationsImages();
     }
   }, [directConversations]);
-  
+
+  //Fetch invitaion chat rooms images
   useEffect(() => {
     const fetchChatRoomInvitationsIcons = async () => {
       const images = await fetchImages(chatRoomInvitations, 'icon_url');
       setChatRoomInvitionsIcons(images);
     };
-  
     if (chatRoomInvitations.length) {
       fetchChatRoomInvitationsIcons();
     }
   }, [chatRoomInvitations]);
-  
+
+  //Fetch suggested chat rooms images
   useEffect(() => {
     const fetchSuggestedChatRoomsIcons = async () => {
       const images = await fetchImages(suggestedChatRooms, 'icon_url');
@@ -86,25 +87,27 @@ useEffect(() => {
     }
   }, [suggestedChatRooms]);
   
-  useEffect(() => {
-    const fetchChatRoomConversationsCovers = async () => {
-      const images = await fetchImages(chatRoomConversations, 'cover');
-      setChatRoomCovers(images);
-    };
-  
-    if (chatRoomConversations.length) {
-      fetchChatRoomConversationsCovers();
-    }
-  }, [chatRoomConversations]);
 
+  useEffect(()=> {
+    if(chatRoomCovers.length)
+      console.log("Heeeeeeeeeeeere: ",chatRoomCovers)
+  }, [chatRoomCovers])
+
+  //Fetch chat rooms images and covers
   useEffect(() => {
     const fetchChatRoomConversationsIcons = async () => {
       const images = await fetchImages(chatRoomConversations, 'icon_url');
       setChatRoomIcons(images);
     };
-  
+    const fetchChatRoomConversationsCovers = async () => {
+      const images = await fetchImages(chatRoomConversations, 'cover');
+      setChatRoomCovers(images);
+    };
     if (chatRoomConversations.length) {
+      console.log("zaazazazza: ",chatRoomConversations)
       fetchChatRoomConversationsIcons();
+      fetchChatRoomConversationsCovers();
+
     }
   }, [chatRoomConversations]);
   
