@@ -73,7 +73,12 @@ const MyRoom = (props) => {
           name={props.name}
         />
       )}
-      {deleteRoom && <DeleteChatRoom setDeletRoom={setDeletRoom} />}
+      {deleteRoom && (
+        <DeleteChatRoom
+          setDeletRoom={setDeletRoom} 
+          roomId={props.roomId}
+        />
+      )}
       {leaveRoom && <LeaveChatRoom setLeaveRoom={setLeaveRoom} />}
     </div>
   );

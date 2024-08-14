@@ -4,7 +4,24 @@ from rest_framework.response import Response
 from .models import Room, Membership, Message, Directs, RoomInvitation
 from friends.models import Friendship
 from myapp.models import customuser
-import imghdr
+from django.core.files.storage import default_storage
+
+
+@api_view(['DELETE'])
+def delete_chat_room(request, id):
+    if request.method == 'DELETE':
+        try:
+            room = Room.objects.get(id=id)
+        except Room.DoesNotExist:
+            return Response({'error': 'chat room name not found!'}, status=400)
+        all_members = Membership.objects.filter(room=room)
+        for member in all_members:
+            member.delete()
+        if room.icon.path and default_storage.exists(room.icon.path):
+            default_storage.delete(room.icon.path)
+        room.delete()
+        return Response({'success': 'chat room has been deleted successfully' , 'data' : {'roomId': id}}, status=200)
+    return Response({'error': 'Invalid request method'}, status=400)
 
 @api_view(['POST'])
 def chat_room_update_icon(request):

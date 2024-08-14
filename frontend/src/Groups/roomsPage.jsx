@@ -208,7 +208,17 @@ const Rooms = () => {
 
   return (
     <div className="rooms-page">
-      <Toaster/>
+      <Toaster
+        containerStyle={{ marginTop: '51px' }}
+        toastOptions={{
+          className: '',
+          style: {
+            top: '51px',
+            color: '#713200',
+            textAlign:'center',
+            fontSize: '14px'
+          },
+        }}/>
       <div className="rooms-page-content">
         {createRoom && (
           <CreateRoom
