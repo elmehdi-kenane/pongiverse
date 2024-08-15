@@ -18,7 +18,8 @@ export const ProfileWrapper = ({ child }) => {
     const [userBg, setUserBg] = useState(bg);
     const [userEmail, setUserEmail] = useState('');
     const [userBio, setUserBio] = useState('');
-    const [userLevel, setUserLevel] = useState(null);
+    const [userLevel, setUserLevel] = useState(0);
+    const [userXp, setUserXp] = useState(0);
     const [userCountry, setUserCountry] = useState(null);
 
     const [checkUser, setCheckUser] = useState(true);
@@ -67,6 +68,7 @@ export const ProfileWrapper = ({ child }) => {
             setUserBio(userData.bio)
             setUserEmail(userData.email)
             setUserLevel(userData.level)
+            setUserXp(userData.xp)
             setUserCountry(userData.country)
         }
     }, [userData])
@@ -83,6 +85,8 @@ export const ProfileWrapper = ({ child }) => {
         setUserBio: setUserBio,
         userLevel: userLevel,
         setUserLevel: setUserLevel,
+        userXp: userXp, 
+        setUserXp: setUserXp,
         userCountry: userCountry,
         setUserCountry: setUserCountry,
 

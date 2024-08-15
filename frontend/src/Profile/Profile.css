@@ -594,17 +594,18 @@ h1, h3, p{
     height: 100%;
     background: #826aed;
     border-radius: 10px;
-    animation: level-moving 2s ease-in;
+    transition: width 1s ease-in-out;
+    /* animation: level-moving 2s ease-in; */
 }
 
-@keyframes level-moving {
+/* @keyframes level-moving {
     0% {
         width: 0%;
     }
     100% {
         width: 60%;
     }
-}
+} */
 
 .profile-userlevel p {
     text-align: center;
