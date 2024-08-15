@@ -21,7 +21,8 @@ function DashRanking() {
           },
         });
         const blob = await response.blob();
-        return URL.createObjectURL(blob);
+        // return URL.createObjectURL(blob);
+        return {[user.id] : URL.createObjectURL(blob)};
       });
       const images = await Promise.all(promises);
       setUserImages(images);
@@ -43,12 +44,14 @@ function DashRanking() {
           }
         );
         const res = await response.json();
-        if (response.ok) 
+        if (response.ok) {
           setUsersData(res.usersData);
+          // console.log("RESPONSE : ", res.usersData);
+        }
         else
-          console.log("Error : ", res.error);
+          console.log("Error :", res.error);
       } catch (error) {
-        console.log("Error: ", error);
+        console.log("Error :", error);
       }
     };
     if (user)
@@ -63,11 +66,12 @@ function DashRanking() {
       championsClass = `player__name_level--champions`;
     }
     let userValue = player[sortOption];
+
     return (
       <>
         <div className="player__pos_pic">
           <p className={trophyClass}> #{position}</p>
-          <img src={userImages.length ? userImages[position - 1] : MavSvg} alt="Player" />
+          <img src={userImages.length ? userImages.find((img) => img.hasOwnProperty(player.id))?.[player.id] : MavSvg} alt="Player" />
         </div>
         <div className="player__name_level">
           <p className={championsClass}> {player.username} </p>

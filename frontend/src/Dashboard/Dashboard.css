@@ -83,7 +83,7 @@
     display: flex;
     height: 15px;
     border-radius: 6px;
-    animation: moving 2s ease-in-out;
+    animation: moving 4s ease-in-out;
 }
 
 @keyframes moving {
@@ -99,12 +99,13 @@
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
     background-color: #f4effa;
+    /* transition: width 1s ease-in; */
 }
 .head__game-stats .head__game-stats__line .right-side{
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
-    background-color: #826aed
-;
+    background-color: #826aed;
+    /* transition: width 1s ease-out; */
 }
 
 .head__game-stats .head__game-stats__statistics {
