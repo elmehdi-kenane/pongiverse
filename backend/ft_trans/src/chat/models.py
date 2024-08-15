@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 User = settings.AUTH_USER_MODEL
+
 def default_cover():
 	return 'uploads/roomCover.png'
 

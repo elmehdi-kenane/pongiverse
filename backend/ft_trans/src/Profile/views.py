@@ -54,7 +54,6 @@ def friends_with_directs(request, username):
     friends = Friendship.objects.filter(user=user)
     data = []
     for friend in friends:
-        print("HHHHAHHHAHHAHHHAHA")
         last_message = get_direct_last_message(username, friend.friend.username)
         friend_data = {
             'id' : friend.friend.id,

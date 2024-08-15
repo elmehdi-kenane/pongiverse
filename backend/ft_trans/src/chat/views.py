@@ -74,6 +74,8 @@ def chat_room_update_icon(request):
             room = Room.objects.get(id=request.data.get('room'))
         except Room.DoesNotExist:
             return Response({'error': 'chat room name not found!'}, status=400)
+        if room.icon.path and default_storage.exists(room.icon.path):
+                default_storage.delete(room.icon.path)
         room.icon = request.data.get('icon')
         room.save()
         return Response({'success': 'chat room icon changed successfully'}, status=200)
@@ -86,9 +88,15 @@ def chat_room_update_cover(request):
             room = Room.objects.get(id=request.data.get('room'))
         except Room.DoesNotExist:
             return Response({'error': 'chat room name not found!'}, status=400)
+        cover = request.data.get('cover')
+        print("COVERRRRR: ",cover)
+        if cover is None or cover == 'null':
+            return Response({'error': 'invalid chat room cover!'}, status=400)
+        if room.cover.path and default_storage.exists(room.cover.path):
+                default_storage.delete(room.cover.path)       
         room.cover = request.data.get('cover')
         room.save()
-        return Response({'success': 'chat room cover changed successfully'}, status=200)
+        return Response({'success': 'chat room cover changed successfully', 'data': {'id' : room.id , 'cover': room.cover.path}}, status=200)
     return Response({'error': 'Invalid request method'}, status=400)
 
 
@@ -136,7 +144,8 @@ def create_chat_room(request):
                 "name": new_room.name,
                 "topic": new_room.topic,
                 "icon_url": new_room.icon.path,
-                "membersCount": new_room.members_count
+                "membersCount": new_room.members_count,
+                'cover': new_room.cover.path
             }
         })
     return Response({'error': 'Invalid request method'}, status=400)
@@ -150,6 +159,7 @@ def channel_list(request, username):
         print(memberships)
         rooms = []
         for membership in memberships:
+            print("\n\n\n Path cover:>",membership.room.cover.path, '\n\n\n')
             room_data = {
                 'id': membership.room.id,
                 'role': membership.roles,
