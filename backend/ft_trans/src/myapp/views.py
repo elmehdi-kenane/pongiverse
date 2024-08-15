@@ -26,6 +26,7 @@ from urllib.parse import urlencode
 import json
 import os
 import certifi
+from mainApp.models import UserMatchStatics
 
 
 
@@ -58,6 +59,17 @@ class SignUpView(APIView):
 			response = Response()
 			data = get_tokens_for_user(user)
 			csrf.get_token(request)
+			user = customuser.objects.filter(id=user.id).first()
+			if user:
+				print("--------------------------------------")
+				UserMatchStatics.objects.create(
+					player=user,
+					wins=0,
+					losts=0,
+					level=0,
+					total_xp=0,
+					goals=0
+				)
 			response.data = {"Case": "Sign up successfully", "data": data}
 			return response
 		else:

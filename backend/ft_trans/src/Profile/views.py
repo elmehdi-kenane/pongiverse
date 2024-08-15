@@ -252,3 +252,21 @@ def get_users_data(request, username):
     else:
         err_res = Response(data={'error': 'Error Getting UsersData!'}, status=status.HTTP_400_BAD_REQUEST)
         return err_res
+
+@api_view(["GET"])
+def get_user_games_wl(request, username):
+    user = customuser.objects.filter(username=username).first()
+    if user is not None:
+        user_games = UserMatchStatics.objects.filter(player=user).first()
+        if user_games is not None:
+            res_data = {
+                'wins': user_games.wins,
+                'losts': user_games.losts,
+                'goals': user_games.goals,
+            }
+            return Response(data={"userGames": res_data}, status=status.HTTP_200_OK)
+        else:
+            return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+       return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
+       
