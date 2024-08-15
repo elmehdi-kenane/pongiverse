@@ -1,17 +1,61 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import racketSvg from "./assets/racket.svg"
-
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-
-const games = 12;
-  const win = 6;
-  const lost = games - win;
-  const winPcnt = ((win * 100)/games).toFixed(0);
-  const lostPcnt = 100 - winPcnt;
+import AuthContext from "../navbar-sidebar/Authcontext";
 
 function DashboardHead() {
+
+  const {user} = useContext(AuthContext);
+  const [userGames, setUserGames] = useState({});
+
+  const [wins, setWins] = useState(0);
+  const [losts, setLosts] = useState(0);
+  const [games, setGames] = useState(0);
+  const [winPcnt, setWinPcnt] = useState(50);
+  const [lostPcnt, setLostPcnt] = useState(50);
+
+
+  useEffect(()=>{
+    if (userGames){
+      const userWins = userGames.wins
+      const userLosts = userGames.losts
+      const userGame = userWins + userLosts
+      const winPct = ((userWins * 100)/userGame).toFixed(0)
+      setWins(userWins)
+      setLosts(userLosts)
+      setGames(userWins + userLosts)
+      setWinPcnt(winPct)
+      setLostPcnt(100 - winPct)
+    }
+  },[userGames])
+
+  useEffect(()=>{
+    const fetchUserGames = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:8000/profile/getUserGames/${user}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const res = await response.json();
+        if (response.ok)
+          setUserGames(res.userGames);
+        else
+          console.log("Error : ", res.error);
+      } catch (error) {
+        console.log("Error: ", error);
+      }
+    }
+    if (user)
+      fetchUserGames()
+  },[user])
+
   return (
     <div className="dashpage__head dash--space"> 
         <div className="head__game-stats dash--bkborder">
@@ -38,8 +82,8 @@ function DashboardHead() {
           </div>
 
           <div className='head__game-stats__statistics'>
-            <p className='dash--win-color'> {win} Won </p>
-            <p className='dash--lost-color'> {lost} Lost</p>
+            <p className='dash--win-color'> {wins} Won </p>
+            <p className='dash--lost-color'> {losts} Lost</p>
           </div>
 
         </div>
