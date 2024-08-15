@@ -73,13 +73,25 @@ def friends_with_directs(request, username):
 def getUserData(request, username):
     user = customuser.objects.filter(username=username).first()
     if user is not None:
-        user_data = {'pic': user.avatar.path,
-                     'bg': user.background_pic.path,
-                     'bio': user.bio,
-                     'email' : user.email,
-                     'level': 0,
-                     'country': user.country,
-                     }
+        user_level = UserMatchStatics.objects.filter(player=user).first()
+        if user_level is not None:
+            user_data = {'pic': user.avatar.path,
+                        'bg': user.background_pic.path,
+                        'bio': user.bio,
+                        'email' : user.email,
+                        'level': user_level.level,
+                        'xp': user_level.total_xp,
+                        'country': user.country,
+                        }
+        else:
+            user_data = {'pic': user.avatar.path,
+                        'bg': user.background_pic.path,
+                        'bio': user.bio,
+                        'email' : user.email,
+                        'level': 0,
+                        'xp': 0,
+                        'country': user.country,
+                        }
         success_response = Response(data={"userData": user_data}, status=status.HTTP_200_OK)
         return success_response
     else:
@@ -246,6 +258,7 @@ def get_users_data(request, username):
                 'level': user.level,
                 'xp': user.total_xp,
                 'goals': user.goals,
+                'id': user.player.id,
             })
         response = Response(data={"usersData": res_data}, status=status.HTTP_200_OK)
         return response
@@ -253,6 +266,8 @@ def get_users_data(request, username):
         err_res = Response(data={'error': 'Error Getting UsersData!'}, status=status.HTTP_400_BAD_REQUEST)
         return err_res
 
+#**--------------------- GetUsers Games Lost - Wins ---------------------**#
+   
 @api_view(["GET"])
 def get_user_games_wl(request, username):
     user = customuser.objects.filter(username=username).first()
@@ -269,4 +284,3 @@ def get_user_games_wl(request, username):
             return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
     else:
        return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
-       

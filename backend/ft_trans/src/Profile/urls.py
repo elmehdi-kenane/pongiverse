@@ -18,5 +18,4 @@ urlpatterns = [
     path('getUsersData/<str:username>', views.get_users_data),
     path('getUserImage/<str:username>', views.get_user_image),
     path('getUserGames/<str:username>', views.get_user_games_wl),
-
 ]
