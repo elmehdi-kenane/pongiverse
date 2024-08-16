@@ -6,6 +6,8 @@ import MyMessage from "./myMessage";
 import OtherMessage from "./otherMessage";
 import { useClickOutSide } from "../Chat/chatConversation";
 import SendMessage from "./sendMessage";
+import { useParams } from "react-router-dom";
+import LeaveChatRoomPopUp from "./leaveChatRoomPopUp";
 
 const ChatRoomConversation = (props) => {
   const {
@@ -14,6 +16,7 @@ const ChatRoomConversation = (props) => {
     chatRoomConversations,
     setChatRoomConversations,
   } = useContext(ChatContext);
+  const [showLeaveRoomPopUp,setShowLeaveRoomPopUp] = useState(false)
   const [showChatRoomOptions, setShowChatRoomOptions] = useState(false);
   const [messages, setMessages] = useState([]);
   const [messageToSend, setMessageToSend] = useState("");
@@ -60,48 +63,6 @@ const ChatRoomConversation = (props) => {
   }, [selectedChatRoom]);
 
   useEffect(() => {
-    if (chatSocket) {
-      chatSocket.onmessage = (e) => {
-        let data = JSON.parse(e.data);
-        console.log("socket message ", data);
-
-        if (data.type === "newMessage") {
-          setRecivedMessage(data.data);
-          console.log(data.data);
-        } else if (data.type === "memberleaveChatRoom") {
-          memeberLeaveChatRoomUpdater(data.message);
-        }
-      };
-    }
-  }, [chatSocket]);
-
-  const memeberLeaveChatRoomUpdater = (data) => {
-    // const allRooms = myRoomsRef.current;
-    console.log("data", data);
-    if (data && data.user === user) {
-      const updatedRooms = chatRoomConversations.filter(
-        (myroom) => myroom.name !== data.name
-      );
-      console.log("upadteeddddd: ", updatedRooms)
-      setChatRoomConversations(updatedRooms);
-      setSelectedChatRoom({
-        name: "",
-        status: "",
-      });
-      props.setSelectedItem("");
-    } 
-    // else {
-    //   const updatedRooms = chatRoomConversations.map((room) => {
-    //     if (room.name === data.name) {
-    //       return { ...room, membersCount: data.membersCount };
-    //     }
-    //     return room;
-    //   });
-    //   setMyRooms(updatedRooms);
-    // }
-  };
-
-  useEffect(() => {
     if (recivedMessage !== null) {
       setMessages((prev) => [...prev, recivedMessage]);
     }
@@ -119,6 +80,13 @@ const ChatRoomConversation = (props) => {
   });
   return (
     <>
+        {showLeaveRoomPopUp && 
+          <LeaveChatRoomPopUp
+          setShowLeaveRoomPopUp={setShowLeaveRoomPopUp}
+          roomId={selectedChatRoom.roomId}
+          setSelectedChatRoom={setSelectedChatRoom}
+          />
+        }          
       <div className="conversation-header">
         <div className="conversation-header-info">
           <img
@@ -158,11 +126,7 @@ const ChatRoomConversation = (props) => {
           />
           {showChatRoomOptions ? (
             <div className="room-options-container">
-              <div
-                className="leave-chat-room-option"
-              >
-                Leave Chat Room
-              </div>
+              <div className="leave-chat-room-option" onClick={()=>setShowLeaveRoomPopUp(true)}>Leave Chat Room</div>
               <div className="chat-room-info-option">Chat Room Info</div>
               <div className="members-list-option">Members List</div>
               <div className="change-wallpaper-option">Wallpaper</div>

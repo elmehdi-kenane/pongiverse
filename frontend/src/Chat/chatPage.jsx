@@ -6,6 +6,7 @@ import ChatConversation from "./chatConversation";
 import ChatRoomConversation from "./chatRoomConversation";
 import { useContext, useState } from "react";
 import * as ChatIcons from "../assets/chat/media/index";
+import { Toaster } from "react-hot-toast";
 
 const Chat = () => {
   const {
@@ -31,6 +32,7 @@ const Chat = () => {
 
   return (
     <div className="chat-page">
+      <Toaster/>
       <div className="chat-container">
         <div
           className={

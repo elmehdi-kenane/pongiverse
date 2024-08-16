@@ -71,7 +71,6 @@ const MyRoomContent = (props) => {
       setChatRoomConver(file);
     }
   };
-
   return (
     <>
       <div className="my-room-header">

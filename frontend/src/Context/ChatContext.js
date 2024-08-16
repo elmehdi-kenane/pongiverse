@@ -20,9 +20,9 @@ export const ChatProvider = ({ children }) => {
   const [isHome, setIsHome] = useState(true);
   const chatRoomConversationsRef = useRef(chatRoomConversations);
 
-useEffect(() => {
-  chatRoomConversationsRef.current = chatRoomConversations;
-}, [chatRoomConversations]);
+  useEffect(() => {
+    chatRoomConversationsRef.current = chatRoomConversations;
+  }, [chatRoomConversations]);
 
   const [selectedChatRoom, setSelectedChatRoom] = useState({
     name: "",
@@ -49,25 +49,25 @@ useEffect(() => {
       });
       const blob = await response.blob();
       return URL.createObjectURL(blob);
+      // return { [item.id]: URL.createObjectURL(blob) };
     });
     return await Promise.all(promises);
-  };  
+  };
   //Fetch Conversations images
   useEffect(() => {
     const fetchDirectConversationsImages = async () => {
-      const images = await fetchImages(directConversations, 'image');
+      const images = await fetchImages(directConversations, "image");
       setDirectsImages(images);
     };
-  
+
     if (directConversations.length) {
       fetchDirectConversationsImages();
     }
   }, [directConversations]);
-
   //Fetch invitaion chat rooms images
   useEffect(() => {
     const fetchChatRoomInvitationsIcons = async () => {
-      const images = await fetchImages(chatRoomInvitations, 'icon_url');
+      const images = await fetchImages(chatRoomInvitations, "icon_url");
       setChatRoomInvitionsIcons(images);
     };
     if (chatRoomInvitations.length) {
@@ -78,41 +78,35 @@ useEffect(() => {
   //Fetch suggested chat rooms images
   useEffect(() => {
     const fetchSuggestedChatRoomsIcons = async () => {
-      const images = await fetchImages(suggestedChatRooms, 'icon_url');
+      const images = await fetchImages(suggestedChatRooms, "icon_url");
       setSuggestedChatRoomsIcons(images);
     };
-  
+
     if (suggestedChatRooms.length) {
       fetchSuggestedChatRoomsIcons();
     }
   }, [suggestedChatRooms]);
-  
 
-  useEffect(()=> {
-    if(chatRoomCovers.length)
-      console.log("Heeeeeeeeeeeere: ",chatRoomCovers)
-  }, [chatRoomCovers])
+
 
   //Fetch chat rooms images and covers
   useEffect(() => {
     const fetchChatRoomConversationsIcons = async () => {
-      const images = await fetchImages(chatRoomConversations, 'icon_url');
+      const images = await fetchImages(chatRoomConversations, "icon_url");
       setChatRoomIcons(images);
     };
     const fetchChatRoomConversationsCovers = async () => {
-      const images = await fetchImages(chatRoomConversations, 'cover');
+      const images = await fetchImages(chatRoomConversations, "cover");
       setChatRoomCovers(images);
     };
     if (chatRoomConversations.length) {
-      console.log("zaazazazza: ",chatRoomConversations)
+      console.log("zaazazazza: ", chatRoomConversations);
       fetchChatRoomConversationsIcons();
       fetchChatRoomConversationsCovers();
-
     }
   }, [chatRoomConversations]);
-  
-  useEffect(() => {
 
+  useEffect(() => {
     const fetchChatRooms = async () => {
       try {
         const response = await fetch(
@@ -141,38 +135,39 @@ useEffect(() => {
 
     const fetchChatRoomInvitations = async () => {
       try {
-        const response = await fetch (
+        const response = await fetch(
           `http://localhost:8000/chatAPI/chatRoomInvitations/${user}`
-        )
-        let data = await response.json()
-        setChatRoomInvitations(data)
+        );
+        let data = await response.json();
+        setChatRoomInvitations(data);
+      } catch (error) {
+        console.log(error);
       }
-      catch (error) {
-        console.log(error)
-      }
-    }
+    };
 
     const fetchSuggestedChatRooms = async () => {
       try {
-        const response = await fetch (
+        const response = await fetch(
           `http://localhost:8000/chatAPI/suggestedChatRooms/${user}`
-        )
-        let data = await response.json()
+        );
+        let data = await response.json();
         // console.log("suggested chat room", data);
-        setSuggestedChatRooms(data)
+        setSuggestedChatRooms(data);
+      } catch (error) {
+        console.log(error);
       }
-      catch (error) {
-        console.log(error)
-      }
-    }
-    if (user && (location.pathname === "/mainpage/chat" || location.pathname === "/mainpage/groups")) {
+    };
+    if (
+      user &&
+      (location.pathname === "/mainpage/chat" ||
+        location.pathname === "/mainpage/groups")
+    ) {
       fetchChatRooms();
       fetchDirectsWithMessage();
-    if(user && location.pathname === '/mainpage/groups') {
-      fetchChatRoomInvitations()
-      fetchSuggestedChatRooms()
-    }
-    
+      if (user && location.pathname === "/mainpage/groups") {
+        fetchChatRoomInvitations();
+        fetchSuggestedChatRooms();
+      }
     }
   }, [location.pathname, user]);
 
@@ -192,12 +187,12 @@ useEffect(() => {
     setIsHome: setIsHome,
     chatRoomInvitations: chatRoomInvitations,
     setChatRoomInvitations: setChatRoomInvitations,
-    chatRoomInvitationsIcons:chatRoomInvitationsIcons,
+    chatRoomInvitationsIcons: chatRoomInvitationsIcons,
     suggestedChatRooms: suggestedChatRooms,
     setSuggestedChatRooms: setSuggestedChatRooms,
-    suggestedChatRoomsIcons:suggestedChatRoomsIcons,
+    suggestedChatRoomsIcons: suggestedChatRoomsIcons,
     chatRoomConversationsRef: chatRoomConversationsRef,
-    chatRoomCovers:chatRoomCovers
+    chatRoomCovers: chatRoomCovers,
   };
   return (
     <ChatContext.Provider value={contextData}>{children}</ChatContext.Provider>

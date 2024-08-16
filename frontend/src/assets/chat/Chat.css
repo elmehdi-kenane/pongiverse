@@ -160,6 +160,7 @@ button.rooms-switch-button-active {
 
 .chat-window,
 .chat-window-hidden {
+  position: relative;
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -538,4 +539,27 @@ textarea.conversation-input::placeholder {
   border-radius: 6.25rem;
   background-color: #665dfe;
   color: white;
+}
+
+.Leave-chat-room-pop {
+  position: absolute;
+  width: 350px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ccc;
+  background-color: #1b062a;
+  border: #826aed solid 2px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 5px;
+  gap: 15px;
+  padding: 10px;
+}
+
+.Leave-chat-room-question{
+  font-size: 18px;
+  font-weight: 600;
 }
