@@ -5,11 +5,14 @@ User = settings.AUTH_USER_MODEL
 def default_cover():
 	return 'uploads/roomCover.png'
 
+def default_icon():
+	return 'uploads/roomIcon.png'
+
 class Room(models.Model):
   name = models.CharField(max_length=100)
   members = models.ManyToManyField(User, related_name='rooms', through='Membership')
   topic = models.TextField(blank=True)
-  icon = models.ImageField(upload_to='uploads/')
+  icon = models.ImageField(upload_to='uploads/', default=default_icon)
   cover = models.ImageField(upload_to='uploads/',default=default_cover)
   members_count = models.IntegerField(default=0)
   visiblity = models.TextField(default='public')
