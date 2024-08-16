@@ -3,6 +3,7 @@ import { rankData } from "../helpers/Data";
 import MavSvg from "../../assets/Profile/Group.svg"
 
 import AuthContext from "../../navbar-sidebar/Authcontext";
+import { Link } from "react-router-dom";
 
 function DashRanking() {
   const { user } = useContext(AuthContext);
@@ -116,9 +117,9 @@ function DashRanking() {
         {sortUsersData(sortOption)}
         {usersData.map((player, key) => {
           return (
-            <div className="player__classment" key={key}>
+            <Link className="player__classment" key={key} to={`/mainpage/profile/${player.username}`}>
               {RankClassment(key + 1, player)}
-            </div>
+            </Link>
           );
         })}
       </div>

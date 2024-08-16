@@ -229,6 +229,7 @@
     height: 44.2px;
     align-items: center;
     border-bottom: #250939 solid 3px;
+    text-decoration: none;
 }
 
 .dashpage__body__rank__classment .player__classment:hover{
@@ -269,6 +270,7 @@
 .dashpage__body__rank__classment .player__classment .player__pos_pic img{
     border-radius: 50%;
     width: 35px;
+    height: 35px;
     margin-left: 5px;
 }
 

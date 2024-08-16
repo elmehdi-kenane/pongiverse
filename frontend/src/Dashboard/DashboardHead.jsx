@@ -13,8 +13,8 @@ function DashboardHead() {
   const [wins, setWins] = useState(0);
   const [losts, setLosts] = useState(0);
   const [games, setGames] = useState(0);
-  const [winPcnt, setWinPcnt] = useState(0);
-  const [lostPcnt, setLostPcnt] = useState(0);
+  const [winPcnt, setWinPcnt] = useState(50);
+  const [lostPcnt, setLostPcnt] = useState(50);
 
 
   useEffect(()=>{
