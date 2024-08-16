@@ -46,12 +46,6 @@ import { ToastContainer, Bounce } from 'react-toastify';
 import { SocketDataContextProvider } from './navbar-sidebar/SocketDataContext';
 import LocalTournamentFillMembers from "./Tournament/LocalTournament/LocalTournamentFillMembers";
 
-const ChatGroupsWrapper = ({ element }) => (
-  <ChatProvider>
-    {element}
-  </ChatProvider>
-);
-
 const App = () => {
   return (
     <div className="page">
@@ -69,11 +63,11 @@ const App = () => {
               <Route path="/Error404" element={<ErrorPage />} />
               <Route path="/mainpage" element={<NavbarSidebar />}>
                 <Route path="dashboard" element={<Dashboard />} />
-                <Route path="profile/:userId" element={<ProfileWrapper child={<Profile />} />} />
+                <Route path="profile/:userId" element={<ChatProvider element={<ProfileWrapper child={<Profile />} />} />} />
                 <Route path="settings" element={<SettingsWrapper child={<Settings />} />} />
-                <Route path="chat" element={<ChatGroupsWrapper element={<Chat />} />} />
+                <Route path="chat" element={<ChatProvider element={<Chat />} />} />
                 <Route path="friends" element={<Friends />} />
-                <Route path="groups" element={<ChatGroupsWrapper element={<Rooms />} />} />
+                <Route path="groups" element={<ChatProvider element={<Rooms />} />} />
                 <Route path="game" element={<Modes />} />
                 <Route path="game/board" element={<GameSettings />} />
                 <Route path="game/solo" element={<Solo />} />

@@ -5,7 +5,7 @@ const ChatContext = createContext();
 
 export default ChatContext;
 
-export const ChatProvider = ({ children }) => {
+export const ChatProvider = ({ element }) => {
   let location = useLocation();
   const { user } = useContext(AuthContext);
   const [chatRoomConversations, setChatRoomConversations] = useState([]);
@@ -184,6 +184,6 @@ useEffect(() => {
     chatRoomConversationsRef: chatRoomConversationsRef
   };
   return (
-    <ChatContext.Provider value={contextData}>{children}</ChatContext.Provider>
+    <ChatContext.Provider value={contextData}>{element}</ChatContext.Provider>
   );
 };
