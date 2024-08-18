@@ -8,7 +8,7 @@ function ProfileLevel() {
       
       setTimeout(() => {
         setPer(userXp*100/1000)
-      }, 1000);
+      }, 2000);
 
       return (
       <div className="profile-userlevel">

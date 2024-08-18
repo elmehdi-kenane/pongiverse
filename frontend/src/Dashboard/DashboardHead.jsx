@@ -16,7 +16,6 @@ function DashboardHead() {
   const [winPcnt, setWinPcnt] = useState(50);
   const [lostPcnt, setLostPcnt] = useState(50);
 
-
   useEffect(()=>{
     if (userGames){
       const userWins = userGames.wins
@@ -26,12 +25,8 @@ function DashboardHead() {
       setWins(userWins)
       setLosts(userLosts)
       setGames(userWins + userLosts)
-
-      // setTimeout(() => {
-        setWinPcnt(winPct)
-        setLostPcnt(100 - winPct)
-      // }, 1000);
-
+      setWinPcnt(winPct)
+      setLostPcnt(100 - winPct)
     }
   },[userGames])
 
