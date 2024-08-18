@@ -1,7 +1,7 @@
 import 'react-toastify/dist/ReactToastify.css';
 import "./assets/navbar-sidebar/index.css";
 import NavbarSidebar from "./navbar-sidebar/NavbarSidebar";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./navbar-sidebar/Authcontext";
 import SignIn from "./homepage/SignIn";
 import SignUp from "./homepage/SignUp";
@@ -88,6 +88,7 @@ const App = () => {
 				<Route path="game/localtournamentbracket" element={<LocalTournamentBracket />}/>
 				<Route path="game/localtournamentfillmembers" element={<LocalTournamentFillMembers />}/>
               </Route>
+              <Route path="*" element={<Navigate to="/Error404" />} />
             </Routes>
             <ToastContainer
               position="top-right"
