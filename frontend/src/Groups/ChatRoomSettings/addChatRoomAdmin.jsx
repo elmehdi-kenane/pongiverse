@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import ChatRoomMember from "./chatRoomMember";
 
 const AddChatRoomAdmin = (props) => { 
-    const [allChatRoomMembers, setAllChatRoomMembers] = useState([]);
+  const [allChatRoomMembers, setAllChatRoomMembers] = useState([]);
 
   useEffect(() => {
     const fetchAllChatRoomMembers = async () => {

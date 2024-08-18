@@ -34,6 +34,7 @@ const RoomsNotifications = (props) => {
             roomIcon={chatRoomInvitationsIcons[index]}
             name={room.name}
             members={room.membersCount}
+            id={room.id}
           />
         ))
       ) : (

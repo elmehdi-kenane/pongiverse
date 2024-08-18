@@ -1,36 +1,60 @@
 import { useContext } from "react";
 import AuthContext from "../../navbar-sidebar/Authcontext";
+import ChatContext from "../../Context/ChatContext";
 import CancelIcon from "@mui/icons-material/Cancel";
+import toast from "react-hot-toast";
 
 const InvitationRoom = (props) => {
-  const { chatSocket, user } = useContext(AuthContext);
-  const onClickAcceptInvitaion = () => {
-    if (chatSocket) {
-      chatSocket.send(
-        JSON.stringify({
-          type: "roomInvitationAccepted",
-          message: {
-            user: user,
-            room: props.name,
-          },
+  const {user } = useContext(AuthContext);
+  const {chatRoomInvitationsRef, setChatRoomInvitations, chatRoomConversationsRef,setChatRoomConversations } = useContext(ChatContext);
+  const onClickAcceptInvitaion = async () => {
+    const toastId = toast.loading("Processing invitation...");
+    try { 
+      const response = await fetch ('http://localhost:8000/chatAPI/accpetChatRoomInvite', {
+        method: 'POST',
+        headers: {'Content-type': 'application/json'},
+        body: JSON.stringify({
+          room: props.id,
+          user: user,
         })
-      );
+      })
+      const data = await response.json()
+      if (response.ok) {
+        setTimeout(()=>{
+          toast.success(data.success)
+          toast.dismiss(toastId);
+          let roomInvitations = chatRoomInvitationsRef.current
+          let updatedRooms = roomInvitations.filter(
+            (room) => room.id !== props.id
+          );
+          setChatRoomInvitations(updatedRooms)
+          const currentChatRooms = chatRoomConversationsRef.current;
+          setChatRoomConversations([...currentChatRooms, data.room]);
+        }, 500)
+      } else toast.error(data.error)
+
+    } catch (error) {
+      console.log(error)
+      toast.error("An error occurred while processing the invitation.");
+      toast.dismiss(toastId);
     }
   };
 
-  const onClickCanelRoomInvitation = () => {
-    if (chatSocket) {
-      chatSocket.send(
-        JSON.stringify({
-          type: "roomInvitationCancelled",
-          message: {
-            user: user,
-            room: props.name,
-          },
+  const onClickCanelRoomInvitation = async () => {
+    try {
+      const response = await fetch ('http://localhost:8000/cancelChatRoomInvite', {
+        method: 'POST',
+        header: {'Content-type' : 'application/json'},
+        body: JSON.stringify({
+          room: props.id,
+          user: user,
         })
-      );
+      })
+    } catch (error) {
+      console.log(error)
     }
   };
+
   return (
     <div className="room-ivnitation-wrapper">
     <div className="room-invitations-infos">

@@ -19,10 +19,15 @@ export const ChatProvider = ({ children }) => {
   const [suggestedChatRoomsIcons, setSuggestedChatRoomsIcons] = useState([]);
   const [isHome, setIsHome] = useState(true);
   const chatRoomConversationsRef = useRef(chatRoomConversations);
+  const chatRoomInvitationsRef = useRef(chatRoomInvitations);
 
   useEffect(() => {
     chatRoomConversationsRef.current = chatRoomConversations;
   }, [chatRoomConversations]);
+
+  useEffect(() => {
+    chatRoomInvitationsRef.current = chatRoomInvitations;
+  }, [chatRoomInvitations]);
 
   const [selectedChatRoom, setSelectedChatRoom] = useState({
     name: "",
@@ -140,6 +145,7 @@ export const ChatProvider = ({ children }) => {
         );
         let data = await response.json();
         setChatRoomInvitations(data);
+        console.log("invitations: ",data)
       } catch (error) {
         console.log(error);
       }
@@ -193,6 +199,7 @@ export const ChatProvider = ({ children }) => {
     suggestedChatRoomsIcons: suggestedChatRoomsIcons,
     chatRoomConversationsRef: chatRoomConversationsRef,
     chatRoomCovers: chatRoomCovers,
+    chatRoomInvitationsRef: chatRoomInvitationsRef,
   };
   return (
     <ChatContext.Provider value={contextData}>{children}</ChatContext.Provider>

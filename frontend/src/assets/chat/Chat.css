@@ -12,7 +12,7 @@
   --toastify-toast-top: 90px;
   --toastify-color-progress-light: #bb86fc;
   --toastify-color-transparent: rgba(255, 255, 255, 1);
-  --toastify-font-family: "IBM Plex Sans", sans-serif;;
+  --toastify-font-family: "IBM Plex Sans", sans-serif;
 }
 
 .chat-page {
@@ -74,8 +74,8 @@ input.chat-search-input::placeholder {
   font-size: 12px;
 }
 input.chat-search-input:focus {
-  outline-color: #913DCE;
-  opacity: .7;
+  outline-color: #913dce;
+  opacity: 0.7;
 }
 .chat-switch-button-wrapper {
   width: 100%;
@@ -133,6 +133,8 @@ button.rooms-switch-button-active {
 
 .conversation-item-avatar {
   min-width: 35px;
+  max-width: 35px;
+  width: 35px;
   height: 35px;
   border-radius: 50px;
 }
@@ -169,11 +171,11 @@ button.rooms-switch-button-active {
     to right bottom,
     rgb(68, 45, 106),
     rgba(74, 37, 139, 0.5)
-    );
+  );
   width: 80%;
 }
 
-.chat-window-empty{
+.chat-window-empty {
   width: 100%;
   height: 100%;
   display: flex;
@@ -194,7 +196,7 @@ img.empty-chat-icon {
 }
 
 .chat-window-empty-message {
-  opacity: .7;
+  opacity: 0.7;
   font-size: 15px;
   font-weight: 500;
 }
@@ -277,7 +279,7 @@ img.empty-chat-icon {
 .change-wallpaper-option:hover,
 .leave-chat-room-option:hover,
 .chat-room-info-option:hover,
-.members-list-optio:hover {
+.members-list-option:hover {
   background-color: #7660d9;
 }
 
@@ -367,13 +369,13 @@ textarea.conversation-input {
 textarea.conversation-input::placeholder {
   font-family: "IBM Plex Sans", sans-serif;
   color: white;
-  opacity: .8;
+  opacity: 0.8;
   color: #ccc;
 }
 
 .conversation-emoji-picker,
 .conversation-file-upload {
-  opacity: .6;
+  opacity: 0.6;
   height: 26px;
   cursor: pointer;
   margin-bottom: 5px;
@@ -392,7 +394,7 @@ textarea.conversation-input::placeholder {
   width: 35px;
   height: 35px;
   cursor: pointer;
-  opacity: .7;
+  opacity: 0.7;
 }
 
 .toast-container {
@@ -529,7 +531,7 @@ textarea.conversation-input::placeholder {
 
 .conversation-item-last-msg-count {
   display: inline-block;
-  padding: .25em .4em;
+  padding: 0.25em 0.4em;
   font-size: 75%;
   font-weight: 700;
   line-height: 1;
@@ -559,7 +561,100 @@ textarea.conversation-input::placeholder {
   padding: 10px;
 }
 
-.Leave-chat-room-question{
+.Leave-chat-room-question {
   font-size: 18px;
   font-weight: 600;
+}
+
+.chat-room-infos-conatiner {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ccc;
+  background-color: #1b062a;
+  /* border: #826aed solid 2px; */
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 5px;
+  gap: 15px;
+  padding: 10px;
+}
+
+.chat-room-members-container {
+  position: absolute;
+  width: 390px;
+  height: 550px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ccc;
+  background-color: #1b062a;
+  border: #826aed solid 2px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 5px;
+  gap: 15px;
+  padding: 10px 0px;
+}
+
+.chat-room-members-list {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.chat-room-member {
+  display: flex;
+  justify-content: space-between;
+  height: 47px;
+  align-items: center;
+  padding: 0 7px;
+  flex-shrink: 0;
+}
+.chat-room-member:hover {
+  background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
+  transition: ease-in 0.2s;
+  box-shadow: 0 2px 30px 0 #250939;
+}
+
+
+.chat-room-member:hover .chat-room-member-message-button{
+background-color: #826aed;
+transition: ease-in 0.3s;
+}
+
+.chat-room-member-name {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 100%;
+  width: 100%;
+  text-decoration: none;
+}
+
+.chat-room-member-avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 35px;
+}
+
+.chat-room-member-message-button {
+  display: flex;
+  background-color: #250939;
+  border-radius: 5px;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 6px;
+  text-decoration: none;
 }

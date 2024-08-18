@@ -1,15 +1,13 @@
-
+import CloseIcon from "@mui/icons-material/Close";
 
 const ChatRoomSettings = (props) => {
     return (
         <div className="room-settings-menu">
           <div className="room-settings-actions">
-            <img
-              src={props.closeButton}
-              alt=""
-              className="room-settings-close-button"
-              onClick={() => props.setShowSettings(false)}
-            />
+            <div className="room-settings-header">
+              <div className="room-settings-head">Room Settings</div>
+              <CloseIcon onClick={() => props.setShowSettings(false)}  className="room-settings-close-button"/>
+            </div>
             <div
               className="room-settings-change-name"
               onClick={() => props.setChangeRoomName(true)}

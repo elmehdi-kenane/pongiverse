@@ -15,5 +15,8 @@ urlpatterns = [
     path('chatRoomInvitations/<str:username>', views.rooms_invitations, name='room-invitations'),
     path('suggestedChatRooms/<str:username>', views.suggested_chat_rooms, name='suggested-chat-rooms'),
     path('changeChatRoomCover', views.chat_room_update_cover, name='chat-room-update-cover'),
+    path('chatRoomMembersList', views.chat_room_members_list, name='chat-room-members-list'),
+    path('accpetChatRoomInvite', views.accept_chat_room_invite, name='accept-chat-room-invite'),
+    path('cancelChatRoomInvite', views.cancel_chat_room_invite, name='cancel-chat-room-invite'),
 
 ]

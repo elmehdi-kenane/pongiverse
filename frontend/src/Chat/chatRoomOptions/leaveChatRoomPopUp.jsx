@@ -1,8 +1,8 @@
 import CloseIcon from "@mui/icons-material/Close";
-import { LeaveChatRoomSubmitter } from "../Groups/ChatRoomSettings/leaveChatRoom";
+import { LeaveChatRoomSubmitter } from "../../Groups/ChatRoomSettings/leaveChatRoom";
 import { useContext } from "react";
-import ChatContext from "../Context/ChatContext";
-import AuthContext from "../navbar-sidebar/Authcontext";
+import ChatContext from "../../Context/ChatContext";
+import AuthContext from "../../navbar-sidebar/Authcontext";
 
 const LeaveChatRoomPopUp = (props) => {
   const { user } = useContext(AuthContext);

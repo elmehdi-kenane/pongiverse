@@ -29,6 +29,7 @@ const MyRoom = (props) => {
         topic={props.topic}
         role={props.role}
         roomId={props.roomId}
+        membersCount={props.membersCount}
         RoomSettings={ChatIcons.RoomSettings}
         chatRoomCovers={props.chatRoomCovers}
       />

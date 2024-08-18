@@ -78,7 +78,7 @@ def chat_room_update_icon(request):
             room = Room.objects.get(id=request.data.get('room'))
         except Room.DoesNotExist:
             return Response({'error': 'chat room name not found!'}, status=400)
-        if room.icon.path and default_storage.exists(room.icon.path):
+        if room.icon.path and room.icon.url != '/uploads/roomIcon.png' and default_storage.exists(room.icon.path):
                 default_storage.delete(room.icon.path)
         room.icon = request.data.get('icon')
         room.save()
@@ -95,7 +95,7 @@ def chat_room_update_cover(request):
         cover = request.data.get('cover')
         if cover is None or cover == 'null':
             return Response({'error': 'invalid chat room cover!'}, status=400)
-        if room.cover.path and default_storage.exists(room.cover.path):
+        if room.cover.path and room.cover.url != '/uploads/roomCover.png' and  default_storage.exists(room.cover.path):
                 default_storage.delete(room.cover.path)       
         room.cover = request.data.get('cover')
         room.save()
@@ -138,7 +138,7 @@ def create_chat_room(request):
             else:
                 new_room = Room.objects.create(name=request.data.get('name'), topic=request.data.get(
                     'topic'), icon=request.FILES.get('icon'), visiblity=request.data.get('visibility'))
-            new_room.members_count += 1
+            new_room.members_count = 1
             new_room.save()
         elif room:
             return Response({'error': 'Chat room name is taken. Try a different one.'})
@@ -346,6 +346,7 @@ def rooms_invitations(request, username):
         for invitaion in invitations:
             room = Room.objects.get(id=invitaion.room_id)
             invitaion_data = {
+                'id': room.id,
                 "name": room.name,
                 "topic": room.topic,
                 "icon_url": room.icon.path,
@@ -354,3 +355,66 @@ def rooms_invitations(request, username):
             all_invitations.append(invitaion_data)
         return Response(all_invitations)
     return Response({'error': 'Invalid request method'}, status=400)
+
+
+@api_view(['POST'])
+def chat_room_members_list(request):
+    if request.method == 'POST':
+        try:
+            room = Room.objects.get(id=request.data.get('id'))
+        except Room.DoesNotExist:
+            return Response({'error': 'chat room not found'}, status=400)
+        memberships = Membership.objects.filter(room=room)
+        data = []
+        for member in memberships:
+            member_data = {
+                'username': member.user.username,
+                'avatar': member.user.avatar.path,
+            }
+            data.append(member_data)
+        return Response(data, status=200)
+
+    return Response({'error': 'Invalid request method'}, status=400)
+
+
+@api_view(['POST'])
+def accept_chat_room_invite(request):
+    if request.method == 'POST':
+        print(request.data.get('user'))
+        print(request.data.get('id'))
+        try:
+            user = customuser.objects.get(username=request.data.get('user'))
+        except customuser.DoesNotExist:
+            return Response({'error': 'user not found'}, status=400)
+        try:
+            room = Room.objects.get(id=request.data.get('room'))
+        except Room.DoesNotExist: 
+            return Response({'error': 'chat room not found'}, status=400)
+        try:
+            invitation = RoomInvitation.objects.get(user=user, room=room)
+        except RoomInvitation.DoesNotExist:
+            return Response({'error': 'opps, something went wrong'}, status=400)
+        Membership.objects.create(user=user, room=room, roles="member")
+        room.members_count +=1
+        invitation.delete()
+        room.save()
+        return Response({
+            'success': f'You have joined {room.name} chat room',
+            'room': {
+                "id": room.id,
+                "role": "member",
+                "name": room.name,
+                "topic": room.topic,
+                "icon_url": room.icon.path,
+                "membersCount": room.members_count,
+                'cover': room.cover.path
+            }
+        })
+
+
+    return Response({'error': 'Invalid request method'}, status=400)
+
+
+@api_view(['POST'])
+def cancel_chat_room_invite(request):
+    pass
