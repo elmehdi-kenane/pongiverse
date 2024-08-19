@@ -11,35 +11,10 @@ import ChatContext from '../../Groups/ChatContext'
 
 const ProfileUserFriends = () => {
 
-
   const { user } = useContext(AuthContext);
   const { userId } = useContext(ProfileContext);
   const [friendsData, setFriendsData] = useState([])
-  const [userImages, setUserImages] = useState([]);
-
   const {selectedDirect, setSelectedDirect} = useContext(ChatContext);
-
-  useEffect(()=> {
-    const fetchImages = async () => {
-			const promises = friendsData.map(async (user) => {
-				const response = await fetch(`http://localhost:8000/api/getImage`, {
-					method: "POST",
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({
-						image: user.pic
-					})
-				});
-				const blob = await response.blob();
-				return URL.createObjectURL(blob);
-			});
-			const images = await Promise.all(promises);
-			setUserImages(images);
-		};
-    if (friendsData.length)
-      fetchImages()
-  },[friendsData])
 
   useEffect(() => {
     const getUserFriends = async () => {
@@ -65,15 +40,14 @@ const ProfileUserFriends = () => {
       getUserFriends()
   }, [userId])
 
-
   const navigate = useNavigate();
   const handleProfileClick = (username) => {
     navigate(`/mainpage/profile/${username}`);
     // window.location.reload();
   };
 
-  const chatNavigate = (username, key) => {
-    const userImage = userImages.length ? userImages[key] : MavSvg
+  const chatNavigate = (username, pic) => {
+    const userImage = pic ? pic : MavSvg
     setSelectedDirect({
       name : username,
       status: true,
@@ -90,11 +64,11 @@ const ProfileUserFriends = () => {
           return (
             <div className='classment__friend' key={key}>
               <div className="friend__pic-name" onClick={() => handleProfileClick(player.username)}>
-                <img src={userImages.length ? userImages[key] : MavSvg} alt='playerImg' />
+                <img src={player.pic ? player.pic : MavSvg} alt='playerImg' />
                 <p> {player.username} </p>
               </div>
               {(user !== player.username) && 
-                <div className='chat__button no-select' to='/mainpage/chat' onClick={() => chatNavigate(player.username, key)}>
+                <div className='chat__button no-select' to='/mainpage/chat' onClick={() => chatNavigate(player.username, player.pic)}>
                   <img src={chatSvg} alt='chatIcon' />
                   <p style={{ cursor: 'pointer' }}> message </p>
                 </div>

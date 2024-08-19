@@ -13,18 +13,11 @@ function ProfileInfo() {
   
   const { user } = useContext(AuthContext);
   const {userId ,userBio, userPic, userBg} = useContext(ProfileContext);
-  const getTopRef = useRef(null);
 
   const isOwnProfile = user === userId;
 
-  useEffect(() => {
-    if (getTopRef.current) {
-      getTopRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [userId]);
-
   return (
-    <div className="profile-userinfo purple-glass" style={{backgroundImage: `url(${userBg})`}} ref={getTopRef}>
+    <div className="profile-userinfo purple-glass" style={{backgroundImage: `url(${userBg})`}}>
       {isOwnProfile ? 
       <Link to="/mainpage/settings" className="info-position">
         <EditIcon className='userinfo__edit info-position'/>

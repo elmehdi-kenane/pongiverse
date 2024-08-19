@@ -1,13 +1,42 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useId, useState } from 'react'
 
 import BarChartIcon from '@mui/icons-material/BarChart';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 import BarGraph from "../../Dashboard/charts/BarGraph"
 import LineGraph from '../../Dashboard/charts/LineGraph'
 import { profileLevel } from '../data/ProfileDataLevel';
+import ProfileContext from '../ProfileWrapper'
+
 
 function ProfileUserStatistics(){
     const [isLineChart, setIsLineChart] = useState(false);
+    const [userStcs, setUserStcs] = useState([])
+    const {userId} = useContext(ProfileContext);
+
+  useEffect(()=>{
+    const getUserStcs = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/profile/getUserStcs/${userId}`, {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+        const res = await response.json()
+        if (response.ok) {
+          console.log("Response UserStcs : ", res.userStcs);
+          // setUserStcs(res.userStcs)
+        }
+        else 
+          console.log("Error : ", res.error);
+      } catch (error) {
+        console.log("Error: ", error);
+      }
+    }
+
+    if (userId)
+      getUserStcs()
+  },[userId])
 
     const iconClick = () => {
       setIsLineChart(!isLineChart);
