@@ -48,24 +48,24 @@ export const SettingsWrapper = ({ child }) => {
     }, [user])
 
     useEffect(() => {
-        const getUserPic = async (picPath, fnc) => {
-            try {
-                const response = await fetch(`http://localhost:8000/api/getImage`, {
-                    method: "POST",
-                    headers: { 'Content-Type': 'application/json', },
-                    body: JSON.stringify({
-                        image: picPath
-                    })
-                });
-                const blob = await response.blob();
-                fnc(URL.createObjectURL(blob));
-            } catch (error) {
-                console.log("Error : ", error)
-            }
-        }
+        // const getUserPic = async (picPath, fnc) => {
+        //     try {
+        //         const response = await fetch(`http://localhost:8000/api/getImage`, {
+        //             method: "POST",
+        //             headers: { 'Content-Type': 'application/json', },
+        //             body: JSON.stringify({
+        //                 image: picPath
+        //             })
+        //         });
+        //         const blob = await response.blob();
+        //         fnc(URL.createObjectURL(blob));
+        //     } catch (error) {
+        //         console.log("Error : ", error)
+        //     }
+        // }
         if (userData) {
-            getUserPic(userData.pic, setUserPic)
-            getUserPic(userData.bg, setUserBg)
+            setUserPic(userData.pic)
+            setUserBg(userData.bg)
             setUserBio(userData.bio)
             setUserEmail(userData.email)
             setUserLevel(userData.level)

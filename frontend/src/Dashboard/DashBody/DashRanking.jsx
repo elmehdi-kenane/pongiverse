@@ -13,26 +13,6 @@ function DashRanking() {
   const [sortOption, setSortOption] = useState('level');
 
   useEffect(() => {
-    const fetchImages = async () => {
-      const promises = usersData.map(async (user) => {
-        const response = await fetch(`http://localhost:8000/profile/getUserImage/${user.username}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const blob = await response.blob();
-        // return URL.createObjectURL(blob);
-        return {[user.id] : URL.createObjectURL(blob)};
-      });
-      const images = await Promise.all(promises);
-      setUserImages(images);
-    };
-    if (usersData.length)
-      fetchImages();
-  }, [usersData]);
-
-  useEffect(() => {
     const getUsersData = async () => {
       try {
         const response = await fetch(
@@ -45,10 +25,8 @@ function DashRanking() {
           }
         );
         const res = await response.json();
-        if (response.ok) {
+        if (response.ok) 
           setUsersData(res.usersData);
-          // console.log("RESPONSE : ", res.usersData);
-        }
         else
           console.log("Error :", res.error);
       } catch (error) {
@@ -59,7 +37,7 @@ function DashRanking() {
       getUsersData();
   }, [user]);
 
-  const RankClassment = (position, player) => {
+  const RankClassment = (player, position) => {
     let trophyClass = ""; // pos-pic
     let championsClass = ""; // name-level
     if (position <= 3) {
@@ -72,7 +50,7 @@ function DashRanking() {
       <>
         <div className="player__pos_pic">
           <p className={trophyClass}> #{position}</p>
-          <img src={userImages.length ? userImages.find((img) => img.hasOwnProperty(player.id))?.[player.id] : MavSvg} alt="Player" />
+          <img src={player.pic ? player.pic : MavSvg} />
         </div>
         <div className="player__name_level">
           <p className={championsClass}> {player.username} </p>
@@ -118,7 +96,7 @@ function DashRanking() {
         {usersData.map((player, key) => {
           return (
             <Link className="player__classment" key={key} to={`/mainpage/profile/${player.username}`}>
-              {RankClassment(key + 1, player)}
+              {RankClassment(player, key + 1)}
             </Link>
           );
         })}
