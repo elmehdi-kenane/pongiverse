@@ -15,7 +15,8 @@ urlpatterns = [
     path('updateUserCountry', views.update_user_country),
     path('updatePassword', views.update_user_password),
     path('getUserFriends/<str:userId>', views.get_user_friends),
+    # path('getUserImage/<str:username>', views.get_user_image),
     path('getUsersData/<str:username>', views.get_users_data),
-    path('getUserImage/<str:username>', views.get_user_image),
     path('getUserGames/<str:username>', views.get_user_games_wl),
+    path('getUserStcs/<str:username>', views.get_user_statistics),
 ]

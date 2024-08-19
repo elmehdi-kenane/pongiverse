@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from myapp.models import customuser
 from mainApp.models import UserMatchStatics
+from mainApp.models import Match
 from rest_framework.decorators import api_view
 
 from django.http import HttpResponse
@@ -11,6 +12,9 @@ import base64
 from django.contrib.auth import authenticate
 from friends.models import Friendship
 from myapp.models import customuser
+
+from django.db.models import Q
+from datetime import datetime, date, timedelta
 
 # Create your views here.
 @api_view (['GET'])
@@ -75,8 +79,8 @@ def getUserData(request, username):
     if user is not None:
         user_level = UserMatchStatics.objects.filter(player=user).first()
         if user_level is not None:
-            user_data = {'pic': user.avatar.path,
-                        'bg': user.background_pic.path,
+            user_data = {'pic': f"http://localhost:8000/auth{user.avatar.url}",
+                        'bg': f"http://localhost:8000/auth{user.background_pic.url}",
                         'bio': user.bio,
                         'email' : user.email,
                         'level': user_level.level,
@@ -84,8 +88,8 @@ def getUserData(request, username):
                         'country': user.country,
                         }
         else:
-            user_data = {'pic': user.avatar.path,
-                        'bg': user.background_pic.path,
+            user_data = {'pic': f"http://localhost:8000/auth{user.avatar.url}",
+                        'bg': f"http://localhost:8000/auth{user.background_pic.url}",
                         'bio': user.bio,
                         'email' : user.email,
                         'level': 0,
@@ -228,21 +232,21 @@ def get_user_friends(request, userId):
         if userId != user.username:
             user_data.append({
                 'username': user.username,
-                'pic': user.avatar.path,
+                'pic': f"http://localhost:8000/auth{user.avatar.url}"
             })
     return Response(data={"allUserData": user_data}, status=status.HTTP_200_OK)
 
 #**--------------------- GetUsers Data Ranking ---------------------** 
 
-@api_view(["GET"])
-def get_user_image(request, username):
-    user = customuser.objects.filter(username=username).first()
-    if user is not None:
-        with open(user.avatar.path, 'rb') as image_file:
-             if image_file:
-                return HttpResponse(image_file.read(), content_type='image/jpeg')
-             else:
-                 return Response("not found")
+# @api_view(["GET"])
+# def get_user_image(request, username):
+#     user = customuser.objects.filter(username=username).first()
+#     if user is not None:
+#         with open(user.avatar.path, 'rb') as image_file:
+#              if image_file:
+#                 return HttpResponse(image_file.read(), content_type='image/jpeg')
+#              else:
+#                  return Response("not found")
 
 @api_view(["GET"])
 def get_users_data(request, username):
@@ -253,12 +257,13 @@ def get_users_data(request, username):
         for user in users_data:
             res_data.append({
                 'username': user.player.username,
+                'pic': f"http://localhost:8000/auth{user.player.avatar.url}",
                 'wins': user.wins,
                 'lost': user.losts,
                 'level': user.level,
                 'xp': user.total_xp,
                 'goals': user.goals,
-                'id': user.player.id,
+                # 'id': user.player.id,
             })
         response = Response(data={"usersData": res_data}, status=status.HTTP_200_OK)
         return response
@@ -284,3 +289,38 @@ def get_user_games_wl(request, username):
             return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
     else:
        return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
+
+#**--------------------- GetUser Statistics {Profile} ---------------------**#
+
+@api_view(["GET"])
+def get_user_statistics(request, username):
+    user = customuser.objects.filter(username=username).first()
+    today = datetime.now().date().isoformat()
+    fifteen_days_ago = (datetime.now().date() - timedelta(days=15)).isoformat()
+
+    print("--------", today, "--------")
+    print("--------", fifteen_days_ago, "--------")
+
+    user_matches = Match.objects.filter(
+        Q(team1_player1=user) | Q(team2_player1=user),
+        date_ended__gte=fifteen_days_ago,
+        date_ended__lte=today
+    ).all()
+    for user_match in user_matches:
+        print("-----TEAM-----")
+        print(user_match.id)
+        print(user_match.date_ended)
+        # print(user_match.team1_status)
+        # print(user_match.team2_status)
+        print("-------------")
+    # user_matches = Match.objects.filter(team2_player1=user).all()
+    # for user_match in user_matches:
+    #     print("-----TEAM2-----")
+    #     print(user_match.date_ended)
+    #     print(user_match.team2_status)
+    #     print("-------------")
+    if user is not None:
+        return Response(data={"userStcs": "Nice"}, status=status.HTTP_200_OK)
+    else:
+        return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
+
