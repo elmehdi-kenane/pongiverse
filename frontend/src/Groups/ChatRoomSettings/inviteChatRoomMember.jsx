@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import ChatRoomInvitee from "./chatRoomInvitee";
 import AuthContext from "../../navbar-sidebar/Authcontext";
+import { toast } from "react-toastify";
 
 
 const InviteChatRoomMember = (props) => {
@@ -19,12 +20,15 @@ const { user } = useContext(AuthContext);
             },
             body: JSON.stringify({
               user: user,
-              room: props.name,
+              id: props.id,
             }),
           }
         );
         const data = await response.json();
-        setAllFriends(data);
+        if(response.ok) {
+          console.log("friends to invite: ",data)
+          setAllFriends(data);
+        } else toast(data.error)
       } catch (error) {
         console.log(error);
       }
@@ -45,6 +49,7 @@ const { user } = useContext(AuthContext);
               key={index}
               name={friend.name}
               roomName={props.name}
+              avatar={friend.avatar}
             />
           ))}
         </div>

@@ -209,6 +209,7 @@ const Rooms = () => {
                       roomIcons={chatRoomIcons}
                       chatRoomCovers={chatRoomCovers}
                       membersCount={room.membersCount}
+                      cover={room.cover}
                     />
                   ))}
                 </div>

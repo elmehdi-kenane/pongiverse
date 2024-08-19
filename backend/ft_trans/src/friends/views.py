@@ -20,6 +20,7 @@ def get_friend_list(request, username):
     user = customuser.objects.filter(username=username).first()
     friend_objs = Friendship.objects.filter(user=user, isBlocked=False)
     friends_ser = friendSerializer(friend_objs, many=True)
+    print("Friends list: ", friends_ser.data)
     return Response(friends_ser.data)
 
 @api_view(['GET'])

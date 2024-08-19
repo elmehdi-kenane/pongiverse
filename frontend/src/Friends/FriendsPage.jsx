@@ -69,8 +69,10 @@ const Friends = () => {
                 }
             );
             const res = await response.json();
-            if (res)
+            if (res) {
+                console.log("FRIENDS:  ", res)
                 setFriends(res);
+            }
         };
         if (user) getFriends();
     }, [user]);

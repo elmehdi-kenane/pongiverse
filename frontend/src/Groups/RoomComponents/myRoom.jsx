@@ -32,6 +32,7 @@ const MyRoom = (props) => {
         membersCount={props.membersCount}
         RoomSettings={ChatIcons.RoomSettings}
         chatRoomCovers={props.chatRoomCovers}
+        cover={props.cover}
       />
       {showSettings && (
         <ChatRoomSettings
@@ -74,6 +75,7 @@ const MyRoom = (props) => {
           setInviteMember={setInviteMember}
           closeButton={ChatIcons.closeButton}
           name={props.name}
+          id={props.roomId}
         />
       )}
       {deleteRoom && (

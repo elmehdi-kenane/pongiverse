@@ -89,7 +89,8 @@ const MyRoomContent = (props) => {
         <div
           className="my-room-cover-wrapper"
           style={{
-            backgroundImage: `url(${props.chatRoomCovers[props.index]})`,
+            // backgroundImage: `url(${props.chatRoomCovers[props.index]})`,
+            backgroundImage: `url(${props.cover})`,
           }}
         ></div>
         <div className="my-room-info">

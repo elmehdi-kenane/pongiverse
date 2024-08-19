@@ -5,6 +5,10 @@ from .models import Room, Membership, Message, Directs, RoomInvitation, default_
 from friends.models import Friendship
 from myapp.models import customuser
 from django.core.files.storage import default_storage
+from rest_framework import status
+import base64
+from django.core.files.base import ContentFile
+from friends.serializers import friendSerializer
 
 @api_view(["POST"])
 def leave_chat_room(request):
@@ -141,7 +145,7 @@ def create_chat_room(request):
             new_room.members_count = 1
             new_room.save()
         elif room:
-            return Response({'error': 'Chat room name is taken. Try a different one.'})
+            return Response({'error': 'Chat room name is taken. Try a different one.'}, status=400)
         Membership.objects.create(user=user, room=new_room, roles="admin")
         return Response({
             'type': 'chatRoomCreated',
@@ -153,8 +157,9 @@ def create_chat_room(request):
                 "icon_url": new_room.icon.path,
                 "membersCount": new_room.members_count,
                 'cover': new_room.cover.path
+                # 'cover': f"http://localhost:8000/chatAPI{new_room.cover.url}"
             }
-        })
+        }, status=200)
     return Response({'error': 'Invalid request method'}, status=400)
 
 
@@ -172,7 +177,8 @@ def channel_list(request, username):
                 'topic': membership.room.topic,
                 'icon_url': membership.room.icon.path,
                 'membersCount': membership.room.members_count,
-                'cover': membership.room.cover.path
+                # 'cover': membership.room.cover.path
+                'cover': f"http://localhost:8000/chatAPI{membership.room.cover.url}"
             }
             rooms.append(room_data)
         return Response(rooms)
@@ -239,16 +245,30 @@ def direct_messages(request):
 @api_view(['POST'])
 def list_all_friends(request):
     if request.method == 'POST':
-        user = customuser.objects.get(username=(request.data).get('user'))
-        friends = Friendship.objects.filter(user=user)
-        room = Room.objects.get(name=request.data.get('room'))
+        print(request.data)
+        try:
+            user = customuser.objects.get(username=(request.data).get('user'))
+        except customuser.DoesNotExist:
+            return Response({'error': 'user not found'}, status=400)
+        try:
+            friends = Friendship.objects.filter(user=user)
+        except Friendship.DoesNotExist:
+            return Response({'error': 'Opps! Something went wrong'}, status=400)
+        try:
+            room = Room.objects.get(id=request.data.get('id'))
+        except Room.DoesNotExist:
+            return Response({'error': 'Opps! Something went wrong'}, status=400)
         all_friend = []
         for friend in friends:
-            friend_object = customuser.objects.get(id=friend.friend_id)
-            if not Membership.objects.filter(room=room, user=friend_object).exists():
+            try:
+                friend_object = customuser.objects.get(id=friend.friend_id)
+            except customuser.DoesNotExist:
+                return Response({'error': 'Opps! Something went wrong'}, status=400)
+            my_friend  = Membership.objects.filter(room=room, user=friend_object)
+            if not my_friend:
                 friend_data = {
                     'name': friend_object.username,
-                    'avatar': friend_object.avatar.path
+                    'avatar': f"http://localhost:8000/auth{friend_object.avatar.url}"
                 }
                 all_friend.append(friend_data)
         return Response(all_friend)
@@ -318,23 +338,23 @@ def direct_messages(request):
     return Response({'error': 'Invalid request method'}, status=400)
 
 
-@api_view(['POST'])
-def list_all_friends(request):
-    if request.method == 'POST':
-        user = customuser.objects.get(username=(request.data).get('user'))
-        friends = Friendship.objects.filter(user=user)
-        room = Room.objects.get(name=request.data.get('room'))
-        all_friend = []
-        for friend in friends:
-            friend_object = customuser.objects.get(id=friend.friend_id)
-            if not Membership.objects.filter(room=room, user=friend_object).exists():
-                friend_data = {
-                    'name': friend_object.username,
-                    'avatar': friend_object.avatar.path
-                }
-                all_friend.append(friend_data)
-        return Response(all_friend)
-    return Response({'error': 'Invalid request method'}, status=400)
+# @api_view(['POST'])
+# def list_all_friends(request):
+#     if request.method == 'POST':
+#         user = customuser.objects.get(username=(request.data).get('user'))
+#         friends = Friendship.objects.filter(user=user)
+#         room = Room.objects.get(name=request.data.get('room'))
+#         all_friend = []
+#         for friend in friends:
+#             friend_object = customuser.objects.get(id=friend.friend_id)
+#             if not Membership.objects.filter(room=room, user=friend_object).exists():
+#                 friend_data = {
+#                     'name': friend_object.username,
+#                     'avatar': friend_object.avatar.path
+#                 }
+#                 all_friend.append(friend_data)
+#         return Response(all_friend)
+#     return Response({'error': 'Invalid request method'}, status=400)
 
 
 @api_view(['GET'])
