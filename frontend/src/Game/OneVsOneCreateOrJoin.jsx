@@ -130,6 +130,9 @@ const OneVsOneCreateOrJoin = () => {
                 inputRoomId.current.value = ''
                 setRoomIdIncorrect(true)
                 setCheckingCode(false)
+                } else if (type === 'hmed') {
+					console.log("hmed received")
+                    socket.close()
                 }
             }
         }

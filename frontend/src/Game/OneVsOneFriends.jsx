@@ -143,7 +143,10 @@ const OneVsOneFriends = () => {
 					//         console.log(allGameFriends[i].name)
 					//     }
 					// }
-				}
+				} else if (type === 'hmed') {
+					console.log("hmed received")
+                    socket.close()
+                }
 				// else if (type === "removeRoom") {
 				//     console.log("inside removeRoom")
 				//     if (socket && socket.readyState === WebSocket.OPEN) {

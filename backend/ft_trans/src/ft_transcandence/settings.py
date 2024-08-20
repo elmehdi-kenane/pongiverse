@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'chat',
     'myapp',
     'mainApp',
+    'Notifications',
     'daphne',
     'channels_redis',
     'django.contrib.admin',

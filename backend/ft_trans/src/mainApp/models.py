@@ -5,6 +5,14 @@ from django.utils import timezone
 from myapp.models import customuser
 import random
 
+class UserMatchStatics(models.Model):
+    player = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='player_match_stats')
+    wins = models.PositiveIntegerField(default=0)
+    losts = models.PositiveIntegerField(default=0)
+    level = models.PositiveIntegerField(default=0)
+    total_xp = models.PositiveIntegerField(default=0)
+    goals = models.PositiveIntegerField(default=0)
+
 class Match(models.Model):
     mode = models.CharField(max_length=255)
     room_id = models.PositiveBigIntegerField(unique=True)
@@ -85,5 +93,41 @@ class GameCustomisation(models.Model):
     ball_effect = models.BooleanField(default=False)
 # room_id_manager = RoomIDManager()
 
+# class Tournament(models.Model):
+# 	tournament_id = models.IntegerField(unique=True)
+
 class Tournament(models.Model):
 	tournament_id = models.IntegerField(unique=True)
+	is_started = models.BooleanField(default=False)
+	is_finished = models.BooleanField(default=False)
+
+
+class TournamentMembers(models.Model):
+	user = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='tournament_member')
+	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='tournament_members')
+	is_owner = models.BooleanField(default=False)
+	is_eliminated = models.BooleanField(default=False)
+	is_inside = models.BooleanField(default=False)
+
+class TournamentInvitation(models.Model):
+	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='Invitation_tournament')
+	sender = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='sender')
+	receiver = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='receiver')
+    
+class TournamentWarnNotifications(models.Model):
+	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='TournamentWarnNotifications')
+	created_at = models.DateTimeField(default=timezone.now, editable=False)
+
+class Round(models.Model):
+	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='round')
+	type = models.CharField(max_length=255, default='')
+
+class TournamentUserInfo(models.Model):
+	round = models.ForeignKey(Round, on_delete=models.CASCADE, related_name='tournamentuserinfo')
+	user = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='user', null=True)
+	position = models.PositiveIntegerField(default=0)
+
+class DisplayOpponent(models.Model):
+	user1 = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='DisplayOpponentUser1')
+	user2 = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='DisplayOpponentUser2')
+	created_at = models.DateTimeField(default=timezone.now, editable=False)

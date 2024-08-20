@@ -579,6 +579,10 @@ function createParticle(x, y) {
                 }
                 else if (type === "playersInfos")
                     setPlayersPics(message.users)
+                else if (type === 'hmed') {
+					console.log("hmed received")
+                    socket.close()
+                }
             }
         }
     }, [socket, user])
