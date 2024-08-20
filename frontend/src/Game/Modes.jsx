@@ -16,7 +16,8 @@ const Modes = () => {
 	const [gameNotif, setGameNotif] = useState([])
 	const [roomID, setRoomID] = useState(null)
 	let { socket, user, setAllGameNotifs,
-		allGameNotifs, notifsImgs } = useContext(AuthContext)
+		allGameNotifs, notifsImgs, notifSocket,
+		setSocket } = useContext(AuthContext)
 
 	useEffect(() => {
 		const check_is_join = async () => {
@@ -57,7 +58,6 @@ const Modes = () => {
 				console.error('Failed to fetch data');
 			}
 		}
-
 		if (user)
 			check_is_started_and_not_finished()
 	}, [user])
@@ -65,7 +65,6 @@ const Modes = () => {
 	const goToSoloPage = () => {
 		navigate("../game/solo")
 	}
-
 
 	const GoToTournamentPage = async () => {
 		if (socket && socket.readyState === WebSocket.OPEN) {
@@ -93,6 +92,7 @@ const Modes = () => {
 	// 				if (message.mode === '1vs1')
 	// 					navigate(`/mainpage/game/solo/1vs1/friends`)
 	// 				else {
+
 	// 					navigate(`/mainpage/game/solo/2vs2/friends`)
 	// 				}
 	// 			} else if (type === 'receiveFriendGame') {
@@ -103,6 +103,73 @@ const Modes = () => {
 	// 		}
 	// 	}
 	// }, [socket])
+
+	// useEffect(() => {
+	// 	if (socket && socket.readyState === WebSocket.OPEN) {
+	// 		socket.onmessage = (event) => {
+	// 			let data = JSON.parse(event.data)
+	// 			let type = data.type
+	// 			let message = data.message
+	// 			if (type === 'goToGamingPage') {
+	// 				// console.log("navigating now")
+	// 				// navigate(`/mainpage/game/solo/1vs1/friends`)
+	// 				if (message.mode === '1vs1')
+	// 					navigate(`/mainpage/game/solo/1vs1/friends`)
+	// 				else
+	// 					navigate(`/mainpage/game/solo/2vs2/friends`)
+	// 			} else if (type === 'receiveFriendGame') {
+	// 				console.log("RECEIVED A GAME REQUEST")
+	// 				setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message])
+	// 				setRoomID(message.roomID)
+	// 			} else if (type === 'tournament_created') {
+	// 				console.log("YESSSSSSSSS")
+	// 				navigate("createtournament")
+	// 			}
+	// 			else if (type === 'connected_again') {
+	// 				console.log("YOUR FRIEND IS LOGED AGAIN")
+	// 			}
+	// 			else if (type === 'hmed') {
+	// 				console.log("hmed received")
+	// 			}
+	// 		}
+	// 	}
+	// }, [socket])
+
+	useEffect(() => {
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+			notifSocket.onmessage = (event) => {
+				let data = JSON.parse(event.data)
+				let type = data.type
+				let message = data.message
+				if (type === 'goToGamingPage') {
+					// console.log("navigating now")
+					// navigate(`/mainpage/game/solo/1vs1/friends`)
+					if (socket.readyState !== WebSocket.OPEN) {
+						const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
+						newSocket.onopen = () => {
+							console.log("+++++++++++=======+++++++++")
+							console.log("GAME SOCKET OPENED AND NOW WE WILL MOVE TO FRIEND PAGE")
+							console.log("+++++++++++=======+++++++++")
+							setSocket(newSocket)
+							if (message.mode === '1vs1')
+								navigate(`/mainpage/game/solo/1vs1/friends`)
+							else
+								navigate(`/mainpage/game/solo/2vs2/friends`)
+						}
+					} else {
+						if (message.mode === '1vs1')
+							navigate(`/mainpage/game/solo/1vs1/friends`)
+						else
+							navigate(`/mainpage/game/solo/2vs2/friends`)
+					}
+				} else if (type === 'receiveFriendGame') {
+					console.log("RECEIVED A GAME REQUEST")
+					setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message])
+					setRoomID(message.roomID)
+				}
+			}
+		}
+	}, [notifSocket])
 
 	useEffect(() => {
 		if (socket && socket.readyState === WebSocket.OPEN) {
@@ -119,18 +186,17 @@ const Modes = () => {
 					setRoomID(message.roomID)
 				} else if (type === 'tournament_created') {
 					navigate("createtournament")
-				}
-				else if (type === 'connected_again') {
-					console.log("YOUR FRIEND IS LOGED AGAIN")
-				}
-				else if (type === 'hmed') {
-					console.log("hmed received")
 				} else if (type === 'invited_to_tournament') {
 					setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message])
 				}
 				else if (type == 'accepted_invitation') {
 					navigate("/mainpage/game/createtournament");
-				}
+				} else if (type === 'hmed') {
+					console.log("WWWWWWWWWAAAAA HMEEEEEEEED")
+					socket.close()
+					// setSocket(null)
+				} else if (type === 'connected_again')
+					console.log('USER IS CONNECTED AGAIN')
 			}
 		}
 	}, [socket])
@@ -170,7 +236,7 @@ const Modes = () => {
 		let notifSelected = allGameNotifs.filter((user) => user.user === creator.user)
 		setAllGameNotifs(allGameNotifs.filter((user) => user.user !== creator.user))
 		if (socket && socket.readyState === WebSocket.OPEN) {
-			if (creator.mode === '1vs1'){
+			if (creator.mode === '1vs1') {
 				socket.send(JSON.stringify({
 					type: 'refuseInvitation',
 					message: {
@@ -179,7 +245,7 @@ const Modes = () => {
 						roomID: notifSelected[0].roomID
 					}
 				}))
-			} else if (creator.mode === 'TournamentInvitation'){
+			} else if (creator.mode === 'TournamentInvitation') {
 				socket.send(JSON.stringify({
 					type: 'deny-tournament-invitation',
 					message: {
@@ -197,7 +263,7 @@ const Modes = () => {
 		setAllGameNotifs(allGameNotifs.filter((user) => user.user !== sender.user))
 		console.log("SENDER : ", sender)
 		if (socket && socket.readyState === WebSocket.OPEN) {
-			if (sender.mode === '1vs1'){
+			if (sender.mode === '1vs1') {
 				console.log("YES!")
 				await socket.send(JSON.strlingify({
 					type: 'acceptInvitation',
@@ -207,7 +273,7 @@ const Modes = () => {
 						roomID: notifSelected[0].roomID
 					}
 				}))
-			}else if (sender.mode === 'TournamentInvitation'){
+			} else if (sender.mode === 'TournamentInvitation') {
 				console.log("YES1!")
 				const response = await fetch(`http://localhost:8000/api/get-tournament-size`, {
 					method: "POST",
@@ -289,81 +355,6 @@ const Modes = () => {
 		if (joinTournamentModeSelected)
 			JoinTournament()
 	}
-	const tournamentHandleAccept = async (tournament_id) => {
-		const response = await fetch(`http://localhost:8000/api/get-tournament-size`, {
-			method: "POST",
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				tournament_id: tournament_id
-			})
-		});
-		if (response.ok) {
-			const data = await response.json();
-			if (data.Case === 'Tournament_started') {
-				Swal.fire({
-					icon: "warning",
-					position: "top-end",
-					title: "Tournament is already started",
-					showConfirmButton: false,
-					customClass: {
-						popup: styles['error-container'],
-						title: styles['title-swal'],
-					},
-					timer: 1500
-				});
-			} else if (data.Case === 'Tournament_is_full') {
-				Swal.fire({
-					icon: "warning",
-					position: "top-end",
-					title: "Tournament is full",
-					showConfirmButton: false,
-					customClass: {
-						popup: styles['error-container'],
-						title: styles['title-swal'],
-					},
-					timer: 1500
-				});
-			} else {
-				if (socket && socket.readyState === WebSocket.OPEN) {
-					try {
-						await socket.send(
-							JSON.stringify({
-								type: 'accept-tournament-invitation',
-								message: {
-									user: user,
-									tournament_id: tournament_id
-								}
-							})
-						);
-					} catch (error) {
-						console.error("Error sending message:", error);
-					}
-				}
-			}
-		} else {
-			console.error('Failed to fetch data');
-		}
-	};
-
-	// Tournamet hahndle deny
-	const TournamentHandleDeny = (sender, tournament_id) => {
-		// setTournamentInviteNotifications((prevTournamentInviteNotifications) => prevTournamentInviteNotifications.filter((notif) => notif.sender !== sender));
-		//delete from notifffsss
-		if (socket && socket.readyState === WebSocket.OPEN) {
-			socket.send(JSON.stringify({
-				type: 'deny-tournament-invitation',
-				message: {
-					user: user,
-					sender: sender,
-					tournament_id: tournament_id
-				}
-			}))
-		}
-
-	}
-
 
 	return (
 		<div className={styles['game-modes-page']}>

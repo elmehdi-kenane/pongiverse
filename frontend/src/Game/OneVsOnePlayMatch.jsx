@@ -36,7 +36,7 @@ class Ball {
         this.radius = radius;
         this.color = color;
     }
-    
+
     changeProperties(newX, newY, newRadius, newColor) {
         this.x = newX
         this.y = newY
@@ -137,7 +137,7 @@ const OneVsOnePlayMatch = () => {
     const wrapperRef = useRef(null);
     const resultRef = useRef(null);
     const aspectRatio = 710 / 400
-    
+
     const [canvasDims, setCanvasDims] = useState(null);
     const canvasDimsRef = useRef(canvasDims);
 
@@ -180,7 +180,7 @@ const OneVsOnePlayMatch = () => {
       ])
 
     // const radius = Math.random() + 0.8
-        
+
 
         // let particlesConst = {
         //     radius: radius,
@@ -232,17 +232,17 @@ function createParticle(x, y) {
                 particles.forEach((particle, index) => {
                     // Decrease life`
                     particle.life--;
-            
+
                     // Remove dead particles
                     if (particle.life <= 0) {
                         particles.splice(index, 1);
                         return;
                     }
-            
+
                     // Update position
                     particle.x += particle.speedX;
                     particle.y += particle.speedY;
-            
+
                     // Draw particle
                     ctx.beginPath();
                     ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
@@ -285,7 +285,7 @@ function createParticle(x, y) {
         gameAbortedRef.current = gameAborted
         canvasDimsRef.current = canvasDims
 	}, [canvasContext, canvasDimensions, gameCustomize, gameAborted, gameFinished, canvasDims]);
-    
+
     function resizeCanvas() {
         const canvas = canvasRef.current;
         const wrapper = wrapperRef.current;
@@ -293,7 +293,7 @@ function createParticle(x, y) {
         if (canvas && wrapper && result) {
             let { width: wrapperWidth, height: wrapperHeight } = wrapper.getBoundingClientRect();
             let { width: resWrapperWidth, height: resWrapperHeight } = result.getBoundingClientRect();
-        
+
             wrapperHeight -= resWrapperHeight;
             if (wrapperWidth / aspectRatio < wrapperHeight) {
                 canvas.width = wrapperWidth;
@@ -313,7 +313,7 @@ function createParticle(x, y) {
     const updateGameObjectProperties = (width, height) => {
         const originalWidth = 710;
         const originalHeight = 400;
-    
+
         const widthScalingFactor = width / originalWidth;
         const heightScalingFactor = height / originalHeight;
         const scalingFactor = Math.min(widthScalingFactor, heightScalingFactor);
@@ -579,6 +579,10 @@ function createParticle(x, y) {
                 }
                 else if (type === "playersInfos")
                     setPlayersPics(message.users)
+                else if (type === 'hmed') {
+					console.log("hmed received")
+                    socket.close()
+                }
             }
         }
     }, [socket, user])
@@ -645,7 +649,7 @@ function createParticle(x, y) {
         const hours = Math.floor(time / 3600);
         const minutes = Math.floor((time % 3600) / 60);
         const seconds = time % 60;
-        
+
         if (minutes >= 60)
             return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;

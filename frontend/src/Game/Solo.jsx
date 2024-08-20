@@ -6,7 +6,9 @@ import * as Icons from '../assets/navbar-sidebar'
 const Solo = () => {
 	const [gameNotif, setGameNotif] = useState([])
 	const [roomID, setRoomID] = useState(null)
-	let { socket, user } = useContext(AuthContext)
+	let { socket, user, setAllGameNotifs,
+		allGameNotifs, notifsImgs, notifSocket,
+		setSocket } = useContext(AuthContext)
 	const navigate = useNavigate()
 	const [selected, setSelected] = useState(0)
 
@@ -43,56 +45,127 @@ const Solo = () => {
 		navigate("../game/solo/1vs1")
 	}
 
+	// FOR THE GAME NOTIFICATIONS - START -
+
+	useEffect(() => {
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+			notifSocket.onmessage = (event) => {
+				let data = JSON.parse(event.data)
+				let type = data.type
+				let message = data.message
+				if (type === 'goToGamingPage') {
+					// console.log("navigating now")
+					// navigate(`/mainpage/game/solo/1vs1/friends`)
+					if (socket.readyState !== WebSocket.OPEN) {
+						const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
+						newSocket.onopen = () => {
+							console.log("+++++++++++=======+++++++++")
+							console.log("GAME SOCKET OPENED AND NOW WE WILL MOVE TO FRIEND PAGE")
+							console.log("+++++++++++=======+++++++++")
+							setSocket(newSocket)
+							if (message.mode === '1vs1')
+								navigate(`/mainpage/game/solo/1vs1/friends`)
+							else
+								navigate(`/mainpage/game/solo/2vs2/friends`)
+						}
+					} else {
+						if (message.mode === '1vs1')
+							navigate(`/mainpage/game/solo/1vs1/friends`)
+						else
+							navigate(`/mainpage/game/solo/2vs2/friends`)
+					}
+				} else if (type === 'receiveFriendGame') {
+					console.log("RECEIVED A GAME REQUEST")
+					setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message])
+					setRoomID(message.roomID)
+				}
+			}
+		}
+	}, [notifSocket])
+
 	useEffect(() => {
 		if (socket && socket.readyState === WebSocket.OPEN) {
 			socket.onmessage = (event) => {
 				let data = JSON.parse(event.data)
 				let type = data.type
-				let message = data.message
-				if (type === 'goToGamingPage') {
-					console.log("navigating now")
-					navigate(`/mainpage/game/solo/1vs1/friends`)
-				} else if (type === 'receiveFriendGame') {
-					console.log("RECEIVED A GAME REQUEST")
-					setGameNotif((prevGameNotif) => [...prevGameNotif, message])
-					setRoomID(message.roomID)
-				}
+				if (type === 'hmed') {
+					console.log("WWWWWWWWWAAAAA HMEEEEEEEED")
+					socket.close()
+					// setSocket(null)
+				} else if (type === 'connected_again')
+					console.log('USER IS CONNECTED AGAIN')
 			}
 		}
 	}, [socket])
 
 	const refuseInvitation = (creator) => {
-		setGameNotif(gameNotif.filter((user) => user.user !== creator))
-		if (socket && socket.readyState === WebSocket.OPEN) {
+		let notifSelected = allGameNotifs.filter((user) => user.user === creator)
+		setAllGameNotifs(allGameNotifs.filter((user) => user.user !== creator))
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
 			console.log("inside join")
-			socket.send(JSON.stringify({
-				type: 'acceptInvitation',
+			notifSocket.send(JSON.stringify({
+				type: 'refuseInvitation',
 				message: {
-					user: creator,
+					user: notifSelected[0].user,
 					target: user,
-					roomID: roomID
+					roomID: notifSelected[0].roomID
 				}
 			}))
 		}
 	}
 
 	const acceptInvitation = (creator) => {
-		setGameNotif(gameNotif.filter((user) => user.user !== creator))
-		if (socket && socket.readyState === WebSocket.OPEN) {
+		let notifSelected = allGameNotifs.filter((user) => user.user === creator)
+		setAllGameNotifs(allGameNotifs.filter((user) => user.user !== creator))
+		console.log(creator, user, roomID)
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
 			console.log("inside join")
-			socket.send(JSON.stringify({
+			notifSocket.send(JSON.stringify({
 				type: 'acceptInvitation',
 				message: {
-					user: creator,
+					user: notifSelected[0].user,
 					target: user,
-					roomID: roomID
+					roomID: notifSelected[0].roomID
 				}
 			}))
 		}
 	}
 
+	// FOR THE GAME NOTIFICATIONS - END -
+
 	return (
 		<div className='soloMode' >
+			<div className='cancel-game-invite-request'>
+				{(allGameNotifs.length) ? (
+					<div className='game-invitations'>
+						{allGameNotifs.map((user, key) => {
+							return ((
+								<div key={key} className='game-invitation'>
+									<img src={notifsImgs[key]} alt="profile-pic" />
+									<div className='user-infos'>
+										<span>{user.user}</span>
+										<span>level 2.5</span>
+									</div>
+									<div className='invitation-mode'>
+										<span>1</span>
+										<span>vs</span>
+										<span>1</span>
+									</div>
+									<div className='accept-refuse'>
+										<div onClick={() => acceptInvitation(user.user)}>
+											<img src={Icons.copied} alt="accept-icon" />
+										</div>
+										<div onClick={() => refuseInvitation(user.user)}>
+											<img src={Icons.cancel} alt="refuse-icon" />
+										</div>
+									</div>
+								</div>
+							))
+						})}
+					</div>
+				) : ''
+				}
+			</div>
 			<div className='soloMode-modes' >
 				<div className={(selected === 1) ? 'soloMode-modes-twoPlayers soloMode-modes-twoPlayers-selected' : 'soloMode-modes-twoPlayers'} onClick={quickMatch} >
 					<div>

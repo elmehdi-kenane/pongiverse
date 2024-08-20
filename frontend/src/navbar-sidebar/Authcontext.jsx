@@ -25,44 +25,14 @@ export const AuthProvider = ({children}) => {
 	let [allGameNotifs, setAllGameNotifs] = useState([])
 	let [notifsImgs, setNotifsImgs] = useState([])
 	let allGameFriendsRef = useRef(allGameFriends)
-	let [isBlur, setIsBlur] = useState(false)
 
-
-	// Glass Background State --------------------------------------------
-	const [isGlass, setIsGlass] = useState(false);
-
-	// Imad's States --------------------------------------------
-	//-- Glass Background
-	const [isReport, setIsReport] = useState(false);
-	const [isBlock, setIsBlock] = useState(false);
-	const [isChatBlur, setIsChartBlur] = useState(false);
-
-	const [reportValue, setReportValue] = useState(null);
-	const reportContentRef = useRef(null);
-	const blockRef = useRef(null);
-	const blockContentRef = useRef(null);
-
-
-	const [userPic, setUserPic] = useState(userPc);
-	const [nickName, setNickName] = useState("Maverick");
-	const [bio, setBio] = useState("Lorem ipsum dolor sit amet consectetur adipisicing elit.");
-	const [country, setCountry] = useState("Morocco");
-
-
+	let [notifSocket, setNotifSocket] = useState(null)
 
 	let [hideNavSideBar, setHideNavSideBar] = useState(false)
 	let [gameCustomize, setGameCustomize] = useState(['#FFFFFF', '#1C00C3', '#5241AB', false])
 	const oneVsOneIdRegex = /^\/mainpage\/play\/1vs1\/\d+$/
 	const twoVsTwoIdRegex = /^\/mainpage\/play\/2vs2\/\d+$/
-
-
-	// Glass Background Effect
-	useEffect (()=> {
-		if (!isReport && !isBlock && !isBlur)
-			setIsGlass(false);
-		else
-			setIsGlass(true);
-	}, [isReport, isBlock])
+	const gamePlayRegex = /^\/mainpage\/(game|play)(\/[\w\d-]*)*$/
 
 	useEffect(() => {
 		allGameFriendsRef.current = allGameFriends;
@@ -173,6 +143,7 @@ export const AuthProvider = ({children}) => {
 				const blob = await response.blob();
 				const image = URL.createObjectURL(blob)
 				setUserImg(image)
+				// console.log('USER IMAGE IS THIS : ', image)
 			} catch (e) {
 				console.log("something wrong with fetch")
 			}
@@ -240,19 +211,17 @@ export const AuthProvider = ({children}) => {
 				console.error('There has been a problem with your fetch operation:', error);
 			}
 		}
-		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && !socket && user) {
-			const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
-			newSocket.onopen = () => {
-				// console.log("Socket created and Opened")
-				setSocket(newSocket)
+		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && !notifSocket && user) {
+			const newNotifSocket = new WebSocket(`ws://localhost:8000/ws/notif-socket`)
+			newNotifSocket.onopen = () => {
+				setNotifSocket(newNotifSocket)
+				console.log("NOTIF SOCKET OPENED SUCCEFULLY")
 			}
-			newSocket.onmessage = (event) => {
+			newNotifSocket.onmessage = (event) => {
 				let data = JSON.parse(event.data)
 				let type = data.type
 				// let message = data.message
 				let uname = data.username
-				if (type === 'hmed')
-					console.log("hmed received")
 				// if (type === 'user_disconnected') {
 				// 	const currentAllGameFriends = allGameFriendsRef.current;
 				// 	console.log("user disconnected : ", allGameFriends)
@@ -266,9 +235,54 @@ export const AuthProvider = ({children}) => {
 				// 	sendUserData(uname, currentAllGameFriends)
 				// }
 			}
-		} else if ((location.pathname === '/' || location.pathname === '/signup' || location.pathname === '/signin' || location.pathname === '/SecondStep' ||  location.pathname === '/WaysSecondStep' || location.pathname === '/ForgotPassword' || location.pathname === '/ChangePassword') && socket) {
+		} else if ((location.pathname === '/' || location.pathname === '/signup' || location.pathname === '/signin' || location.pathname === '/SecondStep' ||  location.pathname === '/WaysSecondStep' || location.pathname === '/ForgotPassword' || location.pathname === '/ChangePassword') && notifSocket) {
+			if (notifSocket) {
+				console.log("NOTIF SOCKET CLOSED SUCCEFULLY")
+				notifSocket.close()
+				setNotifSocket(null)
+			}
+		}
+		if (gamePlayRegex.test(location.pathname) && !socket && user) {
+			const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
+			newSocket.onopen = () => {
+				// console.log("Socket created and Opened")
+				setSocket(newSocket)
+				console.log("GAME SOCKET OPENED SUCCEFULLY")
+			}
+			newSocket.onmessage = (event) => {
+				console.log("GAME SOCKET IN AUTHCONTEXT CLOSED SUCCEFULLY")
+				let data = JSON.parse(event.data)
+				let type = data.type
+				// let message = data.message
+				// let uname = data.username
+				// console.log("GAME SOCKET IN AUTHCONTEXT CLOSED SUCCEFULLY 1")
+				if (type === 'close_socket') {
+					newSocket.close()
+					setSocket(null)
+				}
+				// if (type === 'user_disconnected') {
+				// 	const currentAllGameFriends = allGameFriendsRef.current;
+				// 	console.log("user disconnected : ", allGameFriends)
+				// 	let uname = data.username
+				// 	setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname));
+				// }
+				// if (type === 'connected_again') {
+				// 	const currentAllGameFriends = allGameFriendsRef.current;
+				// 	console.log("user connected : ", allGameFriends)
+				// 	console.log("VISITED CONNECTED AGAIN")
+				// 	sendUserData(uname, currentAllGameFriends)
+				// }
+			}
+			newSocket.onclose = () => {
+				console.log("GAME SOCKET CLOSED SUCCEFULLY FROM THE BACK")
+				// setSocket(null)
+			}
+			newSocket.onerror = () => {
+				console.log("GAME SOCKET ERROR HAPPENED")
+			}
+		} else if (!gamePlayRegex.test(location.pathname) && socket) {
 			if (socket) {
-				console.log("socket closed succefully")
+				console.log("GAME SOCKET CLOSED SUCCEFULLY")
 				socket.close()
 				setSocket(null)
 			}
@@ -315,7 +329,6 @@ export const AuthProvider = ({children}) => {
 			response = await response.json()
 			if (response.Case !== "Invalid token") {
 				setUser(response.data.username)
-				console.log("USER USERNSME: ",response.data.username)
 			} else {
 				setUser('')
 				navigate('/signin')
@@ -344,31 +357,8 @@ export const AuthProvider = ({children}) => {
 		notifsImgs: notifsImgs,
 		gameCustomize: gameCustomize,
 		hideNavSideBar: hideNavSideBar,
-		// Profile Settings
-		isGlass:isGlass,
-		setIsGlass:setIsGlass,
-		isReport: isReport,
-		setIsReport: setIsReport,
-		reportContentRef: reportContentRef,
-		reportValue: reportValue,
-		setReportValue: setReportValue,
-		isBlock: isBlock,
-		setIsBlock:setIsBlock,
-		blockRef:blockRef,
-		blockContentRef:blockContentRef,
-		// User Credintials
-		userPic:userPic,
-		setUserPic:setUserPic,
-		nickName:nickName,
-		bio:bio,
-		country,country,
-		setNickName:setNickName,
-		setBio:setBio,
-		setCountry:setCountry,
-		// chat blur
-		isBlur:isBlur,
-		setIsBlur:setIsBlur,
 		// gameNotif: gameNotif
+		notifSocket: notifSocket,
 	}
 
 	return (

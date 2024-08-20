@@ -92,19 +92,18 @@ def online_friends(request):
 		print(f"is_online {user_id.friend.is_online}, is_playing {user_id.friend.is_playing}, username {user_id.friend.username}")
 		if user_id.friend.is_online and not user_id.friend.is_playing: ####################  and user_id.friend.is_playing
 			image_path = user_id.friend.avatar.path
+			# with open(image_path, 'rb') as image_file:
+				# encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
 			allFriends.append({'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path})
+		# print(f'friends are {friends}')
 	return Response({'message': allFriends})
 
 
 @api_view(['POST'])
 def serve_image(request):
-	print(f"*************// : {request.data}")
 	if (request.data).get('image'):
 		with open(request.data['image'], 'rb') as image_file:
-			if image_file:
-				return HttpResponse(image_file.read(), content_type='image/jpeg')
-			else:
-				return Response("not found")
+			return HttpResponse(image_file.read(), content_type='image/jpeg')
 
 @api_view(['POST'])
 def get_user(request):

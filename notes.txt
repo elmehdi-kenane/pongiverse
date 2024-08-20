@@ -1,0 +1,2 @@
+* must add a row when the user connect for the first time - game customization - (paddle: white, ball: blue, board: violet)
+* when the user disconnected, we must delete the running for search matches if he is alone, or remove him from it and send to the remaining temmate and opponents that he is disconnected

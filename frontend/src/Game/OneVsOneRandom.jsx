@@ -19,7 +19,7 @@ const OneVsOneRandom = () => {
     let { privateCheckAuth, socket, user,
         socketRecreated, setSocketRecreated,
         userImg, loading } = useContext(AuthContext)
-    
+
     let isOut = false
     const userRef = useRef(user)
     const roomIdRef = useRef(roomID)
@@ -110,6 +110,9 @@ const OneVsOneRandom = () => {
                     randomPics = setInterval(() => {
                         setRandomPic(picsList[Math.floor(Math.random() * picsList.length)])
                     }, 1000);
+                } else if (type === 'hmed') {
+					console.log("hmed received")
+                    socket.close()
                 }
             }
         }

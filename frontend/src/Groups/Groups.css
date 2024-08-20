@@ -1,0 +1,334 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.channels-page {
+    width: 100%;
+    height: 100%;
+    color: white;
+    display: flex;
+    overflow-y: auto;
+    font-size: 1em;
+}
+
+
+.middle-container {
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    height: 980px;
+    margin-bottom: 100px;
+    margin-top: 90px;
+}
+
+
+.channels-container {
+    width: 90%;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.buttons {
+    width: 5%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.buttons__join, .buttons__create{
+    width: 3rem;
+}
+
+.buttons__join:hover, .buttons__create:hover {
+    cursor: pointer;
+}
+
+
+.mychannels, .suggested {
+    width: 50%;
+    height: 980px;
+    background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 100px;
+}
+
+.mychannels__tittle, .suggested__tittle{
+    padding: 15px 0px;
+    font-weight: bolder;
+    font-size: 25px;
+}
+.mychannels__line, .suggested__line {
+    display: flex;
+    align-items: center;
+    height: 0.5px;
+    background: white;
+    opacity: 0.5;
+    width: 80%;
+}
+
+.mychannels__list, .suggested__list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.mychannels__list::-webkit-scrollbar , .suggested__list::-webkit-scrollbar {
+    display: none;
+}
+
+
+.channel{
+    padding: 15px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.channel:hover,
+.channel:focus{
+    cursor: pointer;
+    background-color: #211336;
+}
+.channel__avatar {
+    width: 35px;
+}
+.channel-details {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.members-number {
+    font-size: 12px;
+}
+
+@media screen and (min-width: 1444px) {
+    .middle-container {
+        width: 1360px;
+    }
+}
+
+ @media screen and (max-width: 1024px) {
+    .middle-container {
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 30px;
+        gap: 10px;
+    }
+    .mychannels, .suggested {
+        height: 800px;
+    }
+    .buttons {
+        flex-direction: row;
+        width: 90%;
+    }
+    .mychannels__tittle, .suggested__tittle{
+        padding: 8px 0px;
+        font-size: 20px;
+    }
+    .buttons__join, .buttons__create{
+        width: 2.2rem;
+    }
+    .channel{
+        padding: 12px 8px;
+    }
+    .channel__avatar {
+        width: 30px;
+    }
+    .channel-details {
+        gap: 5px;
+    }
+    .members-number {
+        font-size: 8px;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .channels-container {
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .buttons {
+        width: 90%;
+    }
+    .mychannels, .suggested {
+        width: 90%;
+        height: 750px;
+    }
+    .suggested {
+        margin-top: -100px;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .buttons {
+        width: 95%;
+    }
+    .mychannels, .suggested {
+        width: 95%;
+    }
+    .buttons__join, .buttons__create{
+        width: 2rem;
+    }
+}
+
+.create-modal {
+color: black;
+background-color: white;
+    position:absolute;
+    top: 400px;
+    left: 50%;
+    transform: translate(-40%, -50%);
+    margin: 0 auto;
+    padding: 20px 15px;
+    z-index: 999;
+}
+
+.create-modal__container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.visibility__buttons {
+    width: 100%;
+    display: flex;
+    justify-self: center;
+    gap: 10px;
+    padding: 15px 0px 15px 0px;
+}
+
+.public,
+.private,
+.protected {
+    width: 33%;
+    padding: 10px 0;
+    background-color: transparent;
+    border: 1px solid black;
+    border-radius: 3px;
+}
+
+.create-modal__form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.create-modal__form input {
+    padding: 10px 0;
+    width: 350px;
+    background-color: transparent;
+    border: 1px solid black;
+    border-radius: 3px;
+    text-indent: 10px;
+}
+
+.create-modal__creation-btns {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+.create, .cancel {
+    padding: 5px 20px;
+    background-color: transparent;
+    border: 1px solid black;
+    border-radius: 3px;
+}
+
+.create:hover, .cancel:hover,
+.create:focus, .cancel:focus {
+    cursor: pointer;
+    background-color: #943DCE;
+    border: none;
+    color: white;
+    font-weight: bolder;
+    transition: all 0.5s ease;
+}
+
+.public:hover, .private:hover, .protected:hover {
+    cursor: pointer;
+    background-color: #943DCE;
+    border: none;
+    color: white;
+    font-weight: bolder;
+    transition: all 0.5s ease;
+}
+
+.selected {
+    width: 33%;
+    padding: 10px 0;
+    background-color: #943DCE;
+    border: none;
+    border-radius: 3px;
+    color: white;
+    font-weight: bolder;
+    transition: all 0.5s ease;
+}
+
+#errors {
+    align-self: flex-start;
+    padding-left: 2px;
+    color: red;
+    font-size: 10px;
+}
+
+
+.join-modal {
+    color: black;
+    background-color: white;
+    position:absolute;
+    top: 400px;
+    left: 50%;
+    transform: translate(-40%, -50%);
+    margin: 0 auto;
+    padding: 20px 15px;
+    z-index: 999;
+}
+
+.join-modal__container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.join-modal__form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.join-modal__form input {
+    padding: 10px 0;
+    width: 350px;
+    background-color: transparent;
+    border: 1px solid black;
+    border-radius: 3px;
+    text-indent: 10px;
+}
+
+.join-modal__buttons {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}

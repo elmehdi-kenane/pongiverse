@@ -7,11 +7,14 @@ import AuthContext from "../navbar-sidebar/Authcontext";
 import { Outlet } from "react-router-dom";
 
 function NavbarSidebar() {
-  const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
-  const [searchbar, setSearchBar] = useState(false);
-  let { user, privateCheckAuth, setUser, hideNavSideBar } =
-    useContext(AuthContext);
-  let navigate = useNavigate();
+    const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
+    const [searchbar, setSearchBar] = useState(false);
+    let { user, privateCheckAuth, setUser, hideNavSideBar } = useContext(AuthContext)
+    let navigate = useNavigate()
+
+    useEffect(() => {
+      privateCheckAuth()
+    }, [])
 
   useEffect(() => {
     privateCheckAuth();
@@ -49,25 +52,23 @@ function NavbarSidebar() {
     } catch (e) {
       console.log("Error in network or URL");
     }
-  };
-  return (
-    <>
-      {!hideNavSideBar && (
-        <Navbar
-          Icons={Icons}
-          searchbar={searchbar}
-          setSearchBar={setSearchBar}
-          handleSearchBar={handleSearchBar}
-        />
-      )}
-      {
-        <div className="sidebarWrapper">
-          {!hideNavSideBar && <Sidebar Icons={Icons} />}
-          <Outlet />
-        </div>
-      }
-    </>
-  );
+  }
+    return (
+      <>
+          {!hideNavSideBar && (<Navbar
+              Icons={Icons}
+              searchbar={searchbar}
+              setSearchBar={setSearchBar}
+              handleSearchBar={handleSearchBar}
+          />)}
+          {<div className='sidebarWrapper'>
+            {!hideNavSideBar && (<Sidebar
+                Icons={Icons}
+            />)}
+            <Outlet />
+          </div>}
+      </>
+    );
 }
 
 export default NavbarSidebar;
