@@ -16,24 +16,21 @@ function ProfileUserStatistics(){
   useEffect(()=>{
     const getUserStcs = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/profile/getUserStcs/${userId}`, {
+        const response = await fetch(`http://localhost:8000/profile/getUserStcs/${userId}/${15}`, {
           method: "GET",
           headers: {
             'Content-Type': 'application/json',
           }
         });
         const res = await response.json()
-        if (response.ok) {
-          console.log("Response UserStcs : ", res.userStcs);
-          // setUserStcs(res.userStcs)
-        }
+        if (response.ok) 
+          setUserStcs(res.userStcs)
         else 
           console.log("Error : ", res.error);
       } catch (error) {
         console.log("Error: ", error);
       }
     }
-
     if (userId)
       getUserStcs()
   },[userId])
@@ -44,7 +41,7 @@ function ProfileUserStatistics(){
     const chartParameters = {
       left: -30,
       right: 10,
-      data: profileLevel,
+      data: userStcs,
       brSize: 15,
     }
 
@@ -53,10 +50,12 @@ function ProfileUserStatistics(){
         <div className='userstate-header'><h1> Statistics </h1> </div>
         {isLineChart && <BarChartIcon className="statics__chart-icon" onClick={iconClick}/>}
         {!isLineChart && <ShowChartIcon className="statics__chart-icon" onClick={iconClick}/>}
-        <div className="statistics__container">
-          {!isLineChart && <BarGraph param={chartParameters}/>}
-          {isLineChart && <LineGraph param={chartParameters}/>}
-        </div>
+        {userStcs ? 
+          <div className="statistics__container">
+            {!isLineChart && <BarGraph param={chartParameters}/>}
+            {isLineChart && <LineGraph param={chartParameters}/>}
+          </div> : <></>
+        }
       </div>
     )
   }

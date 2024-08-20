@@ -25,8 +25,10 @@ function DashboardHead() {
       setWins(userWins)
       setLosts(userLosts)
       setGames(userWins + userLosts)
-      setWinPcnt(winPct)
-      setLostPcnt(100 - winPct)
+      if (userGame){
+        setWinPcnt(winPct)
+        setLostPcnt(100 - winPct)
+      }
     }
   },[userGames])
 
@@ -46,7 +48,7 @@ function DashboardHead() {
         if (response.ok)
           setUserGames(res.userGames);
         else
-          console.log("Error : ", res.error);
+          console.log("Error :", res.error);
       } catch (error) {
         console.log("Error: ", error);
       }
@@ -61,17 +63,17 @@ function DashboardHead() {
           <p className='game'> Games </p>
           <div className="head__games-value-pic">
             <img alt='racket' src={racketSvg} />
-            <p> {games} </p> 
+            <p> {games ? games : 0} </p> 
           </div>
           
           <div className="head__game-stats__percentage">
             <div className='pic-percentage dash--win-color'>
               <AddCircleIcon />
-              <p> {winPcnt} %</p>
+              <p>{isNaN(winPcnt) || winPcnt === 0 ? '0%' : `${winPcnt}%`}</p>
             </div>
             <div className='pic-percentage dash--lost-color'>
               <RemoveCircleIcon />
-              <p> {lostPcnt} %</p>
+              <p>{isNaN(lostPcnt) || lostPcnt === 0 ? '0%' : `${lostPcnt}%`}</p>
             </div>
           </div>
 
@@ -81,8 +83,8 @@ function DashboardHead() {
           </div>
 
           <div className='head__game-stats__statistics'>
-            <p className='dash--win-color'> {wins} Won </p>
-            <p className='dash--lost-color'> {losts} Lost</p>
+            <p className='dash--win-color'> {wins ? wins : 0} Wins </p>
+            <p className='dash--lost-color'> {losts ? losts : 0} Losts </p>
           </div>
 
         </div>
