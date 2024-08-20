@@ -293,34 +293,50 @@ def get_user_games_wl(request, username):
 #**--------------------- GetUser Statistics {Profile} ---------------------**#
 
 @api_view(["GET"])
-def get_user_statistics(request, username):
+def get_user_statistics(request, username, date_range):
     user = customuser.objects.filter(username=username).first()
-    today = datetime.now().date().isoformat()
-    fifteen_days_ago = (datetime.now().date() - timedelta(days=15)).isoformat()
+    # today = datetime.now().date().isoformat()
+    # fifteen_days_ago = (datetime.now().date() - timedelta(days=15)).isoformat()
 
-    print("--------", today, "--------")
-    print("--------", fifteen_days_ago, "--------")
+    res_data = []
+    date = date_range - 1
+    while date >= 0:
+        day_bfr = (datetime.now().date() - timedelta(days=date)).isoformat()
+        day_afr = (datetime.now().date() - timedelta(days=date-1)).isoformat()
+        
+        user_matches = Match.objects.filter(
+            Q(team1_player1=user) | Q(team2_player1=user),
+            date_ended__gte=day_bfr,
+            date_ended__lte=day_afr
+        ).all()
 
-    user_matches = Match.objects.filter(
-        Q(team1_player1=user) | Q(team2_player1=user),
-        date_ended__gte=fifteen_days_ago,
-        date_ended__lte=today
-    ).all()
-    for user_match in user_matches:
-        print("-----TEAM-----")
-        print(user_match.id)
-        print(user_match.date_ended)
-        # print(user_match.team1_status)
-        # print(user_match.team2_status)
-        print("-------------")
-    # user_matches = Match.objects.filter(team2_player1=user).all()
-    # for user_match in user_matches:
-    #     print("-----TEAM2-----")
-    #     print(user_match.date_ended)
-    #     print(user_match.team2_status)
-    #     print("-------------")
+        wins = 0
+        losts = 0
+        if user_matches.exists():
+            for user_match in user_matches:
+                # print("-------", user.username, "---", user_match.team1_player1.username)
+                # print("--------> ", user.id == user_match.team1_player1.id)
+                if (user.id == user_match.team1_player1.id):
+                    if user_match.team1_status == "winner":
+                        wins +=1
+                    else:
+                        losts +=1
+                else:
+                    if user_match.team2_status == "winner":
+                        wins +=1
+                    else:
+                        losts +=1
+        day_int = int(datetime.strptime(day_bfr, "%Y-%m-%d").day)
+        day_str = f"{day_int:02}"
+        res_data.append({
+            'day': day_str,
+            'wins': wins,
+            'losts': losts,
+        })
+        date -=1
+
     if user is not None:
-        return Response(data={"userStcs": "Nice"}, status=status.HTTP_200_OK)
+        return Response(data={"userStcs": res_data}, status=status.HTTP_200_OK)
     else:
         return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
 

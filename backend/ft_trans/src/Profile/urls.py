@@ -18,5 +18,5 @@ urlpatterns = [
     # path('getUserImage/<str:username>', views.get_user_image),
     path('getUsersData/<str:username>', views.get_users_data),
     path('getUserGames/<str:username>', views.get_user_games_wl),
-    path('getUserStcs/<str:username>', views.get_user_statistics),
+    path('getUserStcs/<str:username>/<int:date_range>', views.get_user_statistics),
 ]
