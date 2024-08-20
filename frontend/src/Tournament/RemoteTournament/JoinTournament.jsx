@@ -84,7 +84,7 @@ function JoinTournament() {
 					let newTournament = data.message.tournament_info
 					setTournamentSuggestions((prevTournamentSuggestions) => [...prevTournamentSuggestions, newTournament]);
 				}
-				else if (type === 'tournament_destroyed_by_user') {
+				else if (type === 'tournament_destroyed_by_user' || type === 'tournament_started_by_user') {
 					let tournament_id = data.message.tournament_id
 					setTournamentSuggestions((prevTournamentSuggestions) => prevTournamentSuggestions.filter((member) => member.tournament_id !== tournament_id));
 				}

@@ -112,7 +112,7 @@
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
-	width: 45%;
+	width: 100%;
 	height: 150px;
 }
 
@@ -167,7 +167,7 @@
 	}
 
 	.game-modes-page-button {
-		width: 70%;
+		width: 55%;
 	}
 
 	.play-solo-mode-description,
@@ -309,7 +309,6 @@
 
 @media (max-width: 260px){
 	.game-modes-page {
-		margin-top: 30px;
 		gap: 10px;
 		margin-bottom: 100px;
 	}

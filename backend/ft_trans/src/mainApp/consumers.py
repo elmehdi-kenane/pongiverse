@@ -578,6 +578,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		await self.send(text_data=json.dumps({
 			'type' : 'tournament_started',
 		}))
+
+	async def tournament_started_by_user(self, event):
+		await self.send(text_data=json.dumps({
+			'type' : 'tournament_started_by_user',
+			'message' : event['message']
+		}))
+
 	async def warn_members(self, event):
 		await self.send(text_data=json.dumps({
 			'type' : 'warn_members',

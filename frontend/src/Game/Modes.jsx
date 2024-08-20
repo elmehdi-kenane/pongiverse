@@ -430,8 +430,8 @@ const Modes = () => {
 					</div>
 				</div>
 			</div>
-			<div className={`${styles['game-modes-page-button']} ${(soloModeSelected || createTournamentModeSelected || joinTournamentModeSelected) ? styles['game-modes-page-button-selected'] : ''}`} onClick={handleButtonClick}>
-				<button disabled={!enableButton}>Next</button>
+			<div className={`${styles['game-modes-page-button']} ${(soloModeSelected || createTournamentModeSelected || joinTournamentModeSelected) ? styles['game-modes-page-button-selected'] : ''}`}>
+				<button onClick={handleButtonClick} disabled={!enableButton}>Next</button>
 			</div>
 		</div>
 	)

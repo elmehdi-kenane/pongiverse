@@ -468,5 +468,16 @@ async def start_tournament(self, data, user_channels):
 					'type': 'tournament_started'
 				}
 			)
+	for username, channel_name in user_channels.items():
+		await self.channel_layer.send(
+			channel_name,
+			{
+				'type': 'tournament_started_by_user',
+				'message': {
+					'tournament_id' : tournament_id,
+				}
+			}
+		)
+
 
 
