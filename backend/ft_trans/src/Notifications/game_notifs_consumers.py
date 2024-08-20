@@ -4,7 +4,7 @@ import random
 import base64
 import asyncio
 import datetime
-# from friends.models import Friends
+# from chat.models import Friends
 from chat.models import Friends
 from myapp.models import customuser
 from asgiref.sync import sync_to_async
@@ -316,7 +316,7 @@ async def accept_game_invite(self, data, notifs_user_channels):
             #                 'mode': '1vs1'
             #             }
             #         })
-    
+
 
                     # await self.channel_layer.group_add(str(room['id']), channel_name)
             # await self.channel_layer.group_send(str(room['id']), {
