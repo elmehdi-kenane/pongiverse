@@ -59,9 +59,7 @@ class SignUpView(APIView):
 			response = Response()
 			data = get_tokens_for_user(user)
 			csrf.get_token(request)
-			user = customuser.objects.filter(id=user.id).first()
 			if user:
-				print("--------------------------------------")
 				UserMatchStatics.objects.create(
 					player=user,
 					wins=0,
@@ -96,6 +94,15 @@ class WaysSignUpView(APIView) :
 		serializer = MyModelSerializer(data=my_data)
 		if serializer.is_valid():
 			user = serializer.save()
+			if user:
+				UserMatchStatics.objects.create(
+					player=user,
+					wins=0,
+					losts=0,
+					level=0,
+					total_xp=0,
+					goals=0
+				)
 			response = Response()
 			response.data = {"Case" : "Sign up successfully"}
 			return response
