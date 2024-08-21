@@ -4,7 +4,6 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 import BarGraph from "../../Dashboard/charts/BarGraph"
 import LineGraph from '../../Dashboard/charts/LineGraph'
-import { profileLevel } from '../data/ProfileDataLevel';
 import ProfileContext from '../ProfileWrapper'
 
 

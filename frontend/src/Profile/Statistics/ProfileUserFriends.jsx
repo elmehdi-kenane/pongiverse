@@ -11,10 +11,11 @@ import ChatContext from '../../Groups/ChatContext'
 
 const ProfileUserFriends = () => {
 
+  const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const { userId } = useContext(ProfileContext);
   const [friendsData, setFriendsData] = useState([])
-  const {selectedDirect, setSelectedDirect} = useContext(ChatContext);
+  const { setSelectedDirect } = useContext(ChatContext);
 
   useEffect(() => {
     const getUserFriends = async () => {
@@ -40,12 +41,11 @@ const ProfileUserFriends = () => {
       getUserFriends()
   }, [userId])
 
-  const navigate = useNavigate();
   const handleProfileClick = (username) => {
     navigate(`/mainpage/profile/${username}`);
     // window.location.reload();
   };
-
+  
   const chatNavigate = (username, pic) => {
     const userImage = pic ? pic : MavSvg
     setSelectedDirect({

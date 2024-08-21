@@ -1,11 +1,5 @@
 import React, { useState } from 'react'
 import Pagination from "../Dashboard/helpers/Pagination"
-import BarGraph from "../Dashboard/charts/BarGraph"
-import LineGraph from '../Dashboard/charts/LineGraph'
-import { profileLevel } from './data/ProfileDataLevel';
-
-import BarChartIcon from '@mui/icons-material/BarChart';
-import ShowChartIcon from '@mui/icons-material/ShowChart';
 
 import { achv } from './data/achvData'
 import ProfileUserFriends from './Statistics/ProfileUserFriends'
