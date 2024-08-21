@@ -4,7 +4,6 @@ import { useClickOutSide } from "../../Chat/chatConversation";
 import CloseIcon from "@mui/icons-material/Close";
 import CreateRoomVisibilityOptions from "./createRoomVisibilityOptions";
 import CreateRoomForm from "./createRoomForm";
-import CreateRoomPassword from "./createRoomPassword";
 import ChatContext from "../../Context/ChatContext";
 import { toast } from "react-hot-toast";
 
@@ -159,15 +158,6 @@ const CreateRoom = (props) => {
           submitHandler={submitHandler}
           onChangeHandler={onChangeHandler}
           onChangeIcon={onChangeIcon}
-        />
-      )}
-      {step === 3 && (
-        <CreateRoomPassword
-          formData={formData}
-          setStep={setStep}
-          errors={errors}
-          submitHandler={submitHandler}
-          onChangeHandler={onChangeHandler}
         />
       )}
       <span ref={errorRef} style={{ display: "none" }}></span>

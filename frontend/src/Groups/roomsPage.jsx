@@ -10,6 +10,9 @@ import NotificationAddIcon from "@mui/icons-material/NotificationAdd";
 import { Toaster } from "react-hot-toast";
 import RoomsNotifications from "./RoomComponents/roomsNotifications";
 
+import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
+import AddIcon from "@mui/icons-material/Add";
+
 const Rooms = () => {
   const [createRoom, setCreateRoom] = useState(false);
   const { user, chatSocket, isBlur, setIsBlur } = useContext(AuthContext);
@@ -21,7 +24,7 @@ const Rooms = () => {
     setChatRoomInvitations,
     suggestedChatRooms,
     chatRoomConversationsRef,
-    chatRoomCovers
+    chatRoomCovers,
   } = useContext(ChatContext);
 
   //hande scroller handler (My Rooms)
@@ -112,7 +115,7 @@ const Rooms = () => {
     if (chatSocket) {
       chatSocket.onmessage = (e) => {
         let data = JSON.parse(e.data);
-        if (data.type === "chatRoomAdminAdded")  
+        if (data.type === "chatRoomAdminAdded")
           chatRoomAdminAdded(data.message);
         else if (data.type === "roomInvitation") {
           const allInvitaions = roomInvitationsRef.current;
@@ -165,6 +168,13 @@ const Rooms = () => {
                 />
                 <div className="create-room-text">Create a Room</div>
               </div>
+              <AddIcon
+                className="create-room-button-icon"
+                onClick={() => {
+                  setCreateRoom(true);
+                  setIsBlur(true);
+                }}
+              />
               <NotificationAddIcon
                 className="rooms-notifications-icon"
                 onClick={() => {

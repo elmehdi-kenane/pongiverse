@@ -28,6 +28,7 @@ const RoomsNotifications = (props) => {
           }}
         />
       </div>
+      <div className="room-invitation-list-wrapper">
       {chatRoomInvitations.length ? (
         chatRoomInvitations.map((room, index) => (
           <InvitationRoom
@@ -42,6 +43,7 @@ const RoomsNotifications = (props) => {
           You currently have no chat room invitations{" "}
         </div>
       )}
+      </div>
     </div>
   );
 };

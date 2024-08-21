@@ -90,6 +90,7 @@ const Chat = () => {
                   <ChatConversationItem
                     key={key}
                     name={chatRoom.name}
+                    icon={chatRoom.icon}
                     lastMessage={
                       "The correct format would typically be chatRoomConversations"
                     }

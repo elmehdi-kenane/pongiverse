@@ -14,7 +14,7 @@ const ChatConversationItem = (props) => {
       props.setSelectedChatRoom({
         name: props.name,
         memberCount: props.membersCount,
-        icon: chatRoomIcons[props.imageIndex],
+        icon: props.icon,
         roomId: props.roomId,
       });
     }
@@ -33,7 +33,7 @@ const ChatConversationItem = (props) => {
         src={
           props.isDirect
             ? directsImages[props.imageIndex]
-            : chatRoomIcons[props.imageIndex]
+            : props.icon
         }
         alt=""
         className="conversation-item-avatar"
