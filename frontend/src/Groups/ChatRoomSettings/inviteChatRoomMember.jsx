@@ -12,7 +12,7 @@ const { user } = useContext(AuthContext);
     const fetchAllFriends = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8000/chatAPI/listAllFriends",
+          `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/listAllFriends`,
           {
             method: "POST",
             headers: {

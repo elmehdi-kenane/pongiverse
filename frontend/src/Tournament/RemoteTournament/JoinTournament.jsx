@@ -56,7 +56,7 @@ function JoinTournament() {
 
 	useEffect(() => {
 		const getTournamentSuggestions = async () => {
-			const response = await fetch(`http://localhost:8000/api/get-tournament-suggestions`, {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-tournament-suggestions`, {
 				method: "GET",
 				headers: {
 					'Content-Type': 'application/json',
@@ -114,7 +114,7 @@ function JoinTournament() {
 
 	useEffect(() => {
 		const get_members = async () => {
-			const response = await fetch(`http://localhost:8000/api/get-tournament-data`, {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-tournament-data`, {
 				method: "POST",
 				headers: {
 					'Content-Type': 'application/json',

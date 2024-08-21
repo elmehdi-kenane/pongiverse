@@ -9,7 +9,7 @@ const ChangeChatRoomIcon = (props) => {
     formData.append("room", props.roomId);
     try {
       const response = await fetch(
-        "http://localhost:8000/chatAPI/changeChatRoomIcon",
+        `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/changeChatRoomIcon`,
         {
           method: "POST",
           body: formData,
@@ -44,12 +44,13 @@ const ChangeChatRoomIcon = (props) => {
   return (
     <div className="room-update-avatar-wrapper">
       <div className="room-update-avatar-content">
+        {/* <div className="room-upate-avatar-head">Change Chat Room Icon</div> */}
         <img
-          src={props.RoomIcon}
+          src={props.currentIcon}
           alt=""
           className="room-update-avatar-preview"
         />
-        <label htmlFor="update-room-image" id="room-update-avatar-label">
+        {/* <label htmlFor="update-room-image" id="room-update-avatar-label">
           Select an Image
         </label>
         <input
@@ -58,7 +59,7 @@ const ChangeChatRoomIcon = (props) => {
           accept="image/png, image/jpeg"
           id="update-room-image"
           onChange={onChangeChangeRoomAvatar}
-        />
+        /> */}
       </div>
       <div className="room-update-avatar-buttons">
         <button onClick={() => props.setUpdateRoomAvatar(false)}>Cancel</button>

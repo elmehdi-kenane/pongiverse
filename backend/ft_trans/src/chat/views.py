@@ -9,6 +9,7 @@ from rest_framework import status
 import base64
 from django.core.files.base import ContentFile
 from friends.serializers import friendSerializer
+import socket, requests, os
 
 @api_view(["POST"])
 def leave_chat_room(request):
@@ -163,22 +164,44 @@ def create_chat_room(request):
     return Response({'error': 'Invalid request method'}, status=400)
 
 
+
+def get_server_ip():
+    try:
+        response = requests.get('https://api.ipify.org?format=json')
+        public_ip = response.json().get('ip')
+        if public_ip:
+            return public_ip
+    except requests.RequestException:
+        pass
+
+    # Fallback to local IP
+    hostname = socket.gethostname()
+    return socket.gethostbyname(hostname)
+
+def get_protocol(request):
+    return 'https' if request.is_secure() else 'http'
+
 @api_view(['GET'])
 def channel_list(request, username):
     if request.method == 'GET':
         user = customuser.objects.get(username=username)
         memberships = Membership.objects.filter(user=user)
         rooms = []
+        protocol = get_protocol(request)
+        server_ip = get_server_ip()
+        print("server ip: ",server_ip)
+        ip_address = os.getenv('IP_ADDRESS')
         for membership in memberships:
             room_data = {
                 'id': membership.room.id,
                 'role': membership.roles,
                 'name': membership.room.name,
                 'topic': membership.room.topic,
-                'icon_url': membership.room.icon.path,
+                # 'icon' : f"{protocol}://172.26.59.182:8000/chatAPI{membership.room.icon.url}",
+                'icon' : f"{protocol}://{ip_address}:8000/chatAPI{membership.room.icon.url}",
+                # 'cover' : f"{protocol}://172.26.59.182:8000/chatAPI{membership.room.cover.url}",
+                'cover' : f"{protocol}://{ip_address}:8000/chatAPI{membership.room.cover.url}",
                 'membersCount': membership.room.members_count,
-                # 'cover': membership.room.cover.path
-                'cover': f"http://localhost:8000/chatAPI{membership.room.cover.url}"
             }
             rooms.append(room_data)
         return Response(rooms)

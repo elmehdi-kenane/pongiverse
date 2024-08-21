@@ -10,7 +10,7 @@ import AuthContext from '../navbar-sidebar/Authcontext';
 const Dashboard = () => {
 	const { user } = useContext(AuthContext)
 	const set_is_inside = async () => {
-		const response = await fetch(`http://localhost:8000/api/set-is-inside`, {
+		const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/set-is-inside`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -52,7 +52,7 @@ export default Dashboard
 
 //   useEffect(() => {
 // 	const getUsers = async () => {
-// 		const response = await fetch(`http://localhost:8000/users/profile/${user}`, {
+// 		const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/users/profile/${user}`, {
 // 		  method: 'GET'
 // 		})
 // 		const res = await response.json()
@@ -66,7 +66,7 @@ export default Dashboard
 //   }, [user])
 
 //   const addFriend = async (myuser) => {
-// 	const response = await fetch(`http://localhost:8000/users/add/${user}`, {
+// 	const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/users/add/${user}`, {
 // 	  method: 'POST',
 // 	  headers: {
 // 		'Content-Type': 'application/json'

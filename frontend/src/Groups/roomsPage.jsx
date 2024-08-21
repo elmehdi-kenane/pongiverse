@@ -201,15 +201,13 @@ const Rooms = () => {
                   {chatRoomConversations.map((room, index) => (
                     <MyRoom
                       key={index}
-                      role={room.role}
-                      name={room.name}
-                      index={index}
-                      topic={room.topic}
                       roomId={room.id}
-                      roomIcons={chatRoomIcons}
-                      chatRoomCovers={chatRoomCovers}
-                      membersCount={room.membersCount}
+                      name={room.name}
+                      icon={room.icon}
                       cover={room.cover}
+                      role={room.role}
+                      topic={room.topic}
+                      membersCount={room.membersCount}
                     />
                   ))}
                 </div>

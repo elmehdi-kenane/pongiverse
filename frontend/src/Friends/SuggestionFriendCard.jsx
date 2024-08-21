@@ -19,7 +19,7 @@ const SuggestionFriendCard = ({ currentUsername, secondUsername, avatar}) => {
     
     // 
     const handleAddFriendReq = () => {
-    fetch('http://localhost:8000/friends/add_friend_request/', {
+    fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/add_friend_request/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ const SuggestionFriendCard = ({ currentUsername, secondUsername, avatar}) => {
 
 // const handleCancelFriendReq = () => {
 //     setFriendRequestBtn(false);
-//     fetch('http://localhost:8000/friends/cancel_friend_request/', {
+//     fetch('http://${import.meta.env.VITE_IPADDRESS}:8000/friends/cancel_friend_request/', {
 //         method: 'POST',
 //         headers: {
 //             'Content-Type': 'application/json',

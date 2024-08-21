@@ -9,7 +9,7 @@ const ChatRoomMembersList = (props) => {
 
   const fetchImages = async (items, key) => {
     const promises = items.map(async (item) => {
-      const response = await fetch(`http://localhost:8000/api/getImage`, {
+      const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -41,7 +41,7 @@ const ChatRoomMembersList = (props) => {
     const fetchAllChatRoomMembers = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/chatAPI/chatRoomMembersList`,
+          `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/chatRoomMembersList`,
           {
             method: "POST",
             headers: {

@@ -18,7 +18,7 @@ const FriendCard = ({ isLastTwoElements, currentUsername, secondUsername, avatar
     console.log("currentUsername", currentUsername);
     console.log("secondUsername", secondUsername);
     const handleBlockFriend = () => {
-        fetch('http://localhost:8000/friends/block_friend/', {
+        fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/block_friend/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ const FriendCard = ({ isLastTwoElements, currentUsername, secondUsername, avatar
 
 
     const handleRemoveFriendship = () => {
-        fetch('http://localhost:8000/friends/remove_friendship/', {
+        fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/remove_friendship/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

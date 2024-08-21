@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 const client = axios.create({
-	baseURL: "http://localhost:8000",
+	baseURL: `http://${import.meta.env.VITE_IPADDRESS}:8000`,
 });
 
 function WaysSecondStep() {

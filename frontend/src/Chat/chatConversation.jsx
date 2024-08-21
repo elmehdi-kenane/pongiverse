@@ -62,7 +62,7 @@ const ChatConversation = () => {
     const fetchMessages = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/chatAPI/Directs/messages`,
+          `http:${import.meta.env.VITE_IPADDRESS}/chatAPI/Directs/messages`,
           {
             method: "POST",
             headers: {

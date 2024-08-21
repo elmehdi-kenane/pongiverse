@@ -4,7 +4,7 @@ import Profile from '../assets/Friends/profile.png';
 
 const RecievedFriendReqCard = ({ currentUsername, secondUsername, send_at, avatar }) => {
     const handleConfirmFriendReq = () => {
-        fetch('http://localhost:8000/friends/confirm_friend_request/', {
+        fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/confirm_friend_request/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -23,7 +23,7 @@ const RecievedFriendReqCard = ({ currentUsername, secondUsername, send_at, avata
             });
     };
     const handleCancelFriendReq = () => {
-        fetch('http://localhost:8000/friends/cancel_friend_request/', {
+        fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/cancel_friend_request/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

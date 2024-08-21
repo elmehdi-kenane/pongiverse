@@ -43,7 +43,7 @@ export const ChatProvider = ({ children }) => {
 
   const fetchImages = async (items, key) => {
     const promises = items.map(async (item) => {
-      const response = await fetch(`http://localhost:8000/api/getImage`, {
+      const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -54,7 +54,6 @@ export const ChatProvider = ({ children }) => {
       });
       const blob = await response.blob();
       return URL.createObjectURL(blob);
-      // return { [item.id]: URL.createObjectURL(blob) };
     });
     return await Promise.all(promises);
   };
@@ -81,41 +80,41 @@ export const ChatProvider = ({ children }) => {
   }, [chatRoomInvitations]);
 
   //Fetch suggested chat rooms images
-  useEffect(() => {
-    const fetchSuggestedChatRoomsIcons = async () => {
-      const images = await fetchImages(suggestedChatRooms, "icon_url");
-      setSuggestedChatRoomsIcons(images);
-    };
+  // useEffect(() => {
+  //   const fetchSuggestedChatRoomsIcons = async () => {
+  //     const images = await fetchImages(suggestedChatRooms, "icon_url");
+  //     setSuggestedChatRoomsIcons(images);
+  //   };
 
-    if (suggestedChatRooms.length) {
-      fetchSuggestedChatRoomsIcons();
-    }
-  }, [suggestedChatRooms]);
+  //   if (suggestedChatRooms.length) {
+  //     // fetchSuggestedChatRoomsIcons();
+  //   }
+  // }, [suggestedChatRooms]);
 
 
 
   //Fetch chat rooms images and covers
-  useEffect(() => {
-    const fetchChatRoomConversationsIcons = async () => {
-      const images = await fetchImages(chatRoomConversations, "icon_url");
-      setChatRoomIcons(images);
-    };
-    const fetchChatRoomConversationsCovers = async () => {
-      const images = await fetchImages(chatRoomConversations, "cover");
-      setChatRoomCovers(images);
-    };
-    if (chatRoomConversations.length) {
-      console.log("zaazazazza: ", chatRoomConversations);
-      fetchChatRoomConversationsIcons();
-      fetchChatRoomConversationsCovers();
-    }
-  }, [chatRoomConversations]);
+  // useEffect(() => {
+  //   const fetchChatRoomConversationsIcons = async () => {
+  //     const images = await fetchImages(chatRoomConversations, "icon_url");
+  //     setChatRoomIcons(images);
+  //   };
+  //   const fetchChatRoomConversationsCovers = async () => {
+  //     const images = await fetchImages(chatRoomConversations, "cover");
+  //     setChatRoomCovers(images);
+  //   };
+  //   if (chatRoomConversations.length) {
+  //     console.log("zaazazazza: ", chatRoomConversations);
+  //     // fetchChatRoomConversationsIcons();
+  //     // fetchChatRoomConversationsCovers();
+  //   }
+  // }, [chatRoomConversations]);
 
   useEffect(() => {
     const fetchChatRooms = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/chatAPI/chatRooms/${user}`
+          `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/chatRooms/${user}`
         );
         const data = await response.json();
         setChatRoomConversations(data);
@@ -127,7 +126,7 @@ export const ChatProvider = ({ children }) => {
     const fetchDirectsWithMessage = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/profile/firendwithdirects/${user}`
+          `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/firendwithdirects/${user}`
         );
         const data = await response.json();
         console.log(data);
@@ -141,7 +140,7 @@ export const ChatProvider = ({ children }) => {
     const fetchChatRoomInvitations = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/chatAPI/chatRoomInvitations/${user}`
+          `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/chatRoomInvitations/${user}`
         );
         let data = await response.json();
         setChatRoomInvitations(data);
@@ -154,7 +153,7 @@ export const ChatProvider = ({ children }) => {
     const fetchSuggestedChatRooms = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/chatAPI/suggestedChatRooms/${user}`
+          `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/suggestedChatRooms/${user}`
         );
         let data = await response.json();
         // console.log("suggested chat room", data);

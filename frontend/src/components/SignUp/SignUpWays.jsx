@@ -30,7 +30,7 @@ function SignUpWays() {
 
 	const verify_email = async (email, picture) => {
 		console.log("the dta : ", email)
-		const response = await fetch(`http://localhost:8000/auth/checkemail/`, {
+		const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/checkemail/`, {
 			method: "POST",
 			headers: {
 				'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ function SignUpWays() {
 
 	useEffect(() => {
 		const google_get_data = async () => {
-			const response = await fetch(`http://localhost:8000/auth/sign-up-google-login-get-token/`, {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/sign-up-google-login-get-token/`, {
 				method: "POST",
 				headers: {
 					'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ function SignUpWays() {
 
 	useEffect(() => {
 		const intra_get_data = async () => {
-			const response = await fetch(`http://localhost:8000/auth/sign-up-intra-login-get-token/`, {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/sign-up-intra-login-get-token/`, {
 				method: "POST",
 				headers: {
 					'Content-Type': 'application/json',
@@ -116,7 +116,7 @@ function SignUpWays() {
 
 	const handleGoogleClick = () => {
 		const getGoogleUrl = async () => {
-			const response = await fetch(`http://localhost:8000/auth/sign-up-google-get-url`, {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/sign-up-google-get-url`, {
 				method: "GET",
 				headers: {
 					'Content-Type': 'application/json',
@@ -133,7 +133,7 @@ function SignUpWays() {
 	}
 	const handleIntraClick = () => {
 		const getIntraUrl = async () => {
-			const response = await fetch(`http://localhost:8000/auth/sign-up-intra-get-url/`, {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/sign-up-intra-get-url/`, {
 				method: "GET",
 				headers: {
 					'Content-Type': 'application/json',

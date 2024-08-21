@@ -74,7 +74,7 @@ export const AuthProvider = ({children}) => {
 	useEffect(() => {
 		const fetchImages = async () => {
 			const promises = allGameFriends.map(async (user) => {
-				const response = await fetch(`http://localhost:8000/api/getImage`, {
+				const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`, {
 					method: "POST",
 					headers: {
 						'Content-Type': 'application/json',
@@ -101,7 +101,7 @@ export const AuthProvider = ({children}) => {
 	useEffect(() => {
 		const fetchNotifsImages = async () => {
 			const promises = allGameNotifs.map(async (user) => {
-				const response = await fetch(`http://localhost:8000/api/getImage`, {
+				const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`, {
 					method: "POST",
 					headers: {
 						'Content-Type': 'application/json',
@@ -123,7 +123,7 @@ export const AuthProvider = ({children}) => {
 	useEffect(() => {
 		const getAllGameFriends = async () => {
 			try {
-				let response = await fetch('http://localhost:8000/api/onlineFriends', {
+				let response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/onlineFriends`, {
 					method: "POST",
 					headers: {
 						'Content-Type': 'application/json',
@@ -143,7 +143,7 @@ export const AuthProvider = ({children}) => {
 
 		const getAllNotifsFriends = async () => {
 			try {
-				let response = await fetch('http://localhost:8000/api/notifsFriends', {
+				let response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/notifsFriends`, {
 					method: "POST",
 					headers: {
 						'Content-Type': 'application/json',
@@ -164,7 +164,7 @@ export const AuthProvider = ({children}) => {
 
 		const getUserImage = async () => {
 			try {
-				let response = await fetch('http://localhost:8000/api/getUserImage', {
+				let response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getUserImage`, {
 					method: "POST",
 					headers: {
 						'Content-Type': 'application/json',
@@ -183,7 +183,7 @@ export const AuthProvider = ({children}) => {
 		
 		const getGameCustomize = async () => {
 			try {
-				let response = await fetch('http://localhost:8000/api/getCustomizeGame', {
+				let response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getCustomizeGame`, {
 					credentials: 'include'
 				})
 				const res = await response.json()
@@ -227,7 +227,7 @@ export const AuthProvider = ({children}) => {
 		};
 		async function sendUserData(uname, currentAllGameFriends){
 			try {
-				let response = await fetch('http://localhost:8000/api/get_user', {
+				let response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get_user`, {
 					method: "POST",
 					headers: {
 						'Content-Type': 'application/json',
@@ -275,7 +275,7 @@ export const AuthProvider = ({children}) => {
 			}
 		}
 		if (gamePlayRegex.test(location.pathname) && !socket && user) {
-			const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
+			const newSocket = new WebSocket(`ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/socket-server`)
 			newSocket.onopen = () => {
 				setSocket(newSocket)
 				console.log("GAME SOCKET OPENED SUCCEFULLY")
@@ -319,7 +319,7 @@ export const AuthProvider = ({children}) => {
 			}
 		}
 		if ( (location.pathname === "/mainpage/chat" || location.pathname === "/mainpage/groups") && !chatSocket && user) {
-		  const newChatSocket = new WebSocket(`ws://localhost:8000/ws/chat_socket`);
+		  const newChatSocket = new WebSocket(`ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/chat_socket`);
 		  newChatSocket.onopen = () => {
 			console.log("chat Socket Created and opened");
 			setChatSocket(newChatSocket);
@@ -340,7 +340,7 @@ export const AuthProvider = ({children}) => {
 
 	async function publicCheckAuth() {
 		try {
-			let response = await fetch('http://localhost:8000/auth/verifytoken/', {  // 10.12.7.3   localhost   127.0.0.1
+			let response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/verifytoken/`, {  // 10.12.7.3   localhost   127.0.0.1
 				method : 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -364,7 +364,7 @@ export const AuthProvider = ({children}) => {
 
 	async function privateCheckAuth() {
 		try {
-			let response = await fetch('http://localhost:8000/auth/verifytoken/', {  // 10.12.7.3   localhost   127.0.0.1
+			let response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/verifytoken/`, {  // 10.12.7.3   localhost   127.0.0.1
 				method : 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -376,9 +376,11 @@ export const AuthProvider = ({children}) => {
 			})
 			response = await response.json()
 			if (response.Case !== "Invalid token") {
+				console.log("LOGGEDIN SUCCESSFULY")
 				setUser(response.data.username)
 				console.log("USER USERNSME: ",response.data.username)
 			} else {
+				console.log("FAILD TO LOGIN SUCCESSFULY")
 				setUser('')
 				navigate('/signin')
 			}

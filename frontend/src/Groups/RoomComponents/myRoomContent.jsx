@@ -33,7 +33,7 @@ const MyRoomContent = (props) => {
     formData.append("cover", chatRoomCover);
     const toastId = toast.loading("Updating chat room cover. Please wait...");
     try {
-      const response = await fetch(`http://localhost:8000/chatAPI/changeChatRoomCover`, {
+      const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/changeChatRoomCover`, {
         method: "POST",
         body: formData,
       });
@@ -89,13 +89,12 @@ const MyRoomContent = (props) => {
         <div
           className="my-room-cover-wrapper"
           style={{
-            // backgroundImage: `url(${props.chatRoomCovers[props.index]})`,
             backgroundImage: `url(${props.cover})`,
           }}
         ></div>
         <div className="my-room-info">
           <img
-            src={props.roomIcons[props.index]}
+            src={props.icon}
             alt=""
             className="my-room-icon"
             onClick={navigateToChatRoom}

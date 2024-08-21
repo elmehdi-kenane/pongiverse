@@ -27,7 +27,7 @@ const Solo = () => {
 	}
 
 	const nextPage = () => {
-		console.log(socket, socket.readyState === WebSocket.OPEN, user)
+		// console.log(socket, socket.readyState === WebSocket.OPEN, user)
 		if (selected === 1) {
 			navigate('../game/solo/1vs1')
 		}

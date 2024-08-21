@@ -7,7 +7,7 @@ const BlockedAccountCard = ({ secondUsername, avatar}) => {
     const { user } = useContext(AuthContext)
 
     const handleUnblockFriend = () => {
-        fetch('http://localhost:8000/friends/unblock_friend/', {
+        fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/unblock_friend/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

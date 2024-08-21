@@ -21,18 +21,16 @@ const MyRoom = (props) => {
   return (
     <div className="my-room-container">
       <MyRoomContent
+        roomId={props.id}
+        name={props.name}
+        icon={props.icon}
+        cover={props.cover}
+        role={props.role}
+        topic={props.topic}
+        membersCount={props.membersCount}
         setLeaveRoom={setLeaveRoom}
         setShowSettings={setShowSettings}
-        roomIcons={props.roomIcons}
-        index={props.index}
-        name={props.name}
-        topic={props.topic}
-        role={props.role}
-        roomId={props.roomId}
-        membersCount={props.membersCount}
         RoomSettings={ChatIcons.RoomSettings}
-        chatRoomCovers={props.chatRoomCovers}
-        cover={props.cover}
       />
       {showSettings && (
         <ChatRoomSettings
@@ -55,10 +53,10 @@ const MyRoom = (props) => {
       )}
       {updateRoomAvatar && (
         <ChangeChatRoomIcon
+          currentIcon= {props.icon}
+          roomId={props.roomId}
           setUpdateRoomAvatar={setUpdateRoomAvatar}
           setShowSettings={setShowSettings}
-          RoomIcon={ChatIcons.RoomIcon}
-          roomId={props.roomId}
         />
       )}
       {addRoomAdmin && (

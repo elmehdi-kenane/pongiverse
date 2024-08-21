@@ -46,7 +46,7 @@ const ChatRoomConversation = (props) => {
     const fetchMessages = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/chatAPI/chatRoom/messages/${selectedChatRoom.roomId}`
+          `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/chatRoom/messages/${selectedChatRoom.roomId}`
         );
         const data = await response.json();
         if (data) setMessages(data);

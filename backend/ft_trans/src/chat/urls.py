@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('createChatRoom', views.create_chat_room, name='create-chat-room'),
@@ -18,5 +20,4 @@ urlpatterns = [
     path('chatRoomMembersList', views.chat_room_members_list, name='chat-room-members-list'),
     path('accpetChatRoomInvite', views.accept_chat_room_invite, name='accept-chat-room-invite'),
     path('cancelChatRoomInvite', views.cancel_chat_room_invite, name='cancel-chat-room-invite'),
-
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

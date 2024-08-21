@@ -4,7 +4,7 @@ import Profile from '../assets/Friends/profile.png';
 
 const SentFriendReqCard = ({ currentUsername, secondUsername, send_at, avatar }) => {
     const handleCancelFriendReq = () => {
-        fetch('http://localhost:8000/friends/cancel_friend_request/', {
+        fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/cancel_friend_request/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

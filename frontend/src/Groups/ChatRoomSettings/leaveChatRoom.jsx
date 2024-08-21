@@ -6,7 +6,7 @@ import ChatContext from "../../Context/ChatContext";
 // export const LeaveChatRoomSubmitter = async (user, chatRoomConversationsRef, setChatRoomConversations, roomId) => {
 //   try {
 //     const response = await fetch(
-//       `http://localhost:8000/chatAPI/leaveChatRoom`,
+//       `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/leaveChatRoom`,
 //       {
 //         method: "POST",
 //         headers: { "content-type": "application/json" },
@@ -43,7 +43,7 @@ export const LeaveChatRoomSubmitter = async (
   setTimeout(async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/chatAPI/leaveChatRoom`,
+        `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/leaveChatRoom`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
