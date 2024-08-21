@@ -1,5 +1,4 @@
 import { React, useContext, useEffect, useState } from "react";
-import { rankData } from "../helpers/Data";
 import MavSvg from "../../assets/Profile/Group.svg"
 
 import AuthContext from "../../navbar-sidebar/Authcontext";
