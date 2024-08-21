@@ -295,48 +295,46 @@ def get_user_games_wl(request, username):
 @api_view(["GET"])
 def get_user_statistics(request, username, date_range):
     user = customuser.objects.filter(username=username).first()
-    # today = datetime.now().date().isoformat()
-    # fifteen_days_ago = (datetime.now().date() - timedelta(days=15)).isoformat()
-
     res_data = []
     date = date_range - 1
     while date >= 0:
         day_bfr = (datetime.now().date() - timedelta(days=date)).isoformat()
         day_afr = (datetime.now().date() - timedelta(days=date-1)).isoformat()
-        
+
         user_matches = Match.objects.filter(
-            Q(team1_player1=user) | Q(team2_player1=user),
+            Q(team1_player1=user) | Q(team1_player2=user) | Q(team2_player1=user) | Q(team2_player2=user),
             date_ended__gte=day_bfr,
             date_ended__lte=day_afr
         ).all()
 
-        wins = 0
-        losts = 0
-        if user_matches.exists():
-            for user_match in user_matches:
-                # print("-------", user.username, "---", user_match.team1_player1.username)
-                # print("--------> ", user.id == user_match.team1_player1.id)
-                if (user.id == user_match.team1_player1.id):
-                    if user_match.team1_status == "winner":
-                        wins +=1
-                    else:
-                        losts +=1
-                else:
-                    if user_match.team2_status == "winner":
-                        wins +=1
-                    else:
-                        losts +=1
+        wins, losts = 0, 0
+        for user_match in user_matches:
+            if user_match.team1_player1 == user or user_match.team1_player2 == user:
+                wins += int(user_match.team1_status == "winner")
+                losts += int(user_match.team1_status != "winner")
+            elif user_match.team2_player1 == user or user_match.team2_player2 == user:
+                wins += int(user_match.team2_status == "winner")
+                losts += int(user_match.team2_status != "winner")
+
         day_int = int(datetime.strptime(day_bfr, "%Y-%m-%d").day)
-        day_str = f"{day_int:02}"
         res_data.append({
-            'day': day_str,
+            'day': f"{day_int:02}",
             'wins': wins,
             'losts': losts,
         })
-        date -=1
+        date -= 1
 
     if user is not None:
         return Response(data={"userStcs": res_data}, status=status.HTTP_200_OK)
     else:
         return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(["GET"])
+def get_single_matches(request, username):
+    user = customuser.objects.filter(username=username).first()
+    if user is not None:
+        user_matches = Match.objects.filter(
+            Q(team1_player1=user) | Q(team1_player2=user) | Q(team2_player1=user) | Q(team2_player2=user)).all()
+        return Response(data={"userMatches": "NAADI"}, status=status.HTTP_200_OK)
+    else:
+       return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
