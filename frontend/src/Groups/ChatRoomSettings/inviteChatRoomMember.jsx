@@ -44,6 +44,7 @@ const { user } = useContext(AuthContext);
             className="room-invite-member-close-button"
             onClick={() => props.setInviteMember(false)}
           />
+          <div className="room-invite-member-list-wrapper">
           {allFriends.map((friend, index) => (
             <ChatRoomInvitee
               key={index}
@@ -52,6 +53,7 @@ const { user } = useContext(AuthContext);
               avatar={friend.avatar}
             />
           ))}
+          </div>
         </div>
     )
 }

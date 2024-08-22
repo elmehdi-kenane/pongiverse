@@ -188,8 +188,6 @@ def channel_list(request, username):
         memberships = Membership.objects.filter(user=user)
         rooms = []
         protocol = get_protocol(request)
-        server_ip = get_server_ip()
-        print("server ip: ",server_ip)
         ip_address = os.getenv('IP_ADDRESS')
         for membership in memberships:
             room_data = {
@@ -361,23 +359,6 @@ def direct_messages(request):
     return Response({'error': 'Invalid request method'}, status=400)
 
 
-# @api_view(['POST'])
-# def list_all_friends(request):
-#     if request.method == 'POST':
-#         user = customuser.objects.get(username=(request.data).get('user'))
-#         friends = Friendship.objects.filter(user=user)
-#         room = Room.objects.get(name=request.data.get('room'))
-#         all_friend = []
-#         for friend in friends:
-#             friend_object = customuser.objects.get(id=friend.friend_id)
-#             if not Membership.objects.filter(room=room, user=friend_object).exists():
-#                 friend_data = {
-#                     'name': friend_object.username,
-#                     'avatar': friend_object.avatar.path
-#                 }
-#                 all_friend.append(friend_data)
-#         return Response(all_friend)
-#     return Response({'error': 'Invalid request method'}, status=400)
 
 
 @api_view(['GET'])
@@ -409,10 +390,12 @@ def chat_room_members_list(request):
             return Response({'error': 'chat room not found'}, status=400)
         memberships = Membership.objects.filter(room=room)
         data = []
+        protocol = get_protocol(request)
+        ip_address = os.getenv('IP_ADDRESS')
         for member in memberships:
             member_data = {
                 'username': member.user.username,
-                'avatar': member.user.avatar.path,
+                'avatar' : f"{protocol}://{ip_address}:8000/chatAPI{member.user.avatar.url}",
             }
             data.append(member_data)
         return Response(data, status=200)
@@ -441,6 +424,8 @@ def accept_chat_room_invite(request):
         room.members_count +=1
         invitation.delete()
         room.save()
+        protocol = get_protocol(request)
+        ip_address = os.getenv('IP_ADDRESS')
         return Response({
             'success': f'You have joined {room.name} chat room',
             'room': {
@@ -448,9 +433,9 @@ def accept_chat_room_invite(request):
                 "role": "member",
                 "name": room.name,
                 "topic": room.topic,
-                "icon_url": room.icon.path,
+                "icon": f"{protocol}://{ip_address}:8000/chatAPI{room.icon.url}",
+                "cover": f"{protocol}://{ip_address}:8000/chatAPI{room.cover.url}",
                 "membersCount": room.members_count,
-                'cover': room.cover.path
             }
         })
 

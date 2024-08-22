@@ -21,7 +21,7 @@ const MyRoom = (props) => {
   return (
     <div className="my-room-container">
       <MyRoomContent
-        roomId={props.id}
+        roomId={props.roomId}
         name={props.name}
         icon={props.icon}
         cover={props.cover}

@@ -1,8 +1,14 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const ChangeChatRoomIcon = (props) => {
   const [newRoomIcon, setnewRoomIcon] = useState(null);
 
+
+  const fileInputRef = useRef(null);
+
+  const handleImageClick = () => {
+    fileInputRef.current.click();
+  };
   const changeRoomIconSubmitHandler = async () => {
     const formData = new FormData();
     formData.append("icon", newRoomIcon);
@@ -43,23 +49,22 @@ const ChangeChatRoomIcon = (props) => {
 
   return (
     <div className="room-update-avatar-wrapper">
-      <div className="room-update-avatar-content">
-        {/* <div className="room-upate-avatar-head">Change Chat Room Icon</div> */}
+      <div className="room-update-avatar-content" onClick={handleImageClick}>
         <img
           src={props.currentIcon}
-          alt=""
+          alt="Room Avatar"
           className="room-update-avatar-preview"
+          style={{ cursor: "pointer" }}
         />
-        {/* <label htmlFor="update-room-image" id="room-update-avatar-label">
-          Select an Image
-        </label>
         <input
           type="file"
           name="avatar"
           accept="image/png, image/jpeg"
           id="update-room-image"
+          style={{ display: "none" }}
+          ref={fileInputRef}
           onChange={onChangeChangeRoomAvatar}
-        /> */}
+        />
       </div>
       <div className="room-update-avatar-buttons">
         <button onClick={() => props.setUpdateRoomAvatar(false)}>Cancel</button>

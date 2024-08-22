@@ -11,11 +11,12 @@ const MyRoomContent = (props) => {
   let chatRoomCoverRef = useRef(chatRoomCover)
 
   const navigateToChatRoom = () => {
+    console.log("Room ID: ",props.roomId)
     setSelectedChatRoom({
-      name: props.name,
-      memberCount: props.membersCount,
-      icon: props.roomIcons[props.index],
       roomId: props.roomId,
+      name: props.name,
+      icon: props.icon,
+      memberCount: props.membersCount,
     });
     setIsHome(false);
     navigate(`/mainpage/chat`);

@@ -29,6 +29,7 @@ const AddChatRoomAdmin = (props) => {
             className="room-add-admin-close-button"
             onClick={() => props.setAddRoomAdmin(false)}
           />
+          <div className="room-add-admin-list-wrapper">
           {allChatRoomMembers.map((memeber, index) => (
             <ChatRoomMember
               key={index}
@@ -36,6 +37,7 @@ const AddChatRoomAdmin = (props) => {
               roomName={props.name}
             />
           ))}
+          </div>
         </div>
     )
 

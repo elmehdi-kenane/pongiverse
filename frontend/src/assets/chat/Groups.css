@@ -992,6 +992,10 @@ svg.my-room-cover-edit-icon:hover {
   z-index: 3;
   padding: 10px;
 }
+.room-update-avatar-wrapper {
+  flex-direction: row;
+  align-items: center;
+}
 
 .room-change-name-title {
   font-weight: 600;
@@ -1031,11 +1035,21 @@ svg.my-room-cover-edit-icon:hover {
   border-radius: 2px;
 }
 
+.room-update-avatar-buttons {
+  flex-direction: column;
+  gap: 5px;
+  max-width: 55%;
+}
+.room-update-avatar-buttons button {
+  width: 100%;
+}
+
 .room-update-avatar-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  cursor: pointer;
 }
 
 .room-update-avatar-preview {
@@ -1066,8 +1080,15 @@ svg.my-room-cover-edit-icon:hover {
   padding: 10px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
   z-index: 3;
+  gap: 3px;
+}
+.room-invite-member-list-wrapper {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  overflow-y: auto;
+  gap: 5px;
 }
 
 .room-add-admin-close-button,
@@ -1113,6 +1134,14 @@ svg.my-room-cover-edit-icon:hover {
 
 /*chatRoomMember*/
 
+.room-add-admin-list-wrapper {
+  display: flex;
+  flex-direction: column;
+  z-index: 3;
+  gap: 3px;
+  overflow-y: auto;
+}
+
 .add-room-member-list,
 .invite-room-member-list {
   display: flex;
@@ -1122,9 +1151,10 @@ svg.my-room-cover-edit-icon:hover {
 .add-admin-member-infos,
 .invite-member-infos {
   display: flex;
-  justify-content: center;
+  overflow: hidden;
   align-items: center;
   gap: 5px;
+  width: 65%;
 }
 
 .add-room-admin-image,
@@ -1137,7 +1167,8 @@ svg.my-room-cover-edit-icon:hover {
 .add-admin-member-name,
 .invite-room-member-name {
   font-size: 14px;
-  /* font-weight: 600; */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .add-admin-member-level,
@@ -1148,7 +1179,7 @@ svg.my-room-cover-edit-icon:hover {
 
 .add-room-admin-btn,
 .invite-room-member-btn {
-  width: 30%;
+  min-width: 30%;
   font-size: 10px;
   height: 20px;
   border: none;

@@ -27,6 +27,7 @@ const Rooms = () => {
     chatRoomCovers,
   } = useContext(ChatContext);
 
+  console.log(chatRoomConversations)
   //hande scroller handler (My Rooms)
   const onClickScroller = (handle, numberOfRooms) => {
     const slider = document.getElementsByClassName("rooms-slider")[0];
