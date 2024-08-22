@@ -358,7 +358,6 @@ def get_customize_game(request):
 def set_is_inside(request):
 	response = Response()
 	is_inside = request.data.get('is_inside')
-	print(f"----- get to is inside {is_inside}---------------")
 	username = request.data.get('user')
 	user = customuser.objects.filter(username=username).first()
 	for member in TournamentMembers.objects.filter(user=user):

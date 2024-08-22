@@ -20,7 +20,7 @@ function CreateTournament() {
 	const [membersImages, setMemberImages] = useState([])
 	const navigate = useNavigate()
 	const location = useLocation()
-	const { user, userImages, allGameFriends, socket, setAllGameFriends } = useContext(AuthContext)
+	const { user, userImages, allGameFriends, socket, notifSocket,  setAllGameFriends } = useContext(AuthContext)
 	const allGameFriendsRef = useRef(allGameFriends);
 	const divRef = useRef(null);
 	const divRef2 = useRef(null);
@@ -254,28 +254,7 @@ function CreateTournament() {
 				let data = JSON.parse(event.data)
 				let type = data.type
 				let message = data.message
-				console.log("DATA RECEIVED:", data)
-				if (type === 'user_disconnected') {
-					const currentAllGameFriends = allGameFriendsRef.current;
-					console.log("user disconnected : ", allGameFriends)
-					let uname = data.message.user
-					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname))
-					setTournamentMembers(prevMembers => prevMembers.map(member => member.name === uname ? { ...member, 'is_online': false } : member));
-				} else if (type === 'connected_again_tourn') {
-					setTournamentMembers(prevMembers => prevMembers.map(member => member.name === message.user ? { ...member, 'is_online': true } : member));
-				} else if (type === 'connected_again') {
-					const currentAllGameFriends = allGameFriendsRef.current;
-					const userExists = currentAllGameFriends.some(friend => friend.name === message.user)
-					if (!userExists)
-						setAllGameFriends([...currentAllGameFriends, message.userInfos])
-				} else if (type === 'accepted_invitation') {
-					const currentAllGameFriends = allGameFriendsRef.current;
-					let username = data.message.user
-					if (username !== user) {
-						get_member(data.message.user)
-						setAllGameFriends(currentAllGameFriends.filter(user => user.name !== data.message.user))
-					}
-				} else if (type === 'user_kicked_out') {
+				if (type === 'user_kicked_out') {
 					let kicked = data.message.kicked
 					setTournamentMembers((prevMembers) =>
 						prevMembers.filter((member) => member.name !== kicked));
@@ -313,6 +292,38 @@ function CreateTournament() {
 
 	}, [socket])
 
+
+	useEffect(()=>{
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+			notifSocket.onmessage = (event) => {
+				let data = JSON.parse(event.data)
+				let type = data.type
+				let message = data.message
+				console.log("DATA RECEIVED:", data)
+				if (type === 'user_disconnected') {
+					const currentAllGameFriends = allGameFriendsRef.current;
+					let uname = data.message.user
+					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname))
+					setTournamentMembers(prevMembers => prevMembers.map(member => member.name === uname ? { ...member, 'is_online': false } : member));
+				} else if (type === 'connected_again_tourn') {
+					setTournamentMembers(prevMembers => prevMembers.map(member => member.name === message.user ? { ...member, 'is_online': true } : member));
+				} else if (type === 'connected_again') {
+					const currentAllGameFriends = allGameFriendsRef.current;
+					const userExists = currentAllGameFriends.some(friend => friend.name === message.user)
+					if (!userExists)
+						setAllGameFriends([...currentAllGameFriends, message.userInfos])
+				} else if (type === 'accepted_invitation') {
+					const currentAllGameFriends = allGameFriendsRef.current;
+					let username = data.message.user
+					if (username !== user) {
+						get_member(data.message.user)
+						setAllGameFriends(currentAllGameFriends.filter(user => user.name !== data.message.user))
+					}
+				}
+			}
+		}
+	},[notifSocket])
+
 	useEffect(() => {
 		if (socket && socket.readyState === WebSocket.OPEN) {
 			socket.send(JSON.stringify({
@@ -324,28 +335,6 @@ function CreateTournament() {
 		}
 	}, [socket])
 
-	// useEffect(() =>{
-	// 	const is_tournament_advanced = async () =>{
-	// 		const response = await fetch(`http://localhost:8000/api/is-tournament-advanced`, {
-	// 			method: "POST",
-	// 			headers: {
-	// 				'Content-Type': 'application/json',
-	// 			},
-	// 			body: JSON.stringify({
-	// 				tournament_id: tournamentId
-	// 			})
-	// 		});
-	// 		if (response.ok) {
-	// 			const data = await response.json();
-	// 			if (data.Case === 'tournament_advanced')
-	// 				navigate("../game/tournamentbracket")
-	// 		} else {
-	// 			console.error('Failed to fetch data');
-	// 		}
-	// 	}
-	// 	is_tournament_advanced()
-
-	// },[user, tournamentId])
 	const handleKick = (username) => {
 		if (socket && socket.readyState === WebSocket.OPEN) {
 			socket.send(JSON.stringify({

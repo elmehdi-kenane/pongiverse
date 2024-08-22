@@ -21,6 +21,7 @@ export const AuthProvider = ({children}) => {
 	let [user, setUser] = useState('')
 	let [userImg, setUserImg] = useState('')
 	let [socket, setSocket] = useState(null)
+	let socketRef = useRef(socket)
 	let [socketRecreated, setSocketRecreated] = useState(false)
 	let [allGameNotifs, setAllGameNotifs] = useState([])
 	let [notifsImgs, setNotifsImgs] = useState([])
@@ -37,6 +38,10 @@ export const AuthProvider = ({children}) => {
 	useEffect(() => {
 		allGameFriendsRef.current = allGameFriends;
 	}, [allGameFriends]);
+
+	useEffect(() => {
+		socketRef.current = socket
+	}, [socket])
 
 	useEffect(() => {
 		const fetchImages = async () => {
@@ -257,6 +262,7 @@ export const AuthProvider = ({children}) => {
 				// let uname = data.username
 				// console.log("GAME SOCKET IN AUTHCONTEXT CLOSED SUCCEFULLY 1")
 				if (type === 'close_socket') {
+					console.log("AUTHCONTEXT CLOSE_SOCKET..............")
 					newSocket.close()
 					setSocket(null)
 				}
@@ -345,6 +351,7 @@ export const AuthProvider = ({children}) => {
 		privateCheckAuth: privateCheckAuth,
 		socket: socket,
 		setSocket: setSocket,
+		socketRef: socketRef,
 		socketRecreated: socketRecreated,
 		setSocketRecreated: setSocketRecreated,
 		userImg: userImg,

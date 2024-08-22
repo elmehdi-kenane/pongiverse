@@ -17,7 +17,7 @@ const Modes = () => {
 	const [roomID, setRoomID] = useState(null)
 	let { socket, user, setAllGameNotifs,
 		allGameNotifs, notifsImgs, notifSocket,
-		setSocket } = useContext(AuthContext)
+		setSocket, socketRef } = useContext(AuthContext)
 
 	useEffect(() => {
 		const check_is_join = async () => {
@@ -144,7 +144,10 @@ const Modes = () => {
 				if (type === 'goToGamingPage') {
 					// console.log("navigating now")
 					// navigate(`/mainpage/game/solo/1vs1/friends`)
-					if (socket.readyState !== WebSocket.OPEN) {
+					const socketRefer = socketRef.current
+					console.log("SOCKET........", socketRefer)
+					if (socketRefer.readyState !== WebSocket.OPEN) {
+						console.log("SOCKET IS CLOSED, SHOULD OPENED")
 						const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
 						newSocket.onopen = () => {
 							console.log("+++++++++++=======+++++++++")
@@ -166,6 +169,18 @@ const Modes = () => {
 					console.log("RECEIVED A GAME REQUEST")
 					setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message])
 					setRoomID(message.roomID)
+				} else if (type == 'accepted_invitation') {
+					const socketRefer = socketRef.current
+					if (socketRefer.readyState !== WebSocket.OPEN) {
+						console.log("SOCKET IS CLOSED, SHOULD OPENED")
+						const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
+						newSocket.onopen = () => {
+							setSocket(newSocket)
+							navigate("/mainpage/game/createtournament");
+						}
+					} else {
+						navigate("/mainpage/game/createtournament");
+					}
 				}
 			}
 		}
@@ -188,12 +203,10 @@ const Modes = () => {
 					navigate("createtournament")
 				} else if (type === 'invited_to_tournament') {
 					setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message])
-				}
-				else if (type == 'accepted_invitation') {
-					navigate("/mainpage/game/createtournament");
 				} else if (type === 'hmed') {
 					console.log("WWWWWWWWWAAAAA HMEEEEEEEED")
 					socket.close()
+					console.log(socket)
 					// setSocket(null)
 				} else if (type === 'connected_again')
 					console.log('USER IS CONNECTED AGAIN')
@@ -262,10 +275,10 @@ const Modes = () => {
 		let notifSelected = allGameNotifs.filter((user) => user.user === sender.user)
 		setAllGameNotifs(allGameNotifs.filter((user) => user.user !== sender.user))
 		console.log("SENDER : ", sender)
-		if (socket && socket.readyState === WebSocket.OPEN) {
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
 			if (sender.mode === '1vs1') {
 				console.log("YES!")
-				await socket.send(JSON.strlingify({
+				notifSocket.send(JSON.stringify({
 					type: 'acceptInvitation',
 					message: {
 						user: notifSelected[0].user,
@@ -311,7 +324,7 @@ const Modes = () => {
 							timer: 1500
 						});
 					} else {
-						await socket.send(
+						await notifSocket.send(
 							JSON.stringify({
 								type: 'accept-tournament-invitation',
 								message: {

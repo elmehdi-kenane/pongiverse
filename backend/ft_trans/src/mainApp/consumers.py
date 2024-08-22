@@ -195,7 +195,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		###
 		elif data['type'] == 'createTournament': await tournament_consumers.create_tournament(self, data, user_channels)
 		elif data['type'] == 'invite-friend': await tournament_consumers.invite_friend(self, data, user_channels)
-		elif data['type'] == 'accept-tournament-invitation': await tournament_consumers.accept_invite(self, data, user_channels)
+		# elif data['type'] == 'accept-tournament-invitation': await tournament_consumers.accepted_invitation(self, data, user_channels)
 		elif data['type'] == 'deny-tournament-invitation': await tournament_consumers.deny_invite(self, data, user_channels)
 		elif data['type'] == 'tournament-member-loged-again': await tournament_consumers.loged_again(self, data, user_channels)
 		elif data['type'] == 'kick-player-out': await tournament_consumers.kick_player(self, data, user_channels)
@@ -757,11 +757,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			'message': event['message']
 		}))
 
-	async def accepted_invitation(self, event):
-		await self.send(text_data=json.dumps({
-			'type': 'accepted_invitation',
-			'message': event['message']
-		}))
 	async def user_kicked_out(self, event):
 		await self.send(text_data=json.dumps({
 			'type' : 'user_kicked_out',
@@ -808,11 +803,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			'message' : event['message']
 		}))
 
-	async def user_join_tournament(self, event):
-		await self.send(text_data=json.dumps({
-			'type' : 'user_join_tournament',
-			'message' : event['message']
-		}))
 
 	async def user_kicked_from_tournament(self, event):
 		await self.send(text_data=json.dumps({

@@ -7,7 +7,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 function JoinTournament() {
 	const navigate = useNavigate()
 	const [data, setData] = useState('')
-	const { user, socket } = useContext(AuthContext)
+	const { user, socket, notifSocket, socketRef, setSocket } = useContext(AuthContext)
 	const [tournamentSuggestions, setTournamentSuggestions] = useState([])
 	const [TournamentInfo, setTournamentInfo] = useState({
 		tournament_id: '',
@@ -78,9 +78,7 @@ function JoinTournament() {
 			socket.onmessage = (event) => {
 				let data = JSON.parse(event.data)
 				let type = data.type
-				if (type == 'accepted_invitation') {
-					navigate("/mainpage/game/createtournament");
-				} else if (type === 'tournament_created_by_user') {
+				 if (type === 'tournament_created_by_user') {
 					let newTournament = data.message.tournament_info
 					setTournamentSuggestions((prevTournamentSuggestions) => [...prevTournamentSuggestions, newTournament]);
 				}
@@ -98,7 +96,38 @@ function JoinTournament() {
 						)
 					);
 				}
-				else if (type === 'user_join_tournament') {
+				// else if (type === 'user_join_tournament') {
+				// 	let tournament_id = data.message.tournament_id
+				// 	setTournamentSuggestions(prevSuggestions =>
+				// 		prevSuggestions.map(tournament =>
+				// 			tournament.tournament_id == tournament_id
+				// 				? { ...tournament, size: tournament.size + 1 }
+				// 				: tournament
+				// 		)
+				// 	);
+				// }
+			}
+		}
+	}, [socket])
+
+	useEffect(() =>{
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+			notifSocket.onmessage = (event) => {
+				let data = JSON.parse(event.data)
+				let type = data.type
+				if (type == 'accepted_invitation') {
+					const socketRefer = socketRef.current
+					if (socketRefer.readyState !== WebSocket.OPEN) {
+						console.log("SOCKET IS CLOSED, SHOULD OPENED")
+						const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
+						newSocket.onopen = () => {
+							setSocket(newSocket)
+							navigate("/mainpage/game/createtournament");
+						}
+					} else {
+						navigate("/mainpage/game/createtournament");
+					}
+				} else if (type === 'user_join_tournament') {
 					let tournament_id = data.message.tournament_id
 					setTournamentSuggestions(prevSuggestions =>
 						prevSuggestions.map(tournament =>
@@ -110,7 +139,7 @@ function JoinTournament() {
 				}
 			}
 		}
-	}, [socket])
+	},[notifSocket])
 
 	useEffect(() => {
 		const get_members = async () => {
