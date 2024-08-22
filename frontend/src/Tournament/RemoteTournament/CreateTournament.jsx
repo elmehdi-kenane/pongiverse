@@ -86,7 +86,9 @@ function CreateTournament() {
 		allGameFriendsRef.current = allGameFriends;
 	}, [allGameFriends]);
 
+
 	useEffect(() => {
+
 		const get_members = async () => {
 			const response = await fetch(`http://localhost:8000/api/tournament-members`, {
 				method: "POST",
@@ -127,6 +129,7 @@ function CreateTournament() {
 				console.error('Failed to fetch data');
 			}
 		}
+
 		const set_is_inside = async () => {
 			const response = await fetch(`http://localhost:8000/api/set-is-inside`, {
 				method: 'POST',
@@ -221,7 +224,6 @@ function CreateTournament() {
 			});
 			if (response.ok) {
 				const data = await response.json();
-				console.log(" haha data :", data)
 				const newUser = { 'id': data.id, 'name': data.name, 'level': data.level, 'image': data.image }
 				setTournamentMembers((prevTournamentMembers) => [...prevTournamentMembers, newUser]);
 				setTournamentMembers((prevTournamentMembers) => {
@@ -286,6 +288,13 @@ function CreateTournament() {
 						}))
 					}
 					navigate('../game/tournamentbracket');
+				} else if (type === 'accepted_invitation') {
+					const currentAllGameFriends = allGameFriendsRef.current;
+					let username = data.message.user
+					if (username !== user) {
+						get_member(data.message.user)
+						setAllGameFriends(currentAllGameFriends.filter(user => user.name !== data.message.user))
+					}
 				}
 			}
 		}
@@ -301,24 +310,22 @@ function CreateTournament() {
 				let message = data.message
 				console.log("DATA RECEIVED:", data)
 				if (type === 'user_disconnected') {
+					console.log("ENTER TO USER DISCONNECTED")
 					const currentAllGameFriends = allGameFriendsRef.current;
 					let uname = data.message.user
 					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname))
 					setTournamentMembers(prevMembers => prevMembers.map(member => member.name === uname ? { ...member, 'is_online': false } : member));
 				} else if (type === 'connected_again_tourn') {
+					console.log("ENTER TO USER CONNECTED AGAIN TOUR")
 					setTournamentMembers(prevMembers => prevMembers.map(member => member.name === message.user ? { ...member, 'is_online': true } : member));
 				} else if (type === 'connected_again') {
+					console.log("ENTER TO USER CONNECTED AGAIN")
 					const currentAllGameFriends = allGameFriendsRef.current;
 					const userExists = currentAllGameFriends.some(friend => friend.name === message.user)
 					if (!userExists)
 						setAllGameFriends([...currentAllGameFriends, message.userInfos])
-				} else if (type === 'accepted_invitation') {
-					const currentAllGameFriends = allGameFriendsRef.current;
-					let username = data.message.user
-					if (username !== user) {
-						get_member(data.message.user)
-						setAllGameFriends(currentAllGameFriends.filter(user => user.name !== data.message.user))
-					}
+				} else if (type === 'tournament_destroyed') {
+					navigate("/mainpage/game")
 				}
 			}
 		}

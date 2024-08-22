@@ -15,6 +15,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from django.core.exceptions import ObjectDoesNotExist
 import asyncio
 import requests
+from Notifications.consumers import notifs_user_channels
 
 the_tournament_id = 0
 
@@ -210,6 +211,7 @@ async def invite_friend(self, data, user_channels):
 
 async def loged_again(self, data, user_channels):
 	username = data['message']['user']
+	print("***********************************WAHMEDDDDDDDDDDDD")
 	user = await sync_to_async(customuser.objects.filter(username=username).first)()
 	members = await sync_to_async(list)(TournamentMembers.objects.filter(user=user))
 	for member in members:
@@ -217,6 +219,10 @@ async def loged_again(self, data, user_channels):
 		if not is_started:
 			tournament_id = await sync_to_async(lambda: member.tournament.tournament_id)()
 			group_name = f'tournament_{tournament_id}'
+			channel_names_list = notifs_user_channels.get(username)
+			if channel_names_list:
+				for channel_names in channel_names_list:
+					await self.channel_layer.group_add(group_name, channel_names)
 			await self.channel_layer.group_add(group_name, self.channel_name)
 			break
 
@@ -283,6 +289,10 @@ async def leave_tournament(self, data, user_channels):
 	)
 	channel_name = user_channels.get(data['message']['kicked'])
 	await self.channel_layer.group_discard(group_name, channel_name)
+	channel_name_notif_list = notifs_user_channels.get(data['message']['kicked'])
+	if channel_name_notif_list:
+		for channel_name_notif in channel_name_notif_list:
+			await self.channel_layer.group_discard(group_name, channel_name_notif)
 	for username, channel_name in user_channels.items():
 		await self.channel_layer.send(
 			channel_name,
@@ -314,8 +324,12 @@ async def destroy_tournament(self, data, user_channels):
 		member.user.is_playing = False
 		await sync_to_async(member.user.save)()
 		channel_name = user_channels.get(username)
+		channel_name_notif_list = notifs_user_channels.get(username)
 		if channel_name:
 			await self.channel_layer.group_discard(group_name, channel_name)
+		if channel_name_notif_list:
+			for channel_name_notif in channel_name_notif_list:
+				await self.channel_layer.group_discard(group_name, channel_name_notif)
 	await sync_to_async(tournament.delete)()
 	friends = await sync_to_async(list)(Friends.objects.filter(user=user))
 	for friend in friends:

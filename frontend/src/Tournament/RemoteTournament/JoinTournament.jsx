@@ -19,9 +19,9 @@ function JoinTournament() {
 		setData(value);
 	};
 	const handleAccept = async () => {
-		if (socket && socket.readyState === WebSocket.OPEN) {
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
 			try {
-				await socket.send(
+				await notifSocket.send(
 					JSON.stringify({
 						type: 'accept-tournament-invitation',
 						message: {
@@ -37,9 +37,9 @@ function JoinTournament() {
 	};
 
 	const handleJoin = async (tournament_id) => {
-		if (socket && socket.readyState === WebSocket.OPEN) {
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
 			try {
-				await socket.send(
+				await notifSocket.send(
 					JSON.stringify({
 						type: 'accept-tournament-invitation',
 						message: {

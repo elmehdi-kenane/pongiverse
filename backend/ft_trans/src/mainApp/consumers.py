@@ -1,29 +1,3 @@
-# userinTournaments = await sync_to_async(list)(TournamentMembers.objects.filter(user=user))
-# 			for member in userinTournaments:
-# 				is_started = await sync_to_async(lambda: member.tournament.is_started)()
-# 				if is_started == False:
-# 					tournamentmembers = await sync_to_async(list)(TournamentMembers.objects.filter(tournament=member.tournament))
-# 					for tournamentmember in tournamentmembers:
-# 						memberusername = await sync_to_async(lambda: tournamentmember.user.username)()
-# 						channel_name = user_channels.get(memberusername)
-# 						if channel_name:
-# 							await self.channel_layer.send(
-# 							channel_name,
-# 							{
-# 								'type': 'connected_again_tourn',
-# 								'message': {
-# 									'user': tmp_username,
-# 									'userInfos': {
-# 										'id': user.id,
-# 										'name': user.username,
-# 										'level': 2,
-# 										'image': user.avatar.path,
-# 									}
-# 								}
-# 							}
-# 						)
-
-
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from rest_framework_simplejwt.tokens import AccessToken
@@ -386,6 +360,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	async def user_disconnected(self, event):
 		await self.send(text_data=json.dumps({
 			'type': 'user_disconnected',
+			'message': event['message']
+		}))
+
+	async def accepted_invitation(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'accepted_invitation',
 			'message': event['message']
 		}))
 

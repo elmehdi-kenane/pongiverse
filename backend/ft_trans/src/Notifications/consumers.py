@@ -20,7 +20,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 		if user is not None:
 			await self.accept()
 			username = user.username
-			# tmp_username = username
+			tmp_username = username
 			user.is_online = True
 			await sync_to_async(user.save)()
 			if notifs_user_channels.get(username):
@@ -41,9 +41,6 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 					# channel_name = notifs_user_channels.get(friend_username)
 						# #print(f"USER CHANNEL ON CONNECT IS : {channel_name}")
 						if channel_name and friend_is_online and not user.is_playing:
-							# #print("========++++++++=======")
-							# #print(channel_name)
-							# #print("========++++++++=======")
 							await self.channel_layer.send(
 								channel_name,
 								{
@@ -59,39 +56,31 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 										}
 								}
 							)
-						if channel_name and friend_is_online:
-							await self.channel_layer.send(
+			userinTournaments = await sync_to_async(list)(TournamentMembers.objects.filter(user=user))
+			for member in userinTournaments:
+				is_started = await sync_to_async(lambda: member.tournament.is_started)()
+				if is_started == False:
+					tournamentmembers = await sync_to_async(list)(TournamentMembers.objects.filter(tournament=member.tournament))
+					for tournamentmember in tournamentmembers:
+						memberusername = await sync_to_async(lambda: tournamentmember.user.username)()
+						channel_name_list = notifs_user_channels.get(memberusername)
+						for channel_name in channel_name_list:
+							if channel_name:
+								await self.channel_layer.send(
 								channel_name,
 								{
 									'type': 'connected_again_tourn',
 									'message': {
-											'user': username,
-											'userInfos': {
-												'id': user.id,
-												'name': user.username,
-												'level': 2,
-												'image': user.avatar.path,
-											}
+										'user': tmp_username,
+										'userInfos': {
+											'id': user.id,
+											'name': user.username,
+											'level': 2,
+											'image': user.avatar.path,
 										}
+									}
 								}
 							)
-				# for username, channel_name in notifs_user_channels.items():
-				#     user = await sync_to_async(customuser.objects.filter(username=username).first)()
-				#     await self.channel_layer.send(
-				#         channel_name,
-				#         {
-				#             'type': 'connected_again_tourn',
-				#             'message': {
-				#                 'user': tmp_username,
-				#                 'userInfos': {
-				#                     'id': user.id,
-				#                     'name': user.username,
-				#                     'level': 2,
-				#                     'image': user.avatar.path,
-				#                 }
-				#             }
-				#         }
-				#     )
 		else:
 			self.socket.close()
 
@@ -182,10 +171,20 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 		}))
 
 	async def accepted_invitation(self, event):
-		print(f"****** MESSAGE : {event['message']}")
 		await self.send(text_data=json.dumps({
 			'type': 'accepted_invitation',
 			'message': event['message']
+		}))
+
+	async def tournament_destroyed(self, event):
+		await self.send(text_data=json.dumps({
+			'type' : 'tournament_destroyed'
+		}))
+
+	async def leave_tournament(self, event):
+		await self.send(text_data=json.dumps({
+			'type' : 'leave_tournament',
+			'message' : event['message']
 		}))
 
 	async def user_join_tournament(self, event):

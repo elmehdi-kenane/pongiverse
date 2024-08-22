@@ -287,7 +287,7 @@ def is_started_and_not_finshed(request):
 	response = Response()
 	user = customuser.objects.filter(username=username).first()
 	for member in TournamentMembers.objects.filter(user=user):
-		if member.tournament.is_started == True and member.tournament.is_finished == False and member.is_eliminated == False:
+		if member.tournament is not None and  member.tournament.is_started == True and member.tournament.is_finished == False and member.is_eliminated == False:
 			response.data = {'Case' : 'yes'}
 			return response
 	response.data = {'Case' : 'no'}
