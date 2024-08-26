@@ -5,11 +5,13 @@ from .models import Room, Membership, Message, Directs, RoomInvitation, default_
 from friends.models import Friendship
 from myapp.models import customuser
 from django.core.files.storage import default_storage
-from rest_framework import status
-import base64
-from django.core.files.base import ContentFile
-from friends.serializers import friendSerializer
-import socket, requests, os
+import os
+from .consumers import user_channels
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+
+def get_protocol(request):
+    return 'https' if request.is_secure() else 'http'
 
 @api_view(["POST"])
 def leave_chat_room(request):
@@ -148,42 +150,34 @@ def create_chat_room(request):
         elif room:
             return Response({'error': 'Chat room name is taken. Try a different one.'}, status=400)
         Membership.objects.create(user=user, room=new_room, roles="admin")
+        protocol = get_protocol(request)
+        ip_address = os.getenv('IP_ADDRESS')
+        channel_layer = get_channel_layer()
+        user_channels_name = user_channels.get(user.id)
+        for channel in user_channels_name:
+            async_to_sync(channel_layer.group_add(f'chat_room_{new_room.id}', channel))
+        async_to_sync(channel_layer.group_add())
         return Response({
             'type': 'chatRoomCreated',
             'room': {
                 "id": new_room.id,
-                "role": "admin",
                 "name": new_room.name,
                 "topic": new_room.topic,
-                "icon_url": new_room.icon.path,
+                "role": "admin",
+                "icon": f"{protocol}://{ip_address}:8000/chatAPI{new_room.icon.url}",
+                "cover": f"{protocol}://{ip_address}:8000/chatAPI{new_room.cover.url}",
                 "membersCount": new_room.members_count,
-                'cover': new_room.cover.path
-                # 'cover': f"http://localhost:8000/chatAPI{new_room.cover.url}"
             }
         }, status=200)
     return Response({'error': 'Invalid request method'}, status=400)
 
 
 
-def get_server_ip():
-    try:
-        response = requests.get('https://api.ipify.org?format=json')
-        public_ip = response.json().get('ip')
-        if public_ip:
-            return public_ip
-    except requests.RequestException:
-        pass
-
-    # Fallback to local IP
-    hostname = socket.gethostname()
-    return socket.gethostbyname(hostname)
-
-def get_protocol(request):
-    return 'https' if request.is_secure() else 'http'
 
 @api_view(['GET'])
 def channel_list(request, username):
     if request.method == 'GET':
+        print("USER_CHANNNELS_NAMES_INSIDE_CHANNEL_LIST", user_channels)
         user = customuser.objects.get(username=username)
         memberships = Membership.objects.filter(user=user)
         rooms = []
@@ -195,9 +189,7 @@ def channel_list(request, username):
                 'role': membership.roles,
                 'name': membership.room.name,
                 'topic': membership.room.topic,
-                # 'icon' : f"{protocol}://172.26.59.182:8000/chatAPI{membership.room.icon.url}",
                 'icon' : f"{protocol}://{ip_address}:8000/chatAPI{membership.room.icon.url}",
-                # 'cover' : f"{protocol}://172.26.59.182:8000/chatAPI{membership.room.cover.url}",
                 'cover' : f"{protocol}://{ip_address}:8000/chatAPI{membership.room.cover.url}",
                 'membersCount': membership.room.members_count,
             }

@@ -17,19 +17,22 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
 		if user is not None:
 			await self.accept()
-			user_channels[user.username] = self.channel_name
+			userId = user.id
+			if user_channels.get(userId):
+				user_channels[userId].append(self.channel_name)
+			else:
+				user_channels[userId] = [self.channel_name]
 			message = {
 					'type': 'connected',
 					'message': 'chat connection established'
 				}
+			print("USER_CHANNEL_NAMES", user_channels)
 			await self.send(json.dumps(message))
 
 	async def receive(self, text_data):
 		data = json.loads(text_data)
 		print("recived: ", data)
-		if data['type'] == 'createChatRoom': await chat_consumers.create_chat_room(self, data)
-		elif data['type'] == 'joinChatRoom': await chat_consumers.join_chat_room(self, data)
-		elif data['type'] == 'leaveRoom': await chat_consumers.leave_chat_room(self, data, user_channels)
+		if data['type'] == 'leaveRoom': await chat_consumers.leave_chat_room(self, data, user_channels)
 		elif data['type'] == 'changeRoomName': await chat_consumers.change_chat_room_name(self, data, user_channels)
 		elif data['type'] == 'changeRoomAvatar': await chat_consumers.change_chat_room_avatar(self, data)
 		elif data['type'] == 'addUserChannelGroup': await chat_consumers.add_user_channel_group(self, data)

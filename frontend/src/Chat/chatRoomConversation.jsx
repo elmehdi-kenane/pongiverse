@@ -32,6 +32,7 @@ const ChatRoomConversation = (props) => {
         JSON.stringify({
           type: "message",
           data: {
+            id: selectedChatRoom.roomId,
             name: selectedChatRoom.name,
             sender: user,
             message: messageToSend,
@@ -65,6 +66,15 @@ const ChatRoomConversation = (props) => {
       setMessages((prev) => [...prev, recivedMessage]);
     }
   }, [recivedMessage]);
+
+  useEffect(() => {
+    if (chatSocket) {
+      chatSocket.onmessage = (e) => {
+        let data = JSON.parse(e.data);
+        console.log("data recived insde the channels", data)
+      };
+    }
+  }, [chatSocket]);
 
   useEffect(() => {
     if (messages) {
