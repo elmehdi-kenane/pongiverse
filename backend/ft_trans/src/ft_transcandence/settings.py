@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'myapp',
     'mainApp',
     'friends',
+    'navBar',
     'daphne',
     'channels_redis',
     'django.contrib.admin',
