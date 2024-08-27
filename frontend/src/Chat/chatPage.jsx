@@ -74,9 +74,11 @@ const Chat = () => {
               ? filteredConversations.map((friend, key) => (
                   <ChatConversationItem
                     key={key}
+                    friendId={friend.id}
                     name={friend.name}
                     status={friend.is_online}
                     lastMessage={friend.lastMessage}
+                    unreadCount = {friend.unreadCount}
                     imageIndex={key}
                     isDirect={isHome}
                     setSelectedDirect={setSelectedDirect}

@@ -62,6 +62,7 @@ def friends_with_directs(request, username):
             'is_playing' : friend.friend.is_playing,
             'image' :friend.friend.avatar.path,
             'lastMessage' : last_message,
+            'unreadCount' : Directs.objects.filter(reciver=user, sender=friend.friend ,is_read=False).count()
         }
         data.append(friend_data)
     return Response(data)

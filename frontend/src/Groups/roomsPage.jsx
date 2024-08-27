@@ -18,11 +18,9 @@ const Rooms = () => {
   const {
     chatRoomConversations,
     setChatRoomConversations,
-    chatRoomIcons,
     setChatRoomInvitations,
     suggestedChatRooms,
     chatRoomConversationsRef,
-    chatRoomCovers,
   } = useContext(ChatContext);
 
   console.log(chatRoomConversations)
@@ -252,7 +250,7 @@ const Rooms = () => {
             <div className="rooms-slider-container">
               {suggestedChatRooms && suggestedChatRooms.length ? (
                 <div className="suggested-rooms-slider">
-                  {suggestedChatRooms.map((room, index) => (
+                  {/* {suggestedChatRooms.map((room, index) => (
                     <SuggestedRoom
                       key={index}
                       role={room.role}
@@ -264,7 +262,7 @@ const Rooms = () => {
                       chatRoomCovers={chatRoomCovers}
                       membersCount={room.membersCount}
                     />
-                  ))}
+                  ))} */}
                 </div>
               ) : (
                 <div className="suggested-rooms-slider empty-rooms-slider">

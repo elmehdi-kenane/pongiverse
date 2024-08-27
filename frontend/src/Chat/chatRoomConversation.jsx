@@ -193,14 +193,17 @@ const ChatRoomConversation = (props) => {
             message.sender === user ? (
               <MyMessage
                 key={index}
+                name={user}
                 content={message.content}
-                avatar={userImg}
+                date={message.date}
+                
               />
             ) : (
               <OtherMessage
                 key={index}
+                name={message.sender}
                 content={message.content}
-                avatar={selectedChatRoom.icon}
+                date={message.date}
               />
             )
           )}

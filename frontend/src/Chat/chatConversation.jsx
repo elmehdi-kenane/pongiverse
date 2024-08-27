@@ -61,8 +61,7 @@ const ChatConversation = () => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await fetch(
-          `http:${import.meta.env.VITE_IPADDRESS}/chatAPI/Directs/messages`,
+        const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/Directs/messages`,
           {
             method: "POST",
             headers: {
@@ -75,14 +74,15 @@ const ChatConversation = () => {
           }
         );
         const data = await response.json();
-        if (data) {
+        if (response.ok) {
           setMessages(data);
-        }
+          console.log("set Messages: ",data)
+        } else console.log("error")
       } catch (error) {
         console.log(error);
       }
     };
-    if (selectedDirect) {
+    if (selectedDirect.length !== 0) {
       fetchMessages();
     }
     let scrollView = document.getElementById("start");
@@ -141,7 +141,6 @@ const ChatConversation = () => {
   let domNode = useClickOutSide(() => {
     setShowDirectOptions(false);
   });
-
 
   return (
     <>
@@ -209,14 +208,18 @@ const ChatConversation = () => {
             message.sender === user ? (
               <MyMessage
                 key={index}
+                name={user}
                 content={message.content}
                 avatar={userImg}
+                date={message.date}
               />
             ) : (
               <OtherMessage
                 key={index}
+                name={message.sender}
                 content={message.content}
                 avatar={selectedDirect.avatar}
+                date={message.date}
               />
             )
           )}

@@ -1,8 +1,27 @@
 import { useContext} from "react";
 import ChatContext from "../Context/ChatContext";
+import AuthContext from "../navbar-sidebar/Authcontext";
 
 const ChatConversationItem = (props) => {
-  const { directsImages, chatRoomIcons } = useContext(ChatContext);
+  const { directsImages } = useContext(ChatContext);
+  const {user} = useContext(AuthContext)
+  const resetUnreadMessages = async () => {
+    try {
+      await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/resetUndreadMessages`,{
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user: user,
+          receiver: props.friendId,
+        })
+      })
+    } catch(error) {
+      console.log(error)
+    }
+  }
+
   const handleClick = () => {
     if (props.isDirect && props.name) {
       props.setSelectedDirect({
@@ -19,6 +38,7 @@ const ChatConversationItem = (props) => {
       });
     }
     props.setSelectedItem(props.name);
+    // resetUnreadMessages()
   };
   return (
     <div
@@ -50,7 +70,7 @@ const ChatConversationItem = (props) => {
           </div>
         </div>
       </div>
-      <div className="conversation-item-last-msg-count">9</div>
+      {parseInt(props.unreadCount) > 0 ? <div className="conversation-item-last-msg-count">{props.unreadCount}</div> : ""}
     </div>
   );
 };

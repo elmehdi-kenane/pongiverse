@@ -4,6 +4,7 @@ from asgiref.sync import sync_to_async
 from rest_framework_simplejwt.tokens import AccessToken
 import json
 from . import chat_consumers
+from datetime import datetime
 
 user_channels = {}
 
@@ -43,6 +44,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		elif data['type'] == 'inviteChatRoomMember' : await chat_consumers.invite_member_chat_room (self, data, user_channels)
 		elif data['type'] == 'roomInvitationAccepted' : await chat_consumers.chat_room_accept_invitation(self, data)
 		elif data['type'] == 'roomInvitationCancelled' : await chat_consumers.chat_room_invitation_declined(self, data)
+	
 	async def disconnect(self, close_code):
 		cookiess = self.scope.get('cookies', {})
 		token = cookiess.get('token')
@@ -63,13 +65,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	async def send_message(self, event):
 		data = event['message']
 		timestamp = data.timestamp.isoformat()
+		dt = datetime.fromisoformat(timestamp)
+		formatted_time = dt.strftime('%Y/%m/%d AT %I:%M %p')
 		message  = {
 			'type':'newMessage',
 			'data': {
 				'id':data.id,
 				'content':data.content,
 				'sender' : data.sender.username,
-				'date' : timestamp,
+				'date' : formatted_time,
 			}
 		}
 		await self.send(text_data=json.dumps(message))

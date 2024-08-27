@@ -11,7 +11,6 @@ from myapp.models import customuser
 from friends.models import Friendship
 import socket
 from .common import rooms, user_channels
-
 # from mainApp.models import Match
 # from mainApp.models import ActiveMatch
 # from mainApp.models import NotifPlayer

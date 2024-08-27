@@ -1,16 +1,25 @@
-import * as ChatIcons from '../assets/chat/media'
-
+import { useContext } from "react";
 import "../assets/chat/Chat.css";
+import ChatContext from "../Context/ChatContext";
 
 const OtherMessage = (props) => {
-    return (
-        <div className="other-message-row message-row">
-            <img  className="other-message-avatar" src={props.avatar} alt="" />
-            <div className="other-message-content message-content" >
-                {props.content}
-            </div>
+  const { isHome } = useContext(ChatContext);
+  return (
+    <div className="other-message-row message-row">
+      {isHome ? (
+        <img className="other-message-avatar" src={props.avatar} alt="" />
+      ) : (
+        ""
+      )}
+      <div className="other-message-content-wrapper">
+        <div className="my-message-row-sender-name">{props.name}</div>
+        <div className="other-message-content message-content">
+          {props.content}
         </div>
-    )
-}
+        <div className="my-message-row-sender-date">{props.date}</div>
+      </div>
+    </div>
+  );
+};
 
-export default OtherMessage
+export default OtherMessage;

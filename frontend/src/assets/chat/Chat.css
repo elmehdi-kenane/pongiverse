@@ -299,17 +299,39 @@ img.empty-chat-icon {
   flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden;
+  gap: 10px;
 }
 
 .message-row {
   padding-top: 7px;
   display: flex;
-  gap: 5px;
   max-width: 80%;
+  gap: 5px;
 }
 
 .my-message-row {
   align-self: flex-end;
+}
+
+.my-message-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-end;
+
+}
+.other-message-row {
+}
+
+.other-message-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-start;
+}
+.my-message-row-sender-name {
+  color: #ccc;
+  font-size: 12px;
 }
 
 .message-content {
@@ -322,7 +344,10 @@ img.empty-chat-icon {
   word-break: break-all;
   /* white-space: ; */
 }
-
+.my-message-row-sender-date {
+  color: #ccc;
+  font-size: 12px;
+}
 .my-message-content {
   border-radius: 15px 0px 15px 15px;
 }
