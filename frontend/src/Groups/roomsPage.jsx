@@ -9,8 +9,6 @@ import "../assets/chat/Groups.css";
 import NotificationAddIcon from "@mui/icons-material/NotificationAdd";
 import { Toaster } from "react-hot-toast";
 import RoomsNotifications from "./RoomComponents/roomsNotifications";
-
-import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import AddIcon from "@mui/icons-material/Add";
 
 const Rooms = () => {

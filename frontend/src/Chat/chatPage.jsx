@@ -1,7 +1,6 @@
 import "../assets/chat/Chat.css";
 import ChatConversationItem from "./chatConversationItem";
 import ChatContext from "../Context/ChatContext";
-import AuthContext from "../navbar-sidebar/Authcontext";
 import ChatConversation from "./chatConversation";
 import ChatRoomConversation from "./chatRoomConversation";
 import { useContext, useState } from "react";
@@ -19,7 +18,6 @@ const Chat = () => {
     isHome,
     setIsHome,
   } = useContext(ChatContext);
-  const { user } = useContext(AuthContext);
   const [query, setQuery] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
   const filteredConversations = directConversations.filter((conversation) => {

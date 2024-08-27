@@ -8,16 +8,13 @@ export default ChatContext;
 export const ChatProvider = ({ children }) => {
   let location = useLocation();
   const { user } = useContext(AuthContext);
+  const [isHome, setIsHome] = useState(true);
   const [chatRoomConversations, setChatRoomConversations] = useState([]);
   const [chatRoomInvitations, setChatRoomInvitations] = useState([]);
   const [suggestedChatRooms, setSuggestedChatRooms] = useState([]);
   const [directConversations, setDirectConversations] = useState([]);
   const [directsImages, setDirectsImages] = useState([]);
-  const [chatRoomIcons, setChatRoomIcons] = useState([]);
-  const [chatRoomCovers, setChatRoomCovers] = useState([]);
   const [chatRoomInvitationsIcons, setChatRoomInvitionsIcons] = useState([]);
-  const [suggestedChatRoomsIcons, setSuggestedChatRoomsIcons] = useState([]);
-  const [isHome, setIsHome] = useState(true);
   const chatRoomConversationsRef = useRef(chatRoomConversations);
   const chatRoomInvitationsRef = useRef(chatRoomInvitations);
 
@@ -40,18 +37,25 @@ export const ChatProvider = ({ children }) => {
     status: "",
     avatar: "",
   });
+  const selectedChatRoomRef = useRef(selectedChatRoom);
+  useEffect(() => {
+    selectedChatRoomRef.current = selectedChatRoom;
+  }, [selectedChatRoom]);
 
   const fetchImages = async (items, key) => {
     const promises = items.map(async (item) => {
-      const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          image: item[key],
-        }),
-      });
+      const response = await fetch(
+        `http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            image: item[key],
+          }),
+        }
+      );
       const blob = await response.blob();
       return URL.createObjectURL(blob);
     });
@@ -91,8 +95,6 @@ export const ChatProvider = ({ children }) => {
   //   }
   // }, [suggestedChatRooms]);
 
-
-
   //Fetch chat rooms images and covers
   // useEffect(() => {
   //   const fetchChatRoomConversationsIcons = async () => {
@@ -114,7 +116,9 @@ export const ChatProvider = ({ children }) => {
     const fetchChatRooms = async () => {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/chatRooms/${user}`
+          `http://${
+            import.meta.env.VITE_IPADDRESS
+          }:8000/chatAPI/chatRooms/${user}`
         );
         const data = await response.json();
         setChatRoomConversations(data);
@@ -126,7 +130,9 @@ export const ChatProvider = ({ children }) => {
     const fetchDirectsWithMessage = async () => {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/firendwithdirects/${user}`
+          `http://${
+            import.meta.env.VITE_IPADDRESS
+          }:8000/profile/firendwithdirects/${user}`
         );
         const data = await response.json();
         console.log(data);
@@ -140,11 +146,13 @@ export const ChatProvider = ({ children }) => {
     const fetchChatRoomInvitations = async () => {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/chatRoomInvitations/${user}`
+          `http://${
+            import.meta.env.VITE_IPADDRESS
+          }:8000/chatAPI/chatRoomInvitations/${user}`
         );
         let data = await response.json();
         setChatRoomInvitations(data);
-        console.log("invitations: ",data)
+        console.log("invitations: ", data);
       } catch (error) {
         console.log(error);
       }
@@ -153,7 +161,9 @@ export const ChatProvider = ({ children }) => {
     const fetchSuggestedChatRooms = async () => {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/suggestedChatRooms/${user}`
+          `http://${
+            import.meta.env.VITE_IPADDRESS
+          }:8000/chatAPI/suggestedChatRooms/${user}`
         );
         let data = await response.json();
         // console.log("suggested chat room", data);
@@ -184,7 +194,6 @@ export const ChatProvider = ({ children }) => {
     setSelectedChatRoom: setSelectedChatRoom,
     selectedChatRoom: selectedChatRoom,
     directsImages: directsImages,
-    chatRoomIcons: chatRoomIcons,
     setDirectsImages: setDirectsImages,
     selectedDirect: selectedDirect,
     setSelectedDirect: setSelectedDirect,
@@ -195,10 +204,9 @@ export const ChatProvider = ({ children }) => {
     chatRoomInvitationsIcons: chatRoomInvitationsIcons,
     suggestedChatRooms: suggestedChatRooms,
     setSuggestedChatRooms: setSuggestedChatRooms,
-    suggestedChatRoomsIcons: suggestedChatRoomsIcons,
     chatRoomConversationsRef: chatRoomConversationsRef,
-    chatRoomCovers: chatRoomCovers,
     chatRoomInvitationsRef: chatRoomInvitationsRef,
+    selectedChatRoomRef,
   };
   return (
     <ChatContext.Provider value={contextData}>{children}</ChatContext.Provider>

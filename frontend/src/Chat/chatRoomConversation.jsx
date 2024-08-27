@@ -11,7 +11,7 @@ import ChatRoomMembersList from "./chatRoomOptions/chatRoomMembersList";
 import ChatRoomInfos from "./chatRoomOptions/chatRoomInfos";
 
 const ChatRoomConversation = (props) => {
-  const { selectedChatRoom, setSelectedChatRoom } = useContext(ChatContext);
+  const { selectedChatRoom, setSelectedChatRoom, selectedChatRoomRef } = useContext(ChatContext);
   const [showChatRoomInfos, setShowChatRoomInfos] = useState(false);
   const [showChatRoomMembers, setShowChatRoomMembers] = useState(false);
   const [showLeaveRoomPopUp, setShowLeaveRoomPopUp] = useState(false);
@@ -71,7 +71,11 @@ const ChatRoomConversation = (props) => {
     if (chatSocket) {
       chatSocket.onmessage = (e) => {
         let data = JSON.parse(e.data);
-        console.log("data recived insde the channels", data)
+        console.log(data)
+        if (data.type === "newMessage") {
+          setRecivedMessage(data.data);
+          console.log("new message recived: ", data.data)
+        }
       };
     }
   }, [chatSocket]);

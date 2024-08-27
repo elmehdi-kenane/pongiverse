@@ -398,8 +398,6 @@ def chat_room_members_list(request):
 @api_view(['POST'])
 def accept_chat_room_invite(request):
     if request.method == 'POST':
-        print(request.data.get('user'))
-        print(request.data.get('id'))
         try:
             user = customuser.objects.get(username=request.data.get('user'))
         except customuser.DoesNotExist:
@@ -418,6 +416,10 @@ def accept_chat_room_invite(request):
         room.save()
         protocol = get_protocol(request)
         ip_address = os.getenv('IP_ADDRESS')
+        channel_layer = get_channel_layer()
+        user_channels_name = user_channels.get(user.id)
+        for channel in user_channels_name:
+            async_to_sync(channel_layer.group_add(f'chat_room_{room.id}', channel))
         return Response({
             'success': f'You have joined {room.name} chat room',
             'room': {

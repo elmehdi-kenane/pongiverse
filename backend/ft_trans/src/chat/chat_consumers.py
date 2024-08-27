@@ -12,16 +12,10 @@ async def add_user_channel_group(self, data):
     user = await get_user_by_name(self, data["user"])
     memberships = await sync_to_async(list)(Membership.objects.filter(user=user))
     for membership in memberships:
-        room_name = await sync_to_async(lambda: membership.room.name)()
-        print(
-            "the roorm name after remove the whitespaces:",
-            re.sub(r"\s+", "_", room_name),
-        )
+        room_id = await sync_to_async(lambda: membership.room.id)()
         await self.channel_layer.group_add(
-            re.sub(r"\s+", "_", room_name), self.channel_name
+            re.sub(f"chat_room{room_id}"), self.channel_name
         )
-
-
 
 async def leave_chat_room(self, data, user_channels):
     # get the user by username
