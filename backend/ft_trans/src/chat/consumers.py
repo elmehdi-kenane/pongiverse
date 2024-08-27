@@ -26,7 +26,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 					'type': 'connected',
 					'message': 'chat connection established'
 				}
-			print("USER_CHANNEL_NAMES", user_channels)
+			print("USER_CHANNEL_NAMES", self.channel_name)
 			await self.send(json.dumps(message))
 
 	async def receive(self, text_data):
@@ -43,6 +43,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		elif data['type'] == 'inviteChatRoomMember' : await chat_consumers.invite_member_chat_room (self, data, user_channels)
 		elif data['type'] == 'roomInvitationAccepted' : await chat_consumers.chat_room_accept_invitation(self, data)
 		elif data['type'] == 'roomInvitationCancelled' : await chat_consumers.chat_room_invitation_declined(self, data)
+	async def disconnect(self, close_code):
+		cookiess = self.scope.get('cookies', {})
+		token = cookiess.get('token')
+		decoded_token = AccessToken(token)
+		payload_data = decoded_token.payload
+		user_id = payload_data.get('user_id')
+		if user_id:
+			user_channels_name = user_channels.get(user_id)
+			print("user channels before the filter: ", user_channels_name)
+			filtered_channels_name = [channel_name for channel_name in user_channels_name if channel_name != self.channel_name]
+			print("user channels in the filter: ", filtered_channels_name)
+			user_channels[user_id] = filtered_channels_name
+			print("user channels after the filter: ", user_channels.get(user_id))
 
 	async def broadcast_message(self, event):
 		await self.send(text_data=json.dumps(event['data']))
