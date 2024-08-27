@@ -330,11 +330,30 @@ def get_user_statistics(request, username, date_range):
         return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["GET"])
-def get_single_matches(request, username):
+def get_single_matches(request, username, page):
     user = customuser.objects.filter(username=username).first()
+    res_data = []
     if user is not None:
+        page_size = 3
+        offset = (page - 1) * page_size
         user_matches = Match.objects.filter(
-            Q(team1_player1=user) | Q(team1_player2=user) | Q(team2_player1=user) | Q(team2_player2=user)).all()
-        return Response(data={"userMatches": "NAADI"}, status=status.HTTP_200_OK)
+            Q(team1_player1=user) | Q(team1_player2=user) | Q(team2_player1=user) | Q(team2_player2=user),
+            mode="1vs1"
+        ).order_by('-date_ended')[offset:offset+page_size]
+
+        # Check if there is still matches or not -------
+        total_matches_count = Match.objects.filter(
+            Q(team1_player1=user) | Q(team1_player2=user) | Q(team2_player1=user) | Q(team2_player2=user),
+            mode="1vs1"
+        ).count()
+        has_more_matches = (offset + page_size) < total_matches_count
+
+        for user_match in user_matches:
+            res_data.append({
+                "pic1": f"http://localhost:8000/auth{user_match.team1_player1.avatar.url}",
+                "score" : f"{user_match.team1_score} - {user_match.team2_score}",
+                "pic2": f"http://localhost:8000/auth{user_match.team2_player1.avatar.url}",
+            })
+        return Response(data={"userMatches": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
     else:
        return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
