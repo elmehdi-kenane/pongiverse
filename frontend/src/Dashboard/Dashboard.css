@@ -316,6 +316,55 @@
     margin-bottom: 8px;
 }
 
+.footer__single-match .no-result{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+    width: 85%;
+    margin: 0px 5px;
+    
+    background: rgba( 255, 255, 255, 0.25 );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    box-shadow: 0 2px 30px 0 #250939;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+}
+
+.footer__single-match .no-result h3{
+    color: white;
+    width: 80%;
+    font-size: 19px;
+    font-weight: 450;
+    margin-bottom: 15px;
+}
+.footer__single-match .no-result .start-game{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: white;
+    background: #250939;
+    border: white 1px solid;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 19px;
+    font-weight: 450;
+    gap: 5px;
+    cursor: pointer;
+}
+.footer__single-match .no-result .start-game p{
+    cursor: pointer;
+}
+.footer__single-match .no-result .start-game:hover{
+    color: #250939;
+    background: white;
+    transition: ease-in 0.4s;
+}
+
+
 .footer__result {   /* result of all footer matches */
     display: flex;
     height: 60px;
@@ -346,6 +395,8 @@
 
 .footer__single-match .single-match__result img {
     width: 45px;
+    height: 45px;
+    border-radius: 50%;
 }
 
 /* Multiplayer Match */
@@ -365,12 +416,16 @@
 
 .multiplayer-match__result .multiplayer-pics img{
     width: 40px;
+    height: 40px;
+    border-radius: 50%;
 }
 
 /* Tournament Match */
 
 .footer__tournament-match .tournament-match__result img {
     width: 45px;
+    height: 45px;
+    border-radius: 50%;
 }
 
 /* Pagination */
@@ -557,5 +612,18 @@
         flex-direction: column;
         height: 700px;
         margin-top: 0;
+    }
+    .footer__single-match .no-result{
+        width: 100%;
+        padding: 10px 0;
+    }
+    .footer__single-match .no-result h3{
+        width: 85%;
+        font-size: 15px;
+    }
+    .footer__single-match .no-result .start-game{  
+        padding: 5px 10px;
+        font-size: 15px;
+        gap: 5px;
     }
 }
