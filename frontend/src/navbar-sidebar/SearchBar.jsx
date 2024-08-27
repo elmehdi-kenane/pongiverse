@@ -46,7 +46,7 @@ export const SearchBar = () => {
   };
   //   });
 
-  const debouncedSearch = useCallback(debounce(getSearchResult, 500), []);
+  const debouncedSearch = useCallback(debounce(getSearchResult, 300), []);
 
   const handleInputChange = (event) => {
     // Debounced Function Instantiation: The debouncedSearch function is being re-created every time handleInputChange is called. This means the debounce effect might not work as expected because a new debounced function is created on every keystroke. Solution: Move the instantiation of debouncedSearch outside of the handleInputChange function or use the useCallback hook to memoize it.

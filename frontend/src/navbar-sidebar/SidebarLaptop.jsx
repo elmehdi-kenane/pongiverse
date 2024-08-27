@@ -6,59 +6,52 @@ import AuthContext from "./Authcontext";
 function SidebarLaptop({ Icons }) {
 
     const {isGlass} = useContext(AuthContext);
-
+    const sideBarItems = [
+        {
+            id: 1,
+            icon: Icons.dashboard,
+            route: "dashboard",
+            text: "Dashboard",
+        },
+        {
+            id: 2,
+            icon: Icons.friends,
+            route: "friends",
+            text: "Friends",
+        },
+        {
+            id: 3,
+            icon: Icons.chat,
+            route: "chat",
+            text: "Chat",
+        },
+        {
+            id: 4,
+            icon: Icons.console,
+            route: "game",
+            text: "Game",
+        },
+        {
+            id: 5,
+            icon: Icons.channels,
+            route: "channels",
+            text: "Channels",
+        }
+    ]
     return (
         <div className={(isGlass) ?"blur sidebar":"sidebar"}>
-            <div className="sidebar-navigations" id="sidebar-dashboard">
-                <div className="sidebar-icons">
-                    <Link to="dashboard">
-                        <img src={Icons.dashboard} alt="Dashboard-logo"/>
-                    </Link>
-                </div>
-                <div className="sidebar-titles">
-                    <Link to="dashboard">Dashboard</Link>
-                </div>
-            </div>
-            <div className="sidebar-navigations" id="sidebar-friends">
-                <div className="sidebar-icons">
-                    <Link to="friends">
-                        <img src={Icons.friends} alt="friends-logo"/>
-                    </Link>
-                </div>
-                <div className="sidebar-titles">
-                    <Link to="friends">Friends</Link>
-                </div>
-            </div>
-            <div className="sidebar-navigations" id="chat">
-                <div className="sidebar-icons">
-                    <Link to="chat">
-                        <img src={Icons.chat} alt="chat-logo"/>
-                    </Link>
-                </div>
-                <div className="sidebar-titles">
-                    <Link to="chat">Chat</Link>
-                </div>
-            </div>
-            <div className="sidebar-navigations" id="game">
-                <div className="sidebar-icons">
-                    <Link to="game">
-                        <img src={Icons.console} alt="console-logo"/>
-                    </Link>
-                </div>
-                <div className="sidebar-titles">
-                    <Link to="game">Game</Link>
-                </div>
-            </div>
-            <div className="sidebar-navigations" id="channels">
-                <div className="sidebar-icons">
-                    <Link to="groups">
-                        <img src={Icons.channels} alt="channels-logo"/>
-                    </Link>
-                </div>
-                <div className="sidebar-titles">
-                    <Link to="groups">Channels</Link>
-                </div>
-            </div>
+            {sideBarItems.map((item, index) => {
+                return (
+                    <div className="sidebar-navigations" id={`sidebar-${item.route}`} key={index}>
+                        <div className="sidebar-icons">
+                            <Link to={item.route}>
+                                <img src={item.icon} alt={`${item.text}-logo`} />
+                                <p className="sidebar-titles"> {item.text} </p>
+                            </Link>
+                        </div>
+                    </div>
+                )
+            })}
             {/* <div className="sidebar-navigations" id="none"></div> */}
         </div>
     );
