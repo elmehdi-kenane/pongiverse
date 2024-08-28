@@ -76,7 +76,6 @@ const ChatConversation = () => {
         const data = await response.json();
         if (response.ok) {
           setMessages(data);
-          console.log("set Messages: ",data)
         } else console.log("error")
       } catch (error) {
         console.log(error);
@@ -95,14 +94,11 @@ const ChatConversation = () => {
         let data = JSON.parse(e.data);
         if (data.type === "newDirect") {
           const currentDirect = selectedDirectRef.current;
-          if (
-            (currentDirect.name === data.data.sender &&
-              data.data.reciver === user) ||
-            (user === data.data.sender && data.data.reciver === user)
-          ){
-            console.log(data.data)
+          if ((currentDirect.name === data.data.sender && data.data.reciver === user) || (user === data.data.sender && data.data.reciver === user)){
             setRecivedMessage(data.data);
           }
+          else
+            
         } else if (data.type === "goToGamingPage") {
           console.log("navigating now");
           navigate(`/mainpage/game/solo/1vs1/friends`);

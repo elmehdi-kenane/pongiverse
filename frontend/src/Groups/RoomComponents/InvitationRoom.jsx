@@ -59,7 +59,7 @@ const InvitationRoom = (props) => {
     <div className="room-ivnitation-wrapper">
     <div className="room-invitations-infos">
       <img
-        src={props.roomIcon}
+        src={props.icon}
         alt=""
         className="room-invitation-room-icon"
       />

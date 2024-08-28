@@ -1,15 +1,7 @@
 from django.db.models import Q
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import (
-    Room,
-    Membership,
-    Message,
-    Directs,
-    RoomInvitation,
-    default_cover,
-    default_icon,
-)
+from .models import Room, Membership, Message, Directs, RoomInvitation
 from friends.models import Friendship
 from myapp.models import customuser
 from django.core.files.storage import default_storage
@@ -294,7 +286,7 @@ def channel_messages(request, room_id):
                 "id": message.id,
                 "content": message.content,
                 "sender": message.sender.username,
-                'date': formatted_time
+                "date": formatted_time,
             }
             data.append(message_data)
         return Response(data)
@@ -304,7 +296,6 @@ def channel_messages(request, room_id):
 @api_view(["POST"])
 def direct_messages(request):
     if request.method == "POST":
-        print("IM HEEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
         username = customuser.objects.get(username=(request.data).get("user"))
         friend = customuser.objects.get(username=(request.data).get("friend"))
         messages = Directs.objects.filter(
@@ -368,12 +359,14 @@ def rooms_invitations(request, username):
         user = customuser.objects.get(username=username)
         invitations = RoomInvitation.objects.filter(user=user)
         all_invitations = []
+        protocol = get_protocol(request)
+        ip_address = os.getenv("IP_ADDRESS")
         for invitaion in invitations:
             room = Room.objects.get(id=invitaion.room_id)
             invitaion_data = {
                 "name": room.name,
                 "topic": room.topic,
-                "icon_url": room.icon.path,
+                "icon": f"{protocol}://{ip_address}:8000/chatAPI{room.icon.url}",
                 "membersCount": room.members_count,
             }
             all_invitations.append(invitaion_data)
@@ -399,26 +392,6 @@ def suggested_chat_rooms(request, username):
             rooms.append(room_data)
         return Response(rooms)
 
-    return Response({"error": "Invalid request method"}, status=400)
-
-
-@api_view(["GET"])
-def rooms_invitations(request, username):
-    if request.method == "GET":
-        user = customuser.objects.get(username=username)
-        invitations = RoomInvitation.objects.filter(user=user)
-        all_invitations = []
-        for invitaion in invitations:
-            room = Room.objects.get(id=invitaion.room_id)
-            invitaion_data = {
-                "id": room.id,
-                "name": room.name,
-                "topic": room.topic,
-                "icon_url": room.icon.path,
-                "membersCount": room.members_count,
-            }
-            all_invitations.append(invitaion_data)
-        return Response(all_invitations)
     return Response({"error": "Invalid request method"}, status=400)
 
 
@@ -499,13 +472,52 @@ def reset_unread_messages(request):
         try:
             user = customuser.objects.get(username=request.data.get("user"))
         except customuser.DoesNotExist:
-            return Response({'error' : 'user not found'}, status=400)
+            return Response({"error": "user not found"}, status=400)
         try:
             receiver = customuser.objects.get(id=request.data.get("receiver"))
         except customuser.DoesNotExist:
-            return Response({'error' : 'user not found'}, status=400)
+            return Response({"error": "user not found"}, status=400)
         Directs.objects.filter(sender=receiver, reciver=user, is_read=False).update(
             is_read=True
         )
-        return Response({'success' : 'reset unread message successfully'}, status=200)
+        return Response({"success": "reset unread message successfully"}, status=200)
     return Response({"error": "Invalid request method"}, status=400)
+
+
+def get_direct_last_message(username, friend):
+    user = customuser.objects.get(username=username)
+    friend = customuser.objects.get(username=friend)
+    last_message = (
+        Directs.objects.filter(
+            Q(sender=user, reciver=friend) | Q(sender=friend, reciver=user)
+        )
+        .order_by("-timestamp")
+        .first()
+    )
+    if last_message == None:
+        return ""
+    return last_message.message
+
+
+@api_view(["GET"])
+def friends_with_directs(request, username):
+    user = customuser.objects.get(username=username)
+    friends = Friendship.objects.filter(user=user)
+    data = []
+    protocol = get_protocol(request)
+    ip_address = os.getenv("IP_ADDRESS")
+    for friend in friends:
+        last_message = get_direct_last_message(username, friend.friend.username)
+        friend_data = {
+            "id": friend.friend.id,
+            "name": friend.friend.username,
+            "avatar": f"{protocol}://{ip_address}:8000/chatAPI{friend.friend.avatar.url}",
+            "is_online": friend.friend.is_online,
+            "is_playing": friend.friend.is_playing,
+            "lastMessage": last_message,
+            "unreadCount": Directs.objects.filter(
+                reciver=user, sender=friend.friend, is_read=False
+            ).count(),
+        }
+        data.append(friend_data)
+    return Response(data)

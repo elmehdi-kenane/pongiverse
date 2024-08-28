@@ -38,35 +38,6 @@ def show_friends(request, username):
     print(friends)
     return Response({"friends": friends})
 
-def get_direct_last_message(username, friend):
-    user = customuser.objects.get(username=username)
-    friend = customuser.objects.get(username=friend)
-    last_message = Directs.objects.filter(
-        Q(sender=user, reciver=friend) | Q(sender=friend, reciver=user)
-    ).order_by('-timestamp').first()
-    if(last_message == None):
-        return ""
-    return last_message.message
-
-@api_view(['GET'])
-def friends_with_directs(request, username):
-    user = customuser.objects.get(username=username)
-    friends = Friendship.objects.filter(user=user)
-    data = []
-    for friend in friends:
-        last_message = get_direct_last_message(username, friend.friend.username)
-        friend_data = {
-            'id' : friend.friend.id,
-            'name' : friend.friend.username,
-            'is_online' : friend.friend.is_online,
-            'is_playing' : friend.friend.is_playing,
-            'image' :friend.friend.avatar.path,
-            'lastMessage' : last_message,
-            'unreadCount' : Directs.objects.filter(reciver=user, sender=friend.friend ,is_read=False).count()
-        }
-        data.append(friend_data)
-    return Response(data)
-
 @api_view(['POST'])
 def get_user_info(request):
     username = request.data.get('user')

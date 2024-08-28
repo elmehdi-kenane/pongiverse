@@ -33,16 +33,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	async def receive(self, text_data):
 		data = json.loads(text_data)
 		print("recived: ", data)
-		if data['type'] == 'leaveRoom': await chat_consumers.leave_chat_room(self, data, user_channels)
-		elif data['type'] == 'changeRoomName': await chat_consumers.change_chat_room_name(self, data, user_channels)
-		elif data['type'] == 'changeRoomAvatar': await chat_consumers.change_chat_room_avatar(self, data)
-		elif data['type'] == 'addUserChannelGroup': await chat_consumers.add_user_channel_group(self, data)
-		elif data['type'] == 'deleteChatRoom': await chat_consumers.detete_char_room(self, data, user_channels)
+		if data['type'] == 'addUserChannelGroup': await chat_consumers.add_user_channel_group(self, data)
 		elif data['type'] == 'message': await chat_consumers.message(self, data)
 		elif data['type'] == 'directMessage': await chat_consumers.direct_message(self, data, user_channels)
 		elif data['type'] == 'addRoomMemberAdmin' : await chat_consumers.add_chat_room_admin(self, data, user_channels)
 		elif data['type'] == 'inviteChatRoomMember' : await chat_consumers.invite_member_chat_room (self, data, user_channels)
-		elif data['type'] == 'roomInvitationAccepted' : await chat_consumers.chat_room_accept_invitation(self, data)
 		elif data['type'] == 'roomInvitationCancelled' : await chat_consumers.chat_room_invitation_declined(self, data)
 	
 	async def disconnect(self, close_code):
@@ -89,12 +84,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	
 	async def send_direct(self, event):
 		data = event['data']
+		timestamp = data['date'].isoformat()
+		dt = datetime.fromisoformat(timestamp)
+		formatted_time = dt.strftime('%Y/%m/%d AT %I:%M %p')
 		message = {
 			'type' : 'newDirect',
 			'data' : {
 				'sender': data['sender'],
 				'reciver': data['reciver'],
 				'content': data['message'],
+				'date' :  formatted_time,
 			}
 		}
 		await self.send(text_data=json.dumps(message))

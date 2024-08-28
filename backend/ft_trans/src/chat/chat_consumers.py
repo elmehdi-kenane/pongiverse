@@ -67,48 +67,6 @@ async def invite_member_chat_room(self, data, user_channels):
             )
 
 
-async def chat_room_accept_invitation(self, data):
-    user = await sync_to_async(customuser.objects.get)(username=data["message"]["user"])
-    room = await sync_to_async(Room.objects.get)(name=data["message"]["room"])
-    invitation = await sync_to_async(RoomInvitation.objects.get)(user=user, room=room)
-    if room:
-        await sync_to_async(invitation.delete)()
-        await sync_to_async(Membership.objects.create)(user=user, room=room)
-        room.members_count += 1
-        await sync_to_async(room.save)()
-        await self.channel_layer.group_add(
-            str(re.sub(r"\s+", "_", room.name)), self.channel_name
-        )
-        await self.channel_layer.group_send(
-            re.sub(r"\s+", "_", room.name),
-            {
-                "type": "broadcast_message",
-                "data": {
-                    "type": "roomInvitationAccepted",
-                    "data": {
-                        "user": user.username,
-                        "room": {
-                            "id": room.id,
-                            "role": "member",
-                            "name": room.name,
-                            "topic": room.topic,
-                            "icon_url": room.icon.path,
-                            "membersCount": room.members_count,
-                        },
-                    },
-                },
-            },
-        )
-    elif not room:
-        await self.channel_layer.send(
-            json.dumps(
-                {
-                    "type": "removeRoomInvitation",
-                    "room": {"name": data["message"]["room"]},
-                }
-            )
-        )
-
 
 async def chat_room_invitation_declined(self, data):
     user = await sync_to_async(customuser.objects.get)(username=data["message"]["user"])
@@ -150,34 +108,38 @@ async def direct_message(self, data, user_channels):
     reciver = await sync_to_async(customuser.objects.get)(
         username=data["data"]["reciver"]
     )
-    await sync_to_async(Directs.objects.create)(
+    message = await sync_to_async(Directs.objects.create)(
         sender=sender, reciver=reciver, message=data["data"]["message"]
     )
-    channel_name = user_channels.get(data["data"]["reciver"])
-    mychannel_name = user_channels.get(data["data"]["sender"])
+    channel_name = user_channels.get(reciver.id)
+    mychannel_name = user_channels.get(sender.id)
+    print("channel name of reciver: ",  channel_name)
+    print("channel name of sender: ",  mychannel_name)
     if channel_name:
-        print("the others message", channel_name)
-        await self.channel_layer.send(
-            channel_name,
-            {
-                "type": "send_direct",
-                "data": {
-                    "sender": data["data"]["sender"],
-                    "reciver": data["data"]["reciver"],
-                    "message": data["data"]["message"],
+        for channel in channel_name:
+            await self.channel_layer.send(
+                channel,
+                {
+                    "type": "send_direct",
+                    "data": {
+                        "sender": data["data"]["sender"],
+                        "reciver": data["data"]["reciver"],
+                        "message": data["data"]["message"],
+                        'date' : message.timestamp,
+                    },
                 },
-            },
-        )
+            )
     if mychannel_name:
-        print("my message", mychannel_name)
-        await self.channel_layer.send(
-            mychannel_name,
-            {
-                "type": "send_direct",
-                "data": {
-                    "sender": data["data"]["sender"],
-                    "reciver": data["data"]["sender"],
-                    "message": data["data"]["message"],
+        for channel in mychannel_name:
+            await self.channel_layer.send(
+                channel,
+                {
+                    "type": "send_direct",
+                    "data": {
+                        "sender": data["data"]["sender"],
+                        "reciver": data["data"]["sender"],
+                        "message": data["data"]["message"],
+                        'date' : message.timestamp,
+                    },
                 },
-            },
-        )
+            )

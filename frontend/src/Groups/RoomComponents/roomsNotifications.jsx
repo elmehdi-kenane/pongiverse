@@ -5,7 +5,7 @@ import InvitationRoom from "./InvitationRoom";
 import ChatContext from "../../Context/ChatContext";
 
 const RoomsNotifications = (props) => {
-  const { chatRoomInvitationsIcons, chatRoomInvitations } =
+  const {chatRoomInvitations } =
     useContext(ChatContext);
 
   const handleClickOutside = () => {
@@ -32,8 +32,9 @@ const RoomsNotifications = (props) => {
       {chatRoomInvitations.length ? (
         chatRoomInvitations.map((room, index) => (
           <InvitationRoom
-            roomIcon={chatRoomInvitationsIcons[index]}
+            key={index}
             name={room.name}
+            icon={room.icon}
             members={room.membersCount}
             id={room.id}
           />
