@@ -3,9 +3,10 @@ import ChatConversationItem from "./chatConversationItem";
 import ChatContext from "../Context/ChatContext";
 import ChatConversation from "./chatConversation";
 import ChatRoomConversation from "./chatRoomConversation";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import * as ChatIcons from "../assets/chat/media/index";
 import { Toaster } from "react-hot-toast";
+import AuthContext from "../navbar-sidebar/Authcontext";
 
 const Chat = () => {
   const {
@@ -18,6 +19,7 @@ const Chat = () => {
     isHome,
     setIsHome,
   } = useContext(ChatContext);
+  const {chatSocket} = useContext(AuthContext)
   const [query, setQuery] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
   const filteredConversations = directConversations.filter((conversation) => {
@@ -27,6 +29,18 @@ const Chat = () => {
   const handleSelectItem = (itemName) => {
     setSelectedItem(itemName);
   };
+
+  useEffect(() => {
+    if (chatSocket) {
+      chatSocket.onmessage = (e) => {
+        let data = JSON.parse(e.data);
+        console.log("data received inside:", data);
+        if (data.type === "newDirect") { 
+          console.log("the MESSAGE")
+        }
+      };
+    }
+  }, [chatSocket]);
 
   return (
     <div className="chat-page">

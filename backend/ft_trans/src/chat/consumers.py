@@ -94,6 +94,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 				'reciver': data['reciver'],
 				'content': data['message'],
 				'date' :  formatted_time,
+				'senderId' : data['senderId']
+
 			}
 		}
 		await self.send(text_data=json.dumps(message))

@@ -22,7 +22,7 @@ export let useClickOutSide = (handler) => {
 };
 
 const ChatConversation = () => {
-  const { selectedDirect, setSelectedDirect } = useContext(ChatContext);
+  const { selectedDirect, setSelectedDirect, setUnreadCount, unreadCount, unreadCountRef} = useContext(ChatContext);
   const [messages, setMessages] = useState([]);
   const [recivedMessage, setRecivedMessage] = useState(null);
   const [messageToSend, setMessageToSend] = useState("");
@@ -92,13 +92,33 @@ const ChatConversation = () => {
     if (chatSocket) {
       chatSocket.onmessage = (e) => {
         let data = JSON.parse(e.data);
+        console.log("data received inside:", data);
+  
         if (data.type === "newDirect") {
           const currentDirect = selectedDirectRef.current;
-          if ((currentDirect.name === data.data.sender && data.data.reciver === user) || (user === data.data.sender && data.data.reciver === user)){
+  
+          // Check if the message is for the currently selected direct chat
+          if (
+            (currentDirect.name === data.data.sender && data.data.reciver === user) ||
+            (user === data.data.sender && data.data.reciver === user)
+          ) {
             setRecivedMessage(data.data);
+          } else {
+            let currentUnreadCount = unreadCountRef.current; // Corrected the typo
+  
+            setUnreadCount((prev) => {
+              console.log(currentUnreadCount)
+              const updatedUnreadCount = new Map(currentUnreadCount);
+  
+              // Get the previous unread count, defaulting to 0 if undefined
+              let prevCount = updatedUnreadCount.get(data.data.senderId) || 0;
+  
+              // Increment the unread count for the sender
+              updatedUnreadCount.set(data.data.senderId, prevCount + 1);
+  
+              return updatedUnreadCount;
+            });
           }
-          else
-            
         } else if (data.type === "goToGamingPage") {
           console.log("navigating now");
           navigate(`/mainpage/game/solo/1vs1/friends`);

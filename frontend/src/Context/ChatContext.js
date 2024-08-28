@@ -27,6 +27,11 @@ export const ChatProvider = ({ children }) => {
     avatar: "",
   });
   const [unreadCount, setUnreadCount] = useState(new Map());
+  const unreadCountRef = useRef(unreadCount)
+
+  useEffect(() => {
+    unreadCountRef.current = unreadCount;
+  }, [unreadCount]);
 
   useEffect(() => {
     chatRoomConversationsRef.current = chatRoomConversations;
@@ -145,6 +150,7 @@ export const ChatProvider = ({ children }) => {
     selectedChatRoomRef,
     unreadCount : unreadCount,
     setUnreadCount: setUnreadCount,
+    unreadCountRef : unreadCountRef,
   };
   return (
     <ChatContext.Provider value={contextData}>{children}</ChatContext.Provider>
