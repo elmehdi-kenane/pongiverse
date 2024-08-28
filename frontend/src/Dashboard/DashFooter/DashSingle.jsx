@@ -7,14 +7,26 @@ import CircularProgress from '@mui/material/CircularProgress';
 import AuthContext from "../../navbar-sidebar/Authcontext";
 import { Link } from "react-router-dom";
 
+const NoResult = () => {
+  return (
+    <div className="no-result">
+      <h3>You haven't participated in a single match before!</h3>
+      <Link to="/mainpage/game/solo/1vs1" className="start-game">
+        <p> Play </p>
+        <SportsEsportsIcon />
+      </Link>
+    </div>
+  )
+}
+
 function DashSingle() {
   const { user } = useContext(AuthContext);
-
   const [page, setPage] = useState(1);
   const [index, setIndex] = useState(1);
   const [loading, setLoading] = useState(false);
   const [limit, setLimit] = useState(-1);
   const [matches, setMatches] = useState([]);
+  const itemsPerPage = 3;
 
   useEffect(() => {
     const getSingleMatches = async () => {
@@ -33,33 +45,38 @@ function DashSingle() {
         if (response.ok) {
           setMatches([...matches, ...res.userMatches]);
           !res.hasMoreMatches && setLimit(index);
-        } else console.log("Error : ", res.error);
+        } else
+            console.log("Error : ", res.error);
       } catch (error) {
         console.log("Error: ", error);
       }
       setLoading(false)
     };
-    if (user) getSingleMatches();
+    if (user)
+      getSingleMatches();
   }, [user, page]);
 
-  const ExpandMore = () => {
-    setIndex(index + 1);
-    index + 1 > page && setPage(page + 1);
-  };
-  const ExpandLess = () => {
-    index - 1 && setIndex(index - 1);
-  };
-
-  const itemsPerPage = 3;
-  return (
-    <div className="footer__single-match dash--bkborder">
-      <h1 className="footer__titles"> Single Match </h1>
-      {loading ? 
-      <CircularProgress color="secondary" style={{marginTop:"80px"}}/>
-      :
+  
+  const Pagination = () => {
+    const expandMore = () => {
+      setIndex(index + 1);
+      index + 1 > page && setPage(page + 1);
+    };
+    const expandLess = () => {
+      index - 1 && setIndex(index - 1);
+    };
+    return (
+      <div className="expand">
+        {index != 1 && (
+          <ExpandLessIcon className="expand-less" onClick={expandLess} />)}
+        {limit != index && (
+          <ExpandMoreIcon className="expand-more" onClick={expandMore} />)}
+      </div>
+    )
+  }
+  const MatchesResults = () => {
+    return (
       <>
-      {matches.length ? 
-        <>
         {matches.slice((index - 1) * itemsPerPage, index * itemsPerPage)
           .map((match, key) => (
             <div key={key} className="single-match__result footer__result">
@@ -69,24 +86,19 @@ function DashSingle() {
             </div>
           ))
         }
-        <div className="expand">
-          {index != 1 && (
-            <ExpandLessIcon className="expand-less" onClick={ExpandLess} />)}
-          {limit != index && (
-            <ExpandMoreIcon className="expand-more" onClick={ExpandMore} />)}
-        </div>
+        <Pagination />
       </>
-      : 
-        <div className="no-result">
-          <h3>You haven't participated in a single match before!</h3>
-          <Link to="/mainpage/game/solo/1vs1" className="start-game">
-            <p> Play </p>
-            <SportsEsportsIcon />
-          </Link>
-        </div>
+    )
+  }
+  
+  return (
+    <div className="footer__single-match dash--bkborder">
+      <h1 className="footer__titles"> Single Match </h1>
+      {loading ? 
+        <CircularProgress color="secondary" style={{marginTop:"80px"}}/>
+        :
+        <> {matches.length ? <MatchesResults /> : <NoResult />} </>
       }
-      </>
-    }
     </div>
   );
 }
