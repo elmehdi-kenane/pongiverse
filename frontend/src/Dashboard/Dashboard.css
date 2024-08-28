@@ -308,6 +308,7 @@
     align-items: center;
     padding: 10px 10px;
     gap: 10px;
+    position: relative;
     /* border: 1px solid rgba( 255, 255, 255, 0.18 ); */
 }
 
@@ -433,7 +434,12 @@
 
 .expand {
     position: absolute;
-    bottom: 15px;
+    bottom: 2px;
+}
+.expand svg{
+    height: 28px;
+    width: 28px;
+
 }
 .expand-more {
     color: white;
