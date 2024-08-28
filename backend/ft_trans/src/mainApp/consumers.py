@@ -2,7 +2,7 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from rest_framework_simplejwt.tokens import AccessToken
 from . import gameConsumers
-from . import gameMultiplayerConsumers
+from . import gameMultiplayerConsumers, tournamentGameConsumer
 from . import tournament_consumers
 from channels.layers import get_channel_layer
 from chat import chat_consumers
@@ -11,7 +11,7 @@ from myapp.models import customuser
 from chat.models import Friends
 from mainApp.models import TournamentMembers
 import socket
-from .common import rooms, user_channels
+from .common import rooms, user_channels, tournament_rooms
 
 
 # from mainApp.models import Match
@@ -168,16 +168,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		# elif data['type'] == 'roomInvitationCancelled' : await chat_consumers.chat_room_invitation_declined(self, data)
 		###
 		elif data['type'] == 'createTournament': await tournament_consumers.create_tournament(self, data, user_channels)
-		elif data['type'] == 'invite-friend': await tournament_consumers.invite_friend(self, data, user_channels)
+		# elif data['type'] == 'invite-friend': await tournament_consumers.invite_friend(self, data, user_channels)
 		# elif data['type'] == 'accept-tournament-invitation': await tournament_consumers.accepted_invitation(self, data, user_channels)
-		elif data['type'] == 'deny-tournament-invitation': await tournament_consumers.deny_invite(self, data, user_channels)
+		# elif data['type'] == 'deny-tournament-invitation': await tournament_consumers.deny_invite(self, data, user_channels)
 		elif data['type'] == 'tournament-member-loged-again': await tournament_consumers.loged_again(self, data, user_channels)
 		elif data['type'] == 'kick-player-out': await tournament_consumers.kick_player(self, data, user_channels)
 		elif data['type'] == 'destroy-tournament': await tournament_consumers.destroy_tournament(self, data, user_channels)
 		elif data['type'] == 'leave-tournament': await tournament_consumers.leave_tournament(self, data, user_channels)
 		elif data['type'] == 'start-tournament': await tournament_consumers.start_tournament(self, data, user_channels)
-		elif data['type'] == 'Round-16-timer': await tournament_consumers.Round_16_timer(self, data, user_channels)
+		elif data['type'] == 'Round-16-timer': await tournament_consumers.Round_16_timer(self, data)
 		elif data['type'] == 'check-round-16-players': await tournament_consumers.check_round_16_players(self, data, user_channels)
+		elif data['type'] == 'moveKeyTournamentGame': await tournamentGameConsumer.move_paddle_tournament_game(self, data, tournament_rooms)
+		elif data['type'] == 'moveMouseTournamentGame':await tournamentGameConsumer.move_mouse_tournament_game(self, data, tournament_rooms)
+		elif data['type'] == 'isPlayerInRoomTournamentGame': await tournamentGameConsumer.validatePlayerTournamentGame(self, data, tournament_rooms, user_channels)
+		elif data['type'] == 'userExitedTournamentGame': await tournamentGameConsumer.user_exited_tournament_game(self, data, tournament_rooms)
 
 	async def disconnect(self, close_code):
 		await tournament_consumers.disconnected(self, user_channels)
@@ -271,11 +275,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			'message': event['message']
 		}))
 
-	async def abortedGame(self, event):
-		await self.send(text_data=json.dumps({
-			'type': 'abortedGame',
-			'message': event['message']
-		}))
 
 	async def playersReady(self, event):
 		await self.send(text_data=json.dumps({
@@ -731,11 +730,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			'message': event['message']
 		}))
 
-	async def invited_to_tournament(self, event):
-		await self.send(text_data=json.dumps({
-			'type': 'invited_to_tournament',
-			'message': event['message']
-		}))
 
 	async def user_kicked_out(self, event):
 		await self.send(text_data=json.dumps({
@@ -789,9 +783,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			'type' : 'user_kicked_from_tournament',
 			'message' : event['message']
 		}))
+
 	async def tournament_started(self, event):
 		await self.send(text_data=json.dumps({
 			'type' : 'tournament_started',
+			'message' : event['message']
 		}))
 
 	async def tournament_started_by_user(self, event):
@@ -803,6 +799,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	async def warn_members(self, event):
 		await self.send(text_data=json.dumps({
 			'type' : 'warn_members',
+			'message' : event['message']
 		}))
 
 	async def user_eliminated(self, event):

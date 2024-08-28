@@ -23,4 +23,5 @@ urlpatterns = [
 	path('set-is-inside', views.set_is_inside, name='set_is_inside'),
 	path('get-game-members-round', views.get_game_members_round, name='get_game_members_round'),
 	path('get-opponent', views.get_opponent, name='get_opponent'),
+	path('get-tournament-warning', views.get_tournament_warning, name='get_tournament_warning'),
 ]

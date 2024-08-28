@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from myapp.models import customuser
 from chat.models import Friends
 from .models import GameCustomisation
-from .models import TournamentMembers, Tournament, Round, TournamentUserInfo, DisplayOpponent
+from .models import TournamentMembers, Tournament, Round, TournamentUserInfo, DisplayOpponent, TournamentWarnNotifications
 import random
 from django.db.models import Q
 from myapp.serializers import MyModelSerializer
@@ -463,4 +463,18 @@ def get_number_of_members_in_a_round(request):
 		response.data = {'Case': 'Tournament round found', 'number_of_members' : number_of_members}
 		return response
 	response.data = {'Case': 'Tournament round not found'}
+	return response
+
+@api_view(['POST'])
+def get_tournament_warning(request):
+	username = request.data.get('user')
+	response = Response()
+	user = customuser.objects.filter(username=username).first()
+	for member in TournamentMembers.objects.filter(user=user):
+		if member.tournament is not None and  member.tournament.is_started == True and member.tournament.is_finished == False and member.is_eliminated == False:
+			TournamentWarning = TournamentWarnNotifications.objects.filter(tournament=member.tournament).first()
+			if TournamentWarning is not None:
+				response.data = {'Case' : 'yes', 'time': TournamentWarning.created_at}
+				return response
+	response.data = {'Case' : 'no'}
 	return response

@@ -23,7 +23,7 @@ function TournamentBracket() {
 	const [userTwoToDisplay, setUserTwoToDisplay] = useState('')
 	const [createdAt, setCreatedAt] = useState(null)
 	const [timeDiff, setTimeDiff] = useState(null);
-	const { user, socket } = useContext(AuthContext)
+	const { user, socket, notifSocket } = useContext(AuthContext)
 
 	const findMemberByPosition = (roundmembers, name) => {
 		const index = roundmembers.findIndex(member => member.name === name);
@@ -33,6 +33,7 @@ function TournamentBracket() {
 	useEffect(() => {
 		const set_is_inside = async () => {
 			console.log("----SET IS INSIDE")
+			console.log("USER IS INSIDE AGAIN +++++++++======+++")
 			const response = await fetch(`http://localhost:8000/api/set-is-inside`, {
 				method: 'POST',
 				headers: {
@@ -140,9 +141,26 @@ function TournamentBracket() {
 		}
 	}, [user])
 
+	// useEffect(() => {
+	// 	if (socket && socket.readyState === WebSocket.OPEN) {
+	// 		socket.onmessage = (event) => {
+	// 			let data = JSON.parse(event.data)
+	// 			let type = data.type
+	// 			let message = data.message
+	// 			console.log("DATA RECEIVED:", data)
+	// 			if (type == 'you_and_your_user') {
+	// 				console.log("YOU data : ", data)
+	// 					setUserOneToDisplay(message.user1)
+	// 					setUserTwoToDisplay(message.user2)
+	// 					setCreatedAt(new Date(message.time))
+	// 			}
+	// 		}
+	// 	}
+	// }, [socket])
+
 	useEffect(() => {
-		if (socket && socket.readyState === WebSocket.OPEN) {
-			socket.onmessage = (event) => {
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+			notifSocket.onmessage = (event) => {
 				let data = JSON.parse(event.data)
 				let type = data.type
 				let message = data.message
@@ -162,11 +180,11 @@ function TournamentBracket() {
 			const interval = setInterval(() => {
 				const now = new Date();
 				const diffInSeconds = Math.floor((now - createdAt) / 1000);
-				if (diffInSeconds < 20) {
-					setTimeDiff(20 - diffInSeconds);
+				if (diffInSeconds < 30) {
+					setTimeDiff(30 - diffInSeconds);
 				} else {
 					setTimeDiff(null);
-					// navigate("/signin");
+					navigate("/mainpage/chat");
 				}
 			}, 1000);
 			return () => clearInterval(interval);

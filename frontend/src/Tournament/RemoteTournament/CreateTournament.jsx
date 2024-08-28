@@ -31,8 +31,8 @@ function CreateTournament() {
 	}
 
 	const handleInviteClick = (name) => {
-		if (socket && socket.readyState === WebSocket.OPEN) {
-			socket.send(JSON.stringify({
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+			notifSocket.send(JSON.stringify({
 				type: 'invite-friend',
 				message: {
 					user: user,
@@ -281,10 +281,14 @@ function CreateTournament() {
 					if (!userExists)
 						setAllGameFriends([...currentAllGameFriends, message.userInfos])
 				} else if (type === 'tournament_started') {
-					console.log("YESSS")
+					let tournament_id = data.message.tournament_id
 					if (socket && socket.readyState === WebSocket.OPEN) {
 						socket.send(JSON.stringify({
 							type: 'Round-16-timer',
+							message : {
+								tournament_id : tournament_id,
+								user: user
+							}
 						}))
 					}
 					navigate('../game/tournamentbracket');

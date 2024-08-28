@@ -6,6 +6,7 @@ import styles from '../assets/Game/gamemodes.module.css'
 import playSoloImage from '../assets/Game/playSoloMode.svg'
 import createTournamentImage from '../assets/Game/createTournamentMode.svg'
 import joinTournamentImage from '../assets/Game/joinTournamentMode.svg'
+import toast, { Toaster } from 'react-hot-toast';
 
 const Modes = () => {
 	const navigate = useNavigate()
@@ -169,7 +170,7 @@ const Modes = () => {
 					console.log("RECEIVED A GAME REQUEST")
 					setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message])
 					setRoomID(message.roomID)
-				} else if (type == 'accepted_invitation') {
+				} else if (type === 'accepted_invitation') {
 					const socketRefer = socketRef.current
 					if (socketRefer.readyState !== WebSocket.OPEN) {
 						console.log("SOCKET IS CLOSED, SHOULD OPENED")
@@ -181,6 +182,13 @@ const Modes = () => {
 					} else {
 						navigate("/mainpage/game/createtournament");
 					}
+				} else if (type === 'warn_members'){
+					notifyError('your game In tournament will start in 15 seconds')
+				}
+				else if (type === 'invited_to_tournament') {
+					setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message])
+				} else if (type === 'deny_tournament_invitation'){
+					setAllGameNotifs(allGameNotifs.filter((user) => user.user !== message.user))
 				}
 			}
 		}
@@ -201,8 +209,6 @@ const Modes = () => {
 					setRoomID(message.roomID)
 				} else if (type === 'tournament_created') {
 					navigate("createtournament")
-				} else if (type === 'invited_to_tournament') {
-					setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message])
 				} else if (type === 'hmed') {
 					console.log("WWWWWWWWWAAAAA HMEEEEEEEED")
 					socket.close()
@@ -248,9 +254,9 @@ const Modes = () => {
 	const refuseInvitation = (creator) => {
 		let notifSelected = allGameNotifs.filter((user) => user.user === creator.user)
 		setAllGameNotifs(allGameNotifs.filter((user) => user.user !== creator.user))
-		if (socket && socket.readyState === WebSocket.OPEN) {
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
 			if (creator.mode === '1vs1') {
-				socket.send(JSON.stringify({
+				notifSocket.send(JSON.stringify({
 					type: 'refuseInvitation',
 					message: {
 						user: notifSelected[0].user,
@@ -259,7 +265,7 @@ const Modes = () => {
 					}
 				}))
 			} else if (creator.mode === 'TournamentInvitation') {
-				socket.send(JSON.stringify({
+				notifSocket.send(JSON.stringify({
 					type: 'deny-tournament-invitation',
 					message: {
 						user: user,
@@ -270,6 +276,11 @@ const Modes = () => {
 			}
 		}
 	}
+
+	const notifyError = (message) => toast.error(message, {
+		position: 'top-center',
+		duration: 6000,
+	});
 
 	const acceptInvitation = async (sender) => {
 		let notifSelected = allGameNotifs.filter((user) => user.user === sender.user)
@@ -299,30 +310,19 @@ const Modes = () => {
 				});
 				if (response.ok) {
 					const data = await response.json();
-					if (data.Case === 'Tournament_started') {
-						Swal.fire({
-							icon: "warning",
-							position: "top-end",
-							title: "Tournament is already started",
-							showConfirmButton: false,
-							customClass: {
-								popup: styles['error-container'],
-								title: styles['title-swal'],
-							},
-							timer: 1500
-						});
-					} else if (data.Case === 'Tournament_is_full') {
-						Swal.fire({
-							icon: "warning",
-							position: "top-end",
-							title: "Tournament is full",
-							showConfirmButton: false,
-							customClass: {
-								popup: styles['error-container'],
-								title: styles['title-swal'],
-							},
-							timer: 1500
-						});
+					if (data.Case === 'Tournament_started' || data.Case === 'Tournament_is_full'){
+						if (data.Case === 'Tournament_started')
+							notifyError("Tournament is already started")
+						else
+							notifyError("Tournament is full")
+						socket.send(JSON.stringify({
+							type: 'deny-tournament-invitation',
+							message: {
+								user: user,
+								sender: sender.user,
+								tournament_id: sender.tournament_id
+							}
+						}))
 					} else {
 						await notifSocket.send(
 							JSON.stringify({
@@ -371,6 +371,7 @@ const Modes = () => {
 
 	return (
 		<div className={styles['game-modes-page']}>
+			<Toaster />
 			<div className={styles['game-modes-div']}>
 				<div className='cancel-game-invite-request'>
 					{(allGameNotifs.length) ? (

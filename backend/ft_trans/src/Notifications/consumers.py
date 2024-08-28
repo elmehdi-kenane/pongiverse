@@ -6,8 +6,8 @@ from chat.models import Friends
 import json
 from . import game_notifs_consumers, tournament_notifs_consumers
 from mainApp.models import TournamentMembers
-
-notifs_user_channels = {}
+from .common import notifs_user_channels
+# notifs_user_channels = {}
 
 class NotificationsConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
@@ -92,6 +92,10 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 		elif data['type'] == 'refuseInvitation': await game_notifs_consumers.refuse_game_invite(self, data, notifs_user_channels)
 		elif data['type'] == 'inviteFriendGame': await game_notifs_consumers.invite_friend(self, data, notifs_user_channels)
 		elif data['type'] == 'accept-tournament-invitation': await tournament_notifs_consumers.accept_invite(self, data, notifs_user_channels)
+		elif data['type'] == 'invite-friend': await tournament_notifs_consumers.invite_friend(self, data, notifs_user_channels)
+		elif data['type'] == 'deny-tournament-invitation': await tournament_notifs_consumers.deny_invite(self, data, notifs_user_channels)
+
+
 
 	async def disconnect(self, close_code):
 		cookiess = self.scope.get('cookies', {})
@@ -191,4 +195,28 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 		await self.send(text_data=json.dumps({
 			'type' : 'user_join_tournament',
 			'message' : event['message']
+		}))
+
+	async def warn_members(self, event):
+		await self.send(text_data=json.dumps({
+			'type' : 'warn_members',
+			'message' : event['message']
+		}))
+
+	async def you_and_your_user(self, event):
+		await self.send(text_data=json.dumps({
+			'type' : 'you_and_your_user',
+			'message' : event['message']
+		}))
+
+	async def invited_to_tournament(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'invited_to_tournament',
+			'message': event['message']
+		}))
+
+	async def deny_tournament_invitation(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'deny_tournament_invitation',
+			'message': event['message']
 		}))

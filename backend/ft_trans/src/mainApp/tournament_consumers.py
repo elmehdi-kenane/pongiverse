@@ -13,11 +13,12 @@ from asgiref.sync import sync_to_async
 from channels.layers import get_channel_layer
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.core.exceptions import ObjectDoesNotExist
+import base64
 import asyncio
 import requests
-from Notifications.consumers import notifs_user_channels
+from Notifications.common import notifs_user_channels
+from .common import tournament_rooms, user_channels
 
-the_tournament_id = 0
 
 async def disconnected(self, user_channels):
 	cookiess = self.scope.get('cookies', {})
@@ -39,19 +40,7 @@ async def disconnected(self, user_channels):
 			if is_started == False or (is_started == True and is_finished == False and is_eliminated == False):
 				member.is_inside = False
 				await sync_to_async(member.save)()
-		# channel_layer = get_channel_layer()
-		# user = await sync_to_async(customuser.objects.filter(username=username).first)()
-		# #### in case of logout
-		# for username, channel_name in user_channels.items():
-		# 	await self.channel_layer.send(
-		# 		channel_name,
-		# 		{
-		# 			'type': 'user_disconnected',
-		# 			'message': {
-		# 				'user': tmp_username
-		# 			}
-		# 		}
-			# )
+
 
 async def create_tournament(self, data, user_channels):
 	#print("hmededede")
@@ -60,6 +49,8 @@ async def create_tournament(self, data, user_channels):
 	flag = 0
 	user = await sync_to_async(customuser.objects.filter(username=username).first)()
 	if user is not None:
+		invitations = await sync_to_async(lambda: GameNotifications.objects.filter(target=user))()
+		await sync_to_async(invitations.delete)()
 		members = await sync_to_async(list)(TournamentMembers.objects.filter(user=user))
 		channel_layer = get_channel_layer()
 		for member in members:
@@ -140,75 +131,6 @@ async def create_tournament(self, data, user_channels):
 				)
 
 
-async def invite_friend(self, data, user_channels):
-	target = data['message']['invited']
-	sender_user = data['message']['user']
-	tournament_id = data['message']['tournament_id']
-	channel_layer = get_channel_layer()
-	channel_name = user_channels.get(target)
-	if channel_name:
-		sender = await sync_to_async(customuser.objects.filter(username=sender_user).first)()
-		receiver = await sync_to_async(customuser.objects.filter(username=target).first)()
-		tournament = await sync_to_async(Tournament.objects.filter(tournament_id=tournament_id).first)()
-		TournamentGameNotify = await sync_to_async(GameNotifications.objects.filter(tournament=tournament, user=sender, target=receiver).first)()
-		if TournamentGameNotify is None:
-			print(f"sender : {sender.username}, receiver : {receiver.username}, tournament : {tournament.tournament_id}, sender_image: {sender.avatar.path}")
-			tournamentInv = GameNotifications(tournament=tournament, user=sender, target=receiver, mode='TournamentInvitation')
-			await sync_to_async(tournamentInv.save)()
-			await self.channel_layer.send(
-						channel_name,
-						{
-							'type': 'invited_to_tournament',
-							'message': {
-								'tournament_id' : tournament_id,
-								'user' : sender_user,
-								'avatar' : sender.avatar.path,
-								'roomID' : '',
-								'mode' : 'TournamentInvitation'
-							}
-						}
-					)
-
-# async def accept_invite(self, data, user_channels):
-# 	tournament_id = data['message']['tournament_id']
-# 	username = data['message']['user']
-# 	user = await sync_to_async(customuser.objects.filter(username=username).first)()
-# 	tournament = await sync_to_async(Tournament.objects.filter(tournament_id=tournament_id).first)()
-# 	member = await sync_to_async(TournamentMembers.objects.filter(user=user, tournament=tournament).first)()
-# 	if member is None:
-# 		invitations = await sync_to_async(lambda: GameNotifications.objects.filter(target=user))()
-# 		await sync_to_async(invitations.delete)()
-# 		channel_layer = get_channel_layer()
-# 		user.is_playing = True
-# 		await sync_to_async(user.save)()
-# 		channel_name = user_channels.get(username)
-# 		tournamentMember = TournamentMembers(user=user, tournament=tournament)
-# 		await sync_to_async(tournamentMember.save)()
-# 		if channel_name:
-# 			group_name = f'tournament_{tournament_id}'
-# 			#print(f"GROUP NAME : {group_name}")
-# 			await self.channel_layer.group_add(group_name, channel_name)
-# 			await self.channel_layer.group_send(
-# 				group_name,
-# 				{
-# 					'type': 'accepted_invitation',
-# 					'message':{
-# 						'user': username,
-# 						'tournament_id': tournament_id
-# 					}
-# 				}
-# 			)
-# 			for username, channel_name in user_channels.items():
-# 				await self.channel_layer.send(
-# 					channel_name,
-# 					{
-# 						'type': 'user_join_tournament',
-# 						'message': {
-# 							'tournament_id' : tournament_id,
-# 						}
-# 					}
-# 				)
-
 async def loged_again(self, data, user_channels):
 	username = data['message']['user']
 	print("***********************************WAHMEDDDDDDDDDDDD")
@@ -225,13 +147,6 @@ async def loged_again(self, data, user_channels):
 					await self.channel_layer.group_add(group_name, channel_names)
 			await self.channel_layer.group_add(group_name, self.channel_name)
 			break
-
-async def deny_invite(self, data, user_channels):
-	sender = await sync_to_async(customuser.objects.filter(username=data['message']['sender']).first)()
-	receiver = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
-	tournament = await sync_to_async(Tournament.objects.filter(tournament_id=data['message']['tournament_id']).first)()
-	tournamentInvite = await sync_to_async(GameNotifications.objects.filter(tournament=tournament, user=sender, target=receiver).first)()
-	await sync_to_async(tournamentInvite.delete)()
 
 async def kick_player(self, data, user_channels):
 	tournament_id = data['message']['tournament_id']
@@ -361,12 +276,28 @@ async def destroy_tournament(self, data, user_channels):
 			}
 		)
 
-async def send_user_eliminated_after_delay(self, tournament, user_channels):
-	await asyncio.sleep(10)
+
+
+@sync_to_async
+def generate_unique_room_id(tournament_id):
+	tournament_rooms_list = tournament_rooms.get(str(tournament_id))
+	while True:
+		room_id = random.randint(1000000, 1000000000)
+		if tournament_rooms_list:
+			if room_id not in tournament_rooms_list:
+				return room_id
+		else:
+			return room_id
+
+
+
+async def send_user_eliminated_after_delay(self, tournament):
+	await asyncio.sleep(15)
 	Tournamentwarnnotification = await sync_to_async(TournamentWarnNotifications.objects.filter(tournament=tournament).first)()
 	await sync_to_async(Tournamentwarnnotification.delete)()
 	print("----after----")
-	group_name = f'tournament_{the_tournament_id}'
+	tournament_id = await sync_to_async(lambda: tournament.tournament_id)()
+	group_name = f'tournament_{tournament_id}'
 	members = await sync_to_async(list)(TournamentMembers.objects.filter(tournament=tournament))
 	for member in members :
 		is_inside = await sync_to_async(lambda: member.is_inside)()
@@ -376,13 +307,14 @@ async def send_user_eliminated_after_delay(self, tournament, user_channels):
 			await sync_to_async(member.save)()
 			member.user.is_playing = False
 			await sync_to_async(member.user.save)()
-			channel_name = user_channels.get(username)
-			await self.channel_layer.group_discard(group_name, channel_name)
+			channel_name_list = notifs_user_channels.get(username)
+			for channel_name in channel_name_list:
+				await self.channel_layer.group_discard(group_name, channel_name)
 			friends = await sync_to_async(list)(Friends.objects.filter(user=member.user))
 			for friend in friends:
 				friend_username = await sync_to_async(lambda: friend.friend.username)()
-				channel_name = user_channels.get(friend_username)
-				if channel_name:
+				channel_name_list = notifs_user_channels.get(friend_username)
+				for channel_name in channel_name_list:
 					await self.channel_layer.send(
 						channel_name,
 						{
@@ -404,6 +336,8 @@ async def send_user_eliminated_after_delay(self, tournament, user_channels):
 	await sync_to_async(round.save)()
 	count = 16
 	for i in range(0, len(members), 2):
+		players = []
+		users = []
 		count+= 1
 		member1 = members[i]
 		member2 = members[i+1] if i + 1 < len(members) else None
@@ -428,19 +362,66 @@ async def send_user_eliminated_after_delay(self, tournament, user_channels):
 			username2 = await sync_to_async(lambda: member2.user.username)()
 			channel_name1 = user_channels.get(username1)
 			channel_name2 = user_channels.get(username2)
-			await self.channel_layer.send(
-				channel_name1,
-				{
-					'type': 'you_and_your_user',
-					'message':{
-						'user1': username1,
-						'user2' : username2,
-						'time' : displayoponent.created_at.isoformat()
-					}
-				}
-			)
-			await self.channel_layer.send(
-				channel_name2,
+			players.append({
+				'user': username1,
+				'state': 'walou',
+				'playerNo': 1,
+				'paddleX': 0,
+				'paddleY': 0,
+				'score': 0,
+				'status': 'notStarted',
+				'hit': 0, ####### added
+				'self_scored': 0, ####### added
+				'tmp_scored': 0 ####### added
+				})
+			players.append({
+				'user': username2,
+				'state': 'walou',
+				'playerNo': 2,
+				'paddleX': 0,
+				'paddleY': 0,
+				'score': 0,
+				'status': 'notStarted',
+				'hit': 0, ####### added
+				'self_scored': 0, ####### added
+				'tmp_scored': 0 ####### added
+				})
+			avatar1 = await sync_to_async(lambda: member1.user.avatar)()
+			avatar2 = await sync_to_async(lambda: member2.user.avatar)()
+			with avatar1.open('rb') as f:
+				users.append({
+					'image': base64.b64encode(f.read()).decode('utf-8'),
+					'level': 2.4
+				})
+			with avatar2.open('rb') as f:
+				users.append({
+					'image': base64.b64encode(f.read()).decode('utf-8'),
+					'level': 2.4
+				})
+			room_id = await generate_unique_room_id(tournament_id)
+			room = {
+				'id': room_id,
+				'players': players,
+				'ball': {
+					'ballX': 0,
+					'ballY': 0
+				},
+				'winner': 0,
+				'status': 'status',
+				'mode': 'tournament',
+				'type': '',
+				'date_started': datetime.datetime.now().isoformat(),
+				'time': 0 #####
+			}
+			if tournament_rooms.get(str(tournament_id)):
+				tournament_rooms.get(str(tournament_id)).update({room['id'] : room})
+			else:
+				tournament_rooms[str(tournament_id)] = {room['id'] : room}
+			await self.channel_layer.group_add(str(room_id), channel_name1)
+			await self.channel_layer.group_add(str(room_id), channel_name2)
+			group_name = f'tournament_{tournament_id}'
+			await self.channel_layer.group_send(
+				group_name,
 				{
 					'type': 'you_and_your_user',
 					'message':{
@@ -452,16 +433,33 @@ async def send_user_eliminated_after_delay(self, tournament, user_channels):
 			)
 
 
-async def Round_16_timer(self, data, user_channels):
-	tournament = await sync_to_async(Tournament.objects.filter(tournament_id=the_tournament_id).first)()
-	tournamentwarnnotification = TournamentWarnNotifications(tournament=tournament)
-	await sync_to_async(tournamentwarnnotification.save)()
-	asyncio.create_task(send_user_eliminated_after_delay(self, tournament, user_channels))
+
+
+async def Round_16_timer(self, data):
+	tournament_id = data['message']['tournament_id']
+	username = data['message']['user']
+	user = await sync_to_async(customuser.objects.filter(username=username).first)()
+	tournament = await sync_to_async(Tournament.objects.filter(tournament_id=tournament_id).first)()
+	tournamentMember = await sync_to_async(TournamentMembers.objects.filter(user=user, tournament=tournament).first)()
+	is_owner = await sync_to_async(lambda: tournamentMember.is_owner)()
+	if is_owner == True:
+		tournamentwarnnotification = TournamentWarnNotifications(tournament=tournament)
+		await sync_to_async(tournamentwarnnotification.save)()
+		tournament_id = await sync_to_async(lambda: tournament.tournament_id)()
+		group_name = f'tournament_{tournament_id}'
+		await self.channel_layer.group_send(
+			group_name,
+			{
+				'type': 'warn_members',
+				'message': {
+					'time' : tournamentwarnnotification.created_at.isoformat()
+				}
+			}
+		)
+		await send_user_eliminated_after_delay(self, tournament)
 
 async def start_tournament(self, data, user_channels):
 	tournament_id = data['message']['tournament_id']
-	global the_tournament_id
-	the_tournament_id = tournament_id
 	tournament = await sync_to_async(Tournament.objects.filter(tournament_id=tournament_id).first)()
 	tournament.is_started = True
 	await sync_to_async(tournament.save)()
@@ -479,7 +477,10 @@ async def start_tournament(self, data, user_channels):
 			await self.channel_layer.send(
 				channel_name,
 				{
-					'type': 'tournament_started'
+					'type': 'tournament_started',
+					'message': {
+						'tournament_id' : tournament_id
+					}
 				}
 			)
 	for username, channel_name in user_channels.items():
@@ -492,6 +493,7 @@ async def start_tournament(self, data, user_channels):
 				}
 			}
 		)
+
 
 
 

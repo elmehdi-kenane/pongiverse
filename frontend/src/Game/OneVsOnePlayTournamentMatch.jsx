@@ -52,30 +52,6 @@ class Ball {
 	}
 }
 
-class Net {
-	constructor(x, y, width, height, color) {
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-		this.color = color
-	}
-
-	changeProperties(newX, newY, newWidth, newHeight, newColor) {
-		this.x = newX
-		this.y = newY
-		this.width = newWidth
-		this.height = newHeight
-		this.color = newColor
-	}
-
-	draw(ctx) {
-		ctx.fillStyle = this.color;
-		for (let i = 0; i <= ctx.canvas.height; i += 15)
-			ctx.fillRect(this.x, this.y + i, this.width, this.height);
-	}
-}
-
 class Edges {
 	constructor(newHeight, newColor) {
 		this.height = newHeight
@@ -94,9 +70,8 @@ class Edges {
 	}
 }
 
-const OneVsOnePlayMatch = () => {
-	let { privateCheckAuth, gameCustomize, socket,
-		socketRecreated, setSocketRecreated, user } = useContext(AuthContext)
+const OneVsOnePlayTournamentMatch = () => {
+	let { privateCheckAuth, gameCustomize, socket, user } = useContext(AuthContext)
 	const [canvasDrawing, setCanvasDrawing] = useState(false)
 	const [gameAborted, setGameAborted] = useState(false)
 	const [gameFinished, setGameFinished] = useState(false)
@@ -104,9 +79,7 @@ const OneVsOnePlayMatch = () => {
 	const [userName2, setUserName2] = useState(null)
 	const [playersPics, setPlayersPics] = useState([])
 	const navigate = useNavigate()
-	const { roomID } = useParams()
 	let canvasRef = useRef(null);
-	let isOut = false
 
 	let isGameStarted = false
 	let playerNo = 0
@@ -119,7 +92,6 @@ const OneVsOnePlayMatch = () => {
 	let edges = useRef(null)
 	let [score1, setScore1] = useState(0)
 	let [score2, setScore2] = useState(0)
-	let audio;
 	let keys = {
 		ArrowDown: false,
 		ArrowUp: false,
@@ -154,7 +126,6 @@ const OneVsOnePlayMatch = () => {
 	let timer;
 
 	const userRef = useRef(user)
-	const roomIdRef = useRef(roomID)
 	const socketRef = useRef(socket)
 
 	let particles = [];
@@ -278,6 +249,44 @@ function createParticle(x, y) {
 	}, [gameCustomize])
 
 	useEffect(() => {
+		const handleBeforeUnload = (event) => {
+			const user = userRef.current
+			const socket = socketRef.current
+			if (socket && socket.readyState === WebSocket.OPEN && user) {
+				socket.send(JSON.stringify({
+					type: 'userExitedTournamentGame',
+					message: {
+						user: user,
+					}
+				}))
+			}
+		}
+		window.addEventListener('beforeunload', handleBeforeUnload)
+		return () => {
+			window.removeEventListener('beforeunload', handleBeforeUnload)
+		}
+	}, [])
+
+	useEffect(() => {
+		return () => {
+			if (isOut) {
+				const user = userRef.current
+				const socket = socketRef.current
+				if (socket && socket.readyState === WebSocket.OPEN && user) {
+					socket.send(JSON.stringify({
+						type: 'userExitedTournamentGame',
+					message: {
+						user: user,
+					}
+					}))
+				}
+			} else
+				isOut = true
+		}
+	}, [])
+
+
+	useEffect(() => {
 		canvasContextRef.current = canvasContext;
 		canvasDimensionsRef.current = canvasDimensions;
 		gameCustomizeRef.current = gameCustomize
@@ -373,9 +382,9 @@ function createParticle(x, y) {
 							playerNo === 1 ? player1.current.y -= (8 * heightScalingFactor) : player2.current.y -= (8 * heightScalingFactor);
 							playerNo === 1 ? originalPositions.player1_y -= 8 : originalPositions.player2_y -= 8  ////
 							socket.send(JSON.stringify({
-								type: 'moveKey',
+								type: 'moveKeyTournamentGame',
 								message: {
-									roomID: roomID,
+									user: user,
 									playerNo: playerNo,
 									direction: 'up'
 								}
@@ -390,9 +399,9 @@ function createParticle(x, y) {
 							playerNo === 1 ? player1.current.y += (8 * heightScalingFactor) : player2.current.y += (8 * heightScalingFactor);
 							playerNo === 1 ? originalPositions.player1_y += 8 : originalPositions.player2_y += 8 ////
 							socket.send(JSON.stringify({
-								type: 'moveKey',
+								type: 'moveKeyTournamentGame',
 								message: {
-									roomID: roomID,
+									user: user,
 									playerNo: playerNo,
 									direction: 'down'
 								}
@@ -459,9 +468,9 @@ function createParticle(x, y) {
 			const distance = (e.clientY - rect.top) * heightScalingFactor
 			console.log(distance)
 			socket.send(JSON.stringify({
-				type: 'moveMouse',
+				type: 'moveMouseTournamentGame',
 				message: {
-					roomID: roomID,
+					user: user,
 					playerNo: playerNo,
 					distance: distance
 				}
@@ -496,7 +505,6 @@ function createParticle(x, y) {
 				let data = JSON.parse(event.data)
 				let type = data.type
 				let message = data.message
-				// console.log("THE TYPE IS : ",type)
 				if (type === "setupGame") {
 					playerNo = message.playerNo
 					console.log("INSIDE SETUPGAME")
@@ -507,7 +515,6 @@ function createParticle(x, y) {
 					startTimer()
 					console.log(socket)
 				} else if (type === "updateGame") {
-					// console.log("INSIDE UPDATEGAME")
 					const canvas = canvasRef.current;
 					if (canvas) {
 						const widthScalingFactor = canvas.width / 710;
@@ -527,11 +534,11 @@ function createParticle(x, y) {
 						resizeCanvas()
 						draw()
 					}
-				} else if (type === "notAuthorized") {
+				} else if (type === "notAuthorized") {  // NOTE: remove from back then remove this
 					console.log("INSIDE LEAVEGAME")
 					console.log("navigating from the playing page")
-					navigate("../game/solo/1vs1")
-				} else if (type === "roomNotExist") {
+					navigate("../game/solo/1vs1")  // TODO: CHANGE THIS TO TOURNAMENT
+				} else if (type === "roomNotExist") {  // NOTE: remove from back then remove this
 					navigate("../game/solo/1vs1")
 				} else if (type === "finishedGame") {
 					let allPlayersStats = [...playersInfos]
@@ -555,7 +562,7 @@ function createParticle(x, y) {
 					allPlayersStats[2].time = message.time
 					setPlayersInfos(allPlayersStats)
 					console.log("playerNo when it is finished : ", playerNo)
-				} else if (type === "abortedGame") {
+				} else if (type === "abortedGame") { // NOTE: remove from back then remove this
 					let allPlayersStats = [...playersInfos]
 					setUserName1(message.user1)
 					setUserName2(message.user2)
@@ -587,49 +594,31 @@ function createParticle(x, y) {
 		}
 	}, [socket, user])
 
-	// useEffect(() => {
-	// 	return () => {
-	// 		if (isOut) {
-	// 			if (socket && socket.readyState === WebSocket.OPEN) {
-	// 				socket.send(JSON.stringify({
-	// 					type: 'playerChangedPage',
-	// 					message: {
-	// 						user: user,
-	// 						roomID: roomID
-	// 					}
-	// 				}))
-	// 			}
-	// 		} else
-	// 			isOut = true
-	// 	}
-	// }, [])
 
 	useEffect(() => {
-		if (canvasDrawing && !socketRecreated && user) {
+		if (canvasDrawing && user) {
 			if (socket && socket.readyState === WebSocket.OPEN && user) {
 				console.log("CHECKING IF PLAYER IN ROOM")
 				socket.send(JSON.stringify({
-					type: 'isPlayerInRoom',
+					type: 'isPlayerInRoomTournamentGame',
 					message: {
-						user: user,
-						roomID: roomID
+						user: user
 					}
 				}))
 			}
 		}
-	}, [canvasDrawing, socket, socketRecreated, user])
+	}, [canvasDrawing, socket, user])
 
 	const exitTheGame = () => {
 		if (user) {
 			if (socket && socket.readyState === WebSocket.OPEN) {
 				socket.send(JSON.stringify({
-					type: 'userExited',
+					type: 'userExitedTournamentGame',
 					message: {
 						user: user,
-						roomID: roomID
 					}
 				}))
-				navigate('../game/solo/1vs1')
+				navigate('../game/solo/1vs1') // NOTE: CHANGE THIS TO TOURNAMENT
 			} else {
 				console.log("socket is closed, refresh the page")
 			}
@@ -655,181 +644,41 @@ function createParticle(x, y) {
 		return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 	};
 
-	useEffect(() => {
+	useEffect(() => { // TODO: CHECK THIS OUT LATER
 		userRef.current = user;
-		roomIdRef.current = roomID;
 		socketRef.current = socket;
-	}, [user, roomID, socket]);
-
-	useEffect(() => {
-		const handleBeforeUnload = (event) => {
-			const user = userRef.current
-			const socket = socketRef.current
-			const roomID = roomIdRef.current
-			console.log("INSIDE THE MATCH : ", user, roomID, socket)
-			if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
-				socket.send(JSON.stringify({
-					type: 'playerChangedPage',
-					message: {
-						user: user,
-						roomID: roomID
-					}
-				}))
-			}
-		}
-		window.addEventListener('beforeunload', handleBeforeUnload)
-		return () => {
-			window.removeEventListener('beforeunload', handleBeforeUnload)
-		}
-	}, [])
-
-	useEffect(() => {
-		return () => {
-			if (isOut) {
-				const user = userRef.current
-				const socket = socketRef.current
-				const roomID = roomIdRef.current
-				console.log("USER IS GETTING OUT ", user, roomID, socket)
-				if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
-					socket.send(JSON.stringify({
-						type: 'playerChangedPage',
-						message: {
-							user: user,
-							roomID: roomID
-						}
-					}))
-				}
-			} else
-				isOut = true
-		}
-	}, [])
-
-	const exitOneVsOneGame = () => {
-		navigate('../game/solo/1vs1')
-	}
+	}, [user, socket]);
 
 	return (
-		<>
-			{(gameFinished || gameAborted) && (
-				<div className='onevsone' style={{position: 'relative'}} >
-				{(gameFinished && user === userName1) ? ((playersInfos[0].totalScore > playersInfos[1].totalScore) ? (
-					<>
-						<div className='winner_cup' >
-							<img src={Icons.winnerCup} alt="winner cup" />
-						</div>
-						<p className='winner_congrats' >WINNER WINNER CHICKEN DINNER!</p>
-					</>
-				) : (
-					<p className='loser_support' >BETTER LUCK NEXT TIME!</p>
-				)) : (gameFinished && user === userName2) ? ((playersInfos[1].totalScore > playersInfos[0].totalScore) ? (
-					<>
-						<div className='winner_cup' >
-							<img src={Icons.winnerCup} alt="winner cup" />
-						</div>
-						<p className='winner_congrats' >WINNER WINNER CHICKEN DINNER!</p>
-					</>
-				) : (
-					<p className='loser_support' >BETTER LUCK NEXT TIME!</p>
-				)) : (
-					<p className='loser_support' >GAME ABORTED!</p>
-				)}
-
-				{/* {(playerScore1 > playerScore2 && playerNo === 1) && (
-						<div className='winner_cup' >
-							<img src={Icons.winnerCup} alt="winner cup" />
-						</div>
-					)}
-				{(playerScore1 > playerScore2 && playerNo === 1) ? (<p className='winner_congrats' >WINNER WINNER CHICKEN DINNER!</p>) : (<p className='loser_support' >BETTER LUCK NEXT TIME!</p>)} */}
-				<div className='gameStats_container' >
-					<div className='gameStats_playerInfos' >
-					<div className='gameStats_playerInfos-details' >
-						<div>
-						{playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[0].avatar}`} alt="" />) : (<img src={Icons.solidGrey} alt="" />)}
-						<p>{userName1}</p>
-						</div>
-						<div>
-						<p>{userName2}</p>
-						{playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[1].avatar}`} alt="" />) : (<img src={Icons.solidGrey} alt="" />)}
-						</div>
-					</div>
-					</div>
-					<div className='gameStats_details' >
-					<div>
-						<p>{playersInfos[0].totalScore}</p>
-						<p>Score</p>
-						<p>{playersInfos[1].totalScore}</p>
-					</div>
-					</div>
-					<div className='gameStats_details' >
-					<div>
-						<p>{playersInfos[0].score}</p>
-						<p>Goals</p>
-						<p>{playersInfos[1].score}</p>
-					</div>
-					</div>
-					<div className='gameStats_details' >
-					<div>
-						<p>{playersInfos[0].hit}</p>
-						<p>Hit</p>
-						<p>{playersInfos[1].hit}</p>
-					</div>
-					</div>
-					<div className='gameStats_details' >
-					<div>
-						{(playersInfos[0].hit) ?
-						(<p>{Math.floor((playersInfos[0].score / playersInfos[0].hit ) * 100)}%</p>) :
-						(<p>0%</p>)
-						}
-						<p>Accuracy</p>
-						{(playersInfos[1].hit) ?
-						(<p>{Math.floor((playersInfos[1].score / playersInfos[1].hit ) * 100)}%</p>) :
-						(<p>0%</p>)
-						}
-					</div>
-					</div>
-					<div className='gameStats_details' >
-					<div>
-						<p>{playersInfos[0].rating}</p>
-						<p>Rating</p>
-						<p>{playersInfos[1].rating}</p>
-					</div>
-					</div>
+		<div className='onevsone-pm' ref={wrapperRef} >
+			<div ref={resultRef} className='onevsone-pm-infos' >
+				<div>
+					{playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[0].avatar}`} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
+					<div style={{textAlign:"center"}} ><p>{userName1}</p></div>
 				</div>
-				<div className='stats-selects stats-selects-modes' >
-					<button onClick={exitOneVsOneGame} >Exit</button>
-				</div>
-				</div>)}
-			{(!gameFinished && !gameAborted) && (<div className='onevsone-pm' ref={wrapperRef} >
-				{gameFinished ? (<div style={{fontWeight:"bolder", textAlign:"center", color:"white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}><p>GAME FINISHED</p></div>) : gameAborted ? (<div style={{fontWeight:"bolder", textAlign:"center", color:"white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}><p>GAME ABORTED</p></div>) : ''}
-				<div ref={resultRef} className='onevsone-pm-infos' >
-					<div>
-						{playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[0].avatar}`} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
-						<div style={{textAlign:"center"}} ><p>{userName1}</p></div>
-					</div>
-					<div>
-						<p>{score1}</p>
-						<div className='onevsone-pm-infos-stats' >
-							<div>
-								{/* <img src={Icons.logout} alt="" onClick={(!gameFinished && !gameAborted) ? exitTheGame : undefined} /> */}
-								<p>Goal: 5</p>
-								<div onClick={(!gameFinished && !gameAborted) ? exitTheGame : undefined} >
-									<img src={Icons.logout} alt="" />
-									<p>Exit</p>
-								</div>
+				<div>
+					<p>{score1}</p>
+					<div className='onevsone-pm-infos-stats' >
+						<div>
+							{/* <img src={Icons.logout} alt="" onClick={(!gameFinished && !gameAborted) ? exitTheGame : undefined} /> */}
+							<p>Goal: 5</p>
+							<div onClick={(!gameFinished && !gameAborted) ? exitTheGame : undefined} >
+								<img src={Icons.logout} alt="" />
+								<p>Exit</p>
 							</div>
-							<div>{formatTime(time)}</div>
 						</div>
-						<p>{score2}</p>
+						<div>{formatTime(time)}</div>
 					</div>
-					<div>
-						<div style={{textAlign:"center"}}><p>{userName2}</p></div>
-						{playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[1].avatar}`} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
-					</div>
+					<p>{score2}</p>
 				</div>
-				<canvas ref={canvasRef} ></canvas>
-			</div>)}
-		</>
+				<div>
+					<div style={{textAlign:"center"}}><p>{userName2}</p></div>
+					{playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[1].avatar}`} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
+				</div>
+			</div>
+			<canvas ref={canvasRef} ></canvas>
+		</div>
 	);
 };
 
-export default OneVsOnePlayMatch;
+export default OneVsOnePlayTournamentMatch;
