@@ -13,20 +13,8 @@ export const ChatProvider = ({ children }) => {
   const [chatRoomInvitations, setChatRoomInvitations] = useState([]);
   const [suggestedChatRooms, setSuggestedChatRooms] = useState([]);
   const [directConversations, setDirectConversations] = useState([]);
-  const [directsImages, setDirectsImages] = useState([]);
-  const [chatRoomInvitationsIcons, setChatRoomInvitionsIcons] = useState([]);
   const chatRoomConversationsRef = useRef(chatRoomConversations);
   const chatRoomInvitationsRef = useRef(chatRoomInvitations);
-  // const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
-
-  useEffect(() => {
-    chatRoomConversationsRef.current = chatRoomConversations;
-  }, [chatRoomConversations]);
-
-  useEffect(() => {
-    chatRoomInvitationsRef.current = chatRoomInvitations;
-  }, [chatRoomInvitations]);
-
   const [selectedChatRoom, setSelectedChatRoom] = useState({
     name: "",
     memberCount: "",
@@ -38,51 +26,30 @@ export const ChatProvider = ({ children }) => {
     status: "",
     avatar: "",
   });
+  const [unreadCount, setUnreadCount] = useState(new Map());
+
+  useEffect(() => {
+    chatRoomConversationsRef.current = chatRoomConversations;
+  }, [chatRoomConversations]);
+
+  useEffect(() => {
+    chatRoomInvitationsRef.current = chatRoomInvitations;
+  }, [chatRoomInvitations]);
+
   const selectedChatRoomRef = useRef(selectedChatRoom);
   useEffect(() => {
     selectedChatRoomRef.current = selectedChatRoom;
   }, [selectedChatRoom]);
 
-  const fetchImages = async (items, key) => {
-    const promises = items.map(async (item) => {
-      const response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            image: item[key],
-          }),
-        }
-      );
-      const blob = await response.blob();
-      return URL.createObjectURL(blob);
-    });
-    return await Promise.all(promises);
-  };
-  //Fetch Conversations images
-  useEffect(() => {
-    const fetchDirectConversationsImages = async () => {
-      const images = await fetchImages(directConversations, "image");
-      setDirectsImages(images);
-    };
 
+  useEffect(() => {
     if (directConversations.length) {
-      fetchDirectConversationsImages();
+      const updatedUnreadCounts = new Map(
+        directConversations.map(friend => [friend.id, friend.unreadCount])
+      );
+      setUnreadCount(updatedUnreadCounts);
     }
   }, [directConversations]);
-  //Fetch invitaion chat rooms images
-  useEffect(() => {
-    const fetchChatRoomInvitationsIcons = async () => {
-      const images = await fetchImages(chatRoomInvitations, "icon_url");
-      setChatRoomInvitionsIcons(images);
-    };
-    if (chatRoomInvitations.length) {
-      fetchChatRoomInvitationsIcons();
-    }
-  }, [chatRoomInvitations]);
 
   useEffect(() => {
     const fetchChatRooms = async () => {
@@ -104,11 +71,13 @@ export const ChatProvider = ({ children }) => {
         const response = await fetch(
           `http://${
             import.meta.env.VITE_IPADDRESS
-          }:8000/profile/firendwithdirects/${user}`
+          }:8000/chatAPI/firendwithdirects/${user}`
         );
         const data = await response.json();
-        console.log(data);
-        setDirectConversations(data);
+        if(response.ok)
+          setDirectConversations(data);
+        else
+          console.error("opps!, something went wrong")
       } catch (error) {
         console.log(error);
       }
@@ -137,7 +106,6 @@ export const ChatProvider = ({ children }) => {
           }:8000/chatAPI/suggestedChatRooms/${user}`
         );
         let data = await response.json();
-        // console.log("suggested chat room", data);
         setSuggestedChatRooms(data);
       } catch (error) {
         console.log(error);
@@ -164,20 +132,19 @@ export const ChatProvider = ({ children }) => {
     setDirectConversations: setDirectConversations,
     setSelectedChatRoom: setSelectedChatRoom,
     selectedChatRoom: selectedChatRoom,
-    directsImages: directsImages,
-    setDirectsImages: setDirectsImages,
     selectedDirect: selectedDirect,
     setSelectedDirect: setSelectedDirect,
     isHome: isHome,
     setIsHome: setIsHome,
     chatRoomInvitations: chatRoomInvitations,
     setChatRoomInvitations: setChatRoomInvitations,
-    chatRoomInvitationsIcons: chatRoomInvitationsIcons,
     suggestedChatRooms: suggestedChatRooms,
     setSuggestedChatRooms: setSuggestedChatRooms,
     chatRoomConversationsRef: chatRoomConversationsRef,
     chatRoomInvitationsRef: chatRoomInvitationsRef,
     selectedChatRoomRef,
+    unreadCount : unreadCount,
+    setUnreadCount: setUnreadCount,
   };
   return (
     <ChatContext.Provider value={contextData}>{children}</ChatContext.Provider>
