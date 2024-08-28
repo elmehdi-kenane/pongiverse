@@ -20,4 +20,5 @@ urlpatterns = [
     path('getUserGames/<str:username>', views.get_user_games_wl),
     path('getUserStcs/<str:username>/<int:date_range>', views.get_user_statistics),
     path('getSingleMatches/<str:username>/<int:page>', views.get_single_matches),
+    path('getMultiplayerMatches/<str:username>/<int:page>', views.get_multiplayer_matches),
 ]
