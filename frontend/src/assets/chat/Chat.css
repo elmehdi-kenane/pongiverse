@@ -152,14 +152,12 @@ button.rooms-switch-button-active {
 }
 
 .conversation-item-last-msg {
-  font-size: 10px;
-  /* font-weight: 100; */
+  font-size: 12px;
   width: 95%;
   color: #ccc;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  /* margin-top: -2px; */
 }
 
 .chat-window,
@@ -244,7 +242,7 @@ img.empty-chat-icon {
 .conversation-options {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 15px;
 }
 .conversation-invite-icon {
   width: 35px;
@@ -331,7 +329,7 @@ img.empty-chat-icon {
 }
 .my-message-row-sender-name {
   color: #ccc;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .message-content {
@@ -346,7 +344,7 @@ img.empty-chat-icon {
 }
 .my-message-row-sender-date {
   color: #ccc;
-  font-size: 12px;
+  font-size: 8px;
 }
 .my-message-content {
   border-radius: 15px 0px 15px 15px;
@@ -447,7 +445,9 @@ textarea.conversation-input::placeholder {
   align-items: center;
   gap: 5px;
 }
-
+.conversation-item-last-msg-wrapper-bolder {
+  font-weight: 500;
+}
 .conversation-item-last-msg-count {
   display: inline-block;
   padding: 0.25em 0.4em;

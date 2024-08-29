@@ -248,12 +248,12 @@ const Friends = () => {
                           <>
                               {
                                   friends.slice(0, (friends.length - 2)).map((request, index) => (
-                                      <FriendCard key={index} isLastTwoElements={false} currentUsername={user} secondUsername={request.second_username} avatar={request.avatar}></FriendCard>
+                                      <FriendCard key={index} isLastTwoElements={false} currentUsername={user} secondUsername={request.second_username} avatar={request.avatar} id={request.id} ></FriendCard>
                                   ))
                               }
                               {
                                   friends.slice(-2).map((request, index) => (
-                                      <FriendCard key={index} isLastTwoElements={friends.length > 2 ? true : false} currentUsername={user} secondUsername={request.second_username} avatar={request.avatar}></FriendCard>
+                                      <FriendCard key={index} isLastTwoElements={friends.length > 2 ? true : false} currentUsername={user} secondUsername={request.second_username} avatar={request.avatar} id={request.id}></FriendCard>
                                   ))
                               }
                           </>

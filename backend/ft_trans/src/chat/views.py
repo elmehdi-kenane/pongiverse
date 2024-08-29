@@ -315,7 +315,6 @@ def direct_messages(request):
             }
             data.append(message_data)
         sorted_by_date = sorted(data, key=lambda x: x["date"])
-        print("sorted by date: ", sorted_by_date)
         return Response(sorted_by_date)
     return Response({"error": "Invalid request method"}, status=400)
 
@@ -507,17 +506,18 @@ def friends_with_directs(request, username):
     protocol = get_protocol(request)
     ip_address = os.getenv("IP_ADDRESS")
     for friend in friends:
-        last_message = get_direct_last_message(username, friend.friend.username)
-        friend_data = {
-            "id": friend.friend.id,
-            "name": friend.friend.username,
-            "avatar": f"{protocol}://{ip_address}:8000/chatAPI{friend.friend.avatar.url}",
-            "is_online": friend.friend.is_online,
-            "is_playing": friend.friend.is_playing,
-            "lastMessage": last_message,
-            "unreadCount": Directs.objects.filter(
-                reciver=user, sender=friend.friend, is_read=False
-            ).count(),
-        }
-        data.append(friend_data)
+        if Directs.objects.filter(Q(sender=user, reciver=friend.friend) | Q(sender=friend.friend, reciver=user)).exists():
+            last_message = get_direct_last_message(username, friend.friend.username)
+            friend_data = {
+                "id": friend.friend.id,
+                "name": friend.friend.username,
+                "avatar": f"{protocol}://{ip_address}:8000/chatAPI{friend.friend.avatar.url}",
+                "is_online": friend.friend.is_online,
+                "is_playing": friend.friend.is_playing,
+                "lastMessage": last_message,
+                "unreadCount": Directs.objects.filter(
+                    reciver=user, sender=friend.friend, is_read=False
+                ).count(),
+            }
+            data.append(friend_data)
     return Response(data)

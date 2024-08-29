@@ -65,7 +65,7 @@ const App = () => {
                   path="chat"
                   element={<ChatGroupsWrapper element={<Chat />} />}
                 />
-                <Route path="friends" element={<Friends />} />
+                <Route path="friends" element={<ChatGroupsWrapper element={<Friends />}/>} />
                 <Route
                   path="groups"
                   element={<ChatGroupsWrapper element={<Rooms />} />}

@@ -15,6 +15,8 @@ export const ChatProvider = ({ children }) => {
   const [directConversations, setDirectConversations] = useState([]);
   const chatRoomConversationsRef = useRef(chatRoomConversations);
   const chatRoomInvitationsRef = useRef(chatRoomInvitations);
+  const directConversationsRef = useRef(directConversations);
+  const [messages, setMessages] = useState([]);
   const [selectedChatRoom, setSelectedChatRoom] = useState({
     name: "",
     memberCount: "",
@@ -22,16 +24,20 @@ export const ChatProvider = ({ children }) => {
     roomId: "",
   });
   const [selectedDirect, setSelectedDirect] = useState({
+    id: '',
     name: "",
     status: "",
     avatar: "",
   });
-  const [unreadCount, setUnreadCount] = useState(new Map());
-  const unreadCountRef = useRef(unreadCount)
+  const selectedDirectRef = useRef(selectedDirect);
 
   useEffect(() => {
-    unreadCountRef.current = unreadCount;
-  }, [unreadCount]);
+    directConversationsRef.current = directConversations;    
+  }, [directConversations]);
+
+  useEffect(() => {
+    selectedDirectRef.current = selectedDirect;
+  }, [selectedDirect]);
 
   useEffect(() => {
     chatRoomConversationsRef.current = chatRoomConversations;
@@ -41,20 +47,30 @@ export const ChatProvider = ({ children }) => {
     chatRoomInvitationsRef.current = chatRoomInvitations;
   }, [chatRoomInvitations]);
 
-  const selectedChatRoomRef = useRef(selectedChatRoom);
-  useEffect(() => {
-    selectedChatRoomRef.current = selectedChatRoom;
-  }, [selectedChatRoom]);
 
-
-  useEffect(() => {
-    if (directConversations.length) {
-      const updatedUnreadCounts = new Map(
-        directConversations.map(friend => [friend.id, friend.unreadCount])
+  useEffect(()=> {
+    if (Object.values(selectedDirect).every((value) => value !== "")) {
+      let currentDirects = directConversationsRef.current
+      const conversationExists = currentDirects.some(
+        (conv) => conv.name === selectedDirect.name
       );
-      setUnreadCount(updatedUnreadCounts);
+      if (!conversationExists) {
+        // Create a new conversation
+        const newConversation = {
+          id: selectedDirect.id,
+          name: selectedDirect.name,
+          avatar: selectedDirect.avatar,
+          is_online: selectedDirect.status,
+          lastMessage: "",
+          unreadCount: '0',
+        };
+        setDirectConversations((prevConversations) => [
+          ...prevConversations,
+          newConversation,
+        ]);
+      }
     }
-  }, [directConversations]);
+  }, [selectedDirect])
 
   useEffect(() => {
     const fetchChatRooms = async () => {
@@ -79,8 +95,30 @@ export const ChatProvider = ({ children }) => {
           }:8000/chatAPI/firendwithdirects/${user}`
         );
         const data = await response.json();
-        if(response.ok)
+        if(response.ok){
           setDirectConversations(data);
+          // if (Object.values(selectedDirect).every((value) => value !== "")) {
+          //   let currentDirects = directConversationsRef.current
+          //   const conversationExists = currentDirects.some(
+          //     (conv) => conv.name === selectedDirect.name
+          //   );
+          //   if (!conversationExists) {
+          //     // Create a new conversation
+          //     const newConversation = {
+          //       id: selectedDirect.id,
+          //       name: selectedDirect.name,
+          //       avatar: selectedDirect.avatar,
+          //       is_online: selectedDirect.status,
+          //       lastMessage: "",
+          //       unreadCount: '0',
+          //     };
+          //     setDirectConversations((prevConversations) => [
+          //       ...prevConversations,
+          //       newConversation,
+          //     ]);
+          //   }
+          // }
+        }
         else
           console.error("opps!, something went wrong")
       } catch (error) {
@@ -147,10 +185,10 @@ export const ChatProvider = ({ children }) => {
     setSuggestedChatRooms: setSuggestedChatRooms,
     chatRoomConversationsRef: chatRoomConversationsRef,
     chatRoomInvitationsRef: chatRoomInvitationsRef,
-    selectedChatRoomRef,
-    unreadCount : unreadCount,
-    setUnreadCount: setUnreadCount,
-    unreadCountRef : unreadCountRef,
+    selectedDirectRef: selectedDirectRef,
+    directConversationsRef: directConversationsRef,
+    messages : messages,
+    setMessages : setMessages,
   };
   return (
     <ChatContext.Provider value={contextData}>{children}</ChatContext.Provider>
