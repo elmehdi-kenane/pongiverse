@@ -2,9 +2,8 @@ from myapp.models import customuser  ###########
 from asgiref.sync import sync_to_async
 from .models import Room, Membership, Message, Directs, RoomInvitation
 from django.core.files.storage import default_storage
-import re, json
+import re, json, os
 from django.contrib.auth.hashers import make_password, check_password
-
 
 async def add_user_channel_group(self, data):
     try:
@@ -111,10 +110,10 @@ async def direct_message(self, data, user_channels):
     message = await sync_to_async(Directs.objects.create)(
         sender=sender, reciver=reciver, message=data["data"]["message"]
     )
+    ip_address = os.getenv("IP_ADDRESS")
+    protocol = os.getenv('PROTOCOL')
     channel_name = user_channels.get(reciver.id)
     mychannel_name = user_channels.get(sender.id)
-    print("channel name of reciver: ",  channel_name)
-    print("channel name of sender: ",  mychannel_name)
     if channel_name:
         for channel in channel_name:
             await self.channel_layer.send(
@@ -122,10 +121,12 @@ async def direct_message(self, data, user_channels):
                 {
                     "type": "send_direct",
                     "data": {
-                        "sender": data["data"]["sender"],
-                        "reciver": data["data"]["reciver"],
-                        "message": data["data"]["message"],
+                        'senderAvatar' : f"{protocol}://{ip_address}:8000/chatAPI{sender.avatar.url}",
+                        "sender": sender.username,
+                        "reciver": reciver.username,
+                        "message": message.message,
                         'senderId' : sender.id,
+                        'receiverId' : reciver.id,
                         'date' : message.timestamp,
                     },
                 },
@@ -137,10 +138,11 @@ async def direct_message(self, data, user_channels):
                 {
                     "type": "send_direct",
                     "data": {
-                        "sender": data["data"]["sender"],
-                        "reciver": data["data"]["sender"],
-                        "message": data["data"]["message"],
+                        "sender": sender.username,
+                        "reciver": sender.username,
+                        "message": message.message,
                         'senderId' : sender.id,
+                        'receiverId' : reciver.id,
                         'date' : message.timestamp,
                     },
                 },

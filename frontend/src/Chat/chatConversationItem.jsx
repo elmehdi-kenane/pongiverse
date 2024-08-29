@@ -4,7 +4,8 @@ import ChatContext from "../Context/ChatContext";
 
 const ChatConversationItem = (props) => {
   const { user } = useContext(AuthContext);
-  const { unreadCount, setUnreadCount } = useContext(ChatContext);
+  const { directConversationsRef, setDirectConversations } =
+    useContext(ChatContext);
   const resetUnreadMessages = async () => {
     try {
       await fetch(
@@ -30,16 +31,21 @@ const ChatConversationItem = (props) => {
   const handleClick = () => {
     if (props.isDirect && props.name) {
       props.setSelectedDirect({
+        id: props.friendId,
         name: props.name,
         avatar: props.avatar,
         status: props.status,
       });
-      setUnreadCount(prev => {
-        const updatedUnreadCount = new Map(prev);
-        updatedUnreadCount.set(props.friendId, 0);
-        return updatedUnreadCount;
+      let allDirects = directConversationsRef.current;
+      const updatedDirects = allDirects.map((friend) => {
+        if (props.friendId === friend.id) {
+          return { ...friend, unreadCount: 0};
+        }
+        return friend;
       });
-      resetUnreadMessages();
+      setDirectConversations(updatedDirects);
+      if(parseInt(props.unreadCount) > 0)
+        resetUnreadMessages();
     } else if (!props.isDirect && props.name) {
       props.setSelectedChatRoom({
         name: props.name,
@@ -67,7 +73,7 @@ const ChatConversationItem = (props) => {
       />
       <div className="conversation-item-details">
         <div className="conversation-item-name">{props.name}</div>
-        <div className="conversation-item-last-msg-wrapper">
+        <div className={parseInt(props.unreadCount) > 0 ?  "conversation-item-last-msg-wrapper-bolder" : "conversation-item-last-msg-wrapper"}>
           <div className="conversation-item-last-msg">
             {props.lastMessage
               ? props.lastMessage
@@ -77,7 +83,13 @@ const ChatConversationItem = (props) => {
           </div>
         </div>
       </div>
-      {parseInt(unreadCount.get(props.friendId)) > 0 ? <div className="conversation-item-last-msg-count">{unreadCount.get(props.friendId)}</div> : ""}
+      {parseInt(props.unreadCount) > 0 ? (
+        <div className="conversation-item-last-msg-count">
+          {props.unreadCount}
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 };

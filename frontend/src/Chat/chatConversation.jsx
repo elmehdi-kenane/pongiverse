@@ -22,28 +22,27 @@ export let useClickOutSide = (handler) => {
 };
 
 const ChatConversation = () => {
-  const { selectedDirect, setSelectedDirect, setUnreadCount, unreadCount, unreadCountRef} = useContext(ChatContext);
-  const [messages, setMessages] = useState([]);
-  const [recivedMessage, setRecivedMessage] = useState(null);
+  const {
+    selectedDirect,
+    setSelectedDirect,
+    recivedMessage,
+    setMessages,
+    messages,
+  } = useContext(ChatContext);
+  
   const [messageToSend, setMessageToSend] = useState("");
   const [showDirectOptions, setShowDirectOptions] = useState(false);
   const { user, chatSocket, userImg } = useContext(AuthContext);
   const messageEndRef = useRef(null);
-  const selectedDirectRef = useRef(selectedDirect);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    selectedDirectRef.current = selectedDirect;
-  }, [selectedDirect]);
-
   const sendMessage = () => {
-    console.log(messageToSend)
     if (
       chatSocket &&
       chatSocket.readyState === WebSocket.OPEN &&
       messageToSend.trim() !== ""
     ) {
-      console.log(messageToSend)
+      console.log(messageToSend);
       chatSocket.send(
         JSON.stringify({
           type: "directMessage",
@@ -61,7 +60,10 @@ const ChatConversation = () => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/Directs/messages`,
+        const response = await fetch(
+          `http://${
+            import.meta.env.VITE_IPADDRESS
+          }:8000/chatAPI/Directs/messages`,
           {
             method: "POST",
             headers: {
@@ -76,7 +78,7 @@ const ChatConversation = () => {
         const data = await response.json();
         if (response.ok) {
           setMessages(data);
-        } else console.log("error")
+        } else console.log("error");
       } catch (error) {
         console.log(error);
       }
@@ -87,51 +89,6 @@ const ChatConversation = () => {
     let scrollView = document.getElementById("start");
     scrollView.scrollTop = scrollView.scrollHeight;
   }, [selectedDirect]);
-
-  useEffect(() => {
-    if (chatSocket) {
-      chatSocket.onmessage = (e) => {
-        let data = JSON.parse(e.data);
-        console.log("data received inside:", data);
-  
-        if (data.type === "newDirect") {
-          const currentDirect = selectedDirectRef.current;
-  
-          // Check if the message is for the currently selected direct chat
-          if (
-            (currentDirect.name === data.data.sender && data.data.reciver === user) ||
-            (user === data.data.sender && data.data.reciver === user)
-          ) {
-            setRecivedMessage(data.data);
-          } else {
-            let currentUnreadCount = unreadCountRef.current; // Corrected the typo
-  
-            setUnreadCount((prev) => {
-              console.log(currentUnreadCount)
-              const updatedUnreadCount = new Map(currentUnreadCount);
-  
-              // Get the previous unread count, defaulting to 0 if undefined
-              let prevCount = updatedUnreadCount.get(data.data.senderId) || 0;
-  
-              // Increment the unread count for the sender
-              updatedUnreadCount.set(data.data.senderId, prevCount + 1);
-  
-              return updatedUnreadCount;
-            });
-          }
-        } else if (data.type === "goToGamingPage") {
-          console.log("navigating now");
-          navigate(`/mainpage/game/solo/1vs1/friends`);
-        }
-      };
-    }
-  }, [chatSocket]);
-
-  useEffect(() => {
-    if (recivedMessage !== null) {
-      setMessages((prev) => [...prev, recivedMessage]);
-    }
-  }, [recivedMessage]);
 
   useEffect(() => {
     if (messages) {
@@ -157,7 +114,6 @@ const ChatConversation = () => {
   let domNode = useClickOutSide(() => {
     setShowDirectOptions(false);
   });
-
   return (
     <>
       <div className="conversation-header">
@@ -172,7 +128,6 @@ const ChatConversation = () => {
                 avatar: "",
                 status: "",
               })
-              
             }
           />
           <img
@@ -207,7 +162,12 @@ const ChatConversation = () => {
             />
             {showDirectOptions ? (
               <div className="direct-options-container">
-                <div className="view-profile-option" onClick={()=> navigate('/mainpage/profile')}>View Profile</div>
+                <div
+                  className="view-profile-option"
+                  onClick={() => navigate("/mainpage/profile")}
+                >
+                  View Profile
+                </div>
                 <div className="block-friend-option">Block</div>
                 <div className="change-wallpaper-option">Wallpaper</div>
               </div>

@@ -81,6 +81,20 @@ const FriendCard = ({ isLastTwoElements, secondUsername, avatar }) => {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+<<<<<<< HEAD
+=======
+
+  const navigateToChat = () => {
+    setSelectedDirect({
+      id: id,
+      name: secondUsername,
+      status: true,
+      avatar: avatar,
+    });
+    setIsHome(true);
+    navigate(`/mainpage/chat`);
+  };
+>>>>>>> 547ef7d114e93b5732c717faa339743fa5442d69
   return (
     <div className="FriendCard">
       <div className="ProfileName">
@@ -88,14 +102,29 @@ const FriendCard = ({ isLastTwoElements, secondUsername, avatar }) => {
         {secondUsername}
       </div>
       {isMenuOpen ? (
+<<<<<<< HEAD
         <div className="optionsWrapper">
+=======
+        <>
+          <button
+            className="FriendBtn detailsOpened"
+            onClick={toggleMenu}
+            ref={buttonRef}
+          >
+            <img src={ThreeDots} alt="ThreeDots" />
+          </button>
+>>>>>>> 547ef7d114e93b5732c717faa339743fa5442d69
           <div
             className={`optionsFriendCard ${
               isLastTwoElements ? "lastTwoElements" : ""
             }`}
             ref={menuRef}
           >
+<<<<<<< HEAD
             <button onClick={handleMessageFriend}>
+=======
+            <button onClick={navigateToChat}>
+>>>>>>> 547ef7d114e93b5732c717faa339743fa5442d69
               <ChatBubbleIcon />
               Message
             </button>
@@ -112,6 +141,7 @@ const FriendCard = ({ isLastTwoElements, secondUsername, avatar }) => {
               Block
             </button>
           </div>
+<<<<<<< HEAD
           <button
             className="FriendBtn detailsOpened"
             onClick={toggleMenu}
@@ -120,6 +150,9 @@ const FriendCard = ({ isLastTwoElements, secondUsername, avatar }) => {
             <img src={ThreeDots} alt="ThreeDots" />
           </button>
         </div>
+=======
+        </>
+>>>>>>> 547ef7d114e93b5732c717faa339743fa5442d69
       ) : (
         <button className="FriendBtn detailsClosed" onClick={toggleMenu}>
           <img src={ThreeDots} alt="ThreeDots" />
@@ -129,4 +162,4 @@ const FriendCard = ({ isLastTwoElements, secondUsername, avatar }) => {
   );
 };
 
-export default FriendCard
+export default FriendCard;
