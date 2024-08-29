@@ -271,7 +271,7 @@ def get_users_data(request, username):
         err_res = Response(data={'error': 'Error Getting UsersData!'}, status=status.HTTP_400_BAD_REQUEST)
         return err_res
 
-#**--------------------- GetUsers Games Lost - Wins ---------------------**#
+#**--------------------- GetUsers Games Lost - Wins {Dashboard}---------------------**#
    
 @api_view(["GET"])
 def get_user_games_wl(request, username):
@@ -284,6 +284,40 @@ def get_user_games_wl(request, username):
                 'losts': user_games.losts,
                 'goals': user_games.goals,
             }
+            return Response(data={"userGames": res_data}, status=status.HTTP_200_OK)
+        else:
+            return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+       return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
+
+#**--------------------- GetUsers Games Lost - Wins {Profile/Diagram}---------------------**#
+   
+@api_view(["GET"])
+def get_user_diagram(request, username):
+    user = customuser.objects.filter(username=username).first()
+    if user is not None:
+        user_games = UserMatchStatics.objects.filter(player=user).first()
+        if user_games is not None:
+            res_data = [{
+                    'subject': "Matches",
+                    'value': user_games.wins + user_games.losts,
+                },{
+                    'subject': "Wins",
+                    'value': user_games.wins,
+                },
+                {
+                    'subject': "Accuracy",
+                    'value': f"{(user_games.wins / user_games.losts):.2f}" if user_games.losts > 0 else "N/A",
+                },
+                {
+                    'subject': "Goals Acc",
+                    'value': user_games.goals/ (user_games.wins + user_games.losts),
+                },
+                {
+                    'subject': "Losts",
+                    'value': user_games.losts,
+                },
+                ]
             return Response(data={"userGames": res_data}, status=status.HTTP_200_OK)
         else:
             return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
