@@ -9,6 +9,9 @@ import AuthContext from '../../navbar-sidebar/Authcontext'
 import ProfileContext from '../ProfileWrapper'
 import ChatContext from '../../Groups/ChatContext'
 
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+
 const ProfileUserFriends = () => {
 
   const navigate = useNavigate();
@@ -77,7 +80,10 @@ const ProfileUserFriends = () => {
           )
         })}
       </div>
-      <Pagination />
+      <div className="expand-profile">
+        <ExpandLessIcon className="expand-less-profile" />
+        <ExpandMoreIcon className="expand-more-profile" />
+      </div>
     </div>
   )
 }
