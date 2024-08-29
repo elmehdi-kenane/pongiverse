@@ -493,11 +493,15 @@
         font-weight: 500;
         margin-bottom: 10px;
     }
-
     .footer__result p{
         font-size: 13px;
     }
-
+    .no-result h3{
+        font-size: 15px;
+    }
+    .no-result .start-game{  
+        font-size: 15px;
+    }
     .footer__tournament-match .tournament-match__result img,
     .footer__single-match .single-match__result img {
         width: 40px;
@@ -630,10 +634,5 @@
     .footer__single-match .no-result h3{
         width: 85%;
         font-size: 15px;
-    }
-    .footer__single-match .no-result .start-game{  
-        padding: 5px 10px;
-        font-size: 15px;
-        gap: 5px;
     }
 }

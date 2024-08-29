@@ -11,7 +11,7 @@ const NoResult = () => {
   return (
     <div className="no-result">
         <h3>You haven't participated in a multiplayer match before!</h3>
-        <Link to="/mainpage/game/solo/1vs1" className="start-game">
+        <Link to="/mainpage/game/solo/2vs2" className="start-game">
         <p> Play </p>
         <SportsEsportsIcon />
       </Link>
