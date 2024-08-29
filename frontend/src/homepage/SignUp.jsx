@@ -17,7 +17,7 @@ const SignUp = () => {
   let submit = async e => {
     e.preventDefault();
 
-    await fetch('http://localhost:8000/api/signup', {
+    await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/signup`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

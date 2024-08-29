@@ -26,7 +26,7 @@ function ProfileInfo(props) {
 
     const getUserInfo = async () => {
       try {
-        const response = await fetch("http://localhost:8000/profile/getuserinfo", {
+        const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getuserinfo`, {
           method: "POST",
           headers: {
             'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ function ProfileInfo(props) {
   // useEffect(() => {
   //   const getUserimg = async () => {
   //     try {
-  //       const response = await fetch(`http://localhost:8000/api/getImage`, {
+  //       const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`, {
   //         method: "POST",
   //         headers: {
   //           'Content-Type': 'application/json',

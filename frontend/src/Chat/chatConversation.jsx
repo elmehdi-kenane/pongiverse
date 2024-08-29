@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import * as ChatIcons from "../assets/chat/media/index";
-import ChatContext from "../Groups/ChatContext";
+import ChatContext from "../Context/ChatContext";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import MyMessage from "./myMessage";
 import OtherMessage from "./otherMessage";
@@ -22,7 +22,7 @@ export let useClickOutSide = (handler) => {
 };
 
 const ChatConversation = () => {
-  const { selectedDirect, setSelectedDirect } = useContext(ChatContext);
+  const { selectedDirect, setSelectedDirect, setUnreadCount, unreadCount, unreadCountRef} = useContext(ChatContext);
   const [messages, setMessages] = useState([]);
   const [recivedMessage, setRecivedMessage] = useState(null);
   const [messageToSend, setMessageToSend] = useState("");
@@ -61,8 +61,7 @@ const ChatConversation = () => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:8000/chatAPI/Directs/messages`,
+        const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/Directs/messages`,
           {
             method: "POST",
             headers: {
@@ -75,14 +74,14 @@ const ChatConversation = () => {
           }
         );
         const data = await response.json();
-        if (data) {
+        if (response.ok) {
           setMessages(data);
-        }
+        } else console.log("error")
       } catch (error) {
         console.log(error);
       }
     };
-    if (selectedDirect) {
+    if (selectedDirect.length !== 0) {
       fetchMessages();
     }
     let scrollView = document.getElementById("start");
@@ -93,15 +92,32 @@ const ChatConversation = () => {
     if (chatSocket) {
       chatSocket.onmessage = (e) => {
         let data = JSON.parse(e.data);
+        console.log("data received inside:", data);
+  
         if (data.type === "newDirect") {
           const currentDirect = selectedDirectRef.current;
+  
+          // Check if the message is for the currently selected direct chat
           if (
-            (currentDirect.name === data.data.sender &&
-              data.data.reciver === user) ||
+            (currentDirect.name === data.data.sender && data.data.reciver === user) ||
             (user === data.data.sender && data.data.reciver === user)
-          ){
-            console.log(data.data)
+          ) {
             setRecivedMessage(data.data);
+          } else {
+            let currentUnreadCount = unreadCountRef.current; // Corrected the typo
+  
+            setUnreadCount((prev) => {
+              console.log(currentUnreadCount)
+              const updatedUnreadCount = new Map(currentUnreadCount);
+  
+              // Get the previous unread count, defaulting to 0 if undefined
+              let prevCount = updatedUnreadCount.get(data.data.senderId) || 0;
+  
+              // Increment the unread count for the sender
+              updatedUnreadCount.set(data.data.senderId, prevCount + 1);
+  
+              return updatedUnreadCount;
+            });
           }
         } else if (data.type === "goToGamingPage") {
           console.log("navigating now");
@@ -141,7 +157,6 @@ const ChatConversation = () => {
   let domNode = useClickOutSide(() => {
     setShowDirectOptions(false);
   });
-
 
   return (
     <>
@@ -209,14 +224,18 @@ const ChatConversation = () => {
             message.sender === user ? (
               <MyMessage
                 key={index}
+                name={user}
                 content={message.content}
                 avatar={userImg}
+                date={message.date}
               />
             ) : (
               <OtherMessage
                 key={index}
+                name={message.sender}
                 content={message.content}
                 avatar={selectedDirect.avatar}
+                date={message.date}
               />
             )
           )}

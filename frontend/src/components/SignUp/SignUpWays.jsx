@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from '../../assets/SignUp/SignUpPage.module.css'
+import styles from '../../assets/SignIn/authentication.module.css'
 import logo42 from '../../assets/SignUp/42_logo.svg'
 import logoGoogle from '../../assets/SignIn/GoogleIcon.svg'
 import Swal from 'sweetalert2';
+import toast, { Toaster } from 'react-hot-toast';
 
 
 function SignUpWays() {
@@ -20,19 +21,16 @@ function SignUpWays() {
 		};
 		const extracted_code = getQueryParam('code');
 		const fullUrl = window.location.href;
-		if (extracted_code && fullUrl && fullUrl.includes("email")) {
+		if (extracted_code && fullUrl && fullUrl.includes("email"))
 			setGoogleCode(extracted_code)
-			console.log("ewahaaa")
-		}
 		else if (extracted_code) {
-			console.log("ewahaaa intra")
 			setIntraCode(extracted_code)
 		}
 	}, [])
 
 	const verify_email = async (email, picture) => {
 		console.log("the dta : ", email)
-		const response = await fetch(`http://localhost:8000/auth/checkemail/`, {
+		const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/checkemail/`, {
 			method: "POST",
 			headers: {
 				'Content-Type': 'application/json',
@@ -45,10 +43,7 @@ function SignUpWays() {
 		if (response.ok) {
 			const data = await response.json();
 			if (data.Case === "Email already exist") {
-				Swal.fire({
-					text: 'Email already used',
-					icon: 'error',
-				});
+				toast.error("Email already used", { duration: 2000, });
 			} else if (data.Case === "Email does not exist") {
 				const userData = {
 					email: email,
@@ -63,7 +58,7 @@ function SignUpWays() {
 
 	useEffect(() => {
 		const google_get_data = async () => {
-			const response = await fetch(`http://localhost:8000/auth/sign-up-google-login-get-token/`, {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/sign-up-google-login-get-token/`, {
 				method: "POST",
 				headers: {
 					'Content-Type': 'application/json',
@@ -88,7 +83,7 @@ function SignUpWays() {
 
 	useEffect(() => {
 		const intra_get_data = async () => {
-			const response = await fetch(`http://localhost:8000/auth/sign-up-intra-login-get-token/`, {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/sign-up-intra-login-get-token/`, {
 				method: "POST",
 				headers: {
 					'Content-Type': 'application/json',
@@ -121,7 +116,7 @@ function SignUpWays() {
 
 	const handleGoogleClick = () => {
 		const getGoogleUrl = async () => {
-			const response = await fetch(`http://localhost:8000/auth/sign-up-google-get-url`, {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/sign-up-google-get-url`, {
 				method: "GET",
 				headers: {
 					'Content-Type': 'application/json',
@@ -138,7 +133,7 @@ function SignUpWays() {
 	}
 	const handleIntraClick = () => {
 		const getIntraUrl = async () => {
-			const response = await fetch(`http://localhost:8000/auth/sign-up-intra-get-url/`, {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/sign-up-intra-get-url/`, {
 				method: "GET",
 				headers: {
 					'Content-Type': 'application/json',
@@ -155,13 +150,9 @@ function SignUpWays() {
 	}
 	return (
 		<>
-			<div className={styles["Intra"]} onClick={handleIntraClick}>
-				<img className={styles["intraLogo"]} src={logo42} alt="" />
-				<button className={styles["IntraButton"]} >Sign In With Intra</button>
-			</div>
-			<div className={styles["Google"]} onClick={handleGoogleClick}>
-				<img className={styles["googleLogo"]} src={logoGoogle} alt="" />
-				<button className={styles["GoogleButton"]}>Sign In with google</button>
+			<div className={styles['authentication-signup-ways']}>
+				<img src={logoGoogle} onClick={handleGoogleClick} alt="" />
+				<img src={logo42} onClick={handleIntraClick} alt="" />
 			</div>
 		</>
 

@@ -7,7 +7,7 @@ import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 import AuthContext from '../navbar-sidebar/Authcontext'
-import ChatContext from "../Groups/ChatContext";
+import ChatContext from "../Context/ChatContext";
 import { Navigate } from 'react-router-dom';
 
 const FriendCard = ({ isLastTwoElements, secondUsername, avatar }) => {

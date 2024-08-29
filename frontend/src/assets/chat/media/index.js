@@ -21,4 +21,4 @@ export { default as publicVisibility} from './publicVisibility.svg';
 export { default as protectedVisibility} from './protectedVisibility.svg';
 export { default as privateVisibility} from './privateVisibility.svg';
 export { default as addNewIcon} from './addNewIcon.png';
-export { default as roomCover} from './roomCover.png';
+export { default as emptyChatIcon} from './emptyChatIcon.svg';

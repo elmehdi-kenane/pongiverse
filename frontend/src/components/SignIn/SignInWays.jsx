@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from '../../assets/SignUp/SignUpPage.module.css'
+import styles from '../../assets/SignIn/authentication.module.css'
 import logo42 from '../../assets/SignUp/42_logo.svg'
 import logoGoogle from '../../assets/SignIn/GoogleIcon.svg'
-import Swal from 'sweetalert2';
+import toast, { Toaster } from 'react-hot-toast';
+
 
 function SignInWays() {
 	const [googleAuthUrl, setGoogleAuthUrl] = useState('')
@@ -32,7 +33,7 @@ function SignInWays() {
 
 	const verify_email = async (email) => {
 		console.log("the dta : ", email)
-		const response = await fetch(`http://localhost:8000/auth/googleLogin/`, {
+		const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/googleLogin/`, {
 			method: "POST",
 			headers: {
 				'Content-Type': 'application/json',
@@ -46,12 +47,10 @@ function SignInWays() {
 			const data = await response.json();
 			console.log("ftft : ")
 			if (data.Case === "Login successfully") {
+				console.log("CASE OF LOGIN SUCCESS")
 				navigate('/mainpage');
 			} else if (data.Case === "Invalid username or password!!") {
-				Swal.fire({
-					text: 'There is no account',
-					icon: 'error',
-				});
+				toast.error("There is no account", { duration: 2000, });
 			}
 		} else {
 			console.error('Failed to fetch data');
@@ -60,7 +59,7 @@ function SignInWays() {
 
 	useEffect(() => {
 		const google_get_data = async () => {
-			const response = await fetch(`http://localhost:8000/auth/google-login-get-token/`, {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/google-login-get-token/`, {
 				method: "POST",
 				headers: {
 					'Content-Type': 'application/json',
@@ -85,7 +84,7 @@ function SignInWays() {
 
 	useEffect(() => {
 		const intra_get_data = async () => {
-			const response = await fetch(`http://localhost:8000/auth/intra-login-get-token/`, {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/intra-login-get-token/`, {
 				method: "POST",
 				headers: {
 					'Content-Type': 'application/json',
@@ -118,7 +117,7 @@ function SignInWays() {
 
 	const handleGoogleClick = () => {
 		const getGoogleUrl = async () => {
-			const response = await fetch(`http://localhost:8000/auth/google-get-url`, {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/google-get-url`, {
 				method: "GET",
 				headers: {
 					'Content-Type': 'application/json',
@@ -133,9 +132,10 @@ function SignInWays() {
 		}
 		getGoogleUrl()
 	}
+	console.log("HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEE: ", `http://${import.meta.env.VITE_IPADDRESS}:8000/auth/intra-get-url`)
 	const handleIntraClick = () => {
 		const getIntraUrl = async () => {
-			const response = await fetch(`http://localhost:8000/auth/intra-get-url`, {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/intra-get-url`, {
 				method: "GET",
 				headers: {
 					'Content-Type': 'application/json',
@@ -152,13 +152,9 @@ function SignInWays() {
 	}
 	return (
 		<>
-			<div className={styles["Intra"]} onClick={handleIntraClick}>
-				<img className={styles["intraLogo"]} src={logo42} alt="" />
-				<button className={styles["IntraButton"]} >Sign In With Intra</button>
-			</div>
-			<div className={styles["Google"]} onClick={handleGoogleClick}>
-				<img className={styles["googleLogo"]} src={logoGoogle} alt="" />
-				<button className={styles["GoogleButton"]}>Sign In with google</button>
+			<div className={styles['authentication-signin-ways']}>
+				<img onClick={handleGoogleClick} src={logoGoogle} alt="" />
+				<img onClick={handleIntraClick} src={logo42} alt="" />
 			</div>
 		</>
 
