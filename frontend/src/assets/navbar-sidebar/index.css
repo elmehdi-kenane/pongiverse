@@ -124,6 +124,7 @@ body {
     color: #1E0934;
     font-weight: 600;
     padding: 5px;
+    padding-right: 10px;
     border-radius: 10px;
 }
 
@@ -147,6 +148,11 @@ body {
     background-color: #1E0934;
     font-weight: 600;
     margin-left: auto;
+}
+
+.searchResultItem button:hover {
+    background-color: #913dce;
+    cursor: pointer;
 }
 
 .search-bar input {
