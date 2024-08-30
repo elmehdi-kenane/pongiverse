@@ -411,7 +411,7 @@ export const AuthProvider = ({children}) => {
 		setUserPic:setUserPic,
 		nickName:nickName,
 		bio:bio,
-		country,country,
+		country: country,
 		setNickName:setNickName,
 		setBio:setBio,
 		setCountry:setCountry,
