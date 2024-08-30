@@ -3,11 +3,14 @@ import { debounce } from "lodash";
 import SearchFilterBar from "./SearchFilterBar";
 import AuthContext from "./Authcontext";
 import { useContext } from "react";
+import { handleAddFriendReq } from '../Friends/utils'
 
 export const SearchBar = () => {
   const searchBarRef = useRef(null);
   const searchInputRef = useRef(null);
   const [inputValue, setInputValue] = useState("");
+    const [addFriendBtn, setAddFriendBtn] = useState("Add friend");
+    const [joinRoomBtn, setJoinRoomBtn] = useState("Join room");
   const [searchFilter, setSearchFilter] = useState("all");
   const [searchResult, setSearchResult] = useState([]);
   const [searchUsersResult, setSearchUsersResult] = useState([]);
@@ -77,6 +80,24 @@ export const SearchBar = () => {
     }
   };
 
+    const handleSearchItemBtn = (currentUsername, secondUsername, successText) => {
+        if (successText === "Request sent") {
+            setAddFriendBtn(successText)
+            setTimeout(() => {
+                console.log("setTimeout 2000");
+                setAddFriendBtn(null);
+            }, 2000);
+            handleAddFriendReq(currentUsername, secondUsername)
+        }
+        else if (successText === "Joined") {
+            setJoinRoomBtn(successText)
+            setTimeout(() => {
+                console.log("setTimeout 2000");
+                setJoinRoomBtn(null);
+            }, 2000);
+        }
+    }
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleEscapeKey);
@@ -126,14 +147,17 @@ export const SearchBar = () => {
                         return (
                           <div key={index} className="searchResultItem">
                             <img src={item.avatar} alt={item.avatar} />
-                            <p>{item.username}</p>
-                            {item.is_friend === false && (
-                              <button>
-                                {item.result_type === "user"
-                                  ? "Add friend"
-                                  : "Join room"}
-                              </button>
-                            )}
+                                <p>{item.username}</p>
+                                {item.is_friend === false && item.result_type === "user" && addFriendBtn !== null &&
+                                    <button onClick={() => handleSearchItemBtn(user, item.username, "Request sent")}>
+                                        {addFriendBtn}
+                                    </button>
+                                }
+                                {item.is_joined === false && item.result_type === "room" && joinRoomBtn !== null &&
+                                    <button onClick={() => handleSearchItemBtn(user, item.username, "Joined")}>
+                                        {joinRoomBtn}
+                                    </button>
+                                }
                           </div>
                         );
                       })
