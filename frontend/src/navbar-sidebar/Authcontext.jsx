@@ -37,6 +37,7 @@ export const AuthProvider = ({children}) => {
 	//-- Glass Background
 	const [isReport, setIsReport] = useState(false);
 	const [isBlock, setIsBlock] = useState(false);
+	const [isGameStats, setIsGameStats] = useState(false);
 	const [isChatBlur, setIsChartBlur] = useState(false);
 
 	const [reportValue, setReportValue] = useState(null);
@@ -55,11 +56,11 @@ export const AuthProvider = ({children}) => {
 
 	// Glass Background Effect
 	useEffect (()=> {
-		if (!isReport && !isBlock && !isBlur)
+		if (!isReport && !isBlock && !isGameStats && !isBlur)
 			setIsGlass(false);
 		else
 			setIsGlass(true);
-	}, [isReport, isBlock])
+	}, [isReport, isBlock, isGameStats])
 
 
 	// Glass Background Effect
@@ -421,6 +422,8 @@ export const AuthProvider = ({children}) => {
 		setReportValue: setReportValue,
 		isBlock: isBlock,
 		setIsBlock:setIsBlock,
+		isGameStats:isGameStats, 
+		setIsGameStats:setIsGameStats,
 		blockRef:blockRef,
 		blockContentRef:blockContentRef,
 		// chat blur
