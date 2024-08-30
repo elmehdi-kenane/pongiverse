@@ -4,8 +4,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from myapp.models import customuser
 from friends.models import Friendship
+from chat.models import Room
 from friends.models import FriendRequest
 from .serializers import customUserSerializer
+from .serializers import roomSerializer
 
 @api_view(['GET'])
 def search_view(request):
@@ -17,7 +19,7 @@ def search_view(request):
 
 
     users_objs = customuser.objects.filter(username__icontains=search_term).annotate(is_friend=Value(False, output_field=BooleanField()), result_type=Value("", output_field=CharField()))
-    # rooms_objs = rooms.objects.filter()
+    rooms_objs = Room.objects.filter(name__icontains=search_term).annotate(is_joined=Value(False, output_field=BooleanField()), result_type=Value("", output_field=CharField()))
     search_result = []
     for user_obj in users_objs:
         result_type = "user"
@@ -38,11 +40,26 @@ def search_view(request):
             'result_type': result_type
         })
 
-    # users_list = list(users_objs)
-    # rooms_list = list(rooms_objs)
+    for room_obj in rooms_objs:
+        result_type = "room"
+        room_ser = roomSerializer(room_obj)
+        if (room_obj.members.filter(id=user.id).exists()):
+            search_result.append({
+            'username': room_ser.data['name'],
+            'avatar': room_ser.data['icon'],
+            'is_joined': True,
+            'result_type': result_type
+            })
+        else:
+            search_result.append({
+            'username': room_ser.data['name'],
+            'avatar': room_ser.data['icon'],
+            'is_joined': False,
+            'result_type': result_type
+            })
 
-    # merged_list = users_list + rooms_list
-    # sorted_merged_list = sorted(merged_list, key=lambda user: user.username)
+    # sorted_merged_list = sorted(search_result, key=lambda item: item.username)
+    search_result.sort(key=lambda item: item['username'])
 
     # Use a generic serializer or create a custom serializer that can handle objects from both models.
     # lists_ser = customUserSerializer(sorted_merged_list, many=True)
