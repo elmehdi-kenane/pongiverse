@@ -79,7 +79,7 @@ function DashMulty() {
         <>
             {matches.slice((index - 1) * itemsPerPage, index * itemsPerPage)
               .map((match, key) => (
-                  <div key={key} className="multiplayer-match__result footer__result">
+                  <div key={key} className="multiplayer-match__result footer__result" id="match-click">
                       <div className="multiplayer-pics">
                           <img src={match.p1Pic1} alt="Player" />
                           <img src={match.p1Pic2} alt="Player" />

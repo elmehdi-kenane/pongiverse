@@ -1,7 +1,5 @@
 import React from 'react'
-import Pagination from '../helpers/Pagination';
 import mmaqbourSvg from "../assets/Group5.svg"
-
 
 const tournamentMatch = () => {
     return (
@@ -23,7 +21,6 @@ function DashTournament() {
       {tournamentMatch()}
       {tournamentMatch()}
       {tournamentMatch()}
-      <Pagination />
     </div>
   )
 }

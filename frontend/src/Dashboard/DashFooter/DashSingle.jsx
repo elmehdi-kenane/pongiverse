@@ -20,7 +20,7 @@ const NoResult = () => {
 }
 
 function DashSingle() {
-  const { user } = useContext(AuthContext);
+  const { user, setIsGameStats} = useContext(AuthContext);
   const [page, setPage] = useState(1);
   const [index, setIndex] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -75,11 +75,15 @@ function DashSingle() {
     )
   }
   const MatchesResults = () => {
+    const showMatchResult = () => {
+      setIsGameStats(true);
+    }
+    
     return (
       <>
         {matches.slice((index - 1) * itemsPerPage, index * itemsPerPage)
           .map((match, key) => (
-            <div key={key} className="single-match__result footer__result">
+            <div key={key} className="single-match__result footer__result" onClick={showMatchResult} id="match-click">
               <img src={match.pic1} alt="Player" />
               <p>{match.score}</p>
               <img src={match.pic2} alt="Player" />

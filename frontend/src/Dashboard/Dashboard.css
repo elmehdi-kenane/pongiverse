@@ -7,8 +7,8 @@
     overflow-y: scroll;
     gap : 20px;
     padding-top:00px;
+    /* position: relative; */
 }
-
 
 .dash--space{
     gap: 15px;
@@ -28,6 +28,50 @@
     font-weight: 550;
     /* color: #8884d8 ;*/
 }
+
+.dash-blur {
+    filter: blur(6px);
+    pointer-events: none;
+    user-select: none;
+  }
+
+/* -------Match-Result------ */
+
+.match-result-ctr {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+.match-result {
+    z-index: 4;
+    display: flex;
+    height: 400px;
+    width: 70%;
+    top: 250px;
+    border: #826aed solid 2px;
+    border-radius: 5px;
+    background-color: #1b062a;
+    position: relative;
+}
+
+.match-result .report-close-stats { 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    color: #826aed;
+    top: 8px;
+    right: 5px;
+    height: 32px;
+    width: 32px;
+    cursor: pointer;
+}
+.match-result .report-close-stats:hover{
+    color: #9e88fd;
+}
+
 /* -------HEAD------ */
 
 .dashpage .dashpage__head {

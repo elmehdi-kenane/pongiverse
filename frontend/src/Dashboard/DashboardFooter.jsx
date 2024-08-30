@@ -1,11 +1,9 @@
 import React from "react";
 import mmaqbourSvg from "./assets/Group5.svg";
 
-import Pagination from "./helpers/Pagination";
 import DashSingle from "./DashFooter/DashSingle";
 import DashMulty from "./DashFooter/DashMulty";
-
-
+import DashTourn from "./DashFooter/DashTourn";
 const tournamentMatch = () => {
   return (
     <div className="tournament-match__result footer__result">
@@ -21,13 +19,7 @@ function DashboardFooter() {
     <div className="dashpage__footer dash--space">
       <DashSingle />
       <DashMulty />
-      <div className="footer__tournament-match dash--bkborder">
-        <h1 className="footer__titles"> Tournament Match </h1>
-        {tournamentMatch()}
-        {tournamentMatch()}
-        {tournamentMatch()}
-        <Pagination />
-      </div>
+      <DashTourn />
     </div>
   );
 }
