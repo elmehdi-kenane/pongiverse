@@ -97,7 +97,9 @@ export const SearchBar = () => {
             }, 2000);
         }
     }
+    const navigateToProfile = () => {
 
+    }
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleEscapeKey);
@@ -145,7 +147,7 @@ export const SearchBar = () => {
                     ) : (
                       searchResult.map((item, index) => {
                         return (
-                          <div key={index} className="searchResultItem">
+                          <button key={index} className="searchResultItem">
                             <img src={item.avatar} alt={item.avatar} />
                                 <p>{item.username}</p>
                                 {item.is_friend === false && item.result_type === "user" && addFriendBtn !== null &&
@@ -158,7 +160,7 @@ export const SearchBar = () => {
                                         {joinRoomBtn}
                                     </button>
                                 }
-                          </div>
+                          </button>
                         );
                       })
                     ))}
@@ -168,13 +170,13 @@ export const SearchBar = () => {
                     ) : (
                       searchUsersResult.map((item, index) => {
                         return (
-                          <div key={index} className="searchResultItem">
+                          <button key={index} className="searchResultItem">
                             <img src={item.avatar} alt={item.avatar} />
                             <p>{item.username}</p>
                             {item.is_friend === false && (
                               <button>Add friend</button>
                             )}
-                          </div>
+                          </button>
                         );
                       })
                     ))}
@@ -184,13 +186,13 @@ export const SearchBar = () => {
                     ) : (
                       searchRoomsResult.map((item, index) => {
                         return (
-                          <div key={index} className="searchResultItem">
+                          <button key={index} className="searchResultItem">
                             <img src={item.avatar} alt={item.avatar} />
                             <p>{item.username}</p>
                             {item.is_friend === false && (
                               <button>Join room</button>
                             )}
-                          </div>
+                          </button>
                         );
                       })
                     ))}
