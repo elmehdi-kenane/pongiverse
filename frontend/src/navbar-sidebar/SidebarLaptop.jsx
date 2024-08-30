@@ -34,7 +34,7 @@ function SidebarLaptop({ Icons }) {
         {
             id: 5,
             icon: Icons.channels,
-            route: "channels",
+            route: "groups",
             text: "Channels",
         }
     ]
@@ -43,12 +43,10 @@ function SidebarLaptop({ Icons }) {
             {sideBarItems.map((item, index) => {
                 return (
                     <div className="sidebar-navigations" id={`sidebar-${item.route}`} key={index}>
-                        <div className="sidebar-icons">
-                            <Link to={item.route}>
+                        <Link to={item.route} className="sidebar-icons">
                                 <img src={item.icon} alt={`${item.text}-logo`} />
                                 <p className="sidebar-titles"> {item.text} </p>
-                            </Link>
-                        </div>
+                        </Link>
                     </div>
                 )
             })}
