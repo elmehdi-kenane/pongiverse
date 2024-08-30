@@ -1,7 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
 import chatSvg from "../../assets/navbar-sidebar/chat.svg"
-// import { rankData } from '../../Dashboard/helpers/rankData'
-import Pagination from "../../Dashboard/helpers/Pagination"
 import { Link, useNavigate } from "react-router-dom"
 import MavSvg from "../../assets/Profile/Group.svg"
 

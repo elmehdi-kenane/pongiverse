@@ -386,6 +386,7 @@ h1, h3, p{
     height: 20px;
     width: 200px;
     border: none;
+    gap: 3px;
     /* border: #826aed solid .5px; */
 }
 .slt__options .option p{
