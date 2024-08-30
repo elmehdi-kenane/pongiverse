@@ -216,7 +216,7 @@ def create_chat_room(request):
         user_channels_name = user_channels.get(user.id)
         for channel in user_channels_name:
             async_to_sync(channel_layer.group_add(f"chat_room_{new_room.id}", channel))
-        async_to_sync(channel_layer.group_add())
+        # async_to_sync(channel_layer.group_add())
         return Response(
             {
                 "type": "chatRoomCreated",
