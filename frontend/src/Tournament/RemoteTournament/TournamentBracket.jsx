@@ -180,11 +180,10 @@ function TournamentBracket() {
 			const interval = setInterval(() => {
 				const now = new Date();
 				const diffInSeconds = Math.floor((now - createdAt) / 1000);
-				if (diffInSeconds < 30) {
-					setTimeDiff(30 - diffInSeconds);
+				if (diffInSeconds < 15) {
+					setTimeDiff(15 - diffInSeconds);
 				} else {
 					setTimeDiff(null);
-					navigate("/mainpage/chat");
 				}
 			}, 1000);
 			return () => clearInterval(interval);

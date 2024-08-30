@@ -64,23 +64,24 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 					for tournamentmember in tournamentmembers:
 						memberusername = await sync_to_async(lambda: tournamentmember.user.username)()
 						channel_name_list = notifs_user_channels.get(memberusername)
-						for channel_name in channel_name_list:
-							if channel_name:
-								await self.channel_layer.send(
-								channel_name,
-								{
-									'type': 'connected_again_tourn',
-									'message': {
-										'user': tmp_username,
-										'userInfos': {
-											'id': user.id,
-											'name': user.username,
-											'level': 2,
-											'image': user.avatar.path,
+						if channel_name_list:
+							for channel_name in channel_name_list:
+								if channel_name:
+									await self.channel_layer.send(
+									channel_name,
+									{
+										'type': 'connected_again_tourn',
+										'message': {
+											'user': tmp_username,
+											'userInfos': {
+												'id': user.id,
+												'name': user.username,
+												'level': 2,
+												'image': user.avatar.path,
+											}
 										}
 									}
-								}
-							)
+								)
 		else:
 			self.socket.close()
 

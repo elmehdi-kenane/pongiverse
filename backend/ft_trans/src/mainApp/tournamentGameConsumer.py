@@ -10,6 +10,8 @@ from asgiref.sync import sync_to_async
 from .gameMultiplayerConsumers import waited_game
 from .models import Match, ActiveMatch, PlayerState, NotifPlayer, GameNotifications, MatchStatistics, UserMatchStatics, TournamentMembers, Tournament, TournamentUserInfo, Round
 from Notifications.common import notifs_user_channels
+from .common import user_channels
+from . import tournament_consumers
 
 
 async def move_paddle_tournament_game(self, data, tournament_rooms):
@@ -127,20 +129,26 @@ async def delete_spicific_room(tournament_rooms, room, tournament_id):
 	t_rooms = tournament_rooms.get(str(tournament_id))
 	del t_rooms[str(room['id'])]
 
-async def get_round_reached(user, tournament):
+async def get_next_round_reached(user, tournament):
 	rounds = ['ROUND 16', 'QUARTERFINAL', 'SEMIFINAL', 'FINAL', 'WINNER']
 	my_dict = {}
 	tournamentuserinfo = await sync_to_async(TournamentUserInfo.objects.filter(user=user).last)()### NOTE: to checkkkkkkkk last
 	round_type = await sync_to_async(lambda: tournamentuserinfo.round.type)()
 	index_of_round = rounds.index(round_type)
 	if index_of_round != 4:
-		round = await sync_to_async(Round.objects.filter(tournament=tournament, type=rounds[index_of_round + 1]).first)()
-		if round:
-			tournamentuserinfocount = await sync_to_async(TournamentUserInfo.objects.filter(round=round).count)()
-			my_dict = {'round_reached': rounds[index_of_round + 1], 'position': tournamentuserinfocount + 1}
+		prev_pos = await sync_to_async(lambda: tournamentuserinfo.position)()
+		if prev_pos % 2 == 0:
+			my_dict = {'round_reached': rounds[index_of_round + 1], 'position': prev_pos/2}
+		else:
+			my_dict = {'round_reached': rounds[index_of_round + 1], 'position': (prev_pos + 1)/2}
 	else:
 		my_dict = {'round_reached': rounds[index_of_round]}
 	return my_dict
+
+async def get_actual_round_reached(tournament):
+	round = await sync_to_async(Round.objects.filter(tournament=tournament).last)()
+	round_type = await sync_to_async(lambda: round.type)()
+	return round_type
 
 
 async def send_playing_status_to_friends(self, user, status, user_channels):
@@ -163,10 +171,18 @@ async def send_playing_status_to_friends(self, user, status, user_channels):
 					}
 				}
 			})
+async def discard_channels_from_tournament_group(self, player, tournament):
+	group_name = f'tournament_{tournament.tournament_id}'
+	channel_name = user_channels.get(player.username)
+	channel_name_notif_list = notifs_user_channels.get(player.username)
+	await self.channel_layer.group_discard(group_name, channel_name)
+	for channel_name in channel_name_notif_list:
+		await self.channel_layer.group_discard(group_name, channel_name)
+
+
+
 
 async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, tournament_id):
-	# global rooms
-
 	while True:
 		room["ball"]["ballX"] += ballProps["velocityX"]
 		room["ball"]["ballY"] += ballProps["velocityY"]
@@ -188,9 +204,10 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 						await sync_to_async(tournamentMember2.save)()
 				player1.is_playing = False
 				await sync_to_async(player1.save)()
+				await discard_channels_from_tournament_group(self, player1, tournament)
 				await send_playing_status_to_friends(self, player1, False, user_channels)
 			else:
-				round_reached = await get_round_reached(player1, tournament)
+				round_reached = await get_next_round_reached(player1, tournament)
 				if round_reached['round_reached'] == 'WINNER':
 					round = Round(tournament=tournament, type='WINNER')
 					await sync_to_async(round.save)()
@@ -206,6 +223,20 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 					await sync_to_async(round.save)()
 					tournamentuserinfo = TournamentUserInfo(round=round, user=player1, position=round_reached['position'])
 					await sync_to_async(tournamentuserinfo.save)()
+				actual_round = await get_actual_round_reached(tournament)
+				the_round = await sync_to_async(Round.objects.filter(tournament=tournament, type=actual_round).first)()
+				tournamentuserinfocount = await sync_to_async(TournamentUserInfo.objects.filter(round=the_round).count)()
+				if actual_round == 'QUARTERFINAL':
+					if tournamentuserinfocount == 8:
+						await tournament_consumers.quarterFinalTimer(self, player1, actual_round, tournament)
+				if actual_round == 'SEMIFINAL':
+					if tournamentuserinfocount == 4:
+						await tournament_consumers.semiFinalTimer(self, player1, actual_round, tournament)
+				if actual_round == 'FINAL':
+					if tournamentuserinfocount == 2:
+						await tournament_consumers.FinalTimer(self, player1, actual_round, tournament)
+				if actual_round == 'WINNER': ##NOTE:to think about this shittt
+					pass
 			if room['players'][1]['status'] == 'loser': ### NOTE: to thinks later about this point
 				tournamentMember = await sync_to_async(TournamentMembers.objects.filter(user=player2, tournament=tournament).first)()
 				if tournamentMember:
@@ -219,8 +250,9 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 				player2.is_playing = False
 				await sync_to_async(player2.save)()
 				await send_playing_status_to_friends(self, player2, False, user_channels)
+				await discard_channels_from_tournament_group(self, player2, tournament)
 			else: ### NOTE:   check to pass to the next round
-				round_reached = await get_round_reached(player2, tournament)
+				round_reached = await get_next_round_reached(player2, tournament)
 				if round_reached['round_reached'] == 'WINNER':
 					round = Round(tournament=tournament, type='WINNER')
 					await sync_to_async(round.save)()
@@ -233,8 +265,8 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 					await send_playing_status_to_friends(self, player2, False, user_channels)
 			# player1_rating = 0
 			# player2_rating = 0
-			# round_reached_1 = await get_round_reached(player1, tournament)
-			# round_reached_2 = await get_round_reached(player2, tournament)
+			# round_reached_1 = await get_next_round_reached(player1, tournament)
+			# round_reached_2 = await get_next_round_reached(player2, tournament)
 			# if room['players'][0]['score'] > room['players'][1]['score']: #### NOTE: in case of last round or semi final round
 			# 		player1_rating = (room['players'][0]['self_scored'] * 20) + (room['players'][0]['self_scored'] * 0.5)
 			# 		player2_rating = (room['players'][1]['self_scored'] * 20) + (room['players'][1]['self_scored'] * -0.5)
@@ -249,6 +281,7 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 			# player2.level += (player2_totalXP / 1000)
 			# player2.total_xp = (player2_totalXP % 1000)
 			# await sync_to_async(player2.save)()
+			#NOTE: here check the size of round to start the next round
 			return
 		if room["ball"]["ballY"] + 7 > 390 or room["ball"]["ballY"] - 7 < 10: ## was 10 now 11 just for the stucking
 			ballProps["velocityY"] *= -1
@@ -297,13 +330,16 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 				if tournamentMember:
 					tournamentMember.is_eliminated = True
 					await sync_to_async(tournamentMember.save)()
+					player2.is_playing = False
+					await sync_to_async(player2.sava)()
 					is_owner = await sync_to_async(lambda: tournamentMember.is_owner)()
 					if is_owner == True:
 						tournamentMember1 = await sync_to_async(TournamentMembers.objects.filter(user=player1, tournament=tournament).first)()
 						tournamentMember1.is_owner = True
 						await sync_to_async(tournamentMember2.save)()
 				await send_playing_status_to_friends(self, player2, False, user_channels)
-				round_reached = await get_round_reached(player1, tournament)
+				await discard_channels_from_tournament_group(self, player2, tournament)
+				round_reached = await get_next_round_reached(player1, tournament)
 				if round_reached['round_reached'] == 'WINNER':
 					round = Round(tournament=tournament, type='WINNER')
 					await sync_to_async(round.save)()
@@ -311,6 +347,8 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 					await sync_to_async(tournamentuserinfo.save)()
 					tournament.is_finished = True
 					await sync_to_async(tournament.save)()
+					player1.is_playing = False
+					await sync_to_async(player1.sava)()
 					await send_playing_status_to_friends(self, player1, False, user_channels)
 				else: ### NOTE: to think more
 					round = Round(tournament=tournament, type=round_reached['round_reached'])
@@ -319,6 +357,20 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 					await sync_to_async(tournamentuserinfo.save)()
 				# NOTE: handle the game is finished and player win the game
 				# await gameFinished(self, room) ### TODO: send message for navigating instead of this funcking function
+				actual_round = await get_actual_round_reached(tournament)
+				the_round = await sync_to_async(Round.objects.filter(tournament=tournament, type=actual_round).first)()
+				tournamentuserinfocount = await sync_to_async(TournamentUserInfo.objects.filter(round=the_round).count)()
+				if actual_round == 'QUARTERFINAL':
+					if tournamentuserinfocount == 8:
+						await tournament_consumers.quarterFinalTimer(self, player1, actual_round, tournament)
+				if actual_round == 'SEMIFINAL':
+					if tournamentuserinfocount == 4:
+						await tournament_consumers.semiFinalTimer(self, player1, actual_round, tournament)
+				if actual_round == 'FINAL':
+					if tournamentuserinfocount == 2:
+						await tournament_consumers.FinalTimer(self, player1, actual_round, tournament)
+				if actual_round == 'WINNER': ##NOTE:to think about this shittt
+					pass
 				await delete_spicific_room(tournament_rooms, room, tournament_id)
 				# player1_rating = 0
 				# player2_rating = 0
@@ -352,13 +404,16 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 				if tournamentMember:
 					tournamentMember.is_eliminated = True
 					await sync_to_async(tournamentMember.save)()
+					player1.is_playing = False
+					await sync_to_async(player1.save)()
 					is_owner = await sync_to_async(lambda: tournamentMember.is_owner)()
 					if is_owner == True:
 						tournamentMember2 = await sync_to_async(TournamentMembers.objects.filter(user=player2, tournament=tournament).first)()
 						tournamentMember2.is_owner = True
 						await sync_to_async(tournamentMember2.save)()
 				await send_playing_status_to_friends(self, player1, False, user_channels)
-				round_reached = await get_round_reached(player2, tournament)
+				await discard_channels_from_tournament_group(self, player1, tournament)
+				round_reached = await get_next_round_reached(player2, tournament)
 				if round_reached['round_reached'] == 'WINNER':
 					round = Round(tournament=tournament, type='WINNER')
 					await sync_to_async(round.save)()
@@ -366,12 +421,28 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 					await sync_to_async(tournamentuserinfo.save)()
 					tournament.is_finished = True
 					await sync_to_async(tournament.save)()
+					player2.is_playing = False
+					await sync_to_async(player2.save)()
 					await send_playing_status_to_friends(self, player2, False, user_channels)
 				else: ### NOTE: to think more
 					round = Round(tournament=tournament, type=round_reached['round_reached'])
 					await sync_to_async(round.save)()
 					tournamentuserinfo = TournamentUserInfo(round=round, user=player2, position=round_reached['position'])
 					await sync_to_async(tournamentuserinfo.save)()
+				actual_round = await get_actual_round_reached(tournament)
+				the_round = await sync_to_async(Round.objects.filter(tournament=tournament, type=actual_round).first)()
+				tournamentuserinfocount = await sync_to_async(TournamentUserInfo.objects.filter(round=the_round).count)()
+				if actual_round == 'QUARTERFINAL':
+					if tournamentuserinfocount == 8:
+						await tournament_consumers.quarterFinalTimer(self, player1, actual_round, tournament)
+				if actual_round == 'SEMIFINAL':
+					if tournamentuserinfocount == 4:
+						await tournament_consumers.semiFinalTimer(self, player1, actual_round, tournament)
+				if actual_round == 'FINAL':
+					if tournamentuserinfocount == 2:
+						await tournament_consumers.FinalTimer(self, player1, actual_round, tournament)
+				if actual_round == 'WINNER': ##NOTE:to think about this shittt
+					pass
 				# NOTE: handle the game is finished and player win the game
 				# await gameFinished(self, room) ### TODO: send message for navigating instead of this funcking function
 				await delete_spicific_room(tournament_rooms, room, tournament_id)
