@@ -2,32 +2,32 @@ import { useContext, useEffect, useState } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import ChatContext from "../Context/ChatContext";
 
+export const resetUnreadMessages = async (user, friendId) => {
+  try {
+    await fetch(
+      `http://${
+        import.meta.env.VITE_IPADDRESS
+      }:8000/chatAPI/resetUndreadMessages`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user: user,
+          receiver: friendId,
+        }),
+      }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const ChatConversationItem = (props) => {
   const { user } = useContext(AuthContext);
   const { directConversationsRef, setDirectConversations } =
     useContext(ChatContext);
-  const resetUnreadMessages = async () => {
-    try {
-      await fetch(
-        `http://${
-          import.meta.env.VITE_IPADDRESS
-        }:8000/chatAPI/resetUndreadMessages`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            user: user,
-            receiver: props.friendId,
-          }),
-        }
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const handleClick = () => {
     if (props.isDirect && props.name) {
       props.setSelectedDirect({
@@ -39,13 +39,13 @@ const ChatConversationItem = (props) => {
       let allDirects = directConversationsRef.current;
       const updatedDirects = allDirects.map((friend) => {
         if (props.friendId === friend.id) {
-          return { ...friend, unreadCount: 0};
+          return { ...friend, unreadCount: 0 };
         }
         return friend;
       });
       setDirectConversations(updatedDirects);
-      if(parseInt(props.unreadCount) > 0)
-        resetUnreadMessages();
+      if (parseInt(props.unreadCount) > 0)
+        resetUnreadMessages(user, props.friendId);
     } else if (!props.isDirect && props.name) {
       props.setSelectedChatRoom({
         name: props.name,
@@ -74,7 +74,13 @@ const ChatConversationItem = (props) => {
       <div className="conversation-item-details">
         <div className="conversation-item-name">{props.name}</div>
         <div className="conversation-item-last-msg-wrapper">
-          <div className={parseInt(props.unreadCount) > 0 ?  "conversation-item-last-msg-bold" : "conversation-item-last-msg"}>
+          <div
+            className={
+              parseInt(props.unreadCount) > 0
+                ? "conversation-item-last-msg-bold"
+                : "conversation-item-last-msg"
+            }
+          >
             {props.lastMessage
               ? props.lastMessage
               : props.status

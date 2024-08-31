@@ -89,15 +89,17 @@ def delete_chat_room(request, id):
         all_members = Membership.objects.filter(room=room)
         for member in all_members:
             member.delete()
+        print("ROOM ICON URL: ", room.icon.url)
+        print("ROOM COVER URL: ", room.cover.url)
         if (
             room.icon.path
-            and room.icon.url != "/uploads/roomIcon.png"
+            and room.icon.url != "/media/uploads/roomIcon.png"
             and default_storage.exists(room.icon.path)
         ):
             default_storage.delete(room.icon.path)
         if (
             room.cover.path
-            and room.cover.url != "/uploads/roomCover.png"
+            and room.cover.url != "/media/uploads/roomCover.png"
             and default_storage.exists(room.cover.path)
         ):
             default_storage.delete(room.cover.path)
@@ -376,14 +378,16 @@ def suggested_chat_rooms(request, username):
     if request.method == "GET":
         user = customuser.objects.get(username=username)
         # Get memberships for the user
-        user_memberships = Membership.objects.filter(user=user).values_list('room_id', flat=True)
+        user_memberships = Membership.objects.filter(user=user).values_list(
+            "room_id", flat=True
+        )
         # Exclude rooms that the user has already joined
         suggested_memberships = Membership.objects.exclude(room_id__in=user_memberships)
         rooms = []
         protocol = get_protocol(request)
         ip_address = os.getenv("IP_ADDRESS")
         for membership in suggested_memberships:
-            if membership.room.visiblity == 'public':
+            if membership.room.visiblity == "public":
                 room_data = {
                     "id": membership.room.id,
                     "role": membership.roles,
@@ -394,7 +398,6 @@ def suggested_chat_rooms(request, username):
                     "membersCount": membership.room.members_count,
                 }
                 rooms.append(room_data)
-        print("SUGGESTED ROOMS: ", rooms)
         return Response(rooms)
     return Response({"error": "Invalid request method"}, status=400)
 
@@ -480,9 +483,9 @@ def reset_unread_messages(request):
             receiver = customuser.objects.get(id=request.data.get("receiver"))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
-        Directs.objects.filter(sender=receiver, reciver=user, is_read=False).update(
-            is_read=True
-        )
+        unread = Directs.objects.filter(sender=receiver, reciver=user, is_read=False)
+        if unread:
+            unread.update(is_read=True)
         return Response({"success": "reset unread message successfully"}, status=200)
     return Response({"error": "Invalid request method"}, status=400)
 
@@ -529,7 +532,8 @@ def friends_with_directs(request, username):
             data.append(friend_data)
     return Response(data)
 
-@api_view(['POST'])
+
+@api_view(["POST"])
 def join_chat_room(request):
     if request.method == "POST":
         try:

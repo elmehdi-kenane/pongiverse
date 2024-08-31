@@ -7,7 +7,7 @@ import { useContext, useEffect, useState } from "react";
 import * as ChatIcons from "../assets/chat/media/index";
 import { Toaster } from "react-hot-toast";
 import AuthContext from "../navbar-sidebar/Authcontext";
-
+import { resetUnreadMessages } from "./chatConversationItem";
 const Chat = () => {
   const {
     chatRoomConversations,
@@ -45,23 +45,15 @@ const Chat = () => {
           const currentDirect = selectedDirectRef.current;
           let allDirects = directConversationsRef.current
           if (
-            (currentDirect.name === data.data.sender &&
-              data.data.reciver === user) ||
-            (user === data.data.sender && data.data.reciver === user)
-          ) {
+            (currentDirect.name === data.data.sender && data.data.reciver === user) ||
+            (user === data.data.sender && data.data.reciver === user)) {
             if(data.data) {
               setMessages((prev) => [...prev, data.data]);
+              if(currentDirect.id === data.data.reciverId)
+                resetUnreadMessages(user, selectedDirect.id)
             }
-            console.log("all directs: ", allDirects)
-            console.log("all directs: ", data.data.receiverId)
-            const updatedDirects = allDirects.map((friend) => {
-              if ( friend.id === data.data.receiverId || friend.id === data.data.senderId) {
-                return { ...friend, lastMessage: data.data.content};
-              }
-              return friend;
-            });
-            setDirectConversations(updatedDirects);
-          } else {
+          } 
+          else {
             const updatedDirects = allDirects.map((friend) => {
               if ( data.data.senderId === friend.id) {
                 let prevCount = friend.unreadCount

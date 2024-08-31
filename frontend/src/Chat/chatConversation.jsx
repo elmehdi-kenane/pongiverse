@@ -124,6 +124,7 @@ const ChatConversation = () => {
             className="conversation-back-arrow"
             onClick={() =>
               setSelectedDirect({
+                id: '',
                 name: "",
                 avatar: "",
                 status: "",

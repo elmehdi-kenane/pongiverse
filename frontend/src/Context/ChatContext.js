@@ -2,7 +2,7 @@ import { createContext, useEffect, useState, useContext, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import AuthContext from "../navbar-sidebar/Authcontext";
 const ChatContext = createContext();
-
+import { resetUnreadMessages } from "../Chat/chatConversationItem";
 export default ChatContext;
 
 export const ChatProvider = ({ children }) => {
@@ -26,7 +26,7 @@ export const ChatProvider = ({ children }) => {
     roomId: "",
   });
   const [selectedDirect, setSelectedDirect] = useState({
-    id: '',
+    id: "",
     name: "",
     status: "",
     avatar: "",
@@ -34,11 +34,11 @@ export const ChatProvider = ({ children }) => {
   const selectedDirectRef = useRef(selectedDirect);
 
   useEffect(() => {
-    suggestedChatRoomsRef.current = suggestedChatRooms;    
+    suggestedChatRoomsRef.current = suggestedChatRooms;
   }, [suggestedChatRooms]);
 
   useEffect(() => {
-    directConversationsRef.current = directConversations;    
+    directConversationsRef.current = directConversations;
   }, [directConversations]);
 
   useEffect(() => {
@@ -76,11 +76,10 @@ export const ChatProvider = ({ children }) => {
           }:8000/chatAPI/firendwithdirects/${user}`
         );
         const data = await response.json();
-        if(response.ok){
+        if (response.ok) {
           setDirectConversations(data);
           if (Object.values(selectedDirect).every((value) => value !== "")) {
-            let currentDirects = data
-            console.log(currentDirects)
+            let currentDirects = data;
             const conversationExists = currentDirects.some(
               (conv) => conv.name === selectedDirect.name
             );
@@ -91,17 +90,26 @@ export const ChatProvider = ({ children }) => {
                 avatar: selectedDirect.avatar,
                 is_online: selectedDirect.status,
                 lastMessage: "",
-                unreadCount: '0',
+                unreadCount: "0",
               };
               setDirectConversations((prevConversations) => [
                 ...prevConversations,
                 newConversation,
               ]);
             }
+            else {
+              let allDirects = data;
+              const updatedDirects = allDirects.map((friend) => {
+                if (selectedDirect.id === friend.id) {
+                  return { ...friend, unreadCount: 0 };
+                }
+                return friend;
+              });
+              setDirectConversations(updatedDirects)
+              resetUnreadMessages(user, selectedDirect.id)
+            }
           }
-        }
-        else
-          console.error("opps!, something went wrong")
+        } else console.error("opps!, something went wrong");
       } catch (error) {
         console.log(error);
       }
@@ -114,7 +122,7 @@ export const ChatProvider = ({ children }) => {
             import.meta.env.VITE_IPADDRESS
           }:8000/chatAPI/chatRoomInvitations/${user}`
         );
-        let data = await response.json()
+        let data = await response.json();
         if (response.ok) {
           console.log("invitations: ", data);
           setChatRoomInvitations(data);
@@ -132,12 +140,10 @@ export const ChatProvider = ({ children }) => {
           }:8000/chatAPI/suggestedChatRooms/${user}`
         );
         let data = await response.json();
-        if(response.ok) {
-          console.log("Suggested: ",data)
+        if (response.ok) {
+          console.log("Suggested: ", data);
           setSuggestedChatRooms(data);
-        }
-        else
-        console.log("opps!, something went wrong")
+        } else console.log("opps!, something went wrong");
       } catch (error) {
         console.log(error);
       }
@@ -175,11 +181,11 @@ export const ChatProvider = ({ children }) => {
     chatRoomInvitationsRef: chatRoomInvitationsRef,
     selectedDirectRef: selectedDirectRef,
     directConversationsRef: directConversationsRef,
-    messages : messages,
-    setMessages : setMessages,
-    selectedItem : selectedItem,
-    setSelectedItem : setSelectedItem,
-    suggestedChatRoomsRef : suggestedChatRoomsRef,
+    messages: messages,
+    setMessages: setMessages,
+    selectedItem: selectedItem,
+    setSelectedItem: setSelectedItem,
+    suggestedChatRoomsRef: suggestedChatRoomsRef,
   };
   return (
     <ChatContext.Provider value={contextData}>{children}</ChatContext.Provider>
