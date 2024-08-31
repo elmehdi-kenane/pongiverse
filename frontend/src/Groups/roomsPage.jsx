@@ -250,19 +250,18 @@ const Rooms = () => {
             <div className="rooms-slider-container">
               {suggestedChatRooms && suggestedChatRooms.length ? (
                 <div className="suggested-rooms-slider">
-                  {/* {suggestedChatRooms.map((room, index) => (
+                  {suggestedChatRooms.map((room, index) => (
                     <SuggestedRoom
-                      key={index}
-                      role={room.role}
-                      name={room.name}
-                      index={index}
-                      topic={room.topic}
-                      roomId={room.id}
-                      roomIcons={chatRoomIcons}
-                      chatRoomCovers={chatRoomCovers}
-                      membersCount={room.membersCount}
+                    key={index}
+                    roomId={room.id}
+                    name={room.name}
+                    icon={room.icon}
+                    cover={room.cover}
+                    role={room.role}
+                    topic={room.topic}
+                    membersCount={room.membersCount}
                     />
-                  ))} */}
+                  ))}
                 </div>
               ) : (
                 <div className="suggested-rooms-slider empty-rooms-slider">

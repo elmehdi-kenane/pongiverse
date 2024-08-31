@@ -151,13 +151,17 @@ button.rooms-switch-button-active {
   font-weight: 500;
 }
 
-.conversation-item-last-msg {
+.conversation-item-last-msg,
+.conversation-item-last-msg-bold  {
   font-size: 12px;
   width: 95%;
   color: #ccc;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.conversation-item-last-msg-bold {
+  font-weight: 900;
 }
 
 .chat-window,
@@ -445,9 +449,7 @@ textarea.conversation-input::placeholder {
   align-items: center;
   gap: 5px;
 }
-.conversation-item-last-msg-wrapper-bolder {
-  font-weight: 500;
-}
+
 .conversation-item-last-msg-count {
   display: inline-block;
   padding: 0.25em 0.4em;

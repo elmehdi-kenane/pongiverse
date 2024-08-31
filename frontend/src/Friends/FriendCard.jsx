@@ -16,9 +16,9 @@ const FriendCard = ({
   currentUsername,
   secondUsername,
   avatar,
-  id,
+  friend,
 }) => {
-  const { setSelectedDirect, setIsHome } = useContext(ChatContext);
+  const { setSelectedDirect, setIsHome, setSelectedItem} = useContext(ChatContext);
   const navigate = useNavigate();
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
@@ -92,11 +92,12 @@ const FriendCard = ({
 
   const navigateToChat = () => {
     setSelectedDirect({
-      id: id,
+      id: friend,
       name: secondUsername,
       status: true,
       avatar: avatar,
     });
+    setSelectedItem(secondUsername);
     setIsHome(true);
     navigate(`/mainpage/chat`);
   };

@@ -73,8 +73,8 @@ const ChatConversationItem = (props) => {
       />
       <div className="conversation-item-details">
         <div className="conversation-item-name">{props.name}</div>
-        <div className={parseInt(props.unreadCount) > 0 ?  "conversation-item-last-msg-wrapper-bolder" : "conversation-item-last-msg-wrapper"}>
-          <div className="conversation-item-last-msg">
+        <div className="conversation-item-last-msg-wrapper">
+          <div className={parseInt(props.unreadCount) > 0 ?  "conversation-item-last-msg-bold" : "conversation-item-last-msg"}>
             {props.lastMessage
               ? props.lastMessage
               : props.status

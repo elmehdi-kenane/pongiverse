@@ -22,10 +22,11 @@ const Chat = () => {
     setDirectConversations,
     directConversationsRef,
     setMessages,
+    selectedItem,
+    setSelectedItem,
   } = useContext(ChatContext);
   const { chatSocket , user} = useContext(AuthContext);
   const [query, setQuery] = useState("");
-  const [selectedItem, setSelectedItem] = useState(null);
   const filteredConversations = directConversations.filter((conversation) => {
     return conversation.name.includes(query);
   });
@@ -33,29 +34,6 @@ const Chat = () => {
   const handleSelectItem = (itemName) => {
     setSelectedItem(itemName);
   };
-
-  // useEffect(() => {
-  //   if (chatSocket) {
-  //     chatSocket.onmessage = (e) => {
-  //       let data = JSON.parse(e.data);
-  //       console.log("data received inside:", data);
-  //       if (data.type === "newDirect") {
-  //         const currentDirect = selectedDirectRef.current;
-  //         if (currentDirect.name !== data.data.sender) {
-  //           let allDirects = directConversationsRef.current;
-  //           const updatedDirects = allDirects.map((friend) => {
-  //             if (data.data.senderId === friend.id) {
-  //               let prevCount = friend.unreadCount;
-  //               return { ...friend, unreadCount: prevCount + 1, lastMessage: data.data.content};
-  //             }
-  //             return friend;
-  //           });
-  //           setDirectConversations(updatedDirects);
-  //         }
-  //       }
-  //     };
-  //   }
-  // }, [chatSocket]);
 
   useEffect(() => {
     if (chatSocket) {
@@ -74,6 +52,8 @@ const Chat = () => {
             if(data.data) {
               setMessages((prev) => [...prev, data.data]);
             }
+            console.log("all directs: ", allDirects)
+            console.log("all directs: ", data.data.receiverId)
             const updatedDirects = allDirects.map((friend) => {
               if ( friend.id === data.data.receiverId || friend.id === data.data.senderId) {
                 return { ...friend, lastMessage: data.data.content};

@@ -18,6 +18,11 @@ class Room(models.Model):
   visiblity = models.TextField(default='public')
   password = models.CharField(max_length=128)
 
+class Membership(models.Model):
+	user = models.ForeignKey(User,on_delete=models.CASCADE)
+	room = models.ForeignKey(Room,on_delete=models.CASCADE)
+	roles = models.TextField(default='member')
+	joined_at = models.DateTimeField(auto_now_add=True)
 
 class Message(models.Model):
 	sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
@@ -25,11 +30,6 @@ class Message(models.Model):
 	content = models.TextField(blank=True)
 	timestamp = models.DateTimeField(auto_now_add=True)
 
-class Membership(models.Model):
-	user = models.ForeignKey(User,on_delete=models.CASCADE)
-	room = models.ForeignKey(Room,on_delete=models.CASCADE)
-	roles = models.TextField(default='member')
-	joined_at = models.DateTimeField(auto_now_add=True)
 
 
 class Directs(models.Model):

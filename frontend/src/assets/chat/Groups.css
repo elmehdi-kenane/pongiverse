@@ -889,7 +889,8 @@ svg.my-room-cover-edit-icon:hover {
   gap: 5px;
 }
 
-.room-leave-button {
+.room-leave-button,
+.join-room-button {
   flex-grow: 1;
   border: none;
   background-color: #1f0935;

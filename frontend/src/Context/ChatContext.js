@@ -13,10 +13,12 @@ export const ChatProvider = ({ children }) => {
   const [chatRoomInvitations, setChatRoomInvitations] = useState([]);
   const [suggestedChatRooms, setSuggestedChatRooms] = useState([]);
   const [directConversations, setDirectConversations] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
   const chatRoomConversationsRef = useRef(chatRoomConversations);
   const chatRoomInvitationsRef = useRef(chatRoomInvitations);
   const directConversationsRef = useRef(directConversations);
-  const [messages, setMessages] = useState([]);
+  const suggestedChatRoomsRef = useRef(suggestedChatRooms);
   const [selectedChatRoom, setSelectedChatRoom] = useState({
     name: "",
     memberCount: "",
@@ -30,6 +32,10 @@ export const ChatProvider = ({ children }) => {
     avatar: "",
   });
   const selectedDirectRef = useRef(selectedDirect);
+
+  useEffect(() => {
+    suggestedChatRoomsRef.current = suggestedChatRooms;    
+  }, [suggestedChatRooms]);
 
   useEffect(() => {
     directConversationsRef.current = directConversations;    
@@ -46,31 +52,6 @@ export const ChatProvider = ({ children }) => {
   useEffect(() => {
     chatRoomInvitationsRef.current = chatRoomInvitations;
   }, [chatRoomInvitations]);
-
-
-  useEffect(()=> {
-    if (Object.values(selectedDirect).every((value) => value !== "")) {
-      let currentDirects = directConversationsRef.current
-      const conversationExists = currentDirects.some(
-        (conv) => conv.name === selectedDirect.name
-      );
-      if (!conversationExists) {
-        // Create a new conversation
-        const newConversation = {
-          id: selectedDirect.id,
-          name: selectedDirect.name,
-          avatar: selectedDirect.avatar,
-          is_online: selectedDirect.status,
-          lastMessage: "",
-          unreadCount: '0',
-        };
-        setDirectConversations((prevConversations) => [
-          ...prevConversations,
-          newConversation,
-        ]);
-      }
-    }
-  }, [selectedDirect])
 
   useEffect(() => {
     const fetchChatRooms = async () => {
@@ -97,27 +78,27 @@ export const ChatProvider = ({ children }) => {
         const data = await response.json();
         if(response.ok){
           setDirectConversations(data);
-          // if (Object.values(selectedDirect).every((value) => value !== "")) {
-          //   let currentDirects = directConversationsRef.current
-          //   const conversationExists = currentDirects.some(
-          //     (conv) => conv.name === selectedDirect.name
-          //   );
-          //   if (!conversationExists) {
-          //     // Create a new conversation
-          //     const newConversation = {
-          //       id: selectedDirect.id,
-          //       name: selectedDirect.name,
-          //       avatar: selectedDirect.avatar,
-          //       is_online: selectedDirect.status,
-          //       lastMessage: "",
-          //       unreadCount: '0',
-          //     };
-          //     setDirectConversations((prevConversations) => [
-          //       ...prevConversations,
-          //       newConversation,
-          //     ]);
-          //   }
-          // }
+          if (Object.values(selectedDirect).every((value) => value !== "")) {
+            let currentDirects = data
+            console.log(currentDirects)
+            const conversationExists = currentDirects.some(
+              (conv) => conv.name === selectedDirect.name
+            );
+            if (!conversationExists) {
+              const newConversation = {
+                id: selectedDirect.id,
+                name: selectedDirect.name,
+                avatar: selectedDirect.avatar,
+                is_online: selectedDirect.status,
+                lastMessage: "",
+                unreadCount: '0',
+              };
+              setDirectConversations((prevConversations) => [
+                ...prevConversations,
+                newConversation,
+              ]);
+            }
+          }
         }
         else
           console.error("opps!, something went wrong")
@@ -133,9 +114,11 @@ export const ChatProvider = ({ children }) => {
             import.meta.env.VITE_IPADDRESS
           }:8000/chatAPI/chatRoomInvitations/${user}`
         );
-        let data = await response.json();
-        setChatRoomInvitations(data);
-        console.log("invitations: ", data);
+        let data = await response.json()
+        if (response.ok) {
+          console.log("invitations: ", data);
+          setChatRoomInvitations(data);
+        }
       } catch (error) {
         console.log(error);
       }
@@ -149,7 +132,12 @@ export const ChatProvider = ({ children }) => {
           }:8000/chatAPI/suggestedChatRooms/${user}`
         );
         let data = await response.json();
-        setSuggestedChatRooms(data);
+        if(response.ok) {
+          console.log("Suggested: ",data)
+          setSuggestedChatRooms(data);
+        }
+        else
+        console.log("opps!, something went wrong")
       } catch (error) {
         console.log(error);
       }
@@ -189,6 +177,9 @@ export const ChatProvider = ({ children }) => {
     directConversationsRef: directConversationsRef,
     messages : messages,
     setMessages : setMessages,
+    selectedItem : selectedItem,
+    setSelectedItem : setSelectedItem,
+    suggestedChatRoomsRef : suggestedChatRoomsRef,
   };
   return (
     <ChatContext.Provider value={contextData}>{children}</ChatContext.Provider>
