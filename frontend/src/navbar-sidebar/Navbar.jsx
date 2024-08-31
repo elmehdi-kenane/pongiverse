@@ -1,5 +1,4 @@
-
-import { useContext } from 'react'
+import { useContext } from "react";
 import NavbarIconSearch from "./NavbarIconSearch";
 import NavbarprofNotifs from "./NavbarProfNotifs";
 import AuthContext from "./Authcontext";

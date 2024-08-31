@@ -1,33 +1,29 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
-import MyRoom from "./myRoom";
-import SuggestedRoom from "./suggestedRoom";
-import InvitationRoom from "./InvitationRoom";
-import CreateRoom from "./createRoom";
-import JoinRoom from "./joinRoom";
-import ChatContext from "./ChatContext";
+import MyRoom from "./RoomComponents/myRoom";
+import SuggestedRoom from "./RoomComponents/suggestedRoom";
+import CreateRoom from "./CreateRoom/createRoom";
+import ChatContext from "../Context/ChatContext";
 import * as ChatIcons from "../assets/chat/media";
-import { Slide, ToastContainer, toast } from "react-toastify";
 import "../assets/chat/Groups.css";
+import NotificationAddIcon from "@mui/icons-material/NotificationAdd";
+import { Toaster } from "react-hot-toast";
+import RoomsNotifications from "./RoomComponents/roomsNotifications";
+import AddIcon from "@mui/icons-material/Add";
 
 const Rooms = () => {
   const [createRoom, setCreateRoom] = useState(false);
-  const [joinRoom, setJoinRoom] = useState(false);
   const { user, chatSocket, isBlur, setIsBlur } = useContext(AuthContext);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [showRoomNotifications, setShowRoomNotifications] = useState(false);
   const {
     chatRoomConversations,
     setChatRoomConversations,
-    chatRoomIcons,
-    chatRoomInvitations,
     setChatRoomInvitations,
-    chatRoomInvitationsIcons,
     suggestedChatRooms,
-    chatRoomConversationsRef
+    chatRoomConversationsRef,
   } = useContext(ChatContext);
-  // const myChatRoomsRef = useRef(chatRoomConversations);
-  const roomInvitationsRef = useRef(chatRoomInvitations);
 
+  console.log(chatRoomConversations)
   //hande scroller handler (My Rooms)
   const onClickScroller = (handle, numberOfRooms) => {
     const slider = document.getElementsByClassName("rooms-slider")[0];
@@ -67,27 +63,6 @@ const Rooms = () => {
     }
   };
 
-  //hande scroller handler (Room Invitations)
-  const onClickScrollerInvitation = (handle, numberOfRooms) => {
-    const slider = document.getElementsByClassName(
-      "invitation-rooms-slider"
-    )[0];
-    let sliderIndex = parseInt(
-      getComputedStyle(slider).getPropertyValue("--invitation-slider-index")
-    );
-    let itemsPerScreen = parseInt(
-      getComputedStyle(slider).getPropertyValue("--items-per-screen")
-    );
-    if (handle === "left" && sliderIndex) {
-      slider.style.setProperty("--invitation-slider-index", sliderIndex - 1);
-    } else if (handle === "right") {
-      if (sliderIndex + 1 >= numberOfRooms / itemsPerScreen) {
-        sliderIndex = 0;
-        slider.style.setProperty("--invitation-slider-index", sliderIndex);
-      } else
-        slider.style.setProperty("--invitation-slider-index", sliderIndex + 1);
-    }
-  };
   // ######################################### Chat Room backend Handlers ###################################################################
 
   //add user to channel Group
@@ -103,72 +78,6 @@ const Rooms = () => {
     if (chatSocket && chatSocket.readyState === WebSocket.OPEN && user)
       addUserChannelGroup();
   }, [chatSocket, user]);
-
-  //update chatRoomConversations array When a new Memeber join
-  const newUserJoinedChatRoom = (data) => {
-    const allMyChatRooms = chatRoomConversationsRef.current;
-    const roomExists = allMyChatRooms.some(
-      (myroom) => myroom.name === data.name
-    );
-    if (roomExists) {
-      console.log("room exist");
-      const updatedRooms = allMyChatRooms.map((room) => {
-        if (room.name === data.name) {
-          return { ...room, membersCount: data.membersCount };
-        }
-        return room;
-      });
-      setChatRoomConversations(updatedRooms);
-    } else {
-      console.log("room doesn't exist");
-      setChatRoomConversations([...allMyChatRooms, data]);
-    }
-  };
-
-  //update chatRoomConversations Array if an Memeber leave
-  const memeberLeaveChatRoomUpdater = (data) => {
-    const allMyChatRooms = chatRoomConversationsRef.current;
-    console.log("data", data);
-    if (data && data.user === user) {
-      const updatedRooms = allMyChatRooms.filter(
-        (myroom) => myroom.name !== data.name
-      );
-      setChatRoomConversations(updatedRooms);
-    } else {
-      const updatedRooms = allMyChatRooms.map((room) => {
-        if (room.name === data.name) {
-          return { ...room, membersCount: data.membersCount };
-        }
-        return room;
-      });
-      setChatRoomConversations(updatedRooms);
-    }
-  };
-
-  //update chat Room Name if Changed
-  const chatRoomNameChangedUpdater = (data) => {
-    const allMyChatRooms = chatRoomConversationsRef.current;
-    const updatedRooms = allMyChatRooms.map((room) => {
-      if (room.name === data.name) {
-        return { ...room, name: data.newName };
-      }
-      return room;
-    });
-    console.log("update rooms: ", updatedRooms);
-    setChatRoomConversations(updatedRooms);
-  };
-
-  const chatRoomIconChanged = (data) => {
-    const allMyChatRooms = chatRoomConversationsRef.current;
-    const updatedRooms = allMyChatRooms.map((room) => {
-      if (room.name === data.name) {
-        return { ...room, icon_url: data.iconPath };
-      }
-      return room;
-    });
-    console.log("update rooms: ", updatedRooms);
-    setChatRoomConversations(updatedRooms);
-  };
 
   const chatRoomAdminAdded = (data) => {
     const allMyChatRooms = chatRoomConversationsRef.current;
@@ -199,39 +108,11 @@ const Rooms = () => {
     }
   };
 
-  const chatRoomDeletedUpdater = (data) => {
-    const allMyChatRooms = chatRoomConversationsRef.current;
-    const updatedRooms = allMyChatRooms.filter(
-      (room) => room.name !== data.name
-    );
-    setChatRoomConversations(updatedRooms);
-  };
-
   useEffect(() => {
     if (chatSocket) {
       chatSocket.onmessage = (e) => {
         let data = JSON.parse(e.data);
-        console.log("data recived from socket :", data);
-        if (data.type === "newRoomJoin") newUserJoinedChatRoom(data.room);
-        else if (data.type === "alreadyJoined")
-          toast("Room Already Joined");
-        else if (data.type === "privateRoom") toast("Private Room");
-        else if (data.type === "roomNotFound")
-          toast("Room Not Found");
-        else if (data.type === "incorrectPassword")
-          console.log("incorrect password");
-        else if (data.type === "newRoomCreated") {
-          const allMyChatRooms = chatRoomConversationsRef.current;
-          setChatRoomConversations([...allMyChatRooms, data.room]);
-        } else if (data.type === "memberleaveChatRoom")
-          memeberLeaveChatRoomUpdater(data.message);
-        else if (data.type === "chatRoomNameChanged")
-          chatRoomNameChangedUpdater(data.message);
-        else if (data.type === "chatRoomAvatarChanged")
-          chatRoomIconChanged(data.message);
-        else if (data.type == "chatRoomDeleted")
-          chatRoomDeletedUpdater(data.message);
-        else if (data.type === "chatRoomAdminAdded")
+        if (data.type === "chatRoomAdminAdded")
           chatRoomAdminAdded(data.message);
         else if (data.type === "roomInvitation") {
           const allInvitaions = roomInvitationsRef.current;
@@ -244,41 +125,60 @@ const Rooms = () => {
 
   return (
     <div className="rooms-page">
+      <Toaster
+        containerStyle={{ marginTop: "51px" }}
+        toastOptions={{
+          className: "",
+          style: {
+            color: "#713200",
+            textAlign: "center",
+            fontSize: "14px",
+          },
+        }}
+      />
       <div className="rooms-page-content">
-        {joinRoom && (
-          <JoinRoom
-            onClose={() => {
-              setJoinRoom(false);
-              setIsBlur(false);
-            }}
-          />
-        )}
         {createRoom && (
-          <CreateRoom
-            onClose={() => {
-              setCreateRoom(false);
-              setIsBlur(false);
-            }}
+          <CreateRoom setCreateRoom={setCreateRoom} setIsBlur={setIsBlur} />
+        )}
+        {showRoomNotifications && (
+          <RoomsNotifications
+            setShowRoomNotifications={setShowRoomNotifications}
+            setIsBlur={setIsBlur}
           />
         )}
         <div className={isBlur ? "rooms-wrapper blur" : "rooms-wrapper"}>
-          <div className="rooms-actions-buttons-container">
-          </div>
           <div className="rooms-header-wrapper">
-          <div className="rooms-header">Your Rooms</div>
-          <div
-              className="create-room-button"
-              onClick={() => {
-                setCreateRoom(true);
-                setIsBlur(true);
-              }}
-            >
-              <img
-                src={ChatIcons.CreateChannel}
-                alt=""
-                className="create-room-icon"
+            <div className="rooms-header">Your Rooms</div>
+
+            <div className="create-room-side-buttons-wrapper">
+              <div
+                className="create-room-button"
+                onClick={() => {
+                  setCreateRoom(true);
+                  setIsBlur(true);
+                }}
+              >
+                <img
+                  src={ChatIcons.CreateChannel}
+                  alt=""
+                  className="create-room-icon"
+                />
+                <div className="create-room-text">Create a Room</div>
+              </div>
+              <AddIcon
+                className="create-room-button-icon"
+                onClick={() => {
+                  setCreateRoom(true);
+                  setIsBlur(true);
+                }}
               />
-              <div className="create-room-text">Create a Room</div>
+              <NotificationAddIcon
+                className="rooms-notifications-icon"
+                onClick={() => {
+                  setShowRoomNotifications(true);
+                  setIsBlur(true);
+                }}
+              />
             </div>
           </div>
           <div className="my-rooms-row">
@@ -308,12 +208,12 @@ const Rooms = () => {
                   {chatRoomConversations.map((room, index) => (
                     <MyRoom
                       key={index}
-                      role={room.role}
-                      name={room.name}
-                      index={index}
-                      topic={room.topic}
                       roomId={room.id}
-                      roomIcons={chatRoomIcons}
+                      name={room.name}
+                      icon={room.icon}
+                      cover={room.cover}
+                      role={room.role}
+                      topic={room.topic}
                       membersCount={room.membersCount}
                     />
                   ))}
@@ -352,68 +252,20 @@ const Rooms = () => {
                 <div className="suggested-rooms-slider">
                   {suggestedChatRooms.map((room, index) => (
                     <SuggestedRoom
-                      key={index}
-                      role={room.role}
-                      name={room.name}
-                      index={index}
-                      topic={room.topic}
-                      roomId={room.id}
-                      roomIcons={chatRoomIcons}
-                      membersCount={room.membersCount}
+                    key={index}
+                    roomId={room.id}
+                    name={room.name}
+                    icon={room.icon}
+                    cover={room.cover}
+                    role={room.role}
+                    topic={room.topic}
+                    membersCount={room.membersCount}
                     />
                   ))}
                 </div>
               ) : (
                 <div className="suggested-rooms-slider empty-rooms-slider">
                   No suggested chat room was found
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="rooms-header">Room Invitations</div>
-          <div className="invitations-room-row">
-            {chatRoomInvitations.length > 4 ? (
-              <>
-                <img
-                  src={ChatIcons.leftHand}
-                  className="hande left-hande"
-                  onClick={() =>
-                    onClickScrollerInvitation(
-                      "left",
-                      chatRoomInvitations.length
-                    )
-                  }
-                />
-                <img
-                  src={ChatIcons.rightHand}
-                  className="hande right-hande"
-                  onClick={() =>
-                    onClickScrollerInvitation(
-                      "right",
-                      chatRoomInvitations.length
-                    )
-                  }
-                />
-              </>
-            ) : (
-              ""
-            )}
-            <div className="rooms-slider-container">
-              {chatRoomInvitations.length ? (
-                <div className="invitations-rooms-slider">
-                  {chatRoomInvitations.map((room, index) => (
-                    <InvitationRoom
-                      key={index}
-                      index={index}
-                      name={room.name}
-                      membersCount={room.membersCount}
-                      room_icon={chatRoomInvitationsIcons}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <div className="invitations-rooms-slider empty-rooms-slider">
-                  You currently have no chat room invitations
                 </div>
               )}
             </div>

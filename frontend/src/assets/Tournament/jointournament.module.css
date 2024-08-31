@@ -5,7 +5,7 @@
 	align-items: center;
 	flex-direction: column;
 	height: 100%;
-	top: 200px;
+	top: 100px;
 	gap: 10px;
 }
 
@@ -104,6 +104,7 @@
 	flex-direction: column;
 	align-items: center;
 	gap: 10px;
+	overflow: auto;
 }
 .table-th{
 	margin-top: 20px;
@@ -200,6 +201,7 @@ h4{
 	}
 	.search{
 		width: 100%;
+		gap: 3px;
 	}
 	.input-and-icon{
 		position: relative;
@@ -218,6 +220,7 @@ h4{
 	.join-button-search{
 		width: 60px;
 		height: 30px;
+		margin-right: 2px;
 	}
 
 	.input-and-icon{

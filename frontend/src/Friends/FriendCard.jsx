@@ -7,10 +7,15 @@ import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 import AuthContext from '../navbar-sidebar/Authcontext'
-import ChatContext from "../Groups/ChatContext";
+import ChatContext from "../Context/ChatContext";
 import { Navigate } from 'react-router-dom';
 
-const FriendCard = ({ isLastTwoElements, secondUsername, avatar }) => {
+const FriendCard = ({
+  isLastTwoElements,
+  secondUsername,
+  avatar,
+  friendId,
+}) => {
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -39,6 +44,7 @@ const FriendCard = ({ isLastTwoElements, secondUsername, avatar }) => {
   };
   const handleMessageFriend = () => {
     setSelectedDirect({
+      id: friendId,
       name: secondUsername,
       avatar: avatar,
       status: "true",
@@ -80,6 +86,18 @@ const FriendCard = ({ isLastTwoElements, secondUsername, avatar }) => {
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const navigateToChat = () => {
+    setSelectedDirect({
+      id: id,
+      name: secondUsername,
+      status: true,
+      avatar: avatar,
+    });
+    setSelectedItem(secondUsername);
+    setIsHome(true);
+    navigate(`/mainpage/chat`);
   };
   return (
     <div className="FriendCard">
@@ -129,4 +147,4 @@ const FriendCard = ({ isLastTwoElements, secondUsername, avatar }) => {
   );
 };
 
-export default FriendCard
+export default FriendCard;

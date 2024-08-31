@@ -56,18 +56,6 @@ const SendMessage = (props) => {
 
   const fileInputRef = useRef(null);
 
-  const handleFileUploadClick = () => {
-    fileInputRef.current.click();
-  };
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      console.log('File selected:', file);
-      // Handle the file upload logic here
-    }
-  };
-
   return (
     <div className="conversation-controls-container">
       <img
@@ -77,19 +65,6 @@ const SendMessage = (props) => {
         onClick={() =>
           !props.showDirectOptions ? setShowEmojiPicker(true) : ""
         }
-      />
-      <img
-        src={ChatIcons.fileUploadIcon}
-        alt=""
-        className="conversation-file-upload"
-        onClick={handleFileUploadClick}
-      />
-       <input
-        type="file"
-        ref={fileInputRef}
-        className="file-input-hidden"
-        style={{ display: 'none' }}
-        onChange={handleFileChange}
       />
       <div
         className={

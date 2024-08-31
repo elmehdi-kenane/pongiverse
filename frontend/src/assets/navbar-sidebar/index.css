@@ -455,23 +455,6 @@ body {
   .navbar {
     margin-top: 2px;
   }
-    .NotificationPopupCard {
-            padding: 5px;
-            min-width: 300px;
-            width: 13%;
-            height: max-content;
-            max-width: max-content;
-            gap: 2px;
-            right: 25%;
-            z-index: 99;
-            /* margin-top: 20px; */
-            display: flex;
-            justify-content: flex-start;
-            align-items: flex-start;
-        }
-    .NotificationPopupHeader p, .NotificationPopupUsername, .NotificationPopupCardBtn button {
-        /* font-size: 10px; */
-    }
 
   .sidebarWrapper {
     flex-direction: column;
@@ -1258,12 +1241,6 @@ body {
     }
     
     #ball {
-
-    .onevsone-dashboard-logo #paddle-2 {
-        height: 20px;
-    }
-
-    .onevsone-dashboard-logo #ball {
         height: 5px;
         width: 5px;
     } */
@@ -1409,7 +1386,7 @@ body {
 .cancel-game-invite-request {
   /* margin: 30px 0 100px 0; */
   position: absolute;
-  top: 20px;
+  top: 0;
   left: 100%;
   z-index: 100;
   transform: translate(-100%);

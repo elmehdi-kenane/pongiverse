@@ -31,7 +31,7 @@ class friendSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Friendship
-        fields = ['username', 'friend_username', 'avatar']
+        fields = ['username', 'friend_username', 'avatar', 'friend']
 
     def get_avatar(self, obj):
         request = self.context.get('request')

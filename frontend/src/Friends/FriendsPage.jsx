@@ -21,7 +21,7 @@ const Friends = () => {
     useEffect(() => {
         const getFriendSuggestions = async () => {
             const response = await fetch(
-                `http://localhost:8000/friends/get_friend_suggestions/${user}`,
+                `http://${import.meta.env.VITE_IPADDRESS}:8000/friends/get_friend_suggestions/${user}`,
                 {
                     method: "GET",
                     headers: {
@@ -38,7 +38,7 @@ const Friends = () => {
     useEffect(() => {
         const getFriends = async () => {
             const response = await fetch(
-                `http://localhost:8000/friends/get_friend_list/${user}`,
+                `http://${import.meta.env.VITE_IPADDRESS}:8000/friends/get_friend_list/${user}`,
                 {
                     method: "GET",
                     headers: {
@@ -46,8 +46,10 @@ const Friends = () => {
                 }
             );
             const res = await response.json();
-            if (res)
+            if (res) {
+                console.log("FRIENDS:  ", res)
                 setFriends(res);
+            }
         };
         if (user) getFriends();
     }, [user]);
@@ -178,7 +180,7 @@ const Friends = () => {
     useEffect(() => {
         const getSentRequests = async () => {
             const response = await fetch(
-                `http://localhost:8000/friends/get_sent_requests/${user}`,
+                `http://${import.meta.env.VITE_IPADDRESS}:8000/friends/get_sent_requests/${user}`,
                 {
                     method: "GET",
                     headers: {
@@ -195,7 +197,7 @@ const Friends = () => {
     useEffect(() => {
         const getRecievedRequests = async () => {
             const response = await fetch(
-                `http://localhost:8000/friends/get_recieved_requests/${user}`,
+                `http://${import.meta.env.VITE_IPADDRESS}:8000/friends/get_recieved_requests/${user}`,
                 {
                     method: "GET",
                     headers: {
@@ -212,7 +214,7 @@ const Friends = () => {
     useEffect(() => {
         const getBlockedList = async () => {
             const response = await fetch(
-                `http://localhost:8000/friends/get_blocked_list/${user}`,
+                `http://${import.meta.env.VITE_IPADDRESS}:8000/friends/get_blocked_list/${user}`,
                 {
                     method: "GET",
                     headers: {

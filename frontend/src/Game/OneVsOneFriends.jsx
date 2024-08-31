@@ -26,7 +26,7 @@ const OneVsOneFriends = () => {
 	let { privateCheckAuth, socket, user,
 		socketRecreated, setSocketRecreated,
 		userImg, loading, allGameFriends,
-		userImages, setAllGameFriends } = useContext(AuthContext)
+		userImages, setAllGameFriends, notifSocket } = useContext(AuthContext)
 	const allGameFriendsRef = useRef(allGameFriends);
 
 	let isOut = false
@@ -95,40 +95,13 @@ const OneVsOneFriends = () => {
 					setTmpRoomID(message.id)
 					setGameStarted(true)
 					// setChosenOne('quickMatch')
-				}
-				else if (type === 'user_disconnected') {
-					const currentAllGameFriends = allGameFriendsRef.current;
-					console.log("user disconnected : ", allGameFriends)
-					let uname = data.message.user
-					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname))
-				} else if (type === 'connected_again') {
-					const currentAllGameFriends = allGameFriendsRef.current;
-					const userExists = currentAllGameFriends.some(friend => friend.name === message.user)
-						if (!userExists)
-							setAllGameFriends([...currentAllGameFriends, message.userInfos])
-				}
-				// else if (type === "noRoomFound") {
-				//     console.log("inside noRoomFound")
-				//     if (socket && socket.readyState === WebSocket.OPEN) {
-				//         console.log("inside join")
-				//         socket.send(JSON.stringify({
-				//             type: 'join',
-				//             message: {
-				//                 user: user,
-				//             }
-				//         }))
-				//         setGameStarted(true)
-				//         setLoadMatch(true)
-				//     }
-				// }
-				else if (type === 'alreadySearching') {
+				} else if (type === 'alreadySearching') {
 					console.log("inside alreadySearching")
 					setPlayerNo(message.playerNo)
 					setTmpRoomID(message.id)
 					setGameStarted(true)
 					setLoadMatch(true)
-				}
-				else if (type === 'playingStatus') {
+				} else if (type === 'playingStatus') {
 					// console.log(message.user)
 					// console.log(allGameFriends)
 					const currentAllGameFriends = allGameFriendsRef.current;
@@ -139,38 +112,10 @@ const OneVsOneFriends = () => {
 						if (!userExists)
 							setAllGameFriends([...currentAllGameFriends, message.userInfos])
 					}
-					//     for (let i = 0;i < allGameFriends.length; i++) {
-					//         console.log(allGameFriends[i].name)
-					//     }
-					// }
+				} else if (type === 'hmed') {
+					console.log("hmed received")
+					socket.close()
 				}
-				// else if (type === "removeRoom") {
-				//     console.log("inside removeRoom")
-				//     if (socket && socket.readyState === WebSocket.OPEN) {
-				//         socket.send(JSON.stringify({
-				//             type: 'OpponentIsOut',
-				//             message: {
-				//                 user: user,
-				//                 roomID: roomID
-				//             }
-				//         }))
-				//     }
-				//     setPlayerNo(0)
-				//     setAllSet(false)
-				//     setRoomID(null)
-				// }
-				// else if (type === "alreadySearching") {
-				//     setIsInSearchMode(true)
-				//     setTimeout(() => {
-				//         setIsInSearchMode(false)
-				//     }, 5000);
-				// } else if (type === "alreadyPlaying") {
-				//     console.log("in a match buddy")
-				//     setIsInPlayingMode(true)
-				//     setTimeout(() => {
-				//         setIsInPlayingMode(false)
-				//     }, 5000);
-				// }
 			}
 		}
 
@@ -183,6 +128,28 @@ const OneVsOneFriends = () => {
 		}
 
 	}, [socket, allSet, roomID, tmpRoomID])
+
+	useEffect(() => {
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+			notifSocket.onmessage = (event) => {
+				let data = JSON.parse(event.data)
+				let type = data.type
+				let message = data.message
+				console.log('========', type, '========')
+				if (type === 'connected_again') {
+					const currentAllGameFriends = allGameFriendsRef.current;
+					const userExists = currentAllGameFriends.some(friend => friend.name === message.user)
+						if (!userExists)
+							setAllGameFriends([...currentAllGameFriends, message.userInfos])
+				} else if (type === 'user_disconnected') {
+					const currentAllGameFriends = allGameFriendsRef.current;
+					console.log("user disconnected : ", allGameFriends)
+					let uname = data.message.user
+					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname))
+				}
+			}
+		}
+	}, [notifSocket])
 
 	useEffect(() => {
 		allGameFriendsRef.current = allGameFriends;
@@ -228,6 +195,7 @@ const OneVsOneFriends = () => {
 				setSelectedFriends(selectedFriends.filter(selectedFriend => selectedFriend !== friend))
 			}, 2000);
 			setGameStarted(true)
+			// setAllGameNotifs([]) // SET ALL NOTIFICATIONS TO EMPTY ARRAY
 			// setGameStared(true)
 		}
 	};
