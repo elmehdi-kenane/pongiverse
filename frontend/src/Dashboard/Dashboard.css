@@ -7,8 +7,8 @@
     overflow-y: scroll;
     gap : 20px;
     padding-top:00px;
+    /* position: relative; */
 }
-
 
 .dash--space{
     gap: 15px;
@@ -28,6 +28,50 @@
     font-weight: 550;
     /* color: #8884d8 ;*/
 }
+
+.dash-blur {
+    filter: blur(6px);
+    pointer-events: none;
+    user-select: none;
+  }
+
+/* -------Match-Result------ */
+
+.match-result-ctr {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+.match-result {
+    z-index: 4;
+    display: flex;
+    height: 400px;
+    width: 70%;
+    top: 250px;
+    border: #826aed solid 2px;
+    border-radius: 5px;
+    background-color: #1b062a;
+    position: relative;
+}
+
+.match-result .report-close-stats { 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    color: #826aed;
+    top: 8px;
+    right: 5px;
+    height: 32px;
+    width: 32px;
+    cursor: pointer;
+}
+.match-result .report-close-stats:hover{
+    color: #9e88fd;
+}
+
 /* -------HEAD------ */
 
 .dashpage .dashpage__head {
@@ -83,7 +127,7 @@
     display: flex;
     height: 15px;
     border-radius: 6px;
-    animation: moving 2s ease-in-out;
+    animation: moving 4s ease-in-out;
 }
 
 @keyframes moving {
@@ -99,12 +143,13 @@
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
     background-color: #f4effa;
+    /* transition: width 1s ease-in; */
 }
 .head__game-stats .head__game-stats__line .right-side{
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
-    background-color: #826aed
-;
+    background-color: #826aed;
+    /* transition: width 1s ease-out; */
 }
 
 .head__game-stats .head__game-stats__statistics {
@@ -196,6 +241,10 @@
     /* background: #775C9E; */
     border-right: black solid 0.5px;
 }
+.dashpage__body__rank .dashpage__body__rank__title .select {
+    background: rgb(247, 239, 255);
+    color: #5f4582;
+}
 
 .dashpage__body__rank .dashpage__body__rank__title .title:hover {
     background: rgb(247, 239, 255);
@@ -224,6 +273,7 @@
     height: 44.2px;
     align-items: center;
     border-bottom: #250939 solid 3px;
+    text-decoration: none;
 }
 
 .dashpage__body__rank__classment .player__classment:hover{
@@ -264,6 +314,7 @@
 .dashpage__body__rank__classment .player__classment .player__pos_pic img{
     border-radius: 50%;
     width: 35px;
+    height: 35px;
     margin-left: 5px;
 }
 
@@ -295,11 +346,13 @@
 .footer__tournament-match {
     /* border: white solid 2px; */
     width: 33%;
+    height: 300px;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 10px 10px;
     gap: 10px;
+    position: relative;
     /* border: 1px solid rgba( 255, 255, 255, 0.18 ); */
 }
 
@@ -308,6 +361,55 @@
     font-size: 23px;
     margin-bottom: 8px;
 }
+
+.no-result{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 80%;
+    width: 85%;
+    margin: 0px 5px;
+    
+    background: rgba( 255, 255, 255, 0.25 );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    box-shadow: 0 2px 30px 0 #250939;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+}
+
+.no-result h3{
+    color: white;
+    width: 80%;
+    font-size: 19px;
+    font-weight: 450;
+    margin-bottom: 15px;
+}
+.no-result .start-game{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: white;
+    background: #250939;
+    border: white 1px solid;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 19px;
+    font-weight: 450;
+    gap: 5px;
+    cursor: pointer;
+}
+.no-result .start-game p{
+    cursor: pointer;
+}
+.no-result .start-game:hover{
+    color: #250939;
+    background: white;
+    transition: ease-in 0.4s;
+}
+
 
 .footer__result {   /* result of all footer matches */
     display: flex;
@@ -339,6 +441,8 @@
 
 .footer__single-match .single-match__result img {
     width: 45px;
+    height: 45px;
+    border-radius: 50%;
 }
 
 /* Multiplayer Match */
@@ -358,21 +462,33 @@
 
 .multiplayer-match__result .multiplayer-pics img{
     width: 40px;
+    height: 40px;
+    border-radius: 50%;
 }
 
 /* Tournament Match */
 
 .footer__tournament-match .tournament-match__result img {
     width: 45px;
+    height: 45px;
+    border-radius: 50%;
 }
 
 /* Pagination */
 
+.expand {
+    position: absolute;
+    bottom: 2px;
+}
+.expand svg{
+    height: 28px;
+    width: 28px;
+
+}
 .expand-more {
     color: white;
     margin-top: -2px;
 }
-
 .expand-less {
     color: #250939;
     margin-top: -2px;
@@ -421,11 +537,15 @@
         font-weight: 500;
         margin-bottom: 10px;
     }
-
     .footer__result p{
         font-size: 13px;
     }
-
+    .no-result h3{
+        font-size: 15px;
+    }
+    .no-result .start-game{  
+        font-size: 15px;
+    }
     .footer__tournament-match .tournament-match__result img,
     .footer__single-match .single-match__result img {
         width: 40px;
@@ -550,5 +670,13 @@
         flex-direction: column;
         height: 700px;
         margin-top: 0;
+    }
+    .footer__single-match .no-result{
+        width: 100%;
+        padding: 10px 0;
+    }
+    .footer__single-match .no-result h3{
+        width: 85%;
+        font-size: 15px;
     }
 }

@@ -6,6 +6,14 @@ from datetime import timedelta
 from myapp.models import customuser
 import random
 
+class UserMatchStatics(models.Model):
+    player = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='player_match_stats')
+    wins = models.PositiveIntegerField(default=0)
+    losts = models.PositiveIntegerField(default=0)
+    level = models.PositiveIntegerField(default=0)
+    total_xp = models.PositiveIntegerField(default=0)
+    goals = models.PositiveIntegerField(default=0)
+
 class Match(models.Model):
     mode = models.CharField(max_length=255)
     room_id = models.PositiveBigIntegerField(unique=True)
@@ -13,14 +21,6 @@ class Match(models.Model):
     team1_player2 = models.ForeignKey(customuser, on_delete=models.CASCADE, null=True, related_name='team1_player2')
     team2_player1 = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='team2_player1')
     team2_player2 = models.ForeignKey(customuser, on_delete=models.CASCADE, null=True, related_name='team2_player2')
-    # team1_player1_score = models.PositiveIntegerField(default=0)
-    # team1_player2_score = models.PositiveIntegerField(default=0)
-    # team2_player1_score = models.PositiveIntegerField(default=0)
-    # team2_player2_score = models.PositiveIntegerField(default=0)
-    # team1_player1_score = models.PositiveIntegerField(default=0)
-    # team1_player2_score = models.PositiveIntegerField(default=0)
-    # team2_player1_score = models.PositiveIntegerField(default=0)
-    # team2_player2_score = models.PositiveIntegerField(default=0)
     team1_score = models.PositiveIntegerField(default=0)
     team2_score = models.PositiveIntegerField(default=0)
     team1_status = models.CharField(max_length=255)
@@ -44,10 +44,6 @@ class MatchStatistics(models.Model):
     team1_player2_rating = models.PositiveIntegerField(default=0, null=True, blank=True)
     team2_player1_rating = models.PositiveIntegerField(default=0)
     team2_player2_rating = models.PositiveIntegerField(default=0, null=True, blank=True)
-    team1_player1_level = models.PositiveIntegerField(default=0)
-    team1_player2_level = models.PositiveIntegerField(default=0, null=True, blank=True)
-    team2_player1_level = models.PositiveIntegerField(default=0)
-    team2_player2_level = models.PositiveIntegerField(default=0, null=True, blank=True)
 
 class ActiveMatch(models.Model):
 	mode = models.CharField(max_length=255)

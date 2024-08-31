@@ -77,13 +77,22 @@ class WaysSignUpView(APIView) :
 			image_content = image_response.content
 			if image_content:
 				image_file = InMemoryUploadedFile(ContentFile(image_content), None, 'image.jpg', 'image/jpeg', len(image_content), None)
-				print(f'IMAGE CONTENT IS : {image_file}')
+				#print(f'IMAGE CONTENT IS : {image_file}')
 				my_data['avatar'] = image_file
 		# else:
 			# response.data = {"Case" : "Error"}
 		serializer = MyModelSerializer(data=my_data)
 		if serializer.is_valid():
 			user = serializer.save()
+			if user:
+				UserMatchStatics.objects.create(
+					player=user,
+					wins=0,
+					losts=0,
+					level=0,
+					total_xp=0,
+					goals=0
+				)
 			response = Response()
 			response.data = {"Case" : "Sign up successfully"}
 			return response
@@ -166,7 +175,7 @@ class VerifyTokenView(APIView):
 			token = request.COOKIES.get('token')
 			decoded_token = AccessToken(token)
 			data = decoded_token.payload
-			# print(data)
+			# #print(data)
 			if not data.get('user_id'):
 				if username:
 					user = customuser.objects.filter(username=username).first()

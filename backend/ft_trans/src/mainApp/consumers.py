@@ -250,6 +250,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	##################################### 1vs1 (GAME) #####################################
 
 	async def gameReady(self, event):
+		#print("======== HANDLING GAMEREADY EVENT ========")
 		await self.send(text_data=json.dumps({
 			'type': 'gameReady',
 			'message': event['message']

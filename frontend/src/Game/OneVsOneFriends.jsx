@@ -34,13 +34,16 @@ const OneVsOneFriends = () => {
     const roomIdRef = useRef(tmpRoomID)
     const socketRef = useRef(socket)
 
+	// let checked = false
+
     useEffect(() => {
         privateCheckAuth()
     }, [])
 
     useEffect(() => {
 		if (socket && socket.readyState === WebSocket.OPEN && user) {
-			console.log("CHECKING IF PLAYER IN ROOM")
+			console.log("CHECKING IF PLAYER IN ROOM", socket, user)
+			// checked = true
 			socket.send(JSON.stringify({
 				type: 'isPlayerInAnyRoom',
 				message: {

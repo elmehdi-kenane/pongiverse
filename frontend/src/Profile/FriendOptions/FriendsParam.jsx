@@ -1,8 +1,11 @@
 import React, { useContext } from 'react'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import AuthContext from '../../navbar-sidebar/Authcontext';
+import ProfileContext from '../ProfileWrapper';
+import ChatContext from '../../Groups/ChatContext';
 
 import ChatIcon from '@mui/icons-material/Chat';
+import MavSvg from "../../assets/Profile/Group.svg"
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import CancelScheduleSendIcon from '@mui/icons-material/CancelScheduleSend';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
@@ -11,9 +14,10 @@ import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 
 function FriendsParam(props) {
     const friendsPrm = props.Prm;
-    const {isBlock} = useContext(AuthContext);
-    const {setIsBlock} = useContext(AuthContext);
-    const {blockRef} = useContext(AuthContext);
+    const {isBlock, setIsBlock, blockRef} = useContext(AuthContext);
+    const navigate = useNavigate();
+    const { userId, userPic } = useContext(ProfileContext);
+    const { setSelectedDirect } = useContext(ChatContext);
 
     const handleRmFriend = () => {
         props.onRmFriend();
@@ -24,13 +28,22 @@ function FriendsParam(props) {
     const handleBlock = () => {
         setIsBlock(!isBlock);
     }
+    const chatNavigate = () => {
+        const userImage = userPic ? userPic : MavSvg
+        setSelectedDirect({
+          name : userId,
+          status: true,
+          avatar: userImage,
+        })
+        navigate('/mainpage/chat');
+      }
     
     // Params JSX -----------------------
     const chatJsx = (
-        <Link className='parameter' to='/mainpage/chat'>
+        <div className='parameter' onClick={chatNavigate}>
             <ChatIcon />
             <p> Send Message </p>
-        </Link>
+        </div>
     );
     const challengeJsx = (
         <Link className='parameter' to='/mainpage/game'>

@@ -17,7 +17,7 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError, AccessToke
 # @api_view(['POST'])
 # def signup(request):
 #     serializer = UserSerializer(data=request.data)
-#     print(serializer)
+#     #print(serializer)
 #     serializer.is_valid(raise_exception=True)
 #     serializer.save()
 #     return Response(serializer.data)
@@ -32,7 +32,7 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError, AccessToke
 #     if not user.check_password(password):
 #         raise AuthenticationFailed('Incorrect password')
 #     token = request.COOKIES.get('jwt')
-#     print(token)
+#     #print(token)
 #     if token:
 #         response = Response()
 #         response.data = {
@@ -84,7 +84,7 @@ from mimetypes import guess_type
 @api_view(['POST'])
 def online_friends(request):
 	username = request.data['user']
-	# print(f'user is {username}')
+	# #print(f'user is {username}')
 	user = customuser.objects.get(username=username)
 	allFriends = []
 	print(f"is_online {user.is_online}, is_playing {user.is_playing}, username {user.username}")
@@ -98,11 +98,11 @@ def online_friends(request):
 @api_view(['POST'])
 def notifs_friends(request):
 	username = request.data['user']
-	# print(f'user is {username}')
+	# #print(f'user is {username}')
 	target = customuser.objects.get(username=username)
 	allNotifs = []
 	for gameNotif in GameNotifications.objects.filter(target=target):
-		# print(f'ROOM_ID WHEN FETCHING IS : {gameNotif.room_id}')
+		# #print(f'ROOM_ID WHEN FETCHING IS : {gameNotif.room_id}')
 		allNotifs.append({'user': gameNotif.user.username, 'avatar': gameNotif.user.avatar.path, 'roomID': gameNotif.active_match.room_id, 'mode': gameNotif.mode})
 	return Response({'message': allNotifs})
 
@@ -145,7 +145,7 @@ def create_tournament(request):
 def user_image(request):
 	username = (request.data).get('user')
 	if not username:
-		print("no user is here")
+		#print("no user is here")
 		return Response({'message': 'no username is here'})
 	user = customuser.objects.filter(username=username).first()
 	if user:
@@ -323,10 +323,10 @@ def customize_game(request):
 	board_color = request.data['board']
 	ball_effect = request.data['effect']
 	username = request.data['username']
-	print(f"THE SELF OBJECT IS : {request.COOKIES.get('token')}")
+	#print(f"THE SELF OBJECT IS : {request.COOKIES.get('token')}")
 	user = customuser.objects.filter(username=username).first()
 	if user:
-		print(request.data)
+		#print(request.data)
 		game_customize = GameCustomisation.objects.filter(user=user).first()
 		if game_customize:
 			game_customize.paddle_color = paddle_color
@@ -350,11 +350,11 @@ def customize_game(request):
 @api_view(['GET'])
 def get_customize_game(request):
 	try:
-		print(f"THE SELF OBJECT IS : {request.COOKIES.get('token')}")
+		#print(f"THE SELF OBJECT IS : {request.COOKIES.get('token')}")
 		token = request.COOKIES.get('token')
 		decoded_token = AccessToken(token)
 		data = decoded_token.payload
-		print(data)
+		#print(data)
 		if data.get('user_id'):
 			user = customuser.objects.filter(id=data['user_id']).first()
 			if user is not None:

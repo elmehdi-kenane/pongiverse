@@ -234,6 +234,23 @@
 	padding: 0 5px;
 	align-items: center;
 }
+.error-container{
+	margin-top: 10%;
+}
+
+.title-swal{
+	color: #B00020;
+	font-size: 20px;
+}
+
+.error-container {
+	margin-top: 10%;
+}
+
+.title-swal {
+	color: #B00020;
+	font-size: 20px;
+}
 
 .error-container {
 	margin-top: 10%;
@@ -714,6 +731,15 @@
 		gap: 5px;
 		height: 800px;
 	}
+	.tournament-title {
+		margin-top: 5%;
+		font-size: 13px;
+	}
+
+	.tournament-title {
+		margin-top: 5%;
+		font-size: 13px;
+	}
 
 	.tournament-title {
 		margin-top: 5%;
@@ -778,6 +804,7 @@
 		width: 85px;
 		padding: 0 5px;
 		font-size: 10px;
+
 	}
 	.tournament-id-value-and-icon svg{
 		color: white;
