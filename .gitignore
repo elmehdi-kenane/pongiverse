@@ -8,7 +8,7 @@ uploads
 /.vscode
 .DS_Store
 README.md
-
+log
 Backups/
 Cache/
 CachedData/
