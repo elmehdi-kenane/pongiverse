@@ -298,29 +298,30 @@ def get_user_diagram(request, username):
     if user is not None:
         user_games = UserMatchStatics.objects.filter(player=user).first()
         if user_games is not None:
-            res_data = [{
-                    'subject': "Matches",
-                    'value': user_games.wins + user_games.losts,
-                },{
-                    'subject': "Wins",
-                    'value': user_games.wins,
-                },
-                {
-                    'subject': "Accuracy",
-                    'value': f"{(user_games.wins / user_games.losts):.2f}" if user_games.losts > 0 else "N/A",
-                },
-                {
-                    'subject': "Goals Acc",
-                    'value': user_games.goals/ (user_games.wins + user_games.losts),
-                },
-                {
-                    'subject': "Losts",
-                    'value': user_games.losts,
-                },
-                ]
-            return Response(data={"userGames": res_data}, status=status.HTTP_200_OK)
-        else:
+            if user_games.wins != 0 or user_games.losts != 0:
+                res_data = [{
+                        'subject': "Matches",
+                        'value': user_games.wins + user_games.losts,
+                    },{
+                        'subject': "Wins",
+                        'value': user_games.wins,
+                    },
+                    {
+                        'subject': "Accuracy",
+                        'value': f"{(user_games.wins / user_games.losts):.2f}" if user_games.losts > 0 else "N/A",
+                    },
+                    {
+                        'subject': "Goals Acc",
+                        'value': user_games.goals/ (user_games.wins + user_games.losts),
+                    },
+                    {
+                        'subject': "Losts",
+                        'value': user_games.losts,
+                    },
+                    ]
+                return Response(data={"userGames": res_data}, status=status.HTTP_200_OK)
             return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
     else:
        return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -389,6 +390,7 @@ def get_single_matches(request, username, page):
                 "pic1": f"http://localhost:8000/auth{user_match.team1_player1.avatar.url}",
                 "score" : f"{user_match.team1_score} - {user_match.team2_score}",
                 "pic2": f"http://localhost:8000/auth{user_match.team2_player1.avatar.url}",
+                "id": user_match.room_id,
             })
         return Response(data={"userMatches": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
     else:
@@ -422,6 +424,7 @@ def get_multiplayer_matches(request, username, page):
                 "score" : f"{user_match.team1_score} - {user_match.team2_score}",
                 "p2Pic1": f"http://localhost:8000/auth{user_match.team2_player1.avatar.url}",
                 "p2Pic2": f"http://localhost:8000/auth{user_match.team2_player2.avatar.url}",
+                "id": user_match.room_id,
             })
         return Response(data={"userMatches": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
     else:

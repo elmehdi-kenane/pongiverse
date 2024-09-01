@@ -5,6 +5,7 @@ import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 import CircularProgress from '@mui/material/CircularProgress';
 
 import AuthContext from "../../navbar-sidebar/Authcontext";
+import DashboardContext from "../DashboardWrapper";
 import { Link } from "react-router-dom";
 
 const NoResult = () => {
@@ -75,15 +76,17 @@ function DashSingle() {
     )
   }
   const MatchesResults = () => {
-    const showMatchResult = () => {
+    const { setSingleId } = useContext(DashboardContext);
+    const showMatchResult = (matchId) => {
       setIsGameStats(true);
+      setSingleId(matchId)
     }
     
     return (
       <>
         {matches.slice((index - 1) * itemsPerPage, index * itemsPerPage)
           .map((match, key) => (
-            <div key={key} className="single-match__result footer__result" onClick={showMatchResult} id="match-click">
+            <div key={key} className="single-match__result footer__result" onClick={() => showMatchResult(match.id)} id="match-click">
               <img src={match.pic1} alt="Player" />
               <p>{match.score}</p>
               <img src={match.pic2} alt="Player" />

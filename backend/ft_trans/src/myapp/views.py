@@ -26,6 +26,7 @@ from urllib.parse import urlencode
 import json
 import os
 import certifi
+from mainApp.models import UserMatchStatics
 
 
 
@@ -33,7 +34,7 @@ import certifi
 class SignUpView(APIView):
 	parser_classes = (MultiPartParser, FormParser)
 	def post(self, request, *args, **kwargs):
-		print(f"datatata : {request.data}")
+		#print(f"datatata : {request.data}")
 		avatar = request.data.get('avatar')
 		if avatar == 'null' or avatar is None:
 			my_dict = {
@@ -58,10 +59,19 @@ class SignUpView(APIView):
 			response = Response()
 			data = get_tokens_for_user(user)
 			csrf.get_token(request)
+			if user:
+				UserMatchStatics.objects.create(
+					player=user,
+					wins=0,
+					losts=0,
+					level=0,
+					total_xp=0,
+					goals=0
+				)
 			response.data = {"Case": "Sign up successfully", "data": data}
 			return response
 		else:
-			print(f"Serializer errors: {serializer.errors}")  # Add this line to print serializer errors
+			#print(f"Serializer errors: {serializer.errors}")  # Add this line to #print serializer errors
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class WaysSignUpView(APIView) :
@@ -112,7 +122,7 @@ class LoginView(APIView):
 		response = Response()
 		username = data.get('username', None)
 		password = data.get('password', None)
-		print(f"   username : {username}, password : {password}")
+		#print(f"   username : {username}, password : {password}")
 		user = authenticate(username=username, password=password)
 		if user is not None:
 			data = get_tokens_for_user(user)
@@ -258,8 +268,7 @@ class TestView(APIView):
 def SignInGoogleGetUrl(request):
 	response = Response()
 	client_id = os.getenv('GOOGLE_SIGNIN_CLIENT_ID')
-	redirect_uri = os.getenv('REDIRECT_URI')
-	redirect_uri = os.getenv('REDIRECT_URI_SIGN_IN')
+	redirect_uri = 'http://localhost:3000/signin'
 	scope = 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'
 	response_type = 'code'
 	auth_url = 'https://accounts.google.com/o/oauth2/auth'
@@ -270,7 +279,7 @@ def SignInGoogleGetUrl(request):
 		'response_type': response_type,
 	}
 	auth_url_with_params = f'{auth_url}?{urlencode(params)}'
-	print(f"heyy : {auth_url_with_params}")
+	#print(f"heyy : {auth_url_with_params}")
 	response.data = {'code' : auth_url_with_params}
 	return response
 
@@ -278,12 +287,11 @@ def SignInGoogleGetUrl(request):
 def SignInIntraGetUrl(request):
 	response = Response()
 	client_id = os.getenv('INTRA_SIGNIN_CLIENT_ID')
-	redirect_uri = os.getenv('REDIRECT_URI_SIGN_IN')
+	redirect_uri = 'http://localhost:3000/signin'
 	auth_url = 'https://api.intra.42.fr/oauth/authorize'
 	response_type = 'code'
 	auth_url_with_params = f'{auth_url}?client_id={client_id}&redirect_uri={redirect_uri}&response_type={response_type}'
 	response.data = {'code' : auth_url_with_params}
-	print("HEREEEEEEEEE: ",response.data)
 	return response
 
 @api_view(['POST'])
@@ -292,7 +300,7 @@ def SignInGoogleGetUserData(request):
 		code = request.data.get('code')
 		response = Response()
 		client_id = os.getenv('GOOGLE_SIGNIN_CLIENT_ID')
-		redirect_uri = os.getenv('REDIRECT_URI_SIGN_IN')
+		redirect_uri = 'http://localhost:3000/signin'
 		client_secret = os.getenv('GOOGLE_SIGNIN_SECRET_ID')
 		token_url = 'https://oauth2.googleapis.com/token'
 		payload = {
@@ -315,14 +323,14 @@ def SignInGoogleGetUserData(request):
 		user_picture = user_info_data.get('picture')
 		return Response({'email': user_email, 'picture': user_picture})
 	except Exception as e:
-		print(f"Exception: {str(e)}")
+		#print(f"Exception: {str(e)}")
 		return Response({'error': str(e)}, status=500)
 
 @api_view(['GET'])
 def SignUpGoogleGetUrl(request):
 	response = Response()
 	client_id = os.getenv('GOOGLE_SIGNUP_CLIENT_ID')
-	redirect_uri = os.getenv('REDIRECT_URI_SIGN_UP')
+	redirect_uri = 'http://localhost:3000/signup'
 	scope = 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'
 	response_type = 'code'
 	auth_url = 'https://accounts.google.com/o/oauth2/auth'
@@ -333,7 +341,7 @@ def SignUpGoogleGetUrl(request):
 		'response_type': response_type,
 	}
 	auth_url_with_params = f'{auth_url}?{urlencode(params)}'
-	print(f"heyy : {auth_url_with_params}")
+	#print(f"heyy : {auth_url_with_params}")
 	response.data = {'code' : auth_url_with_params}
 	return response
 
@@ -342,7 +350,7 @@ def SignUpGoogleGetUrl(request):
 def SignUpIntraGetUrl(request):
 	response = Response()
 	client_id = os.getenv('INTRA_SIGNUP_CLIENT_ID')
-	redirect_uri = os.getenv('REDIRECT_URI_SIGN_UP')
+	redirect_uri = 'http://localhost:3000/signup'
 	auth_url = 'https://api.intra.42.fr/oauth/authorize'
 	response_type = 'code'
 	auth_url_with_params = f'{auth_url}?client_id={client_id}&redirect_uri={redirect_uri}&response_type={response_type}'
@@ -356,7 +364,7 @@ def SignInIntraGetUserData(request):
 		response = Response()
 		client_id = os.getenv('INTRA_SIGNIN_CLIENT_ID')
 		client_secret = os.getenv('INTRA_SIGNIN_SECRET_ID')
-		redirect_uri = os.getenv('REDIRECT_URI_SIGN_IN')
+		redirect_uri = 'http://localhost:3000/signin'
 		token_url = 'https://api.intra.42.fr/oauth/token'
 		payload = {
 			'grant_type': 'authorization_code',
@@ -379,7 +387,7 @@ def SignInIntraGetUserData(request):
 		user_picture = image.get('link')
 		return Response({'email': user_email, 'picture': user_picture})
 	except Exception as e:
-		print(f"Exception: {str(e)}")
+		#print(f"Exception: {str(e)}")
 		return Response({'error': str(e)}, status=500)
 
 
@@ -389,7 +397,7 @@ def SignUpGoogleGetUserData(request):
 		code = request.data.get('code')
 		response = Response()
 		client_id = os.getenv('GOOGLE_SIGNUP_CLIENT_ID')
-		redirect_uri = os.getenv('REDIRECT_URI_SIGN_UP')
+		redirect_uri = 'http://localhost:3000/signup'
 		client_secret = os.getenv('GOOGLE_SIGNUP_SECRET_ID')
 		token_url = 'https://oauth2.googleapis.com/token'
 		payload = {
@@ -412,7 +420,7 @@ def SignUpGoogleGetUserData(request):
 		user_picture = user_info_data.get('picture')
 		return Response({'email': user_email, 'picture': user_picture})
 	except Exception as e:
-		print(f"Exception: {str(e)}")
+		#print(f"Exception: {str(e)}")
 		return Response({'error': str(e)}, status=500)
 
 @api_view(['POST'])
@@ -422,7 +430,7 @@ def SignUpIntraGetUserData(request):
 		response = Response()
 		client_id = os.getenv('INTRA_SIGNUP_CLIENT_ID')
 		client_secret = os.getenv('INTRA_SIGNUP_SECRET_ID')
-		redirect_uri = os.getenv('REDIRECT_URI_SIGN_UP')
+		redirect_uri = 'http://localhost:3000/signup'
 		token_url = 'https://api.intra.42.fr/oauth/token'
 		payload = {
 			'grant_type': 'authorization_code',
@@ -445,5 +453,5 @@ def SignUpIntraGetUserData(request):
 		user_picture = image.get('link')
 		return Response({'email': user_email, 'picture': user_picture})
 	except Exception as e:
-		print(f"Exception: {str(e)}")
+		#print(f"Exception: {str(e)}")
 		return Response({'error': str(e)}, status=500)

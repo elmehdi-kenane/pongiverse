@@ -87,9 +87,9 @@ def online_friends(request):
 	# #print(f'user is {username}')
 	user = customuser.objects.get(username=username)
 	allFriends = []
-	print(f"is_online {user.is_online}, is_playing {user.is_playing}, username {user.username}")
+	#print(f"is_online {user.is_online}, is_playing {user.is_playing}, username {user.username}")
 	for user_id in Friendship.objects.filter(user=user):
-		print(f"is_online {user_id.friend.is_online}, is_playing {user_id.friend.is_playing}, username {user_id.friend.username}")
+		#print(f"is_online {user_id.friend.is_online}, is_playing {user_id.friend.is_playing}, username {user_id.friend.username}")
 		if user_id.friend.is_online and not user_id.friend.is_playing: ####################  and user_id.friend.is_playing
 			image_path = user_id.friend.avatar.path
 			allFriends.append({'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path})
@@ -370,7 +370,7 @@ def get_customize_game(request):
 def set_is_inside(request):
 	response = Response()
 	is_inside = request.data.get('is_inside')
-	print(f"----- get to is inside {is_inside}---------------")
+	#print(f"----- get to is inside {is_inside}---------------")
 	username = request.data.get('user')
 	user = customuser.objects.filter(username=username).first()
 	for member in TournamentMembers.objects.filter(user=user):
@@ -454,7 +454,7 @@ def get_game_members_round(request):
 
 @api_view(['POST'])
 def get_opponent(request):
-	print("YESHSHSHSH")
+	#print("YESHSHSHSH")
 	response = Response()
 	username = request.data.get('user')
 	user = customuser.objects.filter(username=username).first()

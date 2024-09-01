@@ -14,7 +14,6 @@ django-cors-headers==4.3.1
 djangorestframework==3.15.1
 djangorestframework-simplejwt==5.3.1
 hyperlink==21.0.0
-python-dotenv
 idna==3.6
 incremental==22.10.0
 msgpack==1.0.8
@@ -35,3 +34,4 @@ txaio==23.1.1
 typing-extensions==4.10.0
 zope.interface==6.2
 requests
+python-dotenv

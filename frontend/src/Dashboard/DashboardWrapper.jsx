@@ -11,48 +11,75 @@ export const DashboardWrapper = ({ child }) => {
 
     const { user } = useContext(AuthContext);
 
-    const [userData, setUserData] = useState(null);
-    const [userWins, setUserWins] = useState(0);
-    const [userLost, setUserLost] = useState(0);
-    const [userGoals, setUserGoals] = useState(0);
-    const [userLevel, setUserLevel] = useState(0);
+    const [userGames, setUserGames] = useState({});
+    const [wins, setWins] = useState(0);
+    const [losts, setLosts] = useState(0);
+    const [games, setGames] = useState(0);
+    const [winPcnt, setWinPcnt] = useState(50);
+    const [lostPcnt, setLostPcnt] = useState(50);
+    const [singleId, setSingleId] = useState(null);
+    const [multyId, setMultyId] = useState(null);
 
-
+    // Dashboard Head ------------------------
     useEffect(()=>{
-        if (userData){
-            setUserWins(userData.wins)
-            setUserLost(userData.lost)
-            setUserGoals(userData.goals)
-            setUserLevel(userData.level)
+        if (userGames){
+          const userWins = userGames.wins
+          const userLosts = userGames.losts
+          const userGame = userWins + userLosts
+          const winPct = ((userWins * 100)/userGame).toFixed(0)
+          setWins(userWins)
+          setLosts(userLosts)
+          setGames(userWins + userLosts)
+          if (userGame){
+            setWinPcnt(winPct)
+            setLostPcnt(100 - winPct)
+          }
         }
-    },[userData])
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch(`http://localhost:8000/profile/getUserData/${user}`, {
-                    method: "GET",
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                });
-                const res = await response.json()
-                if (response.ok) {
-                    console.log("userData :", res.userData)
-                    setUserData(res.userData);
-                }
-                else 
-                    console.log(res.error);
-            } catch (error) {
-                console.log("Error: ", error);
-            }
+      },[userGames])
+    
+      useEffect(()=>{
+        const fetchUserGames = async () => {
+          try {
+            const response = await fetch(
+              `http://localhost:8000/profile/getUserGames/${user}`,
+              {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+            const res = await response.json();
+            if (response.ok)
+              setUserGames(res.userGames);
+            else
+              console.log("Error :", res.error);
+          } catch (error) {
+            console.log("Error: ", error);
+          }
         }
         if (user)
-            fetchData()
-    }, [user])
+          fetchUserGames()
+      },[user])
+    
 
     let userInfoData = {
-        
+        userGames:userGames,
+        setUserGames:setUserGames,
+        wins:wins,
+        setWins:setWins,
+        losts:losts,
+        setLosts:setLosts,
+        games:games,
+        setGames:setGames,
+        winPcnt:winPcnt,
+        setWinPcnt:setWinPcnt,
+        lostPcnt:lostPcnt,
+        setLostPcnt:setLostPcnt,
+        singleId:singleId, 
+        setSingleId:setSingleId,
+        multyId:multyId, 
+        setMultyId:setMultyId,
     };
     return (
         <DashboardContext.Provider value={userInfoData}> {child} </DashboardContext.Provider>

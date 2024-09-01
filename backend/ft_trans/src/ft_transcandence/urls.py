@@ -25,7 +25,6 @@ urlpatterns = [
     # path('users/', include('Profile.urls')),
     path('profile/', include('Profile.urls')),
     path('friends/',include('friends.urls')),
-    path('navBar/',include('navBar.urls')),
     # path('users/', include('Profile.urls')),
     # path('profile/', include('Profile.urls')),
     # path('admin/', admin.site.urls),

@@ -8,7 +8,7 @@ from friends.models import Friendship
 from myapp.models import customuser
 from asgiref.sync import sync_to_async
 from .gameMultiplayerConsumers import waited_game
-from .models import Match, ActiveMatch, PlayerState, NotifPlayer, GameNotifications, MatchStatistics
+from .models import Match, ActiveMatch, PlayerState, NotifPlayer, GameNotifications, MatchStatistics, UserMatchStatics
 from Notifications.consumers import notifs_user_channels
 
 async def isPlayerInAnyRoom(self, data, rooms, user_channels):
@@ -27,9 +27,9 @@ async def isPlayerInAnyRoom(self, data, rooms, user_channels):
             (value['players'][3].get('user') == message['user'] and value['players'][3]['inside'] == True))))
         )
     }
-    print("====================================")
-    print(userRoom)
-    print("====================================")
+    #print("====================================")
+    #print(userRoom)
+    #print("====================================")
     if userRoom:
         value = list(userRoom.values())[0]
         await self.channel_layer.group_add(str(value['id']), self.channel_name)
@@ -1739,12 +1739,12 @@ async def invite_friend(self, data, rooms, user_channels):
                 )
                 # #print("ENTER 12")
                 # if receiver and receiver.is_online and not receiver.is_playing:
-                # print("ENTER 11")
+                # #print("ENTER 11")
                 # friend_channel = user_channels.get(data['message']['target'])
                 friend_channel_list = notifs_user_channels.get(data['message']['target'])
                 # if friend_channel:
-                if friend_channel:
-                    # print("ENTER 10")
+                if friend_channel_list:
+                    # #print("ENTER 10")
                     # with user1.avatar.open('rb') as f:
                     #     image_data = base64.b64encode(f.read()).decode('utf-8')
                     for friend_channel in friend_channel_list:
@@ -1794,7 +1794,7 @@ async def invite_friend(self, data, rooms, user_channels):
     for friend in friends:
         friend_name = await sync_to_async(lambda: friend.friend.username)()
         friend_channel_list = notifs_user_channels.get(friend_name)
-        # print(friend_channel)
+        # #print(friend_channel)
         if friend_channel_list:
             for friend_channel in friend_channel_list:
                 await self.channel_layer.send(friend_channel, {
@@ -1819,10 +1819,10 @@ async def invite_friend(self, data, rooms, user_channels):
         )
         # #print("ENTER 5")
         # if receiver and receiver.is_online and not receiver.is_playing:
-        # print("ENTER 6")
+        # #print("ENTER 6")
         friend_channel_list = notifs_user_channels.get(data['message']['target'])
         if friend_channel_list:
-            # print("ENTER 7")
+            # #print("ENTER 7")
             # with user1.avatar.open('rb') as f:
             #     image_data = base64.b64encode(f.read()).decode('utf-8')
             for friend_channel in friend_channel_list:
@@ -1844,11 +1844,11 @@ async def invite_friend(self, data, rooms, user_channels):
 
 # async def accept_game_invite(self, data, rooms, user_channels):
 #     # active_matches = await sync_to_async(list)(ActiveMatch.objects.all())
-#     # print(f"ACCEPTING A MATCH FRIEND")
+#     # #print(f"ACCEPTING A MATCH FRIEND")
 #     # for active_match in active_matches:
 #     #     player_state = await sync_to_async(PlayerState.objects.filter(active_match=active_match).first)()
 #     #     player_username = await sync_to_async(lambda: player_state.player.username)()
-#     #     print(f"ROOM RUNNING NOW")
+#     #     #print(f"ROOM RUNNING NOW")
 #     #     if player_username == data['message']['user']:
 #     #         await self.send(text_data=json.dumps({
 #     #             'type': 'alreadyPlaying',
@@ -1874,17 +1874,17 @@ async def invite_friend(self, data, rooms, user_channels):
 #                 'message': 'alreadyPlaying'
 #             }))
 #             return
-#     # print("ACCEPT 1")
+#     # #print("ACCEPT 1")
 #     creator = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
 #     friend = await sync_to_async(customuser.objects.filter(username=data['message']['target']).first)()
 #     active_match = await sync_to_async(ActiveMatch.objects.filter(room_id=data['message']['roomID']).first)()
-#     # print(f'DATA INFORMATIONS ARE : {data['message']}')
+#     # #print(f'DATA INFORMATIONS ARE : {data['message']}')
 #     if active_match:
-#         # print("ACCEPT 2")
+#         # #print("ACCEPT 2")
 #         is_invited = await sync_to_async(NotifPlayer.objects.filter(active_match=active_match, player=friend).first)()
 #         # friend_match = await sync_to_async(FriendMatch.objects.filter(creator=creator).first)()
 #         if is_invited:
-#             # print("ACCEPT 3")
+#             # #print("ACCEPT 3")
 #             room = {
 #                 'id': active_match.room_id,
 #                 'players': [{

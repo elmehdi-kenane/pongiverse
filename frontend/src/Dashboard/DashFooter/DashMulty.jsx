@@ -6,6 +6,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import AuthContext from "../../navbar-sidebar/Authcontext";
 import { Link } from "react-router-dom";
+import DashboardContext from "../DashboardWrapper";
 
 const NoResult = () => {
   return (
@@ -20,7 +21,7 @@ const NoResult = () => {
 }
 
 function DashMulty() {
-    const { user } = useContext(AuthContext);
+  const { user, setIsGameStats} = useContext(AuthContext);
     const [page, setPage] = useState(1);
     const [index, setIndex] = useState(1);
     const [loading, setLoading] = useState(false);
@@ -75,11 +76,16 @@ function DashMulty() {
       )
     }
     const MatchesResults = () => {
+      const { setMultyId } = useContext(DashboardContext);
+      const showMatchResult = (matchId) => {
+        setIsGameStats(true);
+        setMultyId(matchId)
+      }
       return (
         <>
             {matches.slice((index - 1) * itemsPerPage, index * itemsPerPage)
               .map((match, key) => (
-                  <div key={key} className="multiplayer-match__result footer__result" id="match-click">
+                  <div key={key} className="multiplayer-match__result footer__result" id="match-click" onClick={() => showMatchResult(match.id)}>
                       <div className="multiplayer-pics">
                           <img src={match.p1Pic1} alt="Player" />
                           <img src={match.p1Pic2} alt="Player" />

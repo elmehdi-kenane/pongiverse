@@ -92,7 +92,6 @@ class TournamentInvitation(models.Model):
 	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='Invitation_tournament')
 	sender = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='sender')
 	receiver = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='receiver')
-   
 
 class GameCustomisation(models.Model):
     user = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='customize_board')

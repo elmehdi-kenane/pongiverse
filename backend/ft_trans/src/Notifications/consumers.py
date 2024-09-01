@@ -31,7 +31,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_add(self.group_name, self.channel_name)
             # channel_layer = get_channel_layer()
             friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
-            # print(f"ALL THE USERS CHANNEL_NAMES : {notifs_user_channels}")
+            # #print(f"ALL THE USERS CHANNEL_NAMES : {notifs_user_channels}")
             for friend in friends:
                 friend_username = await sync_to_async(lambda: friend.friend.username)()
                 friend_is_online = await sync_to_async(lambda: friend.friend.is_online)()
@@ -39,11 +39,11 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
                 if channel_name_list:
                     for channel_name in channel_name_list:
                     # channel_name = notifs_user_channels.get(friend_username)
-                        # print(f"USER CHANNEL ON CONNECT IS : {channel_name}")
+                        # #print(f"USER CHANNEL ON CONNECT IS : {channel_name}")
                         if channel_name and friend_is_online and not user.is_playing:
-                            # print("========++++++++=======")
-                            # print(channel_name)
-                            # print("========++++++++=======")
+                            # #print("========++++++++=======")
+                            # #print(channel_name)
+                            # #print("========++++++++=======")
                             await self.channel_layer.send(
                                 channel_name,
                                 {
