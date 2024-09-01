@@ -13,7 +13,7 @@
 	overflow-y: auto;
 }
 
-.title-and-destroy{
+.title-and-destroy {
 	display: flex;
 	justify-content: space-between;
 	margin-right: 8%;
@@ -26,7 +26,7 @@
 	font-weight: bold;
 }
 
-.destroy-button{
+.destroy-button {
 	border: none;
 	background-color: #913dce;
 	height: 40px;
@@ -70,7 +70,26 @@
 	color: white;
 }
 
-.tournament-id-value,
+.tournament-id-value-and-icon {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 5px;
+}
+.tournament-id-value-and-icon svg{
+	color: white;
+	height: 14px;
+	width: 14px;
+	cursor: pointer;
+}
+
+.tournament-id-value {
+	color: white;
+	font-size: 90%;
+	cursor: pointer;
+}
+
+
 .players-number-value {
 	color: white;
 	font-size: 90%;
@@ -106,7 +125,7 @@
 	opacity: 50%;
 }
 
-.down-button{
+.down-button {
 	background-color: #913dce;
 	border-radius: 7px;
 	color: white;
@@ -144,8 +163,7 @@
 	column-gap: 20px;
 }
 
-.disconnected-div
-{
+.disconnected-div {
 	position: absolute;
 	display: flex;
 	flex-direction: column;
@@ -158,13 +176,13 @@
 	justify-content: center;
 }
 
-.disconnected-div p{
+.disconnected-div p {
 	font-size: 20px;
 	font-weight: bold;
 	color: rgb(204, 63, 63);
 }
 
-.disconnected-button{
+.disconnected-button {
 	background-color: rgb(204, 63, 63);
 	border-radius: 7px;
 	color: white;
@@ -225,6 +243,24 @@
 	font-size: 20px;
 }
 
+.error-container {
+	margin-top: 10%;
+}
+
+.title-swal {
+	color: #B00020;
+	font-size: 20px;
+}
+
+.error-container {
+	margin-top: 10%;
+}
+
+.title-swal {
+	color: #B00020;
+	font-size: 20px;
+}
+
 .friend-data {
 	display: flex;
 	justify-content: flex-start;
@@ -280,8 +316,7 @@
 	color: white;
 }
 
-.down-buttons
-{
+.down-buttons {
 	display: flex;
 	margin-top: 3%;
 	margin-left: 8%;
@@ -319,7 +354,7 @@
 	opacity: 50%;
 }
 
-.notifications{
+.notifications {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
@@ -328,16 +363,18 @@
 
 @keyframes fadeInRight {
 	from {
-	  opacity: 0;
-	  transform: translateX(10px); /* Move from right to left */
+		opacity: 0;
+		transform: translateX(10px);
+		/* Move from right to left */
 	}
-	to {
-	  opacity: 1;
-	  transform: translateX(0);
-	}
-  }
 
-.notif{
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+.notif {
 	margin-right: 5px;
 	background-color: rgba(255, 255, 255, 0.7);
 	display: flex;
@@ -353,18 +390,19 @@
 	animation: fadeInRight 0.5s ease-in-out forwards;
 }
 
-.invite-notif-text{
+.invite-notif-text {
 	margin-top: 5px;
 	text-align: center;
 	font-size: 15px;
 }
 
-.invite-notif-buttons{
+.invite-notif-buttons {
 	display: flex;
 	gap: 10px;
 	justify-content: center;
 }
-.invite-notif-button-accept{
+
+.invite-notif-button-accept {
 	background-color: #00ff43;
 	width: 70px;
 	height: 30px;
@@ -373,14 +411,15 @@
 	font-weight: bold;
 	font-size: 15px;
 }
-.invite-notif-button-deny{
+
+.invite-notif-button-deny {
 	background-color: #ff2222;
 	width: 70px;
 	height: 30px;
 	font-weight: bold;
 	border-radius: 7px;
 	border: none;
-font-size: 15px;
+	font-size: 15px;
 }
 
 @media (min-width: 1440px) {
@@ -429,9 +468,10 @@ font-size: 15px;
 		column-gap: 20px;
 	}
 
-	.tournament-title{
+	.tournament-title {
 		font-size: 27px;
 	}
+
 	.Invite-friend-popup-up {
 		display: flex;
 		flex-direction: column;
@@ -492,7 +532,7 @@ font-size: 15px;
 		font-size: 20px;
 	}
 
-	.down-button{
+	.down-button {
 		display: none;
 		background-color: #913dce;
 		border-radius: 7px;
@@ -511,7 +551,8 @@ font-size: 15px;
 	.player {
 		width: 300px;
 	}
-	.tournament-title{
+
+	.tournament-title {
 		font-size: 25px;
 	}
 }
@@ -535,11 +576,12 @@ font-size: 15px;
 	.buttons {
 		margin-top: 20%;
 	}
-	.tournament-title{
+
+	.tournament-title {
 		font-size: 22px;
 	}
 
-	.destroy-button{
+	.destroy-button {
 		height: 30px;
 		width: 100px;
 	}
@@ -638,7 +680,7 @@ font-size: 15px;
 		font-size: 13px;
 	}
 
-	.up-button-disabled{
+	.up-button-disabled {
 		background-color: #913dce;
 		border-radius: 7px;
 		color: white;
@@ -649,7 +691,7 @@ font-size: 15px;
 		font-size: 13px;
 	}
 
-	.destroy-button{
+	.destroy-button {
 		background-color: #913dce;
 		border-radius: 7px;
 		color: white;
@@ -666,6 +708,7 @@ font-size: 15px;
 	.tournament-page-content {
 		margin-top: 10px;
 	}
+
 
 	.tournament-infos {
 		margin-top: 10px;
@@ -688,6 +731,16 @@ font-size: 15px;
 		gap: 5px;
 		height: 800px;
 	}
+	.tournament-title {
+		margin-top: 5%;
+		font-size: 13px;
+	}
+
+	.tournament-title {
+		margin-top: 5%;
+		font-size: 13px;
+	}
+
 	.tournament-title {
 		margin-top: 5%;
 		font-size: 13px;
@@ -726,7 +779,7 @@ font-size: 15px;
 		column-gap: 10px;
 	}
 
-	.avatar{
+	.avatar {
 		height: 60px;
 		width: 60px;
 	}
@@ -741,6 +794,7 @@ font-size: 15px;
 		padding: 0 5px;
 		font-size: 10px;
 	}
+
 	.up-button-disabled {
 		background-color: #913dce;
 		border-radius: 7px;
@@ -750,8 +804,19 @@ font-size: 15px;
 		width: 85px;
 		padding: 0 5px;
 		font-size: 10px;
+
 	}
-	.destroy-button{
+	.tournament-id-value-and-icon svg{
+		color: white;
+		height: 12px;
+		width: 12px;
+	}
+
+	.tournament-id-value{
+		font-size: 10px;
+	}
+
+	.destroy-button {
 		background-color: #913dce;
 		border-radius: 7px;
 		color: white;

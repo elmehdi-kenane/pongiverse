@@ -59,9 +59,7 @@ function IsFriends(){
     if (isLoading === true) {
       return (
         <div className="userinfo__loading no-select info-position" >
-            <div className='loading-friend'>
-                <Loading />
-            </div>
+          <Loading />
         </div>
       )
     }

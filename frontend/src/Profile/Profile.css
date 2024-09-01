@@ -79,6 +79,7 @@ h1, h3, p{
 }
 .userinfo__pic img {
     height: 160px;
+    width: 160px;
     border-radius: 50%;
     border: #826aed solid 2px;
 }
@@ -147,6 +148,11 @@ h1, h3, p{
 
 .userinfo__bio {
     max-width: 500px;
+    font-size: 18px;
+    font-weight: 500;
+    padding: 0 5px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
 }
 
 /*-- IsFriends - Edit --*/
@@ -380,6 +386,7 @@ h1, h3, p{
     height: 20px;
     width: 200px;
     border: none;
+    gap: 3px;
     /* border: #826aed solid .5px; */
 }
 .slt__options .option p{
@@ -470,7 +477,7 @@ h1, h3, p{
 .report__footer .report-submit .submit__cancel:hover {
     border: none;
     background-color: #52127f;
-    transition: ease-in  0.3s;
+    transition: ease-in  0.2s;
 }
 .report__footer .report-submit .submit__report {
     background-color: #826aed;
@@ -568,10 +575,6 @@ h1, h3, p{
     transition: ease-in  0.3s;
 }
 
-
-
-
-
 /* ------------------- User Level ------------------- */
 
 .profile-userlevel {
@@ -588,17 +591,18 @@ h1, h3, p{
     height: 100%;
     background: #826aed;
     border-radius: 10px;
-    animation: level-moving 2s ease-in;
+    transition: width 1s ease-in-out;
+    /* animation: level-moving 2s ease-in; */
 }
 
-@keyframes level-moving {
+/* @keyframes level-moving {
     0% {
         width: 0%;
     }
     100% {
         width: 60%;
     }
-}
+} */
 
 .profile-userlevel p {
     text-align: center;
@@ -674,7 +678,7 @@ h1, h3, p{
 
 /* ---- Friends - Achievement ---- */
 
-.profile-userstats .userstate__friends-achievements {
+.profile-userstats .userstate__friends-diagrame {
     /* border: cyan solid 1px; */
     display: flex;
     width: 100%;
@@ -682,8 +686,8 @@ h1, h3, p{
     gap: 25px;
 }
 
-.profile-userstats .userstate__friends-achievements .userstate__friends,
-.profile-userstats .userstate__friends-achievements .userstate__achievements {
+.profile-userstats .userstate__friends-diagrame .userstate__friends,
+.profile-userstats .userstate__friends-diagrame .userstate__diagrame {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -738,10 +742,12 @@ h1, h3, p{
     height: 100%;
     width: 100%;
     text-decoration: none;
-    /* border: #826aed solid */
+    /* border: #826aed solid 1px; */
 }
 .classment__friend .friend__pic-name img {
     height: 35px;
+    width: 35px;
+    border-radius: 50%;
 }
 .classment__friend .friend__pic-name p {
     color: white;
@@ -769,52 +775,39 @@ h1, h3, p{
     color: white;
 }
 
+/* Pagination */
+
+.expand-profile {
+    display: flex;
+    align-items: center;
+}
+.expand-profile svg{
+    height: 28px;
+    width: 28px;
+}
+.expand-more-profile {
+    color: white;
+}
+.expand-less-profile {
+    color: #250939;
+}
+
+.expand-more-profile:hover,
+.expand-less-profile:hover {
+    color: #775C9E;
+    cursor: pointer;
+}
+
+
 /* ------------ Achievments ------------*/
 
-.userstate__achievements .achievements__container {
+.userstate__diagrame .diagrame__container {
     height: 100%;
     width: 100%;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 20px;
-    padding: 0 10px;
-    /* border: purple 1px solid; */
-}
-
-.achievements__container .achivement {
-    display: flex;
-    height: 85px;
     align-items: center;
-    padding: 0 3px;
-    gap: 5px;
-
-    background: rgba( 255, 255, 255, 0.05 );
-    border-radius: 10px;
-    border: 1px solid rgba( 255, 255, 255, 0.18 );
-    box-shadow: 0 2px 30px 0 #250939;
-    backdrop-filter: blur( 4px );
-    -webkit-backdrop-filter: blur( 4px );
-}
-.achievements__container .achivement:hover {
-    transition: ease-in 0.09s;
-    height: 86px;
-    box-shadow: 0px 0px 10px 0 #826aed ;
-}
-.achievements__container .achivement img {
-    height: 80px;
-}
-
-.achievements__container .achivement .achivement__title-desc {
-    width: 100%;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-.achievements__container .achivement .achivement__title-desc p {
-    color: rgb(163, 163, 163);
-    cursor: default;
+    padding-top: 15px;
+    /* border: purple 1px solid; */
 }
 
 /*   -------------------   */
@@ -829,6 +822,7 @@ h1, h3, p{
 @media (max-width: 768px) {
     .userinfo__pic img {
         height: 140px;
+        width: 140px;
     }
     .userinfo__name-bio .userinfo__bio{
         font-size: 13px;
@@ -857,17 +851,6 @@ h1, h3, p{
         height: 25px;
         width: 25px;
     }
-
-    .achievements__container .achivement img {
-        height: 70px;
-    }
-    .achivement .achivement__title-desc h3 {
-        font-size: 15px;
-    }
-    .achivement .achivement__title-desc p {
-        font-size: 13px;
-    }
-
 }
 
 @media (max-width: 650px) {
@@ -893,9 +876,6 @@ h1, h3, p{
     .chat__button {
         padding: 4px 8px;
         
-    }
-    .chat__button p {
-        display: none;
     }
 
     /* Report */
@@ -971,43 +951,9 @@ h1, h3, p{
         height: 35px;
         font-size: 12px;
     }
-}
-
-
-@media (max-width: 550px) {
-
-    .profile-page {
-        padding: 50px 15px 0;
-    }
-    /* Player Banner */
-    .profile-userinfo {
-        padding: 0 10px;
-        height: 300px;
-        flex-direction: column;
-        gap: 0px;
-    }
-    .userinfo__pic {
-        height: 170px;
-    }
-    .userinfo__pic img {
-        height: 125px;
-    }
-    .userinfo__pic .is-online {
-        height: 18px;
-        width: 18px;
-        right: 14px;
-    }
-    .userinfo__name-bio .userinfo__name-avatar {
-        justify-content: center;
-        margin-top: -5px;
-    }
-    .userinfo__name-bio {
-        gap: 10px;
-    }
-
 
     /* Statistics */
-    .profile-userstats .userstate__friends-achievements {
+    .profile-userstats .userstate__friends-diagrame {
         /* border: cyan solid 1px; */
         display: flex;
         flex-direction: column;
@@ -1015,8 +961,8 @@ h1, h3, p{
         height: auto;
         gap: 25px;
     }
-    .profile-userstats .userstate__friends-achievements .userstate__friends,
-    .profile-userstats .userstate__friends-achievements .userstate__achievements {
+    .profile-userstats .userstate__friends-diagrame .userstate__friends,
+    .profile-userstats .userstate__friends-diagrame .userstate__diagrame {
         width: 100%;
         height: 405px;
     }
@@ -1039,33 +985,61 @@ h1, h3, p{
         letter-spacing: 0.5px;
         font-size: 14px;
     }
-    /* Achievements */
-    .achievements__container .achivement img {
-        height: 50px;
+}
+
+
+@media (max-width: 600px) {
+
+    .profile-page {
+        padding: 50px 15px 0;
     }
-    .achivement .achivement__title-desc h3 {
-        font-size: 14px;
+    /* Player Banner */
+    .profile-userinfo {
+        padding: 0 10px;
+        height: 300px;
+        flex-direction: column;
+        gap: 0px;
     }
-    .achivement .achivement__title-desc p {
-        font-size: 11px;
+    .userinfo__pic {
+        height: 170px;
+        width: 170px;
     }
+    .userinfo__pic img {
+        height: 125px;
+        width: 125px;
+    }
+    .userinfo__pic .is-online {
+        height: 18px;
+        width: 18px;
+        right: 30px;
+    }
+    .userinfo__name-bio .userinfo__name-avatar {
+        justify-content: center;
+        margin-top: -5px;
+    }
+    .userinfo__name-bio {
+        gap: 10px;
+    }
+
 }
 
 @media (max-width: 400px) {
     .profile-userinfo {
-        height: 218px;
+        /* height: 218px; */
     }
     .userinfo__pic {
-        height: 150px;
+        height: 140px;
+        width: 140px;
     }
     .userinfo__pic img {
         height: 110px;
+        width: 110px;
     }
     .userinfo__pic .is-online {
         height: 15px;
         width: 15px;
-        right: 10px;
-        bottom: 35px;
+        right: 20px;
+        bottom: 30px;
         font-size: 14px;
     }
     .userinfo__name-bio{
@@ -1081,6 +1055,9 @@ h1, h3, p{
         height: 30px;
     }
     .userinfo__name-bio .userinfo__bio {
+        display: none;
+    }
+    .chat__button p {
         display: none;
     }
 }

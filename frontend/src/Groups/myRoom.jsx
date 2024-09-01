@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import * as ChatIcons from "../assets/chat/media";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import ChatContext from "./ChatContext";
@@ -7,6 +7,7 @@ import ChatRoomInvitee from "./chatRoomInvitee";
 import { useNavigate } from "react-router-dom";
 import { leaveRoomSubmitHandler } from "./roomHandler";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import toast from "react-hot-toast";
 
 const MyRoom = (props) => {
   const { chatSocket, user } = useContext(AuthContext);
@@ -29,21 +30,39 @@ const MyRoom = (props) => {
     setShowSettings(true);
   };
 
-  const changeRoomNameSubmitHandler = () => {
-    if (chatSocket) {
-      chatSocket.send(
-        JSON.stringify({
-          type: "changeRoomName",
-          message: {
-            room: props.name,
-            newName: newRoomName,
-          },
-        })
-      );
-      setChangeRoomName(false);
-      setShowSettings(false);
-    }
+  const chatRoomNameChangedUpdater = (data) => {
+    const allMyChatRooms = chatRoomConversationsRef.current;
+    const updatedRooms = allMyChatRooms.map((room) => {
+      if (room.id === data.id) {
+        return { ...room, name: data.newName };
+      }
+      return room;
+    });
+    console.log("update rooms: ", updatedRooms);
+    setChatRoomConversations(updatedRooms);
   };
+
+  const changeRoomNameSubmitHandler = () => {
+    const updateChatRoomName = async () => {
+      try {
+
+        const response = await fetch(`http://localhost:8000/chatAPI/chatRoomUpdateName/${props.roomId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name: newRoomName }),
+        })
+        const data = await response.json()
+        chatRoomNameChangedUpdater(data.data)
+        console.log(data)
+      } catch (error) {
+        toast(error)
+      }
+    }
+    updateChatRoomName()
+  };
+
   const onChangeChangeRoomAvatar = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -161,10 +180,39 @@ const MyRoom = (props) => {
     navigate(`/mainpage/chat`);
   };
 
+  const fileInputRef = useRef(null);
+
+  const handleContainerClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const onChangeIcon = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const imageUrl = e.target.result;
+        const placeHolder = document.getElementsByClassName(
+          "my-room-cover-wrapper"
+        )[0];
+        if(placeHolder)
+          placeHolder.style.backgroundImage = `url(${imageUrl})`;
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="my-room-container">
       <div className="my-room-header">
-        <CameraAltIcon className="my-room-cover-edit-icon" />
+        <div className="my-room-cover-edit-wrapper" onClick={handleContainerClick}>
+          <CameraAltIcon className="my-room-cover-edit-icon" />
+          <input type="file" 
+                  ref={fileInputRef}
+                  style={{ display: "none" }}
+              onChange={onChangeIcon}
+              />
+        </div>
         <div className="my-room-cover-wrapper"></div>
         <div className="my-room-info">
           <img

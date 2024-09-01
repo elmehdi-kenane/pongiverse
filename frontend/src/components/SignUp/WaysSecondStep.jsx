@@ -4,11 +4,12 @@ import Header from "./Header";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
+import logo from '../../assets/SignUp/logo.svg'
 import { useNavigate } from "react-router-dom";
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 const client = axios.create({
-	baseURL: "http://localhost:8000",
+	baseURL: `http://${import.meta.env.VITE_IPADDRESS}:8000`,
 });
 
 function WaysSecondStep() {
@@ -24,7 +25,7 @@ function WaysSecondStep() {
 	const [errors, setErrors] = useState({});
 	const location = useLocation();
 	const data = location.state || {};
-	if (!data.email || !data.avatar){
+	if (!data.email || !data.avatar) {
 		navigate("/signup");
 	}
 	const handleInputChange = (e) => {
@@ -63,10 +64,16 @@ function WaysSecondStep() {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		const validationErrors = {};
+		const regex = /^(?!\d)[a-zA-Z0-9_]{4,8}$/;
+		const containsSingleUnderscore = (nextdata.username.match(/_/g) || []).length <= 1;
 		if (!nextdata.username.trim()) {
-			validationErrors.username = "username is required";
-		} else if (nextdata.username.length > 10){
-			validationErrors.username = "username is too long";
+			validationErrors.username = "username is required"
+		} else if (!regex.test(nextdata.username) || !containsSingleUnderscore || exist) {
+			if (!regex.test(nextdata.username) || !containsSingleUnderscore)
+				validationErrors.username = "Invalid Username"
+			else
+				validationErrors.username = "Username Already Used"
+
 		}
 		if (!nextdata.password.trim()) {
 			validationErrors.password = "password is required";
@@ -106,10 +113,11 @@ function WaysSecondStep() {
 	return (
 		<div className={styles["body_page"]}>
 			<div className={styles["mainPage"]}>
-				<Header />
+				<div className={styles['ways-second-step-navbar']}>
+					<img src={logo} alt="" />
+				</div>
 				<div className={styles["bodyPage"]}>
 					<div className={styles["signUpContainer"]}>
-						<h1 className={styles["title"]}>Next Step</h1>
 						<form
 							className={styles["signUpForm"]}
 							onSubmit={handleSubmit}
@@ -124,7 +132,6 @@ function WaysSecondStep() {
 								placeholder="enter a username"
 							/>
 							{errors.username && <span>{errors.username}</span>}
-							{exist && <span>Username already used</span>}
 							<input
 								className={styles["inputs"]}
 								type="password"
@@ -143,11 +150,9 @@ function WaysSecondStep() {
 							/>
 							{errors.confirmPassword && <span>{errors.confirmPassword}</span>}
 							{
-								exist ? <button type="submit" className={styles["submitButton"]} disabled>
-								Sign Up
-							</button> : <button type="submit" className={styles["submitButton"]}>
-								Sign Up
-							</button>
+								<button type="submit" className={styles["submitButton"]}>
+									Sign Up
+								</button>
 							}
 						</form>
 					</div>

@@ -63,7 +63,7 @@ const SendMessage = (props) => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      console.log('File selected:', file);
+      console.log("File selected:", file);
       // Handle the file upload logic here
     }
   };
@@ -84,11 +84,11 @@ const SendMessage = (props) => {
         className="conversation-file-upload"
         onClick={handleFileUploadClick}
       />
-       <input
+      <input
         type="file"
         ref={fileInputRef}
         className="file-input-hidden"
-        style={{ display: 'none' }}
+        style={{ display: "none" }}
         onChange={handleFileChange}
       />
       <div

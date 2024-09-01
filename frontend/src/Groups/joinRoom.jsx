@@ -1,20 +1,17 @@
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import {useClickOutSide} from "../Chat/chatConversation"
-import { Switch } from 'antd';
-// import 'antd/dist/reset.css'
-
 
 const JoinRoom = (props) => {
   const [isProtected, setIsProtected] = useState(false)
   const [roomName, setRoomName] = useState('')
   const [roomPassword, setRoomPassword] = useState('')
-  const {chatSocket, user} = useContext(AuthContext)
+  const {socket, user} = useContext(AuthContext)
 
   const joinRoomSubmitHandler = (e) => {
     e.preventDefault()
 
-    chatSocket.send(JSON.stringify({
+    socket.send(JSON.stringify({
       type : 'joinChatRoom',
       user: user,
       name : roomName,
@@ -24,11 +21,6 @@ const JoinRoom = (props) => {
   }
 
   let nodeDom = useClickOutSide(props.onClose)
-
-  const handleSwitchChange = (checked) => {
-    setIsProtected(!checked);
-  };
-
   return (
     <div className="join-room-container" ref={nodeDom}>
       <div className="join-room-header">Join a Room</div>
@@ -37,19 +29,26 @@ const JoinRoom = (props) => {
           Please Select Room Visibility:{" "}
         </div>
         <div className="join-room-visibility-labels">
-        <Switch defaultChecked={true} checkedChildren="Public" unCheckedChildren="Protected" onChange={handleSwitchChange} className="custom-switch" />
+          <label className="join-room-visibility-check">
+            Public
+            <input type="radio" checked={!isProtected} name="radio" onChange={() => setIsProtected(false)}/>
+          </label>
+          <label className="join-room-visibility-check">
+          </label>
+            Protected
+            <input type="radio" checked={isProtected} name="radio" onChange={() => setIsProtected(true)}/>
         </div>
       </div>
-      <form action="" onSubmit={joinRoomSubmitHandler} className="join-room-form" autocomplete="off">
+      <form action="" onSubmit={joinRoomSubmitHandler} className="join-room-form">
         <input type="text" placeholder="Room name"  value={roomName} onChange={(e)=> setRoomName(e.target.value)} />
-        {isProtected ? <input type="password" placeholder="Password" value={roomPassword} onChange={(e)=> setRoomPassword(e.target.value)}  /> : ""}
-      </form>
+        {isProtected ? <input type="text" placeholder="Password" value={roomPassword} onChange={(e)=> setRoomPassword(e.target.value)}  /> : ""}
       <div className="join-room-buttons">
         <button className="join-room-cancel" type="button" onClick={props.onClose}>
-          Cancel
+          CANCEL
         </button>
-        <button className="join-room-submit" type="submit" onClick={joinRoomSubmitHandler} >Join</button>
+        <button className="join-room-submit" type="submit" onClick={joinRoomSubmitHandler} >JOIN</button>
       </div>
+      </form>
     </div>
   );
 };

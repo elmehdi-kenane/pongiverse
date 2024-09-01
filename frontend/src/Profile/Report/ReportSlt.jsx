@@ -8,7 +8,8 @@ function ReportSlt(props) {
           {props.report.map((abuse, key) => {
             return (
               <label className='option' key={key}>
-                <input type="radio" value={abuse.value} name="report" className='report__input'/> <p>{abuse.desc}</p>
+                <input type="radio" value={abuse.value} name="report" className='report__input'/>
+                <p>{abuse.desc}</p>
               </label>
             )
           })}

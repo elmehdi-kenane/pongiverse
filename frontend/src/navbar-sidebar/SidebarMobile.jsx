@@ -1,58 +1,55 @@
 import { Link } from "react-router-dom";
 
 function SidebarMobile({ sidebarIsOpen, Icons }) {
+    const sideBarItems = [
+        {
+            id: 1,
+            icon: Icons.dashboard,
+            route: "dashboard",
+            text: "Dashboard",
+        },
+        {
+            id: 2,
+            icon: Icons.friends,
+            route: "friends",
+            text: "Friends",
+        },
+        {
+            id: 3,
+            icon: Icons.chat,
+            route: "chat",
+            text: "Chat",
+        },
+        {
+            id: 4,
+            icon: Icons.console,
+            route: "game",
+            text: "Game",
+        },
+        {
+            id: 5,
+            icon: Icons.channels,
+            route: "channels",
+            text: "Channels",
+        }
+    ]
     return (
         <div className="sidebar-mobile" style={{display:sidebarIsOpen ? "flex":"none"}}>
-                <div className="sidebar-navigations" id="sidebar-dashboard">
-                    <div id="sidebar-dashboard-image">
-                        <Link to={'/mainpage/dashboard'}>
-                            <img src={Icons.dashboard} alt="Dashboard-logo"/>
-                        </Link>
+            hahahahah
+            {sideBarItems.map((item, index) => {
+                return (
+                    <div className="sidebar-navigations" id={`sidebar-${item.route}`}>
+                        <div id={`sidebar-${item.route}-image`}>
+                            <Link to={item.route}>
+                                <img src={item.icon} alt={item.icon} />
+                                <p id={`sidebar-titles`}>
+                                    {item.text}
+                                </p>
+                            </Link>
+                        </div>
                     </div>
-                    <div id="sidebar-dashboard-text">
-                        <Link to={'/mainpage/dashboard'}>Dashboard</Link>
-                    </div>
-                </div>
-                <div className="sidebar-navigations" id="sidebar-friends">
-                    <div id="sidebar-friends-image">
-                        <Link to={'/mainpage/friends'}>
-                            <img src={Icons.friends} alt="friends-logo"/>
-                        </Link>
-                    </div>
-                    <div id="sidebar-friends-text">
-                        <Link to={'/mainpage/friends'}>Friends</Link>
-                    </div>
-                </div>
-                <div className="sidebar-navigations" id="chat">
-                    <div id="sidebar-chat-image">
-                        <Link to={'/mainpage/chat'}>
-                            <img src={Icons.chat} alt="chat-logo"/>
-                        </Link>
-                    </div>
-                    <div id="sidebar-chat-text">
-                        <Link to={'/mainpage/chat'}>Chat</Link>
-                    </div>
-                </div>
-                <div className="sidebar-navigations" id="game">
-                    <div id="sidebar-game-image">
-                        <Link to={'/mainpage/game'}>
-                            <img src={Icons.console} alt="console-logo"/>
-                        </Link>
-                    </div>
-                    <div id="sidebar-game-text">
-                        <Link to={'/mainpage/game'}>Game</Link>
-                    </div>
-                </div>
-                <div className="sidebar-navigations" id="channels">
-                    <div id="sidebar-channels-image">
-                        <Link to={'/mainpage/groups'}>
-                            <img src={Icons.channels} alt="channels-logo"/>
-                        </Link>
-                    </div>
-                    <div id="sidebar-channels-text">
-                        <Link to={'/mainpage/groups'}>Channels</Link>
-                    </div>
-                </div>
+                )
+            })}
             </div>
     );
 }

@@ -87,7 +87,7 @@ function NavbarSidebar() {
   let logout = async (e) => {
     e.preventDefault();
     try {
-      let response = await fetch("http://localhost:8000/api/logout", {
+      let response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/logout`, {
         method: "POST",
         credentials: "include",
         headers: {

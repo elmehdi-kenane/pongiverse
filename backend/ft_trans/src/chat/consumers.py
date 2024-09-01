@@ -26,7 +26,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 	async def receive(self, text_data):
 		data = json.loads(text_data)
-		print("recived: ", data)
+		#print("recived: ", data)
 		if data['type'] == 'createChatRoom': await chat_consumers.create_chat_room(self, data)
 		elif data['type'] == 'joinChatRoom': await chat_consumers.join_chat_room(self, data)
 		elif data['type'] == 'leaveRoom': await chat_consumers.leave_chat_room(self, data, user_channels)
@@ -60,7 +60,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	
 	async def newRoomJoin(self, event):
 		data = event['data']
-		print(data)
+		#print(data)
 		message  = {
 			'type':'newRoomJoin',
 			'room' : data

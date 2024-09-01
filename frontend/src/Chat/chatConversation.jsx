@@ -37,13 +37,13 @@ const ChatConversation = () => {
   }, [selectedDirect]);
 
   const sendMessage = () => {
-    console.log(messageToSend)
+    console.log(messageToSend);
     if (
       chatSocket &&
       chatSocket.readyState === WebSocket.OPEN &&
       messageToSend.trim() !== ""
     ) {
-      console.log(messageToSend)
+      console.log(messageToSend);
       chatSocket.send(
         JSON.stringify({
           type: "directMessage",
@@ -99,8 +99,8 @@ const ChatConversation = () => {
             (currentDirect.name === data.data.sender &&
               data.data.reciver === user) ||
             (user === data.data.sender && data.data.reciver === user)
-          ){
-            console.log(data.data)
+          ) {
+            console.log(data.data);
             setRecivedMessage(data.data);
           }
         } else if (data.type === "goToGamingPage") {
@@ -142,7 +142,6 @@ const ChatConversation = () => {
     setShowDirectOptions(false);
   });
 
-
   return (
     <>
       <div className="conversation-header">
@@ -157,7 +156,6 @@ const ChatConversation = () => {
                 avatar: "",
                 status: "",
               })
-              
             }
           />
           <img
@@ -192,7 +190,12 @@ const ChatConversation = () => {
             />
             {showDirectOptions ? (
               <div className="direct-options-container">
-                <div className="view-profile-option" onClick={()=> navigate('/mainpage/profile')}>View Profile</div>
+                <div
+                  className="view-profile-option"
+                  onClick={() => navigate("/mainpage/profile")}
+                >
+                  View Profile
+                </div>
                 <div className="block-friend-option">Block</div>
                 <div className="change-wallpaper-option">Wallpaper</div>
               </div>

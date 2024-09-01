@@ -122,8 +122,11 @@ body {
     align-items: center;
     gap: 5px;
     color: #1E0934;
+    background-color: #D9D9D9;
+    border: none;
     font-weight: 600;
     padding: 5px;
+    padding-right: 10px;
     border-radius: 10px;
 }
 
@@ -147,6 +150,11 @@ body {
     background-color: #1E0934;
     font-weight: 600;
     margin-left: auto;
+}
+
+.searchResultItem button:hover {
+    background-color: #913dce;
+    cursor: pointer;
 }
 
 .search-bar input {
@@ -312,6 +320,8 @@ body {
 
 .profile-notifications #profile-icon img {
   width: 35px;
+  height: 35px;
+  border-radius: 50%;
 }
 
 .profile-notifications #notifications-icon img {
@@ -342,27 +352,42 @@ body {
   align-items: center;
   height: 100%;
   background-color: rgba(58, 25, 82, 0.5);
+  /* background-color: red; */
   border-radius: 0 15px 0 0;
   overflow-y: auto;
 }
 
-.sidebar .sidebar-navigations .sidebar-icons {
-  text-align: center;
-  padding: 0 0 2px 0;
+.sidebar-icons {
+    padding: 7px 5px;
+    width: 85%;
+    border-radius: 5px;
+}
+.sidebar-icons:hover {
+    background-color: #1E0934;
+}
+
+.sidebar-navigations {
+    /* border: 1px solid red; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
 }
 
 .sidebar .sidebar-navigations {
-  padding: 8px 0 25px 0;
-  margin-left: 0px;
-  width: 100%;
+  text-align: center;
 }
 
-.sidebar #sidebar-dashboard {
-  padding-top: 20px;
+.sidebar .sidebar-navigations {
+  width: 100%;
 }
 
 .sidebar #channels {
   margin-bottom: 80px;
+}
+
+.sidebar-titles {
+    cursor: pointer;
 }
 
 .sidebar .sidebar-navigations .sidebar-titles {
@@ -377,6 +402,7 @@ body {
   width: 180px;
   left: -140px;
   border-radius: 20px;
+  z-index: 5;
 }
 
 .navbar .profile-notifications #profile-icon {
@@ -556,23 +582,6 @@ body {
   .navbar {
     margin-top: 2px;
   }
-    .NotificationPopupCard {
-            padding: 5px;
-            min-width: 300px;
-            width: 13%;
-            height: max-content;
-            max-width: max-content;
-            gap: 2px;
-            right: 25%;
-            z-index: 99;
-            /* margin-top: 20px; */
-            display: flex;
-            justify-content: flex-start;
-            align-items: flex-start;
-        }
-    .NotificationPopupHeader p, .NotificationPopupUsername, .NotificationPopupCardBtn button {
-        /* font-size: 10px; */
-    }
 
   .sidebarWrapper {
     flex-direction: column;
@@ -597,12 +606,6 @@ body {
 
   .sidebar #sidebar-dashboard {
     padding-top: 0;
-  }
-
-  .sidebar .sidebar-navigations {
-    padding: 0;
-    display: flex;
-    justify-content: space-evenly;
   }
 
   .sidebar .sidebar-navigations .sidebar-icons img {
@@ -1359,12 +1362,6 @@ body {
     }
     
     #ball {
-
-    .onevsone-dashboard-logo #paddle-2 {
-        height: 20px;
-    }
-
-    .onevsone-dashboard-logo #ball {
         height: 5px;
         width: 5px;
     } */
@@ -1510,7 +1507,7 @@ body {
 .cancel-game-invite-request {
   /* margin: 30px 0 100px 0; */
   position: absolute;
-  top: 20px;
+  top: 0;
   left: 100%;
   z-index: 100;
   transform: translate(-100%);

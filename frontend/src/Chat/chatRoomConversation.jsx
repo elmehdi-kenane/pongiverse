@@ -83,14 +83,14 @@ const ChatRoomConversation = (props) => {
       const updatedRooms = chatRoomConversations.filter(
         (myroom) => myroom.name !== data.name
       );
-      console.log("upadteeddddd: ", updatedRooms)
+      console.log("upadteeddddd: ", updatedRooms);
       setChatRoomConversations(updatedRooms);
       setSelectedChatRoom({
         name: "",
         status: "",
       });
       props.setSelectedItem("");
-    } 
+    }
     // else {
     //   const updatedRooms = chatRoomConversations.map((room) => {
     //     if (room.name === data.name) {

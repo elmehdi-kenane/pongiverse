@@ -13,10 +13,7 @@ async def add_user_channel_group(self, data):
     memberships = await sync_to_async(list)(Membership.objects.filter(user=user))
     for membership in memberships:
         room_name = await sync_to_async(lambda: membership.room.name)()
-        print(
-            "the roorm name after remove the whitespaces:",
-            re.sub(r"\s+", "_", room_name),
-        )
+        #print("the roorm name after remove the whitespaces:", re.sub(r"\s+", "_", room_name))
         await self.channel_layer.group_add(
             re.sub(r"\s+", "_", room_name), self.channel_name
         )
@@ -30,13 +27,13 @@ async def create_chat_room(self, data):
         user = await get_user_by_name(self, user_name)
     except customuser.DoesNotExist:
         return
-    print("user is found")
+    #print("user is found")
     room = await sync_to_async(Room.objects.filter(name=room_name).first)()
     if not room:
-        print("room not found")
+        #print("room not found")
         image_type = imghdr.what(None, h=image_data)
         if image_type is None:
-            print("Unsupported image type")
+            #print("Unsupported image type")
             return
         image_file = ContentFile(image_data, name=f"{room_name}.{image_type}")
         room = await sync_to_async(Room.objects.create)(
@@ -55,7 +52,7 @@ async def create_chat_room(self, data):
         if room.visiblity == "protected":
             room.password = make_password(data["message"]["password"])
     elif room:
-        print("roomAlreadyExists")
+        #print("roomAlreadyExists")
         self.send(json.dumps({"type": "roomAlreadyExists"}))
         return
     await sync_to_async(Membership.objects.create)(user=user, room=room, roles="admin")
@@ -143,7 +140,7 @@ async def leave_chat_room(self, data, user_channels):
     await sync_to_async(member_to_kick.delete)()
     # delete the query (remove the member from the chat room)
     if member_roles == "admin":
-        print("the user is an admin")
+        #print("the user is an admin")
         all_members = await sync_to_async(list)(
             Membership.objects.filter(room=room).order_by("joined_at")
         )
@@ -231,7 +228,7 @@ async def change_chat_room_avatar(self, data):
     if room:
         image_type = imghdr.what(None, h=image_data)
         if image_type is None:
-            print("Unsupported image type")
+            #print("Unsupported image type")
             return
         image_file = ContentFile(image_data, name=f"{room_name}.{image_type}")
         old_icon_path = room.icon.path
@@ -420,11 +417,11 @@ async def direct_message(self, data, user_channels):
         sender=sender, reciver=reciver, message=data["data"]["message"]
     )
     channel_name = user_channels.get(data["data"]["reciver"])
-    print(channel_name)
+    #print(channel_name)
     mychannel_name = user_channels.get(data["data"]["sender"])
-    print(mychannel_name)
+    #print(mychannel_name)
     if channel_name:
-        print("the others message", channel_name)
+        #print("the others message", channel_name)
         await self.channel_layer.send(
             channel_name,
             {
@@ -437,7 +434,7 @@ async def direct_message(self, data, user_channels):
             },
         )
     if mychannel_name:
-        print("my message", mychannel_name)
+        #print("my message", mychannel_name)
         await self.channel_layer.send(
             mychannel_name,
             {

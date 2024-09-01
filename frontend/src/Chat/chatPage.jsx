@@ -27,13 +27,14 @@ const Chat = () => {
   const handleSelectItem = (itemName) => {
     setSelectedItem(itemName);
   };
-  
+
   return (
     <div className="chat-page">
       <div className="chat-container">
         <div
           className={
-            Object.values(selectedDirect).every((value) => value !== "") || Object.values(selectedChatRoom).every((value) => value !== "")
+            Object.values(selectedDirect).every((value) => value !== "") ||
+            Object.values(selectedChatRoom).every((value) => value !== "")
               ? "chat-sidebar-hidden"
               : "chat-sidebar"
           }
@@ -89,7 +90,8 @@ const Chat = () => {
                     key={key}
                     name={chatRoom.name}
                     lastMessage={
-                      "The correct format would typically be chatRoomConversations"}
+                      "The correct format would typically be chatRoomConversations"
+                    }
                     imageIndex={key}
                     isDirect={isHome}
                     membersCount={chatRoom.membersCount}
@@ -103,7 +105,8 @@ const Chat = () => {
         </div>
         <div
           className={
-            Object.values(selectedDirect).every((value) => value !== "") || Object.values(selectedChatRoom).every((value) => value !== "")
+            Object.values(selectedDirect).every((value) => value !== "") ||
+            Object.values(selectedChatRoom).every((value) => value !== "")
               ? "chat-window"
               : "chat-window-hidden"
           }
@@ -113,7 +116,10 @@ const Chat = () => {
             <ChatConversation />
           ) : !isHome &&
             Object.values(selectedChatRoom).every((value) => value !== "") ? (
-            <ChatRoomConversation setSelectedItem={handleSelectItem} setSelectedChatRoom={setSelectedChatRoom} />
+            <ChatRoomConversation
+              setSelectedItem={handleSelectItem}
+              setSelectedChatRoom={setSelectedChatRoom}
+            />
           ) : (
             ""
           )}

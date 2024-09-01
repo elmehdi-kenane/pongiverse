@@ -37,6 +37,7 @@ export const AuthProvider = ({children}) => {
 	//-- Glass Background
 	const [isReport, setIsReport] = useState(false);
 	const [isBlock, setIsBlock] = useState(false);
+	const [isGameStats, setIsGameStats] = useState(false);
 	const [isChatBlur, setIsChartBlur] = useState(false);
 
 	const [reportValue, setReportValue] = useState(null);
@@ -44,18 +45,22 @@ export const AuthProvider = ({children}) => {
 	const blockRef = useRef(null);
 	const blockContentRef = useRef(null);
 	
-
-	const [userPic, setUserPic] = useState(userPc);
-	const [nickName, setNickName] = useState("Maverick");
-	const [bio, setBio] = useState("Lorem ipsum dolor sit amet consectetur adipisicing elit.");
-	const [country, setCountry] = useState("Morocco");
-
-
+	let [notifSocket, setNotifSocket] = useState(null)
 
 	let [hideNavSideBar, setHideNavSideBar] = useState(false)
 	let [gameCustomize, setGameCustomize] = useState(['#FFFFFF', '#1C00C3', '#5241AB', false])
 	const oneVsOneIdRegex = /^\/mainpage\/play\/1vs1\/\d+$/
 	const twoVsTwoIdRegex = /^\/mainpage\/play\/2vs2\/\d+$/
+	const gamePlayRegex = /^\/mainpage\/(game|play)(\/[\w\d-]*)*$/
+
+
+	// Glass Background Effect
+	useEffect (()=> {
+		if (!isReport && !isBlock && !isGameStats && !isBlur)
+			setIsGlass(false);
+		else
+			setIsGlass(true);
+	}, [isReport, isBlock, isGameStats])
 
 
 	// Glass Background Effect
@@ -73,7 +78,7 @@ export const AuthProvider = ({children}) => {
 	useEffect(() => {
 		const fetchImages = async () => {
 			const promises = allGameFriends.map(async (user) => {
-				const response = await fetch(`http://localhost:8000/api/getImage`, {
+				const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`, {
 					method: "POST",
 					headers: {
 						'Content-Type': 'application/json',
@@ -100,7 +105,7 @@ export const AuthProvider = ({children}) => {
 	useEffect(() => {
 		const fetchNotifsImages = async () => {
 			const promises = allGameNotifs.map(async (user) => {
-				const response = await fetch(`http://localhost:8000/api/getImage`, {
+				const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`, {
 					method: "POST",
 					headers: {
 						'Content-Type': 'application/json',
@@ -122,7 +127,7 @@ export const AuthProvider = ({children}) => {
 	useEffect(() => {
 		const getAllGameFriends = async () => {
 			try {
-				let response = await fetch('http://localhost:8000/api/onlineFriends', {
+				let response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/onlineFriends`, {
 					method: "POST",
 					headers: {
 						'Content-Type': 'application/json',
@@ -142,7 +147,7 @@ export const AuthProvider = ({children}) => {
 
 		const getAllNotifsFriends = async () => {
 			try {
-				let response = await fetch('http://localhost:8000/api/notifsFriends', {
+				let response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/notifsFriends`, {
 					method: "POST",
 					headers: {
 						'Content-Type': 'application/json',
@@ -163,7 +168,7 @@ export const AuthProvider = ({children}) => {
 
 		const getUserImage = async () => {
 			try {
-				let response = await fetch('http://localhost:8000/api/getUserImage', {
+				let response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getUserImage`, {
 					method: "POST",
 					headers: {
 						'Content-Type': 'application/json',
@@ -182,7 +187,7 @@ export const AuthProvider = ({children}) => {
 		
 		const getGameCustomize = async () => {
 			try {
-				let response = await fetch('http://localhost:8000/api/getCustomizeGame', {
+				let response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getCustomizeGame`, {
 					credentials: 'include'
 				})
 				const res = await response.json()
@@ -194,10 +199,10 @@ export const AuthProvider = ({children}) => {
 			}
 		}
 
-		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && location.pathname !== '/game/solo/1vs1/friends' && location.pathname !== '/game/solo/1vs1/random' && user && !allGameNotifs.length)
+		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && user && !allGameNotifs.length)
 			getAllNotifsFriends()
-		else
-			setAllGameNotifs([])
+		// else
+		// 	setAllGameNotifs([])
 
 		if ((location.pathname === '/mainpage/game/solo/1vs1/friends' || location.pathname === '/mainpage/game/createtournament' || location.pathname === '/mainpage/game/solo/2vs2/friends') && user)
 			getAllGameFriends()
@@ -226,7 +231,7 @@ export const AuthProvider = ({children}) => {
 		};
 		async function sendUserData(uname, currentAllGameFriends){
 			try {
-				let response = await fetch('http://localhost:8000/api/get_user', {
+				let response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get_user`, {
 					method: "POST",
 					headers: {
 						'Content-Type': 'application/json',
@@ -242,10 +247,47 @@ export const AuthProvider = ({children}) => {
 				console.error('There has been a problem with your fetch operation:', error);
 			}
 		}
-		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && location.pathname !== '/mainpage/chat' && location.pathname !== "/mainpage/chat" && location.pathname !== "/mainpage/groups" && !socket && user) {
-			const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
+		if (location.pathname !== '/' && location.pathname !== '/signup' && location.pathname !== '/signin' && location.pathname !== '/SecondStep' &&  location.pathname !== '/WaysSecondStep' && location.pathname !== '/ForgotPassword' && location.pathname !== '/ChangePassword' && !notifSocket && user) {
+			const newNotifSocket = new WebSocket(`ws://localhost:8000/ws/notif-socket`)
+			newNotifSocket.onopen = () => {
+				setNotifSocket(newNotifSocket)
+				console.log("NOTIF SOCKET OPENED SUCCEFULLY")
+			}
+			newNotifSocket.onmessage = (event) => {
+				let data = JSON.parse(event.data)
+				let type = data.type
+				// let message = data.message
+				// let uname = data.username
+				// console.log("GAME SOCKET IN AUTHCONTEXT CLOSED SUCCEFULLY 1")
+				if (type === 'close_socket') {
+					newSocket.close()
+					setSocket(null)
+				}
+				// if (type === 'user_disconnected') {
+				// 	const currentAllGameFriends = allGameFriendsRef.current;
+				// 	console.log("user disconnected : ", allGameFriends)
+				// 	let uname = data.username
+				// 	setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname));
+				// }
+				// if (type === 'connected_again') {
+				// 	const currentAllGameFriends = allGameFriendsRef.current;
+				// 	console.log("user connected : ", allGameFriends)
+				// 	console.log("VISITED CONNECTED AGAIN")
+				// 	sendUserData(uname, currentAllGameFriends)
+				// }
+			}
+		} else if ((location.pathname === '/' || location.pathname === '/signup' || location.pathname === '/signin' || location.pathname === '/SecondStep' ||  location.pathname === '/WaysSecondStep' || location.pathname === '/ForgotPassword' || location.pathname === '/ChangePassword') && notifSocket) {
+			if (notifSocket) {
+				console.log("NOTIF SOCKET CLOSED SUCCEFULLY")
+				notifSocket.close()
+				setNotifSocket(null)
+			}
+		}
+		if (gamePlayRegex.test(location.pathname) && !socket && user) {
+			const newSocket = new WebSocket(`ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/socket-server`)
 			newSocket.onopen = () => {
 				setSocket(newSocket)
+				console.log("GAME SOCKET OPENED SUCCEFULLY")
 			}
             // Listen for errors
             newSocket.onerror = (error) => {
@@ -272,7 +314,7 @@ export const AuthProvider = ({children}) => {
 			}
 		}
 		if ( (location.pathname === "/mainpage/chat" || location.pathname === "/mainpage/groups") && !chatSocket && user) {
-		  const newChatSocket = new WebSocket(`ws://localhost:8000/ws/chat_socket`);
+		  const newChatSocket = new WebSocket(`ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/chat_socket`);
 		  newChatSocket.onopen = () => {
 			console.log("chat Socket Created and opened");
 			setChatSocket(newChatSocket);
@@ -293,7 +335,7 @@ export const AuthProvider = ({children}) => {
 
 	async function publicCheckAuth() {
 		try {
-			let response = await fetch('http://localhost:8000/auth/verifytoken/', {  // 10.12.7.3   localhost   127.0.0.1
+			let response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/verifytoken/`, {  // 10.12.7.3   localhost   127.0.0.1
 				method : 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -317,7 +359,7 @@ export const AuthProvider = ({children}) => {
 
 	async function privateCheckAuth() {
 		try {
-			let response = await fetch('http://localhost:8000/auth/verifytoken/', {  // 10.12.7.3   localhost   127.0.0.1
+			let response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/verifytoken/`, {  // 10.12.7.3   localhost   127.0.0.1
 				method : 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -329,9 +371,11 @@ export const AuthProvider = ({children}) => {
 			})
 			response = await response.json()
 			if (response.Case !== "Invalid token") {
+				console.log("LOGGEDIN SUCCESSFULY")
 				setUser(response.data.username)
 				console.log("USER USERNSME: ",response.data.username)
 			} else {
+				console.log("FAILD TO LOGIN SUCCESSFULY")
 				setUser('')
 				navigate('/signin')
 			}
@@ -350,6 +394,7 @@ export const AuthProvider = ({children}) => {
 		socketRecreated: socketRecreated,
 		setSocketRecreated: setSocketRecreated,
 		userImg: userImg,
+		setUserImg:setUserImg,
 		allGameFriends: allGameFriends,
 		setAllGameFriends: setAllGameFriends,
 		loading: loading,
@@ -369,20 +414,14 @@ export const AuthProvider = ({children}) => {
 		setReportValue: setReportValue,
 		isBlock: isBlock,
 		setIsBlock:setIsBlock,
+		isGameStats:isGameStats, 
+		setIsGameStats:setIsGameStats,
 		blockRef:blockRef,
 		blockContentRef:blockContentRef,
-		// User Credintials
-		userPic:userPic,
-		setUserPic:setUserPic,
-		nickName:nickName,
-		bio:bio,
-		country,country,
-		setNickName:setNickName,
-		setBio:setBio,
-		setCountry:setCountry,
 		// chat blur
 		isBlur:isBlur,
 		setIsBlur:setIsBlur,
+		notifSocket: notifSocket,
 		// gameNotif: gameNotif
 		//chat socket
 		chatSocket: chatSocket,
