@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import AuthContext from "../../navbar-sidebar/Authcontext";
 import DashboardContext from "../DashboardWrapper";
 import CloseIcon from "@mui/icons-material/Close";
+import DashRsltSingle from "./DashRsltSingle";
 
 function DashResult() {
   const {isGameStats, setIsGameStats } = useContext(AuthContext);
@@ -24,9 +25,8 @@ function DashResult() {
   return (
     <div className="match-result-ctr">
       <div className="match-result" id="match-click">
-        <CloseIcon onClick={closeGameStats} className="report-close-stats" />
-        {/* <h1> ID:{singleId && singleId} </h1>
-        <h1> ID:{multyId && multyId} </h1> */}
+        <CloseIcon onClick={closeGameStats} className="match-result__close" />
+        { singleId && <DashRsltSingle /> }
       </div>
     </div>
   );
