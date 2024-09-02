@@ -394,6 +394,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		await self.send(text_data=json.dumps({
 			'type': 'youLoseTheGame'
 		}))
+
+	async def new_user_win(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'new_user_win',
+			'message': event['message']
+		}))
 	##################################### (CHAT) #####################################
 	async def broadcast_message(self, event):
 		await self.send(text_data=json.dumps(event['data']))

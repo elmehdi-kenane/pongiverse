@@ -193,6 +193,18 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 			'message' : event['message']
 		}))
 
+	async def updateGame(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'updateGame',
+			'message': event['message']
+		}))
+
+	async def playersInfos(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'playersInfos',
+			'message': event['message']
+		}))
+ 
 	async def user_join_tournament(self, event):
 		await self.send(text_data=json.dumps({
 			'type' : 'user_join_tournament',
@@ -220,5 +232,11 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 	async def deny_tournament_invitation(self, event):
 		await self.send(text_data=json.dumps({
 			'type': 'deny_tournament_invitation',
+			'message': event['message']
+		}))
+
+	async def new_user_win(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'new_user_win',
 			'message': event['message']
 		}))

@@ -188,7 +188,7 @@ async def send_winner_data(self, user, round_reached, tournament):
 	members = await sync_to_async(list)(TournamentMembers.objects.filter(tournament=tournament))
 	ip_address = os.getenv("IP_ADDRESS")
 	for member in members:
-		is_eliminated = await sync_to_async(lambda: member.is_eliminated)
+		is_eliminated = await sync_to_async(lambda: member.is_eliminated)()
 		if is_eliminated == False:
 			groupe_name = f'tournament_{tournament.tournament_id}'
 			await self.channel_layer.group_send(groupe_name, {
@@ -248,10 +248,10 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 					await sync_to_async(player1.save)()
 					await send_playing_status_to_friends(self, player1, False, user_channels)
 				else: ### NOTE: to think more
-					# round = await sync_to_async(Round.objects.filter(tournament=tournament, type=round_reached['round_reached']).first)()
-					# if round is None:
-					# 	round = Round(tournament=tournament, type=round_reached['round_reached'])
-					# 	await sync_to_async(round.save)()
+					round = await sync_to_async(Round.objects.filter(tournament=tournament, type=round_reached['round_reached']).first)()
+					if round is None:
+						round = Round(tournament=tournament, type=round_reached['round_reached'])
+						await sync_to_async(round.save)()
 					tournamentuserinfo = TournamentUserInfo(round=round, user=player1, position=round_reached['position'])
 					await sync_to_async(tournamentuserinfo.save)()
 					channel_name = user_channels.get(room['players'][0]['user'])
@@ -399,6 +399,7 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 						'type': 'youLoseTheGame',
 					})
 				round_reached = await get_next_round_reached(player1, tournament)
+				await send_winner_data(self, player1, round_reached, tournament)
 				if round_reached['round_reached'] == 'WINNER':
 					round = Round(tournament=tournament, type='WINNER')
 					await sync_to_async(round.save)()
@@ -480,6 +481,7 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 						'type': 'youLoseTheGame',
 					})
 				round_reached = await get_next_round_reached(player2, tournament)
+				await send_winner_data(self, player2, round_reached, tournament)
 				if round_reached['round_reached'] == 'WINNER':
 					round = Round(tournament=tournament, type='WINNER')
 					await sync_to_async(round.save)()

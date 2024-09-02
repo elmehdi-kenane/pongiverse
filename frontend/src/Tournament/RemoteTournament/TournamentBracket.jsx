@@ -153,15 +153,38 @@ function TournamentBracket() {
 				}
 			}
 		}
+	}, [notifSocket])
+
+
+	useEffect(() => {
+		if (socket && socket.readyState === WebSocket.OPEN) {
+			socket.onmessage = (event) => {
+				let data = JSON.parse(event.data)
+				let type = data.type
+				let message = data.message
+				if (type == 'new_user_win') {
+					const newMember = {'id': message.id, 'name': message.name, 'level': message.level, 'image': message.image, 'position': message.position}
+					if (message.round_reached === 'QUARTERFINAL')
+						console.log("NEW USER ROUND :", message)
+						setroundQuarterFinalMembers((prevRoundQuarterFinalMembers) => [...prevRoundQuarterFinalMembers, newMember])
+					if (message.round_reached === 'SEMIFINAL')
+						setroundSemiFinalMembers((prevRoundSemiFinalMembers) => [...prevRoundSemiFinalMembers, newMember])
+				}
+			}
+		}
 	}, [socket])
+
+	useEffect(() =>{
+		console.log("MOHAMDDDDDD: ", roundQuarterFinalMembers)
+	},[roundQuarterFinalMembers])
 
 	useEffect(() => {
 		if (createdAt) {
 			const interval = setInterval(() => {
 				const now = new Date();
 				const diffInSeconds = Math.floor((now - createdAt) / 1000);
-				if (diffInSeconds < 60) {
-					setTimeDiff(60 - diffInSeconds);
+				if (diffInSeconds < 3) {
+					setTimeDiff(3 - diffInSeconds);
 				} else {
 					navigate('../game/1vs1tournament')
 				}

@@ -586,6 +586,7 @@ function createParticle(x, y) {
 				} else if (type === 'youWinTheGame'){
 					navigate("../game/tournamentbracket")
 				} else if (type === 'youLoseTheGame'){
+					console.log("===============WAHMEDDDDDDDD")
 					navigate("../game")
 				}
 					
