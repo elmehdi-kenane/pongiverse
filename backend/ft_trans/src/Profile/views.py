@@ -1,8 +1,7 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from myapp.models import customuser
-from mainApp.models import UserMatchStatics
-from mainApp.models import Match
+from mainApp.models import UserMatchStatics, Match, MatchStatistics
 from rest_framework.decorators import api_view
 
 from django.http import HttpResponse
@@ -77,23 +76,15 @@ def friends_with_directs(request, username):
 def getUserData(request, username):
     user = customuser.objects.filter(username=username).first()
     if user is not None:
-        user_level = UserMatchStatics.objects.filter(player=user).first()
-        if user_level is not None:
+        user_states = UserMatchStatics.objects.filter(player=user).first()
+        if user_states is not None:
+            # print("---------------", f"http://localhost:8000/auth{user.avatar.url}", "-----------------")
             user_data = {'pic': f"http://localhost:8000/auth{user.avatar.url}",
                         'bg': f"http://localhost:8000/auth{user.background_pic.url}",
                         'bio': user.bio,
                         'email' : user.email,
-                        'level': user_level.level,
-                        'xp': user_level.total_xp,
-                        'country': user.country,
-                        }
-        else:
-            user_data = {'pic': f"http://localhost:8000/auth{user.avatar.url}",
-                        'bg': f"http://localhost:8000/auth{user.background_pic.url}",
-                        'bio': user.bio,
-                        'email' : user.email,
-                        'level': 0,
-                        'xp': 0,
+                        'level': user_states.level,
+                        'xp': user_states.total_xp,
                         'country': user.country,
                         }
         success_response = Response(data={"userData": user_data}, status=status.HTTP_200_OK)
@@ -265,11 +256,9 @@ def get_users_data(request, username):
                 'goals': user.goals,
                 # 'id': user.player.id,
             })
-        response = Response(data={"usersData": res_data}, status=status.HTTP_200_OK)
-        return response
-    else:
-        err_res = Response(data={'error': 'Error Getting UsersData!'}, status=status.HTTP_400_BAD_REQUEST)
-        return err_res
+        return Response(data={"usersData": res_data}, status=status.HTTP_200_OK)    
+    return Response(data={'error': 'Error Getting UsersData!'}, status=status.HTTP_400_BAD_REQUEST)
+        
 
 #**--------------------- GetUsers Games Lost - Wins {Dashboard}---------------------**#
    
@@ -285,10 +274,7 @@ def get_user_games_wl(request, username):
                 'goals': user_games.goals,
             }
             return Response(data={"userGames": res_data}, status=status.HTTP_200_OK)
-        else:
-            return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
-    else:
-       return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
 
 #**--------------------- GetUsers Games Lost - Wins {Profile/Diagram}---------------------**#
    
@@ -298,71 +284,63 @@ def get_user_diagram(request, username):
     if user is not None:
         user_games = UserMatchStatics.objects.filter(player=user).first()
         if user_games is not None:
-            if user_games.wins != 0 or user_games.losts != 0:
-                res_data = [{
-                        'subject': "Matches",
-                        'value': user_games.wins + user_games.losts,
-                    },{
-                        'subject': "Wins",
-                        'value': user_games.wins,
-                    },
-                    {
-                        'subject': "Accuracy",
-                        'value': f"{(user_games.wins / user_games.losts):.2f}" if user_games.losts > 0 else "N/A",
-                    },
-                    {
-                        'subject': "Goals Acc",
-                        'value': user_games.goals/ (user_games.wins + user_games.losts),
-                    },
-                    {
-                        'subject': "Losts",
-                        'value': user_games.losts,
-                    },
-                    ]
-                return Response(data={"userGames": res_data}, status=status.HTTP_200_OK)
-            return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
-        return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
-    else:
-       return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
+            total_matches = user_games.wins + user_games.losts
+            if total_matches > 0:
+                accuracy = f"{(user_games.wins / user_games.losts):.2f}" if user_games.losts > 0 else "N/A"
+                res_data = [
+                    {'subject': "Matches", 'value': total_matches},
+                    {'subject': "Wins", 'value': user_games.wins},
+                    {'subject': "Accuracy", 'value': accuracy},
+                    {'subject': "Goals Acc", 'value': user_games.goals / total_matches},
+                    {'subject': "Losts", 'value': user_games.losts},
+                ]
+            else:
+                res_data = [
+                    {'subject': "Matches", 'value': 0},
+                    {'subject': "Wins", 'value': 0},
+                    {'subject': "Accuracy", 'value': 0},
+                    {'subject': "Goals Acc", 'value': 0},
+                    {'subject': "Losts", 'value': 0},
+                ]
+            return Response(data={"userGames": res_data}, status=status.HTTP_200_OK)
+    return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
 
 #**--------------------- GetUser Statistics {Profile-Dashboard} ---------------------**#
 
 @api_view(["GET"])
 def get_user_statistics(request, username, date_range):
     user = customuser.objects.filter(username=username).first()
-    res_data = []
-    date = date_range - 1
-    while date >= 0:
-        day_bfr = (datetime.now().date() - timedelta(days=date)).isoformat()
-        day_afr = (datetime.now().date() - timedelta(days=date-1)).isoformat()
-
-        user_matches = Match.objects.filter(
-            Q(team1_player1=user) | Q(team1_player2=user) | Q(team2_player1=user) | Q(team2_player2=user),
-            date_ended__gte=day_bfr,
-            date_ended__lte=day_afr
-        ).all()
-
-        wins, losts = 0, 0
-        for user_match in user_matches:
-            if user_match.team1_player1 == user or user_match.team1_player2 == user:
-                wins += int(user_match.team1_status == "winner")
-                losts += int(user_match.team1_status != "winner")
-            elif user_match.team2_player1 == user or user_match.team2_player2 == user:
-                wins += int(user_match.team2_status == "winner")
-                losts += int(user_match.team2_status != "winner")
-
-        day_int = int(datetime.strptime(day_bfr, "%Y-%m-%d").day)
-        res_data.append({
-            'day': f"{day_int:02}",
-            'wins': wins,
-            'losts': losts,
-        })
-        date -= 1
-
     if user is not None:
+        res_data = []
+        date = date_range - 1
+        while date >= 0:
+            day_bfr = (datetime.now().date() - timedelta(days=date)).isoformat()
+            day_afr = (datetime.now().date() - timedelta(days=date-1)).isoformat()
+
+            user_matches = Match.objects.filter(
+                Q(team1_player1=user) | Q(team1_player2=user) | Q(team2_player1=user) | Q(team2_player2=user),
+                date_ended__gte=day_bfr,
+                date_ended__lte=day_afr
+            ).all()
+
+            wins, losts = 0, 0
+            for user_match in user_matches:
+                if user_match.team1_player1 == user or user_match.team1_player2 == user:
+                    wins += int(user_match.team1_status == "winner")
+                    losts += int(user_match.team1_status != "winner")
+                elif user_match.team2_player1 == user or user_match.team2_player2 == user:
+                    wins += int(user_match.team2_status == "winner")
+                    losts += int(user_match.team2_status != "winner")
+
+            day_int = int(datetime.strptime(day_bfr, "%Y-%m-%d").day)
+            res_data.append({
+                'day': f"{day_int:02}",
+                'wins': wins,
+                'losts': losts,
+            })
+            date -= 1
         return Response(data={"userStcs": res_data}, status=status.HTTP_200_OK)
-    else:
-        return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
 
 #**--------------------- GetUser SingleMatches {Dashboard} ---------------------**#
 
@@ -393,8 +371,36 @@ def get_single_matches(request, username, page):
                 "id": user_match.room_id,
             })
         return Response(data={"userMatches": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
-    else:
-       return Response(data={'error': 'Error Getting SingleGames!'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response(data={'error': 'Error Getting SingleGames!'}, status=status.HTTP_400_BAD_REQUEST)
+
+#**------- GetUser SingleMatch Details -------**#
+
+@api_view(["GET"])
+def get_single_match_dtl(request, match_id):
+    match = Match.objects.filter(room_id=match_id).first()
+    match_stq = MatchStatistics.objects.filter(match=match).first()
+
+    if match and match_stq:
+        res_data = {
+            "date": match.date_ended,
+            "pic1": f"http://localhost:8000/auth{match.team1_player1.avatar.url}",
+            "pic2": f"http://localhost:8000/auth{match.team2_player1.avatar.url}",
+            "user1": match.team1_player1.username,
+            "user2": match.team2_player1.username,
+            "score": f"{match.team1_score} - {match.team2_score}",
+            "score1": match_stq.team1_player1_score,
+            "score2": match_stq.team2_player1_score,
+            "hit1": match_stq.team1_player1_hit,
+            "hit2": match_stq.team2_player1_hit,
+            "exp1": match_stq.team1_player1_rating,
+            "exp2": match_stq.team2_player1_rating,
+            "acc1": (match_stq.team1_player1_score * 100 / match_stq.team1_player1_hit) if match_stq.team1_player1_hit else 0,
+            "acc2": (match_stq.team2_player1_score * 100 / match_stq.team2_player1_hit) if match_stq.team2_player1_hit else 0,
+        }
+        return Response(data={"data": res_data}, status=status.HTTP_200_OK)
+
+    return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 #**--------------------- GetUser MultiplayerMatches {Dashboard} ---------------------**#
 
@@ -427,5 +433,6 @@ def get_multiplayer_matches(request, username, page):
                 "id": user_match.room_id,
             })
         return Response(data={"userMatches": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
-    else:
-       return Response(data={'error': 'Error Getting MultiplayerGames!'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response(data={'error': 'Error Getting MultiplayerGames!'}, status=status.HTTP_400_BAD_REQUEST)
+
+#**------- GetUser MultiplayerMatch Details -------**#
