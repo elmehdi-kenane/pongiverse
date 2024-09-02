@@ -176,7 +176,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		elif data['type'] == 'destroy-tournament': await tournament_consumers.destroy_tournament(self, data, user_channels)
 		elif data['type'] == 'leave-tournament': await tournament_consumers.leave_tournament(self, data, user_channels)
 		elif data['type'] == 'start-tournament': await tournament_consumers.start_tournament(self, data, user_channels)
-		elif data['type'] == 'Round-16-timer': await tournament_consumers.Round_16_timer(self, data)
+		# elif data['type'] == 'Round-16-timer': await tournament_consumers.Round_16_timer(self, data)
 		elif data['type'] == 'check-round-16-players': await tournament_consumers.check_round_16_players(self, data, user_channels)
 		elif data['type'] == 'moveKeyTournamentGame': await tournamentGameConsumer.move_paddle_tournament_game(self, data, tournament_rooms)
 		elif data['type'] == 'moveMouseTournamentGame':await tournamentGameConsumer.move_mouse_tournament_game(self, data, tournament_rooms)
@@ -354,6 +354,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			'type': 'goToGamingPage',
 			'message': event['message']
 		}))
+
 	##################################### Tournament (GAME) #####################################
 
 	async def user_disconnected(self, event):
@@ -382,6 +383,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	async def hmed(self, event):
 		await self.send(text_data=json.dumps({
 			'type': 'hmed'
+		}))
+
+	async def youWinTheGame(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'youWinTheGame'
+		}))
+
+	async def youLoseTheGame(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'youLoseTheGame'
 		}))
 	##################################### (CHAT) #####################################
 	async def broadcast_message(self, event):

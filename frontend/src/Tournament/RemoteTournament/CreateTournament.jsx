@@ -107,24 +107,24 @@ function CreateTournament() {
 				console.log(data)
 				setTournamentId(data.tournament_id)
 				setTournamentMembers(allMembers)
-				const fetchImages = async () => {
-					const promises = allMembers.map(async (user) => {
-						const response = await fetch(`http://localhost:8000/api/getImage`, {
-							method: "POST",
-							headers: {
-								'Content-Type': 'application/json',
-							},
-							body: JSON.stringify({
-								image: user.image
-							})
-						});
-						const blob = await response.blob();
-						return URL.createObjectURL(blob);
-					});
-					const images = await Promise.all(promises);
-					setMemberImages(images)
-				};
-				fetchImages()
+				// const fetchImages = async () => {
+				// 	const promises = allMembers.map(async (user) => {
+				// 		const response = await fetch(`http://localhost:8000/api/getImage`, {
+				// 			method: "POST",
+				// 			headers: {
+				// 				'Content-Type': 'application/json',
+				// 			},
+				// 			body: JSON.stringify({
+				// 				image: user.image
+				// 			})
+				// 		});
+				// 		const blob = await response.blob();
+				// 		return URL.createObjectURL(blob);
+				// 	});
+				// 	const images = await Promise.all(promises);
+				// 	setMemberImages(images)
+				// };
+				// fetchImages()
 			} else {
 				console.error('Failed to fetch data');
 			}
@@ -189,27 +189,27 @@ function CreateTournament() {
 		}
 	}, [user])
 
-	useEffect(() => {
-		const fetchImages = async () => {
-			const promises = tournamentMembers.map(async (user) => {
-				const response = await fetch(`http://localhost:8000/api/getImage`, {
-					method: "POST",
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({
-						image: user.image
-					})
-				});
-				const blob = await response.blob();
-				return URL.createObjectURL(blob);
-			});
-			const images = await Promise.all(promises);
-			setMemberImages(images)
-		};
-		if (tournamentMembers)
-			fetchImages()
-	}, [tournamentMembers])
+	// useEffect(() => {
+	// 	const fetchImages = async () => {
+	// 		const promises = tournamentMembers.map(async (user) => {
+	// 			const response = await fetch(`http://localhost:8000/api/getImage`, {
+	// 				method: "POST",
+	// 				headers: {
+	// 					'Content-Type': 'application/json',
+	// 				},
+	// 				body: JSON.stringify({
+	// 					image: user.image
+	// 				})
+	// 			});
+	// 			const blob = await response.blob();
+	// 			return URL.createObjectURL(blob);
+	// 		});
+	// 		const images = await Promise.all(promises);
+	// 		setMemberImages(images)
+	// 	};
+	// 	if (tournamentMembers)
+	// 		fetchImages()
+	// }, [tournamentMembers])
 
 	useEffect(() => {
 		const get_member = async (username) => {
@@ -225,6 +225,7 @@ function CreateTournament() {
 			if (response.ok) {
 				const data = await response.json();
 				const newUser = { 'id': data.id, 'name': data.name, 'level': data.level, 'image': data.image }
+				console.log("NEW USERRR:", newUser)
 				setTournamentMembers((prevTournamentMembers) => [...prevTournamentMembers, newUser]);
 				setTournamentMembers((prevTournamentMembers) => {
 					if (!prevTournamentMembers.some(member => member.name === newUser.name)) {
@@ -232,21 +233,21 @@ function CreateTournament() {
 					}
 					return prevTournamentMembers;
 				});
-				const fetchImages = async (user_image) => {
-					const response = await fetch(`http://localhost:8000/api/getImage`, {
-						method: "POST",
-						headers: {
-							'Content-Type': 'application/json',
-						},
-						body: JSON.stringify({
-							image: user_image
-						})
-					});
-					const blob = await response.blob();
-					const image = URL.createObjectURL(blob);
-					setMemberImages((prevMemberImages) => [...prevMemberImages, image]);
-				};
-				fetchImages(data.image)
+				// const fetchImages = async (user_image) => {
+				// 	const response = await fetch(`http://localhost:8000/api/getImage`, {
+				// 		method: "POST",
+				// 		headers: {
+				// 			'Content-Type': 'application/json',
+				// 		},
+				// 		body: JSON.stringify({
+				// 			image: user_image
+				// 		})
+				// 	});
+				// 	const blob = await response.blob();
+				// 	const image = URL.createObjectURL(blob);
+				// 	setMemberImages((prevMemberImages) => [...prevMemberImages, image]);
+				// };
+				// fetchImages(data.image)
 			} else {
 				console.error('Failed to fetch data');
 			}
@@ -282,8 +283,8 @@ function CreateTournament() {
 						setAllGameFriends([...currentAllGameFriends, message.userInfos])
 				} else if (type === 'tournament_started') {
 					let tournament_id = data.message.tournament_id
-					if (socket && socket.readyState === WebSocket.OPEN) {
-						socket.send(JSON.stringify({
+					if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+						notifSocket.send(JSON.stringify({
 							type: 'Round-16-timer',
 							message : {
 								tournament_id : tournament_id,
@@ -479,7 +480,7 @@ function CreateTournament() {
 									</div>
 								}
 								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[0]} alt="" />
+									<img className={styles["avatar"]} src={tournamentMembers[0].image} alt="" />
 								</div>
 								<div className={styles["user-info"]}>
 									<h4 className={styles["user-info-name"]}>{tournamentMembers[0].name}</h4>
@@ -504,7 +505,7 @@ function CreateTournament() {
 									</div>
 								}
 								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[1]} alt="" />
+									<img className={styles["avatar"]} src={tournamentMembers[1].image} alt="" />
 								</div>
 								<div className={styles["user-info"]}>
 									<h4 className={styles["user-info-name"]}>{tournamentMembers[1].name}</h4>
@@ -528,7 +529,7 @@ function CreateTournament() {
 									</div>
 								}
 								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[2]} alt="" />
+									<img className={styles["avatar"]} src={tournamentMembers[2].image} alt="" />
 								</div>
 								<div className={styles["user-info"]}>
 									<h4 className={styles["user-info-name"]}>{tournamentMembers[2].name}</h4>
@@ -553,7 +554,7 @@ function CreateTournament() {
 									</div>
 								}
 								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[3]} alt="" />
+									<img className={styles["avatar"]} src={tournamentMembers[3].image} alt="" />
 								</div>
 								<div className={styles["user-info"]}>
 									<h4 className={styles["user-info-name"]}>{tournamentMembers[3].name}</h4>
@@ -578,7 +579,7 @@ function CreateTournament() {
 									</div>
 								}
 								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[4]} alt="" />
+									<img className={styles["avatar"]} src={tournamentMembers[4].image} alt="" />
 								</div>
 								<div className={styles["user-info"]}>
 									<h4 className={styles["user-info-name"]}>{tournamentMembers[4].name}</h4>
@@ -603,7 +604,7 @@ function CreateTournament() {
 									</div>
 								}
 								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[5]} alt="" />
+									<img className={styles["avatar"]} src={tournamentMembers[5].image} alt="" />
 								</div>
 								<div className={styles["user-info"]}>
 									<h4 className={styles["user-info-name"]}>{tournamentMembers[5].name}</h4>
@@ -628,7 +629,7 @@ function CreateTournament() {
 									</div>
 								}
 								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[6]} alt="" />
+									<img className={styles["avatar"]} src={tournamentMembers[6].image} alt="" />
 								</div>
 								<div className={styles["user-info"]}>
 									<h4 className={styles["user-info-name"]}>{tournamentMembers[6].name}</h4>
@@ -653,7 +654,7 @@ function CreateTournament() {
 									</div>
 								}
 								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[7]} alt="" />
+									<img className={styles["avatar"]} src={tournamentMembers[7].image} alt="" />
 								</div>
 								<div className={styles["user-info"]}>
 									<h4 className={styles["user-info-name"]}>{tournamentMembers[7].name}</h4>
@@ -678,7 +679,7 @@ function CreateTournament() {
 									</div>
 								}
 								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[8]} alt="" />
+									<img className={styles["avatar"]} src={tournamentMembers[8].image} alt="" />
 								</div>
 								<div className={styles["user-info"]}>
 									<h4 className={styles["user-info-name"]}>{tournamentMembers[8].name}</h4>
@@ -703,7 +704,7 @@ function CreateTournament() {
 									</div>
 								}
 								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[9]} alt="" />
+									<img className={styles["avatar"]} src={tournamentMembers[9].image} alt="" />
 								</div>
 								<div className={styles["user-info"]}>
 									<h4 className={styles["user-info-name"]}>{tournamentMembers[9].name}</h4>
@@ -728,7 +729,7 @@ function CreateTournament() {
 									</div>
 								}
 								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[10]} alt="" />
+									<img className={styles["avatar"]} src={tournamentMembers[10].image} alt="" />
 								</div>
 								<div className={styles["user-info"]}>
 									<h4 className={styles["user-info-name"]}>{tournamentMembers[10].name}</h4>
@@ -753,7 +754,7 @@ function CreateTournament() {
 									</div>
 								}
 								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[11]} alt="" />
+									<img className={styles["avatar"]} src={tournamentMembers[11].image} alt="" />
 								</div>
 								<div className={styles["user-info"]}>
 									<h4 className={styles["user-info-name"]}>{tournamentMembers[11].name}</h4>
@@ -778,7 +779,7 @@ function CreateTournament() {
 									</div>
 								}
 								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[12]} alt="" />
+									<img className={styles["avatar"]} src={tournamentMembers[12].image} alt="" />
 								</div>
 								<div className={styles["user-info"]}>
 									<h4 className={styles["user-info-name"]}>{tournamentMembers[12].name}</h4>
@@ -803,7 +804,7 @@ function CreateTournament() {
 									</div>
 								}
 								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[13]} alt="" />
+									<img className={styles["avatar"]} src={tournamentMembers[13].image} alt="" />
 								</div>
 								<div className={styles["user-info"]}>
 									<h4 className={styles["user-info-name"]}>{tournamentMembers[13].name}</h4>
@@ -828,7 +829,7 @@ function CreateTournament() {
 									</div>
 								}
 								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[14]} alt="" />
+									<img className={styles["avatar"]} src={tournamentMembers[14].image} alt="" />
 								</div>
 								<div className={styles["user-info"]}>
 									<h4 className={styles["user-info-name"]}>{tournamentMembers[14].name}</h4>
@@ -852,7 +853,7 @@ function CreateTournament() {
 									</div>
 								}
 								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[15]} alt="" />
+									<img className={styles["avatar"]} src={tournamentMembers[15].image} alt="" />
 								</div>
 								<div className={styles["user-info"]}>
 									<h4 className={styles["user-info-name"]}>{tournamentMembers[15].name}</h4>

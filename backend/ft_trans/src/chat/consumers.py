@@ -20,7 +20,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		if data['type'] == 'join-channel':
 			user_name = data['message']['user']
 			room_name = data['message']['room_name']
-			print("room name:",room_name)
 			try:
 				user = await self.get_user_by_name(user_name)
 			except customuser.DoesNotExist:

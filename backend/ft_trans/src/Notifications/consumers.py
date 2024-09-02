@@ -95,6 +95,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 		elif data['type'] == 'accept-tournament-invitation': await tournament_notifs_consumers.accept_invite(self, data, notifs_user_channels)
 		elif data['type'] == 'invite-friend': await tournament_notifs_consumers.invite_friend(self, data, notifs_user_channels)
 		elif data['type'] == 'deny-tournament-invitation': await tournament_notifs_consumers.deny_invite(self, data, notifs_user_channels)
+		elif data['type'] == 'Round-16-timer': await tournament_notifs_consumers.Round_16_timer(self, data)
 
 
 

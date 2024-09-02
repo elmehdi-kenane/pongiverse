@@ -80,7 +80,7 @@ const OneVsOnePlayTournamentMatch = () => {
 	const [playersPics, setPlayersPics] = useState([])
 	const navigate = useNavigate()
 	let canvasRef = useRef(null);
-
+	let isOut = false
 	let isGameStarted = false
 	let playerNo = 0
 
@@ -534,12 +534,6 @@ function createParticle(x, y) {
 						resizeCanvas()
 						draw()
 					}
-				} else if (type === "notAuthorized") {  // NOTE: remove from back then remove this
-					console.log("INSIDE LEAVEGAME")
-					console.log("navigating from the playing page")
-					navigate("../game/solo/1vs1")  // TODO: CHANGE THIS TO TOURNAMENT
-				} else if (type === "roomNotExist") {  // NOTE: remove from back then remove this
-					navigate("../game/solo/1vs1")
 				} else if (type === "finishedGame") {
 					let allPlayersStats = [...playersInfos]
 					setUserName1(message.user1)
@@ -589,7 +583,12 @@ function createParticle(x, y) {
 				else if (type === 'hmed') {
 					console.log("hmed received")
 					socket.close()
+				} else if (type === 'youWinTheGame'){
+					navigate("../game/tournamentbracket")
+				} else if (type === 'youLoseTheGame'){
+					navigate("../game")
 				}
+					
 			}
 		}
 	}, [socket, user])

@@ -148,6 +148,7 @@ def user_image(request):
 @api_view(['POST'])
 def tournament_members(request):
 	username = request.data.get('user')
+	ip_address = os.getenv("IP_ADDRESS")
 	user = customuser.objects.filter(username=username).first()
 	if not user:
 		return Response({'error': 'User not found'}, status=404)
@@ -161,12 +162,12 @@ def tournament_members(request):
 		return Response({'error': 'Tournament not found'}, status=404)
 	allMembers = []
 	for member in TournamentMembers.objects.filter(tournament=my_tournament):
-		image_path = member.user.avatar.path
+		image_path = member.user.avatar.url
 		allMembers.append({
 			'id': member.user.id,
 			'name': member.user.username,
 			'level': 2,  # Assuming level is static for now
-			'image': image_path,
+			'image': f"http://{ip_address}:8000/auth{image_path}",
 			'is_online' : member.user.is_online
 		})
 	response = Response()
@@ -215,10 +216,11 @@ def started_tournament_members(request):
 @api_view(['POST'])
 def get_tournament_member(request):
 	username = request.data.get('user')
+	ip_address = os.getenv("IP_ADDRESS")
 	user = customuser.objects.filter(username=username).first()
 	if user is not None:
 		response = Response()
-		response.data = {'id' : user.id, 'name' : user.username, 'level' : 2, 'image' : user.avatar.path, 'is_online' : user.is_online}
+		response.data = {'id' : user.id, 'name' : user.username, 'level' : 2, 'image' : f"http://{ip_address}:8000/auth{user.avatar.url}", 'is_online' : user.is_online}
 		return response
 
 @api_view(['POST'])
@@ -286,8 +288,10 @@ def is_started_and_not_finshed(request):
 	username = request.data.get('user')
 	response = Response()
 	user = customuser.objects.filter(username=username).first()
-	for member in TournamentMembers.objects.filter(user=user):
-		if member.tournament is not None and  member.tournament.is_started == True and member.tournament.is_finished == False and member.is_eliminated == False:
+	members = TournamentMembers.objects.filter(user=user)
+	for member in members:
+		tournament = member.tournament
+		if tournament and  member.tournament.is_started == True and member.tournament.is_finished == False and member.is_eliminated == False:
 			response.data = {'Case' : 'yes'}
 			return response
 	response.data = {'Case' : 'no'}
@@ -372,6 +376,7 @@ def set_is_inside(request):
 @api_view(['POST'])
 def get_game_members_round(request):
 	username = request.data.get('user')
+	ip_address = os.getenv("IP_ADDRESS")
 	user = customuser.objects.filter(username=username).first()
 	response = Response()
 	for member in TournamentMembers.objects.filter(user=user):
@@ -390,7 +395,7 @@ def get_game_members_round(request):
 						'id' : sixteenmember.user.id,
 						'name' : sixteenmember.user.username,
 						'level': 2,  # Assuming level is static for now
-						'image': sixteenmember.user.avatar.path,
+						'image': f"http://{ip_address}:8000/auth{sixteenmember.user.avatar.url}",
 						'position': sixteenmember.position
 					})
 			if roundquarterfinal is not None:
@@ -400,7 +405,7 @@ def get_game_members_round(request):
 							'id' : quartermember.user.id,
 							'name' : quartermember.user.username,
 							'level': 2,  # Assuming level is static for now
-							'image': quartermember.user.avatar.path,
+							'image': f"http://{ip_address}:8000/auth{quartermember.user.avatar.url}",
 							'position': quartermember.position
 						})
 					else:
@@ -418,7 +423,7 @@ def get_game_members_round(request):
 							'id' : semimember.user.id,
 							'name' : semimember.user.username,
 							'level': 2,  # Assuming level is static for now
-							'image': semimember.user.avatar.path,
+							'image': f"http://{ip_address}:8000/auth{semimember.user.avatar.url}",
 							'position': semimember.position
 						})
 					else :
@@ -433,7 +438,7 @@ def get_game_members_round(request):
 			winnermember = TournamentUserInfo.objects.filter(round=winner).first()
 			if winnermember is not None:
 				if winnermember.user is not None:
-					winnerdict.update({'id': winnermember.user.id, 'name' : winnermember.user.username, 'level' : 2, 'image' : winnermember.user.avatar.path, 'position' : winnermember.position})
+					winnerdict.update({'id': winnermember.user.id, 'name' : winnermember.user.username, 'level' : 2, 'image' : f"http://{ip_address}:8000/auth{winnermember.user.avatar.url}", 'position' : winnermember.position})
 				else:
 					winnerdict.update({'id': -1, 'name' : '', 'level' : 2, 'image' : '', 'position' : winnermember.position})
 	response.data = {'roundsixteen' : sixteenmembers, 'roundquarter' : quartermembers, 'roundsemi' : semimembers, 'winner' : winnerdict}
