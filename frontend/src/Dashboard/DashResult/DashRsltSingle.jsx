@@ -18,10 +18,9 @@ function DashRsltSingle() {
       // Extract time components
       const hours = String(date.getHours()).padStart(2, '0');
       const minutes = String(date.getMinutes()).padStart(2, '0');
-      const seconds = String(date.getSeconds()).padStart(2, '0');
 
       // Construct the formatted date and time
-      const formattedDateTime = `${year}-${month}-${day} | ${hours}:${minutes}:${seconds}`;
+      const formattedDateTime = `${year}-${month}-${day} | ${hours}:${minutes}`;
       setMatchDate(formattedDateTime);
 
     }
@@ -56,35 +55,41 @@ function DashRsltSingle() {
   return (
     <>
       <h1> Single Match Results </h1>
-      <div className="result__field">
-        <p>a</p>
+      <div className="result__field all-space">
+        <div className="field__img-name">
+          <img src={matchDtls.pic1}/>
+          <p> {matchDtls.user1} </p>
+        </div>
         <p>{matchDate}</p>
-        <p>a</p>
+        <div className="field__img-name">
+          <img src={matchDtls.pic2}/>
+          <p> {matchDtls.user2} </p>
+        </div>
       </div>
       <div className="result__field">
-        <p>a</p>
-        <p>a</p>
-        <p>a</p>
+        <p> {matchDtls.score1} </p>
+        <p> Score</p>
+        <p> {matchDtls.score2} </p>
       </div>
       <div className="result__field">
-        <p>a</p>
-        <p>a</p>
-        <p>a</p>
+        <p> {matchDtls.goals1} </p>
+        <p> Goals </p>
+        <p> {matchDtls.goals2} </p>
       </div>
       <div className="result__field">
-        <p>a</p>
-        <p>a</p>
-        <p>a</p>
+        <p> {matchDtls.hit1} </p>
+        <p> Hit </p>
+        <p> {matchDtls.hit2} </p>
       </div>
       <div className="result__field">
-        <p>a</p>
-        <p>a</p>
-        <p>a</p>
+        <p> {matchDtls.acc1}% </p>
+        <p> Accuracy </p>
+        <p> {matchDtls.acc2}% </p>
       </div>
       <div className="result__field">
-        <p>a</p>
-        <p>a</p>
-        <p>a</p>
+        <p> {matchDtls.exp1} </p>
+        <p> Rating </p>
+        <p> {matchDtls.exp2} </p>
       </div>
     </>
   );
