@@ -3,6 +3,7 @@ import AuthContext from "../../navbar-sidebar/Authcontext";
 import DashboardContext from "../DashboardWrapper";
 import CloseIcon from "@mui/icons-material/Close";
 import DashRsltSingle from "./DashRsltSingle";
+import DashRsltMulty from "./DashRsltMulty";
 
 function DashResult() {
   const {isGameStats, setIsGameStats } = useContext(AuthContext);
@@ -27,6 +28,7 @@ function DashResult() {
       <div className="match-result" id="match-click">
         <CloseIcon onClick={closeGameStats} className="match-result__close" />
         { singleId && <DashRsltSingle /> }
+        { multyId && <DashRsltMulty /> }
       </div>
     </div>
   );

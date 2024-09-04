@@ -395,8 +395,8 @@ def get_single_match_dtl(request, match_id):
             "hit2": match_stq.team2_player1_hit,
             "exp1": match_stq.team1_player1_rating,
             "exp2": match_stq.team2_player1_rating,
-            "acc1": f"{(match_stq.team1_player1_score * 100 / match_stq.team1_player1_hit):.2f}" if match_stq.team1_player1_hit else 0,
-            "acc2": f"{(match_stq.team2_player1_score * 100 / match_stq.team2_player1_hit):.2f}" if match_stq.team2_player1_hit else 0,
+            "acc1": f"{(match_stq.team1_player1_score * 100 / match_stq.team1_player1_hit):.0f}" if match_stq.team1_player1_hit else 0,
+            "acc2": f"{(match_stq.team2_player1_score * 100 / match_stq.team2_player1_hit):.0f}" if match_stq.team2_player1_hit else 0,
         }
         return Response(data={"data": res_data}, status=status.HTTP_200_OK)
 
@@ -437,3 +437,30 @@ def get_multiplayer_matches(request, username, page):
     return Response(data={'error': 'Error Getting MultiplayerGames!'}, status=status.HTTP_400_BAD_REQUEST)
 
 #**------- GetUser MultiplayerMatch Details -------**#
+
+# @api_view(["GET"])
+# def get_multy_match_dtl(request, match_id):
+#     match = Match.objects.filter(room_id=match_id).first()
+#     match_stq = MatchStatistics.objects.filter(match=match).first()
+
+#     if match and match_stq:
+#         res_data = {
+#             "date": match.date_ended,
+#             "pic1": f"http://localhost:8000/auth{match.team1_player1.avatar.url}",
+#             "pic2": f"http://localhost:8000/auth{match.team2_player1.avatar.url}",
+#             "user1": match.team1_player1.username,
+#             "user2": match.team2_player1.username,
+#             "score1": match.team1_score,
+#             "score2": match.team2_score,
+#             "goals1": match_stq.team1_player1_score,
+#             "goals2": match_stq.team2_player1_score,
+#             "hit1": match_stq.team1_player1_hit,
+#             "hit2": match_stq.team2_player1_hit,
+#             "exp1": match_stq.team1_player1_rating,
+#             "exp2": match_stq.team2_player1_rating,
+#             "acc1": f"{(match_stq.team1_player1_score * 100 / match_stq.team1_player1_hit):.0f}" if match_stq.team1_player1_hit else 0,
+#             "acc2": f"{(match_stq.team2_player1_score * 100 / match_stq.team2_player1_hit):.0f}" if match_stq.team2_player1_hit else 0,
+#         }
+#         return Response(data={"data": res_data}, status=status.HTTP_200_OK)
+
+#     return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
