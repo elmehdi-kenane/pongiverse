@@ -35,18 +35,18 @@ def leave_chat_room(request):
         except Membership.DoesNotExist:
             return Response({"error": {"Opps!, Something went Wrong"}}, status=404)
 
-        member_roles = member_to_kick.roles
+        member_role = member_to_kick.role
         # cick the member from the room membership
         member_to_kick.delete()
-        if member_roles == "admin":
+        if member_role == "admin":
             print("the user is an admin")
             all_members = Membership.objects.filter(room=room).order_by("joined_at")
             admin_found = 0
             for member in all_members:
-                if member.roles == "admin" and member_to_kick != member:
+                if member.role == "admin" and member_to_kick != member:
                     admin_found += 1
             if all_members and not admin_found:
-                all_members[0].roles = "admin"
+                all_members[0].role = "admin"
                 new_admin = customuser.objects.get(id=all_members[0].user_id)
                 all_members[0].save()
         room.members_count -= 1
@@ -211,7 +211,7 @@ def create_chat_room(request):
             return Response(
                 {"error": "Chat room name is taken. Try a different one."}, status=400
             )
-        Membership.objects.create(user=user, room=new_room, roles="admin")
+        Membership.objects.create(user=user, room=new_room, role="admin")
         protocol = get_protocol(request)
         ip_address = os.getenv("IP_ADDRESS")
         channel_layer = get_channel_layer()
@@ -235,6 +235,11 @@ def create_chat_room(request):
         )
     return Response({"error": "Invalid request method"}, status=400)
 
+def get_chat_room_last_message(roomId):
+    last_message = Message.objects.filter(room__id=roomId).last()
+    return last_message.content if last_message else ''
+def get_chat_room_unread_cout(user, roomId):
+     return Membership.objects.get(user=user, room__id=roomId).unreadCount
 
 @api_view(["GET"])
 def channel_list(request, username):
@@ -247,12 +252,14 @@ def channel_list(request, username):
         for membership in memberships:
             room_data = {
                 "id": membership.room.id,
-                "role": membership.roles,
+                "role": membership.role,
                 "name": membership.room.name,
                 "topic": membership.room.topic,
                 "icon": f"{protocol}://{ip_address}:8000/chatAPI{membership.room.icon.url}",
                 "cover": f"{protocol}://{ip_address}:8000/chatAPI{membership.room.cover.url}",
                 "membersCount": membership.room.members_count,
+                "lastMessage" : get_chat_room_last_message(membership.room.id),
+                "unreadCount": get_chat_room_unread_cout(user, membership.room.id)
             }
             rooms.append(room_data)
         return Response(rooms)
@@ -266,7 +273,7 @@ def all_chat_room_memebers(request, chat_room_name):
     members = Membership.objects.filter(room=room)
     data = []
     for member in members:
-        if member.roles == "member":
+        if member.role == "member":
             user = customuser.objects.get(id=member.user_id)
             member_data = {"name": user.username, "avatar": user.avatar.path}
             data.append(member_data)
@@ -363,6 +370,7 @@ def rooms_invitations(request, username):
         for invitaion in invitations:
             room = Room.objects.get(id=invitaion.room_id)
             invitaion_data = {
+                'id' : room.id,
                 "name": room.name,
                 "topic": room.topic,
                 "icon": f"{protocol}://{ip_address}:8000/chatAPI{room.icon.url}",
@@ -390,7 +398,7 @@ def suggested_chat_rooms(request, username):
             if membership.room.visiblity == "public":
                 room_data = {
                     "id": membership.room.id,
-                    "role": membership.roles,
+                    "role": membership.role,
                     "name": membership.room.name,
                     "topic": membership.room.topic,
                     "icon": f"{protocol}://{ip_address}:8000/chatAPI{membership.room.icon.url}",
@@ -432,14 +440,16 @@ def accept_chat_room_invite(request):
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
         try:
+            print("Room ID", request.data.get("room"))     
             room = Room.objects.get(id=request.data.get("room"))
+            print(room)
         except Room.DoesNotExist:
             return Response({"error": "chat room not found"}, status=400)
         try:
             invitation = RoomInvitation.objects.get(user=user, room=room)
         except RoomInvitation.DoesNotExist:
             return Response({"error": "opps, something went wrong"}, status=400)
-        Membership.objects.create(user=user, room=room, roles="member")
+        Membership.objects.create(user=user, room=room, role="member")
         room.members_count += 1
         invitation.delete()
         room.save()
@@ -471,6 +481,21 @@ def accept_chat_room_invite(request):
 def cancel_chat_room_invite(request):
     pass
 
+
+@api_view(["POST"])
+def reset_chat_room_unread_messages(request):
+    if request.method == "POST":
+        try:
+            user = customuser.objects.get(username=request.data.get("user"))
+        except customuser.DoesNotExist:
+            return Response({"error": "user not found"}, status=400)
+        try:
+            room = Room.objects.get(id=request.data.get("roomId"))
+        except customuser.DoesNotExist:
+            return Response({"error": "user not found"}, status=400)
+        Membership.objects.filter(user=user, room=room).update(unreadCount=0)
+        return Response({"success": "reset unread message successfully"}, status=200)
+    return Response({"error": "Invalid request method"}, status=400)
 
 @api_view(["POST"])
 def reset_unread_messages(request):
@@ -546,7 +571,7 @@ def join_chat_room(request):
             return Response({"error": "chat room not found"}, status=400)
         if Membership.objects.filter(user=user, room=room).exists():
             return Response({"error": "you already joined chat room"}, status=400)
-        Membership.objects.create(user=user, room=room, roles="member")
+        Membership.objects.create(user=user, room=room, role="member")
         room.members_count += 1
         room.save()
         protocol = get_protocol(request)

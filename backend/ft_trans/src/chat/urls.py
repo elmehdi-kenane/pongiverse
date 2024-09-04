@@ -22,5 +22,6 @@ urlpatterns = [
     path('joinChatRoom', views.join_chat_room, name='join-chat-room'),     
     path('cancelChatRoomInvite', views.cancel_chat_room_invite, name='cancel-chat-room-invite'),
     path('resetUndreadMessages', views.reset_unread_messages, name='reset-unread-messages'),
+    path('resetChatRoomUndreadMessages', views.reset_chat_room_unread_messages),
     path('firendwithdirects/<str:username>', views.friends_with_directs),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

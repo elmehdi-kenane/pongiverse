@@ -31,7 +31,10 @@ const InvitationRoom = (props) => {
           const currentChatRooms = chatRoomConversationsRef.current;
           setChatRoomConversations([...currentChatRooms, data.room]);
         }, 500)
-      } else toast.error(data.error)
+      } else {
+        toast.dismiss(toastId); 
+        toast.error(data.error)
+      }
 
     } catch (error) {
       console.log(error)

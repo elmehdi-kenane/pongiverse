@@ -27,7 +27,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 					'type': 'connected',
 					'message': 'chat connection established'
 				}
-			print("USER_CHANNEL_NAMES", self.channel_name)
 			await self.send(json.dumps(message))
 
 	async def receive(self, text_data):
@@ -48,11 +47,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		user_id = payload_data.get('user_id')
 		if user_id:
 			user_channels_name = user_channels.get(user_id)
-			print("user channels before the filter: ", user_channels_name)
 			filtered_channels_name = [channel_name for channel_name in user_channels_name if channel_name != self.channel_name]
-			print("user channels in the filter: ", filtered_channels_name)
 			user_channels[user_id] = filtered_channels_name
-			print("user channels after the filter: ", user_channels.get(user_id))
 
 	async def broadcast_message(self, event):
 		await self.send(text_data=json.dumps(event['data']))
@@ -66,6 +62,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			'type':'newMessage',
 			'data': {
 				'id':data.id,
+				'roomId' : data.room.id,
 				'content':data.content,
 				'sender' : data.sender.username,
 				'date' : formatted_time,

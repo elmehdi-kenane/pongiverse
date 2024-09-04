@@ -7,7 +7,7 @@ export default ChatContext;
 
 export const ChatProvider = ({ children }) => {
   let location = useLocation();
-  const { user } = useContext(AuthContext);
+  const { user, chatSocket } = useContext(AuthContext);
   const [isHome, setIsHome] = useState(true);
   const [chatRoomConversations, setChatRoomConversations] = useState([]);
   const [chatRoomInvitations, setChatRoomInvitations] = useState([]);
@@ -32,6 +32,7 @@ export const ChatProvider = ({ children }) => {
     avatar: "",
   });
   const selectedDirectRef = useRef(selectedDirect);
+  const selectedChatRoomRef = useRef(selectedChatRoom);
 
   useEffect(() => {
     suggestedChatRoomsRef.current = suggestedChatRooms;
@@ -46,12 +47,36 @@ export const ChatProvider = ({ children }) => {
   }, [selectedDirect]);
 
   useEffect(() => {
+    selectedChatRoomRef.current = selectedChatRoom;
+  }, [selectedChatRoom]);
+
+  useEffect(() => {
     chatRoomConversationsRef.current = chatRoomConversations;
   }, [chatRoomConversations]);
 
   useEffect(() => {
     chatRoomInvitationsRef.current = chatRoomInvitations;
   }, [chatRoomInvitations]);
+
+    //add user to channel Group
+    useEffect(() => {
+      const addUserChannelGroup = () => {
+        chatSocket.send(
+          JSON.stringify({
+            type: "addUserChannelGroup",
+            user: user,
+          })
+        );
+      };
+      if (
+        chatSocket &&
+        chatSocket.readyState === WebSocket.OPEN &&
+        user &&
+        (location.pathname === "/mainpage/chat" ||
+          location.pathname === "/mainpage/groups")
+      )
+        addUserChannelGroup();
+    }, [chatSocket, user, location.pathname]);
 
   useEffect(() => {
     const fetchChatRooms = async () => {
@@ -63,7 +88,7 @@ export const ChatProvider = ({ children }) => {
         );
         const data = await response.json();
         setChatRoomConversations(data);
-        // console.log("inside the context channels", data);
+        console.log("inside the context channels", data);
       } catch (error) {
         console.log(error);
       }
@@ -96,8 +121,7 @@ export const ChatProvider = ({ children }) => {
                 ...prevConversations,
                 newConversation,
               ]);
-            }
-            else {
+            } else {
               let allDirects = data;
               const updatedDirects = allDirects.map((friend) => {
                 if (selectedDirect.id === friend.id) {
@@ -105,8 +129,8 @@ export const ChatProvider = ({ children }) => {
                 }
                 return friend;
               });
-              setDirectConversations(updatedDirects)
-              resetUnreadMessages(user, selectedDirect.id)
+              setDirectConversations(updatedDirects);
+              resetUnreadMessages(user, selectedDirect.id);
             }
           }
         } else console.error("opps!, something went wrong");
@@ -131,7 +155,6 @@ export const ChatProvider = ({ children }) => {
         console.log(error);
       }
     };
-
     const fetchSuggestedChatRooms = async () => {
       try {
         const response = await fetch(
@@ -186,6 +209,7 @@ export const ChatProvider = ({ children }) => {
     selectedItem: selectedItem,
     setSelectedItem: setSelectedItem,
     suggestedChatRoomsRef: suggestedChatRoomsRef,
+    selectedChatRoomRef: selectedChatRoomRef,
   };
   return (
     <ChatContext.Provider value={contextData}>{children}</ChatContext.Provider>

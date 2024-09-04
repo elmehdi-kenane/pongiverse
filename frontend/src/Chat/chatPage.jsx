@@ -7,7 +7,7 @@ import { useContext, useEffect, useState } from "react";
 import * as ChatIcons from "../assets/chat/media/index";
 import { Toaster } from "react-hot-toast";
 import AuthContext from "../navbar-sidebar/Authcontext";
-import { resetUnreadMessages } from "./chatConversationItem";
+import { resetUnreadMessages, resetChatRoomUnreadMessages } from "./chatConversationItem";
 const Chat = () => {
   const {
     chatRoomConversations,
@@ -20,10 +20,11 @@ const Chat = () => {
     setIsHome,
     selectedDirectRef,
     setDirectConversations,
-    directConversationsRef,
+    setChatRoomConversations,
     setMessages,
     selectedItem,
     setSelectedItem,
+    selectedChatRoomRef,
   } = useContext(ChatContext);
   const { chatSocket, user } = useContext(AuthContext);
   const [query, setQuery] = useState("");
@@ -92,6 +93,7 @@ const Chat = () => {
     if (chatSocket) {
       chatSocket.onmessage = (e) => {
         let data = JSON.parse(e.data);
+        console.log("Type: ",data.type)
         if (data.type === "newDirect") {
           const currentDirect = selectedDirectRef.current;
           if (
@@ -150,6 +152,38 @@ const Chat = () => {
         } else if (data.type === "goToGamingPage") {
           console.log("navigating now");
           navigate(`/mainpage/game/solo/1vs1/friends`);
+        } else if (data.type === "newMessage") {
+          let currentRoom = selectedChatRoomRef.current
+          if(currentRoom.roomId === data.data.roomId) {
+
+            setMessages(prev => [...prev, data.data])
+            setChatRoomConversations((prevConversations) => {
+              return prevConversations.map((room) => {
+                if (room.id === data.data.roomId) {
+                  return {
+                    ...room,
+                    lastMessage: data.data.content,
+                  };
+                }
+                return room;
+              });
+            });
+            if (data.data.sender !== user)
+              resetChatRoomUnreadMessages(user, data.data.roomId);
+          } else {
+            setChatRoomConversations((prevConversations) => {
+              return prevConversations.map((room) => {
+                if (room.id === data.data.roomId) {
+                  return {
+                    ...room,
+                    unreadCount: String(Number(room.unreadCount) + 1),
+                    lastMessage: data.data.content,
+                  };
+                }
+                return room;
+              });
+            });
+          }
         }
       };
     }
@@ -216,15 +250,13 @@ const Chat = () => {
               : chatRoomConversations.map((chatRoom, key) => (
                   <ChatConversationItem
                     key={key}
+                    roomId={chatRoom.id}
                     name={chatRoom.name}
                     icon={chatRoom.icon}
-                    lastMessage={
-                      "The correct format would typically be chatRoomConversations"
-                    }
-                    imageIndex={key}
-                    isDirect={isHome}
+                    lastMessage={chatRoom.lastMessage}
                     membersCount={chatRoom.membersCount}
-                    roomId={chatRoom.id}
+                    unreadCount={chatRoom.unreadCount}
+                    isDirect={isHome}
                     setSelectedChatRoom={setSelectedChatRoom}
                     isSelected={selectedItem === chatRoom.name}
                     setSelectedItem={handleSelectItem}

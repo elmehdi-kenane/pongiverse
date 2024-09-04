@@ -11,15 +11,13 @@ import ChatRoomMembersList from "./chatRoomOptions/chatRoomMembersList";
 import ChatRoomInfos from "./chatRoomOptions/chatRoomInfos";
 
 const ChatRoomConversation = (props) => {
-  const { selectedChatRoom, setSelectedChatRoom, selectedChatRoomRef } = useContext(ChatContext);
+  const { selectedChatRoom, setSelectedChatRoom, messages, setMessages } = useContext(ChatContext);
   const [showChatRoomInfos, setShowChatRoomInfos] = useState(false);
   const [showChatRoomMembers, setShowChatRoomMembers] = useState(false);
   const [showLeaveRoomPopUp, setShowLeaveRoomPopUp] = useState(false);
   const [showChatRoomOptions, setShowChatRoomOptions] = useState(false);
-  const [messages, setMessages] = useState([]);
   const [messageToSend, setMessageToSend] = useState("");
-  const [recivedMessage, setRecivedMessage] = useState(null);
-  const { user, chatSocket, userImg } = useContext(AuthContext);
+  const { user, chatSocket} = useContext(AuthContext);
   const messageEndRef = useRef(null);
 
   const sendMessage = () => {
@@ -51,7 +49,6 @@ const ChatRoomConversation = (props) => {
         );
         const data = await response.json();
         if (data) setMessages(data);
-        console.log("the data messages: ", data);
       } catch (error) {
         console.log(error);
       }
@@ -60,25 +57,6 @@ const ChatRoomConversation = (props) => {
       fetchMessages();
     }
   }, [selectedChatRoom]);
-
-  useEffect(() => {
-    if (recivedMessage !== null) {
-      setMessages((prev) => [...prev, recivedMessage]);
-    }
-  }, [recivedMessage]);
-
-  useEffect(() => {
-    if (chatSocket) {
-      chatSocket.onmessage = (e) => {
-        let data = JSON.parse(e.data);
-        console.log(data)
-        if (data.type === "newMessage") {
-          setRecivedMessage(data.data);
-          console.log("new message recived: ", data.data)
-        }
-      };
-    }
-  }, [chatSocket]);
 
   useEffect(() => {
     if (messages) {

@@ -21,8 +21,9 @@ class Room(models.Model):
 class Membership(models.Model):
 	user = models.ForeignKey(User,on_delete=models.CASCADE)
 	room = models.ForeignKey(Room,on_delete=models.CASCADE)
-	roles = models.TextField(default='member')
+	role = models.TextField(default='member')
 	joined_at = models.DateTimeField(auto_now_add=True)
+	unreadCount = models.BigIntegerField(default=0)
 
 class Message(models.Model):
 	sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')

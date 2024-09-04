@@ -65,20 +65,6 @@ const Rooms = () => {
 
   // ######################################### Chat Room backend Handlers ###################################################################
 
-  //add user to channel Group
-  useEffect(() => {
-    const addUserChannelGroup = () => {
-      chatSocket.send(
-        JSON.stringify({
-          type: "addUserChannelGroup",
-          user: user,
-        })
-      );
-    };
-    if (chatSocket && chatSocket.readyState === WebSocket.OPEN && user)
-      addUserChannelGroup();
-  }, [chatSocket, user]);
-
   const chatRoomAdminAdded = (data) => {
     const allMyChatRooms = chatRoomConversationsRef.current;
     const updatedRooms = allMyChatRooms.map((room) => {

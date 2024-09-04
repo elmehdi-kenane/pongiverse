@@ -2,8 +2,8 @@ from myapp.models import customuser  ###########
 from asgiref.sync import sync_to_async
 from .models import Room, Membership, Message, Directs, RoomInvitation
 from django.core.files.storage import default_storage
-import re, json, os
-from django.contrib.auth.hashers import make_password, check_password
+import json, os
+from django.db.models import F
 
 async def add_user_channel_group(self, data):
     try:
@@ -16,7 +16,7 @@ async def add_user_channel_group(self, data):
         return
     for membership in memberships:
         room_id = await sync_to_async(lambda: membership.room.id)()
-        await self.channel_layer.group_add(f"chat_room{room_id}", self.channel_name)
+        await self.channel_layer.group_add(f"chat_room_{room_id}", self.channel_name)
 
 
 async def add_chat_room_admin(self, data, user_channels):
@@ -25,7 +25,7 @@ async def add_chat_room_admin(self, data, user_channels):
         username=data["message"]["memberName"]
     )
     member = await sync_to_async(Membership.objects.get)(room=room, user=user)
-    member.roles = "admin"
+    member.role = "admin"
     await sync_to_async(member.save)()
     await self.channel_layer.send(
         user_channels.get(user.username),
@@ -92,11 +92,13 @@ async def message(self, data):
     newMessage = await sync_to_async(Message.objects.create)(
         sender=sender, room=room, content=data["data"]["message"]
     )
+
+    await sync_to_async(Membership.objects.exclude(user=sender).update)(unreadCount= F('unreadCount') + 1)
     event = {
         "type": "send_message",
         "message": newMessage,
     }
-    await self.channel_layer.group_add(f"chat_room_{room.id}", self.channel_name)
+    # await self.channel_layer.group_add(f"chat_room_{room.id}", self.channel_name)
     await self.channel_layer.group_send(f"chat_room_{room.id}", event)
 
 
