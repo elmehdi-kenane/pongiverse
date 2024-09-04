@@ -262,7 +262,8 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 				actual_round = await get_actual_round_reached(tournament)
 				the_round = await sync_to_async(Round.objects.filter(tournament=tournament, type=actual_round).first)()
 				tournamentuserinfocount = await sync_to_async(TournamentUserInfo.objects.filter(round=the_round).count)()
-				if (actual_round == 'QUARTERFINAL' and tournamentuserinfocount == 8) or (actual_round == 'SEMIFINAL' and tournamentuserinfocount == 4) or (actual_round == 'FINAL' and tournamentuserinfocount == 2):
+				print("--------------------WSEL HNA")
+				if (actual_round == 'QUARTERFINAL' and tournamentuserinfocount == 2) or (actual_round == 'SEMIFINAL' and tournamentuserinfocount == 4) or (actual_round == 'FINAL' and tournamentuserinfocount == 2):
 					await tournament_notifs_consumers.OtherRounds(self, actual_round, tournament)
 			if room['players'][1]['status'] == 'loser': ### NOTE: to thinks later about this point
 				print("PLAYER 2 LOSE THE GAME")
@@ -313,6 +314,7 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 				actual_round = await get_actual_round_reached(tournament)
 				the_round = await sync_to_async(Round.objects.filter(tournament=tournament, type=actual_round).first)()
 				tournamentuserinfocount = await sync_to_async(TournamentUserInfo.objects.filter(round=the_round).count)()
+				print("--------------------WSEL HNA")
 				if (actual_round == 'QUARTERFINAL' and tournamentuserinfocount == 8) or (actual_round == 'SEMIFINAL' and tournamentuserinfocount == 4) or (actual_round == 'FINAL' and tournamentuserinfocount == 2):
 					await tournament_notifs_consumers.OtherRounds(self, actual_round, tournament)
 			# player1_rating = 0
@@ -507,7 +509,8 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 				actual_round = await get_actual_round_reached(tournament)
 				the_round = await sync_to_async(Round.objects.filter(tournament=tournament, type=actual_round).first)()
 				tournamentuserinfocount = await sync_to_async(TournamentUserInfo.objects.filter(round=the_round).count)()
-				if (actual_round == 'QUARTERFINAL' and tournamentuserinfocount == 8) or (actual_round == 'SEMIFINAL' and tournamentuserinfocount == 4) or (actual_round == 'FINAL' and tournamentuserinfocount == 2):
+				print("WSEL HNAAAAAA")
+				if (actual_round == 'QUARTERFINAL' and tournamentuserinfocount == 2) or (actual_round == 'SEMIFINAL' and tournamentuserinfocount == 4) or (actual_round == 'FINAL' and tournamentuserinfocount == 2):
 					await tournament_notifs_consumers.OtherRounds(self, actual_round, tournament)
 				# NOTE: handle the game is finished and player win the game
 				# await gameFinished(self, room) ### TODO: send message for navigating instead of this funcking function
@@ -709,7 +712,6 @@ async def validatePlayerTournamentGame(self, data, tournament_rooms, user_channe
 					await self.channel_layer.group_add(str(room['id']), self.channel_name)
 					if room['status'] == 'notStarted':
 						room['status'] = 'started'
-						print("---------------------- YESSSSSS: ", room)
 						await self.send(text_data=json.dumps({
 							'type': 'setupGame',
 							'message': {

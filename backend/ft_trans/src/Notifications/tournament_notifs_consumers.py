@@ -126,10 +126,10 @@ def generate_unique_room_id(tournament_id):
 
 
 async def get_player_position(tournament, member, actual_round):
-    round = await sync_to_async(lambda: Round.objects.filter(tournament=tournament, type=actual_round).first())()
-    usertournamentinfo = await sync_to_async(lambda: TournamentUserInfo.objects.filter(user=member, round=round).first())()
-    position = usertournamentinfo.position
-    return position
+	round = await sync_to_async(lambda: Round.objects.filter(tournament=tournament, type=actual_round).first())()
+	usertournamentinfo = await sync_to_async(lambda: TournamentUserInfo.objects.filter(user=member, round=round).first())()
+	position = usertournamentinfo.position
+	return position
 
 async def send_user_eliminated_after_delay(self, tournament, actual_round):
 	await asyncio.sleep(5)
@@ -375,3 +375,46 @@ async def OtherRounds(self, actual_round, tournament):
 		}
 	)
 	await send_user_eliminated_after_delay(self, tournament, actual_round)
+
+async def get_right_room(tournament_id, tournament_rooms, username):
+	room = {}
+	t_rooms = tournament_rooms.get(str(tournament_id))
+	if t_rooms:
+		for room_id, the_room in t_rooms.items():
+			if any(player['user'] == username for player in the_room.get('players', [])):
+				return the_room
+	return room
+ 
+
+async def CheckIsJoiningARoom(self, data):
+	username = data['message']['user']
+	flag = 0
+	user = await sync_to_async(customuser.objects.filter(username=username).first)()
+	members = await sync_to_async(list)(TournamentMembers.objects.filter(user=user))
+	for member in members:
+		is_started = await sync_to_async(lambda: member.tournament.is_started)()
+		is_finished = await sync_to_async(lambda:  member.tournament.is_finished)()
+		is_eliminated = await sync_to_async(lambda: member.is_eliminated)()
+		if is_started == False or (is_started == True and is_finished == False and is_eliminated == False):
+			flag = 1337
+			tournament_id = await sync_to_async(lambda: member.tournament.tournament_id)()
+			room = await get_right_room(tournament_id, tournament_rooms, username)
+			if room:
+				case = "joining a room"
+			else:
+				case = "joining a tournament but not in a room"
+			break
+	if flag == 0:
+		case = 'not joining a tournament'
+	channel_name_list = notifs_user_channels.get(username)
+	if channel_name_list:
+		for channel_name in channel_name_list:
+			await self.channel_layer.send(
+				channel_name,
+				{
+					'type': 'playerSituation',
+					'message': {
+						'Case': case
+					}
+				}
+			)

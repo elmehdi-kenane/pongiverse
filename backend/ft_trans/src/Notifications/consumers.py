@@ -96,6 +96,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 		elif data['type'] == 'invite-friend': await tournament_notifs_consumers.invite_friend(self, data, notifs_user_channels)
 		elif data['type'] == 'deny-tournament-invitation': await tournament_notifs_consumers.deny_invite(self, data, notifs_user_channels)
 		elif data['type'] == 'Round-16-timer': await tournament_notifs_consumers.Round_16_timer(self, data)
+		elif data['type'] == 'check_is_joining_a_room': await tournament_notifs_consumers.CheckIsJoiningARoom(self, data)
 
 
 
@@ -238,5 +239,11 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 	async def new_user_win(self, event):
 		await self.send(text_data=json.dumps({
 			'type': 'new_user_win',
+			'message': event['message']
+		}))
+
+	async def playerSituation(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'playerSituation',
 			'message': event['message']
 		}))

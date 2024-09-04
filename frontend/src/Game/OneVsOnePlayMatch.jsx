@@ -754,18 +754,18 @@ function createParticle(x, y) {
 					</div>
 					</div>
 					<div className='gameStats_details' >
-					<div>
-						<p>{playersInfos[0].totalScore}</p>
-						<p>Score</p>
-						<p>{playersInfos[1].totalScore}</p>
-					</div>
+						<div>
+							<p>{playersInfos[0].totalScore}</p>
+							<p>Score</p>
+							<p>{playersInfos[1].totalScore}</p>
+						</div>
 					</div>
 					<div className='gameStats_details' >
-					<div>
-						<p>{playersInfos[0].score}</p>
-						<p>Goals</p>
-						<p>{playersInfos[1].score}</p>
-					</div>
+						<div>
+							<p>{playersInfos[0].score}</p>
+							<p>Goals</p>
+							<p>{playersInfos[1].score}</p>
+						</div>
 					</div>
 					<div className='gameStats_details' >
 					<div>

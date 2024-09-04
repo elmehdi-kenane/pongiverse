@@ -71,7 +71,7 @@ class Edges {
 }
 
 const OneVsOnePlayTournamentMatch = () => {
-	let { privateCheckAuth, gameCustomize, socket, user } = useContext(AuthContext)
+	let { privateCheckAuth, gameCustomize, socket, user , notifSocket} = useContext(AuthContext)
 	const [canvasDrawing, setCanvasDrawing] = useState(false)
 	const [gameAborted, setGameAborted] = useState(false)
 	const [gameFinished, setGameFinished] = useState(false)
@@ -284,6 +284,33 @@ function createParticle(x, y) {
 				isOut = true
 		}
 	}, [])
+
+	useEffect(() =>{
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN && user) {
+			notifSocket.send(JSON.stringify({
+				type: 'check_is_joining_a_room',
+				message: {
+					user: user,
+				}
+			}))
+		}
+	},[notifSocket, user])
+
+	useEffect(() => {
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN && user) {
+			notifSocket.onmessage = (event) => {
+				let data = JSON.parse(event.data)
+				let type = data.type
+				let message = data.message
+				if (type === 'playerSituation'){
+					if (message.Case === 'joining a tournament but not in a room')
+						navigate("../game/createtournament")
+					if (message.Case === 'not joining a tournament')
+						navigate("../game")
+				}
+			}
+		}
+	}, [notifSocket, user])
 
 
 	useEffect(() => {
@@ -556,37 +583,15 @@ function createParticle(x, y) {
 					allPlayersStats[2].time = message.time
 					setPlayersInfos(allPlayersStats)
 					console.log("playerNo when it is finished : ", playerNo)
-				} else if (type === "abortedGame") { // NOTE: remove from back then remove this
-					let allPlayersStats = [...playersInfos]
-					setUserName1(message.user1)
-					setUserName2(message.user2)
-					setScore1(message.playerScore1)
-					setScore2(message.playerScore2)
-					setGameAborted(true)
-					gamefinishedAborted(message)
-					setTime(message.time)
-					allPlayersStats[0].totalScore = message.score[0]
-					allPlayersStats[1].totalScore = message.score[1]
-					allPlayersStats[0].score = message.selfScore[0]
-					allPlayersStats[1].score = message.selfScore[1]
-					allPlayersStats[0].hit = message.hit[0]
-					allPlayersStats[1].hit = message.hit[1]
-					allPlayersStats[0].accuracy = message.accuracy[0]
-					allPlayersStats[1].accuracy = message.accuracy[1]
-					allPlayersStats[0].rating = message.rating[0]
-					allPlayersStats[1].rating = message.rating[1]
-					allPlayersStats[2].time = message.time
-					setPlayersInfos(allPlayersStats)
-				}
-				else if (type === "playersInfos")
+				} else if (type === "playersInfos")
 					setPlayersPics(message.users)
 				else if (type === 'hmed') {
 					console.log("hmed received")
 					socket.close()
 				} else if (type === 'youWinTheGame'){
 					navigate("../game/tournamentbracket")
-				} else if (type === 'youLoseTheGame'){
-					console.log("===============WAHMEDDDDDDDD")
+				}
+				 else if (type === 'youLoseTheGame'){
 					navigate("../game")
 				}
 					
@@ -618,7 +623,7 @@ function createParticle(x, y) {
 						user: user,
 					}
 				}))
-				navigate('../game/solo/1vs1') // NOTE: CHANGE THIS TO TOURNAMENT
+				navigate('../game')
 			} else {
 				console.log("socket is closed, refresh the page")
 			}
