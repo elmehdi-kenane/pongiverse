@@ -21,8 +21,8 @@ export const SocketDataContextProvider = ({ children }) => {
                 setData(data)
             }
         }
-        else
-            console.log("socket", socket, "doesn't exist");
+        // else
+            // console.log("socket", socket, "doesn't exist");
     }, [socket]);
     return (
         <SocketDataContext.Provider value={data}>

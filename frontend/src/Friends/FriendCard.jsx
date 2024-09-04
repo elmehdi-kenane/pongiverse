@@ -20,7 +20,7 @@ const FriendCard = ({
   const buttonRef = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user } = useContext(AuthContext);
-  const { setSelectedDirect } = useContext(ChatContext);
+  const { setSelectedDirect, setIsHome, setSelectedItem} = useContext(ChatContext);
   const navigate = useNavigate();
 
   const handleBlockFriend = () => {
@@ -49,6 +49,8 @@ const FriendCard = ({
       avatar: avatar,
       status: "true",
     });
+    setIsHome(true)
+    setSelectedItem(secondUsername);
     navigate("/mainpage/chat");
   };
   const handleRemoveFriendship = () => {
@@ -88,17 +90,6 @@ const FriendCard = ({
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const navigateToChat = () => {
-    setSelectedDirect({
-      id: id,
-      name: secondUsername,
-      status: true,
-      avatar: avatar,
-    });
-    setSelectedItem(secondUsername);
-    setIsHome(true);
-    navigate(`/mainpage/chat`);
-  };
   return (
     <div className="FriendCard">
       <div className="ProfileName">

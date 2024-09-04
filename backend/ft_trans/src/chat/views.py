@@ -300,7 +300,7 @@ def direct_messages(request):
         friend = customuser.objects.get(username=(request.data).get("friend"))
         messages = Directs.objects.filter(
             Q(sender=username, reciver=friend) | Q(sender=friend, reciver=username)
-        )
+        ).order_by('timestamp')
         data = []
         for message in messages:
             timestamp = message.timestamp.isoformat()
@@ -314,8 +314,8 @@ def direct_messages(request):
                 "date": formatted_time,
             }
             data.append(message_data)
-        sorted_by_date = sorted(data, key=lambda x: x["date"])
-        return Response(sorted_by_date)
+        # sorted_by_date = sorted(data, key=lambda x: x["date"])
+        return Response(data)
     return Response({"error": "Invalid request method"}, status=400)
 
 
@@ -508,7 +508,7 @@ def get_direct_last_message(username, friend):
 @api_view(["GET"])
 def friends_with_directs(request, username):
     user = customuser.objects.get(username=username)
-    friends = Friendship.objects.filter(user=user)
+    friends = Friendship.objects.filter(user=user, isBlocked=False)
     data = []
     protocol = get_protocol(request)
     ip_address = os.getenv("IP_ADDRESS")

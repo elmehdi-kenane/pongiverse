@@ -138,6 +138,7 @@ async def direct_message(self, data, user_channels):
                 {
                     "type": "send_direct",
                     "data": {
+                        'senderAvatar' : f"{protocol}://{ip_address}:8000/chatAPI{sender.avatar.url}",
                         "sender": sender.username,
                         "reciver": sender.username,
                         "message": message.message,

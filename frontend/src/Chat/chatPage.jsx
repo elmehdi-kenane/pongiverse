@@ -25,7 +25,7 @@ const Chat = () => {
     selectedItem,
     setSelectedItem,
   } = useContext(ChatContext);
-  const { chatSocket , user} = useContext(AuthContext);
+  const { chatSocket, user } = useContext(AuthContext);
   const [query, setQuery] = useState("");
   const filteredConversations = directConversations.filter((conversation) => {
     return conversation.name.includes(query);
@@ -35,33 +35,117 @@ const Chat = () => {
     setSelectedItem(itemName);
   };
 
+  // useEffect(() => {
+  //   if (chatSocket) {
+  //     chatSocket.onmessage = (e) => {
+  //       let data = JSON.parse(e.data);
+  //       if (data.type === "newDirect") {
+  //         const currentDirect = selectedDirectRef.current;
+  //         let allDirects = directConversationsRef.current
+  //         if (
+  //           (currentDirect.name === data.data.sender )||
+  //           (user === data.data.sender)) {
+  //           if(data.data) {
+  //             setMessages((prev) => [...prev, data.data]);
+  //             if(selectedDirect.id)
+  //               resetUnreadMessages(user, selectedDirect.id)
+  //           }
+  //         }
+  //         else {
+  //           const conversationExists = allDirects.some(
+  //             (conv) => conv.name === selectedDirect.name
+  //           );
+  //           if (!conversationExists) {
+  //             console.log("conversation is not found")
+  //             const newConversation = {
+  //               id: data.data.senderId,
+  //               name: data.data.sender,
+  //               avatar: data.data.senderAvatar,
+  //               lastMessage: data.data.content,
+  //               unreadCount: '1',
+  //             };
+  //             console.log("newConversation ", newConversation)
+  //             setDirectConversations((prevConversations) => [
+  //               ...prevConversations,
+  //               newConversation,
+  //             ]);
+  //           }
+  //           console.log(directConversations)
+  //           // const updatedDirects = allDirects.map((friend) => {
+  //           //   if ( data.data.senderId === friend.id) {
+  //           //     let prevCount = friend.unreadCount
+  //           //     return { ...friend, unreadCount: prevCount + 1, lastMessage: data.data.content};
+  //           //   }
+  //           //   return friend;
+  //           // });
+  //           // setDirectConversations(updatedDirects);
+  //         }
+  //       } else if (data.type === "goToGamingPage") {
+  //         console.log("navigating now");
+  //         navigate(`/mainpage/game/solo/1vs1/friends`);
+  //       }
+  //     };
+  //   }
+  // }, [chatSocket]);
+
   useEffect(() => {
     if (chatSocket) {
       chatSocket.onmessage = (e) => {
         let data = JSON.parse(e.data);
-        console.log("data received inside:", data);
-
         if (data.type === "newDirect") {
           const currentDirect = selectedDirectRef.current;
-          let allDirects = directConversationsRef.current
           if (
-            (currentDirect.name === data.data.sender && data.data.reciver === user) ||
-            (user === data.data.sender && data.data.reciver === user)) {
-            if(data.data) {
+            currentDirect.name === data.data.sender ||
+            user === data.data.sender
+          ) {
+            if (data.data) {
               setMessages((prev) => [...prev, data.data]);
-              if(currentDirect.id === data.data.reciverId)
-                resetUnreadMessages(user, selectedDirect.id)
+              setDirectConversations((prevConversations) => {
+                return prevConversations.map((friend) => {
+                  if (data.data.senderId === friend.id ||data.data.receiverId === friend.id  ) {
+                    return {
+                      ...friend,
+                      lastMessage: data.data.content,
+                    };
+                  }
+                  return friend;
+                });
+              });
+              if (currentDirect.id)
+                resetUnreadMessages(user, currentDirect.id);
             }
-          } 
-          else {
-            const updatedDirects = allDirects.map((friend) => {
-              if ( data.data.senderId === friend.id) {
-                let prevCount = friend.unreadCount
-                return { ...friend, unreadCount: prevCount + 1, lastMessage: data.data.content};
+          } else {
+            setDirectConversations((prevConversations) => {
+              const conversationExists = prevConversations.some(
+                (conv) => conv.name === data.data.sender
+              );
+
+              if (!conversationExists) {
+                console.log("conversation is not found");
+
+                const newConversation = {
+                  id: data.data.senderId,
+                  name: data.data.sender,
+                  avatar: data.data.senderAvatar,
+                  lastMessage: data.data.content,
+                  unreadCount: "1",
+                };
+
+                console.log("newConversation ", newConversation);
+                return [...prevConversations, newConversation];
               }
-              return friend;
+
+              return prevConversations.map((friend) => {
+                if (data.data.senderId === friend.id) {
+                  return {
+                    ...friend,
+                    unreadCount: String(Number(friend.unreadCount) + 1),
+                    lastMessage: data.data.content,
+                  };
+                }
+                return friend;
+              });
             });
-            setDirectConversations(updatedDirects);
           }
         } else if (data.type === "goToGamingPage") {
           console.log("navigating now");
@@ -70,6 +154,7 @@ const Chat = () => {
       };
     }
   }, [chatSocket]);
+
   return (
     <div className="chat-page">
       <Toaster />
@@ -121,7 +206,7 @@ const Chat = () => {
                     avatar={friend.avatar}
                     status={friend.is_online}
                     lastMessage={friend.lastMessage}
-                    unreadCount = {friend.unreadCount}
+                    unreadCount={friend.unreadCount}
                     isDirect={isHome}
                     setSelectedDirect={setSelectedDirect}
                     isSelected={selectedItem === friend.name}

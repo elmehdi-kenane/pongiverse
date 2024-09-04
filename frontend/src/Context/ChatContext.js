@@ -63,7 +63,7 @@ export const ChatProvider = ({ children }) => {
         );
         const data = await response.json();
         setChatRoomConversations(data);
-        console.log("inside the context channels", data);
+        // console.log("inside the context channels", data);
       } catch (error) {
         console.log(error);
       }

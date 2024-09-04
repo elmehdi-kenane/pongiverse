@@ -247,7 +247,7 @@ export const AuthProvider = ({children}) => {
 			const newNotifSocket = new WebSocket(`ws://localhost:8000/ws/notif-socket`)
 			newNotifSocket.onopen = () => {
 				setNotifSocket(newNotifSocket)
-				console.log("NOTIF SOCKET OPENED SUCCEFULLY")
+				// console.log("NOTIF SOCKET OPENED SUCCEFULLY")
 			}
 			newNotifSocket.onmessage = (event) => {
 				let data = JSON.parse(event.data)
@@ -321,12 +321,12 @@ export const AuthProvider = ({children}) => {
 		if ( (location.pathname === "/mainpage/chat" || location.pathname === "/mainpage/groups") && !chatSocket && user) {
 		  const newChatSocket = new WebSocket(`ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/chat_socket`);
 		  newChatSocket.onopen = () => {
-			console.log("chat Socket Created and opened");
+			// console.log("chat Socket Created and opened");
 			setChatSocket(newChatSocket);
 		  };
 		  newChatSocket.onmessage = (event) => {
 					let data = JSON.parse(event.data)
-			console.log("connection hereeee", data)
+			// console.log("connection hereeee", data)
 		  }
 		} else if ( location.pathname !== "/mainpage/chat" && location.pathname !== "/mainpage/groups") {
 		  if (chatSocket) {
@@ -376,9 +376,9 @@ export const AuthProvider = ({children}) => {
 			})
 			response = await response.json()
 			if (response.Case !== "Invalid token") {
-				console.log("LOGGEDIN SUCCESSFULY")
+				// console.log("LOGGEDIN SUCCESSFULY")
 				setUser(response.data.username)
-				console.log("USER USERNSME: ",response.data.username)
+				// console.log("USER USERNSME: ",response.data.username)
 			} else {
 				console.log("FAILD TO LOGIN SUCCESSFULY")
 				setUser('')

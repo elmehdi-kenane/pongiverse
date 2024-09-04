@@ -77,6 +77,7 @@ const ChatConversation = () => {
         );
         const data = await response.json();
         if (response.ok) {
+          console.log("recived messages: ", data)
           setMessages(data);
         } else console.log("error");
       } catch (error) {

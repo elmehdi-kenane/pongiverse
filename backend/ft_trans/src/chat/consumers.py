@@ -95,7 +95,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 				'content': data['message'],
 				'date' :  formatted_time,
 				'senderId' : data['senderId'],
-				'receiverId' : data['receiverId']
+				'receiverId' : data['receiverId'],
+				'senderAvatar' : data['senderAvatar'],
 
 			}
 		}

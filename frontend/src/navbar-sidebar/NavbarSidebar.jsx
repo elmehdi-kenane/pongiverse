@@ -52,8 +52,8 @@ function NavbarSidebar() {
         else if (data.type === 'remove-friend-request' && data.message.username === friendReq.username) {
             setRemoveFriendReqNotif(true);
         }
-        else
-            console.log("unknown notif type");
+        // else
+        //     console.log("unknown notif type");
     }, [data.message.to_user, data.type]);
 
     useEffect(() => {
