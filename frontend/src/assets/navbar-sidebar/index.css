@@ -20,6 +20,9 @@ body {
   flex-direction: column;
   overflow: hidden;
   position: relative;
+
+  background-position: center;
+  background-size: cover;
 }
 
 .navbar {

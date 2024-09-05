@@ -10,13 +10,23 @@
     /* position: relative; */
 }
 
+:root {
+    /* --purple-bg: rgba(59, 20, 115, 0.8);  */
+    /* --purple-bg: rgba(62, 10, 122, 0.85); */
+}
 .dash--space{
     gap: 15px;
     padding: 0 15px;
 }
 .dash--bkborder {
     border-radius: 3px;
-    background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
+    /* background: var(--purple-bg) */
+    background: rgba(138, 125, 172, 0.3);
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 1px );
+    -webkit-backdrop-filter: blur( 1px );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
 .dash--win-color {

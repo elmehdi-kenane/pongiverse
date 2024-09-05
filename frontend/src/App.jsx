@@ -47,13 +47,15 @@ import LocalTournamentFillMembers from "./Tournament/LocalTournament/LocalTourna
 import ErrorPage from "./ErrorPage/ErrorPage";
 import { DashboardWrapper } from './Dashboard/DashboardWrapper';
 
+import bg1 from "./assets/Body/2.png"
+
 const ChatGroupsWrapper = ({ element }) => (
   <ChatProvider>{element}</ChatProvider>
 );
 
 const App = () => {
   return (
-    <div className="page">
+    <div className="page" style={{backgroundImage: `url(${bg1})`}}>
       <Router>
         <AuthProvider>
           <SocketDataContextProvider>
