@@ -414,23 +414,23 @@ def get_multiplayer_matches(request, username, page):
         offset = (page - 1) * page_size
         user_matches = Match.objects.filter(
             Q(team1_player1=user) | Q(team1_player2=user) | Q(team2_player1=user) | Q(team2_player2=user),
-            mode="2vs2"
+            mode="1vs1"
         ).order_by('-date_ended')[offset:offset+page_size]
 
         # Check if there is still matches or not -------
         total_matches_count = Match.objects.filter(
             Q(team1_player1=user) | Q(team1_player2=user) | Q(team2_player1=user) | Q(team2_player2=user),
-            mode="2vs2"
+            mode="1vs1"
         ).count()
         has_more_matches = (offset + page_size) < total_matches_count
 
         for user_match in user_matches:
             res_data.append({
                 "p1Pic1": f"http://localhost:8000/auth{user_match.team1_player1.avatar.url}",
-                "p1Pic2": f"http://localhost:8000/auth{user_match.team1_player2.avatar.url}",
+                "p1Pic2": f"http://localhost:8000/auth{user_match.team1_player1.avatar.url}",
                 "score" : f"{user_match.team1_score} - {user_match.team2_score}",
                 "p2Pic1": f"http://localhost:8000/auth{user_match.team2_player1.avatar.url}",
-                "p2Pic2": f"http://localhost:8000/auth{user_match.team2_player2.avatar.url}",
+                "p2Pic2": f"http://localhost:8000/auth{user_match.team2_player1.avatar.url}",
                 "id": user_match.room_id,
             })
         return Response(data={"userMatches": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
@@ -447,32 +447,31 @@ def get_multy_match_dtl(request, match_id):
         res_data = {
             "date": match.date_ended,
             "pic1": f"http://localhost:8000/auth{match.team1_player1.avatar.url}",
-            "pic2": f"http://localhost:8000/auth{match.team1_player2.avatar.url}",
+            "pic2": f"http://localhost:8000/auth{match.team1_player1.avatar.url}",
             "pic3": f"http://localhost:8000/auth{match.team2_player1.avatar.url}",
-            "pic4": f"http://localhost:8000/auth{match.team2_player2.avatar.url}",
+            "pic4": f"http://localhost:8000/auth{match.team2_player1.avatar.url}",
             "user1": match.team1_player1.username,
-            "user2": match.team1_player2.username,
+            "user2": match.team1_player1.username,
             "user3": match.team2_player1.username,
-            "user4": match.team2_player2.username,
+            "user4": match.team2_player1.username,
             "score1": match.team1_score,
             "score2": match.team2_score,
             "goals1": match_stq.team1_player1_score,
-            "goals2": match_stq.team1_player2_score,
+            "goals2": match_stq.team1_player1_score,
             "goals3": match_stq.team2_player1_score,
-            "goals4": match_stq.team2_player2_score,
+            "goals4": match_stq.team2_player1_score,
             "hit1": match_stq.team1_player1_hit,
-            "hit2": match_stq.team1_player2_hit,
+            "hit2": match_stq.team1_player1_hit,
             "hit3": match_stq.team2_player1_hit,
-            "hit4": match_stq.team2_player2_hit,
+            "hit4": match_stq.team2_player1_hit,
             "exp1": match_stq.team1_player1_rating,
-            "exp2": match_stq.team1_player2_rating,
+            "exp2": match_stq.team1_player1_rating,
             "exp3": match_stq.team2_player1_rating,
-            "exp4": match_stq.team2_player2_rating,
+            "exp4": match_stq.team2_player1_rating,
             "acc1": f"{(match_stq.team1_player1_score * 100 / match_stq.team1_player1_hit):.0f}" if match_stq.team1_player1_hit else 0,
-            "acc2": f"{(match_stq.team1_player2_score * 100 / match_stq.team1_player2_hit):.0f}" if match_stq.team1_player2_hit else 0,
+            "acc2": f"{(match_stq.team1_player1_score * 100 / match_stq.team1_player1_hit):.0f}" if match_stq.team1_player1_hit else 0,
             "acc3": f"{(match_stq.team2_player1_score * 100 / match_stq.team2_player1_hit):.0f}" if match_stq.team2_player1_hit else 0,
-            "acc4": f"{(match_stq.team2_player2_score * 100 / match_stq.team2_player2_hit):.0f}" if match_stq.team2_player2_hit else 0,
+            "acc4": f"{(match_stq.team2_player1_score * 100 / match_stq.team2_player1_hit):.0f}" if match_stq.team2_player1_hit else 0,
         }
         return Response(data={"data": res_data}, status=status.HTTP_200_OK)
-
     return Response(data={'error': 'Error Getting MultiplayerGames!'}, status=status.HTTP_400_BAD_REQUEST)

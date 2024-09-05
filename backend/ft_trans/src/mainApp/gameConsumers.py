@@ -882,8 +882,8 @@ async def gameFinished(self, room):
     else:
         player1_rating = (room['players'][0]['self_scored'] * 20) + (room['players'][0]['self_scored'] * -0.5)
         player2_rating = (room['players'][1]['self_scored'] * 20) + (room['players'][1]['self_scored'] * 0.5)
-    player1_accuracy = ((room['players'][0]['hit'] * 100) / (room['players'][0]['self_scored']))
-    player2_accuracy = ((room['players'][1]['hit'] * 100) / (room['players'][1]['self_scored']))
+    player1_accuracy = ((room['players'][0]['hit'] * 100) / (room['players'][0]['self_scored'])) if (room['players'][0]['self_scored']) else 0
+    player2_accuracy = ((room['players'][1]['hit'] * 100) / (room['players'][1]['self_scored'])) if (room['players'][1]['self_scored']) else 0
     await self.channel_layer.group_send(str(room['id']), {
             'type': 'finishedGame',
             'message': {
@@ -902,8 +902,8 @@ async def gameFinished(self, room):
 )
 
 async def gameAborted(self, room):
-    player1_accuracy = ((room['players'][0]['hit'] * 100) / (room['players'][0]['self_scored']))
-    player2_accuracy = ((room['players'][1]['hit'] * 100) / (room['players'][1]['self_scored']))
+    player1_accuracy = ((room['players'][0]['hit'] * 100) / (room['players'][0]['self_scored'])) if (room['players'][0]['self_scored']) else 0
+    player2_accuracy = ((room['players'][1]['hit'] * 100) / (room['players'][1]['self_scored'])) if (room['players'][1]['self_scored']) else 0
     await self.channel_layer.group_send(str(room['id']), {
             'type': 'abortedGame',
             'message': {
