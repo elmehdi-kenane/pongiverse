@@ -24,5 +24,6 @@ urlpatterns = [
     path('getSingleMatches/<str:username>/<int:page>', views.get_single_matches),
     path('getMultiplayerMatches/<str:username>/<int:page>', views.get_multiplayer_matches),
     path('getSingleMatchDtl/<int:match_id>', views.get_single_match_dtl),
+    path('getMultyMatchDtl/<int:match_id>', views.get_multy_match_dtl),
     
 ]
