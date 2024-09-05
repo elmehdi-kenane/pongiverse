@@ -30,7 +30,7 @@ function DashRsltMulty() {
     const getMatchDtls = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/profile/getSingleMatchDtl/${multyId}`,
+          `http://localhost:8000/profile/getMultyMatchDtl/${104115000}`,
           {
             method: "GET",
             headers: {
@@ -49,8 +49,8 @@ function DashRsltMulty() {
       }
     };
 
-    //   if (multyId)
-    //     getMatchDtls();
+      if (multyId)
+        getMatchDtls();
   }, [multyId]);
 
   return (
@@ -58,69 +58,69 @@ function DashRsltMulty() {
       <h1> Multiplayer Match Results </h1>
       <div className="result__field-mtp">
         <div className="field__img">
-          <img src={MavSvg} />
-          <img src={MavSvg} />
+          <img src={matchDtls.pic1} />
+          <img src={matchDtls.pic2} />
         </div>
         <div className="field__date">
-          <p>14:46</p>
-          <p>2024-09-04</p>
+          <p> { matchTime } </p>
+          <p> { matchDate } </p>
         </div>
         <div className="field__img">
-          <img src={MavSvg} />
-          <img src={MavSvg} />
+          <img src={matchDtls.pic3} />
+          <img src={matchDtls.pic4} />
         </div>
       </div>
       <div className="result__field-mtp">
         <div className="field__prg prg-score">
-          <p> 100 </p>
+          <p> {matchDtls.score1} </p>
         </div>
         <p className="field-option"> Score </p>
         <div className="field__prg prg-score">
-          <p> 100 </p>
+          <p> {matchDtls.score2} </p>
         </div>
       </div>
       <div className="result__field-mtp">
         <div className="field__prg">
-          <p> 100 </p>
-          <p> 100 </p>
+          <p> {matchDtls.goals1} </p>
+          <p> {matchDtls.goals2} </p>
         </div>
         <p className="field-option"> Goals</p>
         <div className="field__prg">
-          <p> 100 </p>
-          <p> 100 </p>
+          <p> {matchDtls.goals3} </p>
+          <p> {matchDtls.goals4} </p>
         </div>
       </div>
       <div className="result__field-mtp">
         <div className="field__prg">
-          <p> 100 </p>
-          <p> 100 </p>
+          <p> {matchDtls.hit1} </p>
+          <p> {matchDtls.hit2} </p>
         </div>
         <p className="field-option"> Hit</p>
         <div className="field__prg">
-          <p> 100 </p>
-          <p> 100 </p>
+          <p> {matchDtls.hit3} </p>
+          <p> {matchDtls.hit4} </p>
         </div>
       </div>
       <div className="result__field-mtp">
         <div className="field__prg">
-          <p> 100 </p>
-          <p> 100 </p>
+          <p> {matchDtls.acc1} </p>
+          <p> {matchDtls.acc2} </p>
         </div>
         <p className="field-option"> Accuracy</p>
         <div className="field__prg">
-          <p> 100 </p>
-          <p> 100 </p>
+          <p> {matchDtls.acc3} </p>
+          <p> {matchDtls.acc4} </p>
         </div>
       </div>
       <div className="result__field-mtp">
         <div className="field__prg">
-          <p> 100 </p>
-          <p> 100 </p>
+          <p> {matchDtls.exp1} </p>
+          <p> {matchDtls.exp2} </p>
         </div>
         <p className="field-option"> Rating</p>
         <div className="field__prg">
-          <p> 100 </p>
-          <p> 100 </p>
+          <p> {matchDtls.exp3} </p>
+          <p> {matchDtls.exp4} </p>
         </div>
       </div>
     </>

@@ -31,7 +31,7 @@
 
 .dash-blur {
     filter: blur(6px);
-    /* pointer-events: none; */
+    pointer-events: none;
     user-select: none;
   }
 
@@ -620,6 +620,11 @@
     cursor: pointer;
 }
 
+@media (min-width: 1000px) {
+    .match-result {
+        width: 700px;
+    }
+}
 @media (min-width: 1440px) {
     .dashpage {
         width: 1400px;
