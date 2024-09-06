@@ -361,7 +361,7 @@ def get_customize_game(request):
 				game_customize = GameCustomisation.objects.filter(user=user).first()
 				if game_customize:
 					return Response({'data' : [game_customize.paddle_color, game_customize.ball_color, game_customize.board_color, game_customize.ball_effect]})
-				return Response({'data' : ['blue', 'red', 'black']})
+				return Response({'data' : ['blue', 'red', '#8a7dac00']})
 		return Response({'data' : None})
 	except TokenError as e:
 		return Response({'data' : None})
