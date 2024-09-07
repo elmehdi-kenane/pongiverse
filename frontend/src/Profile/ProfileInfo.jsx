@@ -8,16 +8,18 @@ import EditIcon from '@mui/icons-material/Edit';
 import IsFriends from './FriendOptions/IsFriends';
 import Report from './Report/Report';
 import clan5 from "../assets/Profile/Frame5.svg"
+import bg from "../assets/Profile/bg1.jpg"
+
 
 function ProfileInfo() {
   
   const { user } = useContext(AuthContext);
-  const {userId ,userBio, userPic, userBg} = useContext(ProfileContext);
+  const { userId ,userBio, userPic, userBg } = useContext(ProfileContext);
 
   const isOwnProfile = user === userId;
 
   return (
-    <div className="profile-userinfo purple-glass" style={{backgroundImage: `url(${userBg})`}}>
+    <div className="profile-userinfo purple-glass" style={{backgroundImage: `url(${userBg ? userBg : bg})`}}>
       {isOwnProfile ? 
       <Link to="/mainpage/settings" className="info-position">
         <EditIcon className='userinfo__edit info-position'/>
