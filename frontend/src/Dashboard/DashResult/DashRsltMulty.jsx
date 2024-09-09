@@ -1,12 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
 import DashboardContext from "../DashboardWrapper";
 import MavSvg from "../../assets/Profile/Group.svg";
+import { useNavigate } from "react-router-dom";
+import AuthContext from "../../navbar-sidebar/Authcontext";
 
 function DashRsltMulty() {
-  const { multyId } = useContext(DashboardContext);
+  const { multyId, setMultyId } = useContext(DashboardContext);
+  const { setIsGameStats } = useContext(AuthContext);
   const [matchDtls, setMatchDtls] = useState({});
   const [matchDate, setMatchDate] = useState(null);
   const [matchTime, setMatchTime] = useState(null);
+  const navigate = useNavigate()
 
   useEffect(() => {
     const getDateFormat = (dateStr) => {
@@ -40,7 +44,7 @@ function DashRsltMulty() {
         );
         const res = await response.json();
         if (response.ok) {
-          console.log("data :", res.data);
+          // console.log("data :", res.data);
           setMatchDtls(res.data);
           getDateFormat(res.data.date);
         } else console.log("Error : ", res.error);
@@ -53,21 +57,27 @@ function DashRsltMulty() {
         getMatchDtls();
   }, [multyId]);
 
+  const profileNavigate = (user) => {
+    setIsGameStats(false);
+    setMultyId(null);
+    navigate(`/mainpage/profile/${user}`)
+  }
+
   return (
     <>
       <h1> Multiplayer Match Results </h1>
       <div className="result__field-mtp">
         <div className="field__img">
-          <img src={matchDtls.pic1} />
-          <img src={matchDtls.pic2} />
+          <img src={matchDtls.pic1} onClick={()=>profileNavigate(matchDtls.user1)}/>
+          <img src={matchDtls.pic2} onClick={()=>profileNavigate(matchDtls.user2)}/>
         </div>
         <div className="field__date">
           <p> { matchTime } </p>
           <p> { matchDate } </p>
         </div>
         <div className="field__img">
-          <img src={matchDtls.pic3} />
-          <img src={matchDtls.pic4} />
+          <img src={matchDtls.pic3} onClick={()=>profileNavigate(matchDtls.user3)}/>
+          <img src={matchDtls.pic4} onClick={()=>profileNavigate(matchDtls.user4)}/>
         </div>
       </div>
       <div className="result__field-mtp">

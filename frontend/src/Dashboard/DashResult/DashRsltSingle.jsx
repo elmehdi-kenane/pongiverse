@@ -1,11 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
 import DashboardContext from "../DashboardWrapper";
+import { useNavigate } from "react-router-dom";
+import AuthContext from "../../navbar-sidebar/Authcontext";
 
 function DashRsltSingle() {
-  const { singleId } = useContext(DashboardContext);
+  const { singleId, setSingleId } = useContext(DashboardContext);
+  const { setIsGameStats } = useContext(AuthContext);
   const [matchDtls, setMatchDtls] = useState({})
   const [matchDate, setMatchDate] = useState(null)
   const [matchTime, setMatchTime] = useState(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const getDateFormat = (dateStr) => {
@@ -55,19 +59,26 @@ function DashRsltSingle() {
       getMatchDtls();
   }, [singleId]);
 
+  
+  const profileNavigate = (user) => {
+    setIsGameStats(false);
+    setSingleId(null);
+    navigate(`/mainpage/profile/${user}`)
+  }
+
   return (
     <>
       <h1> Single Match Results </h1>
       <div className="result__field-sgl">
-        <div className="field__img-name">
-          <img src={matchDtls.pic1}/>
+        <div className="field__img-name" >
+          <img src={matchDtls.pic1} onClick={()=>profileNavigate(matchDtls.user1)}/>
         </div>
         <div className="field__date">
           <p>{matchTime}</p>
           <p>{matchDate}</p>
         </div>
         <div className="field__img-name">
-          <img src={matchDtls.pic2}/>
+          <img src={matchDtls.pic2} onClick={()=>profileNavigate(matchDtls.user2)}/>
         </div>
       </div>
       <div className="result__field-sgl">

@@ -69,9 +69,9 @@ function DashSingle() {
     return (
       <div className="expand">
         {index != 1 && (
-          <ExpandLessIcon className="expand-less" onClick={expandLess} />)}
+          <ExpandLessIcon onClick={expandLess} />)}
         {limit != index && (
-          <ExpandMoreIcon className="expand-more" onClick={expandMore} />)}
+          <ExpandMoreIcon onClick={expandMore} />)}
       </div>
     )
   }

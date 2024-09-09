@@ -286,7 +286,7 @@ def get_user_diagram(request, username):
         if user_games is not None:
             total_matches = user_games.wins + user_games.losts
             if total_matches > 0:
-                accuracy = f"{(user_games.wins / user_games.losts):.2f}" if user_games.losts > 0 else "N/A"
+                accuracy = f"{(user_games.wins / user_games.losts):.2f}" if user_games.losts > 0 else 0
                 res_data = [
                     {'subject': "Matches", 'value': total_matches},
                     {'subject': "Wins", 'value': user_games.wins},
