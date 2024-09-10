@@ -45,7 +45,7 @@ const CustomTooltip = ({ active, payload }) => {
     },[userId])
 
     return (
-      <div className='userstate__diagrame purple-glass-stats'>
+      <div className='userstate__diagrame purple--glass'>
         <div className='userstate-header'> <h1> Diagram </h1> </div>
         <div className="diagrame__container">
           <ResponsiveContainer width="100%" height="100%">

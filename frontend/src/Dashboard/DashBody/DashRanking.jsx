@@ -83,7 +83,7 @@ function DashRanking() {
   },[sortOption])
 
   return (
-    <div className="dashpage__body__rank dash--bkborder">
+    <div className="dashpage__body__rank purple--glass">
       <h1> Rank </h1>
       <div className="dashpage__body__rank__title">
         <div className={`title ${sortOption === 'level' ? 'select' : ''}`} onClick={() => setSortOption('level')}> Level </div>

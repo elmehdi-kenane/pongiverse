@@ -25,6 +25,16 @@ body {
   background-size: cover;
 }
 
+/* Purple Glass */
+.purple--glass {
+  background: linear-gradient(to bottom, rgb(68, 45, 106, 0.5), rgba(74, 37, 139, 0.3));
+  box-shadow: 0 0.5px 5px 0 #ccc;
+  backdrop-filter: blur( 4px );
+  -webkit-backdrop-filter: blur( 4px );
+  border-radius: 5px;
+  border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+
 .navbar {
   color: white;
   height: 50px;
@@ -359,6 +369,10 @@ body {
   /* background-color: red; */
   border-radius: 0 15px 0 0;
   overflow-y: auto;
+
+  box-shadow: 0 0.5px 5px 0 #ccc;
+  border-top: 1px solid rgba( 255, 255, 255, 0.18 );
+  border-right: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
 .sidebar-icons {

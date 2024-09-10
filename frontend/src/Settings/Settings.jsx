@@ -6,17 +6,23 @@ import AuthContext from "../navbar-sidebar/Authcontext";
 
 import { Toaster } from "react-hot-toast";
 import SettingsContext from "./SettingsWrapper";
+import { useNavigate } from "react-router-dom";
 
 function Settings() {
   const [isInfo, setIsInfo] = useState(true);
   const { user } = useContext(AuthContext);
   const { userPic, userEmail } = useContext(SettingsContext);
+  const navigate = useNavigate();
+
+  const profileNavigation = () => {
+    navigate(`/mainpage/profile/${user}`)
+  }
 
   return (
     <div className="settings-page">
       <Toaster />
-      <div className="settings__leftside">
-        <div className="pic-name">
+      <div className="settings__leftside" >
+        <div className="pic-name" onClick={profileNavigation}>
           <img src={userPic} alt="userImg" />
           <p> {user} </p>
         </div>

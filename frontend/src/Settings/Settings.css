@@ -13,16 +13,6 @@
     --dark-gray: color-mix( in oklab, hsl( 215 calc( 1 * 8.8%) 73.3% / 1) 100%, black 0% );;
 }
 
-.purple-bg {
-    background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
-    box-shadow: 0 0px 20px 0 rgb(130, 106, 237, 0.5) ;
-    box-shadow: 0 0.5px 5px 0 #826aed;
-    backdrop-filter: blur( 4px );
-    -webkit-backdrop-filter: blur( 4px );
-    border-radius: 10px;
-    border: 1px solid rgba( 255, 255, 255, 0.18 );
-}
-
 .shadow-bg {
     box-shadow: 0 0px 20px 0 #ccc ;
     box-shadow: 0 0.5px 5px 0 #ccc;
@@ -31,11 +21,21 @@
 }
 
 .btn-active {
-    background: linear-gradient(to bottom, rgb(68, 45, 106, 0.9), rgba(74, 37, 139, 0.4));
+    background: linear-gradient(to bottom, rgb(68, 45, 106, 0.9), rgba(74, 37, 139, 0.2));
 }
 
 .settings-page .no-bottom {
     border-bottom: none;
+}
+
+.linear-purple-bg {
+    background: linear-gradient(to bottom, rgb(68, 45, 106, 0.8), rgba(74, 37, 139, 0));
+    box-shadow: 0 0px 20px 0 #ccc ;
+    box-shadow: 0 0.5px 5px 0 #ccc;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 5px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
 /* -------------------------- Left Side -------------------------- */
@@ -52,6 +52,10 @@
     align-items: center;
     margin-bottom: 5px;
     gap: 10px;
+    cursor: pointer;
+}
+.settings__leftside .pic-name p{
+    cursor: inherit;
 }
 .settings__leftside .pic-name img {
     height: 40px;
@@ -88,16 +92,6 @@
     font-size: 28px;
     border-bottom: #ccc 0.1px solid;
     letter-spacing: 0.5px;
-}
-
-.linear-purple-bg {
-    background: linear-gradient(to bottom, rgb(68, 45, 106, 0.8), rgba(74, 37, 139, 0));
-    box-shadow: 0 0px 20px 0 #ccc ;
-    box-shadow: 0 0.5px 5px 0 #ccc;
-    backdrop-filter: blur( 4px );
-    -webkit-backdrop-filter: blur( 4px );
-    border-radius: 5px;
-    border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
 /* --- Security --- */

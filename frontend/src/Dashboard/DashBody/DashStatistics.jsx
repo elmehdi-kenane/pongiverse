@@ -45,7 +45,7 @@ function DashStatistics() {
     }
 
   return (
-    <div className="dashpage__body__statistics dash--bkborder">
+    <div className="dashpage__body__statistics purple--glass">
         <div className="statistics-head-button">
           <h1> Wins/Lost Historics </h1>
           {isLineChart && <BarChartIcon className="chart-icon" onClick={handleIconClick} />}

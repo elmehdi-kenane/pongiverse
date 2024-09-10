@@ -13,7 +13,7 @@ const tournamentMatch = () => {
 
 function DashTournament() {
   return (
-    <div className="footer__tournament-match2 dash--bkborder">
+    <div className="footer__tournament-match2 purple--glass">
       <h1 className="footer__titles"> Tournament Match </h1>
       {tournamentMatch()}
       {tournamentMatch()}

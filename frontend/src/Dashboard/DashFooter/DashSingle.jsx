@@ -99,7 +99,7 @@ function DashSingle() {
   }
   
   return (
-    <div className="footer__single-match dash--bkborder">
+    <div className="footer__single-match purple--glass">
       <h1 className="footer__titles"> Single Match </h1>
       {loading ? 
         <CircularProgress color="secondary" style={{marginTop:"80px"}}/>

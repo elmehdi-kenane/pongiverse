@@ -10,7 +10,7 @@ function DashboardHead() {
 
   return (
     <div className="dashpage__head dash--space"> 
-        <div className="head__game-stats dash--bkborder">
+        <div className="head__game-stats purple--glass">
           <p className='game'> Games </p>
           <div className="head__games-value-pic">
             <img alt='racket' src={racketSvg} />

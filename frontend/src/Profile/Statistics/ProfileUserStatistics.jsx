@@ -45,7 +45,7 @@ function ProfileUserStatistics(){
     }
 
     return (
-      <div className='userstate_statistics purple-glass-stats'>
+      <div className='userstate_statistics purple--glass'>
         <div className='userstate-header'><h1> Statistics </h1> </div>
         {isLineChart && <BarChartIcon className="statics__chart-icon" onClick={iconClick}/>}
         {!isLineChart && <ShowChartIcon className="statics__chart-icon" onClick={iconClick}/>}

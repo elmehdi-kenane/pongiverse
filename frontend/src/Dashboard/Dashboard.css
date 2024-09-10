@@ -18,24 +18,6 @@
     gap: 15px;
     padding: 0 15px;
 }
-.dash--bkborder {
-    border-radius: 3px;
-    /* background: var(--purple-bg) */
-    background: #8a7dac00;
-    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-    backdrop-filter: blur( 1px );
-    -webkit-backdrop-filter: blur( 1px );
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-
-    background: linear-gradient(to bottom, rgb(68, 45, 106, 0.5), rgba(74, 37, 139, 0.3));
-    box-shadow: 0 0px 20px 0 #ccc ;
-    box-shadow: 0 0.5px 5px 0 #ccc;
-    backdrop-filter: blur( 4px );
-    -webkit-backdrop-filter: blur( 4px );
-    border-radius: 5px;
-    border: 1px solid rgba( 255, 255, 255, 0.18 );
-}
 
 .dash--win-color {
     color: #f4effa;
@@ -44,14 +26,13 @@
 .dash--lost-color {
     color: #826aed;
     font-weight: 550;
-    /* color: #8884d8 ;*/
 }
 
 .dash-blur {
     filter: blur(6px);
     pointer-events: none;
     user-select: none;
-  }
+}
 
 /* -------Match-Result------ */
 

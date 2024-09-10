@@ -15,7 +15,7 @@ const tournamentMatch = () => {
 
 function DashTourn() {
   return (
-    <div className="footer__tournament-match dash--bkborder">
+    <div className="footer__tournament-match purple--glass">
         <h1 className="footer__titles"> Tournament Match </h1>
         {tournamentMatch()}
         {tournamentMatch()}

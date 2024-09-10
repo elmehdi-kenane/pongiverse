@@ -58,7 +58,7 @@ const ProfileUserFriends = () => {
   }
 
   return (
-    <div className='userstate__friends purple-glass-stats'>
+    <div className='userstate__friends purple--glass'>
       <div className='userstate-header'><h1> Friends </h1> </div>
       <div className="userfriends__classment">
         {friendsData.map((player, key) => {

@@ -106,7 +106,7 @@ function DashMulty() {
     }
 
     return (
-      <div className="footer__multiplayer-match dash--bkborder">
+      <div className="footer__multiplayer-match purple--glass">
         <h1 className="footer__titles"> Multiplayer Match </h1>
         {loading ? 
           <CircularProgress color="secondary" style={{marginTop:"80px"}}/>
