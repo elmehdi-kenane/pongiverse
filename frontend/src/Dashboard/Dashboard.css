@@ -674,8 +674,8 @@
         gap : 0px;
     }
     .multiplayer-match__result .multiplayer-pics img{
-        height: 32px;
-        width: 32px;
+        height: 24px;
+        width: 24px;
     }
 }
 
@@ -802,20 +802,37 @@
 
 @media (max-width: 550px) {
     /* Head */
-    .dashpage .dashpage__head {
-        /* flex-wrap: wrap; */
-        gap: 0.5%;
+    .dashpage .dashpage__head .head__game-stats {
+        padding: 5px 0 0 0;
     }
-    .dashpage .dashpage__head .dashpage__head__element {
-        font-size: 10px;
-        width: 49.75%;
-        height: 25px;
-        margin-bottom: 2px;
+    .dashpage .dashpage__head .head__game-stats p,
+    .dashpage .dashpage__head .head__game-stats .game { /* <p>Games<p/> */
+        font-size: 12px;
+        font-weight: 550;
     }
-    
+    .head__game-stats .head__games-value-pic {
+        margin: 5px ;
+    }
+    .head__game-stats .head__games-value-pic img{
+        height: 12px;
+        width: 12px;
+    }
+    .head__game-stats__percentage .pic-percentage svg{
+        height: 12px;
+        width: 12px;
+    }
+    .head__game-stats .head__game-stats__line { /* Line Percentage */
+        margin: 2px 0;
+        height: 12px;
+    }
+
     /* Body */
     .dashpage .dashpage__body {
         height: 1400px;
+    }
+    .dashpage .dashpage__body .dashpage__body__rank h1,
+    .dashpage .dashpage__body .dashpage__body__statistics h1 {
+        font-size: 20px;
     }
     .rank-classment {
         flex-direction: column;
@@ -825,6 +842,14 @@
     .footer__single-match,
     .footer__multiplayer-match{
         width: 100%;
+    }
+    .footer__single-match,
+    .footer__multiplayer-match,
+    .footer__tournament-match {
+        padding: 10px 2px;
+    }
+    .footer__result {   /* result of all footer matches */
+        padding: 5px;
     }
     .dashpage .dashpage__footer {
         flex-direction: column;
@@ -838,6 +863,12 @@
     .footer__single-match .no-result h3{
         width: 85%;
         font-size: 15px;
+    }
+    .dashpage .dashpage__body .dashpage__body__statistics .chart-icon {
+        height: 22px;
+        width: 22px;
+        margin: 10px 4px 0 0;
+
     }
     
     /* Match Result Dtls */

@@ -39,7 +39,7 @@ import TwoVsTwoPlayMatch from "./Game/TwoVsTwoPlayMatch";
 import TwoVsTwoFriends from "./Game/TwoVsTwoFriends";
 import TwoVsTwoCreateOrJoin from "./Game/TwoVsTwoCreateOrJoin";
 import GameSettings from "./Game/GameSettings";
-import Settings from "./Settings/Settings";
+
 import Bot from "./Game/Bot";
 import { ToastContainer, Bounce } from "react-toastify";
 import { SocketDataContextProvider } from "./navbar-sidebar/SocketDataContext";
@@ -48,6 +48,8 @@ import ErrorPage from "./ErrorPage/ErrorPage";
 import { DashboardWrapper } from './Dashboard/DashboardWrapper';
 
 import bg1 from "./assets/Body/2.png"
+import PersonalInfo from './Settings/PersonalInfo';
+import Security from './Settings/Security';
 
 const ChatGroupsWrapper = ({ element }) => (
   <ChatProvider>{element}</ChatProvider>
@@ -71,7 +73,8 @@ const App = () => {
               <Route path="/mainpage" element={<NavbarSidebar />}>
                 <Route path="dashboard" element={<DashboardWrapper child={<Dashboard />}/>} />
                 <Route path="profile/:userId" element={<ChatProvider element={<ProfileWrapper child={<Profile />} />} />} />
-                <Route path="settings" element={<SettingsWrapper child={<Settings />} />} />
+                <Route path="settings" element={<SettingsWrapper child={<PersonalInfo />} />} />
+                <Route path="settings/security" element={<SettingsWrapper child={<Security />} />} />
                 <Route path="chat" element={<ChatProvider element={<Chat />} />} />
                 <Route path="friends" element={<Friends />} />
                 <Route path="groups" element={<ChatProvider element={<Rooms />} />} />
@@ -92,8 +95,8 @@ const App = () => {
                 <Route path="game/createtournament" element={<CreateTournament />} />
                 <Route path="game/jointournament" element={<JoinTournament />} />
                 <Route path="game/tournamentbracket" element={<TournamentBracket />} />
-				<Route path="game/localtournamentbracket" element={<LocalTournamentBracket />}/>
-				<Route path="game/localtournamentfillmembers" element={<LocalTournamentFillMembers />}/>
+				        <Route path="game/localtournamentbracket" element={<LocalTournamentBracket />}/>
+				        <Route path="game/localtournamentfillmembers" element={<LocalTournamentFillMembers />}/>
               </Route>
               <Route path="*" element={<Navigate to="/Error404" />} />
             </Routes>

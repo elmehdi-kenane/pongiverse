@@ -10,8 +10,9 @@ export default SettingsContext;
 
 export const SettingsWrapper = ({ child }) => {
 
-    const [userData, setUserData] = useState(null)
     const { user } = useContext(AuthContext);
+    const [isInfo, setIsInfo] = useState(true);
+    const [userData, setUserData] = useState(null)
 
     const [userPic, setUserPic] = useState(mavPic);
     const [userBg, setUserBg] = useState(bg);
@@ -20,8 +21,22 @@ export const SettingsWrapper = ({ child }) => {
     const [userLevel, setUserLevel] = useState(null);
     const [userCountry, setUserCountry] = useState(null);
 
+    // const [url, setUrl] = useState(window.location.href);
+
     const notifySuc = (suc) => toast.success(suc);
     const notifyErr = (err) => toast.error(err);
+
+    useEffect(()=>{
+        const url = window.location.href;
+        const checkUrlEnd = () => {
+            if (url.endsWith('/') || url.endsWith('/settings'))
+                setIsInfo(true)
+            else if (url.endsWith('/security'))
+                setIsInfo(false)
+            };
+            if (url)
+                checkUrlEnd();
+    },[window.location.href])
 
     useEffect(() => {
         const getUserData = async () => {
@@ -86,6 +101,8 @@ export const SettingsWrapper = ({ child }) => {
         setUserLevel: setUserLevel,
         userCountry: userCountry,
         setUserCountry: setUserCountry,
+        isInfo: isInfo,
+        setIsInfo: setIsInfo,
 
         notifySuc:notifySuc,
         notifyErr:notifyErr

@@ -1,11 +1,16 @@
 import React, { useContext } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from './Authcontext';
 import MavSvg from "../assets/Profile/Group.svg"
 
 const ProfileIcon = ({ Icons, profileHandleDropDown, profileDropDownisOpen }) => {
 
     const {user, userImg} = useContext(AuthContext);
+    const navigate = useNavigate();
+
+    const settingsNavigation = () => { // Done by Imad
+        navigate(`/mainpage/settings`)
+      }
 
     return (
         <div id="profile-icon" onClick={profileHandleDropDown}>
@@ -28,14 +33,14 @@ const ProfileIcon = ({ Icons, profileHandleDropDown, profileDropDownisOpen }) =>
                 <div className='separator'>
                     <div id='line-break'></div>
                 </div>
-                <div className='settings-symbol-text'>
+                <div className='settings-symbol-text' onClick={settingsNavigation}>
                     <div id='settings-symbol'>
                         <a href="#">
                             <img src={Icons.settings} alt="settings-logo" />
                         </a>
                     </div>
                     <div id='settings-text'>
-                        <Link to="/mainpage/settings">
+                        <Link>
                             Settings
                         </Link>
                     </div>

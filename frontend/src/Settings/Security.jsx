@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
+import "./Settings.css";
+
+import SettingsContext from "./SettingsWrapper";
+import { Toaster } from "react-hot-toast";
 import UpdatePwd from './UpdateSecurity/UpdatePwd';
 import TwoFaq from './UpdateSecurity/TwoFaq';
+import SettingsLeft from './SettingsLeft';
 
 function Security() {
 
@@ -15,23 +20,27 @@ function Security() {
   }
 
   return (
-    <div className="settings__security">
-      <h1 className='settings__header'> SECURITY </h1>
-      <div className="security__update linear-purple-bg">
-        {!isPwd && !isTF &&
-          <>
-            <div className="update">
-              <p className='title more-width'> Change Password </p>
-              <div className="update__btn" onClick={() => setUpdate('pwd')}> Update </div>
-            </div>
-            <div className="update no-bottom">
-              <p className='title more-width'> Authenticator App </p>
-              <div className="update__btn" onClick={() => setUpdate('tf')}> Enable </div>
-            </div>
-          </>
-        }
-        {isPwd && <UpdatePwd cancelPwd={setIsPwd} />}
-        {isTF && <TwoFaq />}
+    <div className="settings-page">
+      <Toaster />
+      <SettingsLeft />
+      <div className="settings__security">
+        <h1 className='settings__header'> SECURITY </h1>
+        <div className="security__update linear-purple-bg">
+          {!isPwd && !isTF &&
+            <>
+              <div className="update">
+                <p className='title more-width'> Change Password </p>
+                <div className="update__btn" onClick={() => setUpdate('pwd')}> Update </div>
+              </div>
+              <div className="update no-bottom">
+                <p className='title more-width'> Authenticator App </p>
+                <div className="update__btn" onClick={() => setUpdate('tf')}> Enable </div>
+              </div>
+            </>
+          }
+          {isPwd && <UpdatePwd cancelPwd={setIsPwd} />}
+          {isTF && <TwoFaq />}
+        </div>
       </div>
     </div>
   )
