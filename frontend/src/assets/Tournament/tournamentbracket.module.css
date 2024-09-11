@@ -114,10 +114,9 @@
 	.verticalSvg {
 		width: 100%;
 		display: flex;
-		align-items: center;
+		align-items: unset;
 		justify-content: center;
 		height: auto;
-		margin-top: 200px;
 		margin-left: 10px;
 		margin-right: 10px;
 	}
@@ -131,11 +130,6 @@
 	}
 }
 
-@media (max-width: 768px) {
-	.verticalSvg {
-		margin-top: 250px;
-	}
-}
 
 @media (max-width: 540px) {
 
@@ -190,6 +184,6 @@
 	}
 
 	.verticalSvg {
-		margin-top: 100px;
+		width: 100%;
 	}
 }

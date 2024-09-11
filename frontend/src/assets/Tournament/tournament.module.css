@@ -134,6 +134,8 @@
 	width: 150px;
 	padding: 0 5px;
 	font-size: 20px;
+	/* background-size: cover;
+	background-position: center; */
 }
 
 .tournament-members {
@@ -144,24 +146,12 @@
 	margin: 0 auto;
 	align-content: center;
 	justify-content: center;
-	gap: 20px;
+	gap: 40px;
 	padding-top: 2%;
 	scrollbar-color: transparent transparent;
 	height: 600px;
 }
 
-.player {
-	width: calc(90% / 4);
-	position: relative;
-	max-width: 380px;
-	height: 120px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
-	border-radius: 10px;
-	column-gap: 20px;
-}
 
 .disconnected-div {
 	position: absolute;
@@ -174,6 +164,7 @@
 	border-radius: 10px;
 	align-items: center;
 	justify-content: center;
+	z-index: 100;
 }
 
 .disconnected-div p {
@@ -281,22 +272,86 @@
 	height: 50px;
 }
 
-.avatar {
-	margin-top: 5%;
-	height: 100px;
-	width: 100px;
+.player {
+	width: calc(90% / 4);
+	position: relative;
+	max-width: 400px;
+	height: 180px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+	/* background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5)); */
+	border-radius: 5px;
+	/* row-gap: 20px; */
+}
+
+
+.player-empty{
+	width: calc(90% / 4);
+	position: relative;
+	max-width: 400px;
+	height: 180px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
 	border-radius: 10px;
 }
 
-.user-info {
+.user-avatar{
+	width: 100%;
+	height: 50%;
+	position: relative;
+}
+
+.avatar {
+	height: 80px;
+	width: 80px;
+	border-radius: 5px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%);
+}
+
+.avatar-empty{
+	margin-top: 10%;
+	height: 100px;
+	width: 100px;
+	border-radius: 10px;
+
+}
+
+.line-and-user-info{
+	width: 100%;
 	display: flex;
 	flex-direction: column;
-	row-gap: 3px;
+	justify-content: space-around;
+	border-radius: 0 5px 5px;
+	height: 50%;
+	gap: 3px;
+	background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.9));
+}
+
+.user-info {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding-top: 35px;
 }
 
 .user-info-name,
 .user-info-level {
 	color: white;
+}
+
+.line-inside-player{
+	width: 100%;
+	height: 1px;
+	background-color: white;
 }
 
 .down-buttons {
@@ -434,10 +489,17 @@
 
 }
 
+@media (max-width: 1413px) {
+	.tournament-members {
+		height: 700px;
+	}
+
+}
+
 @media (max-width: 1170px) {
 
 	.tournament-members {
-		width: 80%;
+		width: 90%;
 		height: 100%;
 		display: flex;
 		flex-wrap: wrap;
@@ -451,12 +513,21 @@
 
 	.player {
 		width: 350px;
-		height: 120px;
+		height: 180px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		border-radius: 10px;
-		column-gap: 20px;
+	}
+	
+	.player-empty{
+		
+		width: 350px;
+		height: 180px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 10px;
 	}
 
 	.tournament-title {
@@ -543,6 +614,12 @@
 		width: 300px;
 	}
 
+	.player-empty {
+		width: 300px;
+	}
+
+	
+
 	.tournament-title {
 		font-size: 25px;
 	}
@@ -552,6 +629,9 @@
 
 	.player {
 		width: 40%;
+	}
+	.player-empty {
+		width: 40%;
 		column-gap: 4px;
 	}
 }
@@ -560,6 +640,9 @@
 @media (max-width: 578px) {
 
 	.player {
+		width: 300px;
+	}
+	.player-empty {
 		width: 300px;
 		column-gap: 10px;
 	}
@@ -583,9 +666,13 @@
 	.player {
 		width: 300px;
 	}
+	.player-empty {
+		width: 300px;
+		justify-content: center;
+		gap: 2px;
+	}
 
 	.avatar {
-		margin-top: 5%;
 		height: 75px;
 		width: 75px;
 		border-radius: 10px;
@@ -638,7 +725,7 @@
 
 	.tournament-id {
 		display: flex;
-		column-gap: 50px;
+		column-gap: 20px;
 	}
 
 	.players-number {
@@ -707,6 +794,7 @@
 	.tournament-title {
 		font-size: 20px;
 	}
+	
 
 	.tournament-id-title,
 	.tournament-id-value,
@@ -722,15 +810,12 @@
 		height: 800px;
 	}
 
+
 	.tournament-title {
 		margin-top: 5%;
 		font-size: 13px;
 	}
 
-	.player {
-		height: 70px;
-		column-gap: 5px;
-	}
 
 
 	.Invite-friend-popup-up {
@@ -760,10 +845,6 @@
 		column-gap: 10px;
 	}
 
-	.avatar {
-		height: 60px;
-		width: 60px;
-	}
 
 	.up-button {
 		background-color: #913dce;

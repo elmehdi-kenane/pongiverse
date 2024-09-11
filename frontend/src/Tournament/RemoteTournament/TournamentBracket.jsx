@@ -10,9 +10,9 @@ function TournamentBracket() {
 	const navigate = useNavigate()
 	const location = useLocation()
 	const [tournamentMembers, setTournamentMembers] = useState([])
-	const [roundSixteenMembers, setRoundSixteenMembers] = useState([])
 	const [roundQuarterFinalMembers, setroundQuarterFinalMembers] = useState([])
 	const [roundSemiFinalMembers, setroundSemiFinalMembers] = useState([])
+	const [finalMembers, setFinalMembers] = useState([])
 	const [winnerMember, setwinnerMember] = useState([])
 	const [isTournamentOwner, setIsTournamentOwner] = useState(false)
 	const [userOneToDisplay, setUserOneToDisplay] = useState('')
@@ -93,16 +93,9 @@ function TournamentBracket() {
 			if (response.ok) {
 				const data = await response.json();
 				console.log("----mohamed data : ", data)
-				setRoundSixteenMembers(data.roundsixteen)
 				setroundQuarterFinalMembers(data.roundquarter)
 				setroundSemiFinalMembers(data.roundsemi)
 				setwinnerMember(data.winner)
-				// if (data.roundsixteen.length > 0)
-				// 	fetchImages(data.roundsixteen, setRoundSixteenMembersImages)
-				// if (data.roundquarter.length > 0)
-				// 	fetchImages(data.roundquarter, setroundQuarterFinalMembersImages)
-				// if (data.roundsemi.length > 0)
-				// 	fetchImages(data.roundsemi, setroundSemiFinalMembersImages)
 			} else {
 				console.error('Failed to fetch data');
 			}
@@ -164,19 +157,14 @@ function TournamentBracket() {
 				let message = data.message
 				if (type == 'new_user_win') {
 					const newMember = {'id': message.id, 'name': message.name, 'level': message.level, 'image': message.image, 'position': message.position}
-					if (message.round_reached === 'QUARTERFINAL')
-						console.log("NEW USER ROUND :", message)
-						setroundQuarterFinalMembers((prevRoundQuarterFinalMembers) => [...prevRoundQuarterFinalMembers, newMember])
 					if (message.round_reached === 'SEMIFINAL')
 						setroundSemiFinalMembers((prevRoundSemiFinalMembers) => [...prevRoundSemiFinalMembers, newMember])
+					if (message.round_reached === 'FINAL')
+						setFinalMembers((prevFinalMembers) => [...prevFinalMembers, newMember])
 				}
 			}
 		}
 	}, [socket])
-
-	useEffect(() =>{
-		console.log("MOHAMDDDDDD: ", roundQuarterFinalMembers)
-	},[roundQuarterFinalMembers])
 
 	useEffect(() => {
 		if (createdAt) {
@@ -199,20 +187,19 @@ function TournamentBracket() {
 				userOneToDisplay && userTwoToDisplay && timeDiff &&
 				<div className={styles['display-components-div']}>
 					<div className={styles['display-components-div-players-data']}>
-						<img src={findMemberByPosition(roundSixteenMembers, userOneToDisplay).image} alt="" className={styles['display-components-div-players-data-image']} />
+						<img src={findMemberByPosition(roundQuarterFinalMembers, userOneToDisplay).image} alt="" className={styles['display-components-div-players-data-image']} />
 						<img src={versus} className={styles['display-components-div-players-data-svg']} alt="" />
-						<img src={findMemberByPosition(roundSixteenMembers, userTwoToDisplay).image} alt="" className={styles['display-components-div-players-data-image']} />
+						<img src={findMemberByPosition(roundQuarterFinalMembers, userTwoToDisplay).image} alt="" className={styles['display-components-div-players-data-image']} />
 					</div>
 					<p className={styles['display-components-div-text']}>The game will start in {timeDiff}</p>
 				</div>
 			}
 			<div className={styles['normalSvg']}>
-				<SvgComponent roundsixteenmembers={roundSixteenMembers} roundquartermembers={roundQuarterFinalMembers} />
+				<SvgComponent roundquartermembers={roundQuarterFinalMembers} roundsemifinalmembers={roundSemiFinalMembers} roundfinalMembers={finalMembers} roundwinner={winnerMember}/>
 
 			</div>
 			<div className={styles['verticalSvg']}>
-				{/* <img src={<SvgVerticalComponent images={membersImages} />} alt="" /> */}
-				<SvgVerticalComponent roundsixteenmembers={roundSixteenMembers} roundquartermembers={roundQuarterFinalMembers} />
+				<SvgVerticalComponent roundquartermembers={roundQuarterFinalMembers} roundsemifinalmembers={roundSemiFinalMembers} roundfinalmembers={finalMembers} roundwinner={winnerMember}/>
 			</div>
 		</div>
 	);

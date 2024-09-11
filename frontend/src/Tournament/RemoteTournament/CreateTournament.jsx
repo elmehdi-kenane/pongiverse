@@ -224,7 +224,7 @@ function CreateTournament() {
 			});
 			if (response.ok) {
 				const data = await response.json();
-				const newUser = { 'id': data.id, 'name': data.name, 'level': data.level, 'image': data.image }
+				const newUser = { 'id': data.id, 'name': data.name, 'level': data.level, 'image': data.image , 'background_image': data.background_image}
 				console.log("NEW USERRR:", newUser)
 				setTournamentMembers((prevTournamentMembers) => [...prevTournamentMembers, newUser]);
 				setTournamentMembers((prevTournamentMembers) => {
@@ -452,7 +452,7 @@ function CreateTournament() {
 						}
 						<div className={styles["players-number"]}>
 							<h4 className={styles["players-number-title"]}>Players:</h4>
-							<h5 className={styles["players-number-value"]}>{tournamentMembers.length}/16</h5>
+							<h5 className={styles["players-number-value"]}>{tournamentMembers.length}/8</h5>
 						</div>
 					</div >
 					{
@@ -469,7 +469,11 @@ function CreateTournament() {
 					}
 					<div className={styles["tournament-members"]}>
 						{
-							tournamentMembers.length >= 1 ? (<div className={styles["player"]}>
+							tournamentMembers.length >= 1 ? (<div className={styles["player"]} style={{
+								backgroundImage: `url(${tournamentMembers[0].background_image})`,
+								backgroundSize: "cover",
+								backgroundPosition: "center",
+							  }}>
 								{
 									tournamentMembers[0].is_online === false &&
 									<div className={styles["disconnected-div"]}>
@@ -479,46 +483,59 @@ function CreateTournament() {
 										}
 									</div>
 								}
-								<div className={styles["user-avatar"]}>
+								<div className={styles["user-avatar"]} >
 									<img className={styles["avatar"]} src={tournamentMembers[0].image} alt="" />
 								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[0].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[0].level}</h5>
+								<div className={styles["line-and-user-info"]}>
+									<div className={styles["user-info"]}>
+										<h4 className={styles["user-info-name"]}>{tournamentMembers[0].name}</h4>
+										<h6 className={styles["user-info-level"]}>level {tournamentMembers[0].level}</h6>
+									</div>
 								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
+							</div>) : (<div className={styles["player-empty"]}>
+								<div className={styles["user-avatar-empty"]}>
+									<img className={styles["avatar-empty"]} src={avatar} alt="" />
 								</div>
 							</div>)
 						}
+						
 						{
-							tournamentMembers.length >= 2 ? (<div className={styles["player"]}>
+							tournamentMembers.length >= 2 ? (<div className={styles["player"]} style={{
+								backgroundImage: `url(${tournamentMembers[1].background_image})`,
+								backgroundSize: "cover",
+								backgroundPosition: "center",
+							  }}>
 								{
 									tournamentMembers[1].is_online === false &&
 									<div className={styles["disconnected-div"]}>
 										<p>diconnected</p>
 										{
-
 											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[1].name)}>Kick out</button>
 										}
 									</div>
 								}
-								<div className={styles["user-avatar"]}>
+								<div className={styles["user-avatar"]} >
 									<img className={styles["avatar"]} src={tournamentMembers[1].image} alt="" />
 								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[1].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[1].level}</h5>
+								<div className={styles["line-and-user-info"]}>
+									<div className={styles["user-info"]}>
+										<h4 className={styles["user-info-name"]}>{tournamentMembers[1].name}</h4>
+										<h6 className={styles["user-info-level"]}>level {tournamentMembers[1].level}</h6>
+									</div>
 								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
+							</div>) : (<div className={styles["player-empty"]}>
+								<div className={styles["user-avatar-empty"]}>
+									<img className={styles["avatar-empty"]} src={avatar} alt="" />
 								</div>
 							</div>)
 						}
+						
 						{
-							tournamentMembers.length >= 3 ? (<div className={styles["player"]}>
+							tournamentMembers.length >= 3 ? (<div className={styles["player"]} style={{
+								backgroundImage: `url(${tournamentMembers[0].background_image})`,
+								backgroundSize: "cover",
+								backgroundPosition: "center",
+							  }}>
 								{
 									tournamentMembers[2].is_online === false &&
 									<div className={styles["disconnected-div"]}>
@@ -528,343 +545,177 @@ function CreateTournament() {
 										}
 									</div>
 								}
-								<div className={styles["user-avatar"]}>
+								<div className={styles["user-avatar"]} >
 									<img className={styles["avatar"]} src={tournamentMembers[2].image} alt="" />
 								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[2].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[2].level}</h5>
+								<div className={styles["line-and-user-info"]}>
+									<div className={styles["user-info"]}>
+										<h4 className={styles["user-info-name"]}>{tournamentMembers[2].name}</h4>
+										<h6 className={styles["user-info-level"]}>level {tournamentMembers[2].level}</h6>
+									</div>
 								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
+							</div>) : (<div className={styles["player-empty"]}>
+								<div className={styles["user-avatar-empty"]}>
+									<img className={styles["avatar-empty"]} src={avatar} alt="" />
 								</div>
 							</div>)
 						}
+						
 						{
-							tournamentMembers.length >= 4 ? (<div className={styles["player"]}>
+							tournamentMembers.length >= 4 ? (<div className={styles["player"]} style={{
+								backgroundImage: `url(${tournamentMembers[0].background_image})`,
+								backgroundSize: "cover",
+								backgroundPosition: "center",
+							  }}>
 								{
 									tournamentMembers[3].is_online === false &&
 									<div className={styles["disconnected-div"]}>
 										<p>diconnected</p>
 										{
-
 											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[3].name)}>Kick out</button>
 										}
 									</div>
 								}
-								<div className={styles["user-avatar"]}>
+								<div className={styles["user-avatar"]} >
 									<img className={styles["avatar"]} src={tournamentMembers[3].image} alt="" />
 								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[3].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[3].level}</h5>
+								<div className={styles["line-and-user-info"]}>
+									<div className={styles["user-info"]}>
+										<h4 className={styles["user-info-name"]}>{tournamentMembers[3].name}</h4>
+										<h6 className={styles["user-info-level"]}>level {tournamentMembers[3].level}</h6>
+									</div>
 								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
+							</div>) : (<div className={styles["player-empty"]}>
+								<div className={styles["user-avatar-empty"]}>
+									<img className={styles["avatar-empty"]} src={avatar} alt="" />
 								</div>
 							</div>)
 						}
+						
 						{
-							tournamentMembers.length >= 5 ? (<div className={styles["player"]}>
+							tournamentMembers.length >= 5 ? (<div className={styles["player"]} style={{
+								backgroundImage: `url(${tournamentMembers[0].background_image})`,
+								backgroundSize: "cover",
+								backgroundPosition: "center",
+							  }}>
 								{
 									tournamentMembers[4].is_online === false &&
 									<div className={styles["disconnected-div"]}>
 										<p>diconnected</p>
 										{
-
 											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[4].name)}>Kick out</button>
 										}
 									</div>
 								}
-								<div className={styles["user-avatar"]}>
+								<div className={styles["user-avatar"]} >
 									<img className={styles["avatar"]} src={tournamentMembers[4].image} alt="" />
 								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[4].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[4].level}</h5>
+								<div className={styles["line-and-user-info"]}>
+									<div className={styles["user-info"]}>
+										<h4 className={styles["user-info-name"]}>{tournamentMembers[4].name}</h4>
+										<h6 className={styles["user-info-level"]}>level {tournamentMembers[4].level}</h6>
+									</div>
 								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
+							</div>) : (<div className={styles["player-empty"]}>
+								<div className={styles["user-avatar-empty"]}>
+									<img className={styles["avatar-empty"]} src={avatar} alt="" />
 								</div>
 							</div>)
 						}
+						
 						{
-							tournamentMembers.length >= 6 ? (<div className={styles["player"]}>
+							tournamentMembers.length >= 6 ? (<div className={styles["player"]} style={{
+								backgroundImage: `url(${tournamentMembers[0].background_image})`,
+								backgroundSize: "cover",
+								backgroundPosition: "center",
+							  }}>
 								{
 									tournamentMembers[5].is_online === false &&
 									<div className={styles["disconnected-div"]}>
 										<p>diconnected</p>
 										{
-
 											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[5].name)}>Kick out</button>
 										}
 									</div>
 								}
-								<div className={styles["user-avatar"]}>
+								<div className={styles["user-avatar"]} >
 									<img className={styles["avatar"]} src={tournamentMembers[5].image} alt="" />
 								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[5].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[5].level}</h5>
+								<div className={styles["line-and-user-info"]}>
+									<div className={styles["user-info"]}>
+										<h4 className={styles["user-info-name"]}>{tournamentMembers[5].name}</h4>
+										<h6 className={styles["user-info-level"]}>level {tournamentMembers[5].level}</h6>
+									</div>
 								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
+							</div>) : (<div className={styles["player-empty"]}>
+								<div className={styles["user-avatar-empty"]}>
+									<img className={styles["avatar-empty"]} src={avatar} alt="" />
 								</div>
 							</div>)
 						}
+						
 						{
-							tournamentMembers.length >= 7 ? (<div className={styles["player"]}>
+							tournamentMembers.length >= 7 ? (<div className={styles["player"]} style={{
+								backgroundImage: `url(${tournamentMembers[0].background_image})`,
+								backgroundSize: "cover",
+								backgroundPosition: "center",
+							  }}>
 								{
 									tournamentMembers[6].is_online === false &&
 									<div className={styles["disconnected-div"]}>
 										<p>diconnected</p>
 										{
-
 											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[6].name)}>Kick out</button>
 										}
 									</div>
 								}
-								<div className={styles["user-avatar"]}>
+								<div className={styles["user-avatar"]} >
 									<img className={styles["avatar"]} src={tournamentMembers[6].image} alt="" />
 								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[6].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[6].level}</h5>
+								<div className={styles["line-and-user-info"]}>
+									<div className={styles["user-info"]}>
+										<h4 className={styles["user-info-name"]}>{tournamentMembers[6].name}</h4>
+										<h6 className={styles["user-info-level"]}>level {tournamentMembers[6].level}</h6>
+									</div>
 								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
+							</div>) : (<div className={styles["player-empty"]}>
+								<div className={styles["user-avatar-empty"]}>
+									<img className={styles["avatar-empty"]} src={avatar} alt="" />
 								</div>
 							</div>)
 						}
+						
 						{
-							tournamentMembers.length >= 8 ? (<div className={styles["player"]}>
+							tournamentMembers.length >= 8 ? (<div className={styles["player"]} style={{
+								backgroundImage: `url(${tournamentMembers[0].background_image})`,
+								backgroundSize: "cover",
+								backgroundPosition: "center",
+							  }}>
 								{
 									tournamentMembers[7].is_online === false &&
 									<div className={styles["disconnected-div"]}>
 										<p>diconnected</p>
 										{
-
 											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[7].name)}>Kick out</button>
 										}
 									</div>
 								}
-								<div className={styles["user-avatar"]}>
+								<div className={styles["user-avatar"]} >
 									<img className={styles["avatar"]} src={tournamentMembers[7].image} alt="" />
 								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[7].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[7].level}</h5>
-								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
-								</div>
-							</div>)
-						}
-						{
-							tournamentMembers.length >= 9 ? (<div className={styles["player"]}>
-								{
-									tournamentMembers[8].is_online === false &&
-									<div className={styles["disconnected-div"]}>
-										<p>diconnected</p>
-										{
-
-											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[8].name)}>Kick out</button>
-										}
+								<div className={styles["line-and-user-info"]}>
+									<div className={styles["user-info"]}>
+										<h4 className={styles["user-info-name"]}>{tournamentMembers[7].name}</h4>
+										<h6 className={styles["user-info-level"]}>level {tournamentMembers[7].level}</h6>
 									</div>
-								}
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={tournamentMembers[8].image} alt="" />
 								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[8].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[8].level}</h5>
-								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
+							</div>) : (<div className={styles["player-empty"]}>
+								<div className={styles["user-avatar-empty"]}>
+									<img className={styles["avatar-empty"]} src={avatar} alt="" />
 								</div>
 							</div>)
 						}
-						{
-							tournamentMembers.length >= 10 ? (<div className={styles["player"]}>
-								{
-									tournamentMembers[9].is_online === false &&
-									<div className={styles["disconnected-div"]}>
-										<p>diconnected</p>
-										{
-
-											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[9].name)}>Kick out</button>
-										}
-									</div>
-								}
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={tournamentMembers[9].image} alt="" />
-								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[9].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[9].level}</h5>
-								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
-								</div>
-							</div>)
-						}
-						{
-							tournamentMembers.length >= 11 ? (<div className={styles["player"]}>
-								{
-									tournamentMembers[10].is_online === false &&
-									<div className={styles["disconnected-div"]}>
-										<p>diconnected</p>
-										{
-
-											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[10].name)}>Kick out</button>
-										}
-									</div>
-								}
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={tournamentMembers[10].image} alt="" />
-								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[10].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[10].level}</h5>
-								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
-								</div>
-							</div>)
-						}
-						{
-							tournamentMembers.length >= 12 ? (<div className={styles["player"]}>
-								{
-									tournamentMembers[11].is_online === false &&
-									<div className={styles["disconnected-div"]}>
-										<p>diconnected</p>
-										{
-
-											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[11].name)}>Kick out</button>
-										}
-									</div>
-								}
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={tournamentMembers[11].image} alt="" />
-								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[11].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[11].level}</h5>
-								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
-								</div>
-							</div>)
-						}
-						{
-							tournamentMembers.length >= 13 ? (<div className={styles["player"]}>
-								{
-									tournamentMembers[12].is_online === false &&
-									<div className={styles["disconnected-div"]}>
-										<p>diconnected</p>
-										{
-
-											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[12].name)}>Kick out</button>
-										}
-									</div>
-								}
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={tournamentMembers[12].image} alt="" />
-								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[12].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[12].level}</h5>
-								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
-								</div>
-							</div>)
-						}
-						{
-							tournamentMembers.length >= 14 ? (<div className={styles["player"]}>
-								{
-									tournamentMembers[13].is_online === false &&
-									<div className={styles["disconnected-div"]}>
-										<p>diconnected</p>
-										{
-
-											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[13].name)}>Kick out</button>
-										}
-									</div>
-								}
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={tournamentMembers[13].image} alt="" />
-								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[13].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[13].level}</h5>
-								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
-								</div>
-							</div>)
-						}
-						{
-							tournamentMembers.length >= 15 ? (<div className={styles["player"]}>
-								{
-									tournamentMembers[14].is_online === false &&
-									<div className={styles["disconnected-div"]}>
-										<p>diconnected</p>
-										{
-
-											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[14].name)}>Kick out</button>
-										}
-									</div>
-								}
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={tournamentMembers[14].image} alt="" />
-								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[14].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[14].level}</h5>
-								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
-								</div>
-							</div>)
-						}
-						{
-							tournamentMembers.length >= 16 ? (<div className={styles["player"]}>
-								{
-									tournamentMembers[15].is_online === false &&
-									<div className={styles["disconnected-div"]}>
-										<p>diconnected</p>
-										{
-											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[15].name)}>Kick out</button>
-										}
-									</div>
-								}
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={tournamentMembers[15].image} alt="" />
-								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[15].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[15].level}</h5>
-								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
-								</div>
-							</div>)
-						}
+						
 					</div>
 					{
 						isTournamentOwner ?

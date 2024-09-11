@@ -284,7 +284,7 @@ async def start_tournament(self, data, user_channels):
 	await sync_to_async(tournament.save)()
 	members = await sync_to_async(list)(TournamentMembers.objects.filter(tournament=tournament))
 	count = 1
-	round = Round(tournament=tournament, type='ROUND 16')
+	round = Round(tournament=tournament, type='QUARTERFINAL')
 	await sync_to_async(round.save)()
 	for member in members:
 		username = await sync_to_async(lambda: member.user.username)()

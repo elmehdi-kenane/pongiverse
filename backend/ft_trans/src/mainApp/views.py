@@ -9,6 +9,7 @@ import random
 from django.db.models import Q
 from myapp.serializers import MyModelSerializer
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError, AccessToken
+from .common import tournament_rooms
 # from rest_framework.exceptions import AuthenticationFailed
 # from .serializers import UserSerializer
 # from .models import User
@@ -163,11 +164,13 @@ def tournament_members(request):
 	allMembers = []
 	for member in TournamentMembers.objects.filter(tournament=my_tournament):
 		image_path = member.user.avatar.url
+		background_image_path = member.user.background_pic.url
 		allMembers.append({
 			'id': member.user.id,
 			'name': member.user.username,
 			'level': 2,  # Assuming level is static for now
 			'image': f"http://{ip_address}:8000/auth{image_path}",
+			'background_image' : f"http://{ip_address}:8000/auth{background_image_path}",
 			'is_online' : member.user.is_online
 		})
 	response = Response()
@@ -220,7 +223,7 @@ def get_tournament_member(request):
 	user = customuser.objects.filter(username=username).first()
 	if user is not None:
 		response = Response()
-		response.data = {'id' : user.id, 'name' : user.username, 'level' : 2, 'image' : f"http://{ip_address}:8000/auth{user.avatar.url}", 'is_online' : user.is_online}
+		response.data = {'id' : user.id, 'name' : user.username, 'level' : 2, 'image' : f"http://{ip_address}:8000/auth{user.avatar.url}", 'background_image' : f"http://{ip_address}:8000/auth{user.background_pic.url}", 'is_online' : user.is_online}
 		return response
 
 @api_view(['POST'])
@@ -304,7 +307,7 @@ def get_tournament_size(request):
 	tournament = Tournament.objects.filter(tournament_id=tournament_id).first()
 	if tournament.is_started == True:
 		response.data = {'Case' : 'Tournament_started'}
-	elif TournamentMembers.objects.filter(tournament=tournament).count() == 16:
+	elif TournamentMembers.objects.filter(tournament=tournament).count() == 8:
 		response.data = {'Case' : 'Tournament_is_full'}
 	else:
 		response.data = {'Case' : 'size_is_valide'}
@@ -379,32 +382,21 @@ def get_game_members_round(request):
 	ip_address = os.getenv("IP_ADDRESS")
 	user = customuser.objects.filter(username=username).first()
 	response = Response()
+	quartermembers = []
+	semimembers = []
+	winnerdict = {}
 	for member in TournamentMembers.objects.filter(user=user):
 		if member.tournament.is_started == True and member.tournament.is_finished == False and member.is_eliminated == False:
-			roundsixteen = Round.objects.filter(tournament=member.tournament, type="ROUND 16").first()
 			roundquarterfinal = Round.objects.filter(tournament=member.tournament, type="QUARTERFINAL").first()
 			roundsemierfinal = Round.objects.filter(tournament=member.tournament, type="SEMIFINAL").first()
 			winner = Round.objects.filter(tournament=member.tournament, type="WINNER").first()
-			sixteenmembers = []
-			quartermembers = []
-			semimembers = []
-			winnerdict = {}
-			if roundsixteen is not None:
-				for sixteenmember in TournamentUserInfo.objects.filter(round=roundsixteen):
-					sixteenmembers.append({
-						'id' : sixteenmember.user.id,
-						'name' : sixteenmember.user.username,
-						'level': 2,  # Assuming level is static for now
-						'image': f"http://{ip_address}:8000/auth{sixteenmember.user.avatar.url}",
-						'position': sixteenmember.position
-					})
 			if roundquarterfinal is not None:
 				for quartermember in TournamentUserInfo.objects.filter(round=roundquarterfinal):
 					if quartermember.user is not None:
 						quartermembers.append({
 							'id' : quartermember.user.id,
 							'name' : quartermember.user.username,
-							'level': 2,  # Assuming level is static for now
+							'level': quartermember.user.level,
 							'image': f"http://{ip_address}:8000/auth{quartermember.user.avatar.url}",
 							'position': quartermember.position
 						})
@@ -412,7 +404,7 @@ def get_game_members_round(request):
 						quartermembers.append({
 							'id' : -1,
 							'name' : '',
-							'level': 2,  # Assuming level is static for now
+							'level': -1,
 							'image': '',
 							'position': quartermember.position
 						})
@@ -422,7 +414,7 @@ def get_game_members_round(request):
 						semimembers.append({
 							'id' : semimember.user.id,
 							'name' : semimember.user.username,
-							'level': 2,  # Assuming level is static for now
+							'level': semimember.user.level,
 							'image': f"http://{ip_address}:8000/auth{semimember.user.avatar.url}",
 							'position': semimember.position
 						})
@@ -430,7 +422,7 @@ def get_game_members_round(request):
 						semimembers.append({
 							'id' : -1,
 							'name' : '',
-							'level': 2,  # Assuming level is static for now
+							'level': -1,  # Assuming level is static for now
 							'image': '',
 							'position': semimember.position
 						})
@@ -440,8 +432,8 @@ def get_game_members_round(request):
 				if winnermember.user is not None:
 					winnerdict.update({'id': winnermember.user.id, 'name' : winnermember.user.username, 'level' : 2, 'image' : f"http://{ip_address}:8000/auth{winnermember.user.avatar.url}", 'position' : winnermember.position})
 				else:
-					winnerdict.update({'id': -1, 'name' : '', 'level' : 2, 'image' : '', 'position' : winnermember.position})
-	response.data = {'roundsixteen' : sixteenmembers, 'roundquarter' : quartermembers, 'roundsemi' : semimembers, 'winner' : winnerdict}
+					winnerdict.update({'id': -1, 'name' : '', 'level' : -1, 'image' : '', 'position' : winnermember.position})
+	response.data = {'roundquarter' : quartermembers, 'roundsemi' : semimembers, 'winner' : winnerdict}
 	return response
 
 @api_view(['POST'])
@@ -482,4 +474,38 @@ def get_tournament_warning(request):
 				response.data = {'Case' : 'yes', 'time': TournamentWarning.created_at}
 				return response
 	response.data = {'Case' : 'no'}
+	return response
+
+def get_right_room(tournament_id, tournament_rooms, username):
+	room = {}
+	t_rooms = tournament_rooms.get(str(tournament_id))
+	if t_rooms:
+		for room_id, the_room in t_rooms.items():
+			if any(player['user'] == username for player in the_room.get('players', [])):
+				return the_room
+	return room
+ 
+
+@api_view(['POST'])	
+def player_situation(request):
+	username = request.data.get('user')
+	flag = 0
+	response = Response()
+	user = customuser.objects.filter(username=username).first()
+	for member in TournamentMembers.objects.filter(user=user):
+		is_started = member.tournament.is_started
+		is_finished =  member.tournament.is_finished
+		is_eliminated = member.is_eliminated
+		if is_started == False or (is_started == True and is_finished == False and is_eliminated == False):
+			flag = 1337
+			tournament_id = member.tournament.tournament_id
+			room = get_right_room(tournament_id, tournament_rooms, username)
+			if room:
+				case = "joining a room"
+			else:
+				case = "joining a tournament but not in a room"
+			break
+	if flag == 0:
+		case = 'not joining a tournament'
+	response.data = {'Case' : case}
 	return response

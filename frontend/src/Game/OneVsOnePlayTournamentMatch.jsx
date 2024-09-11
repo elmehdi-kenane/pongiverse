@@ -285,32 +285,57 @@ function createParticle(x, y) {
 		}
 	}, [])
 
-	useEffect(() =>{
-		if (notifSocket && notifSocket.readyState === WebSocket.OPEN && user) {
-			notifSocket.send(JSON.stringify({
-				type: 'check_is_joining_a_room',
-				message: {
-					user: user,
-				}
-			}))
-		}
-	},[notifSocket, user])
+	// useEffect(() =>{
+	// 	if (notifSocket && notifSocket.readyState === WebSocket.OPEN && user) {
+	// 		notifSocket.send(JSON.stringify({
+	// 			type: 'check_is_joining_a_room',
+	// 			message: {
+	// 				user: user,
+	// 			}
+	// 		}))
+	// 	}
+	// },[notifSocket, user])
+
+	// useEffect(() => {
+	// 	if (notifSocket && notifSocket.readyState === WebSocket.OPEN && user) {
+	// 		notifSocket.onmessage = (event) => {
+	// 			let data = JSON.parse(event.data)
+	// 			let type = data.type
+	// 			let message = data.message
+	// 			if (type === 'playerSituation'){
+	// 				if (message.Case === 'joining a tournament but not in a room')
+	// 					navigate("../game/createtournament")
+	// 				if (message.Case === 'not joining a tournament')
+	// 					navigate("../game")
+	// 			}
+	// 		}
+	// 	}
+	// }, [notifSocket, user])
 
 	useEffect(() => {
-		if (notifSocket && notifSocket.readyState === WebSocket.OPEN && user) {
-			notifSocket.onmessage = (event) => {
-				let data = JSON.parse(event.data)
-				let type = data.type
-				let message = data.message
-				if (type === 'playerSituation'){
-					if (message.Case === 'joining a tournament but not in a room')
-						navigate("../game/createtournament")
-					if (message.Case === 'not joining a tournament')
-						navigate("../game")
-				}
+		const check_player_situation = async () => {
+			const response = await fetch(`http://localhost:8000/api/player-situation`, {
+				method: "POST",
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					user: user
+				})
+			});
+			if (response.ok) {
+				const data = await response.json();
+				if (data.Case === 'joining a tournament but not in a room')
+					navigate("../game/createtournament")
+				if (data.Case === 'not joining a tournament')
+					navigate("../game")
+			} else {
+				console.error('Failed to fetch data');
 			}
 		}
-	}, [notifSocket, user])
+		if (user)
+			check_player_situation()
+	},[user])
 
 
 	useEffect(() => {

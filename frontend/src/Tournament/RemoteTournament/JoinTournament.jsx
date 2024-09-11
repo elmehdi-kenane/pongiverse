@@ -190,10 +190,10 @@ function JoinTournament() {
 			</div>
 			<div className={styles['tournament-suggestions']}>
 				<div className={styles['table-th']}>
-					<h3>Id</h3>
-					<h3>Owner</h3>
-					<h3>Players</h3>
-					<h3></h3>
+					<h3 className={styles['h3-titles']}>Id</h3>
+					<h3 className={styles['h3-titles']}>Owner</h3>
+					<h3 className={styles['h3-titles']}>Players</h3>
+					<h3 className={styles['h3-titles']}></h3>
 				</div>
 				<div className={styles['table-line']}>
 				</div>
@@ -201,9 +201,9 @@ function JoinTournament() {
 					tournamentSuggestions.length > 0 && tournamentSuggestions.map((tournament) => {
 						return (
 							<div className={styles['table-th']} key={tournament.tournament_id}>
-								<h4>{tournament.tournament_id}</h4>
-								<h4>{tournament.owner}</h4>
-								<h4>{tournament.size}/16</h4>
+								<h4 className={styles['h4-titles']}>{tournament.tournament_id}</h4>
+								<h4 className={styles['h4-titles']}>{tournament.owner}</h4>
+								<h4 className={styles['h4-titles']}>{tournament.size}/8</h4>
 								<div className={styles['join']}>
 									<button className={styles['join-button']} onClick={() => handleJoin(tournament.tournament_id)}>Join</button>
 								</div>

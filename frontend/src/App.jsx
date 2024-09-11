@@ -122,7 +122,7 @@ const App = () => {
 									element={<LocalTournamentBracket />}
 								/>
 								<Route
-									path="game/localtournamentfillmembers"
+									path="game/  "
 									element={<LocalTournamentFillMembers />}
 								/>
 							</Route>
