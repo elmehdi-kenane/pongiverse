@@ -35,3 +35,5 @@ typing-extensions==4.10.0
 zope.interface==6.2
 requests
 python-dotenv
+pyotp
+qrcode
