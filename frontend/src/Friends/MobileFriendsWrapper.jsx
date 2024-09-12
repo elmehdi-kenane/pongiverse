@@ -97,7 +97,7 @@ export const MobileFriendsWrapper = ({ friends, recievedRequests, sentRequests, 
                   recievedRequests.map((request, index) => (
                     <RecievedFriendReqCard
                       key={index}
-                      secondUsername={request.second_username}
+                      secondUsername={request.username}
                       send_at={request.send_at}
                       avatar={request.avatar}
                     ></RecievedFriendReqCard>
@@ -115,7 +115,7 @@ export const MobileFriendsWrapper = ({ friends, recievedRequests, sentRequests, 
                   sentRequests.map((request, index) => (
                     <SentFriendReqCard
                       key={index}
-                      secondUsername={request.second_username}
+                      secondUsername={request.username}
                       send_at={request.send_at}
                       avatar={request.avatar}
                     ></SentFriendReqCard>

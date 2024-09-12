@@ -205,10 +205,8 @@ const Friends = () => {
                 }
             );
             const res = await response.json();
-            if (res){
-                console.log("Requests: ",res)
+            if (res)
                 setRecievedRequests(res);
-            }
         };
         if (user) getRecievedRequests();
     }, [user]);

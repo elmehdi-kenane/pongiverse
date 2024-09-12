@@ -394,13 +394,10 @@ body {
 
 .sidebar .sidebar-navigations {
   text-align: center;
-}
-
-.sidebar .sidebar-navigations {
   width: 100%;
 }
 
-.sidebar #channels {
+.sidebar #sidebar-groups {
   margin-bottom: 80px;
 }
 
@@ -616,6 +613,8 @@ body {
     border-radius: 0;
     overflow: hidden;
     margin: 0 0;
+    box-shadow:none;
+    border: none;
     /* background-color:aquamarine; */
   }
 
@@ -624,7 +623,11 @@ body {
   }
 
   .sidebar #sidebar-dashboard {
-    padding-top: 0;
+    /* padding-top: 0; */
+  }
+
+  .sidebar #sidebar-groups {
+    margin-bottom: 0;
   }
 
   .sidebar .sidebar-navigations .sidebar-icons img {

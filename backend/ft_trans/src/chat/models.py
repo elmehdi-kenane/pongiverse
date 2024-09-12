@@ -2,13 +2,18 @@ from django.db import models
 from django.conf import settings
 User = settings.AUTH_USER_MODEL
 
+def default_cover():
+	return 'uploads_default/roomCover.png'
+
+def default_icon():
+	return 'uploads_default/roomIcon.png'
 
 class Room(models.Model):
   name = models.CharField(max_length=100)
   members = models.ManyToManyField(User, related_name='rooms', through='Membership')
   topic = models.TextField(blank=True)
-  icon = models.ImageField(upload_to='uploads/')
-  # cover = models.ImageField(upload_to='uploads/')
+  icon = models.ImageField(upload_to='uploads/', default=default_icon)
+  cover = models.ImageField(upload_to='uploads/',default=default_cover)
   members_count = models.IntegerField(default=0)
   visiblity = models.TextField(default='public')
   password = models.CharField(max_length=128)
