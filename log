@@ -1,0 +1,134 @@
+On branch nav-side-bar
+Your branch is up to date with 'origin/nav-side-bar'.
+
+You have unmerged paths.
+  (fix conflicts and run "git commit")
+  (use "git merge --abort" to abort the merge)
+
+Changes to be committed:
+	modified:   .gitignore
+	new file:   README.md
+	new file:   backend/ft_trans/.DS_Store
+	new file:   backend/ft_trans/src/.DS_Store
+	modified:   backend/ft_trans/src/Profile/consumers.py
+	modified:   backend/ft_trans/src/Profile/urls.py
+	modified:   backend/ft_trans/src/Profile/views.py
+	modified:   backend/ft_trans/src/mainApp/consumers.py
+	modified:   backend/ft_trans/src/mainApp/gameConsumers.py
+	modified:   backend/ft_trans/src/mainApp/gameMultiplayerConsumers.py
+	modified:   backend/ft_trans/src/mainApp/models.py
+	modified:   backend/ft_trans/src/mainApp/views.py
+	modified:   backend/ft_trans/src/myapp/consumers.py
+	modified:   backend/ft_trans/src/myapp/models.py
+	modified:   backend/ft_trans/src/myapp/views.py
+	deleted:    backend/ft_trans/src/package-lock.json
+	deleted:    backend/ft_trans/src/package.json
+	new file:   frontend/README.md
+	modified:   frontend/package-lock.json
+	modified:   frontend/src/App.jsx
+	modified:   frontend/src/Chat/chatConversation.jsx
+	modified:   frontend/src/Chat/chatConversationItem.jsx
+	modified:   frontend/src/Chat/chatPage.jsx
+	modified:   frontend/src/Chat/chatRoomConversation.jsx
+	modified:   frontend/src/Chat/myMessage.jsx
+	modified:   frontend/src/Chat/otherMessage.jsx
+	modified:   frontend/src/Chat/sendMessage.jsx
+	new file:   frontend/src/Dashboard/DashBody/DashRanking.jsx
+	new file:   frontend/src/Dashboard/DashBody/DashStatistics.jsx
+	new file:   frontend/src/Dashboard/DashBody/DashTournament.jsx
+	new file:   frontend/src/Dashboard/DashFooter/DashMulty.jsx
+	new file:   frontend/src/Dashboard/DashFooter/DashSingle.jsx
+	new file:   frontend/src/Dashboard/DashFooter/DashTourn.jsx
+	new file:   frontend/src/Dashboard/DashResult/DashResult.jsx
+	modified:   frontend/src/Dashboard/Dashboard.css
+	modified:   frontend/src/Dashboard/Dashboard.jsx
+	modified:   frontend/src/Dashboard/DashboardBody.jsx
+	modified:   frontend/src/Dashboard/DashboardFooter.jsx
+	modified:   frontend/src/Dashboard/DashboardHead.jsx
+	new file:   frontend/src/Dashboard/DashboardWrapper.jsx
+	modified:   frontend/src/Dashboard/charts/BarGraph.jsx
+	modified:   frontend/src/Dashboard/charts/LineGraph.jsx
+	modified:   frontend/src/Dashboard/helpers/CustomTooltip.css
+	new file:   frontend/src/ErrorPage/Button.jsx
+	new file:   frontend/src/ErrorPage/ErrorPage.jsx
+	new file:   frontend/src/ErrorPage/Header.jsx
+	new file:   frontend/src/ErrorPage/NavBar.jsx
+	new file:   frontend/src/ErrorPage/SubHeader.jsx
+	modified:   frontend/src/Game/OneVsOneFriends.jsx
+	new file:   frontend/src/Groups/ChatContext.js
+	new file:   frontend/src/Groups/InvitationRoom.jsx
+	new file:   frontend/src/Groups/chatRoomInvitee.jsx
+	new file:   frontend/src/Groups/chatRoomMember.jsx
+	new file:   frontend/src/Groups/createRoom.jsx
+	new file:   frontend/src/Groups/createRoomForm.jsx
+	new file:   frontend/src/Groups/createRoomPassword.jsx
+	new file:   frontend/src/Groups/createRoomVisibilityOptions.jsx
+	new file:   frontend/src/Groups/joinRoom.jsx
+	new file:   frontend/src/Groups/myRoom.jsx
+	new file:   frontend/src/Groups/roomHandler.jsx
+	new file:   frontend/src/Groups/roomsNotifications.jsx
+	new file:   frontend/src/Groups/suggestedRoom.jsx
+	modified:   frontend/src/Profile/FriendOptions/FriendsParam.jsx
+	modified:   frontend/src/Profile/FriendOptions/IsFriends.jsx
+	modified:   frontend/src/Profile/Profile.css
+	modified:   frontend/src/Profile/Profile.jsx
+	modified:   frontend/src/Profile/ProfileInfo.jsx
+	modified:   frontend/src/Profile/ProfileLevel.jsx
+	modified:   frontend/src/Profile/ProfileStatistics.jsx
+	new file:   frontend/src/Profile/ProfileWrapper.jsx
+	modified:   frontend/src/Profile/Report/ReportContent.jsx
+	modified:   frontend/src/Profile/Report/ReportFooter.jsx
+	modified:   frontend/src/Profile/Report/ReportSlt.jsx
+	new file:   frontend/src/Profile/Statistics/ProfileUserDiagrame.jsx
+	new file:   frontend/src/Profile/Statistics/ProfileUserFriends.jsx
+	new file:   frontend/src/Profile/Statistics/ProfileUserStatistics.jsx
+	modified:   frontend/src/Settings/PersonalInfo.jsx
+	modified:   frontend/src/Settings/Security.jsx
+	modified:   frontend/src/Settings/Settings.css
+	modified:   frontend/src/Settings/Settings.jsx
+	new file:   frontend/src/Settings/SettingsWrapper.jsx
+	modified:   frontend/src/Settings/Update/AdjustPic.jsx
+	modified:   frontend/src/Settings/Update/UpdateBio.jsx
+	modified:   frontend/src/Settings/Update/UpdateCountry.jsx
+	modified:   frontend/src/Settings/Update/UpdateNkName.jsx
+	modified:   frontend/src/Settings/Update/UpdatePic.jsx
+	new file:   frontend/src/Settings/UpdateSecurity/TwoFaq.jsx
+	new file:   frontend/src/Settings/UpdateSecurity/UpdatePwd.jsx
+	new file:   frontend/src/Tournament/CreateTournament.jsx
+	new file:   frontend/src/Tournament/JoinTournament.jsx
+	new file:   frontend/src/Tournament/SvgComponent.jsx
+	new file:   frontend/src/Tournament/SvgVerticalComponent.jsx
+	new file:   frontend/src/Tournament/TournamentBracket.jsx
+	new file:   frontend/src/assets/PingLogo.svg
+	new file:   frontend/src/assets/Profile/Frame.svg
+	new file:   frontend/src/assets/Profile/Frame4.svg
+	new file:   frontend/src/assets/Profile/Frame5.svg
+	new file:   frontend/src/assets/Profile/Group.svg
+	new file:   frontend/src/assets/Profile/achv.svg
+	new file:   frontend/src/assets/Profile/bg1.jpg
+	new file:   frontend/src/assets/Profile/bg2.jpg
+	modified:   frontend/src/assets/SignUp/imagePlaceholder.svg
+	modified:   frontend/src/assets/Tournament/tournament.module.css
+	modified:   frontend/src/assets/chat/Chat.css
+	modified:   frontend/src/assets/chat/Groups.css
+	modified:   frontend/src/assets/chat/media/PlaceHolder.svg
+	new file:   frontend/src/assets/chat/media/roomCover.png
+	new file:   frontend/src/assets/error_page/ErrorPage.css
+	new file:   frontend/src/assets/error_page/racket.svg
+	modified:   frontend/src/assets/navbar-sidebar/index.css
+	modified:   frontend/src/navbar-sidebar/Authcontext.jsx
+	modified:   frontend/src/navbar-sidebar/ProfileIcon.jsx
+	new file:   log
+
+Unmerged paths:
+  (use "git add/rm <file>..." as appropriate to mark resolution)
+	deleted by us:   frontend/src/Chat/MyMessage.jsx
+	deleted by us:   frontend/src/Chat/OtherMessage.jsx
+
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	deleted:    frontend/src/Chat/myMessage.jsx
+	deleted:    frontend/src/Chat/otherMessage.jsx
+	modified:   log
+

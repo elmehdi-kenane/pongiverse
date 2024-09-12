@@ -179,13 +179,10 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
-    'https://lh3.googleusercontent.com',
-    'http://172.26.59.182:3000',
-    'http://10.32.105.87:3000',
-    'http://10.30.146.215:3000',
-    'http://e3r10p18.1337.ma:3000',
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:3000",
+    "https://lh3.googleusercontent.com"
 ]
 
 # CORS_ALLOW_ALL_ORIGINS: True

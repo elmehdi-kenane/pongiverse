@@ -1,5 +1,6 @@
 .settings-page {
     display: flex;
+    justify-content: center;
     width: 100%;
     height: 100%;
     /* border: #826aed solid 2px; */
@@ -8,14 +9,8 @@
     overflow-y: scroll;
 }
 
-.purple-bg {
-    background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
-    box-shadow: 0 0px 20px 0 rgb(130, 106, 237, 0.5) ;
-    box-shadow: 0 0.5px 5px 0 #826aed;
-    backdrop-filter: blur( 4px );
-    -webkit-backdrop-filter: blur( 4px );
-    border-radius: 10px;
-    border: 1px solid rgba( 255, 255, 255, 0.18 );
+:root {
+    --dark-gray: color-mix( in oklab, hsl( 215 calc( 1 * 8.8%) 73.3% / 1) 100%, black 0% );;
 }
 
 .shadow-bg {
@@ -26,10 +21,21 @@
 }
 
 .btn-active {
-    background: linear-gradient(to bottom, rgb(68, 45, 106, 0.9), rgba(74, 37, 139, 0.4));
+    background: linear-gradient(to bottom, rgb(68, 45, 106, 0.9), rgba(74, 37, 139, 0.2));
 }
-.settings__personal-info .personal-info__update .no-botom {
+
+.settings-page .no-bottom {
     border-bottom: none;
+}
+
+.linear-purple-bg {
+    background: linear-gradient(to bottom, rgb(68, 45, 106, 0.8), rgba(74, 37, 139, 0));
+    box-shadow: 0 0px 20px 0 #ccc ;
+    box-shadow: 0 0.5px 5px 0 #ccc;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 5px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
 /* -------------------------- Left Side -------------------------- */
@@ -37,7 +43,6 @@
 .settings-page .settings__leftside {
     display: flex;
     flex-direction: column;
-    height: 400px;
     width: 25%;
     /* border: #8edf34 solid 1px; */
     color: white;
@@ -45,10 +50,17 @@
 .settings__leftside .pic-name{
     display: flex;
     align-items: center;
+    margin-bottom: 5px;
     gap: 10px;
+    cursor: pointer;
+}
+.settings__leftside .pic-name p{
+    cursor: inherit;
 }
 .settings__leftside .pic-name img {
     height: 40px;
+    width: 40px;
+    border-radius: 50%;
 }
 
 .settings-page .settings__leftside .left__email{
@@ -57,6 +69,7 @@
     /* text-align: center; */
     border-bottom: #ccc 0.5px solid;
     margin-bottom: 20px;
+    font-size: 17px;
 }
 
 .settings-page .settings__leftside .left__security,
@@ -68,29 +81,168 @@
     width: 100%;
     border-radius: 10px;
     cursor: pointer;
+    font-size: 18px;
 }
 
 
 /* -------------------------- Right Side -------------------------- */
 
+.settings__header {
+    color: white;
+    font-size: 28px;
+    border-bottom: #ccc 0.1px solid;
+    letter-spacing: 0.5px;
+}
+
 /* --- Security --- */
 
 .settings-page .settings__security {
     display: flex;
-    height: 600px;
-    width: 75%;
-    margin-bottom: 150px;
-
-    border: #ccc solid 1px;
-    background: rgb(68, 45, 106);
-    box-shadow: 0 0px 20px 0 #ccc ;
-    box-shadow: 0 0.5px 5px 0 #ccc;
-    backdrop-filter: blur( 4px );
-    -webkit-backdrop-filter: blur( 4px );
-    border-radius: 5px;
-    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    flex-direction: column;
+    /* height: 600px; */
+    width: 70%;
+    padding-top: 5px;
+    gap: 15px;
+    margin-bottom: 550px;
 }
 
+.settings__security .security__update {
+    display: flex;
+    /* border: #ccc solid 5px; */
+    flex-direction: column;
+    width: 100%;
+    /* height: 400px; */
+}
+
+/*------------------ PWD ------------------*/
+
+.settings-page .settings__security .update__pwd {
+    display: flex;
+    flex-direction: column;
+    /* border: #ccc solid 1px; */
+    /* height: 200px; */
+    align-items: center;
+    padding: 15px 20px 5PX 20PX;
+}
+.update__pwd .pwd__title__input {
+    max-width: 400px;
+    width: 100%;
+}
+
+.settings-page .settings__security .update__pwd .pwd__title{
+    color: var(--dark-gray);
+    width: 100%;
+    text-align: start;
+    margin-bottom: 10px;
+}
+.update__pwd .pwd__title__input .pwd__forgot {
+    display: flex;
+    justify-content: flex-end;
+    margin: -10px 0 10px;
+}
+.update__pwd .pwd__title__input .pwd__forgot a{
+    color: var(--dark-gray);
+    font-weight: 450;
+    font-size: 14px;
+}
+.settings-page .settings__security .update__pwd .input__ctr{
+    position: relative;
+    /* border: white 1px solid; */
+    margin-bottom: 15px;
+}
+.update__pwd .input__ctr .pwd__eye{
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    color: var(--dark-gray);
+    cursor: pointer;
+    transform: translateY(-50%);
+}
+.update__pwd .input__ctr .pwd__eye svg{
+    width: 17px;
+    height: 17px;
+}
+
+.update__pwd .input__ctr .pwd__input{
+    padding-left: 5px;
+    width: 100%;
+    height: 40px;
+    outline: none;
+    border: none;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    color : white;
+    font-size: 17px;
+    max-width: 500px;
+}
+
+.update__pwd .pwd__submit {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.update__pwd .pwd__submit .submit-button{
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 10px;
+    border: white .5px solid;
+    cursor: pointer;
+    font-size: 15px;
+    background-color: #927eea;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.update__pwd .pwd__submit .submit-button:hover{
+    background-color: #826aed;
+    border: none;
+    transition: ease-in 0.2s;
+}
+
+.update__pwd .pwd__submit .submit__cancel{
+    background-color: #2f084b;
+}
+.update__pwd .pwd__submit .submit__cancel:hover{
+    background-color: #52127f;
+}
+
+/*------------ Loading ------------*/
+
+.settings-page .settings__security .update__lodaing {
+    display: flex;
+    flex-direction: column;
+    /* border: #ccc solid 1px; */
+    height: 180px;
+    align-items: center;
+    justify-content: space-evenly;
+    padding-bottom: 20px;
+}
+.update__lodaing .loading__title {
+    color: white;
+    /* margin-bottom: 10px; */
+}
+.settings__security .update__lodaing .loading__ctr {
+    display: flex;
+    height: 50px;
+    width: 70%;
+    border: white 3px solid;
+    border-radius: 10px;
+    position: relative;
+    z-index: 2;
+}
+
+/*------------------ TFQ ------------------*/
+
+.settings-page .settings__security .twofaw {
+    display: flex;
+    flex-direction: column;
+    height: 200px;
+
+}
 /* --- Personal Info --- */
 
 .settings-page .settings__personal-info {
@@ -103,27 +255,13 @@
     margin-bottom: 800px;
 }
 
-.settings__personal-info .personal-info__header {
-    color: white;
-    font-size: 28px;
-    border-bottom: #ccc 0.1px solid;
-    letter-spacing: 0.5px;
-}
 .settings__personal-info .personal-info__update {
     display: flex;
     flex-direction: column;
     /* height: 100%; */
-    
-    background: linear-gradient(to bottom, rgb(68, 45, 106, 0.8), rgba(74, 37, 139, 0));
-    box-shadow: 0 0px 20px 0 #ccc ;
-    box-shadow: 0 0.5px 5px 0 #ccc;
-    backdrop-filter: blur( 4px );
-    -webkit-backdrop-filter: blur( 4px );
-    border-radius: 5px;
-    border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
-.personal-info__update .update { /* Update Container */
+.update { /* Update Container */
     display: flex;
     align-items: center;
     height: 90px;
@@ -151,13 +289,16 @@
     font-weight: 450;
     color: #ccc;
 }
-.personal-info__update .update .title {
+.update .title {
     color: #ccc;
     width: 90px;
     font-size: 18px;
     font-weight: 450;
     margin-right: 20px;
     /* border: #826aed solid 1px; */
+}
+.update .more-width { /* For Security titles*/
+    width: 160px;
 }
 .update .update__info {
     font-size: 18px;
@@ -169,10 +310,11 @@
 .update .update__bio {
     position: relative;
     cursor: pointer;
+    /* border: white solid 1px; */
 }
 .update .update__bio .update__info-hover {
     position: absolute;
-    top: -23px;
+    top: -10px;
     opacity: 0;
     padding: 5px;
     font-size: 15px;
@@ -181,6 +323,7 @@
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 5px;
     cursor: pointer;
+    z-index: 4;
 }
 .update .update__bio:hover .update__info-hover{
     opacity: 1;
@@ -218,7 +361,8 @@
 
 /*---- Update Btn ----*/
 
-.personal-info__update .update .update__btn {
+.update .update__btn {
+    display: flex;
     background-color: #826aed;
     border: white 1px solid;
     border-radius: 10px;
@@ -227,7 +371,7 @@
     cursor: pointer;
     user-select: none;
 }
-.personal-info__update .update .update__btn:hover {
+.update .update__btn:hover {
     padding: 9px 27px;
     background-color: #927eea;
     transition: ease-in-out 0.2s;
@@ -248,8 +392,9 @@
     font-size: 15px;
 }
 
-.country-space {
+.personal-info__update .country-space {
     justify-content: space-between;
+    border-bottom: none;
 }
 
 /*------ Adjust Pic -----*/
@@ -300,4 +445,111 @@
 }
 .adjustpic .adjustpic__submit button:nth-child(2) {
     background: #826aed;
+}
+
+@media (min-width: 1440px) {
+    .settings-page {
+        width: 1400px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 1000px) {
+    .settings-page {
+        flex-direction: column;
+        justify-content: start;
+    }
+    
+    .settings-page .settings__security,
+    .settings-page .settings__leftside {
+        width: 90%;
+        align-self: center;
+    }
+    .settings__leftside .pic-name {
+        font-size: 20px;
+        height: 50px;
+        width: 50px;
+    }
+    .settings-page .settings__personal-info {
+        margin-bottom: 0px;
+        align-self: center;
+        width: 90%;
+        margin-bottom: 280px;
+    }
+}
+
+@media (max-width: 768px) {
+    .settings__header {
+        font-size: 25px;
+    }
+    .update {
+        padding: 0 20px 0 20px;
+        gap: 10px;
+    }
+    .update .update__btn {
+        padding: 8px 15px;
+    }
+    .update .update__btn:hover {
+        padding: 9px 17px;
+    }
+    .update .update__info {
+        font-size: 14px;
+        font-weight: 450;
+    }
+    .update .title {
+        width: 85px;
+        font-size: 14px;
+        margin-right: 10px;
+    }
+    .personal-info__update .update .title-pic {
+        font-size: 14px;
+    }
+}
+@media (min-width: 570px) {
+    .update .update__btn svg{
+        display: none;
+    }
+}
+@media (max-width: 570px) {
+
+    .update {
+        padding: 0 15px 0 15px;
+    }
+    .settings-page .settings__security,
+    .settings-page .settings__personal-info,
+    .settings-page .settings__leftside {
+        width: 100%;
+    }
+
+    .update .update__btn svg{
+        display:block;
+    }
+    .update .update__btn p{
+        display: none;
+    }
+    .update .update__btn svg{
+        height: 22.5px;
+        width: 22.5px;
+    }
+    .update .update__btn {
+        padding: 4px 4px;
+    }
+    .update .update__btn:hover {
+        padding: 5.5px 5.5px;
+    }
+    .personal-info__update .country-space {
+        /* display: flex;
+        flex-direction: column; */
+    }
+
+    .personal-info__update .update img {
+        height: 50px;
+        width: 50px;
+        margin-right: 5px;
+    }
+    .personal-info__update .update + .update img {
+        margin-right: 5px;
+        height: 45px;
+        width: 60px;
+    }
 }

@@ -11,6 +11,7 @@ from myapp.models import customuser
 from friends.models import Friendship
 import socket
 from .common import rooms, user_channels
+
 # from mainApp.models import Match
 # from mainApp.models import ActiveMatch
 # from mainApp.models import NotifPlayer
@@ -47,23 +48,23 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			# await sync_to_async(user.save)()
 			channel_namee = user_channels.get(username)
 			if channel_namee:
-				# print(f"**[Previous channel_name 2]: {channel_namee}")
-				# print(f"THIS IS THE OLD CHANNEL NAME =======> {username}")
+				# #print(f"**[Previous channel_name 2]: {channel_namee}")
+				# #print(f"THIS IS THE OLD CHANNEL NAME =======> {username}")
 				await self.channel_layer.send(channel_namee, {
 					'type': 'hmed'
 				})
 			user_channels[username] = self.channel_name
-			# print(f"**[Current channel_name]: {user_channels[username]}")
-			# print(f"**[USER CHANNELS]: {user_channels}")
+			# #print(f"**[Current channel_name]: {user_channels[username]}")
+			# #print(f"**[USER CHANNELS]: {user_channels}")
 			# channel_layer = get_channel_layer()
 			# friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
-			# print(f"ALL THE USERS CHANNEL_NAMES : {user_channels}")
+			# #print(f"ALL THE USERS CHANNEL_NAMES : {user_channels}")
 			# for friend in friends:
 			# 	friend_username = await sync_to_async(lambda: friend.friend.username)()
 			# 	friend_is_online = await sync_to_async(lambda: friend.friend.is_online)()
-			# 	print(f"friend username : {friend_username}")
+			# 	#print(f"friend username : {friend_username}")
 			# 	channel_name = user_channels.get(friend_username)
-			# 	print(f"USER CHANNEL ON CONNECT IS : {channel_name}")
+			# 	#print(f"USER CHANNEL ON CONNECT IS : {channel_name}")
 			# 	if channel_name and friend_is_online and not user.is_playing:
 			# 		await self.channel_layer.send(
 			# 			channel_name,
@@ -229,27 +230,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			'message': event['message']
 		}))
 
-	async def unblocker(self, event):
+	async def unblock_friend(self, event):
 		await self.send(text_data=json.dumps({
-			'type': 'unblocker-friend',
-			'message': event['message']
-		}))
-
-	async def unblocker_move_to_suggestions(self, event):
-		await self.send(text_data=json.dumps({
-			'type': 'unblocker-move-to-suggestions',
-			'message': event['message']
-		}))
-	
-	async def unblocked(self, event):
-		await self.send(text_data=json.dumps({
-			'type': 'unblocked-friend',
+			'type': 'unblock-friend',
 			'message': event['message']
 		}))
 
 	##################################### 1vs1 (GAME) #####################################
 
 	async def gameReady(self, event):
+		#print("======== HANDLING GAMEREADY EVENT ========")
 		await self.send(text_data=json.dumps({
 			'type': 'gameReady',
 			'message': event['message']
@@ -404,7 +394,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		await self.send(text_data=json.dumps(message))
 	async def newRoomJoin(self, event):
 		data = event['data']
-		print(data)
+		#print(data)
 		message  = {
 			'type':'newRoomJoin',
 			'room' : data
@@ -420,7 +410,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 				'content': data['message'],
 			}
 		}
-		print(message)
+		#print(message)
 		await self.send(text_data=json.dumps(message))
 
 
@@ -555,7 +545,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 #         }))
 
 	async def socket_close(self, event):
-		print("----------JA L SOCKET CLOSE----------")
+		#print("----------JA L SOCKET CLOSE----------")
 		await self.send(text_data=json.dumps({
 			'type': 'socket_close'
 		}))
@@ -577,7 +567,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	# 	await self.send(text_data=json.dumps(message))
 	# async def newRoomJoin(self, event):
 	# 	data = event['data']
-	# 	print(data)
+	# 	#print(data)
 	# 	message  = {
 	# 		'type':'newRoomJoin',
 	# 		'room' : data
@@ -593,7 +583,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	# 			'content': data['message'],
 	# 		}
 	# 	}
-	# 	print(message)
+	# 	#print(message)
 	# 	await self.send(text_data=json.dumps(message))
 
 

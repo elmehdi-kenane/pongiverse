@@ -1,47 +1,79 @@
-import React, {useState, useContext} from 'react'
-import AuthContext from '../../navbar-sidebar/Authcontext'
+import React, { useState, useContext, useEffect } from 'react'
 import Avatar from 'react-avatar-edit'
+import AuthContext from '../../navbar-sidebar/Authcontext'
+import SettingsContext from '../SettingsWrapper'
 
 function AdjustPic(props) {
 
-  const {userPic} = useContext(AuthContext)
-  const {setUserPic} = useContext(AuthContext)
+  const { user, setUserImg } = useContext(AuthContext)
+  const { userPic, setUserPic, notifySuc, notifyErr} = useContext(SettingsContext);
 
-  const {nickName} = useContext(AuthContext)
   const [src, setSrc] = useState(null)
   const [preview, setPreview] = useState(userPic)
+  const [check, setCheck] = useState(userPic)
 
-  const handleConfirmClick = () => {
-      props.setAdjust(false);
-      setUserPic(preview);
+  const UpdatePic = async (updatedPic) => {
+    try {
+      const response = await fetch('http://localhost:8000/profile/updateUserPic', {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user: user,
+          image: updatedPic,
+        })
+      });
+      const res = await response.json()
+      if (response.ok) {
+        notifySuc(res.case);
+        setUserPic(preview); // SettingsContext
+        setUserImg(preview); // AuthContext
+      }
+      else
+        notifyErr(res.error);
+    } catch (error) {
+      notifyErr(error);
+      console.log(error);
+    }
   }
-  const handleCancelClick = () => {
-      props.setAdjust(false);
+
+  const onCrop = view => {
+    setPreview(view);
   }
   const onClose = () => {
-      props.setAdjust(false);
+    props.setAdjust(false);
   }
-  const onCrop = view => {
-      setPreview(view);
+  const handleConfirmClick = () => {
+    if (preview != check)
+      UpdatePic(preview);
+    props.setAdjust(false);
   }
+  const handleCancelClick = () => {
+    props.setAdjust(false);
+  }
+
   return (
     <div className='adjustpic'>
       <div className='adjustpic__img-name'>
-        <img src={preview} alt="UserPic"/>
-        <h1> {nickName} </h1>
+        <img src={preview} alt="UserPic" />
+        <h1> {user} </h1>
       </div>
       <Avatar
-            width={300}
-            height={300}
-            backgroundColor='#4a258b00'
-            closeIconColor='white'
-            label="Choose a file"
-            labelStyle={{fontSize:"18px", cursor:"pointer", padding:"5px", fontWeight:"500",
-                color: "white", border: "1px solid white"}}
-            onClose={onClose}
-            onCrop={onCrop}
-            src={src}
-        />
+        width={300}
+        height={300}
+        backgroundColor='#4a258b00'
+        closeIconColor='white'
+        label="Choose a file"
+        labelStyle={{
+          fontSize: "15px", cursor: "pointer", padding: "5px", fontWeight: "500",
+          color: "white", border: "1px solid white", borderRadius: "5px"
+        }}
+        onClose={onClose}
+        onCrop={onCrop}
+        src={src}
+      // cropRadius={50}
+      />
       <div className='adjustpic__submit'>
         <button onClick={handleCancelClick}> Cancel </button>
         <button onClick={handleConfirmClick}> Confirm </button>

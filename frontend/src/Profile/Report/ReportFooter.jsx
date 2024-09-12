@@ -1,12 +1,13 @@
 import React, { useContext, useState } from 'react'
 import DoneIcon from '@mui/icons-material/Done';
 import AuthContext from '../../navbar-sidebar/Authcontext';
+import ProfileContext from '../ProfileWrapper';
 
 function ReportFooter() {
 
-  const {reportValue} = useContext(AuthContext);
-  const {setIsReport} = useContext(AuthContext);
+  const {reportValue, setIsReport} = useContext(AuthContext);
   const [isBlock, setIsBlock] = useState(false);
+  const {userId} = useContext(ProfileContext);
 
   const handleBlockClick = () => {
     setIsBlock(!isBlock);
@@ -23,7 +24,7 @@ function ReportFooter() {
     <div className='report__footer'>
       <button className="block-user" onClick={handleBlockClick}>
         <DoneIcon className={!isBlock ? 'block-icon' : 'block-icon valid-bg'}/>
-        <p> Block Maverick ? </p>
+        <p> Block {userId} ? </p>
       </button>
       <div className="report-submit">
         <button className='submit-button submit__cancel' onClick={HandleCancelReport}> Cancel </button>

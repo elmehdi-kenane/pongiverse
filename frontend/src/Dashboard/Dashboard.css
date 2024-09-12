@@ -6,17 +6,17 @@
     /* border: white solid 1px; */
     overflow-y: scroll;
     gap : 20px;
-    padding-top:00px;
+    padding-top:02px;
+    /* position: relative; */
 }
 
-
+:root {
+    /* --purple-bg: rgba(59, 20, 115, 0.8);  */
+    /* --purple-bg: rgba(62, 10, 122, 0.85); */
+}
 .dash--space{
     gap: 15px;
     padding: 0 15px;
-}
-.dash--bkborder {
-    border-radius: 3px;
-    background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
 }
 
 .dash--win-color {
@@ -26,8 +26,173 @@
 .dash--lost-color {
     color: #826aed;
     font-weight: 550;
-    /* color: #8884d8 ;*/
 }
+
+.dash-blur {
+    filter: blur(6px);
+    pointer-events: none;
+    user-select: none;
+}
+
+/* -------Match-Result------ */
+
+.match-result-ctr {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    /* height: 100%; */
+    width: 100%;
+}
+.match-result {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 70%;
+    top: 250px;
+    border: #826aed solid 2px; 
+    border-radius: 5px;
+    background-color: #1b062a;
+    color: white;
+    position: relative;
+    z-index: 4;
+}
+.match-result h1{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    letter-spacing: 1px;
+    width: 100%;
+    border-bottom: 2px #826aed solid;
+    height: 55px;
+}
+
+/* Single Fields */
+
+.match-result .result__field-sgl{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 55px;
+}
+.match-result-ctr .match-result .result__field-sgl p:nth-child(2n){
+    font-weight: 500;
+    font-size: 16px;
+}
+.match-result-ctr .match-result .result__field-sgl p{
+    font-weight: 410;
+    font-size: 15px;
+    width: 65px;
+    text-align: center;
+}
+.match-result .result__field-sgl:nth-child(2n+1){
+    background-color: #220637;
+}
+.match-result .result__field-sgl .field__date{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.match-result .result__field-sgl .field__date p{
+    width: 100px;
+    font-weight: 500;
+    font-size: 16px;
+}
+.match-result .result__field-sgl .field__img-name{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 65px;
+}
+.match-result .result__field-sgl img{
+    height: 40px;
+    width: 40px;
+    border-radius: 30%;
+    cursor: pointer;
+}
+
+/* Multiplayer Fields */
+
+.match-result .result__field-mtp{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 55px;
+    padding: 0 20px;
+}
+.match-result .result__field-mtp:nth-child(2n+1){
+    background-color: #220637;
+}
+
+.match-result .result__field-mtp .field__date{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.match-result .result__field-mtp .field__date p{
+    width: 100px;
+    font-weight: 500;
+    font-size: 16px;
+    text-align: center;
+}
+.match-result .result__field-mtp .field-option{ /* Option */
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.match-result .result__field-mtp .field__img{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* border: white 1px solid; */
+    width: 90px;
+}
+.match-result .result__field-mtp .field__img img{
+    height: 36px;
+    width: 36px;
+    border-radius: 30%;
+    cursor: pointer;
+}
+
+.match-result .result__field-mtp .field__prg{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    width: 90px;
+}
+.match-result .result__field-mtp .field__prg p{
+    font-weight: 410;
+    font-size: 15px;
+}
+.match-result .result__field-mtp .prg-score p{
+    text-align: center;
+    width: 100%;
+}
+
+
+
+
+.match-result .match-result__close { 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    color: #826aed;
+    top: 10px;
+    right: 6px;
+    height: 32px;
+    width: 32px;
+    cursor: pointer;
+}
+.match-result .match-result__close:hover{
+    color: #9e88fd;
+}
+
 /* -------HEAD------ */
 
 .dashpage .dashpage__head {
@@ -83,7 +248,7 @@
     display: flex;
     height: 15px;
     border-radius: 6px;
-    animation: moving 2s ease-in-out;
+    animation: moving 4s ease-in-out;
 }
 
 @keyframes moving {
@@ -99,12 +264,13 @@
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
     background-color: #f4effa;
+    /* transition: width 1s ease-in; */
 }
 .head__game-stats .head__game-stats__line .right-side{
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
-    background-color: #826aed
-;
+    background-color: #826aed;
+    /* transition: width 1s ease-out; */
 }
 
 .head__game-stats .head__game-stats__statistics {
@@ -178,7 +344,7 @@
     letter-spacing: 1px;
     font-weight: 600;
     padding: 10px;
-    border-bottom: #250939 solid 10px;
+    border-bottom: #250939 solid 3px; /*10px*/
     text-align: center;
 }
 
@@ -192,13 +358,17 @@
     padding: 8px;
     width: 100%;
     text-align: center;
-    background: #5f4582;
+    background: #826aed99;
     /* background: #775C9E; */
     border-right: black solid 0.5px;
 }
+.dashpage__body__rank .dashpage__body__rank__title .select {
+    background: #f4effa;
+    color: #5f4582;
+}
 
 .dashpage__body__rank .dashpage__body__rank__title .title:hover {
-    background: rgb(247, 239, 255);
+    background: #f4effa;
     color: #5f4582;
     transition: ease-in 0.2s;
     cursor: pointer;
@@ -224,12 +394,13 @@
     height: 44.2px;
     align-items: center;
     border-bottom: #250939 solid 3px;
+    text-decoration: none;
 }
 
 .dashpage__body__rank__classment .player__classment:hover{
-    background-color: #250939;
+    background-color: #826aed99;
     transition: ease-in 0.2s;
-    box-shadow: 0 2px 30px 0 #250939;
+    /* box-shadow: 0 2px 10px 0 rgb(130, 106, 237, 0.6); */
 }
 
 .dashpage__body__rank__classment .player__classment .player__pos_pic{
@@ -264,6 +435,7 @@
 .dashpage__body__rank__classment .player__classment .player__pos_pic img{
     border-radius: 50%;
     width: 35px;
+    height: 35px;
     margin-left: 5px;
 }
 
@@ -295,11 +467,13 @@
 .footer__tournament-match {
     /* border: white solid 2px; */
     width: 33%;
+    height: 300px;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 10px 10px;
     gap: 10px;
+    position: relative;
     /* border: 1px solid rgba( 255, 255, 255, 0.18 ); */
 }
 
@@ -308,6 +482,55 @@
     font-size: 23px;
     margin-bottom: 8px;
 }
+
+.no-result{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 80%;
+    width: 85%;
+    margin: 0px 5px;
+    
+    background: rgba( 255, 255, 255, 0.25 );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    box-shadow: 0 2px 30px 0 #250939;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+}
+
+.no-result h3{
+    color: white;
+    width: 80%;
+    font-size: 19px;
+    font-weight: 450;
+    margin-bottom: 15px;
+}
+.no-result .start-game{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: white;
+    background: #250939;
+    border: white 1px solid;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 19px;
+    font-weight: 450;
+    gap: 5px;
+    cursor: pointer;
+}
+.no-result .start-game p{
+    cursor: pointer;
+}
+.no-result .start-game:hover{
+    color: #250939;
+    background: white;
+    transition: ease-in 0.4s;
+}
+
 
 .footer__result {   /* result of all footer matches */
     display: flex;
@@ -318,7 +541,8 @@
     padding: 10px;
     color: white;
     
-    background: rgba( 255, 255, 255, 0.25 );
+    background: rgba( 255, 255, 255, 0.20 );
+    /* background: rgba(130, 106, 237, 0.45); */
     border-radius: 10px;
     border: 1px solid rgba( 255, 255, 255, 0.18 );
     box-shadow: 0 2px 30px 0 #250939;
@@ -339,6 +563,8 @@
 
 .footer__single-match .single-match__result img {
     width: 45px;
+    height: 45px;
+    border-radius: 50%;
 }
 
 /* Multiplayer Match */
@@ -358,32 +584,40 @@
 
 .multiplayer-match__result .multiplayer-pics img{
     width: 40px;
+    height: 40px;
+    border-radius: 50%;
 }
 
 /* Tournament Match */
 
 .footer__tournament-match .tournament-match__result img {
     width: 45px;
+    height: 45px;
+    border-radius: 50%;
 }
 
 /* Pagination */
 
-.expand-more {
+.expand {
+    position: absolute;
+    bottom: 2px;
+}
+.expand svg{
+    height: 24px;
+    width: 24px;
     color: white;
     margin-top: -2px;
-}
-
-.expand-less {
-    color: #250939;
-    margin-top: -2px;
-}
-
-.expand-more:hover,
-.expand-less:hover {
-    color: #775C9E;
     cursor: pointer;
 }
+.expand svg:hover {
+    color: #826aed99;
+}
 
+@media (min-width: 1000px) {
+    .match-result {
+        width: 700px;
+    }
+}
 @media (min-width: 1440px) {
     .dashpage {
         width: 1400px;
@@ -421,21 +655,27 @@
         font-weight: 500;
         margin-bottom: 10px;
     }
-
     .footer__result p{
         font-size: 13px;
     }
-
+    .no-result h3{
+        font-size: 15px;
+    }
+    .no-result .start-game{  
+        font-size: 15px;
+    }
     .footer__tournament-match .tournament-match__result img,
     .footer__single-match .single-match__result img {
         width: 40px;
+        height: 40px;
     }
 
     .footer__multiplayer-match .multiplayer-match__result .multiplayer-pics {
         gap : 0px;
     }
     .multiplayer-match__result .multiplayer-pics img{
-        width: 30px;
+        height: 24px;
+        width: 24px;
     }
 }
 
@@ -465,6 +705,46 @@
         height: 820px;
         flex-direction: column;
     }
+
+    /* Match Result Dtls */
+    .match-result h1{
+        font-size: 20px;
+    }
+    .match-result-ctr .match-result .result__field-sgl p{
+        font-size: 13px;
+    }
+    .match-result .result__field-sgl .field__date p,
+    .match-result-ctr .match-result .result__field-sgl p:nth-child(2n){
+        font-size: 15px;
+    }
+
+    /* Multiplayer Fields */
+
+    .match-result .result__field-mtp{
+        padding: 0 10px;
+    }
+    .match-result .result__field-mtp .field__date p{
+        width: 85px;
+        font-size: 14px;
+    }
+    .match-result .result__field-mtp .field-option{ /* Option */
+        font-size: 14px;
+    }
+    .match-result .result__field-mtp .field__img{
+        width: 70px;
+    }
+    .match-result .result__field-mtp .field__img img{
+        height: 28px;
+        width: 28px;
+    }
+
+    .match-result .result__field-mtp .field__prg{
+        width: 70px;
+    }
+    .match-result .result__field-mtp .field__prg p{
+        font-size: 12px;
+    }
+
 
     /* Statistics */
     .dashpage .dashpage__body .dashpage__body__statistics {
@@ -522,20 +802,37 @@
 
 @media (max-width: 550px) {
     /* Head */
-    .dashpage .dashpage__head {
-        /* flex-wrap: wrap; */
-        gap: 0.5%;
+    .dashpage .dashpage__head .head__game-stats {
+        padding: 5px 0 0 0;
     }
-    .dashpage .dashpage__head .dashpage__head__element {
-        font-size: 10px;
-        width: 49.75%;
-        height: 25px;
-        margin-bottom: 2px;
+    .dashpage .dashpage__head .head__game-stats p,
+    .dashpage .dashpage__head .head__game-stats .game { /* <p>Games<p/> */
+        font-size: 12px;
+        font-weight: 550;
+    }
+    .head__game-stats .head__games-value-pic {
+        margin: 5px ;
+    }
+    .head__game-stats .head__games-value-pic img{
+        height: 12px;
+        width: 12px;
+    }
+    .head__game-stats__percentage .pic-percentage svg{
+        height: 12px;
+        width: 12px;
+    }
+    .head__game-stats .head__game-stats__line { /* Line Percentage */
+        margin: 2px 0;
+        height: 12px;
     }
 
     /* Body */
     .dashpage .dashpage__body {
         height: 1400px;
+    }
+    .dashpage .dashpage__body .dashpage__body__rank h1,
+    .dashpage .dashpage__body .dashpage__body__statistics h1 {
+        font-size: 20px;
     }
     .rank-classment {
         flex-direction: column;
@@ -546,9 +843,106 @@
     .footer__multiplayer-match{
         width: 100%;
     }
+    .footer__single-match,
+    .footer__multiplayer-match,
+    .footer__tournament-match {
+        padding: 10px 2px;
+    }
+    .footer__result {   /* result of all footer matches */
+        padding: 5px;
+    }
     .dashpage .dashpage__footer {
         flex-direction: column;
         height: 700px;
         margin-top: 0;
+    }
+    .footer__single-match .no-result{
+        width: 100%;
+        padding: 10px 0;
+    }
+    .footer__single-match .no-result h3{
+        width: 85%;
+        font-size: 15px;
+    }
+    .dashpage .dashpage__body .dashpage__body__statistics .chart-icon {
+        height: 22px;
+        width: 22px;
+        margin: 10px 4px 0 0;
+
+    }
+    
+    /* Match Result Dtls */
+    .match-result {
+        width: 80%;
+        min-width: 140px;
+    }
+    .match-result h1{
+        font-size: 15px;
+    }
+    .match-result-ctr .match-result .result__field-sgl p{
+        font-size: 10px;
+        width: 60px;
+    }
+    .match-result .result__field-sgl .field__date p,
+    .match-result-ctr .match-result .result__field-sgl p:nth-child(2n){
+        font-size: 10px;
+    }
+    .match-result .result__field-sgl .field__img-name{
+        width: 50px;
+    }
+    .match-result .result__field-sgl img{
+        height: 25px;
+        width: 25px;
+    }
+    .match-result .match-result__close { 
+        top: 2px;
+        right: 2px;
+        height: 20px;
+        width: 20px;
+    }
+    
+    /* Multiplayer Fields */
+    
+    .match-result .result__field-mtp{
+        padding: 0 5px;
+    }
+    .match-result .result__field-mtp .field__date p{
+        width: 75px;
+        font-size: 12px;
+    }
+    .match-result .result__field-mtp .field-option{ /* Option */
+        font-size: 12px;
+    }
+    .match-result .result__field-mtp .field__img{
+        width: auto;
+        justify-content: center;
+        gap: 5px;
+    }
+    .match-result .result__field-mtp .field__img img{
+        height: 21px;
+        width: 21px;
+    }
+    
+    .match-result .result__field-mtp .field__prg{
+        justify-content: center;
+        gap: 5px;
+        width: auto;
+    }
+    .match-result .result__field-mtp .prg-score p{
+        width: 40px;
+        /* border: red 1px solid; */
+    }
+    .match-result .result__field-mtp .field__prg p{
+        font-size: 10px;
+    }
+    
+}
+@media (max-width: 300px) {
+    /* .match-result {
+        top: -80px;
+    } */
+    .match-result .result__field-mtp .field__img img{
+        height: 15px;
+        width: 15px;
     }
 }

@@ -5,7 +5,7 @@ const ChatContext = createContext();
 import { resetUnreadMessages } from "../Chat/chatConversationItem";
 export default ChatContext;
 
-export const ChatProvider = ({ children }) => {
+export const ChatProvider = ({ child }) => {
   let location = useLocation();
   const { user, chatSocket } = useContext(AuthContext);
   const [isHome, setIsHome] = useState(true);
@@ -212,6 +212,6 @@ export const ChatProvider = ({ children }) => {
     selectedChatRoomRef: selectedChatRoomRef,
   };
   return (
-    <ChatContext.Provider value={contextData}>{children}</ChatContext.Provider>
+    <ChatContext.Provider value={contextData}>{child}</ChatContext.Provider>
   );
 };

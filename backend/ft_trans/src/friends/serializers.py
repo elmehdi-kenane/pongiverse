@@ -5,12 +5,12 @@ from myapp.models import customuser
 
 class friendRequestSerializer(serializers.ModelSerializer):
     # from_user = serializers.CharField(source='from_user.username')
-    username = serializers.CharField(source='to_user.username')
+    second_username = serializers.CharField(source='to_user.username')
     avatar = serializers.SerializerMethodField()
 
     class Meta:
         model = FriendRequest
-        fields = ['username', 'send_at', 'avatar']
+        fields = ['second_username', 'send_at', 'avatar']
         # I think I will add 'id' field
         # Including the id field in the serializer output can be very useful, especially for frontend applications. It allows you to uniquely identify and reference specific friend request records. For instance, you might need to update or delete a specific friend request, and having the id helps in making those API requests.
 
@@ -25,8 +25,7 @@ class friendRequestSerializer(serializers.ModelSerializer):
         return None
 
 class friendSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source='user.username')
-    friend_username = serializers.CharField(source='friend.username')
+    second_username = serializers.CharField(source='friend.username')
     avatar = serializers.SerializerMethodField()
 
     class Meta:

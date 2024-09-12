@@ -17,7 +17,7 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError, AccessToke
 # @api_view(['POST'])
 # def signup(request):
 #     serializer = UserSerializer(data=request.data)
-#     print(serializer)
+#     #print(serializer)
 #     serializer.is_valid(raise_exception=True)
 #     serializer.save()
 #     return Response(serializer.data)
@@ -32,7 +32,7 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError, AccessToke
 #     if not user.check_password(password):
 #         raise AuthenticationFailed('Incorrect password')
 #     token = request.COOKIES.get('jwt')
-#     print(token)
+#     #print(token)
 #     if token:
 #         response = Response()
 #         response.data = {
@@ -84,12 +84,12 @@ from mimetypes import guess_type
 @api_view(['POST'])
 def online_friends(request):
 	username = request.data['user']
-	# print(f'user is {username}')
+	# #print(f'user is {username}')
 	user = customuser.objects.get(username=username)
 	allFriends = []
-	print(f"is_online {user.is_online}, is_playing {user.is_playing}, username {user.username}")
+	#print(f"is_online {user.is_online}, is_playing {user.is_playing}, username {user.username}")
 	for user_id in Friendship.objects.filter(user=user):
-		print(f"is_online {user_id.friend.is_online}, is_playing {user_id.friend.is_playing}, username {user_id.friend.username}")
+		#print(f"is_online {user_id.friend.is_online}, is_playing {user_id.friend.is_playing}, username {user_id.friend.username}")
 		if user_id.friend.is_online and not user_id.friend.is_playing: ####################  and user_id.friend.is_playing
 			image_path = user_id.friend.avatar.path
 			allFriends.append({'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path})
@@ -98,11 +98,11 @@ def online_friends(request):
 @api_view(['POST'])
 def notifs_friends(request):
 	username = request.data['user']
-	# print(f'user is {username}')
+	# #print(f'user is {username}')
 	target = customuser.objects.get(username=username)
 	allNotifs = []
 	for gameNotif in GameNotifications.objects.filter(target=target):
-		# print(f'ROOM_ID WHEN FETCHING IS : {gameNotif.room_id}')
+		# #print(f'ROOM_ID WHEN FETCHING IS : {gameNotif.room_id}')
 		allNotifs.append({'user': gameNotif.user.username, 'avatar': gameNotif.user.avatar.path, 'roomID': gameNotif.active_match.room_id, 'mode': gameNotif.mode})
 	return Response({'message': allNotifs})
 
@@ -145,7 +145,7 @@ def create_tournament(request):
 def user_image(request):
 	username = (request.data).get('user')
 	if not username:
-		print("no user is here")
+		#print("no user is here")
 		return Response({'message': 'no username is here'})
 	user = customuser.objects.filter(username=username).first()
 	if user:
@@ -323,10 +323,10 @@ def customize_game(request):
 	board_color = request.data['board']
 	ball_effect = request.data['effect']
 	username = request.data['username']
-	print(f"THE SELF OBJECT IS : {request.COOKIES.get('token')}")
+	#print(f"THE SELF OBJECT IS : {request.COOKIES.get('token')}")
 	user = customuser.objects.filter(username=username).first()
 	if user:
-		print(request.data)
+		#print(request.data)
 		game_customize = GameCustomisation.objects.filter(user=user).first()
 		if game_customize:
 			game_customize.paddle_color = paddle_color
@@ -350,18 +350,18 @@ def customize_game(request):
 @api_view(['GET'])
 def get_customize_game(request):
 	try:
-		print(f"THE SELF OBJECT IS : {request.COOKIES.get('token')}")
+		#print(f"THE SELF OBJECT IS : {request.COOKIES.get('token')}")
 		token = request.COOKIES.get('token')
 		decoded_token = AccessToken(token)
 		data = decoded_token.payload
-		print(data)
+		#print(data)
 		if data.get('user_id'):
 			user = customuser.objects.filter(id=data['user_id']).first()
 			if user is not None:
 				game_customize = GameCustomisation.objects.filter(user=user).first()
 				if game_customize:
 					return Response({'data' : [game_customize.paddle_color, game_customize.ball_color, game_customize.board_color, game_customize.ball_effect]})
-				return Response({'data' : ['blue', 'red', 'black']})
+				return Response({'data' : ['blue', 'red', '#8a7dac00']})
 		return Response({'data' : None})
 	except TokenError as e:
 		return Response({'data' : None})
@@ -370,7 +370,7 @@ def get_customize_game(request):
 def set_is_inside(request):
 	response = Response()
 	is_inside = request.data.get('is_inside')
-	print(f"----- get to is inside {is_inside}---------------")
+	#print(f"----- get to is inside {is_inside}---------------")
 	username = request.data.get('user')
 	user = customuser.objects.filter(username=username).first()
 	for member in TournamentMembers.objects.filter(user=user):
@@ -454,7 +454,7 @@ def get_game_members_round(request):
 
 @api_view(['POST'])
 def get_opponent(request):
-	print("YESHSHSHSH")
+	#print("YESHSHSHSH")
 	response = Response()
 	username = request.data.get('user')
 	user = customuser.objects.filter(username=username).first()

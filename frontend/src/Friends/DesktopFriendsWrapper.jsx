@@ -45,7 +45,7 @@ export const DesktopFriendsWrapper = ({ friends, recievedRequests, sentRequests,
               {recievedRequests.map((request, index) => (
                 <RecievedFriendReqCard
                   key={index}
-                  secondUsername={request.username}
+                  secondUsername={request.second_username}
                   send_at={request.send_at}
                   avatar={request.avatar}
                 ></RecievedFriendReqCard>
@@ -65,7 +65,7 @@ export const DesktopFriendsWrapper = ({ friends, recievedRequests, sentRequests,
               {sentRequests.map((request, index) => (
                 <SentFriendReqCard
                   key={index}
-                  secondUsername={request.username}
+                  secondUsername={request.second_username}
                   send_at={request.send_at}
                   avatar={request.avatar}
                 ></SentFriendReqCard>

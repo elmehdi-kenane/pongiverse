@@ -1,15 +1,21 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
+import ProfileContext from './ProfileWrapper';
 
 function ProfileLevel() {
-    const [level, setLevel] = useState(0);
-    const [per, setPer] = useState(60);
+    const {userLevel, userXp} = useContext(ProfileContext);
+    
+    const [per, setPer] = useState(0);
+      
+      setTimeout(() => {
+        setPer(userXp*100/1000)
+      }, 1000);
 
-    return (
-    <div className="profile-userlevel">
-        <div className='userlevel__per' style={{width:`${per}%`}} />
-        <p> Level {level} - {per}% </p>
-    </div>
-  )
-}
+      return (
+      <div className="profile-userlevel">
+          <div className='userlevel__per' style={{width:`${per}%`}} />
+          <p> Level {userLevel} - {per}% </p>
+      </div>
+    )
+  }
 
 export default ProfileLevel

@@ -1,5 +1,6 @@
 import { useState, useContext } from 'react'
 import AuthContext from '../navbar-sidebar/Authcontext'
+import { handleAddFriendReq } from './utils'
 
 const SuggestionFriendCard = ({ secondUsername, avatar }) => {
     const { user } = useContext(AuthContext);
@@ -39,7 +40,7 @@ const SuggestionFriendCard = ({ secondUsername, avatar }) => {
                     </div>
                 </>
                     :
-                    <button className="FriendBtn Add" onClick={handleAddFriendReq}>Add friend</button>
+                    <button className="FriendBtn Add" onClick={() => handleAddFriendReq(user, secondUsername, setFriendRequestBtn)}>Add friend</button>
                 }
         </div>
     )

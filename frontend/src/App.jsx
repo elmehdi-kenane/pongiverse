@@ -1,16 +1,18 @@
-import "react-toastify/dist/ReactToastify.css";
+import 'react-toastify/dist/ReactToastify.css';
 import "./assets/navbar-sidebar/index.css";
 import NavbarSidebar from "./navbar-sidebar/NavbarSidebar";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./navbar-sidebar/Authcontext";
 import HomePage from "./homepage/HomePage";
 import Modes from "./Game/Modes";
 import Solo from "./Game/Solo";
 import OneVersusOne from "./Game/OneVersusOne";
 import Rooms from "./Groups/roomsPage";
-import Friends from "./Friends/FriendsPage";
 import Dashboard from "./Dashboard/Dashboard";
 import Profile from "./Profile/Profile";
+import {ProfileWrapper} from "./Profile/ProfileWrapper";
+import { SettingsWrapper } from "./Settings/SettingsWrapper";
+import Friends from "./Friends/FriendsPage";
 import WaysSecondStep from "./components/SignUp/WaysSecondStep";
 import ForgotPassword from "./components/SignIn/ForgotPassword";
 import ChangePassword from "./components/SignIn/ChangePassword";
@@ -33,19 +35,21 @@ import TwoVsTwoPlayMatch from "./Game/TwoVsTwoPlayMatch";
 import TwoVsTwoFriends from "./Game/TwoVsTwoFriends";
 import TwoVsTwoCreateOrJoin from "./Game/TwoVsTwoCreateOrJoin";
 import GameSettings from "./Game/GameSettings";
-import Settings from "./Settings/Settings";
+
 import Bot from "./Game/Bot";
 import { ToastContainer, Bounce } from "react-toastify";
 import { SocketDataContextProvider } from "./navbar-sidebar/SocketDataContext";
 import LocalTournamentFillMembers from "./Tournament/LocalTournament/LocalTournamentFillMembers";
+import ErrorPage from "./ErrorPage/ErrorPage";
+import { DashboardWrapper } from './Dashboard/DashboardWrapper';
 
-const ChatGroupsWrapper = ({ element }) => (
-  <ChatProvider>{element}</ChatProvider>
-);
+import bg1 from "./assets/Body/2.png"
+import PersonalInfo from './Settings/PersonalInfo';
+import Security from './Settings/Security';
 
 const App = () => {
   return (
-    <div className="page">
+    <div className="page" style={{backgroundImage: `url(${bg1})`}}>
       <Router>
         <AuthProvider>
           <SocketDataContextProvider>
@@ -57,78 +61,36 @@ const App = () => {
               <Route path="/WaysSecondStep" element={<WaysSecondStep />} />
               <Route path="/ForgotPassword" element={<ForgotPassword />} />
               <Route path="/ChangePassword" element={<ChangePassword />} />
+              <Route path="/Error404" element={<ErrorPage />} />
               <Route path="/mainpage" element={<NavbarSidebar />}>
-                <Route path="dashboard" element={<Dashboard />} />
-                <Route path="profile" element={<Profile />} />
-                <Route path="settings" element={<Settings />} />
-                <Route
-                  path="chat"
-                  element={<ChatGroupsWrapper element={<Chat />} />}
-                />
-                <Route path="friends" element={<ChatGroupsWrapper element={<Friends />}/>} />
-                <Route
-                  path="groups"
-                  element={<ChatGroupsWrapper element={<Rooms />} />}
-                />
+                <Route path="dashboard" element={<DashboardWrapper child={<Dashboard />}/>} />
+                <Route path="profile/:userId" element={<ChatProvider child={<ProfileWrapper child={<Profile />} />} />} />
+                <Route path="settings" element={<SettingsWrapper child={<PersonalInfo />} />} />
+                <Route path="settings/security" element={<SettingsWrapper child={<Security />} />} />
+                <Route path="chat" element={<ChatProvider child={<Chat />} />} />
+                <Route path="friends" element={<ChatProvider child={<Friends />} />} />
+                <Route path="groups" element={<ChatProvider child={<Rooms />} />} />
                 <Route path="game" element={<Modes />} />
                 <Route path="game/board" element={<GameSettings />} />
                 <Route path="game/solo" element={<Solo />} />
                 <Route path="game/solo/computer" element={<Bot />} />
                 <Route path="game/solo/1vs1" element={<OneVersusOne />} />
-                <Route
-                  path="game/solo/1vs1/random"
-                  element={<OneVsOneRandom />}
-                />
-                <Route
-                  path="game/solo/1vs1/friends"
-                  element={<OneVsOneFriends />}
-                />
-                <Route
-                  path="game/solo/1vs1/create-or-join"
-                  element={<OneVsOneCreateOrJoin />}
-                />
+                <Route path="game/solo/1vs1/random" element={<OneVsOneRandom />} />
+                <Route path="game/solo/1vs1/friends" element={<OneVsOneFriends />} />
+                <Route path="game/solo/1vs1/create-or-join" element={<OneVsOneCreateOrJoin />} />
                 <Route path="game/solo/2vs2" element={<TwoVersusTwo />} />
-                <Route
-                  path="game/solo/2vs2/random"
-                  element={<TwoVsTwoRandom />}
-                />
-                <Route
-                  path="game/solo/2vs2/friends"
-                  element={<TwoVsTwoFriends />}
-                />
-                <Route
-                  path="game/solo/2vs2/create-or-join"
-                  element={<TwoVsTwoCreateOrJoin />}
-                />
-                <Route
-                  path="play/1vs1/:roomID"
-                  element={<OneVsOnePlayMatch />}
-                />
-                <Route
-                  path="play/2vs2/:roomID"
-                  element={<TwoVsTwoPlayMatch />}
-                />
-                <Route
-                  path="game/createtournament"
-                  element={<CreateTournament />}
-                />
-                <Route
-                  path="game/jointournament"
-                  element={<JoinTournament />}
-                />
-                <Route
-                  path="game/tournamentbracket"
-                  element={<TournamentBracket />}
-                />
-                <Route
-                  path="game/localtournamentbracket"
-                  element={<LocalTournamentBracket />}
-                />
-                <Route
-                  path="game/localtournamentfillmembers"
-                  element={<LocalTournamentFillMembers />}
-                />
+                <Route path="game/solo/2vs2/random" element={<TwoVsTwoRandom />} />
+                <Route path="game/solo/2vs2/friends" element={<TwoVsTwoFriends />} />
+                <Route path="game/solo/2vs2/create-or-join" element={<TwoVsTwoCreateOrJoin />} />
+                <Route path="play/1vs1/:roomID" element={<OneVsOnePlayMatch />} />
+                <Route path="play/2vs2/:roomID" element={<TwoVsTwoPlayMatch />} />
+                <Route path="game/createtournament" element={<CreateTournament />} />
+                <Route path="game/jointournament" element={<JoinTournament />} />
+                <Route path="game/tournamentbracket" element={<TournamentBracket />} />
+				        <Route path="game/localtournamentbracket" element={<LocalTournamentBracket />}/>
+				        <Route path="game/localtournamentfillmembers" element={<LocalTournamentFillMembers />}/>
               </Route>
+              <Route path="*" element={<Navigate to="/Error404" />} />
             </Routes>
             <ToastContainer
               position="top-right"
