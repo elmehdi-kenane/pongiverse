@@ -15,6 +15,10 @@ from myapp.models import customuser
 from django.db.models import Q
 from datetime import datetime, date, timedelta
 
+from .models import UserTFQ
+import pyotp
+import qrcode
+
 # Create your views here.
 @api_view (['GET'])
 def list_users(request, username):
@@ -475,3 +479,15 @@ def get_multy_match_dtl(request, match_id):
         }
         return Response(data={"data": res_data}, status=status.HTTP_200_OK)
     return Response(data={'error': 'Error Getting MultiplayerGames!'}, status=status.HTTP_400_BAD_REQUEST)
+
+#**------- Enable User TFQ -------**#
+
+@api_view(["GET"])
+def enable_user_tfq(request, username):
+    user = customuser.objects.filter(username=username).first()
+    if user is not None:
+        UserTFQ.objects.create(
+            user = user,
+            key = pyotp.random_base32()
+        )
+
