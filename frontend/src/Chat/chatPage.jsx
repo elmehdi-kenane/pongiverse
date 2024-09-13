@@ -7,7 +7,10 @@ import { useContext, useEffect, useState } from "react";
 import * as ChatIcons from "../assets/chat/media/index";
 import { Toaster } from "react-hot-toast";
 import AuthContext from "../navbar-sidebar/Authcontext";
-import { resetUnreadMessages, resetChatRoomUnreadMessages } from "./chatConversationItem";
+import {
+  resetUnreadMessages,
+  resetChatRoomUnreadMessages,
+} from "./chatConversationItem";
 const Chat = () => {
   const {
     chatRoomConversations,
@@ -93,7 +96,7 @@ const Chat = () => {
     if (chatSocket) {
       chatSocket.onmessage = (e) => {
         let data = JSON.parse(e.data);
-        console.log("Type: ",data.type)
+        console.log("Type: ", data.type);
         if (data.type === "newDirect") {
           const currentDirect = selectedDirectRef.current;
           if (
@@ -104,7 +107,10 @@ const Chat = () => {
               setMessages((prev) => [...prev, data.data]);
               setDirectConversations((prevConversations) => {
                 return prevConversations.map((friend) => {
-                  if (data.data.senderId === friend.id ||data.data.receiverId === friend.id  ) {
+                  if (
+                    data.data.senderId === friend.id ||
+                    data.data.receiverId === friend.id
+                  ) {
                     return {
                       ...friend,
                       lastMessage: data.data.content,
@@ -113,8 +119,7 @@ const Chat = () => {
                   return friend;
                 });
               });
-              if (currentDirect.id)
-                resetUnreadMessages(user, currentDirect.id);
+              if (currentDirect.id) resetUnreadMessages(user, currentDirect.id);
             }
           } else {
             setDirectConversations((prevConversations) => {
@@ -153,10 +158,9 @@ const Chat = () => {
           console.log("navigating now");
           navigate(`/mainpage/game/solo/1vs1/friends`);
         } else if (data.type === "newMessage") {
-          let currentRoom = selectedChatRoomRef.current
-          if(currentRoom.roomId === data.data.roomId) {
-
-            setMessages(prev => [...prev, data.data])
+          let currentRoom = selectedChatRoomRef.current;
+          if (currentRoom.roomId === data.data.roomId) {
+            setMessages((prev) => [...prev, data.data]);
             setChatRoomConversations((prevConversations) => {
               return prevConversations.map((room) => {
                 if (room.id === data.data.roomId) {

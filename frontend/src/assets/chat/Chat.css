@@ -119,7 +119,7 @@ button.rooms-switch-button-active {
   gap: 5px;
   cursor: pointer;
   padding: 10px;
-  overflow: hidden;
+  /* overflow: hidden; */
   align-items: flex-end;
 }
 
