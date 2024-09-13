@@ -26,4 +26,5 @@ urlpatterns = [
     path('getSingleMatchDtl/<int:match_id>', views.get_single_match_dtl),
     path('getMultyMatchDtl/<int:match_id>', views.get_multy_match_dtl),
     
+    path('EnableTFQ/<str:username>', views.enable_user_tfq),   
 ]

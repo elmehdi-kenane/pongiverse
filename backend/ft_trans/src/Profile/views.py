@@ -15,9 +15,11 @@ from myapp.models import customuser
 from django.db.models import Q
 from datetime import datetime, date, timedelta
 
+from django.core.files import File
 from .models import UserTFQ
 import pyotp
 import qrcode
+import os
 
 # Create your views here.
 @api_view (['GET'])
@@ -482,12 +484,34 @@ def get_multy_match_dtl(request, match_id):
 
 #**------- Enable User TFQ -------**#
 
+def checkPath():
+    path = 'uploads/qr_codes/'
+    if not os.path.exists(path):
+        os.makedirs(path)
+
 @api_view(["GET"])
 def enable_user_tfq(request, username):
     user = customuser.objects.filter(username=username).first()
     if user is not None:
-        UserTFQ.objects.create(
-            user = user,
+        checkPath()
+        # user_tfq = UserTFQ.objects.filter(user=user).all()
+        # user_tfq.delete()
+        user_tfq = UserTFQ.objects.filter(user=user).first()
+        if user_tfq is None:
             key = pyotp.random_base32()
-        )
-
+            print(f"Generated key: {key}")
+            user_tfq = UserTFQ.objects.create(
+                user = user,
+                key = key,
+            )
+            urc = pyotp.totp.TOTP(key).provisioning_uri(name=user.username, issuer_name="Transcendence")
+            qr_path = f"uploads/qr_codes/{user.username}_Q.png"
+            qrcode.make(urc).save(qr_path)
+            with open(qr_path, 'rb') as qr_file:
+                user_tfq.qr_code.save(f"{user.username}_QR.png", File(qr_file), save=True)
+            if os.path.isfile(qr_path):
+                os.remove(qr_path)
+            print(f"QR Code saved for {user.username} at {user_tfq.qr_code.url}")
+            return Response(data={"data": f"http://localhost:8000/auth{user_tfq.qr_code.url}"}, status=status.HTTP_200_OK)
+        return Response(data={'error': 'User has already enabled TFQ'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response(data={'error': 'Error Saving QrCode'}, status=status.HTTP_400_BAD_REQUEST)

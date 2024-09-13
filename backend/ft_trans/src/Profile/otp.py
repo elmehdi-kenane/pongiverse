@@ -1,6 +1,7 @@
 import time
 import pyotp
 import qrcode
+import os
 
 # key = pyotp.random_base32() #Create a random 32 key that will be using it to create a otp (one time password)
 key = "TSDUCNJUHDB6SFQQS4BXBSZ3OICFS2OC"
@@ -9,7 +10,7 @@ user = "IMAD"
 totp = pyotp.TOTP(key) #TimeBase one time password: to each 30s time generate a new otp
 
 print(key)
-print(totp.now())
+# print(totp.now())
 
 # Testing if the otp will be changed after 30s -------------------------------
 # time.sleep(30) 
@@ -22,9 +23,17 @@ print(totp.now())
 
 
 # Create a qrcode image based on the key -------------------------------
-# urc = pyotp.totp.TOTP(key).provisioning_uri(name=user, issuer_name="Transcendence")  
-# qrcode.make(urc).save("IMAD_QR.png")
+urc = pyotp.totp.TOTP(key).provisioning_uri(name=user, issuer_name="Transcendence")
+qrcode.make(urc).save("../uploads/qr_codes/IMAD_QR.png")
+
+
+
+image_path = '../uploads/qr_codes/IMAD_QR.png'
+filename = os.path.abspath()
+print(filename)
 
 while True:
     input_code = input("Enter TFQ code :")
     print(totp.verify(input_code))
+    
+    # <div className='twofaw'>
