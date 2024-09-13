@@ -106,15 +106,15 @@ async def direct_message(self, data, user_channels):
     sender = await sync_to_async(customuser.objects.get)(
         username=data["data"]["sender"]
     )
-    reciver = await sync_to_async(customuser.objects.get)(
-        username=data["data"]["reciver"]
+    receiver = await sync_to_async(customuser.objects.get)(
+        username=data["data"]["receiver"]
     )
     message = await sync_to_async(Directs.objects.create)(
-        sender=sender, reciver=reciver, message=data["data"]["message"]
+        sender=sender, receiver=receiver, message=data["data"]["message"]
     )
     ip_address = os.getenv("IP_ADDRESS")
     protocol = os.getenv('PROTOCOL')
-    channel_name = user_channels.get(reciver.id)
+    channel_name = user_channels.get(receiver.id)
     mychannel_name = user_channels.get(sender.id)
     if channel_name:
         for channel in channel_name:
@@ -125,10 +125,10 @@ async def direct_message(self, data, user_channels):
                     "data": {
                         'senderAvatar' : f"{protocol}://{ip_address}:8000/chatAPI{sender.avatar.url}",
                         "sender": sender.username,
-                        "reciver": reciver.username,
+                        "receiver": receiver.username,
                         "message": message.message,
                         'senderId' : sender.id,
-                        'receiverId' : reciver.id,
+                        'receiverId' : receiver.id,
                         'date' : message.timestamp,
                     },
                 },
@@ -142,10 +142,10 @@ async def direct_message(self, data, user_channels):
                     "data": {
                         'senderAvatar' : f"{protocol}://{ip_address}:8000/chatAPI{sender.avatar.url}",
                         "sender": sender.username,
-                        "reciver": sender.username,
+                        "receiver": sender.username,
                         "message": message.message,
                         'senderId' : sender.id,
-                        'receiverId' : reciver.id,
+                        'receiverId' : receiver.id,
                         'date' : message.timestamp,
                     },
                 },

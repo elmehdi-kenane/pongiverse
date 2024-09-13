@@ -32,10 +32,9 @@ class Message(models.Model):
 	timestamp = models.DateTimeField(auto_now_add=True)
 
 
-
 class Directs(models.Model):
   sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='direct_sender')
-  reciver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='direct_reciver')
+  receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='direct_receiver')
   message = models.TextField()
   timestamp = models.DateTimeField(auto_now_add=True)
   is_read = models.BooleanField(default=False)
@@ -45,6 +44,6 @@ class RoomInvitation(models.Model):
         ("PEN", "pending"),
         ("ACC" , 'accepted')
     }
-    user=models.ForeignKey(User, on_delete=models.CASCADE, related_name='invitation_reciver')
+    user=models.ForeignKey(User, on_delete=models.CASCADE, related_name='invitation_receiver')
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='invitation_room')
     status = models.CharField(max_length=20,choices=INVITATION_STATUS, default='pending' )

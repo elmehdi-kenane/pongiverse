@@ -88,7 +88,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			'type' : 'newDirect',
 			'data' : {
 				'sender': data['sender'],
-				'reciver': data['reciver'],
+				'receiver': data['receiver'],
 				'content': data['message'],
 				'date' :  formatted_time,
 				'senderId' : data['senderId'],

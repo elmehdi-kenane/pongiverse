@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import OuterRef, Subquery, Exists, Q
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Room, Membership, Message, Directs, RoomInvitation
@@ -10,10 +10,59 @@ from .consumers import user_channels
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from datetime import datetime
-from .serializers import friends_with_directs_serializer
+from .serializers import friends_with_directs_serializer, direct_message_serializer
+from rest_framework.pagination import PageNumberPagination
 
 def get_protocol(request):
     return "https" if request.is_secure() else "http"
+
+class CustomLimitOffsetPagination(PageNumberPagination):
+    page_size = 20  # Default page size
+    page_size_query_param = 'page_size'
+    max_page_size = 100  # Maximum page size the user can request
+
+
+@api_view(["GET"])
+def friends_with_directs(request, username):
+    user = customuser.objects.get(username=username)
+    friends = Friendship.objects.filter(user=user, isBlocked=False)
+    last_message_subquery = Directs.objects.filter(
+        Q(sender=user, receiver=OuterRef('friend')) | 
+        Q(receiver=user, sender=OuterRef('friend'))
+    ).order_by('-timestamp').values('timestamp')[:1]  # Get the latest timestamp
+
+    # Step 3: Filter friends who have messages and annotate with last message timestamp
+    friends_with_messages = friends.annotate(
+        last_message_timestamp=Subquery(last_message_subquery)
+    ).filter(
+        Exists(Directs.objects.filter(
+            Q(sender=user, receiver=OuterRef('friend')) | 
+            Q(receiver=user, sender=OuterRef('friend'))
+        ))
+    ).order_by('-last_message_timestamp')  # Sort by last message timestamp
+    paginator = CustomLimitOffsetPagination()
+    result_page = paginator.paginate_queryset(friends_with_messages, request)
+    serializer = friends_with_directs_serializer(result_page, many=True, context={
+        'username': username,  # Passing the username to get the last message
+        'user': request.user  # Passing the current user for unread count
+    })
+
+    return paginator.get_paginated_response(serializer.data)
+
+@api_view(["POST"])
+def direct_messages(request):
+    if request.method == "POST":
+        username = customuser.objects.get(username=(request.data).get("user"))
+        friend = customuser.objects.get(username=(request.data).get("friend"))
+        messages = Directs.objects.filter(
+            Q(sender=username, receiver=friend) | Q(sender=friend, receiver=username)
+        ).order_by('-timestamp')
+        paginator = CustomLimitOffsetPagination()
+        result_page = paginator.paginate_queryset(messages, request)
+        reversed_page = list(reversed(result_page))
+        serializer = direct_message_serializer(reversed_page,  many=True)
+        return paginator.get_paginated_response(serializer.data)
+    return Response({"error": "Invalid request method"}, status=400)
 
 
 @api_view(["POST"])
@@ -301,32 +350,6 @@ def channel_messages(request, room_id):
 
 
 @api_view(["POST"])
-def direct_messages(request):
-    if request.method == "POST":
-        username = customuser.objects.get(username=(request.data).get("user"))
-        friend = customuser.objects.get(username=(request.data).get("friend"))
-        messages = Directs.objects.filter(
-            Q(sender=username, reciver=friend) | Q(sender=friend, reciver=username)
-        ).order_by('timestamp')
-        data = []
-        for message in messages:
-            timestamp = message.timestamp.isoformat()
-            dt = datetime.fromisoformat(timestamp)
-            formatted_time = dt.strftime("%Y/%m/%d AT %I:%M %p")
-            message_data = {
-                "id": message.id,
-                "sender": message.sender.username,
-                "reciver": message.reciver.username,
-                "content": message.message,
-                "date": formatted_time,
-            }
-            data.append(message_data)
-        # sorted_by_date = sorted(data, key=lambda x: x["date"])
-        return Response(data)
-    return Response({"error": "Invalid request method"}, status=400)
-
-
-@api_view(["POST"])
 def list_all_friends(request):
     if request.method == "POST":
         print(request.data)
@@ -508,27 +531,11 @@ def reset_unread_messages(request):
             receiver = customuser.objects.get(id=request.data.get("receiver"))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
-        unread = Directs.objects.filter(sender=receiver, reciver=user, is_read=False)
+        unread = Directs.objects.filter(sender=receiver, receiver=user, is_read=False)
         if unread:
             unread.update(is_read=True)
         return Response({"success": "reset unread message successfully"}, status=200)
     return Response({"error": "Invalid request method"}, status=400)
-
-
-@api_view(["GET"])
-def friends_with_directs(request, username):
-    user = customuser.objects.get(username=username)
-    # friends = Friendship.objects.filter(user=user, isBlocked=False)
-    friends_with_messages = Friendship.objects.filter(
-    Q(friend__in=Directs.objects.filter(sender=user).values('reciver')) |
-    Q(friend__in=Directs.objects.filter(reciver=user).values('sender')))
-    serializer = friends_with_directs_serializer(friends_with_messages, many=True, context={
-        'request': request,  # Passing the request for protocol and IP
-        'username': username,  # Passing the username to get the last message
-        'user': request.user  # Passing the current user for unread count
-    })
-
-    return Response(serializer.data)
 
 
 @api_view(["POST"])

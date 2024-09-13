@@ -47,7 +47,7 @@ const Friends = () => {
             );
             const res = await response.json();
             if (res) {
-                console.log("FRIENDS:  ", res)
+                // console.log("FRIENDS:  ", res)
                 setFriends(res);
             }
         };
@@ -55,9 +55,9 @@ const Friends = () => {
     }, [user]);
 
     useEffect(() => {
-        console.log("============ socket-start ============");
-        console.log("message:", message, "type:", type);
-        console.log("============ socket-end ============");
+        // console.log("============ socket-start ============");
+        // console.log("message:", message, "type:", type);
+        // console.log("============ socket-end ============");
         if (type === 'cancel-friend-request') {
             setSentRequests((prevSentRequests) => {
                 const updatedSentRequests = prevSentRequests.filter(SentRequest => SentRequest.username !== message.username);

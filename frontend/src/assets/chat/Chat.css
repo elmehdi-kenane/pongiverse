@@ -5,7 +5,7 @@
 }
 
 ::-webkit-scrollbar {
-  display: none;
+  /* display: none; */
 }
 
 :root {
@@ -305,6 +305,7 @@ img.empty-chat-icon {
 }
 
 .message-row {
+  padding: 0 5px;
   padding-top: 7px;
   display: flex;
   max-width: 80%;

@@ -306,7 +306,7 @@ height: 170px;
     flex-direction: column;
     align-items: center;
     /* border-radius: 10px; */
-    overflow: scroll;
+    overflow-y: auto;
     position: relative;
     /* filter: drop-shadow(black 0 0 4px); */
 }

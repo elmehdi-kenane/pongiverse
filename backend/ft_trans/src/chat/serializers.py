@@ -3,6 +3,8 @@ from friends.models import Friendship
 from .models import Room, Membership, Message, Directs, RoomInvitation
 from myapp.models import customuser
 from django.db.models import Q
+import os
+
 
 def get_direct_last_message(username, friend):
     try:
@@ -10,7 +12,7 @@ def get_direct_last_message(username, friend):
         friend_user = customuser.objects.get(username=friend)
         last_message = (
             Directs.objects.filter(
-                Q(sender=user, reciver=friend_user) | Q(sender=friend_user, reciver=user)
+                Q(sender=user, receiver=friend_user) | Q(sender=friend_user, receiver=user)
             )
             .order_by("-timestamp")
             .first()
@@ -35,12 +37,9 @@ class friends_with_directs_serializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'avatar', 'is_online', 'is_playing', 'lastMessage', 'unreadCount']
 
     def get_avatar(self, obj):
-        request = self.context.get('request')
-        if request and hasattr(obj.friend, 'avatar'):
-            protocol = request.scheme
-            ip_address = request.get_host()
-            return f"{protocol}://{ip_address}{obj.friend.avatar.url}"
-        return None
+        protocol = os.getenv("PROTOCOL")
+        ip_address = os.getenv("IP_ADDRESS")
+        return f"{protocol}://{ip_address}:8000/chatAPI{obj.friend.avatar.url}"
 
     def get_lastMessage(self, obj):
         username = self.context.get('username')
@@ -52,4 +51,19 @@ class friends_with_directs_serializer(serializers.ModelSerializer):
         user = self.context.get('user')
         if not user or user.is_anonymous:
             return 0
-        return Directs.objects.filter(reciver=user, sender=obj.friend, is_read=False).count()
+        return Directs.objects.filter(receiver=user, sender=obj.friend, is_read=False).count()
+
+class direct_message_serializer(serializers.ModelSerializer):
+    sender = serializers.CharField(source='sender.username')
+    receiver = serializers.CharField(source='receiver.username')
+    date = serializers.SerializerMethodField()
+    content = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Directs
+        fields = ['id', 'sender', 'receiver' , 'content', 'date']
+        
+    def get_date(self, obj):
+        return obj.timestamp.strftime("%Y/%m/%d AT %I:%M %p")
+    def get_content(self, obj):
+        return obj.message

@@ -6,6 +6,10 @@ import { resetUnreadMessages } from "../Chat/chatConversationItem";
 export default ChatContext;
 
 export const ChatProvider = ({ child }) => {
+  const DIRECT_LIMIT = 20
+  const listInnerRef = useRef();
+  const [currPage, setCurrPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true)
   let location = useLocation();
   const { user, chatSocket } = useContext(AuthContext);
   const [isHome, setIsHome] = useState(true);
@@ -88,23 +92,70 @@ export const ChatProvider = ({ child }) => {
         );
         const data = await response.json();
         setChatRoomConversations(data);
-        console.log("inside the context channels", data);
       } catch (error) {
         console.log(error);
       }
     };
+    
+    const fetchChatRoomInvitations = async () => {
+      try {
+        const response = await fetch(
+          `http://${
+            import.meta.env.VITE_IPADDRESS
+          }:8000/chatAPI/chatRoomInvitations/${user}`
+        );
+        let data = await response.json();
+        if (response.ok) {
+          setChatRoomInvitations(data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    const fetchSuggestedChatRooms = async () => {
+      try {
+        const response = await fetch(
+          `http://${
+            import.meta.env.VITE_IPADDRESS
+          }:8000/chatAPI/suggestedChatRooms/${user}`
+        );
+        let data = await response.json();
+        if (response.ok) {
+          setSuggestedChatRooms(data);
+        } else console.log("opps!, something went wrong");
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (
+      user &&
+      (location.pathname === "/mainpage/chat" ||
+        location.pathname === "/mainpage/groups")
+    ) {
+      fetchChatRooms();
+      if (user && location.pathname === "/mainpage/groups") {
+        fetchChatRoomInvitations();
+        fetchSuggestedChatRooms();
+      }
+    }
+  }, [location.pathname, user]);
+
+
+  useEffect(()=> {
     const fetchDirectsWithMessage = async () => {
       try {
         const response = await fetch(
           `http://${
             import.meta.env.VITE_IPADDRESS
-          }:8000/chatAPI/firendwithdirects/${user}`
+          }:8000/chatAPI/firendwithdirects/${user}?page=${currPage}`
         );
-        const data = await response.json();
+        const {count, results} = await response.json();
         if (response.ok) {
-          setDirectConversations(data);
+          setDirectConversations([...directConversations, ...results])
+          if(directConversations.length + DIRECT_LIMIT >= count)
+            setHasMore(false)
           if (Object.values(selectedDirect).every((value) => value !== "")) {
-            let currentDirects = data;
+            let currentDirects = results;
             const conversationExists = currentDirects.some(
               (conv) => conv.name === selectedDirect.name
             );
@@ -122,7 +173,7 @@ export const ChatProvider = ({ child }) => {
                 newConversation,
               ]);
             } else {
-              let allDirects = data;
+              let allDirects = results;
               const updatedDirects = allDirects.map((friend) => {
                 if (selectedDirect.id === friend.id) {
                   return { ...friend, unreadCount: 0 };
@@ -138,53 +189,25 @@ export const ChatProvider = ({ child }) => {
         console.log(error);
       }
     };
-
-    const fetchChatRoomInvitations = async () => {
-      try {
-        const response = await fetch(
-          `http://${
-            import.meta.env.VITE_IPADDRESS
-          }:8000/chatAPI/chatRoomInvitations/${user}`
-        );
-        let data = await response.json();
-        if (response.ok) {
-          console.log("invitations: ", data);
-          setChatRoomInvitations(data);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    const fetchSuggestedChatRooms = async () => {
-      try {
-        const response = await fetch(
-          `http://${
-            import.meta.env.VITE_IPADDRESS
-          }:8000/chatAPI/suggestedChatRooms/${user}`
-        );
-        let data = await response.json();
-        if (response.ok) {
-          console.log("Suggested: ", data);
-          setSuggestedChatRooms(data);
-        } else console.log("opps!, something went wrong");
-      } catch (error) {
-        console.log(error);
-      }
-    };
     if (
       user &&
       (location.pathname === "/mainpage/chat" ||
         location.pathname === "/mainpage/groups")
-    ) {
-      fetchChatRooms();
+    && hasMore) {
       fetchDirectsWithMessage();
-      if (user && location.pathname === "/mainpage/groups") {
-        fetchChatRoomInvitations();
-        fetchSuggestedChatRooms();
+    }
+  },[location.pathname, user, currPage])
+
+  const onScroll = () => {
+    if (listInnerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
+      if (scrollTop + clientHeight === scrollHeight) {
+        setTimeout(() => {
+          setCurrPage(currPage + 1);
+        }, 500);
       }
     }
-  }, [location.pathname, user]);
-
+  };
   let contextData = {
     chatRoomConversations: chatRoomConversations,
     setChatRoomConversations: setChatRoomConversations,
@@ -210,6 +233,8 @@ export const ChatProvider = ({ child }) => {
     setSelectedItem: setSelectedItem,
     suggestedChatRoomsRef: suggestedChatRoomsRef,
     selectedChatRoomRef: selectedChatRoomRef,
+    onScroll:onScroll,
+    listInnerRef: listInnerRef,
   };
   return (
     <ChatContext.Provider value={contextData}>{child}</ChatContext.Provider>

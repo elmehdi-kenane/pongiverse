@@ -25,16 +25,18 @@ const ChatConversation = () => {
   const {
     selectedDirect,
     setSelectedDirect,
-    recivedMessage,
     setMessages,
     messages,
   } = useContext(ChatContext);
-  
+  const MESSAGES_LIMIT = 20
   const [messageToSend, setMessageToSend] = useState("");
   const [showDirectOptions, setShowDirectOptions] = useState(false);
   const { user, chatSocket, userImg } = useContext(AuthContext);
   const messageEndRef = useRef(null);
   const navigate = useNavigate();
+  const messgesInnerRef = useRef()
+  const [currentMessagePage, setCurrentMessagePage] = useState(1);
+  const [hasMoreMessages, setHasMoreMessages] = useState(true)
 
   const sendMessage = () => {
     if (
@@ -42,13 +44,12 @@ const ChatConversation = () => {
       chatSocket.readyState === WebSocket.OPEN &&
       messageToSend.trim() !== ""
     ) {
-      console.log(messageToSend);
       chatSocket.send(
         JSON.stringify({
           type: "directMessage",
           data: {
             sender: user,
-            reciver: selectedDirect.name,
+            receiver: selectedDirect.name,
             message: messageToSend,
           },
         })
@@ -63,7 +64,7 @@ const ChatConversation = () => {
         const response = await fetch(
           `http://${
             import.meta.env.VITE_IPADDRESS
-          }:8000/chatAPI/Directs/messages`,
+          }:8000/chatAPI/Directs/messages?page=${currentMessagePage}`,
           {
             method: "POST",
             headers: {
@@ -75,24 +76,25 @@ const ChatConversation = () => {
             }),
           }
         );
-        const data = await response.json();
+        const {count , results} = await response.json();
         if (response.ok) {
-          console.log("recived messages: ", data)
-          setMessages(data);
+          setMessages([...results, ...messages])
+          if(messages.length + MESSAGES_LIMIT >= count)
+            setHasMoreMessages(false)
         } else console.log("error");
       } catch (error) {
         console.log(error);
       }
     };
-    if (selectedDirect.length !== 0) {
+    if (selectedDirect.length !== 0 && hasMoreMessages) {
       fetchMessages();
     }
     let scrollView = document.getElementById("start");
     scrollView.scrollTop = scrollView.scrollHeight;
-  }, [selectedDirect]);
+  }, [selectedDirect, currentMessagePage]);
 
   useEffect(() => {
-    if (messages) {
+    if (messages && currentMessagePage === 1) {
       let scrollView = document.getElementById("start");
       scrollView.scrollTop = scrollView.scrollHeight;
     }
@@ -115,6 +117,16 @@ const ChatConversation = () => {
   let domNode = useClickOutSide(() => {
     setShowDirectOptions(false);
   });
+  const onScrollCoversationBody = () => {
+    if(messgesInnerRef.current) {
+      const { scrollTop } = messgesInnerRef.current;
+      if (scrollTop === 0 && hasMoreMessages) {
+        setTimeout(() => {
+          setCurrentMessagePage(prev => prev + 1)
+        }, 500);
+      }
+    }
+  }
   return (
     <>
       <div className="conversation-header">
@@ -179,7 +191,7 @@ const ChatConversation = () => {
           </div>
         </div>
       </div>
-      <div className="conversation-body" id="start">
+      <div className="conversation-body" id="start" ref={messgesInnerRef} onScroll={onScrollCoversationBody}>
         {messages.length !== 0 &&
           messages &&
           messages.map((message, index) =>
