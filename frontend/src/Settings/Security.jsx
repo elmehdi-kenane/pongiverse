@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import "./Settings.css";
 
-import SettingsContext from "./SettingsWrapper";
 import { Toaster } from "react-hot-toast";
 import UpdatePwd from './UpdateSecurity/UpdatePwd';
-import TwoFaq from './UpdateSecurity/TwoFaq';
+import UpdateTFQ from './UpdateSecurity/UpdateTFQ';
 import SettingsLeft from './SettingsLeft';
 
 function Security() {
@@ -18,7 +17,7 @@ function Security() {
     else
       setIsTF(!isTF);
   }
-
+  
   return (
     <div className="settings-page">
       <Toaster />
@@ -39,7 +38,7 @@ function Security() {
             </>
           }
           {isPwd && <UpdatePwd cancelPwd={setIsPwd} />}
-          {isTF && <TwoFaq />}
+          {isTF && <UpdateTFQ />}
         </div>
       </div>
     </div>

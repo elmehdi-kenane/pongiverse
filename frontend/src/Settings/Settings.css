@@ -237,12 +237,68 @@
 
 /*------------------ TFQ ------------------*/
 
-.settings-page .settings__security .twofaw {
+.settings-page .settings__security .tfq {
     display: flex;
     flex-direction: column;
-    height: 200px;
-
+    /* height: 550px; */
+    padding: 10px 35px 0;
 }
+.settings-page .settings__security .tfq h1{
+    color: white;
+    font-size: 27px;
+    border-bottom: white 0.5px solid;
+    height: 40px;
+    margin-bottom: 20px;
+}
+.settings-page .settings__security .tfq p{
+    /* width: 100%; */
+    color: white;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+.settings-page .settings__security .tfq .tfq__applist{
+    padding: 0 15px;
+    font-size: 18px;
+    margin-bottom: 10px;
+    margin-right: 20px;
+    color: white;
+}
+
+.settings-page .settings__security .tfq .tfq__submit{ /* Submition */
+    display: flex;
+    justify-content: center;
+    border-top: white solid 0.5px;
+    gap: 10px;
+    padding: 20px 0;
+}
+.tfq .tfq__submit .submit{
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 30px;
+    border: white .5px solid;
+    cursor: pointer;
+    font-size: 15px;
+}
+.tfq__submit .submit__cancel {
+    background-color: #2f084b;
+}
+.tfq__submit .submit__cancel:hover {
+    border: none;
+    background-color: #52127f;
+    transition: ease-in  0.2s;
+}
+.tfq__submit .submit__continue {
+    background-color: #826aed;
+}
+.tfq__submit .submit__continue:hover {
+    /* padding: 12px 42px; */
+    border: none;
+    background-color: #927eea;
+    transition: ease-in 0.2s;
+}
+
+
 /* --- Personal Info --- */
 
 .settings-page .settings__personal-info {
