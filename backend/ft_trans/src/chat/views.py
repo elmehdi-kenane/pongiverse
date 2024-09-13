@@ -10,7 +10,7 @@ from .consumers import user_channels
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from datetime import datetime
-
+from .serializers import friends_with_directs_serializer
 
 def get_protocol(request):
     return "https" if request.is_secure() else "http"
@@ -515,47 +515,20 @@ def reset_unread_messages(request):
     return Response({"error": "Invalid request method"}, status=400)
 
 
-def get_direct_last_message(username, friend):
-    user = customuser.objects.get(username=username)
-    friend = customuser.objects.get(username=friend)
-    last_message = (
-        Directs.objects.filter(
-            Q(sender=user, reciver=friend) | Q(sender=friend, reciver=user)
-        )
-        .order_by("-timestamp")
-        .first()
-    )
-    if last_message == None:
-        return ""
-    return last_message.message
-
-
 @api_view(["GET"])
 def friends_with_directs(request, username):
     user = customuser.objects.get(username=username)
-    friends = Friendship.objects.filter(user=user, isBlocked=False)
-    data = []
-    protocol = get_protocol(request)
-    ip_address = os.getenv("IP_ADDRESS")
-    for friend in friends:
-        if Directs.objects.filter(
-            Q(sender=user, reciver=friend.friend)
-            | Q(sender=friend.friend, reciver=user)
-        ).exists():
-            last_message = get_direct_last_message(username, friend.friend.username)
-            friend_data = {
-                "id": friend.friend.id,
-                "name": friend.friend.username,
-                "avatar": f"{protocol}://{ip_address}:8000/chatAPI{friend.friend.avatar.url}",
-                "is_online": friend.friend.is_online,
-                "is_playing": friend.friend.is_playing,
-                "lastMessage": last_message,
-                "unreadCount": Directs.objects.filter(
-                    reciver=user, sender=friend.friend, is_read=False
-                ).count(),
-            }
-            data.append(friend_data)
-    return Response(data)
+    # friends = Friendship.objects.filter(user=user, isBlocked=False)
+    friends_with_messages = Friendship.objects.filter(
+    Q(friend__in=Directs.objects.filter(sender=user).values('reciver')) |
+    Q(friend__in=Directs.objects.filter(reciver=user).values('sender')))
+    serializer = friends_with_directs_serializer(friends_with_messages, many=True, context={
+        'request': request,  # Passing the request for protocol and IP
+        'username': username,  # Passing the username to get the last message
+        'user': request.user  # Passing the current user for unread count
+    })
+
+    return Response(serializer.data)
 
 
 @api_view(["POST"])
