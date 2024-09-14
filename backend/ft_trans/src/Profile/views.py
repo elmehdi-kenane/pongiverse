@@ -92,6 +92,7 @@ def getUserData(request, username):
                         'level': user_states.level,
                         'xp': user_states.total_xp,
                         'country': user.country,
+                        'tfq': user.is_tfq,
                         }
         success_response = Response(data={"userData": user_data}, status=status.HTTP_200_OK)
         return success_response
@@ -489,29 +490,55 @@ def checkPath():
     if not os.path.exists(path):
         os.makedirs(path)
 
+# def check_user_tfq(user):
+#     checkPath()
+#     user_tfq = UserTFQ.objects.filter(user=user).all()
+#     if (user_tfq):
+#         user_tfq.delete()
+#         qr_path = f"uploads/qr_codes/{user.username}_QR.png"
+#         if os.path.isfile(qr_path):
+#             os.remove(qr_path)
+
 @api_view(["GET"])
 def enable_user_tfq(request, username):
     user = customuser.objects.filter(username=username).first()
     if user is not None:
-        checkPath()
         # user_tfq = UserTFQ.objects.filter(user=user).all()
         # user_tfq.delete()
         user_tfq = UserTFQ.objects.filter(user=user).first()
-        if user_tfq is None:
-            key = pyotp.random_base32()
-            print(f"Generated key: {key}")
-            user_tfq = UserTFQ.objects.create(
-                user = user,
-                key = key,
-            )
-            urc = pyotp.totp.TOTP(key).provisioning_uri(name=user.username, issuer_name="Transcendence")
-            qr_path = f"uploads/qr_codes/{user.username}_Q.png"
-            qrcode.make(urc).save(qr_path)
-            with open(qr_path, 'rb') as qr_file:
-                user_tfq.qr_code.save(f"{user.username}_QR.png", File(qr_file), save=True)
-            if os.path.isfile(qr_path):
-                os.remove(qr_path)
-            print(f"QR Code saved for {user.username} at {user_tfq.qr_code.url}")
-            return Response(data={"data": f"http://localhost:8000/auth{user_tfq.qr_code.url}"}, status=status.HTTP_200_OK)
-        return Response(data={'error': 'User has already enabled TFQ'}, status=status.HTTP_400_BAD_REQUEST)
-    return Response(data={'error': 'Error Saving QrCode'}, status=status.HTTP_400_BAD_REQUEST)
+        if user_tfq:
+            return Response(data={'error': 'User already has Two-Factor Authenticator'}, status=status.HTTP_400_BAD_REQUEST)
+        checkPath()
+        key = pyotp.random_base32()
+        user_tfq = UserTFQ.objects.create(
+            user = user,
+            key = key,
+        )
+        urc = pyotp.totp.TOTP(user_tfq.key).provisioning_uri(name=user.username, issuer_name="Transcendence")
+        qr_path = f"uploads/qr_codes/{user.username}_Q.png"
+        qrcode.make(urc).save(qr_path)
+        with open(qr_path, 'rb') as qr_file:
+            user_tfq.qr_code.save(f"{user.username}_QR.png", File(qr_file), save=True)
+        if os.path.isfile(qr_path):
+            os.remove(qr_path)
+        res = {
+            "key": user_tfq.key,
+            "img": f"http://localhost:8000/auth{user_tfq.qr_code.url}"
+        }
+        return Response(data={"data": res}, status=status.HTTP_200_OK)
+    return Response(data={'error': 'Error Generating QrCode'}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(["GET"])
+def validate_user_tfq(requset, username, otp):
+    user = customuser.objects.filter(username=username).first()
+    if user is not None:
+        user_tfq = UserTFQ.objects.filter(user=user).first()
+        if user_tfq is not None:
+            key = user_tfq.key
+            totp = pyotp.TOTP(key)
+            if totp.verify(otp) == True:
+                user.is_tfq = True
+                user.save()
+                return Response(data={"data": "Congratulation you enabled Two-Factor Authenticator"}, status=status.HTTP_200_OK)
+            return Response(data={'error': 'Wrong otp'}, status=status.HTTP_400_BAD_REQUEST)
+

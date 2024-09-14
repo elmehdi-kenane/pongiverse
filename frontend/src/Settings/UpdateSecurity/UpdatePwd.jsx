@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import AuthContext from '../../navbar-sidebar/Authcontext';
 import SettingsContext from '../SettingsWrapper';
-import Loading from '../../Game/Loading';
+import SettingsLoading from './SettingsLoading';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Link } from 'react-router-dom';
@@ -12,10 +12,9 @@ function UpdatePwd(props) {
   const newPRef = useRef(null);
   const cfmPRef = useRef(null);
 
-  const [isLoading, setIsLoading] = useState(false)
 
   const { user } = useContext(AuthContext);
-  const { notifySuc, notifyErr } = useContext(SettingsContext);
+  const { notifySuc, notifyErr, isLoading, setIsLoading } = useContext(SettingsContext);
 
   const checkPwd = (oldPwd, newPwd, cfmPwd) => {
     if (!oldPwd || !newPwd || !cfmPwd)
@@ -127,20 +126,9 @@ function UpdatePwd(props) {
     )
   }
 
-  const LoadingPwd = () => {
-    return (
-      <div className='update__lodaing'>
-        <h1 className='loading__title'> Loading... </h1>
-        <div className='loading__ctr'>
-          <Loading />
-        </div>
-      </div>
-    )
-  }
-
   return (
     <>
-      {!isLoading ? <InputsPwd /> : <LoadingPwd />}
+      {!isLoading ? <InputsPwd /> : <SettingsLoading />}
     </>
   )
 }

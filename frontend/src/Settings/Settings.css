@@ -212,7 +212,7 @@
 
 /*------------ Loading ------------*/
 
-.settings-page .settings__security .update__lodaing {
+.settings-page .update__lodaing {
     display: flex;
     flex-direction: column;
     /* border: #ccc solid 1px; */
@@ -225,7 +225,7 @@
     color: white;
     /* margin-bottom: 10px; */
 }
-.settings__security .update__lodaing .loading__ctr {
+.update__lodaing .loading__ctr {
     display: flex;
     height: 50px;
     width: 70%;
@@ -296,6 +296,65 @@
     border: none;
     background-color: #927eea;
     transition: ease-in 0.2s;
+}
+
+.settings-page .settings__security .tfq h4,
+.settings-page .settings__security .tfq h3{
+    color: white;
+    margin-bottom: 5px;
+    width: 100%;
+    text-align: left;
+    font-size: 17px;
+}
+.settings-page .settings__security .tfq .tfq__keycode{
+    display: flex;
+    align-self: center;
+    margin-bottom: 10px;
+    justify-content: center;
+    padding: 20px;
+    gap: 10px;
+
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.20);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+.tfq .tfq__keycode .keycode__key {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    /* border: #2f084b solid .5px; */
+    width: 150px;
+}
+.tfq .tfq__keycode .keycode__key h6{
+    display: flex;
+    color: white;
+    font-size: 11px;
+    padding: 5px 8px;
+    border-radius: 5px;
+    background-color: rgb(47, 8, 75, 0.5);
+    word-break: break-all;
+}
+.tfq .tfq__keycode .keycode__QR {
+    height: 150px;
+    width: 150px;
+}
+
+.tfq .tfq__input {
+    align-self: center;
+    padding-left: 5px;
+    width: 80%;
+    height: 35px;
+    outline: none;
+    border: solid white 0.5px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    color : white;
+    font-size: 17px;
+    margin-bottom: 10px;
+}
+.tfq .tfq__input::placeholder {
+    color: rgb(127, 127, 127, 0.8);
+    font-size: 14px;
 }
 
 

@@ -10,7 +10,7 @@ function UpdateNkName() {
     const iconRef = useRef(null);
 
     const { user, setUser} = useContext(AuthContext)
-    const { notifySuc, notifyErr} = useContext(SettingsContext)
+    const { notifySuc, notifyErr } = useContext(SettingsContext)
 
     useEffect(() => {
         if (inputRef.current)

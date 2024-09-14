@@ -13,6 +13,7 @@ export const SettingsWrapper = ({ child }) => {
     const { user } = useContext(AuthContext);
     const [isInfo, setIsInfo] = useState(true);
     const [userData, setUserData] = useState(null)
+    const [isLoading, setIsLoading] = useState(false)
 
     const [userPic, setUserPic] = useState(mavPic);
     const [userBg, setUserBg] = useState(bg);
@@ -20,8 +21,8 @@ export const SettingsWrapper = ({ child }) => {
     const [userBio, setUserBio] = useState('');
     const [userLevel, setUserLevel] = useState(null);
     const [userCountry, setUserCountry] = useState(null);
-
-    // const [url, setUrl] = useState(window.location.href);
+    const [userTfq, setUserTfq] = useState(false);
+    
 
     const notifySuc = (suc) => toast.success(suc);
     const notifyErr = (err) => toast.error(err);
@@ -49,7 +50,7 @@ export const SettingsWrapper = ({ child }) => {
                 });
                 const res = await response.json()
                 if (response.ok) {
-                    // console.log("Response userData : ", res.userData);
+                    console.log("Response userData : ", res.userData);
                     setUserData(res.userData);
                 }
                 else
@@ -85,6 +86,7 @@ export const SettingsWrapper = ({ child }) => {
             setUserEmail(userData.email)
             setUserLevel(userData.level)
             setUserCountry(userData.country)
+            setUserTfq(userData.tfq)
         }
     }, [userData])
 
@@ -101,8 +103,13 @@ export const SettingsWrapper = ({ child }) => {
         setUserLevel: setUserLevel,
         userCountry: userCountry,
         setUserCountry: setUserCountry,
+        userTfq: userTfq,
+        setUserTfq: setUserTfq,
+
         isInfo: isInfo,
         setIsInfo: setIsInfo,
+        isLoading:isLoading,
+        setIsLoading:setIsLoading,
 
         notifySuc:notifySuc,
         notifyErr:notifyErr
