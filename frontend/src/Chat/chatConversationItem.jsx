@@ -48,10 +48,9 @@ export const resetChatRoomUnreadMessages = async (user, roomId) => {
 
 const ChatConversationItem = (props) => {
   const { user } = useContext(AuthContext);
-  const { directConversationsRef, setDirectConversations , chatRoomConversationsRef, setChatRoomConversations, setMessages} =
+  const { directConversationsRef, setDirectConversations , chatRoomConversationsRef, setChatRoomConversations, setMessages, setCurrentMessagePage, setHasMoreMessages} =
     useContext(ChatContext);
   const handleClick = () => {
-    setMessages([])
     if (props.isDirect && props.name) {
       props.setSelectedDirect({
         id: props.friendId,
@@ -87,6 +86,9 @@ const ChatConversationItem = (props) => {
       if (parseInt(props.unreadCount) > 0)
         resetChatRoomUnreadMessages(user, props.roomId);
     }
+    setMessages([])
+    setCurrentMessagePage(1)
+    setHasMoreMessages(true)
     props.setSelectedItem(props.name);
   };
   return (

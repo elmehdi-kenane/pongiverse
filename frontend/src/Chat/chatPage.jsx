@@ -1,45 +1,25 @@
 import "../assets/chat/Chat.css";
-import ChatConversationItem from "./chatConversationItem";
 import ChatContext from "../Context/ChatContext";
-import ChatConversation from "./chatConversation";
-import ChatRoomConversation from "./chatRoomConversation";
 import { useContext, useEffect, useState } from "react";
-import * as ChatIcons from "../assets/chat/media/index";
+
 import { Toaster } from "react-hot-toast";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import {
   resetUnreadMessages,
   resetChatRoomUnreadMessages,
 } from "./chatConversationItem";
+import ChatSideBar from "./chatPageSidebar";
+import ChatWindow from "./chatPageWindow";
 const Chat = () => {
   const {
-    chatRoomConversations,
-    directConversations,
-    setSelectedChatRoom,
-    selectedChatRoom,
-    setSelectedDirect,
-    selectedDirect,
-    isHome,
-    setIsHome,
     selectedDirectRef,
     setDirectConversations,
     setChatRoomConversations,
     setMessages,
-    selectedItem,
-    setSelectedItem,
     selectedChatRoomRef,
-    listInnerRef,
-    onScroll,
   } = useContext(ChatContext);
   const { chatSocket, user } = useContext(AuthContext);
-  const [query, setQuery] = useState("");
-  const filteredConversations = directConversations.filter((conversation) => {
-    return conversation.name.includes(query);
-  });
 
-  const handleSelectItem = (itemName) => {
-    setSelectedItem(itemName);
-  };
   useEffect(() => {
     if (chatSocket) {
       chatSocket.onmessage = (e) => {
@@ -144,110 +124,8 @@ const Chat = () => {
     <div className="chat-page">
       <Toaster />
       <div className="chat-container">
-        <div
-          className={
-            Object.values(selectedDirect).every((value) => value !== "") ||
-            Object.values(selectedChatRoom).every((value) => value !== "")
-              ? "chat-sidebar-hidden"
-              : "chat-sidebar"
-          }
-        >
-          <div className="chat-sidebar-header">
-            <input
-              type="text"
-              placeholder="search"
-              value={query}
-              className="chat-search-input"
-              onChange={(e) => setQuery(e.target.value)}
-            />
-            <div className="chat-switch-button-wrapper">
-              <button
-                className={
-                  isHome
-                    ? "direct-switch-button-active"
-                    : "direct-switch-button"
-                }
-                onClick={() => setIsHome(true)}
-              >
-                Directs
-              </button>
-              <button
-                className={
-                  isHome ? "rooms-switch-button" : "rooms-switch-button-active"
-                }
-                onClick={() => setIsHome(false)}
-              >
-                Rooms
-              </button>
-            </div>
-          </div>
-          <div className="chat-conversations-list" onScroll={onScroll} ref={listInnerRef}>
-            {isHome
-              ? filteredConversations.map((friend, key) => (
-                  <ChatConversationItem
-                    key={key}
-                    friendId={friend.id}
-                    name={friend.name}
-                    avatar={friend.avatar}
-                    status={friend.is_online}
-                    lastMessage={friend.lastMessage}
-                    unreadCount={friend.unreadCount}
-                    isDirect={isHome}
-                    setSelectedDirect={setSelectedDirect}
-                    isSelected={selectedItem === friend.name}
-                    setSelectedItem={handleSelectItem}
-                  />
-                ))
-              : chatRoomConversations.map((chatRoom, key) => (
-                  <ChatConversationItem
-                    key={key}
-                    roomId={chatRoom.id}
-                    name={chatRoom.name}
-                    icon={chatRoom.icon}
-                    lastMessage={chatRoom.lastMessage}
-                    membersCount={chatRoom.membersCount}
-                    unreadCount={chatRoom.unreadCount}
-                    isDirect={isHome}
-                    setSelectedChatRoom={setSelectedChatRoom}
-                    isSelected={selectedItem === chatRoom.name}
-                    setSelectedItem={handleSelectItem}
-                  />
-                ))}
-          </div>
-        </div>
-        <div
-          className={
-            Object.values(selectedDirect).every((value) => value !== "") ||
-            Object.values(selectedChatRoom).every((value) => value !== "")
-              ? "chat-window"
-              : "chat-window-hidden"
-          }
-        >
-          {isHome &&
-          Object.values(selectedDirect).every((value) => value !== "") ? (
-            <ChatConversation />
-          ) : !isHome &&
-            Object.values(selectedChatRoom).every((value) => value !== "") ? (
-            <ChatRoomConversation
-              setSelectedItem={handleSelectItem}
-              setSelectedChatRoom={setSelectedChatRoom}
-            />
-          ) : (
-            <div className="chat-window-empty">
-              <div className="chat-window-empty-wrapper">
-                <img
-                  src={ChatIcons.emptyChatIcon}
-                  alt=""
-                  className="empty-chat-icon"
-                />
-                <p className="chat-window-empty-message">
-                  {" "}
-                  Begin a conversation with a friend to see it show up here!
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
+        <ChatSideBar />
+        <ChatWindow />
       </div>
     </div>
   );

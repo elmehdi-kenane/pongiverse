@@ -49,8 +49,6 @@ class friends_with_directs_serializer(serializers.ModelSerializer):
 
     def get_unreadCount(self, obj):
         user = self.context.get('user')
-        if not user or user.is_anonymous:
-            return 0
         return Directs.objects.filter(receiver=user, sender=obj.friend, is_read=False).count()
 
 class direct_message_serializer(serializers.ModelSerializer):

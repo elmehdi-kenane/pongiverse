@@ -44,7 +44,7 @@ def friends_with_directs(request, username):
     result_page = paginator.paginate_queryset(friends_with_messages, request)
     serializer = friends_with_directs_serializer(result_page, many=True, context={
         'username': username,  # Passing the username to get the last message
-        'user': request.user  # Passing the current user for unread count
+        'user': user
     })
 
     return paginator.get_paginated_response(serializer.data)

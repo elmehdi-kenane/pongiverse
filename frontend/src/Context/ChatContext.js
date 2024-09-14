@@ -8,16 +8,18 @@ export default ChatContext;
 export const ChatProvider = ({ child }) => {
   const DIRECT_LIMIT = 20
   const listInnerRef = useRef();
+  const [currentMessagePage, setCurrentMessagePage] = useState(1);
+  const [hasMoreMessages, setHasMoreMessages] = useState(true)
   const [currPage, setCurrPage] = useState(1);
   const [hasMore, setHasMore] = useState(true)
   let location = useLocation();
   const { user, chatSocket } = useContext(AuthContext);
   const [isHome, setIsHome] = useState(true);
+  const [messages, setMessages] = useState([]);
   const [chatRoomConversations, setChatRoomConversations] = useState([]);
   const [chatRoomInvitations, setChatRoomInvitations] = useState([]);
   const [suggestedChatRooms, setSuggestedChatRooms] = useState([]);
   const [directConversations, setDirectConversations] = useState([]);
-  const [messages, setMessages] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const chatRoomConversationsRef = useRef(chatRoomConversations);
   const chatRoomInvitationsRef = useRef(chatRoomInvitations);
@@ -202,9 +204,7 @@ export const ChatProvider = ({ child }) => {
     if (listInnerRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
       if (scrollTop + clientHeight === scrollHeight) {
-        setTimeout(() => {
           setCurrPage(currPage + 1);
-        }, 500);
       }
     }
   };
@@ -235,6 +235,10 @@ export const ChatProvider = ({ child }) => {
     selectedChatRoomRef: selectedChatRoomRef,
     onScroll:onScroll,
     listInnerRef: listInnerRef,
+    currentMessagePage: currentMessagePage,
+    setCurrentMessagePage: setCurrentMessagePage,
+    hasMoreMessages: hasMoreMessages,
+    setHasMoreMessages: setHasMoreMessages,
   };
   return (
     <ChatContext.Provider value={contextData}>{child}</ChatContext.Provider>

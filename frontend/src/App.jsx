@@ -49,8 +49,8 @@ import Security from './Settings/Security';
 
 const App = () => {
   return (
-    // <div className="page">
-    <div className="page" style={{backgroundImage: `url(${bg1})`}}>
+    // <div className="page" style={{backgroundImage: `url(${bg1})`}}>
+    <div className="page">
       <Router>
         <AuthProvider>
           <SocketDataContextProvider>
