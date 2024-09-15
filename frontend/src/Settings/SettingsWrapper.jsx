@@ -50,7 +50,7 @@ export const SettingsWrapper = ({ child }) => {
                 });
                 const res = await response.json()
                 if (response.ok) {
-                    console.log("Response userData : ", res.userData);
+                    // console.log("Response userData : ", res.userData);
                     setUserData(res.userData);
                 }
                 else

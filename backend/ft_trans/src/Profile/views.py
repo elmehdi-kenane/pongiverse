@@ -14,7 +14,7 @@ from myapp.models import customuser
 
 from django.db.models import Q
 from datetime import datetime, date, timedelta
-
+from myapp.views import get_tokens_for_user
 from django.core.files import File
 from .models import UserTFQ
 import pyotp
@@ -542,3 +542,18 @@ def validate_user_tfq(requset, username, otp):
                 return Response(data={"data": "Congratulation you enabled Two-Factor Authenticator"}, status=status.HTTP_200_OK)
             return Response(data={'error': 'Wrong otp'}, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(["GET"])
+def check_user_tfq(requset, username, otp):
+    user = customuser.objects.filter(username=username).first()
+    if user is not None:
+        user_tfq = UserTFQ.objects.filter(user=user).first()
+        if user_tfq is not None:
+            key = user_tfq.key
+            totp = pyotp.TOTP(key)
+            if totp.verify(otp) == True:
+                response = Response()
+                data = get_tokens_for_user(user)
+                response.set_cookie('token', data['access'], httponly=True)
+                response.status_code = status.HTTP_200_OK
+                return response
+            return Response(data={'Case': 'Wrong otp'}, status=status.HTTP_400_BAD_REQUEST)

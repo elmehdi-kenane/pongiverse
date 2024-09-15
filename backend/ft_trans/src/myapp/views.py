@@ -125,10 +125,14 @@ class LoginView(APIView):
 		#print(f"   username : {username}, password : {password}")
 		user = authenticate(username=username, password=password)
 		if user is not None:
-			data = get_tokens_for_user(user)
-			response.set_cookie('token', data['access'], httponly=True)
-			response.data = {"Case": "Login successfully"}
-			return response
+			if user.is_tfq == True:
+				response.data = {"Case": "Login successfully but have tfq", "user" : user.username}
+				return response
+			else:
+				data = get_tokens_for_user(user)
+				response.set_cookie('token', data['access'], httponly=True)
+				response.data = {"Case": "Login successfully"}
+				return response
 		else:
 			response.data = {"Case": "Invalid username or password!!"}
 			return response
@@ -140,10 +144,14 @@ class GoogleLoginView(APIView):
 		email = data.get('email', None)
 		user = customuser.objects.filter(email=email).first()
 		if user is not None:
-			data = get_tokens_for_user(user)
-			response.set_cookie('token', data['access'], httponly=True)
-			response.data = {"Case" : "Login successfully"}
-			return response
+			if user.is_tfq == True:
+				response.data = {"Case": "Login successfully but have tfq", "user" : user.username}
+				return response
+			else:
+				data = get_tokens_for_user(user)
+				response.set_cookie('token', data['access'], httponly=True)
+				response.data = {"Case": "Login successfully"}
+				return response
 		else:
 			response.data = {"Case" : "Invalid username or password!!"}
 			return response

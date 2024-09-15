@@ -1,64 +1,146 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import toast, { Toaster } from 'react-hot-toast';
-import styles from '../../assets/SignIn/authentication.module.css'
+import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
+import styles from "../../assets/SignIn/authentication.module.css";
 
-import Cookies from 'js-cookie';
-import { Link } from 'react-router-dom';
+import Cookies from "js-cookie";
+import { Link } from "react-router-dom";
 
 function SignInForm() {
-
-	const [data, setData] = useState({
-		username: '',
-		password: ''
-	});
-
-	const handleChange = (e) => {
-		setData({ ...data, [e.target.name]: e.target.value });
-	};
 	const navigate = useNavigate();
+  const [data, setData] = useState({
+    username: "",
+    password: "",
+  });
 
-	const handleSubmit = (e) => {
-		e.preventDefault();
-		fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/login/`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			credentials: 'include',
-			body: JSON.stringify(data),
-		})
-			.then(response => {
-				if (!response.ok) {
-					throw new Error('Network response was not ok');
-				}
-				return response.json();
-			})
-			.then(data => {
-				if (data.Case === "Login successfully") {
-					navigate('/mainpage');
-				} else if (data.Case === "Invalid username or password!!") {
-					toast.error(data.Case, {
-						duration: 1000,
-					});
-					setData({ ...data, 'password': '' });
-				}
-			})
-			.catch(error => {
-				console.error('There was an error!', error);
-			});
-	};
+  const [user, setUser] = useState('')
+  const [openTfq, setOpenTfq] = useState(false);
+  const inputRef = useRef(null);
 
-	return (
-		<>
-			<input className={styles['authentication-signin-input']} type="text" value={data.username || ''} onChange={handleChange} name='username' placeholder='Enter your username' />
-			<input className={styles['authentication-signin-input']} type="password" name='password' value={data.password || ''} onChange={handleChange} placeholder='Enter your password' />
-			<div className={styles['authentication-signin-forget-password-div']}>
-				<Link className={styles['authentication-signin-forget-password']} to="/ForgotPassword">Forget your password?</Link>
-			</div>
-			<button className={styles['authentication-signin-button']} onClick={handleSubmit}>Sign In</button>
-		</>
-	);
+  const checkOtp = (otpStr) => {
+    const regex = /^\d{6}$/; // Matches exactly 6 digits
+    if (regex.test(otpStr)) return true;
+    else notifyErr("Wrong One-Time-Password");
+  };
+
+  const ValidateTFQ = async () => {
+    const otp = inputRef.current.value;
+    if (checkOtp(otp)) {
+      try {
+		if (user){
+			const response = await fetch(
+			  `http://localhost:8000/profile/CheckUserTFQ/${user}/${otp}`,
+			  {
+				method: "GET",
+				headers: {
+				  "Content-Type": "application/json",
+				},
+				credentials: "include",
+			  }
+			);
+			if (response.ok) {
+				navigate("/mainpage")
+			} else {
+			  console.log("Error : ", res.error);
+			  alert("wrong one time password")
+			  setOpenTfq(false)
+			}
+		}
+      } catch (error) {
+        console.log("Error: ", error);
+      }
+    }
+  };
+
+
+  const OtfInput = () => {
+    return (
+      <div className={styles["otp-input-div"]}>
+			<input
+			type="text"
+			className="tfq__input"
+			placeholder="Authentication Code (6 digits)"
+			maxLength={6}
+			ref={inputRef}
+			/>
+			<button onClick={ValidateTFQ}>enter</button>
+      </div>
+    );
+  };
+  const handleChange = (e) => {
+    setData({ ...data, [e.target.name]: e.target.value });
+  };
+  
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/login/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(data),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.Case === "Login successfully") {
+          navigate("/mainpage");
+        } else if (data.Case === "Invalid username or password!!") {
+          toast.error(data.Case, {
+            duration: 1000,
+          });
+          setData({ ...data, password: "" });
+        } else if (data.Case === "Login successfully but have tfq") {
+			setUser(data.user)
+        	setOpenTfq(true);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
+
+  return (
+    <>
+		{user && openTfq && <OtfInput/>}
+      <input
+        className={styles["authentication-signin-input"]}
+        type="text"
+        value={data.username || ""}
+        onChange={handleChange}
+        name="username"
+        placeholder="Enter your username"
+      />
+      <input
+        className={styles["authentication-signin-input"]}
+        type="password"
+        name="password"
+        value={data.password || ""}
+        onChange={handleChange}
+        placeholder="Enter your password"
+      />
+      <div className={styles["authentication-signin-forget-password-div"]}>
+        <Link
+          className={styles["authentication-signin-forget-password"]}
+          to="/ForgotPassword"
+        >
+          Forget your password?
+        </Link>
+      </div>
+      <button
+        className={styles["authentication-signin-button"]}
+        onClick={handleSubmit}
+      >
+        Sign In
+      </button>
+    </>
+  );
 }
 
 export default SignInForm;

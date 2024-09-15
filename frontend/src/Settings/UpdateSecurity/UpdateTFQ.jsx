@@ -22,7 +22,7 @@ function UpdateTFQ(props) {
   ];
   
   const cancelTFQ = () => {
-    props.cancelTFQ(false)
+    props.cancelTFQ('security')
   }
   
   const Notice = () => {
@@ -152,9 +152,9 @@ function UpdateTFQ(props) {
   const ValidTFQ = () => {
     return (
       <div className="tfq">
-        <p>
+        <h1>
           Congratulation You enabled TFQ
-        </p>
+        </h1>
         <div className="tfq__submit">
           <button className="submit submit__cancel" onClick={cancelTFQ}> Back </button>
         </div>

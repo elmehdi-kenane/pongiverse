@@ -28,4 +28,5 @@ urlpatterns = [
     
     path('EnableTFQ/<str:username>', views.enable_user_tfq),
     path('ValidateTFQ/<str:username>/<str:otp>', views.validate_user_tfq),
+    path('CheckUserTFQ/<str:username>/<str:otp>', views.check_user_tfq),
 ]

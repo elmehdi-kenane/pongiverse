@@ -97,7 +97,7 @@ function UpdatePwd(props) {
     )
   }
   const cancelPwd = () => {
-    props.cancelPwd(false);
+    props.cancelPwd('security');
   }
   const InputsPwd = () => {
     return (
