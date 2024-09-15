@@ -95,6 +95,7 @@ function TournamentBracket() {
 				console.log("----mohamed data : ", data)
 				setroundQuarterFinalMembers(data.roundquarter)
 				setroundSemiFinalMembers(data.roundsemi)
+				setFinalMembers(data.roundfinal)
 				setwinnerMember(data.winner)
 			} else {
 				console.error('Failed to fetch data');

@@ -12,6 +12,9 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 		else
 			return null
 	};
+	if (roundwinner.length ) {
+		console.log("roundwinner is empty", roundwinner)
+	}
 	if (!roundquartermembers) {
 		navigate("../game/createtournament")
 	}
@@ -145,8 +148,8 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 				findMemberByPosition(roundfinalmembers, 1) && (
 					<foreignObject x="395" y="535" width="88" height="88">
 						<picture>
-							<source srcSet={findMemberByPosition(roundfinalmembers, 1).image} />
-							<img src={findMemberByPosition(roundfinalmembers, 1).image} alt="Description of the image" width="88" height="88" style={{ borderRadius: '10px' }} />
+							<source srcSet={findMemberByPosition(roundfinalmembers, 1).id === -1 ? nullplayer : findMemberByPosition(roundfinalmembers, 1).image} />
+							<img src={findMemberByPosition(roundfinalmembers, 1).id === -1 ? nullplayer : findMemberByPosition(roundfinalmembers, 1).image} alt="Description of the image" width="88" height="88" style={{ borderRadius: '10px' }} />
 						</picture>
 					</foreignObject>
 				)
@@ -205,9 +208,9 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 			<path d="M439.502 471.996L439.828 534.524" stroke="white" />
 			<path d="M318.707 826.445L318.707 852.419" stroke="white" />
 			<path d="M566.445 827.027L318.039 827.027" stroke="white" />
-			<path d="M707.716 694H788.288C790.892 694 793.002 698.52 793.002 704.1V722.927V752.775V773.898C793.002 779.478 790.892 784 788.288 784H707.716C705.112 784 703.002 779.478 703.002 773.898V752.775V722.927V704.1C703.002 698.52 705.112 694 707.716 694Z" stroke="#FFD700" stroke-width="2" /> { /* WINNER 1*/ }
+			<path d="M707.716 694H788.288C790.892 694 793.002 698.52 793.002 704.1V722.927V752.775V773.898C793.002 779.478 790.892 784 788.288 784H707.716C705.112 784 703.002 779.478 703.002 773.898V752.775V722.927V704.1C703.002 698.52 705.112 694 707.716 694Z" stroke="#FFD700" strokeWidth="2" /> { /* WINNER 1*/ }
 			{
-				roundwinner.lengh && (
+				roundwinner && (
 					<foreignObject x="704" y="695" width="88" height="88">
 						<picture>
 							<source srcSet={roundwinner.image} />

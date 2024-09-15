@@ -384,11 +384,13 @@ def get_game_members_round(request):
 	response = Response()
 	quartermembers = []
 	semimembers = []
+	finalmembers = []
 	winnerdict = {}
 	for member in TournamentMembers.objects.filter(user=user):
 		if member.tournament.is_started == True and member.tournament.is_finished == False and member.is_eliminated == False:
 			roundquarterfinal = Round.objects.filter(tournament=member.tournament, type="QUARTERFINAL").first()
 			roundsemierfinal = Round.objects.filter(tournament=member.tournament, type="SEMIFINAL").first()
+			roundfinal = Round.objects.filter(tournament=member.tournament, type="FINAL").first()
 			winner = Round.objects.filter(tournament=member.tournament, type="WINNER").first()
 			if roundquarterfinal is not None:
 				for quartermember in TournamentUserInfo.objects.filter(round=roundquarterfinal):
@@ -426,6 +428,24 @@ def get_game_members_round(request):
 							'image': '',
 							'position': semimember.position
 						})
+			if roundfinal is not None:
+				for finalmember in TournamentUserInfo.objects.filter(round=roundfinal):
+					if finalmember.user is not None:
+						finalmembers.append({
+							'id' : finalmember.user.id,
+							'name' : finalmember.user.username,
+							'level': finalmember.user.level,
+							'image': f"http://{ip_address}:8000/auth{finalmember.user.avatar.url}",
+							'position': finalmember.position
+						})
+					else:
+						finalmembers.append({
+							'id' : -1,
+							'name' : '',
+							'level': -1,
+							'image': '',
+							'position': finalmember.position
+						})
 
 			winnermember = TournamentUserInfo.objects.filter(round=winner).first()
 			if winnermember is not None:
@@ -433,7 +453,7 @@ def get_game_members_round(request):
 					winnerdict.update({'id': winnermember.user.id, 'name' : winnermember.user.username, 'level' : 2, 'image' : f"http://{ip_address}:8000/auth{winnermember.user.avatar.url}", 'position' : winnermember.position})
 				else:
 					winnerdict.update({'id': -1, 'name' : '', 'level' : -1, 'image' : '', 'position' : winnermember.position})
-	response.data = {'roundquarter' : quartermembers, 'roundsemi' : semimembers, 'winner' : winnerdict}
+	response.data = {'roundquarter' : quartermembers, 'roundsemi' : semimembers, 'roundfinal' : finalmembers , 'winner' : winnerdict}
 	return response
 
 @api_view(['POST'])

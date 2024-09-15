@@ -71,11 +71,12 @@ async def send_player_winner(self, tournament_id, user, next_round, position):
 
 async def send_user_eliminated_after_delay(self, tournament, actual_round):
 	print(f"\nGET INTO SEND USER ELIMINATED AFTER DELAY : {actual_round}\n")
-	await asyncio.sleep(6)
+	await asyncio.sleep(10)
 	rounds = ['QUARTERFINAL', 'SEMIFINAL', 'FINAL', 'WINNER']
 	next_round = ''
 	if actual_round == 'WINNER':
-		pass
+		tournament.is_finished = True
+		await sync_to_async(tournament.save)()
 	else:
 		round_index = rounds.index(actual_round)
 		next_round = rounds[round_index + 1]
@@ -281,16 +282,24 @@ async def manage_tournament(self, tournament_id):
 	print("\nMANAGE TOURNAMENT\n")
 	global counter
 	tournament = await sync_to_async(Tournament.objects.filter(tournament_id=tournament_id).first)()
-	roundquarterfinal = await sync_to_async(Round.objects.filter(tournament=tournament, type="QUARTERFINAL").first)()
-	roundsemifinal = await sync_to_async(Round.objects.filter(tournament=tournament, type="SEMIFINAL").first)()
-	roundfinal = await sync_to_async(Round.objects.filter(tournament=tournament, type="FINAL").first)()
-	roundwinner = await sync_to_async(Round.objects.filter(tournament=tournament, type="WINNER").first)()
+	quarterfinalcount = 0
+	semifinalcount = 0
+	finalcount = 0
+	winnercount = 0
 	while True:
 		await asyncio.sleep(2)
-		quarterfinalcount = await sync_to_async(TournamentUserInfo.objects.filter(round=roundquarterfinal).count)()
-		semifinalcount = await sync_to_async(TournamentUserInfo.objects.filter(round=roundsemifinal).count)()
-		finalcount = await sync_to_async(TournamentUserInfo.objects.filter(round=roundfinal).count)()
-		winnercount = await sync_to_async(TournamentUserInfo.objects.filter(round=roundwinner).count)()
+		roundquarterfinal = await sync_to_async(Round.objects.filter(tournament=tournament, type="QUARTERFINAL").first)()
+		roundsemifinal = await sync_to_async(Round.objects.filter(tournament=tournament, type="SEMIFINAL").first)()
+		roundfinal = await sync_to_async(Round.objects.filter(tournament=tournament, type="FINAL").first)()
+		roundwinner = await sync_to_async(Round.objects.filter(tournament=tournament, type="WINNER").first)()
+		if roundquarterfinal is  not None:
+			quarterfinalcount = await sync_to_async(lambda: TournamentUserInfo.objects.filter(round=roundquarterfinal).count())()
+		if roundsemifinal is  not None:
+			semifinalcount = await sync_to_async(lambda: TournamentUserInfo.objects.filter(round=roundsemifinal).count())()
+		if roundfinal is not None:
+			finalcount = await sync_to_async(lambda: TournamentUserInfo.objects.filter(round=roundfinal).count())()
+		if roundwinner is not None:
+			winnercount = await sync_to_async(lambda: TournamentUserInfo.objects.filter(round=roundwinner).count())()
 		print(f"\nQUARTERFINAL COUNT: {quarterfinalcount}, SEMIFINAL COUNT: {semifinalcount}, FINAL COUNT: {finalcount}, WINNER COUNT: {winnercount}\n")
 		if quarterfinalcount == 8 and semifinalcount == 0 and counter == 0:
 			counter += 1
@@ -350,5 +359,7 @@ async def manage_tournament(self, tournament_id):
 				)
 				await send_user_eliminated_after_delay(self, tournament, "FINAL")
 		elif quarterfinalcount == 8 and semifinalcount == 4 and finalcount == 2 and winnercount == 1:
+			counter = 0
+			await send_user_eliminated_after_delay(self, tournament, "WINNER")
 			break
 

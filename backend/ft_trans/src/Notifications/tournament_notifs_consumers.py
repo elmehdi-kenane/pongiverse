@@ -21,6 +21,7 @@ from mainApp.common import tournament_rooms
 from .common import notifs_user_channels
 from mainApp.tasks import manage_tournament
 import os
+
 async def accept_invite(self, data, notifs_user_channels):
 	tournament_id = data['message']['tournament_id']
 	username = data['message']['user']
