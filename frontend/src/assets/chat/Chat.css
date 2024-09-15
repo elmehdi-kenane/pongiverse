@@ -296,7 +296,8 @@ img.empty-chat-icon {
 
 .conversation-body {
   flex: 1;
-  margin: 10px 5px;
+  margin: 10px 0px;
+  padding: 0 5px;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -305,7 +306,7 @@ img.empty-chat-icon {
 }
 
 .message-row {
-  padding: 0 5px;
+  /* padding: 0 5px; */
   padding-top: 7px;
   display: flex;
   max-width: 80%;

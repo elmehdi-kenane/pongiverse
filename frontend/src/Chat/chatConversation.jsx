@@ -26,7 +26,7 @@ const fetchMessages = async (
   setMessages,
   messages,
   limit,
-  setHasMoreMessages
+  setHasMoreMessages,
 ) => {
   try {
     const response = await fetch(
@@ -44,10 +44,15 @@ const fetchMessages = async (
         }),
       }
     );
-    const { count, results } = await response.json();
+    const { count, results, next } = await response.json();
     if (response.ok) {
       setMessages([...results, ...messages]);
-      if (messages.length + limit >= count) setHasMoreMessages(false);
+      if (!next) {
+        setHasMoreMessages(false);
+        console.log("NO MORE MESSAGES", next);
+      } else {
+        console.log("HAS MORE MESSAGES", next);
+      }
     } else console.log("error");
   } catch (error) {
     console.log(error);
@@ -64,6 +69,8 @@ const ChatConversation = () => {
     setCurrentMessagePage,
     hasMoreMessages,
     setHasMoreMessages,
+    hasMoreMessagesRef,
+    currentMessagePageRef,
   } = useContext(ChatContext);
   const MESSAGES_LIMIT = 20;
   const [showDirectOptions, setShowDirectOptions] = useState(false);
@@ -72,23 +79,26 @@ const ChatConversation = () => {
   const messgesInnerRef = useRef();
 
   useEffect(() => {
-    if (selectedDirect.length !== 0 && hasMoreMessages) {
+    console.log("\n\n\nCURRENT PAGE: ", currentMessagePageRef.current);
+    console.log("HAS MORE MESSAGES: ", hasMoreMessagesRef.current);
+    if (hasMoreMessagesRef.current) {
       fetchMessages(
-        currentMessagePage,
+        currentMessagePageRef.current,
         user,
         selectedDirect.name,
         setMessages,
         messages,
         MESSAGES_LIMIT,
-        setHasMoreMessages
+        setHasMoreMessages,
+        hasMoreMessagesRef.current,
       );
     }
     let scrollView = document.getElementById("start");
     scrollView.scrollTop = scrollView.scrollHeight;
-  }, [selectedDirect, currentMessagePage]);
+  }, [selectedDirect, currentMessagePageRef.current]);
 
   useEffect(() => {
-    if (messages && currentMessagePage === 1) {
+    if (messages && currentMessagePageRef.current === 1) {
       let scrollView = document.getElementById("start");
       scrollView.scrollTop = scrollView.scrollHeight;
     }
@@ -97,10 +107,14 @@ const ChatConversation = () => {
   let domNode = useClickOutSide(() => {
     setShowDirectOptions(false);
   });
-  const onScrollCoversationBody = () => {
+
+  const onScrollCoversationBody = (e) => {
     if (messgesInnerRef.current) {
       const { scrollTop } = messgesInnerRef.current;
-      if (scrollTop === 0 && hasMoreMessages) {
+      const currentHassMoreMessages = hasMoreMessagesRef.current;
+      if (scrollTop === 0 && currentHassMoreMessages) {
+        console.log("CURRENT HAS MORE: ",currentHassMoreMessages)
+        console.log("ANA HENA INSIDE SCROLL");
         setCurrentMessagePage((prev) => prev + 1);
       }
     }

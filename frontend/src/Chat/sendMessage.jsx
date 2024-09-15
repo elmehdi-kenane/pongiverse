@@ -11,7 +11,6 @@ const SendMessage = (props) => {
   const [messageToSend, setMessageToSend] = useState("");
 
   const sendMessage = () => {
-    console.log(props.selectedDirect.name)
     if (
       chatSocket &&
       chatSocket.readyState === WebSocket.OPEN &&

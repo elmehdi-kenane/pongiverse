@@ -25,6 +25,8 @@ export const ChatProvider = ({ child }) => {
   const chatRoomInvitationsRef = useRef(chatRoomInvitations);
   const directConversationsRef = useRef(directConversations);
   const suggestedChatRoomsRef = useRef(suggestedChatRooms);
+  const hasMoreMessagesRef = useRef(hasMoreMessages);
+  const currentMessagePageRef = useRef(currentMessagePage);
   const [selectedChatRoom, setSelectedChatRoom] = useState({
     name: "",
     memberCount: "",
@@ -39,6 +41,16 @@ export const ChatProvider = ({ child }) => {
   });
   const selectedDirectRef = useRef(selectedDirect);
   const selectedChatRoomRef = useRef(selectedChatRoom);
+  const messgesInnerRef = useRef();
+
+  useEffect(() => {
+    currentMessagePageRef.current = currentMessagePage;
+  }, [currentMessagePage]);
+
+
+  useEffect(() => {
+    hasMoreMessagesRef.current = hasMoreMessages;
+  }, [hasMoreMessages]);
 
   useEffect(() => {
     suggestedChatRoomsRef.current = suggestedChatRooms;
@@ -239,6 +251,9 @@ export const ChatProvider = ({ child }) => {
     setCurrentMessagePage: setCurrentMessagePage,
     hasMoreMessages: hasMoreMessages,
     setHasMoreMessages: setHasMoreMessages,
+    messgesInnerRef: messgesInnerRef,
+    hasMoreMessagesRef: hasMoreMessagesRef,
+    currentMessagePageRef: currentMessagePageRef,
   };
   return (
     <ChatContext.Provider value={contextData}>{child}</ChatContext.Provider>
