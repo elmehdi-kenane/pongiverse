@@ -5,9 +5,9 @@ import { useNavigate } from "react-router-dom";
 
 const SvgComponent = ({ roundquartermembers }) => {
 	const navigate = useNavigate()
-	// if (!roundquartermembers) {
-	// 	navigate("../game/createtournament")
-	// }
+	if (!roundquartermembers) {
+		navigate("../game/createtournament")
+	}
 	const findMemberByPosition = (roundmembers, position) => {
 		const member = roundmembers.find(member => member.position === position);
 		if (member)

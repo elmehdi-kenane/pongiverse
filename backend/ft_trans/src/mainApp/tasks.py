@@ -303,61 +303,61 @@ async def manage_tournament(self, tournament_id):
 		print(f"\nQUARTERFINAL COUNT: {quarterfinalcount}, SEMIFINAL COUNT: {semifinalcount}, FINAL COUNT: {finalcount}, WINNER COUNT: {winnercount}\n")
 		if quarterfinalcount == 8 and semifinalcount == 0 and counter == 0:
 			counter += 1
-			number_of_null_players = await sync_to_async(TournamentUserInfo.objects.filter(round=roundquarterfinal, user=None).count)()
-			if number_of_null_players == 8:
-				pass
-			else:
-				tournamentwarnnotification = TournamentWarnNotifications(tournament=tournament)
-				await sync_to_async(tournamentwarnnotification.save)()
-				group_name = f'tournament_{tournament_id}'
-				await self.channel_layer.group_send(
-					group_name,
-					{
-						'type': 'warn_members',
-						'message': {
-							'time' : tournamentwarnnotification.created_at.isoformat()
-						}
+			# number_of_null_players = await sync_to_async(TournamentUserInfo.objects.filter(round=roundquarterfinal, user=None).count)()
+			# if number_of_null_players == 8:
+			# 	pass
+			# else:
+			tournamentwarnnotification = TournamentWarnNotifications(tournament=tournament)
+			await sync_to_async(tournamentwarnnotification.save)()
+			group_name = f'tournament_{tournament_id}'
+			await self.channel_layer.group_send(
+				group_name,
+				{
+					'type': 'warn_members',
+					'message': {
+						'time' : tournamentwarnnotification.created_at.isoformat()
 					}
-				)
-				await send_user_eliminated_after_delay(self, tournament, "QUARTERFINAL") 
+				}
+			)
+			await send_user_eliminated_after_delay(self, tournament, "QUARTERFINAL") 
 		elif quarterfinalcount == 8 and semifinalcount == 4 and finalcount == 0 and counter == 1:
 			counter += 1
-			number_of_null_players = await sync_to_async(TournamentUserInfo.objects.filter(round=roundsemifinal, user=None).count)()
-			if number_of_null_players == 4:
-				pass
-			else:
-				tournamentwarnnotification = TournamentWarnNotifications(tournament=tournament)
-				await sync_to_async(tournamentwarnnotification.save)()
-				group_name = f'tournament_{tournament_id}'
-				await self.channel_layer.group_send(
-					group_name,
-					{
-						'type': 'warn_members',
-						'message': {
-							'time' : tournamentwarnnotification.created_at.isoformat()
-						}
+			# number_of_null_players = await sync_to_async(TournamentUserInfo.objects.filter(round=roundsemifinal, user=None).count)()
+			# if number_of_null_players == 4:
+				# pass
+			# else:
+			tournamentwarnnotification = TournamentWarnNotifications(tournament=tournament)
+			await sync_to_async(tournamentwarnnotification.save)()
+			group_name = f'tournament_{tournament_id}'
+			await self.channel_layer.group_send(
+				group_name,
+				{
+					'type': 'warn_members',
+					'message': {
+						'time' : tournamentwarnnotification.created_at.isoformat()
 					}
-				)
-				await send_user_eliminated_after_delay(self, tournament, "SEMIFINAL")
+				}
+			)
+			await send_user_eliminated_after_delay(self, tournament, "SEMIFINAL")
 		elif quarterfinalcount == 8 and semifinalcount == 4 and finalcount == 2 and winnercount == 0 and counter == 2:
 			counter += 1
-			number_of_null_players = await sync_to_async(TournamentUserInfo.objects.filter(round=roundfinal, user=None).count)()
-			if number_of_null_players == 2:
-				pass
-			else:
-				tournamentwarnnotification = TournamentWarnNotifications(tournament=tournament)
-				await sync_to_async(tournamentwarnnotification.save)()
-				group_name = f'tournament_{tournament_id}'
-				await self.channel_layer.group_send(
-					group_name,
-					{
-						'type': 'warn_members',
-						'message': {
-							'time' : tournamentwarnnotification.created_at.isoformat()
-						}
+			# number_of_null_players = await sync_to_async(TournamentUserInfo.objects.filter(round=roundfinal, user=None).count)()
+			# if number_of_null_players == 2:
+			# 	pass
+			# else:
+			tournamentwarnnotification = TournamentWarnNotifications(tournament=tournament)
+			await sync_to_async(tournamentwarnnotification.save)()
+			group_name = f'tournament_{tournament_id}'
+			await self.channel_layer.group_send(
+				group_name,
+				{
+					'type': 'warn_members',
+					'message': {
+						'time' : tournamentwarnnotification.created_at.isoformat()
 					}
-				)
-				await send_user_eliminated_after_delay(self, tournament, "FINAL")
+				}
+			)
+			await send_user_eliminated_after_delay(self, tournament, "FINAL")
 		elif quarterfinalcount == 8 and semifinalcount == 4 and finalcount == 2 and winnercount == 1:
 			counter = 0
 			await send_user_eliminated_after_delay(self, tournament, "WINNER")

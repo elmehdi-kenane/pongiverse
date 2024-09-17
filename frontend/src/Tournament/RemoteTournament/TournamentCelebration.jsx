@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import avatar from '../avatar.jpeg'
 import nullplayer from './nullplayer.png'
 import { useNavigate } from "react-router-dom";
-const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roundfinalmembers, roundwinner }) => {
+const TournamentCelebration = ({ roundquartermembers, roundsemifinalmembers, roundfinalmembers, roundwinner }) => {
 	const navigate = useNavigate()
 
 	const findMemberByPosition = (roundmembers, position) => {
@@ -229,4 +229,4 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 	);
 }
 
-export default SvgVerticalComponent
+export default TournamentCelebration;

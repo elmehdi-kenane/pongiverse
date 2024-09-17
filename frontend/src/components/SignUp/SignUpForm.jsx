@@ -72,7 +72,7 @@ function SignUpForm() {
 			{errors.password && <span>{errors.password}</span>}
 			<input type='password' className={styles['authentication-signup-input']} name='confirmPassword' onChange={handleChange} placeholder='Confirm your password' />
 			{errors.confirmPassword && <span>{errors.confirmPassword}</span>}
-			<button className={styles['authentication-signup-button']} onClick={handleNextClick} >Sign Up</button>
+			<button className={styles['authentication-signup-button']} onClick={handleNextClick} >Next</button>
 		</>
 	);
 }

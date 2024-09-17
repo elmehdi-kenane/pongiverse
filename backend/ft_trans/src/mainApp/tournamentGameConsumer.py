@@ -203,24 +203,6 @@ async def send_winner_data(self, user, round_reached, tournament_id):
 	})
 
 
-@database_sync_to_async
-def set_player_is_eliminated(self, user1, user2, tournament):
-	member = TournamentMembers.objects.filter(user=user1, tournament=tournament).first()
-	# if member:
-	# 	member.is_eliminated = True
-	# 	member.save()
-	# 	while True:
-	# 		member = TournamentMembers.objects.filter(user=user1, tournament=tournament).first()
-	# 		is_eliminated = lambda: member.is_eliminated()
-	# 		if is_eliminated == True:
-	# 			break
-	# 		else:
-	# 			member.is_eliminated = True
-	# 			member.save()
-	# 	print(f"\n member after eliminated setted {member.is_eliminated}")
-	# user1.is_playing = False
-	# user1.save()
-
 async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, tournament_id):
 	while True:
 		room["ball"]["ballX"] += ballProps["velocityX"]
@@ -274,7 +256,6 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 
 			else:
 				## PLAYER 2 LOSER ###
-				# await set_player_is_eliminated(self, player2, player1, tournament)
 				await discard_channels_from_tournament_group(self, player2, tournament_id)
 				await send_playing_status_to_friends(self, player2, False, user_channels)
 				print("******************PLAYER 2 LOSE THE GAME")

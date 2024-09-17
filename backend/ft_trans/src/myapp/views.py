@@ -26,6 +26,8 @@ from urllib.parse import urlencode
 import json
 import os
 import certifi
+from PIL import Image
+from io import BytesIO
 
 
 
@@ -33,7 +35,6 @@ import certifi
 class SignUpView(APIView):
 	parser_classes = (MultiPartParser, FormParser)
 	def post(self, request, *args, **kwargs):
-		print(f"datatata : {request.data}")
 		avatar = request.data.get('avatar')
 		if avatar == 'null' or avatar is None:
 			my_dict = {
@@ -43,12 +44,25 @@ class SignUpView(APIView):
 				'is_active': request.data.get('is_active', True)
 			}
 		else:
+			image = Image.open(avatar)
+			width, height = image.size
+			left = (width - 400) / 2
+			upper = (height - 400) / 2
+			right = (width + 400) / 2
+			lower = (height + 400) / 2
+			image = image.crop((left, upper, right, lower))
+			if image.mode == 'RGBA':
+				image = image.convert('RGB')
+			image_io = BytesIO()
+			image.save(image_io, format='JPEG')
+			image_file = ContentFile(image_io.getvalue(), name=avatar.name)
+
 			my_dict = {
 				'username': request.data.get('username'),
 				'email': request.data.get('email'),
 				'password': request.data.get('password'),
 				'is_active': request.data.get('is_active', True),
-				'avatar': avatar
+				'avatar': image_file
 			}
 
 		serializer = MyModelSerializer(data=my_dict)
@@ -56,9 +70,7 @@ class SignUpView(APIView):
 		if serializer.is_valid():
 			user = serializer.save()
 			response = Response()
-			data = get_tokens_for_user(user)
-			csrf.get_token(request)
-			response.data = {"Case": "Sign up successfully", "data": data}
+			response.data = {"Case": "Sign up successfully"}
 			return response
 		else:
 			print(f"Serializer errors: {serializer.errors}")  # Add this line to print serializer errors
@@ -77,7 +89,6 @@ class WaysSignUpView(APIView) :
 			image_content = image_response.content
 			if image_content:
 				image_file = InMemoryUploadedFile(ContentFile(image_content), None, 'image.jpg', 'image/jpeg', len(image_content), None)
-				print(f'IMAGE CONTENT IS : {image_file}')
 				my_data['avatar'] = image_file
 		# else:
 			# response.data = {"Case" : "Error"}
