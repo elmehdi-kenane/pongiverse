@@ -2,13 +2,12 @@ import styles from '../../assets/Tournament/tournamentbracket.module.css'
 import versus from '../../assets/navbar-sidebar/Versus.svg';
 import SvgComponent from './SvgComponent';
 import SvgVerticalComponent from './SvgVerticalComponent'
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AuthContext from '../../navbar-sidebar/Authcontext';
 import { useEffect, useState, useContext } from 'react';
 
 function TournamentBracket() {
 	const navigate = useNavigate()
-	const location = useLocation()
 	const [tournamentMembers, setTournamentMembers] = useState([])
 	const [roundQuarterFinalMembers, setroundQuarterFinalMembers] = useState([])
 	const [roundSemiFinalMembers, setroundSemiFinalMembers] = useState([])

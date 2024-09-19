@@ -4,6 +4,8 @@ import avatar from '../avatar.svg'
 import toast, { Toaster } from 'react-hot-toast';
 import AuthContext from '../../navbar-sidebar/Authcontext'
 import { useNavigate } from 'react-router-dom';
+import backgroundImage from './bg.jpg'
+import { Avatar } from '@mui/material';
 
 
 function LocalTournamentFillMembers() {
@@ -28,19 +30,22 @@ function LocalTournamentFillMembers() {
 		);
 	}
 
-
+	useEffect(() => {
+		if (user)
+			console.log("USER EXIST")
+	}, [user])
 
 	useEffect(() => {
 		if (user) {
-			const item = localStorage.getItem('Round16Players');
+			const item = localStorage.getItem('QuarterFinalPlayers');
 			if (item !== null) {
 				setPlayers(JSON.parse(item));
 				console.log("ITEM EXIST")
 			}
 			else {
 				console.log("ITEM DOES NOT EXIST")
-				const defaultPlayers = Array.from({ length: 16 }, (_, index) => `Player_${index + 1}`);
-				localStorage.setItem('Round16Players', JSON.stringify(defaultPlayers));
+				const defaultPlayers = Array.from({ length: 8 }, (_, index) => `Player_${index + 1}`);
+				localStorage.setItem('QuarterFinalPlayers', JSON.stringify(defaultPlayers));
 				setPlayers(defaultPlayers)
 				localStorage.setItem('is_started', 'false');
 			}
@@ -53,7 +58,7 @@ function LocalTournamentFillMembers() {
 	useEffect(() => {
 		if (players.length > 0) {
 			console.log("PLAYER YSEE")
-			localStorage.setItem('Round16Players', JSON.stringify(players));
+			localStorage.setItem('QuarterFinalPlayers', JSON.stringify(players));
 		}
 	}, [players])
 
@@ -97,7 +102,7 @@ function LocalTournamentFillMembers() {
 
 	return (
 		<div className={styles["tournament-page"]}>
-			<Toaster/>
+			<Toaster />
 			<div className={styles["tournament-page-content"]}>
 				<div className={styles["title-and-destroy"]}>
 					<h1 className={styles["tournament-title"]}>Tournament Creation</h1>
@@ -109,12 +114,18 @@ function LocalTournamentFillMembers() {
 					}
 					{
 						players.map((player, index) => (
-							<div key={index} className={open ? styles["player-opened"] : styles["player"]} onClick={!open ? () => div_click(index) : null}>
-								<div className={styles["user-avatar"]}>
+							<div key={index} className={open ? styles["player-opened"] : styles["player"]} onClick={!open ? () => div_click(index) : null} style={{
+								backgroundImage: `url(${backgroundImage})`,
+								backgroundSize: "cover",
+								backgroundPosition: "center",
+							}}>
+								<div className={styles["user-avatar"]} >
 									<img className={styles["avatar"]} src={avatar} alt="" />
 								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{players[index]}</h4>
+								<div className={styles["line-and-user-info"]}>
+									<div className={styles["user-info"]}>
+										<h4 className={styles["user-info-name"]}>{players[index]}</h4>
+									</div>
 								</div>
 							</div>
 						))

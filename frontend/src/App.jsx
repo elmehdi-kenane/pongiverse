@@ -40,7 +40,7 @@ import GameSettings from "./Game/GameSettings";
 import Settings from "./Settings/Settings";
 import Bot from "./Game/Bot";
 import LocalTournamentFillMembers from "./Tournament/LocalTournament/LocalTournamentFillMembers";
-
+import TournamentCelebration from "./Tournament/RemoteTournament/TournamentCelebration";
 const App = () => {
 	return (
 		<div className="page">
@@ -122,8 +122,12 @@ const App = () => {
 									element={<LocalTournamentBracket />}
 								/>
 								<Route
-									path="game/  "
+									path="game/localtournamentfillmembers"
 									element={<LocalTournamentFillMembers />}
+								/>
+								<Route
+									path="game/tournamentcelebration"
+									element={<TournamentCelebration />}
 								/>
 							</Route>
 						</Routes>

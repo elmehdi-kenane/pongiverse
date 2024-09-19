@@ -453,6 +453,7 @@ def get_game_members_round(request):
 					winnerdict.update({'id': winnermember.user.id, 'name' : winnermember.user.username, 'level' : 2, 'image' : f"http://{ip_address}:8000/auth{winnermember.user.avatar.url}", 'position' : winnermember.position})
 				else:
 					winnerdict.update({'id': -1, 'name' : '', 'level' : -1, 'image' : '', 'position' : winnermember.position})
+		break
 	response.data = {'roundquarter' : quartermembers, 'roundsemi' : semimembers, 'roundfinal' : finalmembers , 'winner' : winnerdict}
 	return response
 

@@ -401,7 +401,7 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 					tournament.is_finished = True
 					await sync_to_async(tournament.save)()
 					player1.is_playing = False
-					await sync_to_async(player1.sava)()
+					await sync_to_async(player1.save)()
 					await send_playing_status_to_friends(self, player1, False, user_channels)
 					channel_name = user_channels.get(room['players'][0]['user'])
 					if channel_name:
