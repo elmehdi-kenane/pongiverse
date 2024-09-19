@@ -4,7 +4,7 @@ import ChatConversation from "./chatConversation";
 import ChatRoomConversation from "./chatRoomConversation";
 import ChatContext from "../Context/ChatContext";
 
-const ChatWindow = (props) => {
+const ChatWindow = ({messages, setMessages}) => {
   const { setSelectedChatRoom, selectedChatRoom, selectedDirect, isHome } =
     useContext(ChatContext);
   return (
@@ -18,7 +18,10 @@ const ChatWindow = (props) => {
     >
       {isHome &&
       Object.values(selectedDirect).every((value) => value !== "") ? (
-        <ChatConversation />
+        <ChatConversation
+          messages={messages}
+          setMessages={setMessages}
+        />
       ) : !isHome &&
         Object.values(selectedChatRoom).every((value) => value !== "") ? (
         <ChatRoomConversation

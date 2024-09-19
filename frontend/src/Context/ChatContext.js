@@ -6,16 +6,12 @@ import { resetUnreadMessages } from "../Chat/chatConversationItem";
 export default ChatContext;
 
 export const ChatProvider = ({ child }) => {
-  const DIRECT_LIMIT = 20
   const listInnerRef = useRef();
-  const [currentMessagePage, setCurrentMessagePage] = useState(1);
-  const [hasMoreMessages, setHasMoreMessages] = useState(true)
   const [currPage, setCurrPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true)
+  const [hasMore, setHasMore] = useState(true);
   let location = useLocation();
   const { user, chatSocket } = useContext(AuthContext);
   const [isHome, setIsHome] = useState(true);
-  const [messages, setMessages] = useState([]);
   const [chatRoomConversations, setChatRoomConversations] = useState([]);
   const [chatRoomInvitations, setChatRoomInvitations] = useState([]);
   const [suggestedChatRooms, setSuggestedChatRooms] = useState([]);
@@ -25,8 +21,6 @@ export const ChatProvider = ({ child }) => {
   const chatRoomInvitationsRef = useRef(chatRoomInvitations);
   const directConversationsRef = useRef(directConversations);
   const suggestedChatRoomsRef = useRef(suggestedChatRooms);
-  const hasMoreMessagesRef = useRef(hasMoreMessages);
-  const currentMessagePageRef = useRef(currentMessagePage);
   const [selectedChatRoom, setSelectedChatRoom] = useState({
     name: "",
     memberCount: "",
@@ -41,16 +35,6 @@ export const ChatProvider = ({ child }) => {
   });
   const selectedDirectRef = useRef(selectedDirect);
   const selectedChatRoomRef = useRef(selectedChatRoom);
-  const messgesInnerRef = useRef();
-
-  useEffect(() => {
-    currentMessagePageRef.current = currentMessagePage;
-  }, [currentMessagePage]);
-
-
-  useEffect(() => {
-    hasMoreMessagesRef.current = hasMoreMessages;
-  }, [hasMoreMessages]);
 
   useEffect(() => {
     suggestedChatRoomsRef.current = suggestedChatRooms;
@@ -75,26 +59,27 @@ export const ChatProvider = ({ child }) => {
   useEffect(() => {
     chatRoomInvitationsRef.current = chatRoomInvitations;
   }, [chatRoomInvitations]);
-
-    //add user to channel Group
-    useEffect(() => {
-      const addUserChannelGroup = () => {
-        chatSocket.send(
-          JSON.stringify({
-            type: "addUserChannelGroup",
-            user: user,
-          })
-        );
-      };
-      if (
-        chatSocket &&
-        chatSocket.readyState === WebSocket.OPEN &&
-        user &&
-        (location.pathname === "/mainpage/chat" ||
-          location.pathname === "/mainpage/groups")
-      )
-        addUserChannelGroup();
-    }, [chatSocket, user, location.pathname]);
+  const CHAT_PATH = "/mainpage/chat";
+  const GROUPS_PATH = "/mainpage/groups";
+  //add user to channel Group
+  useEffect(() => {
+    const addUserChannelGroup = () => {
+      chatSocket.send(
+        JSON.stringify({
+          type: "addUserChannelGroup",
+          user: user,
+        })
+      );
+    };
+    if (
+      chatSocket &&
+      chatSocket.readyState === WebSocket.OPEN &&
+      user &&
+      (location.pathname === "/mainpage/chat" ||
+        location.pathname === "/mainpage/groups")
+    )
+      addUserChannelGroup();
+  }, [chatSocket, user, location.pathname]);
 
   useEffect(() => {
     const fetchChatRooms = async () => {
@@ -110,7 +95,7 @@ export const ChatProvider = ({ child }) => {
         console.log(error);
       }
     };
-    
+
     const fetchChatRoomInvitations = async () => {
       try {
         const response = await fetch(
@@ -154,31 +139,34 @@ export const ChatProvider = ({ child }) => {
     }
   }, [location.pathname, user]);
 
+  console.log("SELECTED DIRECT ", selectedDirect);
 
-  useEffect(()=> {
+  useEffect(() => {
     const fetchDirectsWithMessage = async () => {
+      console.log("fetching direct conversations");
       try {
         const response = await fetch(
           `http://${
             import.meta.env.VITE_IPADDRESS
           }:8000/chatAPI/firendwithdirects/${user}?page=${currPage}`
         );
-        const {count, results} = await response.json();
+        const { next, results } = await response.json();
         if (response.ok) {
-          setDirectConversations([...directConversations, ...results])
-          if(directConversations.length + DIRECT_LIMIT >= count)
-            setHasMore(false)
-          if (Object.values(selectedDirect).every((value) => value !== "")) {
+          setDirectConversations([...directConversations, ...results]);
+          if (!next) setHasMore(false);
+          const currentSelectdDirect = selectedDirectRef.current;
+          console.log("currentSelectdDirect ", currentSelectdDirect);
+          if (Object.values(currentSelectdDirect).every((value) => value !== "")) {
             let currentDirects = results;
             const conversationExists = currentDirects.some(
-              (conv) => conv.name === selectedDirect.name
+              (conv) => conv.name === currentSelectdDirect.name
             );
             if (!conversationExists) {
               const newConversation = {
-                id: selectedDirect.id,
-                name: selectedDirect.name,
-                avatar: selectedDirect.avatar,
-                is_online: selectedDirect.status,
+                id: currentSelectdDirect.id,
+                name: currentSelectdDirect.name,
+                avatar: currentSelectdDirect.avatar,
+                is_online: currentSelectdDirect.status,
                 lastMessage: "",
                 unreadCount: "0",
               };
@@ -189,13 +177,13 @@ export const ChatProvider = ({ child }) => {
             } else {
               let allDirects = results;
               const updatedDirects = allDirects.map((friend) => {
-                if (selectedDirect.id === friend.id) {
+                if (currentSelectdDirect.id === friend.id) {
                   return { ...friend, unreadCount: 0 };
                 }
                 return friend;
               });
               setDirectConversations(updatedDirects);
-              resetUnreadMessages(user, selectedDirect.id);
+              resetUnreadMessages(user, currentSelectdDirect.id);
             }
           }
         } else console.error("opps!, something went wrong");
@@ -203,20 +191,16 @@ export const ChatProvider = ({ child }) => {
         console.log(error);
       }
     };
-    if (
-      user &&
-      (location.pathname === "/mainpage/chat" ||
-        location.pathname === "/mainpage/groups")
-    && hasMore) {
+    if ( user && (location.pathname === CHAT_PATH || location.pathname === GROUPS_PATH) && hasMore) {
       fetchDirectsWithMessage();
     }
-  },[location.pathname, user, currPage])
+  }, [location.pathname, currPage, user, selectedDirect]);
 
   const onScroll = () => {
     if (listInnerRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
       if (scrollTop + clientHeight === scrollHeight) {
-          setCurrPage(currPage + 1);
+        setCurrPage(currPage + 1);
       }
     }
   };
@@ -239,21 +223,12 @@ export const ChatProvider = ({ child }) => {
     chatRoomInvitationsRef: chatRoomInvitationsRef,
     selectedDirectRef: selectedDirectRef,
     directConversationsRef: directConversationsRef,
-    messages: messages,
-    setMessages: setMessages,
     selectedItem: selectedItem,
     setSelectedItem: setSelectedItem,
     suggestedChatRoomsRef: suggestedChatRoomsRef,
     selectedChatRoomRef: selectedChatRoomRef,
-    onScroll:onScroll,
+    onScroll: onScroll,
     listInnerRef: listInnerRef,
-    currentMessagePage: currentMessagePage,
-    setCurrentMessagePage: setCurrentMessagePage,
-    hasMoreMessages: hasMoreMessages,
-    setHasMoreMessages: setHasMoreMessages,
-    messgesInnerRef: messgesInnerRef,
-    hasMoreMessagesRef: hasMoreMessagesRef,
-    currentMessagePageRef: currentMessagePageRef,
   };
   return (
     <ChatContext.Provider value={contextData}>{child}</ChatContext.Provider>

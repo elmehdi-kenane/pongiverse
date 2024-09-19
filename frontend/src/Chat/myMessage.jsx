@@ -5,7 +5,7 @@ import ChatContext from "../Context/ChatContext";
 const MyMessage = (props) => {
   const { isHome } = useContext(ChatContext);
   return (
-    <div className="my-message-row message-row">
+    <div className="my-message-row message-row" ref={(props.length - 1) === props.index ? props.endRef : null}>
       <div className="my-message-content-wrapper">
         <div className="my-message-row-sender-name">{props.name}</div>
         <div className="my-message-content message-content">

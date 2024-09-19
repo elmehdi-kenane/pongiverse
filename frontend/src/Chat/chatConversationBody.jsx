@@ -3,14 +3,13 @@ import MyMessage from "./myMessage";
 import OtherMessage from "./otherMessage";
 
 const ChatConversationBody = (props) => {
-
   return (
     <div
       className="conversation-body"
-      id="start"
-      ref={props.messgesInnerRef}
-      onScroll={props.onScrollCoversationBody}
+      ref={props.messageBodyRef}
+      onScroll={props.handelScroll}
     >
+      {props.loading && <div className="loading-messages">Loading...</div>}
       {props.messages.length !== 0 &&
         props.messages &&
         props.messages.map((message, index) =>
@@ -21,20 +20,26 @@ const ChatConversationBody = (props) => {
               content={message.content}
               avatar={props.userImg}
               date={message.date}
-            />
-          ) : (
-            <OtherMessage
+              length={props.messages.length}
+              index={index}
+              endRef={props.messageEndRef}
+              />
+            ) : (
+              <OtherMessage
               key={index}
               name={message.sender}
               content={message.content}
               avatar={props.selectedDirect.avatar}
               date={message.date}
+              length={props.messages.length}
+              index={index}
+              endRef={props.messageEndRef}
             />
           )
         )}
-      <div ref={props.messageEndRef}></div>
     </div>
   );
 };
 
 export default ChatConversationBody;
+

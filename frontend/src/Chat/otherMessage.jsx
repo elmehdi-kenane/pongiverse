@@ -5,7 +5,7 @@ import ChatContext from "../Context/ChatContext";
 const OtherMessage = (props) => {
   const { isHome } = useContext(ChatContext);
   return (
-    <div className="other-message-row message-row">
+    <div className="other-message-row message-row" ref={(props.length - 1) === props.index ? props.endRef : null}>
       {isHome ? (
         <img className="other-message-avatar" src={props.avatar} alt="" />
       ) : (

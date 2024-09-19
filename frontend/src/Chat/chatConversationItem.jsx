@@ -48,8 +48,13 @@ export const resetChatRoomUnreadMessages = async (user, roomId) => {
 
 const ChatConversationItem = (props) => {
   const { user } = useContext(AuthContext);
-  const { directConversationsRef, setDirectConversations , chatRoomConversationsRef, setChatRoomConversations, setMessages, setCurrentMessagePage, setHasMoreMessages} =
-    useContext(ChatContext);
+  const {
+    directConversationsRef,
+    setDirectConversations,
+    chatRoomConversationsRef,
+    setChatRoomConversations,
+  } = useContext(ChatContext);
+  
   const handleClick = () => {
     if (props.isDirect && props.name) {
       props.setSelectedDirect({
@@ -75,7 +80,7 @@ const ChatConversationItem = (props) => {
         icon: props.icon,
         roomId: props.roomId,
       });
-      let allChatRooms = chatRoomConversationsRef.current
+      let allChatRooms = chatRoomConversationsRef.current;
       const updatedRooms = allChatRooms.map((room) => {
         if (props.roomId === room.id) {
           return { ...room, unreadCount: 0 };
@@ -86,9 +91,6 @@ const ChatConversationItem = (props) => {
       if (parseInt(props.unreadCount) > 0)
         resetChatRoomUnreadMessages(user, props.roomId);
     }
-    setMessages([])
-    setCurrentMessagePage(1)
-    setHasMoreMessages(true)
     props.setSelectedItem(props.name);
   };
   return (
@@ -115,7 +117,15 @@ const ChatConversationItem = (props) => {
                 : "conversation-item-last-msg"
             }
           >
-            { props.lastMessage ? props.lastMessage : !props.isDirect ? parseInt(props.membersCount) > 1 ? props.membersCount + " Member" : props.membersCount + " Members": props.status ? 'Online' : "Offline" } 
+            {props.lastMessage
+              ? props.lastMessage
+              : !props.isDirect
+              ? parseInt(props.membersCount) > 1
+                ? props.membersCount + " Member"
+                : props.membersCount + " Members"
+              : props.status
+              ? "Online"
+              : "Offline"}
           </div>
         </div>
       </div>

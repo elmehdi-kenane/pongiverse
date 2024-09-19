@@ -15,10 +15,10 @@ const Chat = () => {
     selectedDirectRef,
     setDirectConversations,
     setChatRoomConversations,
-    setMessages,
     selectedChatRoomRef,
   } = useContext(ChatContext);
   const { chatSocket, user } = useContext(AuthContext);
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     if (chatSocket) {
@@ -125,7 +125,10 @@ const Chat = () => {
       <Toaster />
       <div className="chat-container">
         <ChatSideBar />
-        <ChatWindow />
+        <ChatWindow 
+          messages={messages} 
+          setMessages={setMessages} 
+        />
       </div>
     </div>
   );

@@ -19,109 +19,99 @@ export let useClickOutSide = (handler) => {
   return domNode;
 };
 
-const fetchMessages = async (
-  currentMessagePage,
-  user,
-  friend,
-  setMessages,
-  messages,
-  limit,
-  setHasMoreMessages,
-) => {
-  try {
-    const response = await fetch(
-      `http://${
-        import.meta.env.VITE_IPADDRESS
-      }:8000/chatAPI/Directs/messages?page=${currentMessagePage}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user: user,
-          friend: friend,
-        }),
-      }
-    );
-    const { count, results, next } = await response.json();
-    if (response.ok) {
-      setMessages([...results, ...messages]);
-      if (!next) {
-        setHasMoreMessages(false);
-        console.log("NO MORE MESSAGES", next);
-      } else {
-        console.log("HAS MORE MESSAGES", next);
-      }
-    } else console.log("error");
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const ChatConversation = () => {
-  const {
-    selectedDirect,
-    setSelectedDirect,
-    setMessages,
-    messages,
-    currentMessagePage,
-    setCurrentMessagePage,
-    hasMoreMessages,
-    setHasMoreMessages,
-    hasMoreMessagesRef,
-    currentMessagePageRef,
-  } = useContext(ChatContext);
-  const MESSAGES_LIMIT = 20;
+const ChatConversation = ({ messages, setMessages }) => {
   const [showDirectOptions, setShowDirectOptions] = useState(false);
+
+  const { selectedDirect, setSelectedDirect } = useContext(ChatContext);
   const { user, chatSocket, userImg } = useContext(AuthContext);
+
+  const [currentMessagePage, setCurrentMessagePage] = useState(1);
+  const [hasMoreMessages, setHasMoreMessages] = useState(true);
+  const [userChanged, setUserChanged] = useState(false);
   const messageEndRef = useRef(null);
-  const messgesInnerRef = useRef();
-
-  useEffect(() => {
-    console.log("\n\n\nCURRENT PAGE: ", currentMessagePageRef.current);
-    console.log("HAS MORE MESSAGES: ", hasMoreMessagesRef.current);
-    if (hasMoreMessagesRef.current) {
-      fetchMessages(
-        currentMessagePageRef.current,
-        user,
-        selectedDirect.name,
-        setMessages,
-        messages,
-        MESSAGES_LIMIT,
-        setHasMoreMessages,
-        hasMoreMessagesRef.current,
-      );
-    }
-    let scrollView = document.getElementById("start");
-    scrollView.scrollTop = scrollView.scrollHeight;
-  }, [selectedDirect, currentMessagePageRef.current]);
-
-  useEffect(() => {
-    if (messages && currentMessagePageRef.current === 1) {
-      let scrollView = document.getElementById("start");
-      scrollView.scrollTop = scrollView.scrollHeight;
-    }
-  }, [messages]);
-
+  const messageBodyRef = useRef(null);
+  const [lastMessage, setLastMessage] = useState(messageEndRef);
+  const [firstScroll, setFirstScroll] = useState(true);
+  const [loading, setLoading] = useState(false);
   let domNode = useClickOutSide(() => {
     setShowDirectOptions(false);
   });
 
-  const onScrollCoversationBody = (e) => {
-    if (messgesInnerRef.current) {
-      const { scrollTop } = messgesInnerRef.current;
-      const currentHassMoreMessages = hasMoreMessagesRef.current;
-      if (scrollTop === 0 && currentHassMoreMessages) {
-        console.log("CURRENT HAS MORE: ",currentHassMoreMessages)
-        console.log("ANA HENA INSIDE SCROLL");
-        setCurrentMessagePage((prev) => prev + 1);
+  const fetchMessages = async () => {
+    try {
+      const response = await fetch(
+        `http://${
+          import.meta.env.VITE_IPADDRESS
+        }:8000/chatAPI/Directs/messages?page=${currentMessagePage}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user: user,
+            friend: selectedDirect.name,
+          }),
+        }
+      );
+      const { results, next } = await response.json();
+      if (response.ok) {
+        setMessages([...results, ...messages]);
+        if (!next) setHasMoreMessages(false);
+      } else console.log("opps! something went wrong");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    setMessages([]);
+    setCurrentMessagePage(1);
+    setHasMoreMessages(true);
+    setUserChanged(true);
+    setFirstScroll(true);
+  }, [selectedDirect.name]);
+
+  useEffect(() => {
+    if (hasMoreMessages && selectedDirect) {
+      if (currentMessagePage > 1) {
+        const previousScrollHeight = messageBodyRef.current.scrollHeight;
+
+        fetchMessages().then(() => {
+          setLoading(false);
+          setTimeout(() => {
+            const newScrollHeight = messageBodyRef.current.scrollHeight;
+            const scrollDifference = newScrollHeight - previousScrollHeight;
+            messageBodyRef.current.scrollTop += scrollDifference;
+          }, 0); // Ensure the DOM is updated before adjusting the scroll
+        });
+      } else {
+        fetchMessages();
+      }
+    }
+    setUserChanged(false);
+  }, [userChanged, currentMessagePage]);
+
+  useEffect(() => {
+    if (messageEndRef && messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+      setFirstScroll(false);
+    }
+  }, [messages, lastMessage]);
+
+  const handelScroll = (e) => {
+    if (messageBodyRef.current) {
+      const { scrollTop } = messageBodyRef.current;
+      if (scrollTop === 0 && hasMoreMessages && !firstScroll) {
+        setLoading(true);
+        setCurrentMessagePage(currentMessagePage + 1);
       }
     }
   };
+
   return (
     <>
-      <ChatConversationHeader 
+      <ChatConversationHeader
         setSelectedDirect={setSelectedDirect}
         selectedDirect={selectedDirect}
         chatSocket={chatSocket}
@@ -129,12 +119,13 @@ const ChatConversation = () => {
         setShowDirectOptions={setShowDirectOptions}
         domNode={domNode}
         user={user}
-        />
-      <ChatConversationBody 
+      />
+      <ChatConversationBody
+        loading={loading}
         messages={messages}
         userImg={userImg}
-        onScrollCoversationBody={onScrollCoversationBody}
-        messgesInnerRef={messgesInnerRef}
+        messageBodyRef={messageBodyRef}
+        handelScroll={handelScroll}
         messageEndRef={messageEndRef}
         user={user}
         selectedDirect={selectedDirect}

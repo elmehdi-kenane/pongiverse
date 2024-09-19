@@ -295,6 +295,7 @@ img.empty-chat-icon {
 }
 
 .conversation-body {
+  position: relative;
   flex: 1;
   margin: 10px 0px;
   padding: 0 5px;
@@ -581,6 +582,18 @@ transition: ease-in 0.3s;
   gap: 5px;
   padding: 4px 6px;
   text-decoration: none;
+}
+.loading-messages {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  color: #ccc;
+  background-color: #1f0935;
+  z-index: 100;
+  padding: 5px 50px;
+  border-radius: 0 5px 0 5px;
+  font-size: 14px;
 }
 
 @media screen and (min-width: 1444px) {
