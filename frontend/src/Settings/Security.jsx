@@ -1,18 +1,15 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import "./Settings.css";
-
 import { Toaster } from "react-hot-toast";
 import UpdatePwd from './UpdateSecurity/UpdatePwd';
 import UpdateTFQ from './UpdateSecurity/UpdateTFQ';
 import SettingsLeft from './SettingsLeft';
+import SettingsContext from './SettingsWrapper';
+import DisableTFQ from './UpdateSecurity/DisableTFQ';
 
 function Security() {
-
   const [option, setOption] = useState('security');
-
-  const setComponent = (option) => {
-    setOption(option);
-  }
+  const { userTfq } = useContext(SettingsContext);
   
   const SecurityOptions = () => {
     return (
@@ -23,7 +20,9 @@ function Security() {
         </div>
         <div className="update no-bottom">
           <p className='title more-width'> Authenticator App </p>
-          <div className="update__btn" onClick={() => setOption('tfq')}> Enable </div>
+          {!userTfq ? <div className="update__btn" onClick={() => setOption('enable-tfq')}> Enable </div>
+            : <div className="update__btn" onClick={() => setOption('disable-tfq')}> Disable </div>
+          }
         </div>
       </>
     )
@@ -38,7 +37,8 @@ function Security() {
         <div className="security__update linear-purple-bg">
           {option === 'security' && <SecurityOptions />}
           {option === 'pwd' && <UpdatePwd cancelPwd={setOption} />}
-          {option === 'tfq' && <UpdateTFQ cancelTFQ={setOption}/>}
+          {option === 'enable-tfq' && <UpdateTFQ cancelTFQ={setOption}/>}
+          {option === 'disable-tfq' && <DisableTFQ cancelTFQ={setOption}/>}
         </div>
       </div>
     </div>

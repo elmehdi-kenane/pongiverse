@@ -490,15 +490,6 @@ def checkPath():
     if not os.path.exists(path):
         os.makedirs(path)
 
-# def check_user_tfq(user):
-#     checkPath()
-#     user_tfq = UserTFQ.objects.filter(user=user).all()
-#     if (user_tfq):
-#         user_tfq.delete()
-#         qr_path = f"uploads/qr_codes/{user.username}_QR.png"
-#         if os.path.isfile(qr_path):
-#             os.remove(qr_path)
-
 @api_view(["GET"])
 def enable_user_tfq(request, username):
     user = customuser.objects.filter(username=username).first()
@@ -528,19 +519,46 @@ def enable_user_tfq(request, username):
         return Response(data={"data": res}, status=status.HTTP_200_OK)
     return Response(data={'error': 'Error Generating QrCode'}, status=status.HTTP_400_BAD_REQUEST)
 
+#**------- Validate User TFQ -------**#
+
 @api_view(["GET"])
 def validate_user_tfq(requset, username, otp):
     user = customuser.objects.filter(username=username).first()
-    if user is not None:
+    if user:
         user_tfq = UserTFQ.objects.filter(user=user).first()
-        if user_tfq is not None:
+        if user_tfq:
             key = user_tfq.key
             totp = pyotp.TOTP(key)
             if totp.verify(otp) == True:
                 user.is_tfq = True
                 user.save()
+                qr_path = f"uploads/qr_codes/{user.username}_QR.png"
+                if os.path.isfile(qr_path):
+                    os.remove(qr_path)
                 return Response(data={"data": "Congratulation you enabled Two-Factor Authenticator"}, status=status.HTTP_200_OK)
             return Response(data={'error': 'Wrong otp'}, status=status.HTTP_400_BAD_REQUEST)
+
+#**------- Disable User TFQ -------**#
+
+@api_view(["GET"])
+def disable_user_tfq(request, username, otp):
+    user = customuser.objects.filter(username=username).first()
+    if user is not None:
+        user_tfq = UserTFQ.objects.filter(user=user).first()
+        if user_tfq:
+            key = user_tfq.key
+            totp = pyotp.TOTP(key)
+            if totp.verify(otp) == True:
+                user_tfq.delete()
+                user.is_tfq = False
+                user.save()
+                return Response(data={"data": "Congratulation You Disabled Two-Factor Authenticator"}, status=status.HTTP_200_OK)
+    return Response(data={'error': 'Error disabling user TFQ'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+#**------- Check OTP for SignIN -------**#
 
 @api_view(["GET"])
 def check_user_tfq(requset, username, otp):

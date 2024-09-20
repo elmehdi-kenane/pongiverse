@@ -271,6 +271,9 @@
     gap: 10px;
     padding: 20px 0;
 }
+.settings-page .settings__security .tfq .no--top-border {
+    border-top: white solid 0px;
+}
 .tfq .tfq__submit .submit{
     color: white;
     border: none;
@@ -298,6 +301,13 @@
     transition: ease-in 0.2s;
 }
 
+.settings-page .settings__security .tfq h2{
+    color: white;
+    margin: 10px 0 5px;    
+    width: 100%;
+    text-align: center;
+    font-size: 22px;
+}
 .settings-page .settings__security .tfq h4,
 .settings-page .settings__security .tfq h3{
     color: white;

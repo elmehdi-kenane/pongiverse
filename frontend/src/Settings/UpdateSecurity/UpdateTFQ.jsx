@@ -5,7 +5,7 @@ import SettingsLoading from "./SettingsLoading";
 
 function UpdateTFQ(props) {
   const { user } = useContext(AuthContext);
-  const { isLoading, setIsLoading, notifySuc, notifyErr } = useContext(SettingsContext);
+  const { isLoading, setIsLoading, notifySuc, notifyErr, setUserTfq } = useContext(SettingsContext);
   const [tfqImg, setTfqImg] = useState(null);
   const [key, setKey] = useState(null);
   const [step, setStep] = useState('notice');
@@ -43,7 +43,7 @@ function UpdateTFQ(props) {
         );
         const res = await response.json();
         if (response.ok) {
-          console.log("Response : ", res.data);
+          // console.log("Response : ", res.data);
           setTfqImg(res.data.img);
           setKey(res.data.key);
           setStep('submit')
@@ -79,7 +79,7 @@ function UpdateTFQ(props) {
     )
   }
 
-  const SubmitQrCode = () => {
+  const SubmitTFQ = () => {
     const inputRef = useRef(null);
 
     const checkOtp = (otpStr) => {
@@ -105,17 +105,22 @@ function UpdateTFQ(props) {
           );
           const res = await response.json();
           if (response.ok) {
-            console.log("Response : ", res.data);
             notifySuc(res.data)
             setStep('valid')
+            setUserTfq(true);
           } else {
-            console.log("Error : ", res.error);
             notifyErr("Wrong One-Time-Password")
           }
         } catch (error) {
           console.log("Error: ", error);
         }
       }
+    }
+
+    const handleEnterClick = (event) => {
+      const otp = inputRef.current.value
+      if (event.key === 'Enter' && otp.length === 6)
+        ValidateTFQ()
     }
 
     return (
@@ -140,6 +145,7 @@ function UpdateTFQ(props) {
                 className="tfq__input"
                 placeholder='Authentication Code (6 digits)'
                 maxLength={6}
+                onKeyDown={handleEnterClick}
                 ref={inputRef} />
         <div className="tfq__submit">
           <button className="submit submit__cancel" onClick={cancelTFQ}> Cancel </button>
@@ -152,10 +158,8 @@ function UpdateTFQ(props) {
   const ValidTFQ = () => {
     return (
       <div className="tfq">
-        <h1>
-          Congratulation You enabled TFQ
-        </h1>
-        <div className="tfq__submit">
+        <h1> Congratulation You enabled Two-Factor Authentication </h1>
+        <div className="tfq__submit no--top-border">
           <button className="submit submit__cancel" onClick={cancelTFQ}> Back </button>
         </div>
       </div>
@@ -165,7 +169,7 @@ function UpdateTFQ(props) {
   return (
     <>
         {step === 'notice' && <Notice />}
-        {step === 'submit' && <SubmitQrCode />}
+        {step === 'submit' && <SubmitTFQ />}
         {step === 'valid'  && <ValidTFQ />}
     </>
   )
