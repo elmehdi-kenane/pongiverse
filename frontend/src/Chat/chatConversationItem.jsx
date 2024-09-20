@@ -49,8 +49,6 @@ export const resetChatRoomUnreadMessages = async (user, roomId) => {
 const ChatConversationItem = (props) => {
   const { user } = useContext(AuthContext);
   const {
-    directConversationsRef,
-    setDirectConversations,
     chatRoomConversationsRef,
     setChatRoomConversations,
   } = useContext(ChatContext);
@@ -63,14 +61,14 @@ const ChatConversationItem = (props) => {
         avatar: props.avatar,
         status: props.status,
       });
-      let allDirects = directConversationsRef.current;
+      let allDirects = props.directs;
       const updatedDirects = allDirects.map((friend) => {
         if (props.friendId === friend.id) {
           return { ...friend, unreadCount: 0 };
         }
         return friend;
       });
-      setDirectConversations(updatedDirects);
+      props.setDirects(updatedDirects);
       if (parseInt(props.unreadCount) > 0)
         resetUnreadMessages(user, props.friendId);
     } else if (!props.isDirect && props.name) {

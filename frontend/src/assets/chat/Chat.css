@@ -272,6 +272,7 @@ img.empty-chat-icon {
   right: 0;
   border-radius: 5px 5px 5px 5px;
   outline: 0.5px solid #7660d9;
+  z-index: 10;
 }
 
 .view-profile-option,

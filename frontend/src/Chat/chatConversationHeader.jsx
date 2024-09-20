@@ -74,7 +74,7 @@ const ChatConversationHeader = (props) => {
                   View Profile
                 </div>
                 <div className="block-friend-option">Block</div>
-                <div className="change-wallpaper-option">Wallpaper</div>
+                {/* <div className="change-wallpaper-option">Wallpaper</div> */}
               </div>
             ) : (
               ""

@@ -1,10 +1,9 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ChatContext from "../Context/ChatContext";
 import ChatConversationItem from "./chatConversationItem";
 
-const ChatSideBar = (props) => {
+const ChatSideBar = ({directs, setDirects, directsOnScroll, directsListInnerRef}) => {
   const {
-    directConversations,
     chatRoomConversations,
     setSelectedChatRoom,
     selectedChatRoom,
@@ -14,12 +13,10 @@ const ChatSideBar = (props) => {
     isHome,
     setIsHome,
     selectedItem,
-    listInnerRef,
-    onScroll,
   } = useContext(ChatContext);
   const [query, setQuery] = useState("");
 
-  const filteredConversations = directConversations.filter((conversation) => {
+  const filteredConversations = directs.filter((conversation) => {
     return conversation.name.includes(query);
   })
   const handleSelectItem = (itemName) => {
@@ -63,13 +60,13 @@ const ChatSideBar = (props) => {
       </div>
       <div
         className="chat-conversations-list"
-        onScroll={onScroll}
-        ref={listInnerRef}
+        onScroll={directsOnScroll}
+        ref={directsListInnerRef}
       >
         {isHome
-          ? filteredConversations.map((friend, key) => (
+          ? filteredConversations.map((friend, index) => (
               <ChatConversationItem
-                key={key}
+                key={index}
                 friendId={friend.id}
                 name={friend.name}
                 avatar={friend.avatar}
@@ -80,11 +77,13 @@ const ChatSideBar = (props) => {
                 setSelectedDirect={setSelectedDirect}
                 isSelected={selectedItem === friend.name}
                 setSelectedItem={handleSelectItem}
+                setDirects={setDirects}
+                directs={directs}
               />
             ))
-          : chatRoomConversations.map((chatRoom, key) => (
+          : chatRoomConversations.map((chatRoom, index) => (
               <ChatConversationItem
-                key={key}
+                key={index}
                 roomId={chatRoom.id}
                 name={chatRoom.name}
                 icon={chatRoom.icon}
