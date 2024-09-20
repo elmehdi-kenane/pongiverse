@@ -4,7 +4,7 @@ import ChatConversation from "./chatConversation";
 import ChatRoomConversation from "./chatRoomConversation";
 import ChatContext from "../Context/ChatContext";
 
-const ChatWindow = ({messages, setMessages}) => {
+const ChatWindow = ({messages, setMessages, handleSelectItem}) => {
   const { setSelectedChatRoom, selectedChatRoom, selectedDirect, isHome } =
     useContext(ChatContext);
   return (
@@ -25,8 +25,8 @@ const ChatWindow = ({messages, setMessages}) => {
       ) : !isHome &&
         Object.values(selectedChatRoom).every((value) => value !== "") ? (
         <ChatRoomConversation
-          setSelectedItem={handleSelectItem}
-          setSelectedChatRoom={setSelectedChatRoom}
+          messages={messages}
+          setMessages={setMessages}
         />
       ) : (
         <div className="chat-window-empty">

@@ -65,3 +65,51 @@ class direct_message_serializer(serializers.ModelSerializer):
         return obj.timestamp.strftime("%Y/%m/%d AT %I:%M %p")
     def get_content(self, obj):
         return obj.message
+
+
+class room_serializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(source='room.id')
+    role = serializers.CharField()
+    name = serializers.CharField(source='room.name')
+    topic = serializers.CharField(source='room.topic')
+    icon = serializers.SerializerMethodField()
+    cover = serializers.SerializerMethodField()
+    membersCount = serializers.SerializerMethodField()
+    lastMessage = serializers.SerializerMethodField()
+    unreadCount = serializers.IntegerField()
+
+    class Meta:
+        model = Membership
+        fields = ['id', 'role' ,'name', 'topic' ,'icon', 'cover', 'membersCount', 'lastMessage', 'unreadCount']
+
+    def get_icon(self, obj):
+        protocol = os.getenv("PROTOCOL")
+        ip_address = os.getenv("IP_ADDRESS")
+        return f"{protocol}://{ip_address}:8000/chatAPI{obj.room.icon.url}"
+
+    def get_cover(self, obj):
+        protocol = os.getenv("PROTOCOL")
+        ip_address = os.getenv("IP_ADDRESS")
+        return f"{protocol}://{ip_address}:8000/chatAPI{obj.room.cover.url}"
+
+    def get_membersCount(self, obj):
+        return obj.room.members.count()
+
+    def get_lastMessage(self, obj):
+        last_message = Message.objects.filter(room__id=obj.room.id).last()
+        return last_message.content if last_message else ''
+
+
+class room_message_serializer(serializers.ModelSerializer):
+    sender = serializers.CharField(source='sender.username')
+    date = serializers.SerializerMethodField()
+    content = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Message
+        fields = ['id', 'sender', 'content', 'date']
+        
+    def get_date(self, obj):
+        return obj.timestamp.strftime("%Y/%m/%d AT %I:%M %p")
+    def get_content(self, obj):
+        return obj.content

@@ -33,6 +33,27 @@ const ChatConversation = ({ messages, setMessages }) => {
   const [lastMessage, setLastMessage] = useState(messageEndRef);
   const [firstScroll, setFirstScroll] = useState(true);
   const [loading, setLoading] = useState(false);
+
+  const [messageToSend, setMessageToSend] = useState("");
+  const sendMessage = () => {
+    if (
+      chatSocket &&
+      chatSocket.readyState === WebSocket.OPEN &&
+      messageToSend.trim() !== ""
+    ) {
+      chatSocket.send(
+        JSON.stringify({
+          type: "directMessage",
+          data: {
+            sender: user,
+            receiver: selectedDirect.name,
+            message: messageToSend,
+          },
+        })
+      );
+      setMessageToSend("");
+    }
+  };
   let domNode = useClickOutSide(() => {
     setShowDirectOptions(false);
   });
@@ -133,7 +154,9 @@ const ChatConversation = ({ messages, setMessages }) => {
       <SendMessage
         showDirectOptions={showDirectOptions}
         setShowDirectOptions={setShowDirectOptions}
-        selectedDirect={selectedDirect}
+        setMessageToSend={setMessageToSend}
+        messageToSend={messageToSend}
+        sendMessage={sendMessage}
       />
     </>
   );

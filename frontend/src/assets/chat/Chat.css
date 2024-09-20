@@ -109,7 +109,8 @@ button.rooms-switch-button-active {
   font-weight: 500;
 }
 
-.chat-conversations-list {
+.chat-conversations-list,
+.chat-rooms-conversations-list {
   display: flex;
   flex-direction: column;
   overflow-y: auto;

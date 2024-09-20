@@ -2,7 +2,6 @@ import { createContext, useEffect, useState, useContext, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import AuthContext from "../navbar-sidebar/Authcontext";
 const ChatContext = createContext();
-import { resetUnreadMessages } from "../Chat/chatConversationItem";
 export default ChatContext;
 
 export const ChatProvider = ({ child }) => {
@@ -50,7 +49,7 @@ export const ChatProvider = ({ child }) => {
   useEffect(() => {
     chatRoomInvitationsRef.current = chatRoomInvitations;
   }, [chatRoomInvitations]);
-  
+
   useEffect(() => {
     const addUserChannelGroup = () => {
       chatSocket.send(
@@ -71,25 +70,10 @@ export const ChatProvider = ({ child }) => {
   }, [chatSocket, user, location.pathname]);
 
   useEffect(() => {
-    const fetchChatRooms = async () => {
-      try {
-        const response = await fetch(
-          `http://${
-            import.meta.env.VITE_IPADDRESS
-          }:8000/chatAPI/chatRooms/${user}`
-        );
-        const data = await response.json();
-        setChatRoomConversations(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
     const fetchChatRoomInvitations = async () => {
       try {
         const response = await fetch(
-          `http://${
-            import.meta.env.VITE_IPADDRESS
+          `http://${import.meta.env.VITE_IPADDRESS
           }:8000/chatAPI/chatRoomInvitations/${user}`
         );
         let data = await response.json();
@@ -103,8 +87,7 @@ export const ChatProvider = ({ child }) => {
     const fetchSuggestedChatRooms = async () => {
       try {
         const response = await fetch(
-          `http://${
-            import.meta.env.VITE_IPADDRESS
+          `http://${import.meta.env.VITE_IPADDRESS
           }:8000/chatAPI/suggestedChatRooms/${user}`
         );
         let data = await response.json();
@@ -115,16 +98,9 @@ export const ChatProvider = ({ child }) => {
         console.log(error);
       }
     };
-    if (
-      user &&
-      (location.pathname === "/mainpage/chat" ||
-        location.pathname === "/mainpage/groups")
-    ) {
-      fetchChatRooms();
-      if (user && location.pathname === "/mainpage/groups") {
-        fetchChatRoomInvitations();
-        fetchSuggestedChatRooms();
-      }
+    if (user && location.pathname === "/mainpage/groups") {
+      fetchChatRoomInvitations();
+      fetchSuggestedChatRooms();
     }
   }, [location.pathname, user]);
 

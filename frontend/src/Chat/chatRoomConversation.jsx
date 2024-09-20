@@ -10,16 +10,26 @@ import LeaveChatRoomPopUp from "./chatRoomOptions/leaveChatRoomPopUp";
 import ChatRoomMembersList from "./chatRoomOptions/chatRoomMembersList";
 import ChatRoomInfos from "./chatRoomOptions/chatRoomInfos";
 
-const ChatRoomConversation = (props) => {
-  const { selectedChatRoom, setSelectedChatRoom, messages, setMessages } = useContext(ChatContext);
+const ChatRoomConversation = ({ messages, setMessages, setSelectedItem }) => {
   const [showChatRoomInfos, setShowChatRoomInfos] = useState(false);
   const [showChatRoomMembers, setShowChatRoomMembers] = useState(false);
   const [showLeaveRoomPopUp, setShowLeaveRoomPopUp] = useState(false);
   const [showChatRoomOptions, setShowChatRoomOptions] = useState(false);
-  const [messageToSend, setMessageToSend] = useState("");
-  const { user, chatSocket} = useContext(AuthContext);
-  const messageEndRef = useRef(null);
 
+  const [currentChatRoomMessagesPage, setCurrentChatRoomMessagesPage] =
+    useState(1);
+  const [hasMoreChatRoomMessages, setHasMoreChatRoomMessages] = useState(true);
+  const [chatRoomChanged, setChatRoomChanged] = useState(false);
+  const messageEndRef = useRef(null);
+  const messageBodyRef = useRef(null);
+  const [lastMessage, setLastMessage] = useState(messageEndRef);
+  const [firstScroll, setFirstScroll] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const { selectedChatRoom, setSelectedChatRoom } = useContext(ChatContext);
+  const { user, chatSocket } = useContext(AuthContext);
+
+  const [messageToSend, setMessageToSend] = useState("");
   const sendMessage = () => {
     if (
       chatSocket &&
@@ -42,32 +52,73 @@ const ChatRoomConversation = (props) => {
   };
 
   useEffect(() => {
+    setMessages([]);
+    setCurrentChatRoomMessagesPage(1);
+    setHasMoreChatRoomMessages(true);
+    setChatRoomChanged(true);
+    setFirstScroll(true);
+  }, [selectedChatRoom.name]);
+
+  useEffect(() => {
     const fetchMessages = async () => {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/chatRoom/messages/${selectedChatRoom.roomId}`
+          `http://${
+            import.meta.env.VITE_IPADDRESS
+          }:8000/chatAPI/chatRoom/messages/${
+            selectedChatRoom.roomId
+          }?page=${currentChatRoomMessagesPage}`
         );
-        const data = await response.json();
-        if (data) setMessages(data);
+        if (response.ok) {
+          const { next, results } = await response.json();
+          setMessages([...results, ...messages]);
+          if (next) setHasMoreChatRoomMessages(true);
+        } else {
+          console.log("Error fetching messages");
+        }
       } catch (error) {
         console.log(error);
       }
     };
-    if (selectedChatRoom) {
-      fetchMessages();
+    if (hasMoreChatRoomMessages) {
+      if (currentChatRoomMessagesPage > 1) {
+        const previousScrollHeight = messageBodyRef.current.scrollHeight;
+        fetchMessages().then(() => {
+          setTimeout(() => {
+            const newScrollHeight = messageBodyRef.current.scrollHeight;
+            const scrollHeightDifference =
+              newScrollHeight - previousScrollHeight;
+            messageBodyRef.current.scrollTop = scrollHeightDifference;
+          }, 0);
+        });
+      } else {
+        fetchMessages();
+      }
     }
-  }, [selectedChatRoom]);
+    setChatRoomChanged(false);
+  }, [chatRoomChanged, currentChatRoomMessagesPage]);
 
   useEffect(() => {
-    if (messages) {
-      let scrollView = document.getElementById("start");
-      scrollView.scrollTop = scrollView.scrollHeight;
+    if (messageEndRef && messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+      setFirstScroll(false);
     }
-  }, [messages]);
+  }, [messages, lastMessage]);
 
   let domNode = useClickOutSide(() => {
     setShowChatRoomOptions(false);
   });
+
+  const handleScroll = () => {
+    if(messageBodyRef.current){
+      const { scrollTop} = messageBodyRef.current;
+      if (scrollTop === 0 && hasMoreChatRoomMessages && !firstScroll) {
+        setLoading(true);
+        setCurrentChatRoomMessagesPage((prev) => prev + 1);
+      }
+    }
+  }
+
   return (
     <>
       {showLeaveRoomPopUp && (
@@ -101,9 +152,11 @@ const ChatRoomConversation = (props) => {
             onClick={() => {
               setSelectedChatRoom({
                 name: "",
-                status: "",
+                memberCount: "",
+                icon: "",
+                roomId: "",
               });
-              props.setSelectedItem("");
+              setSelectedItem("");
             }}
           />
           <img
@@ -165,7 +218,7 @@ const ChatRoomConversation = (props) => {
           )}
         </div>
       </div>
-      <div className="conversation-body" id="start">
+      <div className="conversation-body" ref={messageBodyRef} onScroll={handleScroll}>
         {messages.length !== 0 &&
           messages.map((message, index) =>
             message.sender === user ? (
@@ -174,14 +227,19 @@ const ChatRoomConversation = (props) => {
                 name={user}
                 content={message.content}
                 date={message.date}
-                
-              />
-            ) : (
-              <OtherMessage
+                length={messages.length}
+                endRef={messageEndRef}
+                index={index}
+                />
+              ) : (
+                <OtherMessage
                 key={index}
                 name={message.sender}
                 content={message.content}
                 date={message.date}
+                length={messages.length}
+                endRef={messageEndRef}
+                index={index}
               />
             )
           )}

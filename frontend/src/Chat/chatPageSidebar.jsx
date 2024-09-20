@@ -2,9 +2,17 @@ import { useContext, useEffect, useState } from "react";
 import ChatContext from "../Context/ChatContext";
 import ChatConversationItem from "./chatConversationItem";
 
-const ChatSideBar = ({directs, setDirects, directsOnScroll, directsListInnerRef}) => {
+const ChatSideBar = ({
+  directs,
+  setDirects,
+  directsOnScroll,
+  directsListInnerRef,
+  chatRooms,
+  setChatRooms,
+  chatRoomsOnScroll,
+  chatRoomsListInnerRef,
+}) => {
   const {
-    chatRoomConversations,
     setSelectedChatRoom,
     selectedChatRoom,
     setSelectedDirect,
@@ -18,7 +26,7 @@ const ChatSideBar = ({directs, setDirects, directsOnScroll, directsListInnerRef}
 
   const filteredConversations = directs.filter((conversation) => {
     return conversation.name.includes(query);
-  })
+  });
   const handleSelectItem = (itemName) => {
     setSelectedItem(itemName);
   };
@@ -58,45 +66,56 @@ const ChatSideBar = ({directs, setDirects, directsOnScroll, directsListInnerRef}
           </button>
         </div>
       </div>
-      <div
-        className="chat-conversations-list"
-        onScroll={directsOnScroll}
-        ref={directsListInnerRef}
-      >
-        {isHome
-          ? filteredConversations.map((friend, index) => (
-              <ChatConversationItem
-                key={index}
-                friendId={friend.id}
-                name={friend.name}
-                avatar={friend.avatar}
-                status={friend.is_online}
-                lastMessage={friend.lastMessage}
-                unreadCount={friend.unreadCount}
-                isDirect={isHome}
-                setSelectedDirect={setSelectedDirect}
-                isSelected={selectedItem === friend.name}
-                setSelectedItem={handleSelectItem}
-                setDirects={setDirects}
-                directs={directs}
-              />
-            ))
-          : chatRoomConversations.map((chatRoom, index) => (
-              <ChatConversationItem
-                key={index}
-                roomId={chatRoom.id}
-                name={chatRoom.name}
-                icon={chatRoom.icon}
-                lastMessage={chatRoom.lastMessage}
-                membersCount={chatRoom.membersCount}
-                unreadCount={chatRoom.unreadCount}
-                isDirect={isHome}
-                setSelectedChatRoom={setSelectedChatRoom}
-                isSelected={selectedItem === chatRoom.name}
-                setSelectedItem={handleSelectItem}
-              />
-            ))}
-      </div>
+      {isHome && (
+        <div
+          className="chat-conversations-list"
+          onScroll={directsOnScroll}
+          ref={directsListInnerRef}
+        >
+          {filteredConversations.map((friend, index) => (
+            <ChatConversationItem
+              key={index}
+              friendId={friend.id}
+              name={friend.name}
+              avatar={friend.avatar}
+              status={friend.is_online}
+              lastMessage={friend.lastMessage}
+              unreadCount={friend.unreadCount}
+              isDirect={isHome}
+              setSelectedDirect={setSelectedDirect}
+              isSelected={selectedItem === friend.name}
+              setSelectedItem={handleSelectItem}
+              setDirects={setDirects}
+              directs={directs}
+            />
+          ))}
+        </div>
+      )}
+      {!isHome && (
+        <div
+          className="chat-rooms-conversations-list"
+          onScroll={chatRoomsOnScroll}
+          ref={chatRoomsListInnerRef}
+        >
+          {chatRooms.map((chatRoom, index) => (
+            <ChatConversationItem
+              key={index}
+              roomId={chatRoom.id}
+              name={chatRoom.name}
+              icon={chatRoom.icon}
+              lastMessage={chatRoom.lastMessage}
+              membersCount={chatRoom.membersCount}
+              unreadCount={chatRoom.unreadCount}
+              isDirect={isHome}
+              setSelectedChatRoom={setSelectedChatRoom}
+              isSelected={selectedItem === chatRoom.name}
+              setSelectedItem={handleSelectItem}
+              setChatRooms={setChatRooms}
+              chatRooms={chatRooms}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

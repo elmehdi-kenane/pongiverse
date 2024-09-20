@@ -10,7 +10,7 @@ from .consumers import user_channels
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from datetime import datetime
-from .serializers import friends_with_directs_serializer, direct_message_serializer
+from .serializers import friends_with_directs_serializer, direct_message_serializer, room_serializer, room_message_serializer
 from rest_framework.pagination import PageNumberPagination
 
 def get_protocol(request):
@@ -63,6 +63,28 @@ def direct_messages(request):
         serializer = direct_message_serializer(reversed_page,  many=True)
         return paginator.get_paginated_response(serializer.data)
     return Response({"error": "Invalid request method"}, status=400)
+
+@api_view(["GET"])
+def chat_rooms_list(request, username):
+    if request.method == "GET":
+        user = customuser.objects.get(username=username)
+        memberships = Membership.objects.filter(user=user)
+        paginator = CustomLimitOffsetPagination()
+        result_page = paginator.paginate_queryset(memberships, request)
+        serializer = room_serializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
+    return Response({"error": "Invalid request method"}, status=400)
+
+@api_view(["GET"])
+def chat_room_messages(request, room_id):
+    if request.method == "GET":
+        messages = Message.objects.filter(room_id=room_id)
+        paginator = CustomLimitOffsetPagination()
+        result_page = paginator.paginate_queryset(messages, request)
+        serializer = room_message_serializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
+    return Response({"error": "Invalid request method"}, status=400)
+
 
 
 @api_view(["POST"])
@@ -284,37 +306,6 @@ def create_chat_room(request):
         )
     return Response({"error": "Invalid request method"}, status=400)
 
-def get_chat_room_last_message(roomId):
-    last_message = Message.objects.filter(room__id=roomId).last()
-    return last_message.content if last_message else ''
-def get_chat_room_unread_cout(user, roomId):
-     return Membership.objects.get(user=user, room__id=roomId).unreadCount
-
-@api_view(["GET"])
-def channel_list(request, username):
-    if request.method == "GET":
-        user = customuser.objects.get(username=username)
-        memberships = Membership.objects.filter(user=user)
-        rooms = []
-        protocol = get_protocol(request)
-        ip_address = os.getenv("IP_ADDRESS")
-        for membership in memberships:
-            room_data = {
-                "id": membership.room.id,
-                "role": membership.role,
-                "name": membership.room.name,
-                "topic": membership.room.topic,
-                "icon": f"{protocol}://{ip_address}:8000/chatAPI{membership.room.icon.url}",
-                "cover": f"{protocol}://{ip_address}:8000/chatAPI{membership.room.cover.url}",
-                "membersCount": membership.room.members_count,
-                "lastMessage" : get_chat_room_last_message(membership.room.id),
-                "unreadCount": get_chat_room_unread_cout(user, membership.room.id)
-            }
-            rooms.append(room_data)
-        return Response(rooms)
-
-    return Response({"error": "Invalid request method"}, status=400)
-
 
 @api_view(["GET"])
 def all_chat_room_memebers(request, chat_room_name):
@@ -327,26 +318,6 @@ def all_chat_room_memebers(request, chat_room_name):
             member_data = {"name": user.username, "avatar": user.avatar.path}
             data.append(member_data)
     return Response(data)
-
-
-@api_view(["GET"])
-def channel_messages(request, room_id):
-    if request.method == "GET":
-        messages = Message.objects.filter(room_id=room_id)
-        data = []
-        for message in messages:
-            timestamp = message.timestamp.isoformat()
-            dt = datetime.fromisoformat(timestamp)
-            formatted_time = dt.strftime("%Y/%m/%d AT %I:%M %p")
-            message_data = {
-                "id": message.id,
-                "content": message.content,
-                "sender": message.sender.username,
-                "date": formatted_time,
-            }
-            data.append(message_data)
-        return Response(data)
-    return Response({"error": "Invalid request method"}, status=400)
 
 
 @api_view(["POST"])
