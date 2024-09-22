@@ -11,3 +11,4 @@
 * match stats in the 2vs2 matches
 * clear the group channels when needed
 * save bot stats everytime goal scored -tabs problem-
+*in tournament join, check if already joined a tournament

@@ -126,7 +126,7 @@ const App = () => {
 									element={<LocalTournamentFillMembers />}
 								/>
 								<Route
-									path="game/tournamentcelebration"
+									path="game/tournamentcel"
 									element={<TournamentCelebration />}
 								/>
 							</Route>

@@ -25,6 +25,7 @@ urlpatterns = [
 	path('get-opponent', views.get_opponent, name='get_opponent'),
 	path('get-tournament-warning', views.get_tournament_warning, name='get_tournament_warning'),
 	path('player-situation', views.player_situation, name='player_situation'),
+	path('get-tournament-members-rounds', views.get_tournament_members_rounds, name='get_tournament_members_rounds'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

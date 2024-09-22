@@ -2,13 +2,20 @@ import styles from '../../assets/Tournament/tournamentbracket.module.css'
 import versus from '../../assets/navbar-sidebar/Versus.svg';
 import SvgComponent from './SvgComponent';
 import SvgVerticalComponent from './SvgVerticalComponent'
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import AuthContext from '../../navbar-sidebar/Authcontext';
 import { useEffect, useState, useContext } from 'react';
 import Confetti from 'react-confetti-boom';
 
 function TournamentCelebration() {
 	const navigate = useNavigate()
+	const location = useLocation()
+	const tournamentId = location.state?.tournament_id;
+	useEffect(() => {
+        if (!tournamentId) {
+            navigate('../game');
+        }
+    }, [tournamentId, navigate]);
 	const [roundQuarterFinalMembers, setroundQuarterFinalMembers] = useState([])
 	const [roundSemiFinalMembers, setroundSemiFinalMembers] = useState([])
 	const [finalMembers, setFinalMembers] = useState([])
@@ -36,14 +43,14 @@ function TournamentCelebration() {
 				})
 			})
 		}
-		const gameMembersRounds = async () => { //NOTE: this function need to modify (send tournament Id instead of user)			
-			const response = await fetch('http://localhost:8000/api/get-game-members-round', {
+		const gameMembersRounds = async () => {
+			const response = await fetch('http://localhost:8000/api/get-tournament-members-rounds', {
 				method: 'POST',
 				headers: {
 					'Content-type': 'application/json'
 				},
 				body: JSON.stringify({
-					user: user
+					tournament_id: tournamentId
 				})
 			});
 			if (response.ok) {
@@ -60,25 +67,10 @@ function TournamentCelebration() {
 
 		if (user) {
 			set_is_inside()
+			gameMembersRounds()
 		}
 	}, [user])
 
-	// useEffect(() => {
-	// 	if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
-	// 		notifSocket.onmessage = (event) => {
-	// 			let data = JSON.parse(event.data)
-	// 			let type = data.type
-	// 			let message = data.message
-	// 			console.log("DATA RECEIVED:", data)
-	// 			if (type == 'you_and_your_user') {
-	// 				console.log("YOU data : ", data)
-	// 					setUserOneToDisplay(message.user1)
-	// 					setUserTwoToDisplay(message.user2)
-	// 					setCreatedAt(new Date(message.time))
-	// 			}
-	// 		}
-	// 	}
-	// }, [notifSocket])
 
 
 	return (

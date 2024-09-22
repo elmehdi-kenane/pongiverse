@@ -90,7 +90,7 @@ class GameNotifications(models.Model):
 	user = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='notify_user')
 	target = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='notify_target')
 	mode = models.CharField(max_length=255)
-	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='notify_tournament', null=True, default=None)
+	tournament_id = models.IntegerField(default=0)
 # room_id_manager = RoomIDManager()
 
 
@@ -111,7 +111,7 @@ class GameCustomisation(models.Model):
 
 
 class TournamentWarnNotifications(models.Model):
-	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='TournamentWarnNotifications')
+	tournament_id = models.IntegerField(default=0)
 	created_at = models.DateTimeField(default=timezone.now, editable=False)
 
 class Round(models.Model):
@@ -124,6 +124,6 @@ class TournamentUserInfo(models.Model):
 	position = models.PositiveIntegerField(default=0)
 
 class DisplayOpponent(models.Model):
-	user1 = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='DisplayOpponentUser1')
-	user2 = models.ForeignKey(customuser, on_delete=models.CASCADE, related_name='DisplayOpponentUser2')
+	user1 = models.CharField(max_length=255)
+	user2 = models.CharField(max_length=255)
 	created_at = models.DateTimeField(default=timezone.now, editable=False)

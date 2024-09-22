@@ -15,6 +15,7 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 	if (!roundquartermembers) {
 		navigate("../game/createtournament")
 	}
+	console.log("winner lenght", roundwinner)
 	return (
 
 
@@ -207,7 +208,7 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 			<path d="M566.445 827.027L318.039 827.027" stroke="white" />
 			<path d="M707.716 694H788.288C790.892 694 793.002 698.52 793.002 704.1V722.927V752.775V773.898C793.002 779.478 790.892 784 788.288 784H707.716C705.112 784 703.002 779.478 703.002 773.898V752.775V722.927V704.1C703.002 698.52 705.112 694 707.716 694Z" stroke="#FFD700" strokeWidth="2" /> { /* WINNER 1*/ }
 			{
-				roundwinner && (
+				roundwinner.image && (
 					<foreignObject x="704" y="695" width="88" height="88">
 						<picture>
 							<source srcSet={roundwinner.image} />

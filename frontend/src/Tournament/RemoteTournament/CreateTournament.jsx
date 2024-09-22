@@ -107,24 +107,6 @@ function CreateTournament() {
 				console.log(data)
 				setTournamentId(data.tournament_id)
 				setTournamentMembers(allMembers)
-				// const fetchImages = async () => {
-				// 	const promises = allMembers.map(async (user) => {
-				// 		const response = await fetch(`http://localhost:8000/api/getImage`, {
-				// 			method: "POST",
-				// 			headers: {
-				// 				'Content-Type': 'application/json',
-				// 			},
-				// 			body: JSON.stringify({
-				// 				image: user.image
-				// 			})
-				// 		});
-				// 		const blob = await response.blob();
-				// 		return URL.createObjectURL(blob);
-				// 	});
-				// 	const images = await Promise.all(promises);
-				// 	setMemberImages(images)
-				// };
-				// fetchImages()
 			} else {
 				console.error('Failed to fetch data');
 			}
@@ -189,27 +171,6 @@ function CreateTournament() {
 		}
 	}, [user])
 
-	// useEffect(() => {
-	// 	const fetchImages = async () => {
-	// 		const promises = tournamentMembers.map(async (user) => {
-	// 			const response = await fetch(`http://localhost:8000/api/getImage`, {
-	// 				method: "POST",
-	// 				headers: {
-	// 					'Content-Type': 'application/json',
-	// 				},
-	// 				body: JSON.stringify({
-	// 					image: user.image
-	// 				})
-	// 			});
-	// 			const blob = await response.blob();
-	// 			return URL.createObjectURL(blob);
-	// 		});
-	// 		const images = await Promise.all(promises);
-	// 		setMemberImages(images)
-	// 	};
-	// 	if (tournamentMembers)
-	// 		fetchImages()
-	// }, [tournamentMembers])
 
 	useEffect(() => {
 		const get_member = async (username) => {
@@ -460,7 +421,7 @@ function CreateTournament() {
 							<div className={styles["up-buttons"]}>
 								<button className={styles["up-button"]} onClick={isOpen} ref={inviteRef2}>Invite Friend</button>
 								{
-									tournamentMembers.length > 0 ? <button className={styles["up-button"]} onClick={handleStart}>Start</button> : <button className={styles["up-button-disabled"]} onClick={handleStart} disabled>Start</button>
+									tournamentMembers.length === 8 ? <button className={styles["up-button"]} onClick={handleStart}>Start</button> : <button className={styles["up-button-disabled"]} onClick={handleStart} disabled>Start</button>
 								}
 							</div>
 							: <div className={styles["up-buttons"]}>
@@ -726,7 +687,7 @@ function CreateTournament() {
 										<button className={styles["button"]} onClick={isOpen} ref={inviteRef}>Invite Friend</button>
 									</div>
 									{
-										tournamentMembers.length > 0 ? <button className={styles["button"]} onClick={handleStart}>Start</button> : <button className={styles["button-disabled"]} onClick={handleStart} disabled>Start</button>
+										tournamentMembers.length === 8 ? <button className={styles["button"]} onClick={handleStart}>Start</button> : <button className={styles["button-disabled"]} disabled>Start</button>
 									}
 								</div>
 								{open && <InviteFriendComp class="Invite-friend-popup-up" refs={divRef2} />}

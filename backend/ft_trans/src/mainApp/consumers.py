@@ -388,7 +388,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 	async def youWinTheGame(self, event):
 		await self.send(text_data=json.dumps({
-			'type': 'youWinTheGame'
+			'type': 'youWinTheGame',
+			'message': event['message']
 		}))
 
 	async def youLoseTheGame(self, event):

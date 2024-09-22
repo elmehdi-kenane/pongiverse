@@ -285,32 +285,25 @@ function createParticle(x, y) {
 		}
 	}, [])
 
-	// useEffect(() =>{
-	// 	if (notifSocket && notifSocket.readyState === WebSocket.OPEN && user) {
-	// 		notifSocket.send(JSON.stringify({
-	// 			type: 'check_is_joining_a_room',
-	// 			message: {
-	// 				user: user,
-	// 			}
-	// 		}))
-	// 	}
-	// },[notifSocket, user])
 
-	// useEffect(() => {
-	// 	if (notifSocket && notifSocket.readyState === WebSocket.OPEN && user) {
-	// 		notifSocket.onmessage = (event) => {
-	// 			let data = JSON.parse(event.data)
-	// 			let type = data.type
-	// 			let message = data.message
-	// 			if (type === 'playerSituation'){
-	// 				if (message.Case === 'joining a tournament but not in a room')
-	// 					navigate("../game/createtournament")
-	// 				if (message.Case === 'not joining a tournament')
-	// 					navigate("../game")
-	// 			}
-	// 		}
-	// 	}
-	// }, [notifSocket, user])
+
+	useEffect(() => {
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN && user) {
+			notifSocket.onmessage = (event) => {
+				let data = JSON.parse(event.data)
+				let type = data.type
+				let message = data.message
+				if (type === 'youWinTheGame'){
+					console.log("tournament_id : ", message)
+					if (message.round_reached !== 'WINNER')
+						navigate("../game/tournamentbracket")
+					else{
+						navigate("../game/tournamentcel", { state: { tournament_id: message.tournament_id } });
+					}
+				}
+			}
+		}
+	}, [notifSocket, user])
 
 	useEffect(() => {
 		const check_player_situation = async () => {
@@ -614,7 +607,12 @@ function createParticle(x, y) {
 					console.log("hmed received")
 					socket.close()
 				} else if (type === 'youWinTheGame'){
-					navigate("../game/tournamentbracket")
+					console.log("tournament_id : ", message)
+					if (message.round_reached !== 'WINNER')
+						navigate("../game/tournamentbracket")
+					else{
+						navigate("../game/tournamentcelebration", { state: message.tournament_id })
+					}
 				}
 				 else if (type === 'youLoseTheGame'){
 					navigate("../game")
