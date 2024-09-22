@@ -28,7 +28,7 @@ const InvitationRoom = (props) => {
             (room) => room.id !== props.id
           );
           setChatRoomInvitations(updatedRooms)
-          const currentChatRooms = chatRoomConversationsRef.current;
+          const currentChatRooms = props.myChatRooms;
           setChatRoomConversations([...currentChatRooms, data.room]);
         }, 500)
       } else {

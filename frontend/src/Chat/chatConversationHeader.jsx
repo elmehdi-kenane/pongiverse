@@ -69,11 +69,11 @@ const ChatConversationHeader = (props) => {
               <div className="direct-options-container">
                 <div
                   className="view-profile-option"
-                  onClick={() => navigate("/mainpage/profile")}
+                  onClick={() => navigate("/mainpage/profile/" + props.selectedDirect.name)}
                 >
                   View Profile
                 </div>
-                <div className="block-friend-option">Block</div>
+                <div className="block-friend-option" onClick={()=> props.setShowBlockPopup(true)}>Block</div>
                 {/* <div className="change-wallpaper-option">Wallpaper</div> */}
               </div>
             ) : (

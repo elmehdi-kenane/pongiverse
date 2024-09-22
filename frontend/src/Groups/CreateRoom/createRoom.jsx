@@ -9,7 +9,7 @@ import { toast } from "react-hot-toast";
 
 import "../../assets/chat/Groups.css";
 
-const CreateRoom = (props) => {
+const CreateRoom = ({setCreateRoom, setIsBlur, myChatRooms, setMyChatRooms}) => {
   let errorsContainer = {};
   const { user, chatSocket } = useContext(AuthContext);
   const [errors, setErrors] = useState({});
@@ -20,8 +20,6 @@ const CreateRoom = (props) => {
   });
   const [roomVisibility, setRoomVisibility] = useState("public-visibility");
   const [step, setStep] = useState(1);
-  const { setChatRoomConversations, chatRoomConversationsRef } =
-    useContext(ChatContext);
 
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
@@ -82,8 +80,8 @@ const CreateRoom = (props) => {
             setTimeout(() => {
               toast.success("Room created successfully!");
               toast.dismiss(toastId); // Dismiss the loading toast
-              const currentChatRooms = chatRoomConversationsRef.current;
-              setChatRoomConversations([...currentChatRooms, responseData.room]);
+              const currentChatRooms = myChatRooms;
+              setMyChatRooms([...currentChatRooms, responseData.room]);
             }, 2000); // Adjust the delay time (in milliseconds) as needed
           } else {
             setTimeout(() => {
@@ -123,8 +121,8 @@ const CreateRoom = (props) => {
   };
 
   const closeCreatePopUp = () => {
-    props.setIsBlur(false);
-    props.setCreateRoom(false);
+    setIsBlur(false);
+    setCreateRoom(false);
   };
 
   let createRoomRef = useClickOutSide(closeCreatePopUp);
@@ -145,7 +143,7 @@ const CreateRoom = (props) => {
           setStep={setStep}
           roomVisibility={roomVisibility}
           setRoomVisibility={setRoomVisibility}
-          onClose={props.onClose}
+          onClose={setIsBlur}
         />
       )}
       {step === 2 && (

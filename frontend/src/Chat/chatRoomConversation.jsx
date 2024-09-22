@@ -10,7 +10,7 @@ import LeaveChatRoomPopUp from "./chatRoomOptions/leaveChatRoomPopUp";
 import ChatRoomMembersList from "./chatRoomOptions/chatRoomMembersList";
 import ChatRoomInfos from "./chatRoomOptions/chatRoomInfos";
 
-const ChatRoomConversation = ({ messages, setMessages, setSelectedItem }) => {
+const ChatRoomConversation = ({ chatRoomMessages, setChatRoomMessages, setSelectedItem }) => {
   const [showChatRoomInfos, setShowChatRoomInfos] = useState(false);
   const [showChatRoomMembers, setShowChatRoomMembers] = useState(false);
   const [showLeaveRoomPopUp, setShowLeaveRoomPopUp] = useState(false);
@@ -52,7 +52,7 @@ const ChatRoomConversation = ({ messages, setMessages, setSelectedItem }) => {
   };
 
   useEffect(() => {
-    setMessages([]);
+    setChatRoomMessages([]);
     setCurrentChatRoomMessagesPage(1);
     setHasMoreChatRoomMessages(true);
     setChatRoomChanged(true);
@@ -71,8 +71,8 @@ const ChatRoomConversation = ({ messages, setMessages, setSelectedItem }) => {
         );
         if (response.ok) {
           const { next, results } = await response.json();
-          setMessages([...results, ...messages]);
-          if (next) setHasMoreChatRoomMessages(true);
+          setChatRoomMessages([...results, ...chatRoomMessages]);
+          if (!next) setHasMoreChatRoomMessages(false);
         } else {
           console.log("Error fetching messages");
         }
@@ -103,7 +103,7 @@ const ChatRoomConversation = ({ messages, setMessages, setSelectedItem }) => {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
       setFirstScroll(false);
     }
-  }, [messages, lastMessage]);
+  }, [chatRoomMessages, lastMessage]);
 
   let domNode = useClickOutSide(() => {
     setShowChatRoomOptions(false);
@@ -139,7 +139,7 @@ const ChatRoomConversation = ({ messages, setMessages, setSelectedItem }) => {
       {showChatRoomInfos && (
         <ChatRoomInfos
           setShowChatRoomInfos={setShowChatRoomInfos}
-          roomId={selectedChatRoom.roomId}
+          selectedChatRoom={selectedChatRoom}
           setSelectedChatRoom={setSelectedChatRoom}
         />
       )}
@@ -193,7 +193,7 @@ const ChatRoomConversation = ({ messages, setMessages, setSelectedItem }) => {
               >
                 Leave Chat Room
               </div>
-              <div
+              {/* <div
                 className="chat-room-info-option"
                 onClick={() => {
                   setShowChatRoomInfos(true);
@@ -201,7 +201,7 @@ const ChatRoomConversation = ({ messages, setMessages, setSelectedItem }) => {
                 }}
               >
                 Chat Room Info
-              </div>
+              </div> */}
               <div
                 className="members-list-option"
                 onClick={() => {
@@ -211,7 +211,7 @@ const ChatRoomConversation = ({ messages, setMessages, setSelectedItem }) => {
               >
                 Members List
               </div>
-              <div className="change-wallpaper-option">Wallpaper</div>
+              {/* <div className="change-wallpaper-option">Wallpaper</div> */}
             </div>
           ) : (
             ""
@@ -219,15 +219,15 @@ const ChatRoomConversation = ({ messages, setMessages, setSelectedItem }) => {
         </div>
       </div>
       <div className="conversation-body" ref={messageBodyRef} onScroll={handleScroll}>
-        {messages.length !== 0 &&
-          messages.map((message, index) =>
+        {chatRoomMessages.length !== 0 &&
+          chatRoomMessages.map((message, index) =>
             message.sender === user ? (
               <MyMessage
                 key={index}
                 name={user}
                 content={message.content}
                 date={message.date}
-                length={messages.length}
+                length={chatRoomMessages.length}
                 endRef={messageEndRef}
                 index={index}
                 />
@@ -237,7 +237,7 @@ const ChatRoomConversation = ({ messages, setMessages, setSelectedItem }) => {
                 name={message.sender}
                 content={message.content}
                 date={message.date}
-                length={messages.length}
+                length={chatRoomMessages.length}
                 endRef={messageEndRef}
                 index={index}
               />

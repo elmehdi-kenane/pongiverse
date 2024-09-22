@@ -48,10 +48,6 @@ export const resetChatRoomUnreadMessages = async (user, roomId) => {
 
 const ChatConversationItem = (props) => {
   const { user } = useContext(AuthContext);
-  const {
-    chatRoomConversationsRef,
-    setChatRoomConversations,
-  } = useContext(ChatContext);
   
   const handleClick = () => {
     if (props.isDirect && props.name) {
@@ -76,16 +72,18 @@ const ChatConversationItem = (props) => {
         name: props.name,
         memberCount: props.membersCount,
         icon: props.icon,
+        cover: props.cover,
         roomId: props.roomId,
+        topic: props.topic,
       });
-      let allChatRooms = chatRoomConversationsRef.current;
+      let allChatRooms = props.chatRooms;
       const updatedRooms = allChatRooms.map((room) => {
         if (props.roomId === room.id) {
           return { ...room, unreadCount: 0 };
         }
         return room;
       });
-      setChatRoomConversations(updatedRooms);
+      props.setChatRooms(updatedRooms);
       if (parseInt(props.unreadCount) > 0)
         resetChatRoomUnreadMessages(user, props.roomId);
     }

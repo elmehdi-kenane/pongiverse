@@ -2,7 +2,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import '../../Profile/Profile.css'
-import chatSvg from "../../assets/navbar-sidebar/chat.svg"
+import AccountBoxRoundedIcon from '@mui/icons-material/AccountBoxRounded';
 import ChatContext from "../../Context/ChatContext";
 const ChatRoomMembersList = (props) => {
   const [chatRoomMembers, setChatRoomMembers] = useState([]);
@@ -58,8 +58,8 @@ const ChatRoomMembersList = (props) => {
                   <p> {member.username} </p>
                 </div>
                 <div className="chat-room-member-message-button">
-                  <img src={chatSvg} alt='chatIcon'/>
-                  <p style={{ cursor: "pointer" }}> message </p>
+                  <AccountBoxRoundedIcon />
+                  <p style={{ cursor: "pointer" }}> Profile </p>
                 </div>
               </div>
             );

@@ -22,6 +22,11 @@ class CustomLimitOffsetPagination(PageNumberPagination):
     max_page_size = 100  # Maximum page size the user can request
 
 
+class CustomMyChatRoomLimitOffsetPagination(PageNumberPagination):
+    page_size = 6  # Default page size
+    page_size_query_param = 'page_size'
+    max_page_size = 100  # Maximum page size the user can request
+
 @api_view(["GET"])
 def friends_with_directs(request, username):
     user = customuser.objects.get(username=username)
@@ -68,20 +73,42 @@ def direct_messages(request):
 def chat_rooms_list(request, username):
     if request.method == "GET":
         user = customuser.objects.get(username=username)
-        memberships = Membership.objects.filter(user=user)
+        # get memberships for the user that have at least one message
+        memberships = Membership.objects.filter (user=user, room__message__isnull=False).distinct()
+        # sort the rooms by the message date
+        ordered_memberships = sorted(
+            memberships,
+            key=lambda membership: membership.room.message_set.last().timestamp
+            if membership.room.message_set.last()
+            else membership.room.membership_set.last().joined_at,
+            reverse=True,
+        )
         paginator = CustomLimitOffsetPagination()
-        result_page = paginator.paginate_queryset(memberships, request)
-        serializer = room_serializer(result_page, many=True)
+        result_page = paginator.paginate_queryset(ordered_memberships, request)
+        serializer = room_serializer(result_page, many=True, context={"user": user})
         return paginator.get_paginated_response(serializer.data)
     return Response({"error": "Invalid request method"}, status=400)
 
 @api_view(["GET"])
+def my_chat_rooms(request, username):
+    if request.method == "GET":
+        user = customuser.objects.get(username=username)
+        memberships = Membership.objects.filter(user=user)
+        paginator = CustomMyChatRoomLimitOffsetPagination()
+        result_page = paginator.paginate_queryset(memberships, request)
+        serializer = room_serializer(result_page, many=True, context={"user": user})
+        return paginator.get_paginated_response(serializer.data)
+    return Response({"error": "Invalid request method"}, status=400)
+
+
+@api_view(["GET"])
 def chat_room_messages(request, room_id):
     if request.method == "GET":
-        messages = Message.objects.filter(room_id=room_id)
+        messages = Message.objects.filter(room_id=room_id).order_by("-timestamp")
         paginator = CustomLimitOffsetPagination()
         result_page = paginator.paginate_queryset(messages, request)
-        serializer = room_message_serializer(result_page, many=True)
+        reversed_page = list(reversed(result_page))
+        serializer = room_message_serializer(reversed_page, many=True)
         return paginator.get_paginated_response(serializer.data)
     return Response({"error": "Invalid request method"}, status=400)
 
@@ -124,13 +151,13 @@ def leave_chat_room(request):
         if room.members_count == 0:
             if (
                 room.icon.path
-                and room.icon.url != "/uploads/roomIcon.png"
+                and room.icon.url != "/media/uploads_default/roomIcon.png"
                 and default_storage.exists(room.icon.path)
             ):
                 default_storage.delete(room.icon.path)
             if (
                 room.cover.path
-                and room.cover.url != "/uploads/roomCover.png"
+                and room.cover.url != "/media/uploads_default/roomCover.png"
                 and default_storage.exists(room.cover.path)
             ):
                 default_storage.delete(room.cover.path)
@@ -160,17 +187,24 @@ def delete_chat_room(request, id):
         all_members = Membership.objects.filter(room=room)
         for member in all_members:
             member.delete()
-        print("ROOM ICON URL: ", room.icon.url)
+        print("\n\n\nROOM ICON URL: ", room.icon.url)
         print("ROOM COVER URL: ", room.cover.url)
         if (
             room.icon.path
-            and room.icon.url != "/media/uploads/roomIcon.png"
+            and room.icon.url != "/media/uploads_default/roomIcon.png"
             and default_storage.exists(room.icon.path)
         ):
             default_storage.delete(room.icon.path)
         if (
             room.cover.path
-            and room.cover.url != "/media/uploads/roomCover.png"
+
+
+
+
+
+
+            
+            and room.cover.url != "/media/uploads_default/roomCover.png"
             and default_storage.exists(room.cover.path)
         ):
             default_storage.delete(room.cover.path)
@@ -194,7 +228,7 @@ def chat_room_update_icon(request):
             return Response({"error": "chat room name not found!"}, status=400)
         if (
             room.icon.path
-            and room.icon.url != "/uploads/roomIcon.png"
+            and room.icon.url != "/media/uploads_default/roomIcon.png"
             and default_storage.exists(room.icon.path)
         ):
             default_storage.delete(room.icon.path)
@@ -216,16 +250,18 @@ def chat_room_update_cover(request):
             return Response({"error": "invalid chat room cover!"}, status=400)
         if (
             room.cover.path
-            and room.cover.url != "/uploads/roomCover.png"
+            and room.cover.url != "/media/uploads_default/roomCover.png"
             and default_storage.exists(room.cover.path)
         ):
             default_storage.delete(room.cover.path)
         room.cover = request.data.get("cover")
         room.save()
+        protocol = os.getenv("PROTOCOL")
+        ip_address = os.getenv("IP_ADDRESS")
         return Response(
             {
                 "success": "chat room cover changed successfully",
-                "data": {"id": room.id, "cover": room.cover.path},
+                "data": {"id": room.id, "cover": f"{protocol}://{ip_address}:8000/chatAPI{room.cover.url}"},
             },
             status=200,
         )

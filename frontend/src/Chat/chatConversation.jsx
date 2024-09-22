@@ -19,10 +19,9 @@ export let useClickOutSide = (handler) => {
   return domNode;
 };
 
-const ChatConversation = ({ messages, setMessages }) => {
+const ChatConversation = ({ messages, setMessages, setShowBlockPopup }) => {
   const [showDirectOptions, setShowDirectOptions] = useState(false);
-
-  const { selectedDirect, setSelectedDirect } = useContext(ChatContext);
+  const { selectedDirect, setSelectedDirect,  } = useContext(ChatContext);
   const { user, chatSocket, userImg } = useContext(AuthContext);
 
   const [currentMessagePage, setCurrentMessagePage] = useState(1);
@@ -140,6 +139,7 @@ const ChatConversation = ({ messages, setMessages }) => {
         setShowDirectOptions={setShowDirectOptions}
         domNode={domNode}
         user={user}
+        setShowBlockPopup={setShowBlockPopup}
       />
       <ChatConversationBody
         loading={loading}

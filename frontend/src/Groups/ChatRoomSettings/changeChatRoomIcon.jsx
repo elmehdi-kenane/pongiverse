@@ -2,8 +2,7 @@ import { useRef, useState } from "react";
 
 const ChangeChatRoomIcon = (props) => {
   const [newRoomIcon, setnewRoomIcon] = useState(null);
-
-
+  
   const fileInputRef = useRef(null);
 
   const handleImageClick = () => {

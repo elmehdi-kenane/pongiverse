@@ -24,4 +24,5 @@ urlpatterns = [
     path('resetUndreadMessages', views.reset_unread_messages, name='reset-unread-messages'),
     path('resetChatRoomUndreadMessages', views.reset_chat_room_unread_messages),
     path('firendwithdirects/<str:username>', views.friends_with_directs),
+    path('myChatRooms/<str:username>', views.my_chat_rooms, name='my-chat-rooms'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

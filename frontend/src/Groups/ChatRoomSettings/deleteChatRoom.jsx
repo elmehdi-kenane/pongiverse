@@ -3,17 +3,20 @@ import ChatContext from "../../Context/ChatContext";
 import { useContext } from "react";
 
 const DeleteChatRoom = (props) => {
-  const { chatRoomConversationsRef, setChatRoomConversations } =
-    useContext(ChatContext);
 
   const chatRoomDeletedUpdater = (data) => {
-    const allMyChatRooms = chatRoomConversationsRef.current;
+    console.log("data: ", data);
+    const allMyChatRooms = props.myChatRooms;
     const updatedRooms = allMyChatRooms.filter(
       (room) => room.id !== data.roomId
     );
-    setChatRoomConversations(updatedRooms);
+    console.log("update rooms: ", updatedRooms);
+    props.setMyChatRooms(updatedRooms);
+    props.setDeletRoom(false);
+    props.setShowSettings(false);
   };
   const deleteChatRoomHandler = async () => {
+    const toastId = toast.loading("Deleting chat room...");
     try {
       const response = await fetch(
         `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/deleteChatRoom/${props.roomId}`,
@@ -25,13 +28,20 @@ const DeleteChatRoom = (props) => {
       const data = await response.json();
   
       if (response.ok) {
-        console.log("im Hereeeeeeeeeee");
-        chatRoomDeletedUpdater(data.data);
-        toast.success(data.success);
+        setTimeout(() => {
+          toast.success(data.success);
+          toast.dismiss(toastId);
+          chatRoomDeletedUpdater(data.data);
+        }, 2000);
+        console.log(data.success);
       } else {
-        toast.error(data.error || "Failed to delete chat room");
+        setTimeout(() => {
+          toast.dismiss(toastId);
+          toast.error("Failed to delete chat room");
+        }, 500);
       }
     } catch (error) {
+      toast.dismiss(toastId);
       toast.error("An error occurred. Please try again later.");
     }
   };

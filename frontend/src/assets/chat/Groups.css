@@ -797,6 +797,12 @@ span#create-room-errors {
   );
   border-radius: 5px;
   overflow: hidden;
+  cursor: pointer;
+}
+
+.my-room-container:hover {
+  box-shadow: 0 0 15px #15072a;
+  transition: ease-in 0.3s;
 }
 
 .my-room-header {

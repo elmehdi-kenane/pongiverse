@@ -13,13 +13,14 @@ import ChatWindow from "./chatPageWindow";
 const Chat = () => {
   const {
     selectedDirectRef,
-    setChatRoomConversations,
     selectedChatRoomRef,
     selectedDirect,
+    selectedChatRoom,
   } = useContext(ChatContext);
 
   const { chatSocket, user } = useContext(AuthContext);
   const [messages, setMessages] = useState([]);
+  const [chatRoomMessages, setChatRoomMessages] = useState([]);
   const [hasMoreDirects, setHasMoreDirects] = useState(true);
   const [currentDirectPage, setCurrentDirectPage] = useState(1);
   const [directs, setDirects] = useState([]);
@@ -76,12 +77,11 @@ const Chat = () => {
       }
     };
 
-    const handleNewMessage = (data) => {
+    const handleChatRoomNewMesssage = (data) => {
       const currentRoom = selectedChatRoomRef.current;
-
       if (currentRoom.roomId === data.roomId) {
-        setMessages((prev) => [...prev, data]);
-        setChatRoomConversations((prevConversations) =>
+        setChatRoomMessages((prev) => [...prev, data]);
+        setChatRooms((prevConversations) =>
           prevConversations.map((room) =>
             room.id === data.roomId
               ? { ...room, lastMessage: data.content }
@@ -92,7 +92,9 @@ const Chat = () => {
           resetChatRoomUnreadMessages(user, data.roomId);
         }
       } else {
-        setChatRoomConversations((prevConversations) =>
+        console.log("updating chat room");
+        console.log(data);
+        setChatRooms((prevConversations) =>
           prevConversations.map((room) =>
             room.id === data.roomId
               ? {
@@ -106,14 +108,40 @@ const Chat = () => {
       }
     };
 
+    const moveDirectToTop = (senderId, receiverId) => {
+      // move the conversation to the top of the list
+      setDirects((prevConversations) => {
+        const updatedDirects = prevConversations.filter(
+          (friend) => friend.id !== senderId && friend.id !== receiverId
+        );
+        const friendToMove = prevConversations.find(
+          (friend) => friend.id === senderId || friend.id === receiverId
+        );
+        return [friendToMove, ...updatedDirects];
+      });
+    };
+
+    const moveChatRoomToTop = (roomId) => {
+      setChatRooms((prevConversations) => {
+        const updatedRooms = prevConversations.filter(
+          (room) => room.id !== roomId
+        );
+        const roomToMove = prevConversations.find(
+          (room) => room.id === roomId
+        );
+        return [roomToMove, ...updatedRooms];
+      });
+    };
+
     const handleMessage = (e) => {
       const data = JSON.parse(e.data);
       if (data.type === "newDirect") {
         handleNewDirectMessage(data.data);
+        moveDirectToTop(data.data.senderId, data.data.receiverId);
       } else if (data.type === "newMessage") {
-        handleNewMessage(data.data);
+        handleChatRoomNewMesssage(data.data);
+        moveChatRoomToTop(data.data.roomId);
       } else if (data.type === "goToGamingPage") {
-        console.log("Navigating to gaming page");
         navigate("/mainpage/game/solo/1vs1/friends");
       }
     };
@@ -135,8 +163,7 @@ const Chat = () => {
         );
         const { next, results } = await response.json();
         if (response.ok) {
-          console.log("Directs: ",results.length);
-          console.log(next);
+          console.log("FETCH: ",results.length, ' ', next);
           setDirects([...directs, ...results]);
           if (!next) setHasMoreDirects(false);
           if (Object.values(selectedDirect).every((value) => value !== "")) {
@@ -184,12 +211,45 @@ const Chat = () => {
           `http://${
             import.meta.env.VITE_IPADDRESS
           }:8000/chatAPI/chatRooms/${user}?page=${currentChatRoomPage}`
-        )
-        const {next, results} = await response.json();
+        );
+        const { next, results } = await response.json();
         if (response.ok) {
-          console.log("Rooms: ",results.length);
+          console.log("FETCH ROOMS: ",results.length, ' ', next);
           setChatRooms([...chatRooms, ...results]);
           if (!next) setHasMoreChatRooms(false);
+        if (Object.values(selectedChatRoom).every((value) => value !== "")) {
+          let currentRooms = results;
+          const conversationExists = currentRooms.some(
+            (conv) => conv.id === selectedChatRoom.roomId
+          );
+          if (!conversationExists) {
+            const newConversation = {
+              id: selectedChatRoom.roomId,
+              name: selectedChatRoom.name,
+              icon: selectedChatRoom.icon,
+              membersCount: selectedChatRoom.membersCount,
+              lastMessage: "",
+              unreadCount: "0",
+            };
+            setChatRooms((prevConversations) => [
+              newConversation,
+              ...prevConversations,
+            ]);
+          } else {
+            let allRooms = results;
+            const updatedRooms = allRooms.map((room) => {
+              if (selectedChatRoomRef.current.roomId === room.id) {
+                return { ...room, unreadCount: 0 };
+              }
+              return room;
+            });
+            setChatRooms(updatedRooms);
+            resetChatRoomUnreadMessages(
+              user,
+              selectedChatRoomRef.current.roomId
+            );
+          }
+        }
         } else console.error("opps!, something went wrong");
       } catch (error) {
         console.log(error);
@@ -205,7 +265,7 @@ const Chat = () => {
     if (directsListInnerRef.current) {
       const { scrollTop, scrollHeight, clientHeight } =
         directsListInnerRef.current;
-      if (scrollTop + clientHeight === scrollHeight - 1 && hasMoreDirects) {
+      if (scrollTop + clientHeight === scrollHeight && hasMoreDirects) {
         setCurrentDirectPage((prev) => prev + 1);
       }
     }
@@ -215,7 +275,7 @@ const Chat = () => {
     if (chatRoomsListInnerRef.current) {
       const { scrollTop, scrollHeight, clientHeight } =
         chatRoomsListInnerRef.current;
-      if (scrollTop + clientHeight === scrollHeight - 1 && hasMoreChatRooms) {
+      if (scrollTop + clientHeight === scrollHeight && hasMoreChatRooms) {
         setCurrentChatRoomPage((prev) => prev + 1);
       }
     }
@@ -234,8 +294,15 @@ const Chat = () => {
           setChatRooms={setChatRooms}
           chatRoomsOnScroll={chatRoomsOnScroll}
           chatRoomsListInnerRef={chatRoomsListInnerRef}
+          setChatRoomMessages={setChatRoomMessages}
+          setMessages={setMessages}
         />
-        <ChatWindow messages={messages} setMessages={setMessages} />
+        <ChatWindow
+          messages={messages}
+          setMessages={setMessages}
+          chatRoomMessages={chatRoomMessages}
+          setChatRoomMessages={setChatRoomMessages}
+        />
       </div>
     </div>
   );

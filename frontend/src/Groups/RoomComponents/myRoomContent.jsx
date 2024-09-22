@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 const MyRoomContent = (props) => {
   const navigate = useNavigate();
   const [chatRoomCover, setChatRoomConver] = useState(null);
-  const { setIsHome, setSelectedChatRoom , chatRoomConversationsRef, setChatRoomConversations} = useContext(ChatContext);
+  const { setIsHome, setSelectedChatRoom } = useContext(ChatContext);
   let chatRoomCoverRef = useRef(chatRoomCover)
 
   const navigateToChatRoom = () => {
@@ -16,7 +16,7 @@ const MyRoomContent = (props) => {
       roomId: props.roomId,
       name: props.name,
       icon: props.icon,
-      memberCount: props.membersCount,
+      membersCount: props.membersCount,
     });
     setIsHome(false);
     navigate(`/mainpage/chat`);
@@ -43,14 +43,15 @@ const MyRoomContent = (props) => {
         setTimeout(() => {
           toast.success(data.success);
           toast.dismiss(toastId); // Dismiss the loading toast
-          const allMyChatRooms = chatRoomConversationsRef.current
+          const allMyChatRooms = props.myChatRooms
           const updatedRooms = allMyChatRooms.map((room) => {
             if (room.id === data.data.id) {
+              console.log("Updated Room: ", data.data.cover);
               return { ...room, cover: data.data.cover };
             }
             return room;
           });
-          setChatRoomConversations(updatedRooms);
+          props.setMyChatRooms(updatedRooms);
         }, 2000); // Adjust the delay time (in milliseconds) as needed
       } else toast.error(data.error);
     } catch (error) {

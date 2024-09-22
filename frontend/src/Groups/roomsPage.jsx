@@ -17,13 +17,14 @@ const Rooms = () => {
   const [showRoomNotifications, setShowRoomNotifications] = useState(false);
   const {
     chatRoomConversations,
-    setChatRoomConversations,
     setChatRoomInvitations,
     suggestedChatRooms,
     chatRoomConversationsRef,
   } = useContext(ChatContext);
+  const [myChatRooms, setMyChatRooms] = useState([]);
+  const [hasMoreRooms, setHasMoreRooms] = useState(true);
+  const [currentMyRoomsPage, setCurrentMyRoomsPage] = useState(1);
 
-  console.log(chatRoomConversations)
   //hande scroller handler (My Rooms)
   const onClickScroller = (handle, numberOfRooms) => {
     const slider = document.getElementsByClassName("rooms-slider")[0];
@@ -66,20 +67,20 @@ const Rooms = () => {
   // ######################################### Chat Room backend Handlers ###################################################################
 
   const chatRoomAdminAdded = (data) => {
-    const allMyChatRooms = chatRoomConversationsRef.current;
+    const allMyChatRooms = myChatRooms;
     const updatedRooms = allMyChatRooms.map((room) => {
       if (room.name === data.name) return { ...room, role: "admin" };
       return room;
     });
-    setChatRoomConversations(updatedRooms);
+    setMyChatRooms(updatedRooms);
   };
 
   const roomInvitationsAcceptedUpdater = (data) => {
-    const allMyChatRooms = chatRoomConversationsRef.current;
+    const allMyChatRooms = myChatRooms;
     const allRoomInvites = roomInvitationsRef.current;
     console.log("data recive if the invite accepted", data);
     if (user === data.user) {
-      setChatRoomConversations([...allMyChatRooms, data.room]);
+      setMyChatRooms([...allMyChatRooms, data.room]);
       const updatedRoomsInvits = allRoomInvites.filter(
         (room) => room.name !== data.room.name
       );
@@ -90,7 +91,7 @@ const Rooms = () => {
           return { ...room, membersCount: data.room.membersCount };
         return room;
       });
-      setChatRoomConversations(updatedRooms);
+      setMyChatRooms(updatedRooms);
     }
   };
 
@@ -109,6 +110,29 @@ const Rooms = () => {
     }
   }, [chatSocket]);
 
+  useEffect(() => {
+    // fetch chat rooms
+    const fetchChatRooms = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:8000/chatAPI/myChatRooms/${user}?page=${currentMyRoomsPage}`
+        );
+        const { next, results } = await response.json();
+        if (response.ok) {
+          console.log("fetch chat rooms", results);
+          setMyChatRooms([...myChatRooms, ...results]);
+          console.log("fetch chat rooms", results.length ,' ', next);
+          if (!next) setHasMoreRooms(false);
+        } else {
+          console.error("Failed to fetch chat rooms");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (user) fetchChatRooms();
+  }, [currentMyRoomsPage, user]);
+
   return (
     <div className="rooms-page">
       <Toaster
@@ -124,7 +148,7 @@ const Rooms = () => {
       />
       <div className="rooms-page-content">
         {createRoom && (
-          <CreateRoom setCreateRoom={setCreateRoom} setIsBlur={setIsBlur} />
+          <CreateRoom setCreateRoom={setCreateRoom} setIsBlur={setIsBlur} myChatRooms={myChatRooms} setMyChatRooms={setMyChatRooms}/>
         )}
         {showRoomNotifications && (
           <RoomsNotifications
@@ -168,30 +192,29 @@ const Rooms = () => {
             </div>
           </div>
           <div className="my-rooms-row">
-            {chatRoomConversations.length > 4 ? (
+            {myChatRooms.length > 4 ? (
               <>
                 <img
                   src={ChatIcons.leftHand}
                   className="hande left-hande"
-                  onClick={() =>
-                    onClickScroller("left", chatRoomConversations.length)
-                  }
+                  onClick={() => onClickScroller("left", myChatRooms.length)}
                 />
                 <img
                   src={ChatIcons.rightHand}
                   className="hande right-hande"
-                  onClick={() =>
-                    onClickScroller("right", chatRoomConversations.length)
-                  }
+                  onClick={() => {
+                    onClickScroller("right", myChatRooms.length);
+                    if (hasMoreRooms) setCurrentMyRoomsPage((prev) => prev + 1);
+                  }}
                 />
               </>
             ) : (
               ""
             )}
             <div className="rooms-slider-container">
-              {chatRoomConversations && chatRoomConversations.length ? (
+              {myChatRooms && myChatRooms.length ? (
                 <div className="rooms-slider">
-                  {chatRoomConversations.map((room, index) => (
+                  {myChatRooms.map((room, index) => (
                     <MyRoom
                       key={index}
                       roomId={room.id}
@@ -201,6 +224,8 @@ const Rooms = () => {
                       role={room.role}
                       topic={room.topic}
                       membersCount={room.membersCount}
+                      myChatRooms={myChatRooms}
+                      setMyChatRooms={setMyChatRooms}
                     />
                   ))}
                 </div>
@@ -238,14 +263,14 @@ const Rooms = () => {
                 <div className="suggested-rooms-slider">
                   {suggestedChatRooms.map((room, index) => (
                     <SuggestedRoom
-                    key={index}
-                    roomId={room.id}
-                    name={room.name}
-                    icon={room.icon}
-                    cover={room.cover}
-                    role={room.role}
-                    topic={room.topic}
-                    membersCount={room.membersCount}
+                      key={index}
+                      roomId={room.id}
+                      name={room.name}
+                      icon={room.icon}
+                      cover={room.cover}
+                      role={room.role}
+                      topic={room.topic}
+                      membersCount={room.membersCount}
                     />
                   ))}
                 </div>

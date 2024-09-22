@@ -11,6 +11,8 @@ const ChatSideBar = ({
   setChatRooms,
   chatRoomsOnScroll,
   chatRoomsListInnerRef,
+  setChatRoomMessages,
+  setMessages,
 }) => {
   const {
     setSelectedChatRoom,
@@ -52,7 +54,12 @@ const ChatSideBar = ({
             className={
               isHome ? "direct-switch-button-active" : "direct-switch-button"
             }
-            onClick={() => setIsHome(true)}
+            onClick={() => {setIsHome(true); setSelectedChatRoom({
+              name: "",
+              memberCount: "",
+              icon: "",
+              roomId: "",
+            }); setSelectedItem(""); setChatRoomMessages([]);}}
           >
             Directs
           </button>
@@ -60,7 +67,12 @@ const ChatSideBar = ({
             className={
               isHome ? "rooms-switch-button" : "rooms-switch-button-active"
             }
-            onClick={() => setIsHome(false)}
+            onClick={() => {setIsHome(false); setSelectedDirect({
+              id: "",
+              name: "",
+              status: "",
+              avatar: "",
+            }); setSelectedItem(""); setMessages([]);}}
           >
             Rooms
           </button>
@@ -106,6 +118,8 @@ const ChatSideBar = ({
               lastMessage={chatRoom.lastMessage}
               membersCount={chatRoom.membersCount}
               unreadCount={chatRoom.unreadCount}
+              cover={chatRoom.cover}
+              topic={chatRoom.topic}
               isDirect={isHome}
               setSelectedChatRoom={setSelectedChatRoom}
               isSelected={selectedItem === chatRoom.name}

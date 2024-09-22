@@ -8,18 +8,18 @@ export const ChatProvider = ({ child }) => {
   let location = useLocation();
   const { user, chatSocket } = useContext(AuthContext);
   const [isHome, setIsHome] = useState(true);
-  const [chatRoomConversations, setChatRoomConversations] = useState([]);
   const [chatRoomInvitations, setChatRoomInvitations] = useState([]);
   const [suggestedChatRooms, setSuggestedChatRooms] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
-  const chatRoomConversationsRef = useRef(chatRoomConversations);
   const chatRoomInvitationsRef = useRef(chatRoomInvitations);
   const suggestedChatRoomsRef = useRef(suggestedChatRooms);
   const [selectedChatRoom, setSelectedChatRoom] = useState({
     name: "",
-    memberCount: "",
+    membersCount: "",
     icon: "",
+    cover: "",
     roomId: "",
+    topic: "",
   });
   const [selectedDirect, setSelectedDirect] = useState({
     id: "",
@@ -42,9 +42,6 @@ export const ChatProvider = ({ child }) => {
     selectedChatRoomRef.current = selectedChatRoom;
   }, [selectedChatRoom]);
 
-  useEffect(() => {
-    chatRoomConversationsRef.current = chatRoomConversations;
-  }, [chatRoomConversations]);
 
   useEffect(() => {
     chatRoomInvitationsRef.current = chatRoomInvitations;
@@ -105,8 +102,6 @@ export const ChatProvider = ({ child }) => {
   }, [location.pathname, user]);
 
   let contextData = {
-    chatRoomConversations: chatRoomConversations,
-    setChatRoomConversations: setChatRoomConversations,
     setSelectedChatRoom: setSelectedChatRoom,
     selectedChatRoom: selectedChatRoom,
     selectedDirect: selectedDirect,
@@ -117,7 +112,6 @@ export const ChatProvider = ({ child }) => {
     setChatRoomInvitations: setChatRoomInvitations,
     suggestedChatRooms: suggestedChatRooms,
     setSuggestedChatRooms: setSuggestedChatRooms,
-    chatRoomConversationsRef: chatRoomConversationsRef,
     chatRoomInvitationsRef: chatRoomInvitationsRef,
     selectedDirectRef: selectedDirectRef,
     selectedItem: selectedItem,

@@ -31,6 +31,8 @@ const MyRoom = (props) => {
         setLeaveRoom={setLeaveRoom}
         setShowSettings={setShowSettings}
         RoomSettings={ChatIcons.RoomSettings}
+        myChatRooms={props.myChatRooms}
+        setMyChatRooms={props.setMyChatRooms}
       />
       {showSettings && (
         <ChatRoomSettings
@@ -49,14 +51,18 @@ const MyRoom = (props) => {
           setShowSettings={setShowSettings}
           roomId={props.roomId}
           name={props.name}
+          myChatRooms={props.myChatRooms}
+          setMyChatRooms={props.setMyChatRooms}
         />
       )}
       {updateRoomAvatar && (
         <ChangeChatRoomIcon
-          currentIcon= {props.icon}
+          currentIcon={props.icon}
           roomId={props.roomId}
           setUpdateRoomAvatar={setUpdateRoomAvatar}
           setShowSettings={setShowSettings}
+          myChatRooms={props.myChatRooms}
+          setMyChatRooms={props.setMyChatRooms}
         />
       )}
       {addRoomAdmin && (
@@ -65,6 +71,8 @@ const MyRoom = (props) => {
           setAddRoomAdmin={setAddRoomAdmin}
           closeButton={ChatIcons.closeButton}
           name={props.name}
+          myChatRooms={props.myChatRooms}
+          setMyChatRooms={props.setMyChatRooms}
         />
       )}
       {inviteMember && (
@@ -74,13 +82,26 @@ const MyRoom = (props) => {
           closeButton={ChatIcons.closeButton}
           name={props.name}
           id={props.roomId}
+          myChatRooms={props.myChatRooms}
+          setMyChatRooms={props.setMyChatRooms}
         />
       )}
       {deleteRoom && (
-        <DeleteChatRoom setDeletRoom={setDeletRoom} roomId={props.roomId} />
+        <DeleteChatRoom
+          setDeletRoom={setDeletRoom}
+          roomId={props.roomId}
+          myChatRooms={props.myChatRooms}
+          setMyChatRooms={props.setMyChatRooms}
+          setShowSettings={setShowSettings}
+        />
       )}
       {leaveRoom && (
-        <LeaveChatRoom setLeaveRoom={setLeaveRoom} roomId={props.roomId} />
+        <LeaveChatRoom
+          setLeaveRoom={setLeaveRoom}
+          roomId={props.roomId}
+          myChatRooms={props.myChatRooms}
+          setMyChatRooms={props.setMyChatRooms}
+        />
       )}
     </div>
   );

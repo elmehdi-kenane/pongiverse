@@ -76,7 +76,7 @@ class room_serializer(serializers.ModelSerializer):
     cover = serializers.SerializerMethodField()
     membersCount = serializers.SerializerMethodField()
     lastMessage = serializers.SerializerMethodField()
-    unreadCount = serializers.IntegerField()
+    unreadCount = serializers.SerializerMethodField()
 
     class Meta:
         model = Membership
@@ -98,6 +98,9 @@ class room_serializer(serializers.ModelSerializer):
     def get_lastMessage(self, obj):
         last_message = Message.objects.filter(room__id=obj.room.id).last()
         return last_message.content if last_message else ''
+    def get_unreadCount(self, obj):
+        user = self.context.get('user')
+        return Membership.objects.get(room=obj.room, user=user).unreadCount
 
 
 class room_message_serializer(serializers.ModelSerializer):

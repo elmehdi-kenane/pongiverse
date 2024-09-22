@@ -93,7 +93,7 @@ async def message(self, data):
         sender=sender, room=room, content=data["data"]["message"]
     )
 
-    await sync_to_async(Membership.objects.exclude(user=sender).update)(unreadCount= F('unreadCount') + 1)
+    await sync_to_async(Membership.objects.filter(room=room).exclude(user=sender).update)(unreadCount= F('unreadCount') + 1)
     event = {
         "type": "send_message",
         "message": newMessage,

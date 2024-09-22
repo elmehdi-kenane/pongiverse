@@ -28,7 +28,7 @@ const SuggestedRoom = (props) => {
             (room) => room.id !== props.roomId
           );
           setSuggestedChatRooms(updatedSuggestedRooms)
-          const currentChatRooms = chatRoomConversationsRef.current;
+          const currentChatRooms = props.myChatRooms;
           setChatRoomConversations([...currentChatRooms, data.room]);
         }, 2000); // Adjust the delay time (in milliseconds) as needed
       } else {

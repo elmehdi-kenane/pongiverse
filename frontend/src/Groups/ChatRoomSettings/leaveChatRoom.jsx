@@ -1,40 +1,11 @@
 import toast from "react-hot-toast";
 import AuthContext from "../../navbar-sidebar/Authcontext";
 import { useContext } from "react";
-import ChatContext from "../../Context/ChatContext";
 
-// export const LeaveChatRoomSubmitter = async (user, chatRoomConversationsRef, setChatRoomConversations, roomId) => {
-//   try {
-//     const response = await fetch(
-//       `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/leaveChatRoom`,
-//       {
-//         method: "POST",
-//         headers: { "content-type": "application/json" },
-//         body: JSON.stringify({
-//           member: user,
-//           roomId: roomId,
-//         }),
-//       }
-//     );
-//     const data = await response.json();
-//     if (response.ok) {
-//       toast.success(data.success);
-//       const allMyChatRooms = chatRoomConversationsRef.current;
-//       if (data && data.data.user === user) {
-//         const updatedRooms = allMyChatRooms.filter(
-//           (myroom) => myroom.id !== data.data.id
-//         );
-//         setChatRoomConversations(updatedRooms);
-//       }
-//     } else toast.error(data.error);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
 
 export const LeaveChatRoomSubmitter = async (
   user,
-  roomsRef,
+  rooms,
   setRooms,
   roomId
 ) => {
@@ -56,7 +27,7 @@ export const LeaveChatRoomSubmitter = async (
       const data = await response.json();
       if (response.ok) {
         toast.success(data.success);
-        const allMyChatRooms = roomsRef.current;
+        const allMyChatRooms = rooms
         if (data && data.data.user === user) {
           const updatedRooms = allMyChatRooms.filter(
             (myroom) => myroom.id !== data.data.id
@@ -77,8 +48,6 @@ export const LeaveChatRoomSubmitter = async (
 
 const LeaveChatRoom = (props) => {
   const { user } = useContext(AuthContext);
-  const { chatRoomConversationsRef, setChatRoomConversations } =
-    useContext(ChatContext);
 
   return (
     <div className="room-leave-wrapper">
@@ -97,8 +66,8 @@ const LeaveChatRoom = (props) => {
           onClick={() =>
             LeaveChatRoomSubmitter(
               user,
-              chatRoomConversationsRef,
-              setChatRoomConversations,
+              props.myChatRooms,
+              props.setMyChatRooms,
               props.roomId
             )
           }

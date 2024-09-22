@@ -1,16 +1,13 @@
 import ChatContext from "../../Context/ChatContext";
 import { useContext, useState } from "react";
+import { toast } from "react-hot-toast";
 
 const ChangeChatRoomName = (props) => {
   const [newRoomName, setNewRoomName] = useState("");
-  const {
-    chatRoomConversationsRef,
-    setChatRoomConversations,
-  } = useContext(ChatContext);
   
   //update the chat room name in the chatRoomConversatios array
   const chatRoomNameChangedUpdater = (data) => {
-    const allMyChatRooms = chatRoomConversationsRef.current;
+    const allMyChatRooms = props.myChatRooms;
     const updatedRooms = allMyChatRooms.map((room) => {
       if (room.id === data.id) {
         return { ...room, name: data.newName };
@@ -18,7 +15,7 @@ const ChangeChatRoomName = (props) => {
       return room;
     });
     console.log("update rooms: ", updatedRooms);
-    setChatRoomConversations(updatedRooms);
+    props.setMyChatRooms(updatedRooms);
   };
 
   //post the new chat room name to backend

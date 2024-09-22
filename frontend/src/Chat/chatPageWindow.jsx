@@ -1,12 +1,19 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import * as ChatIcons from "../assets/chat/media/index";
 import ChatConversation from "./chatConversation";
 import ChatRoomConversation from "./chatRoomConversation";
 import ChatContext from "../Context/ChatContext";
+import BlockPopUp from "./chatRoomOptions/blockPopUp";
 
-const ChatWindow = ({messages, setMessages, handleSelectItem}) => {
-  const { setSelectedChatRoom, selectedChatRoom, selectedDirect, isHome } =
+const ChatWindow = ({
+  messages,
+  setMessages,
+  chatRoomMessages,
+  setChatRoomMessages,
+}) => {
+  const {selectedChatRoom, selectedDirect, isHome } =
     useContext(ChatContext);
+  const [showBlockPopup, setShowBlockPopup] = useState(false);
   return (
     <div
       className={
@@ -16,17 +23,15 @@ const ChatWindow = ({messages, setMessages, handleSelectItem}) => {
           : "chat-window-hidden"
       }
     >
+      {showBlockPopup && <BlockPopUp setShowBlockPopup={setShowBlockPopup} />}
       {isHome &&
       Object.values(selectedDirect).every((value) => value !== "") ? (
-        <ChatConversation
-          messages={messages}
-          setMessages={setMessages}
-        />
+        <ChatConversation messages={messages} setMessages={setMessages} setShowBlockPopup={setShowBlockPopup}/>
       ) : !isHome &&
         Object.values(selectedChatRoom).every((value) => value !== "") ? (
         <ChatRoomConversation
-          messages={messages}
-          setMessages={setMessages}
+          chatRoomMessages={chatRoomMessages}
+          setChatRoomMessages={setChatRoomMessages}
         />
       ) : (
         <div className="chat-window-empty">
