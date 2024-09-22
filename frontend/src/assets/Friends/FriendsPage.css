@@ -614,12 +614,19 @@ height: 170px;
 }
 
 ::-webkit-scrollbar {
-    width: 3px;
+    color: #fff;
+    height: 2px;
+    width: 2px;    
+    /* width: 2px;
+    height: 20px; */
 }
 
 ::-webkit-scrollbar-thumb {
     background: #fff;
     border-radius: 10px;
+    color: #fff;
+    /* height: 1px;
+   width: 1px;  */
 }
 
 @media (max-width: 291px) {

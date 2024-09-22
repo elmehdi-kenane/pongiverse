@@ -16,10 +16,8 @@ const Rooms = () => {
   const { user, chatSocket, isBlur, setIsBlur } = useContext(AuthContext);
   const [showRoomNotifications, setShowRoomNotifications] = useState(false);
   const {
-    chatRoomConversations,
     setChatRoomInvitations,
     suggestedChatRooms,
-    chatRoomConversationsRef,
   } = useContext(ChatContext);
   const [myChatRooms, setMyChatRooms] = useState([]);
   const [hasMoreRooms, setHasMoreRooms] = useState(true);
@@ -135,7 +133,7 @@ const Rooms = () => {
 
   return (
     <div className="rooms-page">
-      <Toaster
+      {/* <Toaster
         containerStyle={{ marginTop: "51px" }}
         toastOptions={{
           className: "",
@@ -145,8 +143,8 @@ const Rooms = () => {
             fontSize: "14px",
           },
         }}
-      />
-      <div className="rooms-page-content">
+      /> */}
+      {/* <div className="rooms-page-content"> */}
         {createRoom && (
           <CreateRoom setCreateRoom={setCreateRoom} setIsBlur={setIsBlur} myChatRooms={myChatRooms} setMyChatRooms={setMyChatRooms}/>
         )}
@@ -282,7 +280,7 @@ const Rooms = () => {
             </div>
           </div>
         </div>
-      </div>
+      {/* </div> */}
     </div>
   );
 };
