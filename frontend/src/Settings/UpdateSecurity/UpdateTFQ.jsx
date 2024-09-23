@@ -106,8 +106,9 @@ function UpdateTFQ(props) {
           const res = await response.json();
           if (response.ok) {
             notifySuc(res.data)
-            setStep('valid')
             setUserTfq(true);
+            cancelTFQ();
+            // setStep('valid')
           } else {
             notifyErr("Wrong One-Time-Password")
           }
@@ -155,22 +156,22 @@ function UpdateTFQ(props) {
     )
   }
 
-  const ValidTFQ = () => {
-    return (
-      <div className="tfq">
-        <h1> Congratulation You enabled Two-Factor Authentication </h1>
-        <div className="tfq__submit no--top-border">
-          <button className="submit submit__cancel" onClick={cancelTFQ}> Back </button>
-        </div>
-      </div>
-    )
-  }
+  // const ValidTFQ = () => {
+  //   return (
+  //     <div className="tfq">
+  //       <h1> Congratulation You enabled Two-Factor Authentication </h1>
+  //       <div className="tfq__submit no--top-border">
+  //         <button className="submit submit__cancel" onClick={cancelTFQ}> Back </button>
+  //       </div>
+  //     </div>
+  //   )
+  // }
 
   return (
     <>
         {step === 'notice' && <Notice />}
         {step === 'submit' && <SubmitTFQ />}
-        {step === 'valid'  && <ValidTFQ />}
+        {/* {step === 'valid'  && <ValidTFQ />} */}
     </>
   )
 }
