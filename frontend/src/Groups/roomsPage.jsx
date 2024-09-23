@@ -133,7 +133,7 @@ const Rooms = () => {
 
   return (
     <div className="rooms-page">
-      {/* <Toaster
+      <Toaster
         containerStyle={{ marginTop: "51px" }}
         toastOptions={{
           className: "",
@@ -143,8 +143,7 @@ const Rooms = () => {
             fontSize: "14px",
           },
         }}
-      /> */}
-      {/* <div className="rooms-page-content"> */}
+      />
         {createRoom && (
           <CreateRoom setCreateRoom={setCreateRoom} setIsBlur={setIsBlur} myChatRooms={myChatRooms} setMyChatRooms={setMyChatRooms}/>
         )}
@@ -269,6 +268,8 @@ const Rooms = () => {
                       role={room.role}
                       topic={room.topic}
                       membersCount={room.membersCount}
+                      myChatRooms={myChatRooms}
+                      setMyChatRooms={setMyChatRooms}
                     />
                   ))}
                 </div>
@@ -280,7 +281,6 @@ const Rooms = () => {
             </div>
           </div>
         </div>
-      {/* </div> */}
     </div>
   );
 };

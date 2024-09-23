@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 const MyRoomContent = (props) => {
   const navigate = useNavigate();
   const [chatRoomCover, setChatRoomConver] = useState(null);
-  const { setIsHome, setSelectedChatRoom } = useContext(ChatContext);
+  const { setIsHome, setSelectedChatRoom, setSelectedItem } = useContext(ChatContext);
   let chatRoomCoverRef = useRef(chatRoomCover)
 
   const navigateToChatRoom = () => {
@@ -19,6 +19,7 @@ const MyRoomContent = (props) => {
       membersCount: props.membersCount,
     });
     setIsHome(false);
+    setSelectedItem(props.name);
     navigate(`/mainpage/chat`);
   };
 

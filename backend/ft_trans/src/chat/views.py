@@ -469,12 +469,12 @@ def accept_chat_room_invite(request):
             user = customuser.objects.get(username=request.data.get("user"))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
-        try:
-            print("Room ID", request.data.get("room"))     
+        try:   
             room = Room.objects.get(id=request.data.get("room"))
-            print(room)
         except Room.DoesNotExist:
             return Response({"error": "chat room not found"}, status=400)
+        if Membership.objects.filter(user=user, room=room).exists():
+            return Response({"error": "you already joined chat room"}, status=400)
         try:
             invitation = RoomInvitation.objects.get(user=user, room=room)
         except RoomInvitation.DoesNotExist:

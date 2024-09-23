@@ -5,7 +5,7 @@ import ChatContext from "../../Context/ChatContext";
 
 const SuggestedRoom = (props) => {
   const {user} = useContext(AuthContext)
-  const {chatRoomConversationsRef, setChatRoomConversations, suggestedChatRoomsRef , setSuggestedChatRooms} = useContext(ChatContext)
+  const {suggestedChatRoomsRef , setSuggestedChatRooms} = useContext(ChatContext)
 
   const joinChatRoomSubmitter = async () => {
     const toastId = toast.loading("Joining the chat room...");
@@ -29,7 +29,7 @@ const SuggestedRoom = (props) => {
           );
           setSuggestedChatRooms(updatedSuggestedRooms)
           const currentChatRooms = props.myChatRooms;
-          setChatRoomConversations([...currentChatRooms, data.room]);
+          props.setMyChatRooms([...currentChatRooms, data.room]);
         }, 2000); // Adjust the delay time (in milliseconds) as needed
       } else {
         setTimeout(() => {

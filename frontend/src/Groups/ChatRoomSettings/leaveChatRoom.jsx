@@ -2,13 +2,7 @@ import toast from "react-hot-toast";
 import AuthContext from "../../navbar-sidebar/Authcontext";
 import { useContext } from "react";
 
-
-export const LeaveChatRoomSubmitter = async (
-  user,
-  rooms,
-  setRooms,
-  roomId
-) => {
+export const LeaveChatRoomSubmitter = async (user, rooms, setRooms, roomId) => {
   const toastId = toast.loading("Leaving room is being processed...");
 
   setTimeout(async () => {
@@ -27,7 +21,7 @@ export const LeaveChatRoomSubmitter = async (
       const data = await response.json();
       if (response.ok) {
         toast.success(data.success);
-        const allMyChatRooms = rooms
+        const allMyChatRooms = rooms;
         if (data && data.data.user === user) {
           const updatedRooms = allMyChatRooms.filter(
             (myroom) => myroom.id !== data.data.id
@@ -63,14 +57,15 @@ const LeaveChatRoom = (props) => {
         </button>
         <button
           className="room-leave-confirm-button"
-          onClick={() =>
+          onClick={() => {
             LeaveChatRoomSubmitter(
               user,
               props.myChatRooms,
               props.setMyChatRooms,
               props.roomId
-            )
-          }
+            );
+            props.setLeaveRoom(false);
+          }}
         >
           CONFIRM
         </button>
