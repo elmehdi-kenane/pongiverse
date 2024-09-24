@@ -19,7 +19,7 @@ export let useClickOutSide = (handler) => {
   return domNode;
 };
 
-const ChatConversation = ({ messages, setMessages, setShowBlockPopup }) => {
+const ChatConversation = ({ messages, setMessages, setShowBlockPopup, setDirects }) => {
   const [showDirectOptions, setShowDirectOptions] = useState(false);
   const { selectedDirect, setSelectedDirect,  } = useContext(ChatContext);
   const { user, chatSocket, userImg } = useContext(AuthContext);
@@ -112,9 +112,23 @@ const ChatConversation = ({ messages, setMessages, setShowBlockPopup }) => {
     setUserChanged(false);
   }, [userChanged, currentMessagePage]);
 
+  const updateLastMessage = () => {
+    setDirects((prevDirects) => {
+      const updatedDirects = prevDirects.map((friend) => {
+        if (friend.name === selectedDirect.name) {
+          return { ...friend, lastMessage: messages[messages.length - 1].content };
+        }
+        return friend;
+      });
+      return updatedDirects;
+    }
+    );
+  };
+
   useEffect(() => {
     if (messageEndRef && messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+      updateLastMessage();
       setFirstScroll(false);
     }
   }, [messages, lastMessage]);

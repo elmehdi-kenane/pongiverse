@@ -126,9 +126,7 @@ const Chat = () => {
         const updatedRooms = prevConversations.filter(
           (room) => room.id !== roomId
         );
-        const roomToMove = prevConversations.find(
-          (room) => room.id === roomId
-        );
+        const roomToMove = prevConversations.find((room) => room.id === roomId);
         return [roomToMove, ...updatedRooms];
       });
     };
@@ -163,39 +161,37 @@ const Chat = () => {
         );
         const { next, results } = await response.json();
         if (response.ok) {
-          console.log("FETCH: ",results.length, ' ', next);
-          setDirects([...directs, ...results]);
-          if (!next) setHasMoreDirects(false);
-          if (Object.values(selectedDirect).every((value) => value !== "")) {
-            let currentDirects = results;
-            const conversationExists = currentDirects.some(
-              (conv) => conv.name === selectedDirect.name
-            );
-            if (!conversationExists) {
-              const newConversation = {
-                id: selectedDirect.id,
-                name: selectedDirect.name,
-                avatar: selectedDirect.avatar,
-                is_online: selectedDirect.status,
-                lastMessage: "",
-                unreadCount: "0",
-              };
-              setDirects((prevConversations) => [
-                newConversation,
-                ...prevConversations,
-              ]);
-            } else {
-              let allDirects = results;
-              const updatedDirects = allDirects.map((friend) => {
-                if (selectedDirect.id === friend.id) {
-                  return { ...friend, unreadCount: 0 };
-                }
-                return friend;
-              });
-              setDirects(updatedDirects);
-              resetUnreadMessages(user, selectedDirect.id);
+          setDirects((prevConversations) => {
+            let allDirects = [...prevConversations, ...results];
+            if (Object.values(selectedDirect).every((value) => value !== "")) {
+              const conversationExists = allDirects.some(
+                (conv) => conv.id === selectedDirect.id
+              );
+              if (!conversationExists) {
+                const newConversation = {
+                  id: selectedDirect.id,
+                  name: selectedDirect.name,
+                  avatar: selectedDirect.avatar,
+                  is_online: selectedDirect.status,
+                  lastMessage: "",
+                  unreadCount: "0",
+                };
+                allDirects =  [newConversation, ...allDirects];
+              } else {
+                resetUnreadMessages(user, selectedDirect.id);
+              }
             }
-          }
+            // check if thiere is duplicates
+            const seen = new Set();
+            const filteredDirects = allDirects.filter((el) => {
+              const duplicate = seen.has(el.id);
+              seen.add(el.id);
+              return !duplicate;
+            });
+            return filteredDirects;
+          });
+          
+          if (!next) setHasMoreDirects(false);
         } else console.error("opps!, something went wrong");
       } catch (error) {
         console.log(error);
@@ -214,42 +210,38 @@ const Chat = () => {
         );
         const { next, results } = await response.json();
         if (response.ok) {
-          console.log("FETCH ROOMS: ",results.length, ' ', next);
-          setChatRooms([...chatRooms, ...results]);
-          if (!next) setHasMoreChatRooms(false);
-        if (Object.values(selectedChatRoom).every((value) => value !== "")) {
-          let currentRooms = results;
-          const conversationExists = currentRooms.some(
-            (conv) => conv.id === selectedChatRoom.roomId
-          );
-          if (!conversationExists) {
-            const newConversation = {
-              id: selectedChatRoom.roomId,
-              name: selectedChatRoom.name,
-              icon: selectedChatRoom.icon,
-              membersCount: selectedChatRoom.membersCount,
-              lastMessage: "",
-              unreadCount: "0",
-            };
-            setChatRooms((prevConversations) => [
-              newConversation,
-              ...prevConversations,
-            ]);
-          } else {
-            let allRooms = results;
-            const updatedRooms = allRooms.map((room) => {
-              if (selectedChatRoomRef.current.roomId === room.id) {
-                return { ...room, unreadCount: 0 };
+          setChatRooms((prevConversations) => {
+            let allChatRooms = [...prevConversations, ...results];
+            if(Object.values(selectedChatRoom).every((value) => value !== "")){
+              const conversationExists = prevConversations.some(
+                (conv) => conv.id === selectedChatRoom.id
+              );
+              if (!conversationExists) {
+                const newConversation = {
+                  id: selectedChatRoom.roomId,
+                  name: selectedChatRoom.name,
+                  membersCount: selectedChatRoom.membersCount,
+                  icon: selectedChatRoom.icon,
+                  cover: selectedChatRoom.cover,
+                  topic: selectedChatRoom.topic,
+                  lastMessage: "",
+                  unreadCount: "0",
+                };
+                allChatRooms = [newConversation, ...allChatRooms];
+              } else {
+                resetChatRoomUnreadMessages(user, selectedChatRoom.id);
               }
-              return room;
+            }
+            // check if thiere is duplicates
+            const seen = new Set();
+            const filteredChatRooms = allChatRooms.filter((el) => {
+              const duplicate = seen.has(el.id);
+              seen.add(el.id);
+              return !duplicate;
             });
-            setChatRooms(updatedRooms);
-            resetChatRoomUnreadMessages(
-              user,
-              selectedChatRoomRef.current.roomId
-            );
-          }
-        }
+            return filteredChatRooms;
+          });
+          if (!next) setHasMoreChatRooms(false);
         } else console.error("opps!, something went wrong");
       } catch (error) {
         console.log(error);
@@ -266,7 +258,7 @@ const Chat = () => {
       const { scrollTop, scrollHeight, clientHeight } =
         directsListInnerRef.current;
       if (scrollTop + clientHeight === scrollHeight && hasMoreDirects) {
-        setCurrentDirectPage((prev) => prev + 1);
+          setCurrentDirectPage((prev) => prev + 1);
       }
     }
   };
@@ -302,6 +294,8 @@ const Chat = () => {
           setMessages={setMessages}
           chatRoomMessages={chatRoomMessages}
           setChatRoomMessages={setChatRoomMessages}
+          setDirects={setDirects}
+          setChatRooms={setChatRooms}
         />
       </div>
     </div>

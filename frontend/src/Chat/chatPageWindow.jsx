@@ -10,6 +10,8 @@ const ChatWindow = ({
   setMessages,
   chatRoomMessages,
   setChatRoomMessages,
+  setDirects,
+  setChatRooms,
 }) => {
   const {selectedChatRoom, selectedDirect, isHome } =
     useContext(ChatContext);
@@ -26,12 +28,13 @@ const ChatWindow = ({
       {showBlockPopup && <BlockPopUp setShowBlockPopup={setShowBlockPopup} />}
       {isHome &&
       Object.values(selectedDirect).every((value) => value !== "") ? (
-        <ChatConversation messages={messages} setMessages={setMessages} setShowBlockPopup={setShowBlockPopup}/>
+        <ChatConversation messages={messages} setMessages={setMessages} setShowBlockPopup={setShowBlockPopup} setDirects={setDirects}/>
       ) : !isHome &&
         Object.values(selectedChatRoom).every((value) => value !== "") ? (
         <ChatRoomConversation
           chatRoomMessages={chatRoomMessages}
           setChatRoomMessages={setChatRoomMessages}
+          setChatRooms={setChatRooms}
         />
       ) : (
         <div className="chat-window-empty">

@@ -10,7 +10,7 @@ import LeaveChatRoomPopUp from "./chatRoomOptions/leaveChatRoomPopUp";
 import ChatRoomMembersList from "./chatRoomOptions/chatRoomMembersList";
 import ChatRoomInfos from "./chatRoomOptions/chatRoomInfos";
 
-const ChatRoomConversation = ({ chatRoomMessages, setChatRoomMessages, setSelectedItem }) => {
+const ChatRoomConversation = ({ chatRoomMessages, setChatRoomMessages, setChatRooms }) => {
   const [showChatRoomInfos, setShowChatRoomInfos] = useState(false);
   const [showChatRoomMembers, setShowChatRoomMembers] = useState(false);
   const [showLeaveRoomPopUp, setShowLeaveRoomPopUp] = useState(false);
@@ -98,9 +98,23 @@ const ChatRoomConversation = ({ chatRoomMessages, setChatRoomMessages, setSelect
     setChatRoomChanged(false);
   }, [chatRoomChanged, currentChatRoomMessagesPage]);
 
+  const updateLastMessage = () => {
+    setChatRooms((prev) => {
+      const updatedChatRooms = prev.map((room) => {
+        if (room.roomId === selectedChatRoom.roomId) {
+          return { ...room, lastMessage: chatRoomMessages[0].content };
+        }
+        return room;
+      }
+      );
+      return updatedChatRooms;
+    });
+  };
+
   useEffect(() => {
     if (messageEndRef && messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+      updateLastMessage();
       setFirstScroll(false);
     }
   }, [chatRoomMessages, lastMessage]);
