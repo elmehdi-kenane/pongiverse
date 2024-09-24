@@ -16,8 +16,6 @@ const Chat = () => {
     selectedChatRoomRef,
     selectedDirect,
     selectedChatRoom,
-    chatRooms,
-    setChatRooms,
     socketData,
   } = useContext(ChatContext);
 
@@ -27,15 +25,13 @@ const Chat = () => {
   const [hasMoreDirects, setHasMoreDirects] = useState(true);
   const [currentDirectPage, setCurrentDirectPage] = useState(1);
   const [directs, setDirects] = useState([]);
-  // const [chatRooms, setChatRooms] = useState([]);
+  const [chatRooms, setChatRooms] = useState([]);
   const [currentChatRoomPage, setCurrentChatRoomPage] = useState(1);
   const [hasMoreChatRooms, setHasMoreChatRooms] = useState(true);
   const chatRoomsListInnerRef = useRef(null);
   const directsListInnerRef = useRef(null);
 
   useEffect(() => {
-    if (!chatSocket) return;
-
     const handleNewDirectMessage = (data) => {
       const currentDirect = selectedDirectRef.current;
 
@@ -113,7 +109,6 @@ const Chat = () => {
     };
 
     const moveDirectToTop = (senderId, receiverId) => {
-      // move the conversation to the top of the list
       setDirects((prevConversations) => {
         const updatedDirects = prevConversations.filter(
           (friend) => friend.id !== senderId && friend.id !== receiverId
@@ -135,8 +130,17 @@ const Chat = () => {
       });
     };
 
-    const handleMessage = (e) => {
-      const data = JSON.parse(e.data);
+    const chatRoomDeleted = (roomId) => {
+      const currentChatRooms = chatRooms;
+      const updatedChatRooms = currentChatRooms.filter(
+        (room) => room.id !== roomId
+      );
+      setChatRooms(updatedChatRooms);
+    };
+
+    if (socketData) {
+      const data = socketData;
+      console.log("socket data: ", data.type);
       if (data.type === "newDirect") {
         handleNewDirectMessage(data.data);
         moveDirectToTop(data.data.senderId, data.data.receiverId);
@@ -145,15 +149,15 @@ const Chat = () => {
         moveChatRoomToTop(data.data.roomId);
       } else if (data.type === "goToGamingPage") {
         navigate("/mainpage/game/solo/1vs1/friends");
+      } else if (
+        data.type === "chatRoomLeft" ||
+        data.type === "chatRoomDeleted"
+      ) {
+        chatRoomDeleted(data.roomId);
       }
-    };
-
-    chatSocket.onmessage = handleMessage;
-
-    return () => {
-      chatSocket.onmessage = null;
-    };
-  }, [chatSocket]);
+    }
+    console.log("socket data: ", socketData);
+  }, [socketData]);
 
   useEffect(() => {
     const fetchDirectsWithMessage = async () => {
@@ -180,7 +184,7 @@ const Chat = () => {
                   lastMessage: "",
                   unreadCount: "0",
                 };
-                allDirects =  [newConversation, ...allDirects];
+                allDirects = [newConversation, ...allDirects];
               } else {
                 resetUnreadMessages(user, selectedDirect.id);
               }
@@ -194,7 +198,7 @@ const Chat = () => {
             });
             return filteredDirects;
           });
-          
+
           if (!next) setHasMoreDirects(false);
         } else console.error("opps!, something went wrong");
       } catch (error) {
@@ -216,7 +220,9 @@ const Chat = () => {
         if (response.ok) {
           setChatRooms((prevConversations) => {
             let allChatRooms = [...prevConversations, ...results];
-            if(Object.values(selectedChatRoom).every((value) => value !== "")){
+            if (
+              Object.values(selectedChatRoom).every((value) => value !== "")
+            ) {
               const conversationExists = prevConversations.some(
                 (conv) => conv.id === selectedChatRoom.id
               );
@@ -262,7 +268,7 @@ const Chat = () => {
       const { scrollTop, scrollHeight, clientHeight } =
         directsListInnerRef.current;
       if (scrollTop + clientHeight === scrollHeight && hasMoreDirects) {
-          setCurrentDirectPage((prev) => prev + 1);
+        setCurrentDirectPage((prev) => prev + 1);
       }
     }
   };

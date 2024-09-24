@@ -13,10 +13,6 @@ export const ChatProvider = ({ child }) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const chatRoomInvitationsRef = useRef(chatRoomInvitations);
   const suggestedChatRoomsRef = useRef(suggestedChatRooms);
-  const [chatRooms, setChatRooms] = useState([]);
-  const [myChatRooms, setMyChatRooms] = useState([]);
-  const myChatRoomsRef = useRef(myChatRooms);
-  const chatRoomsRef = useRef(chatRooms);
   const [socketData, setSocketData] = useState(null);
   const [selectedChatRoom, setSelectedChatRoom] = useState({
     name: "",
@@ -34,16 +30,6 @@ export const ChatProvider = ({ child }) => {
   });
   const selectedDirectRef = useRef(selectedDirect);
   const selectedChatRoomRef = useRef(selectedChatRoom);
-
-
-  useEffect(() => {
-    myChatRoomsRef.current = myChatRooms;
-  }, [myChatRooms]);
-
-  useEffect(() => {
-    chatRoomsRef.current = chatRooms;
-  }, [chatRooms]);
-
 
   useEffect(() => {
     suggestedChatRoomsRef.current = suggestedChatRooms;
@@ -83,28 +69,10 @@ export const ChatProvider = ({ child }) => {
 
 
   useEffect(() => {
-    console.log("CHAT SOCKET: ", chatSocket);
     if (!chatSocket) return;
     chatSocket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       setSocketData(data);
-      // if (data.type === "chatRoomInvitation") {
-      //   setChatRoomInvitations([...chatRoomInvitationsRef.current, data.data]);
-      // } else if (data.type === "chatRoomDeleted" || data.type === "chatRoomLeft") {
-      //   console.log("CHAT ROOM DELETED: ", data);
-      //   const currentMyChatRooms = chatRoomsRef.current;
-      //   const updatedMyChatRooms = currentMyChatRooms.filter(
-      //     (room) => room.id !== data.roomId
-      //   );
-      //   console.log("UPDATED MY CHAT ROOMS: ", updatedMyChatRooms);
-      //   setChatRooms(updatedMyChatRooms);
-      //   const currentChatRooms = myChatRoomsRef.current;
-      //   const updatedChatRooms = currentChatRooms.filter(
-      //     (room) => room.id !== data.roomId
-      //   );
-      //   console.log("UPDATED CHAT ROOMS: ", updatedChatRooms);
-      //   setMyChatRooms(updatedChatRooms);
-      // }
     }
     return () => {
       chatSocket.onmessage = null;
@@ -163,10 +131,6 @@ export const ChatProvider = ({ child }) => {
     setSelectedItem: setSelectedItem,
     suggestedChatRoomsRef: suggestedChatRoomsRef,
     selectedChatRoomRef: selectedChatRoomRef,
-    chatRooms: chatRooms,
-    setChatRooms: setChatRooms,
-    myChatRooms: myChatRooms,
-    setMyChatRooms: setMyChatRooms,
     socketData: socketData,
   };
   return (
