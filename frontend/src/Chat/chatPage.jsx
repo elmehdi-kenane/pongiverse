@@ -16,6 +16,9 @@ const Chat = () => {
     selectedChatRoomRef,
     selectedDirect,
     selectedChatRoom,
+    chatRooms,
+    setChatRooms,
+    socketData,
   } = useContext(ChatContext);
 
   const { chatSocket, user } = useContext(AuthContext);
@@ -24,11 +27,12 @@ const Chat = () => {
   const [hasMoreDirects, setHasMoreDirects] = useState(true);
   const [currentDirectPage, setCurrentDirectPage] = useState(1);
   const [directs, setDirects] = useState([]);
-  const [chatRooms, setChatRooms] = useState([]);
+  // const [chatRooms, setChatRooms] = useState([]);
   const [currentChatRoomPage, setCurrentChatRoomPage] = useState(1);
   const [hasMoreChatRooms, setHasMoreChatRooms] = useState(true);
   const chatRoomsListInnerRef = useRef(null);
   const directsListInnerRef = useRef(null);
+
   useEffect(() => {
     if (!chatSocket) return;
 

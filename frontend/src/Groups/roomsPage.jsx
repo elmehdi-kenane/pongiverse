@@ -18,8 +18,12 @@ const Rooms = () => {
   const {
     setChatRoomInvitations,
     suggestedChatRooms,
+    myChatRooms,
+    setMyChatRooms,
+    chatRooms,
+    setChatRooms,
   } = useContext(ChatContext);
-  const [myChatRooms, setMyChatRooms] = useState([]);
+  // const [myChatRooms, setMyChatRooms] = useState([]);
   const [hasMoreRooms, setHasMoreRooms] = useState(true);
   const [currentMyRoomsPage, setCurrentMyRoomsPage] = useState(1);
 
@@ -97,6 +101,8 @@ const Rooms = () => {
     if (chatSocket) {
       chatSocket.onmessage = (e) => {
         let data = JSON.parse(e.data);
+        console.log("TYPE: ", data.type);
+        console.log("data recive from chat socket", data);
         if (data.type === "chatRoomAdminAdded")
           chatRoomAdminAdded(data.message);
         else if (data.type === "roomInvitation") {

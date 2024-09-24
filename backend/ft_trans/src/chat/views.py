@@ -127,6 +127,8 @@ def leave_chat_room(request):
             room = Room.objects.get(id=request.data.get("roomId"))
         except Room.DoesNotExist:
             return Response({"error": {"Opps!, Chat room not found"}}, status=404)
+
+        roomId = room.id
         # get the room memeber query by username
         try:
             member_to_kick = Membership.objects.get(user=user, room=room)
@@ -164,13 +166,15 @@ def leave_chat_room(request):
             room.delete()
         else:
             room.save()
+        channel_layer = get_channel_layer()
+        user_channels_name = user_channels.get(user.id)
+        for channel in user_channels_name:
+            print("\n\n\n", room.id)
+            async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type' : 'chatRoomLeft',"roomId": roomId}})
+            async_to_sync(channel_layer.group_discard(f"chat_room_{room.id}", channel))
         return Response(
             {
                 "success": "You left chat room successfully",
-                "data": {
-                    "id": request.data.get("roomId"),
-                    "user": request.data.get("member"),
-                },
             },
             status=200,
         )
@@ -196,14 +200,7 @@ def delete_chat_room(request, id):
         ):
             default_storage.delete(room.icon.path)
         if (
-            room.cover.path
-
-
-
-
-
-
-            
+            room.cover.path            
             and room.cover.url != "/media/uploads_default/roomCover.png"
             and default_storage.exists(room.cover.path)
         ):
