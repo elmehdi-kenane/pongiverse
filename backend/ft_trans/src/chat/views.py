@@ -181,39 +181,6 @@ def leave_chat_room(request):
     return Response({"error": "Invalid request method"}, status=400)
 
 
-@api_view(["DELETE"])
-def delete_chat_room(request, id):
-    if request.method == "DELETE":
-        try:
-            room = Room.objects.get(id=id)
-        except Room.DoesNotExist:
-            return Response({"error": "chat room name not found!"}, status=400)
-        all_members = Membership.objects.filter(room=room)
-        for member in all_members:
-            member.delete()
-        print("\n\n\nROOM ICON URL: ", room.icon.url)
-        print("ROOM COVER URL: ", room.cover.url)
-        if (
-            room.icon.path
-            and room.icon.url != "/media/uploads_default/roomIcon.png"
-            and default_storage.exists(room.icon.path)
-        ):
-            default_storage.delete(room.icon.path)
-        if (
-            room.cover.path            
-            and room.cover.url != "/media/uploads_default/roomCover.png"
-            and default_storage.exists(room.cover.path)
-        ):
-            default_storage.delete(room.cover.path)
-        room.delete()
-        return Response(
-            {
-                "success": "chat room has been deleted successfully",
-                "data": {"roomId": id},
-            },
-            status=200,
-        )
-    return Response({"error": "Invalid request method"}, status=400)
 
 
 @api_view(["POST"])
@@ -318,10 +285,13 @@ def create_chat_room(request):
         Membership.objects.create(user=user, room=new_room, role="admin")
         protocol = get_protocol(request)
         ip_address = os.getenv("IP_ADDRESS")
+
         channel_layer = get_channel_layer()
         user_channels_name = user_channels.get(user.id)
         for channel in user_channels_name:
             async_to_sync(channel_layer.group_add(f"chat_room_{new_room.id}", channel))
+
+        
         return Response(
             {
                 "type": "chatRoomCreated",
@@ -338,6 +308,43 @@ def create_chat_room(request):
             status=200,
         )
     return Response({"error": "Invalid request method"}, status=400)
+
+
+@api_view(["DELETE"])
+def delete_chat_room(request, id):
+    if request.method == "DELETE":
+        try:
+            room = Room.objects.get(id=id)
+        except Room.DoesNotExist:
+            return Response({"error": "chat room name not found!"}, status=400)
+        all_members = Membership.objects.filter(room=room)
+        for member in all_members:
+            member.delete()
+        if (
+            room.icon.path
+            and room.icon.url != "/media/uploads_default/roomIcon.png"
+            and default_storage.exists(room.icon.path)
+        ):
+            default_storage.delete(room.icon.path)
+        if (
+            room.cover.path            
+            and room.cover.url != "/media/uploads_default/roomCover.png"
+            and default_storage.exists(room.cover.path)
+        ):
+            default_storage.delete(room.cover.path)
+        room.delete()
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(f"chat_room_{id}", {"type": "broadcast_message", 'data': {'type': 'chatRoomDeleted', "roomId": id}})
+        return Response(
+            {
+                "success": "chat room has been deleted successfully",
+                "data": {"roomId": id},
+            },
+            status=200,
+        )
+    return Response({"error": "Invalid request method"}, status=400)
+
+
 
 
 @api_view(["GET"])
@@ -506,7 +513,22 @@ def accept_chat_room_invite(request):
 
 @api_view(["POST"])
 def cancel_chat_room_invite(request):
-    pass
+    if request.method == "POST":
+        try:
+            user = customuser.objects.get(username=request.data.get("user"))
+        except customuser.DoesNotExist:
+            return Response({"error": "user not found"}, status=400)
+        try:
+            room = Room.objects.get(id=request.data.get("room"))
+        except Room.DoesNotExist:
+            return Response({"error": "chat room not found"}, status=400)
+        try:
+            invitation = RoomInvitation.objects.get(user=user, room=room)
+        except RoomInvitation.DoesNotExist:
+            return Response({"error": "opps, something went wrong"}, status=400)
+        invitation.delete()
+        return Response({"success": "invitation has been canceled successfully", 'roomId': room.id}, status=200)
+    return Response({"error": "Invalid request method"}, status=400)
 
 
 @api_view(["POST"])

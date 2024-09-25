@@ -15,7 +15,7 @@ const Rooms = () => {
   const [createRoom, setCreateRoom] = useState(false);
   const { user, chatSocket, isBlur, setIsBlur } = useContext(AuthContext);
   const [showRoomNotifications, setShowRoomNotifications] = useState(false);
-  const { setChatRoomInvitations, suggestedChatRooms, socketData } =
+  const { setChatRoomInvitations, suggestedChatRooms, socketData, chatRoomInvitationsRef } =
     useContext(ChatContext);
   const [myChatRooms, setMyChatRooms] = useState([]);
   const [hasMoreRooms, setHasMoreRooms] = useState(true);
@@ -104,7 +104,7 @@ const Rooms = () => {
       let data = socketData;
       if (data.type === "chatRoomAdminAdded") chatRoomAdminAdded(data.message);
       else if (data.type === "roomInvitation") {
-        const allInvitaions = roomInvitationsRef.current;
+        const allInvitaions = chatRoomInvitationsRef.current;
         setChatRoomInvitations([...allInvitaions, data.room]);
       } else if (data.type === "roomInvitationAccepted")
         roomInvitationsAcceptedUpdater(data.data);
@@ -165,6 +165,8 @@ const Rooms = () => {
         <RoomsNotifications
           setShowRoomNotifications={setShowRoomNotifications}
           setIsBlur={setIsBlur}
+          myChatRooms={myChatRooms}
+          setMyChatRooms={setMyChatRooms}
         />
       )}
       <div className={isBlur ? "rooms-wrapper blur" : "rooms-wrapper"}>

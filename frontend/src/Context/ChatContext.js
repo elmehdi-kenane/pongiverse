@@ -72,6 +72,7 @@ export const ChatProvider = ({ child }) => {
     if (!chatSocket) return;
     chatSocket.onmessage = (event) => {
       const data = JSON.parse(event.data);
+      console.log(data);
       setSocketData(data);
     }
     return () => {

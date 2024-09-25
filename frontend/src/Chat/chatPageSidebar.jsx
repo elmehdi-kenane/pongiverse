@@ -24,11 +24,11 @@ const ChatSideBar = ({
     setIsHome,
     selectedItem,
   } = useContext(ChatContext);
-  const [query, setQuery] = useState("");
 
-  const filteredConversations = directs.filter((conversation) => {
-    return conversation.name.includes(query);
-  });
+  // const filteredConversations = directs.filter((conversation) => {
+  //   return conversation.name.includes(query);
+  // });
+  const [showSearchContainer, setShowSreachContainer] = useState(false);
   const handleSelectItem = (itemName) => {
     setSelectedItem(itemName);
   };
@@ -45,10 +45,13 @@ const ChatSideBar = ({
         <input
           type="text"
           placeholder="search"
-          value={query}
           className="chat-search-input"
-          onChange={(e) => setQuery(e.target.value)}
+          onClick={()=>setShowSreachContainer(true)}
         />
+        {showSearchContainer && (
+          <div className="chat-search-container">
+          </div>
+        )}
         <div className="chat-switch-button-wrapper">
           <button
             className={
@@ -84,7 +87,7 @@ const ChatSideBar = ({
           onScroll={directsOnScroll}
           ref={directsListInnerRef}
         >
-          {filteredConversations.map((friend, index) => (
+          {directs.map((friend, index) => (
             <ChatConversationItem
               key={index}
               friendId={friend.id}

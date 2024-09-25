@@ -1,9 +1,11 @@
-from myapp.models import customuser  ###########
+from myapp.models import customuser
 from asgiref.sync import sync_to_async
 from .models import Room, Membership, Message, Directs, RoomInvitation
 from django.core.files.storage import default_storage
-import json, os
+import json
+import os
 from django.db.models import F
+
 
 async def add_user_channel_group(self, data):
     try:
@@ -48,8 +50,9 @@ async def invite_member_chat_room(self, data, user_channels):
         )()
     ):
         await sync_to_async(RoomInvitation.objects.create)(user=user, room=room)
-        user_channel = user_channels.get(user.username)
-        if user_channel:
+        user_channels = user_channels.get(user.id)
+        # if user_channel:
+        for user_channel in user_channels:
             await self.channel_layer.send(
                 user_channel,
                 {
@@ -57,14 +60,15 @@ async def invite_member_chat_room(self, data, user_channels):
                     "data": {
                         "type": "roomInvitation",
                         "room": {
+                            'id': room.id,
                             "name": room.name,
-                            "icon_url": room.icon.path,
+                            'topic': room.topic,
+                            "icon": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/chatAPI{room.icon.url}",
                             "membersCount": room.members_count,
                         },
                     },
                 },
             )
-
 
 
 async def chat_room_invitation_declined(self, data):
@@ -93,7 +97,7 @@ async def message(self, data):
         sender=sender, room=room, content=data["data"]["message"]
     )
 
-    await sync_to_async(Membership.objects.filter(room=room).exclude(user=sender).update)(unreadCount= F('unreadCount') + 1)
+    await sync_to_async(Membership.objects.filter(room=room).exclude(user=sender).update)(unreadCount=F('unreadCount') + 1)
     event = {
         "type": "send_message",
         "message": newMessage,
@@ -123,13 +127,13 @@ async def direct_message(self, data, user_channels):
                 {
                     "type": "send_direct",
                     "data": {
-                        'senderAvatar' : f"{protocol}://{ip_address}:8000/chatAPI{sender.avatar.url}",
+                        'senderAvatar': f"{protocol}://{ip_address}:8000/chatAPI{sender.avatar.url}",
                         "sender": sender.username,
                         "receiver": receiver.username,
                         "message": message.message,
-                        'senderId' : sender.id,
-                        'receiverId' : receiver.id,
-                        'date' : message.timestamp,
+                        'senderId': sender.id,
+                        'receiverId': receiver.id,
+                        'date': message.timestamp,
                     },
                 },
             )
@@ -140,13 +144,13 @@ async def direct_message(self, data, user_channels):
                 {
                     "type": "send_direct",
                     "data": {
-                        'senderAvatar' : f"{protocol}://{ip_address}:8000/chatAPI{sender.avatar.url}",
+                        'senderAvatar': f"{protocol}://{ip_address}:8000/chatAPI{sender.avatar.url}",
                         "sender": sender.username,
                         "receiver": sender.username,
                         "message": message.message,
-                        'senderId' : sender.id,
-                        'receiverId' : receiver.id,
-                        'date' : message.timestamp,
+                        'senderId': sender.id,
+                        'receiverId': receiver.id,
+                        'date': message.timestamp,
                     },
                 },
             )

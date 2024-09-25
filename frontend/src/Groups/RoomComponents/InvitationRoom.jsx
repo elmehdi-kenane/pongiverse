@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 
 const InvitationRoom = (props) => {
   const {user } = useContext(AuthContext);
-  const {chatRoomInvitationsRef, setChatRoomInvitations, chatRoomConversationsRef,setChatRoomConversations } = useContext(ChatContext);
+  const {chatRoomInvitationsRef, setChatRoomInvitations } = useContext(ChatContext);
   const onClickAcceptInvitaion = async () => {
     const toastId = toast.loading("Processing invitation...");
     try { 
@@ -29,7 +29,7 @@ const InvitationRoom = (props) => {
           );
           setChatRoomInvitations(updatedRooms)
           const currentChatRooms = props.myChatRooms;
-          setChatRoomConversations([...currentChatRooms, data.room]);
+          props.setMyChatRooms([...currentChatRooms, data.room]);
         }, 500)
       } else {
         toast.dismiss(toastId); 
@@ -45,14 +45,24 @@ const InvitationRoom = (props) => {
 
   const onClickCanelRoomInvitation = async () => {
     try {
-      const response = await fetch (`http://${import.meta.env.VITE_IPADDRESS}:8000/cancelChatRoomInvite`, {
+      const response = await fetch (`http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/cancelChatRoomInvite`, {
         method: 'POST',
-        header: {'Content-type' : 'application/json'},
+        headers: {'Content-type' : 'application/json'},
         body: JSON.stringify({
           room: props.id,
           user: user,
         })
       })
+      const data = await response.json()
+      if(response.ok) {
+        let roomInvitations = chatRoomInvitationsRef.current
+        let updatedRooms = roomInvitations.filter(
+          (room) => room.id !== data.roomId
+        );
+        setChatRoomInvitations(updatedRooms)
+      }
+      else
+        console.log("Error cancelling room invitation")
     } catch (error) {
       console.log(error)
     }
