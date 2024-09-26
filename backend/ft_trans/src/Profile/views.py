@@ -552,7 +552,7 @@ def disable_user_tfq(request, username, otp):
                 user_tfq.delete()
                 user.is_tfq = False
                 user.save()
-                return Response(data={"data": "Congratulation You Disabled Two-Factor Authenticator"}, status=status.HTTP_200_OK)
+                return Response(data={"data": "Two-Factor Authenticator has been disabled"}, status=status.HTTP_200_OK)
     return Response(data={'error': 'Error disabling user TFQ'}, status=status.HTTP_400_BAD_REQUEST)
 
 
