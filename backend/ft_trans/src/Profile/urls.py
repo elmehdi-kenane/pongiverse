@@ -30,4 +30,6 @@ urlpatterns = [
     path('ValidateTFQ/<str:username>/<str:otp>', views.validate_user_tfq),
     path('DisableTFQ/<str:username>/<str:otp>', views.disable_user_tfq),
     path('CheckUserTFQ/<str:username>/<str:otp>', views.check_user_tfq),
+    
+    path('CheckFriendship/<str:username>/<str:username2>', views.check_friendship),
 ]

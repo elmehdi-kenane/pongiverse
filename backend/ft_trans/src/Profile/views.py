@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from myapp.models import customuser
 from mainApp.models import UserMatchStatics, Match, MatchStatistics
+from friends.models import Friendship
 from rest_framework.decorators import api_view
 
 from django.http import HttpResponse
@@ -575,3 +576,17 @@ def check_user_tfq(requset, username, otp):
                 response.status_code = status.HTTP_200_OK
                 return response
             return Response(data={'Case': 'Wrong otp'}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+#**------- Check OTP for SignIN -------**#
+
+@api_view(["GET"])
+def check_friendship(request, username, username2):
+    user = customuser.objects.filter(username=username).first()
+    user2 = customuser.objects.filter(username=username2).first()
+    if user and user2:
+        is_friends = Friendship.objects.filter(user=user, friend=user2).first()
+        if is_friends:
+            return Response(data={"data": 'true'}, status=status.HTTP_200_OK)
+        return Response(data={"data": 'Not Friends'}, status=status.HTTP_404_NOT_FOUND)
+    return Response(data={'error': 'Error disabling user TFQ'}, status=status.HTTP_400_BAD_REQUEST)
