@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from '../../assets/SignIn/authentication.module.css'
 import logo42 from '../../assets/SignUp/42_logo.svg'
 import logo from '../../assets/SignUp/logo.svg'
@@ -10,7 +10,27 @@ import SignInWays from './SignInWays';
 import SignUpForm from '../SignUp/SignUpForm';
 import SignUpWays from '../SignUp/SignUpWays';
 import toast, { Toaster } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 function SignInPage() {
+	const navigate = useNavigate();
+
+	useEffect(() =>{
+		const check_is_authenticated = async () => {
+			const response = await fetch(`http://localhost:8000/auth/check-is-authenticated`, {
+				method: "GET",
+				credentials: "include"
+			});
+			if (response.ok) {
+				const data = await response.json();
+				if (data.is_authenticated) {
+					navigate('/mainpage');
+				}
+			} else {
+				console.error('Failed to fetch data');
+			}
+		}
+		check_is_authenticated();
+	},[])
 
 
 	return (

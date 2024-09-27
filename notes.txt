@@ -12,3 +12,9 @@
 * clear the group channels when needed
 * save bot stats everytime goal scored -tabs problem-
 *in tournament join, check if already joined a tournament
+* delete display and warn befaure the game started
+* HANDLE go to users profile in tournament
+*start and change the page, warning notification need to refresh
+
+
+

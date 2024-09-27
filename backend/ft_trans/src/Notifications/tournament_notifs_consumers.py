@@ -132,21 +132,6 @@ async def quarterFinal_timer(self, data):
 		asyncio.create_task(manage_tournament(self, tournament_id))
 
 
-async def OtherRounds(self, actual_round, tournament):
-	tournamentwarnnotification = TournamentWarnNotifications(tournament=tournament)
-	# await sync_to_async(tournamentwarnnotification.save)()
-	# group_name = f'tournament_{tournament.tournament_id}'
-	# await self.channel_layer.group_send(
-	# 	group_name,
-	# 	{
-	# 		'type': 'warn_members',
-	# 		'message': {
-	# 			'time' : tournamentwarnnotification.created_at.isoformat()
-	# 		}
-	# 	}
-	# )
-	# await send_user_eliminated_after_delay(self, tournament, actual_round)
-
 async def get_right_room(tournament_id, tournament_rooms, username):
 	room = {}
 	t_rooms = tournament_rooms.get(str(tournament_id))
@@ -155,4 +140,10 @@ async def get_right_room(tournament_id, tournament_rooms, username):
 			if any(player['user'] == username for player in the_room.get('players', [])):
 				return the_room
 	return room
- 
+
+async def delete_display_oponent(self, data):
+	user1 = data['message']['user1']
+	user2 = data['message']['user2']
+	displayopponent = await sync_to_async(DisplayOpponent.objects.filter(user1=user1, user2=user2).first)()
+	if displayopponent is not None:
+		await sync_to_async(displayopponent.delete)()

@@ -9,6 +9,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
 import Swal from 'sweetalert2';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import * as Icons from '../../assets/navbar-sidebar'
 
 
 function CreateTournament() {
@@ -17,10 +18,10 @@ function CreateTournament() {
 	const [inviteButton, setInviteButton] = useState(true)
 	const [tournamentId, setTournamentId] = useState(0)
 	const [tournamentMembers, setTournamentMembers] = useState([])
-	const [membersImages, setMemberImages] = useState([])
 	const navigate = useNavigate()
 	const location = useLocation()
-	const { user, userImages, allGameFriends, socket, notifSocket,  setAllGameFriends } = useContext(AuthContext)
+	// const [isAnyUserOffline, setIsAnyUserOffline] = useState()	
+	const { user, userImages, allGameFriends, socket, notifSocket, setAllGameFriends } = useContext(AuthContext)
 	const allGameFriendsRef = useRef(allGameFriends);
 	const divRef = useRef(null);
 	const divRef2 = useRef(null);
@@ -29,6 +30,10 @@ function CreateTournament() {
 	const isOpen = () => {
 		setOpen(!open);
 	}
+
+	// useEffect(() =>{
+	// 	setIsAnyUserOffline(tournamentMembers.some(user => !user.is_online));
+	// },[tournamentMembers])
 
 	const handleInviteClick = (name) => {
 		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
@@ -66,7 +71,7 @@ function CreateTournament() {
 			confirmButtonText: "Yes, Destroy it!",
 			customClass: {
 				popup: styles['destroy-popup'],
-				title : styles['destroy-popup-title'],
+				title: styles['destroy-popup-title'],
 			}
 		}).then((result) => {
 			if (result.isConfirmed) {
@@ -185,7 +190,7 @@ function CreateTournament() {
 			});
 			if (response.ok) {
 				const data = await response.json();
-				const newUser = { 'id': data.id, 'name': data.name, 'level': data.level, 'image': data.image , 'background_image': data.background_image}
+				const newUser = { 'id': data.id, 'name': data.name, 'level': data.level, 'image': data.image, 'background_image': data.background_image }
 				console.log("NEW USERRR:", newUser)
 				setTournamentMembers((prevTournamentMembers) => [...prevTournamentMembers, newUser]);
 				setTournamentMembers((prevTournamentMembers) => {
@@ -194,21 +199,6 @@ function CreateTournament() {
 					}
 					return prevTournamentMembers;
 				});
-				// const fetchImages = async (user_image) => {
-				// 	const response = await fetch(`http://localhost:8000/api/getImage`, {
-				// 		method: "POST",
-				// 		headers: {
-				// 			'Content-Type': 'application/json',
-				// 		},
-				// 		body: JSON.stringify({
-				// 			image: user_image
-				// 		})
-				// 	});
-				// 	const blob = await response.blob();
-				// 	const image = URL.createObjectURL(blob);
-				// 	setMemberImages((prevMemberImages) => [...prevMemberImages, image]);
-				// };
-				// fetchImages(data.image)
 			} else {
 				console.error('Failed to fetch data');
 			}
@@ -247,8 +237,8 @@ function CreateTournament() {
 					if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
 						notifSocket.send(JSON.stringify({
 							type: 'Round-16-timer',
-							message : {
-								tournament_id : tournament_id,
+							message: {
+								tournament_id: tournament_id,
 								user: user
 							}
 						}))
@@ -261,6 +251,18 @@ function CreateTournament() {
 						get_member(data.message.user)
 						setAllGameFriends(currentAllGameFriends.filter(user => user.name !== data.message.user))
 					}
+				} else if (type === 'playingStatus') {
+					if (data.message.is_playing === false) {
+						const currentAllGameFriends = allGameFriendsRef.current;
+						const userExists = currentAllGameFriends.some(friend => friend.name === message.userInfos.name)
+						if (!userExists)
+							setAllGameFriends([...currentAllGameFriends, message.userInfos])
+					}
+					else {
+						const currentAllGameFriends = allGameFriendsRef.current;
+						let username = message.user
+						setAllGameFriends(currentAllGameFriends.filter(user => user.name !== username))
+					}
 				}
 			}
 		}
@@ -268,13 +270,12 @@ function CreateTournament() {
 	}, [socket])
 
 
-	useEffect(()=>{
+	useEffect(() => {
 		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
 			notifSocket.onmessage = (event) => {
 				let data = JSON.parse(event.data)
 				let type = data.type
 				let message = data.message
-				console.log("DATA RECEIVED:", data)
 				if (type === 'user_disconnected') {
 					console.log("ENTER TO USER DISCONNECTED")
 					const currentAllGameFriends = allGameFriendsRef.current;
@@ -285,7 +286,6 @@ function CreateTournament() {
 					console.log("ENTER TO USER CONNECTED AGAIN TOUR")
 					setTournamentMembers(prevMembers => prevMembers.map(member => member.name === message.user ? { ...member, 'is_online': true } : member));
 				} else if (type === 'connected_again') {
-					console.log("ENTER TO USER CONNECTED AGAIN")
 					const currentAllGameFriends = allGameFriendsRef.current;
 					const userExists = currentAllGameFriends.some(friend => friend.name === message.user)
 					if (!userExists)
@@ -295,7 +295,7 @@ function CreateTournament() {
 				}
 			}
 		}
-	},[notifSocket])
+	}, [notifSocket])
 
 	useEffect(() => {
 		if (socket && socket.readyState === WebSocket.OPEN) {
@@ -372,10 +372,13 @@ function CreateTournament() {
 										<img className={styles["friend-avatar"]} src={userImages[key]} alt="" />
 										<div className={styles["friend-name-and-status"]}>
 											<h3 className={styles["friend-name"]}>{user.name}</h3>
-											<h3 className={styles["friend-status"]}>online</h3>
+											<h3 className={styles["friend-status"]}>level {user.level}</h3>
 										</div>
 									</div>
-									{inviteButton && <img className={styles["friend-invite-button"]} src={invitefriend} alt="" onClick={() => handleInviteClick(user.name)} />}
+									<div className={styles["friend-invite-button-div"]} onClick={() => handleInviteClick(user.name)}>
+										<img className={styles["friend-invite-button-img"]} src={Icons.console} />
+										<p className={styles["friend-invite-button-p"]}>Invite</p>
+									</div>
 								</div>
 							);
 						}
@@ -421,7 +424,7 @@ function CreateTournament() {
 							<div className={styles["up-buttons"]}>
 								<button className={styles["up-button"]} onClick={isOpen} ref={inviteRef2}>Invite Friend</button>
 								{
-									tournamentMembers.length === 8 ? <button className={styles["up-button"]} onClick={handleStart}>Start</button> : <button className={styles["up-button-disabled"]} onClick={handleStart} disabled>Start</button>
+									tournamentMembers.length === 8 ? <button className={styles["up-button"]} onClick={handleStart}>Start</button> : <button className={styles["up-button-disabled"]} disabled>Start</button>
 								}
 							</div>
 							: <div className={styles["up-buttons"]}>
@@ -434,7 +437,7 @@ function CreateTournament() {
 								backgroundImage: `url(${tournamentMembers[0].background_image})`,
 								backgroundSize: "cover",
 								backgroundPosition: "center",
-							  }}>
+							}}>
 								{
 									tournamentMembers[0].is_online === false &&
 									<div className={styles["disconnected-div"]}>
@@ -459,13 +462,13 @@ function CreateTournament() {
 								</div>
 							</div>)
 						}
-						
+
 						{
 							tournamentMembers.length >= 2 ? (<div className={styles["player"]} style={{
 								backgroundImage: `url(${tournamentMembers[1].background_image})`,
 								backgroundSize: "cover",
 								backgroundPosition: "center",
-							  }}>
+							}}>
 								{
 									tournamentMembers[1].is_online === false &&
 									<div className={styles["disconnected-div"]}>
@@ -490,13 +493,13 @@ function CreateTournament() {
 								</div>
 							</div>)
 						}
-						
+
 						{
 							tournamentMembers.length >= 3 ? (<div className={styles["player"]} style={{
 								backgroundImage: `url(${tournamentMembers[0].background_image})`,
 								backgroundSize: "cover",
 								backgroundPosition: "center",
-							  }}>
+							}}>
 								{
 									tournamentMembers[2].is_online === false &&
 									<div className={styles["disconnected-div"]}>
@@ -521,13 +524,13 @@ function CreateTournament() {
 								</div>
 							</div>)
 						}
-						
+
 						{
 							tournamentMembers.length >= 4 ? (<div className={styles["player"]} style={{
 								backgroundImage: `url(${tournamentMembers[0].background_image})`,
 								backgroundSize: "cover",
 								backgroundPosition: "center",
-							  }}>
+							}}>
 								{
 									tournamentMembers[3].is_online === false &&
 									<div className={styles["disconnected-div"]}>
@@ -552,13 +555,13 @@ function CreateTournament() {
 								</div>
 							</div>)
 						}
-						
+
 						{
 							tournamentMembers.length >= 5 ? (<div className={styles["player"]} style={{
 								backgroundImage: `url(${tournamentMembers[0].background_image})`,
 								backgroundSize: "cover",
 								backgroundPosition: "center",
-							  }}>
+							}}>
 								{
 									tournamentMembers[4].is_online === false &&
 									<div className={styles["disconnected-div"]}>
@@ -583,13 +586,13 @@ function CreateTournament() {
 								</div>
 							</div>)
 						}
-						
+
 						{
 							tournamentMembers.length >= 6 ? (<div className={styles["player"]} style={{
 								backgroundImage: `url(${tournamentMembers[0].background_image})`,
 								backgroundSize: "cover",
 								backgroundPosition: "center",
-							  }}>
+							}}>
 								{
 									tournamentMembers[5].is_online === false &&
 									<div className={styles["disconnected-div"]}>
@@ -614,13 +617,13 @@ function CreateTournament() {
 								</div>
 							</div>)
 						}
-						
+
 						{
 							tournamentMembers.length >= 7 ? (<div className={styles["player"]} style={{
 								backgroundImage: `url(${tournamentMembers[0].background_image})`,
 								backgroundSize: "cover",
 								backgroundPosition: "center",
-							  }}>
+							}}>
 								{
 									tournamentMembers[6].is_online === false &&
 									<div className={styles["disconnected-div"]}>
@@ -645,13 +648,13 @@ function CreateTournament() {
 								</div>
 							</div>)
 						}
-						
+
 						{
 							tournamentMembers.length >= 8 ? (<div className={styles["player"]} style={{
 								backgroundImage: `url(${tournamentMembers[0].background_image})`,
 								backgroundSize: "cover",
 								backgroundPosition: "center",
-							  }}>
+							}}>
 								{
 									tournamentMembers[7].is_online === false &&
 									<div className={styles["disconnected-div"]}>
@@ -676,7 +679,7 @@ function CreateTournament() {
 								</div>
 							</div>)
 						}
-						
+
 					</div>
 					{
 						isTournamentOwner ?

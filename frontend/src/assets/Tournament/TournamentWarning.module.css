@@ -1,0 +1,30 @@
+
+
+.tournament-warning-div{
+    position: absolute;
+    width: 250px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 2px;
+    display: flex;
+}
+
+.tournament-warning-text {
+    display: flex;
+    width: 100%;
+    justify-content: start;
+    padding-left: 10px;
+    align-items: center;
+    font-size: 15px;
+}
+
+.tournament-warning-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tournament-warning-button img{
+    width: 30px;
+    height: 30px;
+}

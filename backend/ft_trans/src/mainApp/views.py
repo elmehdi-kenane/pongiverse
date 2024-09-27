@@ -114,21 +114,6 @@ def get_user(request):
 		response.data = {'id' : user.id, 'name' : user.username, 'level' : 2, 'image' : user.avatar.path}
 		return response
 
-@api_view(['GET'])
-def create_tournament(request):
-	response = Response()
-	while True:
-		random_number = random.randint(1000000000, 10000000000)
-		tournament = Tournament.objects.filter(tournament_id=random_number).first()
-		if tournament is None:
-			break
-	response.data = {'tournament_id' : random_number}
-	return response
-
-	if (request.data).get('image'):
-		with open(request.data['image'], 'rb') as image_file:
-			return HttpResponse(image_file.read(), content_type='image/jpeg')
-
 @api_view(['POST'])
 def user_image(request):
 	username = (request.data).get('user')
@@ -147,9 +132,10 @@ def user_image(request):
 
 def is_user_in_any_tournament(username):
 	for tournament_id, tournament_data in tournaments.items():
-		for member in tournament_data['members']:
-			if member['username'] == username:
-				return True, tournament_id, [m['username'] for m in tournament_data['members']]
+		if tournament_data['is_started'] == False or  (tournament_data['is_started'] == True and tournament_data['is_finished'] == False):
+			for member in tournament_data['members']:
+				if member['username'] == username and member['is_eliminated'] == False:
+					return True, tournament_id, [m['username'] for m in tournament_data['members']]
 	return False, 0, []
 
 def get_users_data(usernames):
@@ -182,8 +168,6 @@ def is_user_owner_in_tournament(user_to_check, tournament_id):
 def tournament_members(request):
 	username = request.data.get('user')
 	user_exists, tournament_id, members_usernames = is_user_in_any_tournament(username)
-	if user_exists:
-		pass
 	response = Response()
 	is_owner = is_user_owner_in_tournament(username, tournament_id)
 	if is_owner == False:
@@ -288,9 +272,10 @@ def get_tournament_suggestions(request):
 
 def is_user_in_joining_tournament(username):
 	for tournament_id, tournament_data in tournaments.items():
-		for member in tournament_data['members']:
-			if member['username'] == username and member['is_eliminated'] == False and (tournament_data['is_started'] == False or  (tournament_data['is_started'] == True and tournament_data['is_finished'] == False)):
-				return True
+		if tournament_data['is_started'] == False or  (tournament_data['is_started'] == True and tournament_data['is_finished'] == False):
+			for member in tournament_data['members']:
+				if member['username'] == username and member['is_eliminated'] == False:
+					return True
 	return False
 
 @api_view(['POST'])
@@ -305,14 +290,15 @@ def is_joining_tournament(request):
 
 def get_tournament_id(username):
 	for tournament_id, tournament_data in tournaments.items():
-		for member in tournament_data['members']:
-			if member['username'] == username:
-				return tournament_id
+		if tournament_data['is_started'] == False or  (tournament_data['is_started'] == True and tournament_data['is_finished'] == False):
+			for member in tournament_data['members']:
+				if member['username'] == username and member['is_eliminated'] == False:
+					return tournament_id
 	return 0
 
-def check_is_eliminated(username):
-	for tournament_id, tournament_data in tournaments.items():
-		for member in tournament_data['members']:
+def check_is_eliminated(username, tournament_id):
+	if tournament_id in tournaments:
+		for member in tournaments[tournament_id]['members']:
 			if member['username'] == username:
 				return member['is_eliminated']
 	return False
@@ -323,8 +309,7 @@ def is_started_and_not_finshed(request):
 	response = Response()
 	tournament_id = get_tournament_id(username)
 	if tournament_id != 0:
-		is_eliminated = check_is_eliminated(username)
-		# print(f"\nis_started : {tournaments[tournament_id]['is_started']}, is_finished : {tournaments[tournament_id]['is_finished']}, is_eliminated : {is_eliminated}\n")
+		is_eliminated = check_is_eliminated(username, tournament_id)
 		if tournaments[tournament_id]['is_started'] == True and tournaments[tournament_id]['is_finished'] == False and is_eliminated == False:
 			response.data = {'Case' : 'yes'}
 			return response

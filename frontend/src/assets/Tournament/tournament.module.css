@@ -123,6 +123,7 @@
 	padding: 0 5px;
 	font-size: 20px;
 	opacity: 50%;
+	cursor: not-allowed;
 }
 
 .down-button {
@@ -265,6 +266,30 @@
 	opacity: 0.7;
 }
 
+.friend-invite-button-div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #4d4ea6;
+	height: 20px;
+	width: 80px;
+	gap: 5px;
+	border-radius: 5px;
+}
+
+.friend-invite-button-div:hover {
+	background-color: #3c3d7f;
+}
+
+.friend-invite-button-img {
+	width: 15px;
+}
+
+.friend-invite-button-p {
+	color: white;
+	font-size: 10px;
+}
+
 .friend-invite-button {
 	margin-top: 2px;
 	border: none;
@@ -390,6 +415,7 @@
 	padding: 0 5px;
 	font-size: 20px;
 	opacity: 50%;
+	cursor: not-allowed;
 }
 
 .notifications {

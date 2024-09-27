@@ -241,6 +241,7 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 		room["ball"]["ballX"] += ballProps["velocityX"]
 		room["ball"]["ballY"] += ballProps["velocityY"]
 		if room['status'] == 'finished':
+			print("\n\nGAME IS FINISHED\n\n")
 			await sync_to_async(DisplayOpponent.objects.all().delete)()
 			await delete_spicific_room(tournament_rooms, room, tournament_id)
 			player1 = await sync_to_async(customuser.objects.get)(username=room['players'][0]['user'])
@@ -1001,21 +1002,23 @@ async def validatePlayerTournamentGame(self, data, tournament_rooms, user_channe
 
 def get_tournament_id(username):
 	for tournament_id, tournament_data in tournaments.items():
-		for member in tournament_data['members']:
-			if member['username'] == username:
-				return tournament_id
+		if tournament_data['is_started'] == False or  (tournament_data['is_started'] == True and tournament_data['is_finished'] == False):
+			for member in tournament_data['members']:
+				if member['username'] == username and member['is_eliminated'] == False:
+					return tournament_id
 	return 0
 
 
 async def user_exited_tournament_game(self, data, tournament_rooms):
 	message = data['message']
 	room = {}
-	user = await sync_to_async(customuser.objects.filter(username=message['user']).first)()
-	tournament_id = get_tournament_id(user)
-	tournament = await sync_to_async(Tournament.objects.filter(tournament_id=tournament_id).first)()
+	tournament_id = get_tournament_id(message['user'])
+	print(f"************TournamentId : {tournament_id}")
 	if tournament_id != 0:
 		room = await get_right_room(tournament_id, tournament_rooms, message['user'])
+		print(f"************Room : {room}")
 	if room:
+		print("\n\n************USER EXITED TOURNAMENT GAME\n\n")
 		room['status'] = 'finished'
 		if room['players'][0]['user'] == message['user']:
 			room['players'][0]['status'] = 'loser'
@@ -1029,4 +1032,3 @@ async def user_exited_tournament_game(self, data, tournament_rooms):
 			# user = await sync_to_async(customuser.objects.filter(username=room['players'][1]['user']).first)()
 			# await set_player_eliminated(user, tournament)
 			update_is_eliminated(tournament_id, message['user'], True)
-   

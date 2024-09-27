@@ -35,10 +35,6 @@ def generate_unique_room_id(tournament_id):
 			return room_id
 
 def get_player_position(tournament_id, member_username, actual_round):
-	# round = await sync_to_async(Round.objects.filter(tournament=tournament, type=actual_round).first)()
-	# usertournamentinfo = await sync_to_async(TournamentUserInfo.objects.filter(user=member, round=round).first)()
-	# position = usertournamentinfo.position
-	# return position
 	if tournament_id in tournaments:
 		if actual_round in tournaments[tournament_id]['rounds']:
 			for player in tournaments[tournament_id]['rounds'][actual_round]:
@@ -91,8 +87,7 @@ def get_player_by_position(tournament_id, round_name, position):
                     return player
 def get_is_eliminated(tournament_id, username):
 	if tournament_id in tournaments:
-		members = tournaments[tournament_id]['members']
-		for member in members:
+		for member in tournaments[tournament_id]['members']:
 			if member['username'] == username:
 				return member['is_eliminated']
 	return False
@@ -121,12 +116,12 @@ async def save_tournament_to_db(tournament_id):
 
 
 async def send_user_eliminated_after_delay(self, tournament_id, actual_round):
-	print(f"\nGET INTO SEND USER ELIMINATED AFTER DELAY : {actual_round}\n")
 	rounds = ['QUARTERFINAL', 'SEMIFINAL', 'FINAL', 'WINNER']
 	next_round = ''
 	if actual_round == 'WINNER':
 		for member in tournaments[tournament_id]['rounds'][actual_round]:
 			if member['username'] != 'anounymous':
+				await save_tournament_to_db(tournament_id)
 				channel_name_list = notifs_user_channels.get(member['username'])
 				if channel_name_list:
 					for channel_name in channel_name_list:
@@ -140,10 +135,7 @@ async def send_user_eliminated_after_delay(self, tournament_id, actual_round):
 								}
 							}
 						)
-		await save_tournament_to_db(tournament_id)
 		return
-		# tournament.is_finished = True
-		# await sync_to_async(tournament.save)()
 	else:
 		round_index = rounds.index(actual_round)
 		next_round = rounds[round_index + 1]
@@ -385,6 +377,7 @@ async def manage_tournament(self, tournament_id):
 		finalcount = len(tournaments[tournament_id]['rounds']['FINAL'])
 		winnercount = len(tournaments[tournament_id]['rounds']['WINNER'])
 		print(f"\nQUARTERFINAL COUNT: {quarterfinalcount}, SEMIFINAL COUNT: {semifinalcount}, FINAL COUNT: {finalcount}, WINNER COUNT: {winnercount}\n")
+		print(f"\n *************tournament members: {tournaments[tournament_id]['members']}\n")
 		if quarterfinalcount == 8 and semifinalcount == 0 and counter == 0:
 			counter += 1
 			# number_of_null_players = await sync_to_async(TournamentUserInfo.objects.filter(round=roundquarterfinal, user=None).count)()

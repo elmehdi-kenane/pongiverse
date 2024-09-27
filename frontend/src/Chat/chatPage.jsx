@@ -6,12 +6,9 @@ import ChatConversation from "./chatConversation";
 import ChatRoomConversation from "./chatRoomConversation";
 import { useContext, useEffect, useState } from "react";
 import toast, { Toaster } from 'react-hot-toast';
+import TournamentWarning from "../Tournament/RemoteTournament/TournamentWarning";
 
 const Chat = () => {
-	// hadchi dyal rida
-	const [createdAt, setCreatedAt] = useState(null)
-	const [timeDiff, setTimeDiff] = useState(null);
-	// end hadchi dyal rida
 
 	const {
 		chatRoomConversations,
@@ -31,16 +28,6 @@ const Chat = () => {
 	});
 
 	//START  HADCHI DYAL RIDA
-
-	const notifyError = (message) => toast.error(message, {
-		position: 'top-center',
-		duration: 6000,
-	});
-	const notifyErrorTest = (message, timeD) => toast.error(message + ' ' + timeD, {
-		position: 'top-center',
-		duration: 1000,
-	});
-
 	const set_is_inside = async () => {
 		const response = await fetch(`http://localhost:8000/api/set-is-inside`, {
 			method: 'POST',
@@ -60,62 +47,6 @@ const Chat = () => {
 		}
 	}, [user])
 
-
-	useEffect(() => {
-		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
-			notifSocket.onmessage = (event) => {
-				let data = JSON.parse(event.data)
-				let type = data.type
-				let message = data.message
-				if (type === 'warn_members')
-					setCreatedAt(new Date(message.time))
-			}
-		}
-	}, [notifSocket])
-
-	useEffect(() => {
-		const getTournamentWarning = async () => {
-			const response = await fetch(`http://localhost:8000/api/get-tournament-warning`, {
-				method: "POST",
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					user: user
-				})
-			});
-			if (response.ok) {
-				const data = await response.json();
-				console.log("AAGOU:", data)
-				if (data.Case === 'yes')
-					setCreatedAt(new Date(data.time))
-			}
-		}
-		if (user)
-			getTournamentWarning()
-	}, [user])
-
-	useEffect(() => {
-		if (createdAt) {
-			const interval = setInterval(() => {
-				const now = new Date();
-				const diffInSeconds = Math.floor((now - createdAt) / 1000);
-				if (diffInSeconds < 14) {
-					setTimeDiff(14 - diffInSeconds);
-				} else {
-					setTimeDiff(null);
-					// navigate("/signin");
-				}
-			}, 1000);
-			return () => clearInterval(interval);
-		}
-	}, [createdAt])
-
-	useEffect(() => {
-		if (timeDiff) {
-			notifyErrorTest('hello rida:', timeDiff)
-		}
-	}, [timeDiff])
 	// ENDDDD HADCHI DYAL RIDA
 
 	const handleSelectItem = (itemName) => {
@@ -124,7 +55,8 @@ const Chat = () => {
 
 	return (
 		<div className="chat-page">
-			<Toaster />
+			{/* <Toaster /> */}
+			<TournamentWarning />
 			<div className="chat-container">
 				<div
 					className={

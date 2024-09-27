@@ -11,11 +11,11 @@ function TournamentCelebration() {
 	const navigate = useNavigate()
 	const location = useLocation()
 	const tournamentId = location.state?.tournament_id;
-	useEffect(() => {
-        if (!tournamentId) {
-            navigate('../game');
-        }
-    }, [tournamentId, navigate]);
+	// useEffect(() => {
+	// 	if (!tournamentId) {
+	// 		navigate('../game');
+	// 	}
+	// }, [tournamentId, navigate]);
 	const [roundQuarterFinalMembers, setroundQuarterFinalMembers] = useState([])
 	const [roundSemiFinalMembers, setroundSemiFinalMembers] = useState([])
 	const [finalMembers, setFinalMembers] = useState([])
@@ -65,16 +65,30 @@ function TournamentCelebration() {
 			}
 		}
 
-		if (user) {
-			set_is_inside()
-			gameMembersRounds()
-		}
-	}, [user])
+		const fetchData = async () => {
+			if (user) {
+				await set_is_inside();
+				await gameMembersRounds();
+			}
+		};
+
+		fetchData();
+	}, [user, tournamentId])
 
 
 
 	return (
 		<div className={styles['tournamentbracketpage']}>
+			<div className={styles['confetti-div']}>
+				<Confetti
+					mode='fall'
+					particleCount={1000}
+					shapeSize={40}
+					recycle={false}
+					gravity={0.1}
+					wind={0.1}
+				/>
+			</div>
 			<div className={styles['normalSvg']}>
 				<SvgComponent roundquartermembers={roundQuarterFinalMembers} roundsemifinalmembers={roundSemiFinalMembers} roundfinalMembers={finalMembers} roundwinner={winnerMember} />
 			</div>

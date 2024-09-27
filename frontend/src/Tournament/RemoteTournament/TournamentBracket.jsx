@@ -174,6 +174,15 @@ function TournamentBracket() {
 				if (diffInSeconds < 3) {
 					setTimeDiff(3 - diffInSeconds);
 				} else {
+					if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+						notifSocket.send(JSON.stringify({
+							type: 'Delete-display-oponent',
+							message : {
+								user1: userOneToDisplay,
+								user2: userTwoToDisplay
+							}
+						}))
+					}
 					navigate('../game/1vs1tournament')
 				}
 			}, 1000);

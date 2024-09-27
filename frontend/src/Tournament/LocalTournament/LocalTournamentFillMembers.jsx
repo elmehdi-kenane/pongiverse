@@ -17,13 +17,18 @@ function LocalTournamentFillMembers() {
 	const regex = /^(?!\d)[a-zA-Z0-9_]{4,8}$/;
 	const { user } = useContext(AuthContext)
 
+	const handleCancel = () => {
+		setOpen(false);
+		setIndex(-1);
+	}
+
 	const Component = () => {
 		return (
 			<div className={styles['change-player-username']}>
 				<p className={styles['change-player-username-title']}>Change the username</p>
 				<input type="text" value={username} autoFocus onChange={(e) => { setUsername(e.target.value) }} className={styles['change-player-username-input']} />
 				<div className={styles['change-player-buttons']}>
-					<button className={styles['change-player-button']} onClick={modify_open}>Cancel</button>
+					<button className={styles['change-player-button']} onClick={handleCancel}>Cancel</button>
 					<button className={styles['change-player-button']} onClick={handleConfirm}>Confirm</button>
 				</div>
 			</div>
@@ -113,18 +118,21 @@ function LocalTournamentFillMembers() {
 						open && <Component />
 					}
 					{
-						players.map((player, index) => (
-							<div key={index} className={open ? styles["player-opened"] : styles["player"]} onClick={!open ? () => div_click(index) : null} style={{
-								backgroundImage: `url(${backgroundImage})`,
-								backgroundSize: "cover",
-								backgroundPosition: "center",
-							}}>
+						players.map((player, ind) => (
+							<div key={ind} className={`
+							${open ? styles["player-opened"] : styles["player"]} 
+							${ind === index ? styles["player-selected"] : ""} 
+						  `} onClick={!open ? () => div_click(ind) : null} style={{
+									backgroundImage: `url(${backgroundImage})`,
+									backgroundSize: "cover",
+									backgroundPosition: "center",
+								}}>
 								<div className={styles["user-avatar"]} >
 									<img className={styles["avatar"]} src={avatar} alt="" />
 								</div>
 								<div className={styles["line-and-user-info"]}>
 									<div className={styles["user-info"]}>
-										<h4 className={styles["user-info-name"]}>{players[index]}</h4>
+										<h4 className={styles["user-info-name"]}>{players[ind]}</h4>
 									</div>
 								</div>
 							</div>

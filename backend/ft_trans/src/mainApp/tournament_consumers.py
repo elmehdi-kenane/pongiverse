@@ -79,7 +79,7 @@ async def create_tournament(self, data, user_channels):
 		while True:
 			random_number = random.randint(1000000000, 10000000000)
 			tournament = await sync_to_async(Tournament.objects.filter(tournament_id=random_number).first)()
-			if tournament is None:
+			if tournament is None and random_number not in tournaments:
 				break
 		user.is_playing = True
 		await sync_to_async(user.save)()
@@ -222,7 +222,6 @@ async def destroy_tournament(self, data, user_channels):
 	tournament_id = data['message']['tournament_id']
 	username = data['message']['user']
 	user = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
-	tournament = await sync_to_async(Tournament.objects.filter(tournament_id=tournament_id).first)()
 	group_name = f'tournament_{tournament_id}'
 	await self.channel_layer.group_send(
 		group_name,

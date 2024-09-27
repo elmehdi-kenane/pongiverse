@@ -73,7 +73,6 @@ class Edges {
 const OneVsOnePlayTournamentMatch = () => {
 	let { privateCheckAuth, gameCustomize, socket, user , notifSocket} = useContext(AuthContext)
 	const [canvasDrawing, setCanvasDrawing] = useState(false)
-	const [gameAborted, setGameAborted] = useState(false)
 	const [gameFinished, setGameFinished] = useState(false)
 	const [userName1, setUserName1] = useState(null)
 	const [userName2, setUserName2] = useState(null)
@@ -105,7 +104,6 @@ const OneVsOnePlayTournamentMatch = () => {
 	const canvasDimensionsRef = useRef(canvasDimensions);
 	const gameCustomizeRef = useRef(gameCustomize);
 	const gameFinishedRef = useRef(gameFinished);
-	const gameAbortedRef = useRef(gameAborted);
 	const wrapperRef = useRef(null);
 	const resultRef = useRef(null);
 	const aspectRatio = 710 / 400
@@ -336,9 +334,8 @@ function createParticle(x, y) {
 		canvasDimensionsRef.current = canvasDimensions;
 		gameCustomizeRef.current = gameCustomize
 		gameFinishedRef.current = gameFinished
-		gameAbortedRef.current = gameAborted
 		canvasDimsRef.current = canvasDims
-	}, [canvasContext, canvasDimensions, gameCustomize, gameAborted, gameFinished, canvasDims]);
+	}, [canvasContext, canvasDimensions, gameCustomize, gameFinished, canvasDims]);
 
 	function resizeCanvas() {
 		const canvas = canvasRef.current;
@@ -688,9 +685,8 @@ function createParticle(x, y) {
 					<p>{score1}</p>
 					<div className='onevsone-pm-infos-stats' >
 						<div>
-							{/* <img src={Icons.logout} alt="" onClick={(!gameFinished && !gameAborted) ? exitTheGame : undefined} /> */}
 							<p>Goal: 5</p>
-							<div onClick={(!gameFinished && !gameAborted) ? exitTheGame : undefined} >
+							<div onClick={exitTheGame} >
 								<img src={Icons.logout} alt="" />
 								<p>Exit</p>
 							</div>

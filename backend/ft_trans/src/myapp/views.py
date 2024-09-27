@@ -447,3 +447,22 @@ def SignUpIntraGetUserData(request):
 	except Exception as e:
 		print(f"Exception: {str(e)}")
 		return Response({'error': str(e)}, status=500)
+
+
+@api_view(['POST'])
+def LogoutView(request):
+	response = Response()
+	response.delete_cookie('token')
+	response.data = {"Case" : "Logout successfully"}
+	return response
+
+@api_view(['GET'])
+def CheckIsAuthenticated(request):
+	token = request.COOKIES.get('token')
+	if token is None:
+		return Response({'is_authenticated': False})
+	try:
+		decoded_token = AccessToken(token)
+		return Response({'is_authenticated': True})
+	except TokenError:
+		return Response({'is_authenticated': False})

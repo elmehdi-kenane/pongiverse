@@ -34,25 +34,6 @@ function NavbarSidebar() {
     setSearchBar(!searchbar);
   };
 
-  let logout = async (e) => {
-    e.preventDefault();
-    try {
-      let response = await fetch("http://localhost:8000/api/logout", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      let content = await response.json();
-      if (content.message) {
-        setUser("");
-        navigate("/signin");
-      }
-    } catch (e) {
-      console.log("Error in network or URL");
-    }
-  }
     return (
       <>
           {!hideNavSideBar && (<Navbar
