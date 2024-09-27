@@ -1,5 +1,6 @@
 import {React, useState, useEffect, useRef, useContext} from 'react'
 import AuthContext from '../../navbar-sidebar/Authcontext';
+import ProfileContext from '../ProfileWrapper';
 
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
@@ -15,14 +16,13 @@ const friendPrm = ["chat", "challenge", "remove", "block"];
 
 function IsFriends(){
     const [isLoading, setIsLoading] = useState(false);
-    const [isFriend, setIsFriend] = useState('true');
+    // const [isFriend, setIsFriend] = useState('false');
 
     const [isParam, setIsParam] = useState(false);
     const paramRef = useRef(null);
 
-    const {blockRef} = useContext(AuthContext);
-    const {blockContentRef} = useContext(AuthContext);
-    const {setIsBlock} = useContext(AuthContext);
+    const {blockRef, blockContentRef, setIsBlock} = useContext(AuthContext);
+    const {isFriend, setIsFriend} = useContext(ProfileContext);
 
     const handleRequestFriend = (value) => {
       setIsParam(false);
@@ -63,7 +63,7 @@ function IsFriends(){
         </div>
       )
     }
-    else if (isFriend === 'false' ){
+    else if (isFriend === 'false'){
         return (
           <>
             <div className="userinfo__isfriends no-select info-position">
@@ -79,7 +79,7 @@ function IsFriends(){
           </>
       )
     }
-    else if (isFriend === 'pending' ){
+    else if (isFriend === 'pending'){
       return (
         <>
           <div className="userinfo__isfriends no-select info-position">
@@ -95,7 +95,7 @@ function IsFriends(){
         </>
       )
     }
-    else if (isFriend === 'true' ){
+    else if (isFriend === 'true'){
       return (
         <>
           <div className="userinfo__isfriends no-select info-position">

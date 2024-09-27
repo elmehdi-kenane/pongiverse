@@ -23,6 +23,7 @@ export const ProfileWrapper = ({ child }) => {
     const [userCountry, setUserCountry] = useState(null);
 
     const [checkUser, setCheckUser] = useState(true);
+    const [isFriend, setIsFriend] = useState('false');
 
     useEffect(() => {
         const getUserData = async () => {
@@ -34,7 +35,7 @@ export const ProfileWrapper = ({ child }) => {
                     }
                 });
                 const res = await response.json()
-                if (response.ok) 
+                if (response.ok)
                     setUserData(res.userData);
                 else 
                     setCheckUser(false);
@@ -42,9 +43,30 @@ export const ProfileWrapper = ({ child }) => {
                 console.log("Error: ", error);
             }
         }
-        if (userId)
+        const checkFriendship = async () => {
+            try {
+                const response = await fetch(`http://localhost:8000/profile/CheckFriendship/${user}/${userId}`, {
+                    method: "GET",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                const res = await response.json()
+                if (response.ok) {
+                    setIsFriend('true');
+                }
+                // else
+                //     console.log(res.error);
+            } catch (error) {
+                console.log("Error: ", error);
+            }
+        }
+        if (userId){
             getUserData();
-    }, [userId])
+            if (user && (user != userId))
+                checkFriendship();
+        }
+    }, [user, userId])
 
     useEffect(() => {
         // const getUserPic = async (picPath, fnc) => {
@@ -93,6 +115,8 @@ export const ProfileWrapper = ({ child }) => {
 
         checkUser: checkUser,
         setCheckUser: setCheckUser,
+        isFriend:isFriend,
+        setIsFriend:setIsFriend,
     };
     return (
         <ProfileContext.Provider value={userInfoData}> {child} </ProfileContext.Provider>

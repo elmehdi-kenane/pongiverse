@@ -38,7 +38,6 @@ function DisableTFQ(props) {
 
       const DisableTFQ = async () => {
         const otp = inputRef.current.value
-        console.log(otp);
         if (user && checkOtp(otp)){
           try {
             const response = await fetch(
