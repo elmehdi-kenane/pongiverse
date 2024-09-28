@@ -53,10 +53,11 @@ export const ProfileWrapper = ({ child }) => {
                 });
                 const res = await response.json()
                 if (response.ok) {
-                    setIsFriend('true');
+                    setIsFriend(res.data);
+                    // console.log(res.data)
                 }
-                // else
-                //     console.log(res.error);
+                else
+                    console.log(res.error);
             } catch (error) {
                 console.log("Error: ", error);
             }
