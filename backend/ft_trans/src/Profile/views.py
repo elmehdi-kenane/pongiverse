@@ -589,8 +589,13 @@ def check_friendship(request, username, username2):
         if is_friends:
             return Response(data={"data": "true"}, status=status.HTTP_200_OK)
         else:
-            is_request = FriendRequest.objects.filter(from_user=user, to_user=user2, status='sent').first()
-            if is_request:
+            is_sent_request = FriendRequest.objects.filter(from_user=user, to_user=user2, status='sent').first()
+            if is_sent_request:
                 return Response(data={"data": "pending"}, status=status.HTTP_200_OK)
+            else:
+                is_recv_request = FriendRequest.objects.filter(from_user=user, to_user=user2, status='recieved').first()
+                if is_recv_request:
+                    # print("------REcieved-------")
+                    return Response(data={"data": "accept"}, status=status.HTTP_200_OK)
         return Response(data={"data": "false"}, status=status.HTTP_200_OK)
     return Response(data={'error': 'Error checking user friend'}, status=status.HTTP_400_BAD_REQUEST)
