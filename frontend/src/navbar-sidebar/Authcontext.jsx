@@ -42,8 +42,6 @@ export const AuthProvider = ({children}) => {
 
 	const [reportValue, setReportValue] = useState(null);
 	const reportContentRef = useRef(null);
-	const blockRef = useRef(null);
-	const blockContentRef = useRef(null);
 	
 	let [notifSocket, setNotifSocket] = useState(null)
 
@@ -430,8 +428,6 @@ export const AuthProvider = ({children}) => {
 		setIsBlock:setIsBlock,
 		isGameStats:isGameStats, 
 		setIsGameStats:setIsGameStats,
-		blockRef:blockRef,
-		blockContentRef:blockContentRef,
 		// chat blur
 		isBlur:isBlur,
 		setIsBlur:setIsBlur,

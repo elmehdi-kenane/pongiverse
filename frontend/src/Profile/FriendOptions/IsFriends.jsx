@@ -16,12 +16,10 @@ const friendPrm = ["chat", "challenge", "remove", "block"];
 
 function IsFriends(){
     const [isLoading, setIsLoading] = useState(false);
-    // const [isFriend, setIsFriend] = useState('false');
 
     const [isParam, setIsParam] = useState(false);
     const paramRef = useRef(null);
 
-    const {blockRef, blockContentRef, setIsBlock} = useContext(AuthContext);
     const {isFriend, setIsFriend} = useContext(ProfileContext);
 
     const handleRequestFriend = (value) => {
@@ -37,41 +35,46 @@ function IsFriends(){
         setIsParam(!isParam);
     }
 
-    useEffect (() => {
-      const handleClickOutside = (event)=> {
-        if (!event.composedPath().includes(paramRef.current)) {
-          setIsParam(false);
-          // console.log("click outside Param");
-          // console.log(event.composedPath());
-        }
-        if (!event.composedPath().includes(blockRef.current) 
-          && !event.composedPath().includes(blockContentRef.current) 
-        ) {
-          setIsBlock(false);
-        }
+    // useEffect (() => {
+    //   const handleClickOutside = (event)=> {
+    //     // if (!event.composedPath().includes(paramRef.current)) {
+    //     //   setIsParam(false);
+    //     //   // console.log("click outside Param");
+    //     //   // console.log(event.composedPath());
+    //     // }
+    //     if (!event.composedPath().includes(blockRef.current) 
+    //       && !event.composedPath().includes(blockContentRef.current))
+    //         setIsBlock(false);
+    //   }
+    //   document.body.addEventListener('click', handleClickOutside)
+    //   return () => {
+    //     document.body.removeEventListener('click', handleClickOutside)
+    //   }
+    // }, [])
+    
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#param-click') && isParam){  
+        setIsParam(false);
       }
-      document.body.addEventListener('click', handleClickOutside)
-      return () => {
-        document.body.removeEventListener('click', handleClickOutside)
-      }
-    }, [])
+    });
 
-    if (isLoading === true) {
+    const Looading = () => {
       return (
         <div className="userinfo__loading no-select info-position" >
           <Loading />
         </div>
       )
     }
-    else if (isFriend === 'false'){
-        return (
-          <>
+
+    const AddFriend = () => {
+      return (
+        <>
             <div className="userinfo__isfriends no-select info-position">
               <div className="isfriends__icon-desc adjust-addfriend" onClick={() => {handleRequestFriend('pending')}}>
                 <PersonAddIcon />
                 <p> Add Friend </p>
               </div>
-              <div className="isfriends__menu" onClick={handleFriendParam} ref={paramRef}>
+              <div className="isfriends__menu" onClick={handleFriendParam} ref={paramRef} id='param-click' >
                 <ArrowDropDownIcon />
               </div>
             </div> 
@@ -79,7 +82,8 @@ function IsFriends(){
           </>
       )
     }
-    else if (isFriend === 'pending'){
+
+    const Pending = () => {
       return (
         <>
           <div className="userinfo__isfriends no-select info-position">
@@ -87,15 +91,16 @@ function IsFriends(){
               <AccessTimeIcon />
               <p> Pending </p>
             </div>
-            <div className="isfriends__menu" onClick={handleFriendParam} ref={paramRef}>
+            <div className="isfriends__menu" onClick={handleFriendParam} ref={paramRef} id='param-click' >
               <ArrowDropDownIcon />
             </div>
           </div>
-          {isParam && <FriendsParam onCnclRequest={() => {handleRequestFriend('false')}} Prm={pendingPrm}/>}
+          {isParam && <FriendsParam Prm={pendingPrm}/>}
         </>
       )
     }
-    else if (isFriend === 'true'){
+
+    const Friends = () => {
       return (
         <>
           <div className="userinfo__isfriends no-select info-position">
@@ -103,14 +108,26 @@ function IsFriends(){
               <HowToRegIcon />
               <p> Friends </p>
             </div>
-            <div className="isfriends__menu" onClick={handleFriendParam} ref={paramRef}>
+            <div className="isfriends__menu" onClick={handleFriendParam} ref={paramRef} id='param-click' >
               <ArrowDropDownIcon />
             </div>
           </div>
-          {isParam && <FriendsParam onRmFriend={() => {handleRequestFriend('false') }} Prm={friendPrm} />}
+          {isParam && <FriendsParam Prm={friendPrm} />}
         </>
       )
     }
+
+    return (
+      <>
+        {isLoading ? <Looading /> : 
+          <>
+            {isFriend === 'false' && <AddFriend />}
+            {isFriend === 'pending' && <Pending />}
+            {isFriend === 'true' && <Friends />}
+          </>
+        }
+      </>
+    )
   }
 
 export default IsFriends

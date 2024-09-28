@@ -14,16 +14,16 @@ import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 
 function FriendsParam(props) {
     const friendsPrm = props.Prm;
-    const {isBlock, setIsBlock, blockRef} = useContext(AuthContext);
+    const { isBlock, setIsBlock } = useContext(AuthContext);
     const navigate = useNavigate();
-    const { userId, userPic } = useContext(ProfileContext);
+    const { setIsFriend, userId, userPic } = useContext(ProfileContext);
     const { setSelectedDirect } = useContext(ChatContext);
 
     const handleRmFriend = () => {
-        props.onRmFriend();
+        setIsFriend('false');
     }
     const handleCnclRequest = () => {
-        props.onCnclRequest();
+        setIsFriend('false');
     }
     const handleBlock = () => {
         setIsBlock(!isBlock);
@@ -64,7 +64,7 @@ function FriendsParam(props) {
         </div>
     )
     const blockJsx = (
-        <div className="parameter" onClick={handleBlock} ref={blockRef}>
+        <div className="parameter" onClick={handleBlock} id='block-click'>
             <NoAccountsIcon />
             <p> Block </p>
         </div>

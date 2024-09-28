@@ -3,8 +3,7 @@ import AuthContext from '../../navbar-sidebar/Authcontext';
 import { Link } from 'react-router-dom';
 
 function Block() {
-    const {blockContentRef} = useContext(AuthContext);
-    const {setIsBlock} = useContext(AuthContext);
+    const {isBlock, setIsBlock} = useContext(AuthContext);
 
     const handleCancel = () => {
       setIsBlock(false);
@@ -13,9 +12,15 @@ function Block() {
       setIsBlock(false);
     }
 
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#block-click') && isBlock){  
+        setIsBlock(false);
+      }
+    });
+
   return (
     <div className='profile__block'>
-      <div className="block-content" ref={blockContentRef}>
+      <div className="block-content" id='block-click'>
         <h1 className='block-content__title'>
           Block
         </h1>
