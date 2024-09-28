@@ -18,7 +18,6 @@ function IsFriends(){
     const [isLoading, setIsLoading] = useState(false);
 
     const [isParam, setIsParam] = useState(false);
-    const paramRef = useRef(null);
 
     const {isFriend, setIsFriend} = useContext(ProfileContext);
 
@@ -74,7 +73,24 @@ function IsFriends(){
                 <PersonAddIcon />
                 <p> Add Friend </p>
               </div>
-              <div className="isfriends__menu" onClick={handleFriendParam} ref={paramRef} id='param-click' >
+              <div className="isfriends__menu" onClick={handleFriendParam} id='param-click' >
+                <ArrowDropDownIcon />
+              </div>
+            </div> 
+            {isParam && <FriendsParam Prm={addfriendsPrm} />}
+          </>
+      )
+    }
+
+    const Accept = () => {
+      return (
+        <>
+            <div className="userinfo__isfriends no-select info-position">
+              <div className="isfriends__icon-desc accept-friend" onClick={() => {handleRequestFriend('true')}}>
+                <HowToRegIcon />
+                <p> Accept </p>
+              </div>
+              <div className="isfriends__menu" onClick={handleFriendParam} id='param-click' >
                 <ArrowDropDownIcon />
               </div>
             </div> 
@@ -91,7 +107,7 @@ function IsFriends(){
               <AccessTimeIcon />
               <p> Pending </p>
             </div>
-            <div className="isfriends__menu" onClick={handleFriendParam} ref={paramRef} id='param-click' >
+            <div className="isfriends__menu" onClick={handleFriendParam} id='param-click' >
               <ArrowDropDownIcon />
             </div>
           </div>
@@ -108,7 +124,7 @@ function IsFriends(){
               <HowToRegIcon />
               <p> Friends </p>
             </div>
-            <div className="isfriends__menu" onClick={handleFriendParam} ref={paramRef} id='param-click' >
+            <div className="isfriends__menu" onClick={handleFriendParam} id='param-click' >
               <ArrowDropDownIcon />
             </div>
           </div>
@@ -122,6 +138,7 @@ function IsFriends(){
         {isLoading ? <Looading /> : 
           <>
             {isFriend === 'false' && <AddFriend />}
+            {isFriend === 'accept' && <Accept />}
             {isFriend === 'pending' && <Pending />}
             {isFriend === 'true' && <Friends />}
           </>
