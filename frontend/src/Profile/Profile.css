@@ -188,10 +188,12 @@ h1, h3, p{
     justify-content: center;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
+    cursor: not-allowed;
 }
 .profile-userinfo .isfriends__icon-desc p {
     font-size: 14px;
     font-weight: 450;
+    cursor: inherit;
 }
 .profile-userinfo .isfriends__icon-desc svg {
     height: 16px;
@@ -202,6 +204,7 @@ h1, h3, p{
 .userinfo__isfriends .accept-friend,
 .userinfo__isfriends .adjust-addfriend{
     height: 100%;
+    cursor: pointer;
 }
 .userinfo__isfriends .adjust-addfriend,
 .userinfo__isfriends .adjust-addfriend p
@@ -225,6 +228,7 @@ h1, h3, p{
     width: 20%;
     height: 100%;
     border-left: white solid 1px;
+    cursor: pointer;
 }
 .userinfo__isfriends .isfriends__menu svg {
     height: 100%;
@@ -294,6 +298,7 @@ h1, h3, p{
     align-items: center;
     border-radius: 50px;
     background-color: #250939;
+    cursor: pointer;
 }
 .profile-userinfo .userinfo__report svg {
     color: #826aed;

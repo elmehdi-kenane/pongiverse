@@ -24,6 +24,7 @@ export const ProfileWrapper = ({ child }) => {
 
     const [checkUser, setCheckUser] = useState(true);
     const [isFriend, setIsFriend] = useState('false');
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const getUserData = async () => {
@@ -97,6 +98,8 @@ export const ProfileWrapper = ({ child }) => {
         }
     }, [userData])
 
+    
+
     let userInfoData = {
         userId: userId,
         userPic: userPic,
@@ -118,6 +121,8 @@ export const ProfileWrapper = ({ child }) => {
         setCheckUser: setCheckUser,
         isFriend:isFriend,
         setIsFriend:setIsFriend,
+        isLoading: isLoading, 
+        setIsLoading: setIsLoading,
     };
     return (
         <ProfileContext.Provider value={userInfoData}> {child} </ProfileContext.Provider>

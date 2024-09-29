@@ -3,6 +3,7 @@ import {Link, useNavigate} from 'react-router-dom'
 import AuthContext from '../../navbar-sidebar/Authcontext';
 import ProfileContext from '../ProfileWrapper';
 import ChatContext from '../../Context/ChatContext';
+import { cancelFriendRequest, handleRemoveFriendship } from "../../Friends/utils";
 
 import ChatIcon from '@mui/icons-material/Chat';
 import MavSvg from "../../assets/Profile/Group.svg"
@@ -14,16 +15,26 @@ import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 
 function FriendsParam(props) {
     const friendsPrm = props.Prm;
-    const { isBlock, setIsBlock } = useContext(AuthContext);
+    const { user, isBlock, setIsBlock } = useContext(AuthContext);
+    const { setIsFriend, userId, userPic, setIsLoading } = useContext(ProfileContext);
     const navigate = useNavigate();
-    const { setIsFriend, userId, userPic } = useContext(ProfileContext);
     const { setSelectedDirect } = useContext(ChatContext);
 
     const handleRmFriend = () => {
+        setIsLoading(true);
+        setTimeout(() => {
+        handleRemoveFriendship(user, userId);
+        setIsLoading(false);
         setIsFriend('false');
+      }, 1200);
     }
-    const handleCnclRequest = () => {
+    const handleCnclRequest = (eventType) => {
+        setIsLoading(true);
+        setTimeout(() => {
+        cancelFriendRequest(user, userId, eventType);
+        setIsLoading(false);
         setIsFriend('false');
+      }, 1200);
     }
     const handleBlock = () => {
         setIsBlock(!isBlock);
@@ -52,12 +63,18 @@ function FriendsParam(props) {
         </Link>
     );
     const cancelJsx = (
-        <div className="parameter" onClick={handleCnclRequest}>
+        <div className="parameter" onClick={()=>handleCnclRequest("cancel")}>
             <CancelScheduleSendIcon />
             <p> Cancel Request </p>
         </div>
     )
     const removeJsx = (
+        <div className="parameter" onClick={()=>handleCnclRequest("remove")}>
+            <CancelScheduleSendIcon />
+            <p> Remove Request </p>
+        </div>
+    )
+    const deleteJsx = (
         <div className="parameter" onClick={handleRmFriend}>
             <PersonRemoveIcon />
             <p> Remove Friend </p>
@@ -80,6 +97,7 @@ function FriendsParam(props) {
                         {prm === "challenge" && challengeJsx}
                         {prm === "cancel" && cancelJsx}
                         {prm === "remove" && removeJsx}
+                        {prm === "delete" && deleteJsx}
                         {prm === "block" && blockJsx}
                     </ div>
                 )

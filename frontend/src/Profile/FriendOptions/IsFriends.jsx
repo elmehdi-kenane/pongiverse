@@ -1,6 +1,7 @@
 import {React, useState, useEffect, useRef, useContext} from 'react'
 import AuthContext from '../../navbar-sidebar/Authcontext';
 import ProfileContext from '../ProfileWrapper';
+import { handleAddFriendReq, cancelFriendRequest, confirmFriendRequest } from "../../Friends/utils";
 
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
@@ -11,27 +12,34 @@ import Loading from '../../Game/Loading';
 import FriendsParam from './FriendsParam';
 
 const addfriendsPrm = ["chat", "challenge"];
+const acceptPrm = ["chat", "challenge", "remove"];
 const pendingPrm = ["chat", "challenge", "cancel"];
-const friendPrm = ["chat", "challenge", "remove", "block"];
+const friendPrm = ["chat", "challenge", "delete", "block"];
 
 function IsFriends(){
-    const [isLoading, setIsLoading] = useState(false);
-
     const [isParam, setIsParam] = useState(false);
-
-    const {isFriend, setIsFriend} = useContext(ProfileContext);
-
-    const handleRequestFriend = (value) => {
-      setIsParam(false);
-      setIsLoading(true);
-      setTimeout(() => {
-          setIsLoading(false);
-      }, 1200);
-      setIsFriend(value);
-    }
-
+    const { user } = useContext(AuthContext);
+    const {userId, isFriend, setIsFriend, isLoading, setIsLoading} = useContext(ProfileContext);
+    const [gjw9, setgjw9] = useState(false);
+      
     const handleFriendParam = () => {
         setIsParam(!isParam);
+    }
+    const HandleAddFriend = () => {
+      setIsLoading(true);
+      setTimeout(() => {
+        handleAddFriendReq(user, userId, setgjw9)
+        setIsLoading(false);
+        setIsFriend('pending');
+      }, 1200);
+    }
+    const HandleConfirmRequest = () => {
+      setIsLoading(true);
+      setTimeout(() => {
+          confirmFriendRequest(user, userId)
+          setIsLoading(false);
+          setIsFriend('true');
+      }, 1200);
     }
 
     // useEffect (() => {
@@ -69,7 +77,7 @@ function IsFriends(){
       return (
         <>
             <div className="userinfo__isfriends no-select info-position">
-              <div className="isfriends__icon-desc adjust-addfriend" onClick={() => {handleRequestFriend('pending')}}>
+              <div className="isfriends__icon-desc adjust-addfriend" onClick={HandleAddFriend}>
                 <PersonAddIcon />
                 <p> Add Friend </p>
               </div>
@@ -82,11 +90,11 @@ function IsFriends(){
       )
     }
 
-    const Accept = () => {
+    const AcceptFriend = () => {
       return (
         <>
             <div className="userinfo__isfriends no-select info-position">
-              <div className="isfriends__icon-desc accept-friend" onClick={() => {handleRequestFriend('true')}}>
+              <div className="isfriends__icon-desc accept-friend" onClick={HandleConfirmRequest}>
                 <HowToRegIcon />
                 <p> Accept </p>
               </div>
@@ -94,7 +102,7 @@ function IsFriends(){
                 <ArrowDropDownIcon />
               </div>
             </div> 
-            {isParam && <FriendsParam Prm={addfriendsPrm} />}
+            {isParam && <FriendsParam Prm={acceptPrm} />}
           </>
       )
     }
@@ -103,7 +111,7 @@ function IsFriends(){
       return (
         <>
           <div className="userinfo__isfriends no-select info-position">
-            <div className="isfriends__icon-desc" onClick={() => {handleRequestFriend('true')}}>
+            <div className="isfriends__icon-desc">
               <AccessTimeIcon />
               <p> Pending </p>
             </div>
@@ -138,7 +146,7 @@ function IsFriends(){
         {isLoading ? <Looading /> : 
           <>
             {isFriend === 'false' && <AddFriend />}
-            {isFriend === 'accept' && <Accept />}
+            {isFriend === 'accept' && <AcceptFriend />}
             {isFriend === 'pending' && <Pending />}
             {isFriend === 'true' && <Friends />}
           </>
@@ -148,3 +156,4 @@ function IsFriends(){
   }
 
 export default IsFriends
+
