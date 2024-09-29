@@ -64,3 +64,24 @@ export const handleAddFriendReq = (currentUsername, secondUsername, setFriendReq
         });
     setFriendRequestBtn(true);
 };
+
+// Added by Imad ---
+export const handleRemoveFriendship = (user, secondUsername) => {
+  fetch("http://localhost:8000/friends/remove_friendship/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from_username: user,
+      to_username: secondUsername,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Success:", data);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+};
