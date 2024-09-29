@@ -578,24 +578,24 @@ def check_user_tfq(requset, username, otp):
             return Response(data={'Case': 'Wrong otp'}, status=status.HTTP_400_BAD_REQUEST)
         
 
+
 #**------- Check OTP for SignIN -------**#
 
 @api_view(["GET"])
 def check_friendship(request, username, username2):
     user = customuser.objects.filter(username=username).first()
     user2 = customuser.objects.filter(username=username2).first()
-    if user and user2:
-        is_friends = Friendship.objects.filter(user=user, friend=user2).first()
-        if is_friends:
-            return Response(data={"data": "true"}, status=status.HTTP_200_OK)
-        else:
-            is_sent_request = FriendRequest.objects.filter(from_user=user, to_user=user2, status='sent').first()
-            if is_sent_request:
-                return Response(data={"data": "pending"}, status=status.HTTP_200_OK)
-            else:
-                is_recv_request = FriendRequest.objects.filter(from_user=user, to_user=user2, status='recieved').first()
-                if is_recv_request:
-                    # print("------REcieved-------")
-                    return Response(data={"data": "accept"}, status=status.HTTP_200_OK)
-        return Response(data={"data": "false"}, status=status.HTTP_200_OK)
-    return Response(data={'error': 'Error checking user friend'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if not user or not user2:
+        return Response(data={'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    if Friendship.objects.filter(user=user, friend=user2).exists():
+        return Response(data={"data": "true"}, status=status.HTTP_200_OK)
+
+    if FriendRequest.objects.filter(from_user=user, to_user=user2, status='sent').exists():
+        return Response(data={"data": "pending"}, status=status.HTTP_200_OK)
+
+    if FriendRequest.objects.filter(from_user=user2, to_user=user, status='received').exists():
+        return Response(data={"data": "accept"}, status=status.HTTP_200_OK)
+
+    return Response(data={"data": "false"}, status=status.HTTP_200_OK)
