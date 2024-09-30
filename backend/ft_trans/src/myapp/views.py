@@ -177,7 +177,6 @@ class VerifyTokenView(APIView):
 			token = request.COOKIES.get('token')
 			decoded_token = AccessToken(token)
 			data = decoded_token.payload
-			# print(data)
 			if not data.get('user_id'):
 				if username:
 					user = customuser.objects.filter(username=username).first()
@@ -376,6 +375,7 @@ def SignInIntraGetUserData(request):
 		user_info_data = user_info_response.json()
 		user_email = user_info_data.get('email')
 		image = user_info_data.get('image')
+		print(f"\n\nimage : {image}\n\n")
 		user_picture = image.get('link')
 		return Response({'email': user_email, 'picture': user_picture})
 	except Exception as e:

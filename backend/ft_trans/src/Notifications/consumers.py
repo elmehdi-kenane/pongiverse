@@ -88,6 +88,9 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 									}
 								}
 							)
+			else:
+				user.is_playing = False
+				await sync_to_async(user.save)()
 		else:
 			self.socket.close()
 

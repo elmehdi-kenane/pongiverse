@@ -22,6 +22,7 @@ from .common import tournament_rooms, user_channels, tournaments
 
 
 async def disconnected(self, user_channels):
+	print("\n\n Disconnected \n\n")
 	cookiess = self.scope.get('cookies', {})
 	token = cookiess.get('token')
 	try:
@@ -125,8 +126,8 @@ def is_user_joining_tournament(username):
 	for tournament_id, tournament_data in tournaments.items():
 		for member in tournament_data['members']:
 			if member['username'] == username and member['is_eliminated'] == False and (tournament_data['is_started'] == False or  (tournament_data['is_started'] == True and tournament_data['is_finished'] == False)):
-				return True
-	return False
+				return tournament_id
+	return 0
 
 
 async def loged_again(self, data, user_channels):
@@ -177,7 +178,6 @@ async def kick_player(self, data, user_channels):
 
 async def leave_tournament(self, data, user_channels):
 	tournament_id = data['message']['tournament_id']
-	tournament = await sync_to_async(Tournament.objects.filter(tournament_id=tournament_id).first)()
 	kicked_user = await sync_to_async(customuser.objects.filter(username=data['message']['kicked']).first)()
 	kicked_user.is_playing = False
 	await sync_to_async(kicked_user.save)()

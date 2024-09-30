@@ -41,6 +41,7 @@ import Settings from "./Settings/Settings";
 import Bot from "./Game/Bot";
 import LocalTournamentFillMembers from "./Tournament/LocalTournament/LocalTournamentFillMembers";
 import TournamentCelebration from "./Tournament/RemoteTournament/TournamentCelebration";
+import AuthMiddleware from "./navbar-sidebar/AuthMiddleware";
 const App = () => {
 	return (
 		<div className="page">
@@ -56,7 +57,7 @@ const App = () => {
 							<Route path="/WaysSecondStep" element={<WaysSecondStep />} />
 							<Route path="/ForgotPassword" element={<ForgotPassword />} />
 							<Route path="/ChangePassword" element={<ChangePassword />} />
-							<Route path="/mainpage" element={<NavbarSidebar />}>
+							<Route path="/mainpage" element={<NavbarSidebar /> }>
 								<Route path="dashboard" element={<Dashboard />} />
 								<Route path="profile" element={<Profile />} />
 								<Route path="settings" element={<Settings />} />
