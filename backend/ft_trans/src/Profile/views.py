@@ -507,6 +507,8 @@ def get_multy_match_dtl(request, match_id):
         return Response(data={"data": res_data}, status=status.HTTP_200_OK)
     return Response(data={'error': 'Error Getting MultiplayerGames!'}, status=status.HTTP_400_BAD_REQUEST)
 
+#**--------------------- Two-Factor Authenticator {Settings} ---------------------**#
+
 #**------- Enable User TFQ -------**#
 
 def checkExistQrCode(user):
@@ -552,11 +554,11 @@ def enable_user_tfq(request):
 
 #**------- Validate User TFQ -------**#
 
-@api_view(["GET"])
+@api_view(["POST"])
 def validate_user_tfq(request):
-    user = customuser.objects.filter(username=username).first()
     username = request.data.get('user')
     otp = request.data.get('otp')
+    user = customuser.objects.filter(username=username).first()
     if user:
         user_tfq = UserTFQ.objects.filter(user=user).first()
         if user_tfq:
@@ -570,11 +572,14 @@ def validate_user_tfq(request):
                     os.remove(qr_path)
                 return Response(data={"data": "Congratulation you enabled Two-Factor Authenticator"}, status=status.HTTP_200_OK)
             return Response(data={'error': 'Wrong otp'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response(data={'error': 'Error Validating UserTFQ'}, status=status.HTTP_400_BAD_REQUEST)
 
 #**------- Disable User TFQ -------**#
 
-@api_view(["GET"])
-def disable_user_tfq(request, username, otp):
+@api_view(["POST"])
+def disable_user_tfq(request):
+    username = request.data.get('user')
+    otp = request.data.get('otp')
     user = customuser.objects.filter(username=username).first()
     if user is not None:
         user_tfq = UserTFQ.objects.filter(user=user).first()
@@ -588,13 +593,12 @@ def disable_user_tfq(request, username, otp):
                 return Response(data={"data": "Two-Factor Authenticator has been disabled"}, status=status.HTTP_200_OK)
     return Response(data={'error': 'Error disabling user TFQ'}, status=status.HTTP_400_BAD_REQUEST)
 
-
-
-
 #**------- Check OTP for SignIN -------**#
 
-@api_view(["GET"])
-def check_user_tfq(requset, username, otp):
+@api_view(["POST"])
+def check_user_tfq(request):
+    username = request.data.get('user')
+    otp = request.data.get('otp')
     user = customuser.objects.filter(username=username).first()
     if user is not None:
         user_tfq = UserTFQ.objects.filter(user=user).first()
