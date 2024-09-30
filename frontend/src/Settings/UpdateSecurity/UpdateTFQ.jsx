@@ -33,27 +33,30 @@ function UpdateTFQ(props) {
       // setIsLoading(true)
       try {
         const response = await fetch(
-          `http://localhost:8000/profile/EnableTFQ/${user}`,
+          `http://localhost:8000/profile/EnableTFQ`,
           {
-            method: "GET",
+            method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-          }
+            body: JSON.stringify({
+              user: user,
+            })
+          },
         );
         const res = await response.json();
         if (response.ok) {
           // console.log("Response : ", res.data);
-          setTfqImg(res.data.img);
           setKey(res.data.key);
-          setStep('submit')
+          setTfqImg(res.data.img);
+          setStep('submit');
         } else
             console.log("Error : ", res.error);
       } catch (error) {
         console.log("Error: ", error);
       }
       // setIsLoading(false)
-    };  
+    };
 
     return (
       <div className="tfq">
@@ -95,12 +98,16 @@ function UpdateTFQ(props) {
       if (checkOtp(otp)){
         try {
           const response = await fetch(
-            `http://localhost:8000/profile/ValidateTFQ/${user}/${otp}`,
+            `http://localhost:8000/profile/ValidateTFQ`,
             {
-              method: "GET",
+              method: "POST",
               headers: {
                 "Content-Type": "application/json",
               },
+              body: JSON.stringify({
+                user: user,
+                otp: otp
+              })
             }
           );
           const res = await response.json();

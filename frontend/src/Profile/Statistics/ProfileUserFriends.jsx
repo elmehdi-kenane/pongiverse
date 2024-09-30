@@ -7,11 +7,7 @@ import AuthContext from '../../navbar-sidebar/Authcontext'
 import ProfileContext from '../ProfileWrapper'
 import ChatContext from '../../Context/ChatContext'
 
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-
 const ProfileUserFriends = () => {
-
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const { userId } = useContext(ProfileContext);
@@ -29,8 +25,8 @@ const ProfileUserFriends = () => {
         });
         const res = await response.json()
         if (response.ok) {
-          // console.log("Response allUserData : ", res.allUserData);
-          setFriendsData(res.allUserData)
+          // console.log("Response data : ", res.data);
+          setFriendsData(res.data)
         }
         else 
           console.log("Error : ", res.error);
@@ -77,10 +73,6 @@ const ProfileUserFriends = () => {
             </div>
           )
         })}
-      </div>
-      <div className="expand-profile">
-        <ExpandLessIcon className="expand-less-profile" />
-        <ExpandMoreIcon className="expand-more-profile" />
       </div>
     </div>
   )

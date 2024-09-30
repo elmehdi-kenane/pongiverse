@@ -41,12 +41,16 @@ function DisableTFQ(props) {
         if (user && checkOtp(otp)){
           try {
             const response = await fetch(
-              `http://localhost:8000/profile/DisableTFQ/${user}/${otp}`,
+              `http://localhost:8000/profile/DisableTFQ`,
               {
-                method: "GET",
+                method: "POST",
                 headers: {
                   "Content-Type": "application/json",
                 },
+                body: JSON.stringify({
+                  user: user,
+                  otp: otp
+                })
               }
             );
             const res = await response.json();

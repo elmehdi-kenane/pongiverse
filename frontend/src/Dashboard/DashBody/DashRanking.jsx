@@ -12,10 +12,10 @@ function DashRanking() {
   const [sortOption, setSortOption] = useState('level');
 
   useEffect(() => {
-    const getUsersData = async () => {
+    const getUsersRank = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/profile/getUsersData/${user}`,
+          `http://localhost:8000/profile/getUsersRank/${user}`,
           {
             method: "GET",
             headers: {
@@ -25,7 +25,7 @@ function DashRanking() {
         );
         const res = await response.json();
         if (response.ok) 
-          setUsersData(res.usersData);
+          setUsersData(res.data);
         else
           console.log("Error :", res.error);
       } catch (error) {
@@ -33,7 +33,7 @@ function DashRanking() {
       }
     };
     if (user)
-      getUsersData();
+      getUsersRank();
   }, [user]);
 
   const RankClassment = (player, position) => {

@@ -28,12 +28,16 @@ function SignInWays() {
       try {
         if (user) {
           const response = await fetch(
-            `http://localhost:8000/profile/CheckUserTFQ/${user}/${otp}`,
+            `http://localhost:8000/profile/CheckUserTFQ`,
             {
-              method: "GET",
+              method: "POST",
               headers: {
                 "Content-Type": "application/json",
               },
+              body: JSON.stringify({
+                user: user,
+                otp: otp
+              }),
               credentials: "include",
             }
           );
