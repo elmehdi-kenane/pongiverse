@@ -21,6 +21,7 @@ from .models import UserTFQ
 import pyotp
 import qrcode
 import os
+import secrets
 
 # Create your views here.
 @api_view (['GET'])
@@ -224,16 +225,38 @@ def update_user_password(request):
 #**--------------------- GetFriends User ---------------------** 
 
 @api_view(["GET"])
-def get_user_friends(request, userId):
-    users = customuser.objects.all()
-    user_data = []
-    for user in users:
-        if userId != user.username:
-            user_data.append({
-                'username': user.username,
-                'pic': f"http://localhost:8000/auth{user.avatar.url}"
+def get_user_friends(request, username):
+    user = customuser.objects.filter(username=username).first()
+    friendships = Friendship.objects.filter(user=user).all()
+    friends = []
+    if friendships:
+        for friendship in friendships:
+            friends.append({
+                'username': friendship.friend.username,
+                'pic': f"http://localhost:8000/auth{friendship.friend.avatar.url}"
             })
-    return Response(data={"allUserData": user_data}, status=status.HTTP_200_OK)
+    return Response(data={"data": friends}, status=status.HTTP_200_OK)
+
+#**--------------------- Check User Friendship ---------------------** 
+
+@api_view(["GET"])
+def check_friendship(request, username, username2):
+    user = customuser.objects.filter(username=username).first()
+    user2 = customuser.objects.filter(username=username2).first()
+
+    if not user or not user2:
+        return Response(data={'error': 'users not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    if Friendship.objects.filter(user=user, friend=user2).exists():
+        return Response(data={"data": "true"}, status=status.HTTP_200_OK)
+
+    if FriendRequest.objects.filter(from_user=user, to_user=user2, status='sent').exists():
+        return Response(data={"data": "pending"}, status=status.HTTP_200_OK)
+
+    if FriendRequest.objects.filter(from_user=user, to_user=user2, status='recieved').exists():
+        return Response(data={"data": "accept"}, status=status.HTTP_200_OK)
+
+    return Response(data={"data": "false"}, status=status.HTTP_200_OK)
 
 #**--------------------- GetUsers Data Ranking ---------------------** 
 
@@ -248,7 +271,7 @@ def get_user_friends(request, userId):
 #                  return Response("not found")
 
 @api_view(["GET"])
-def get_users_data(request, username):
+def get_users_rank(request, username):
     # user = customuser.objects.filter(username=username).first()
     users_data = UserMatchStatics.objects.all()
     res_data = []
@@ -264,7 +287,7 @@ def get_users_data(request, username):
                 'goals': user.goals,
                 # 'id': user.player.id,
             })
-        return Response(data={"usersData": res_data}, status=status.HTTP_200_OK)    
+        return Response(data={"data": res_data}, status=status.HTTP_200_OK)    
     return Response(data={'error': 'Error Getting UsersData!'}, status=status.HTTP_400_BAD_REQUEST)
         
 
@@ -486,20 +509,26 @@ def get_multy_match_dtl(request, match_id):
 
 #**------- Enable User TFQ -------**#
 
+def checkExistQrCode(user):
+    user_tfq = UserTFQ.objects.filter(user=user).first()
+    if user_tfq:
+        file_path = user_tfq.qr_code.path
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+        user_tfq.delete()
+
 def checkPath():
     path = 'uploads/qr_codes/'
     if not os.path.exists(path):
         os.makedirs(path)
 
-@api_view(["GET"])
-def enable_user_tfq(request, username):
+@api_view(["POST"])
+def enable_user_tfq(request):
+    username = request.data.get('user')
     user = customuser.objects.filter(username=username).first()
-    if user is not None:
-        # user_tfq = UserTFQ.objects.filter(user=user).all()
-        # user_tfq.delete()
+    if user:
+        checkExistQrCode(user)
         user_tfq = UserTFQ.objects.filter(user=user).first()
-        if user_tfq:
-            return Response(data={'error': 'User already has Two-Factor Authenticator'}, status=status.HTTP_400_BAD_REQUEST)
         checkPath()
         key = pyotp.random_base32()
         user_tfq = UserTFQ.objects.create(
@@ -509,8 +538,9 @@ def enable_user_tfq(request, username):
         urc = pyotp.totp.TOTP(user_tfq.key).provisioning_uri(name=user.username, issuer_name="Transcendence")
         qr_path = f"uploads/qr_codes/{user.username}_Q.png"
         qrcode.make(urc).save(qr_path)
+        random_string = secrets.token_hex(2)
         with open(qr_path, 'rb') as qr_file:
-            user_tfq.qr_code.save(f"{user.username}_QR.png", File(qr_file), save=True)
+            user_tfq.qr_code.save(f"{user.username}_{random_string}.png", File(qr_file), save=True)
         if os.path.isfile(qr_path):
             os.remove(qr_path)
         res = {
@@ -523,8 +553,10 @@ def enable_user_tfq(request, username):
 #**------- Validate User TFQ -------**#
 
 @api_view(["GET"])
-def validate_user_tfq(requset, username, otp):
+def validate_user_tfq(request):
     user = customuser.objects.filter(username=username).first()
+    username = request.data.get('user')
+    otp = request.data.get('otp')
     if user:
         user_tfq = UserTFQ.objects.filter(user=user).first()
         if user_tfq:
@@ -533,7 +565,7 @@ def validate_user_tfq(requset, username, otp):
             if totp.verify(otp) == True:
                 user.is_tfq = True
                 user.save()
-                qr_path = f"uploads/qr_codes/{user.username}_QR.png"
+                qr_path = user_tfq.qr_code.path
                 if os.path.isfile(qr_path):
                     os.remove(qr_path)
                 return Response(data={"data": "Congratulation you enabled Two-Factor Authenticator"}, status=status.HTTP_200_OK)
@@ -576,26 +608,3 @@ def check_user_tfq(requset, username, otp):
                 response.status_code = status.HTTP_200_OK
                 return response
             return Response(data={'Case': 'Wrong otp'}, status=status.HTTP_400_BAD_REQUEST)
-        
-
-
-#**------- Check OTP for SignIN -------**#
-
-@api_view(["GET"])
-def check_friendship(request, username, username2):
-    user = customuser.objects.filter(username=username).first()
-    user2 = customuser.objects.filter(username=username2).first()
-
-    if not user or not user2:
-        return Response(data={'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
-
-    if Friendship.objects.filter(user=user, friend=user2).exists():
-        return Response(data={"data": "true"}, status=status.HTTP_200_OK)
-
-    if FriendRequest.objects.filter(from_user=user, to_user=user2, status='sent').exists():
-        return Response(data={"data": "pending"}, status=status.HTTP_200_OK)
-
-    if FriendRequest.objects.filter(from_user=user2, to_user=user, status='received').exists():
-        return Response(data={"data": "accept"}, status=status.HTTP_200_OK)
-
-    return Response(data={"data": "false"}, status=status.HTTP_200_OK)
