@@ -5,6 +5,7 @@ from django.core.files.storage import default_storage
 import json
 import os
 from django.db.models import F
+from Notifications.common import notifs_user_channels
 
 
 async def add_user_channel_group(self, data):
@@ -49,7 +50,7 @@ async def invite_member_chat_room(self, data, user_channels):
             RoomInvitation.objects.filter(user=user, room=room).exists
         )()
     ):
-        await sync_to_async(RoomInvitation.objects.create)(user=user, room=room)
+        invitaion = await sync_to_async(RoomInvitation.objects.create)(user=user, room=room)
         user_channels = user_channels.get(user.id)
         # if user_channel:
         for user_channel in user_channels:
@@ -64,9 +65,21 @@ async def invite_member_chat_room(self, data, user_channels):
                             "name": room.name,
                             'topic': room.topic,
                             "icon": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/chatAPI{room.icon.url}",
+                            'status': invitaion.status,
                             "membersCount": room.members_count,
                         },
                     },
+                },
+            )
+        user_notification_channels = notifs_user_channels.get(user.id)
+        for user_channel in user_notification_channels:
+            await self.channel_layer.send(
+                user_channel,
+                {
+                    "type": "roomInvite",
+                    'message': {
+                        'room_id': room.id,
+                    }
                 },
             )
 
@@ -102,8 +115,26 @@ async def message(self, data):
         "type": "send_message",
         "message": newMessage,
     }
-    # await self.channel_layer.group_add(f"chat_room_{room.id}", self.channel_name)
     await self.channel_layer.group_send(f"chat_room_{room.id}", event)
+
+    members = await sync_to_async(lambda: list(Membership.objects.filter(room=room).exclude(user=sender)))()
+    for member in members:
+        user_channels = notifs_user_channels.get(member.user_id)
+
+        if user_channels is not None:
+            room_unread_count = await sync_to_async(lambda: Room.objects.filter(
+                membership__user=member.user, membership__unreadCount__gt=0).count())()
+            direct_unread_count = await sync_to_async(lambda: Directs.objects.filter(
+                receiver=member.user, is_read=False).values('sender').distinct().count())()
+            count = room_unread_count + direct_unread_count
+            for user_channel in user_channels:
+                await self.channel_layer.send(
+                    user_channel,
+                    {
+                        "type": "chatNotificationCounter",
+                        'message': count,
+                    },
+                )
 
 
 async def direct_message(self, data, user_channels):
@@ -118,10 +149,10 @@ async def direct_message(self, data, user_channels):
     )
     ip_address = os.getenv("IP_ADDRESS")
     protocol = os.getenv('PROTOCOL')
-    channel_name = user_channels.get(receiver.id)
-    mychannel_name = user_channels.get(sender.id)
-    if channel_name:
-        for channel in channel_name:
+    channel_names = user_channels.get(receiver.id)
+    mychannel_names = user_channels.get(sender.id)
+    if channel_names:
+        for channel in channel_names:
             await self.channel_layer.send(
                 channel,
                 {
@@ -137,8 +168,8 @@ async def direct_message(self, data, user_channels):
                     },
                 },
             )
-    if mychannel_name:
-        for channel in mychannel_name:
+    if mychannel_names:
+        for channel in mychannel_names:
             await self.channel_layer.send(
                 channel,
                 {
@@ -152,5 +183,17 @@ async def direct_message(self, data, user_channels):
                         'receiverId': receiver.id,
                         'date': message.timestamp,
                     },
+                },
+            )
+    user_notification_channels = notifs_user_channels.get(receiver.id)
+    count = await sync_to_async(Directs.objects.filter(receiver=receiver, is_read=False).values('sender').distinct().count)() + await sync_to_async(Room.objects.filter(membership__user=receiver, membership__unreadCount__gt=0).count)()
+    print("THE COUNT INSIDE DIRECT MESSAGE", count)
+    if user_notification_channels is not None:
+        for user_channel in user_notification_channels:
+            await self.channel_layer.send(
+                user_channel,
+                {
+                    "type": "chatNotificationCounter",
+                    'message': count,
                 },
             )

@@ -10,11 +10,18 @@ const ChatWindow = ({
   setMessages,
   chatRoomMessages,
   setChatRoomMessages,
+  directs,
   setDirects,
+  chatRooms,
   setChatRooms,
+  searchValue,
+  setSearchValue,
+  directsSearch,
+  setDirectsSearch,
+  chatRoomsSearch,
+  setChatRoomsSearch,
 }) => {
-  const {selectedChatRoom, selectedDirect, isHome } =
-    useContext(ChatContext);
+  const { selectedChatRoom, selectedDirect, isHome } = useContext(ChatContext);
   const [showBlockPopup, setShowBlockPopup] = useState(false);
   return (
     <div
@@ -28,13 +35,26 @@ const ChatWindow = ({
       {showBlockPopup && <BlockPopUp setShowBlockPopup={setShowBlockPopup} />}
       {isHome &&
       Object.values(selectedDirect).every((value) => value !== "") ? (
-        <ChatConversation messages={messages} setMessages={setMessages} setShowBlockPopup={setShowBlockPopup} setDirects={setDirects}/>
+        <ChatConversation
+          messages={messages}
+          setMessages={setMessages}
+          setShowBlockPopup={setShowBlockPopup}
+          directs={directs}
+          setDirects={setDirects}
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+          directsSearch={directsSearch}
+          setDirectsSearch={setDirectsSearch}
+        />
       ) : !isHome &&
         Object.values(selectedChatRoom).every((value) => value !== "") ? (
         <ChatRoomConversation
           chatRoomMessages={chatRoomMessages}
           setChatRoomMessages={setChatRoomMessages}
+          chatRooms={chatRooms}
           setChatRooms={setChatRooms}
+          setSearchValue={setSearchValue}
+          setChatRoomsSearch={setChatRoomsSearch}
         />
       ) : (
         <div className="chat-window-empty">

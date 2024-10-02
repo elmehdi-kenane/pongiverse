@@ -6,8 +6,7 @@ from friends.models import Friendship
 import json
 from . import game_notifs_consumers
 from mainApp.models import TournamentMembers
-
-notifs_user_channels = {}
+from .common import notifs_user_channels
 
 class NotificationsConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -23,10 +22,10 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
             # tmp_username = username
             user.is_online = True
             await sync_to_async(user.save)()
-            if notifs_user_channels.get(username):
-                notifs_user_channels[username].append(self.channel_name)
+            if notifs_user_channels.get(user_id):
+                notifs_user_channels[user_id].append(self.channel_name)
             else:
-                notifs_user_channels[username] = [self.channel_name]
+                notifs_user_channels[user_id] = [self.channel_name]
             self.group_name = f"friends_group{user_id}"
             await self.channel_layer.group_add(self.group_name, self.channel_name)
             # channel_layer = get_channel_layer()
@@ -178,4 +177,16 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'type': 'user_disconnected',
             'message': event['message']
+        }))
+    
+    async def roomInvite(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'roomInvitation',
+            'message': event.get('message'),
+        }))
+    async def chatNotificationCounter(self, event):
+        print("\n\n\nchatNotificationCounter")
+        await self.send(text_data=json.dumps({
+            'type': 'chatNotificationCounter',
+            'count': event.get('message'),
         }))

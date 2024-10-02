@@ -12,6 +12,7 @@ from asgiref.sync import async_to_sync
 from datetime import datetime
 from .serializers import friends_with_directs_serializer, direct_message_serializer, room_serializer, room_message_serializer
 from rest_framework.pagination import PageNumberPagination
+# from Notifications.consumers import notifs_user_channels
 
 def get_protocol(request):
     return "https" if request.is_secure() else "http"
@@ -169,7 +170,6 @@ def leave_chat_room(request):
         channel_layer = get_channel_layer()
         user_channels_name = user_channels.get(user.id)
         for channel in user_channels_name:
-            print("\n\n\n", room.id)
             async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type' : 'chatRoomLeft',"roomId": roomId}})
             async_to_sync(channel_layer.group_discard(f"chat_room_{room.id}", channel))
         return Response(
@@ -408,6 +408,7 @@ def rooms_invitations(request, username):
                 "name": room.name,
                 "topic": room.topic,
                 "icon": f"{protocol}://{ip_address}:8000/chatAPI{room.icon.url}",
+                'status': invitaion.status,
                 "membersCount": room.members_count,
             }
             all_invitations.append(invitaion_data)
@@ -601,4 +602,69 @@ def join_chat_room(request):
             }
         )
 
+    return Response({"error": "Invalid request method"}, status=400)
+
+@api_view(["GET"])
+def directs_search(request):
+    if (request.method == 'GET'):
+        try:
+            user = customuser.objects.get(username=request.GET.get('user'))
+        except customuser.DoesNotExist:
+            return Response({"error": "user not found"}, status=400)
+        frienships = Friendship.objects.filter(user=user, friend__username__icontains=request.GET.get('searchUsername'))
+        serializer = friends_with_directs_serializer(frienships, many=True, context={
+            'username': user.username,
+            'user': user
+        })
+        return Response(serializer.data)
+        
+    return Response({"error": "Invalid request method"}, status=400)
+
+
+@api_view(["GET"])
+def chat_rooms_search(request):
+    if request.method == "GET":
+        try:
+            user = customuser.objects.get(username=request.GET.get("user"))
+        except customuser.DoesNotExist:
+            return Response({"error": "user not found"}, status=400)
+        rooms = Membership.objects.filter(user=user, room__name__icontains=request.GET.get("searchRoomName"))
+        serializer = room_serializer(rooms, many=True, context={"user": user})
+        return Response(serializer.data)
+    return Response({"error": "Invalid request method"}, status=400)
+
+@api_view(["POST"])
+def update_status_of_invitations(request):
+    if request.method == 'POST':
+        try:
+            user = customuser.objects.get(username=request.data.get("user"))
+        except customuser.DoesNotExist:
+            return Response({"error": "user not found"}, status=400)
+        invitations = RoomInvitation.objects.filter(user=user).update(status="ACC")
+        return Response({"success": "status updated successfully"}, status=200)
+    return Response({"error": "Invalid request method"}, status=400)
+
+@api_view(["GET"])
+def unrecieved_room_invitee(request, username):
+    if request.method == 'GET':
+        try:
+            user = customuser.objects.get(username=username)
+        except customuser.DoesNotExist:
+            return Response({"error": "user not found"}, status=400)
+        count = RoomInvitation.objects.filter(user=user, status="pending").count()
+        return Response({"count": count}, status=200)
+
+    return Response({"error": "Invalid request method"}, status=400)
+
+
+@api_view(["GET"])
+def unread_conversations_count(request, username):
+    if request.method == 'GET':
+        try:
+            user = customuser.objects.get(username=username)
+        except customuser.DoesNotExist:
+            return Response({"error": "user not found"}, status=400)
+        count = Directs.objects.filter(receiver=user, is_read=False).values('sender').distinct().count()
+        count += Room.objects.filter(membership__user=user, membership__unreadCount__gt=0).count()
+        return Response({"count": count}, status=200)
     return Response({"error": "Invalid request method"}, status=400)

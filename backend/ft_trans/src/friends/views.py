@@ -14,7 +14,7 @@ from .models import Friendship
 from .serializers import friendRequestSerializer
 from .serializers import friendSerializer
 from .serializers import customuserSerializer
-
+from chat.common import user_channels
 @api_view(['GET'])
 def get_friend_list(request, username):
     user = customuser.objects.filter(username=username).first()
@@ -268,16 +268,33 @@ def block_friend(request):
     from_user_id = from_user.id
     # to_user_id = to_user.id
     channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)(
-        f"friends_group{from_user_id}",
-        {
-            'type': 'block_friend',
-            'message': {
-                'friend_username': to_username,
-                'avatar': friend_ser_from.data['avatar']
-            }
-        }
-    )
+    # async_to_sync(channel_layer.group_send)(
+    #     f"friends_group{from_user_id}",
+    #     {
+    #         'type': 'block_friend',
+    #         'message': {
+    #             'friend_username': to_username,
+    #             'avatar': friend_ser_from.data['avatar']
+    #         }
+    #     }
+    # )
+    
+    # abdellah added this
+    user_channel_names = user_channels.get(to_user.id)
+    print("USER CHANNELS: ", user_channel_names)
+    if user_channel_names is not None:
+        for channel_name in user_channel_names:
+            async_to_sync(channel_layer.send)(
+                channel_name,
+                {
+                    'type': 'you_are_blocked',
+                    'message': {
+                        'id': from_user.id,
+                    }
+                }
+            )
+    #end of abdellah's addition
+
     # async_to_sync(channel_layer.group_send)(
     #     f"friends_group{to_user_id}",
     #     {

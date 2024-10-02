@@ -20,7 +20,7 @@ const ChatRoomMembersList = (props) => {
               "Content-type": "application/json",
             },
             body: JSON.stringify({
-              id: selectedChatRoom.roomId,
+              id: selectedChatRoom.id,
             }),
           }
         );

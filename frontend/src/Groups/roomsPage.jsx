@@ -10,16 +10,36 @@ import NotificationAddIcon from "@mui/icons-material/NotificationAdd";
 import { Toaster } from "react-hot-toast";
 import RoomsNotifications from "./RoomComponents/roomsNotifications";
 import AddIcon from "@mui/icons-material/Add";
+import { chat } from "../assets/navbar-sidebar";
+import { set } from "lodash";
 
 const Rooms = () => {
   const [createRoom, setCreateRoom] = useState(false);
   const { user, chatSocket, isBlur, setIsBlur } = useContext(AuthContext);
   const [showRoomNotifications, setShowRoomNotifications] = useState(false);
-  const { setChatRoomInvitations, suggestedChatRooms, socketData, chatRoomInvitationsRef } =
-    useContext(ChatContext);
+  const {
+    setChatRoomInvitations,
+    suggestedChatRooms,
+    socketData,
+    chatRoomInvitationsRef,
+    chatRoomInvitations,
+  } = useContext(ChatContext);
   const [myChatRooms, setMyChatRooms] = useState([]);
   const [hasMoreRooms, setHasMoreRooms] = useState(true);
   const [currentMyRoomsPage, setCurrentMyRoomsPage] = useState(1);
+  const [itemsPerScreen, setItemsPerScreen] = useState(4);
+  const [pendingInvitationsCount, setPendingInvitationsCount] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) setItemsPerScreen(1);
+      else if (window.innerWidth < 1024) setItemsPerScreen(3);
+      else setItemsPerScreen(4);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   //hande scroller handler (My Rooms)
   const onClickScroller = (handle, numberOfRooms) => {
@@ -73,7 +93,7 @@ const Rooms = () => {
 
   const roomInvitationsAcceptedUpdater = (data) => {
     const allMyChatRooms = myChatRooms;
-    const allRoomInvites = roomInvitationsRef.current;
+    const allRoomInvites = chatRoomInvitationsRef.current;
     console.log("data recive if the invite accepted", data);
     if (user === data.user) {
       setMyChatRooms([...allMyChatRooms, data.room]);
@@ -93,29 +113,30 @@ const Rooms = () => {
 
   const chatRoomDeleted = (roomId) => {
     const allMyChatRooms = myChatRooms;
-    const updatedRooms = allMyChatRooms.filter(
-      (room) => room.id !== roomId
-    );
+    const updatedRooms = allMyChatRooms.filter((room) => room.id !== roomId);
     setMyChatRooms(updatedRooms);
-  }
+  };
 
   useEffect(() => {
-    if (socketData) {
-      let data = socketData;
-      if (data.type === "chatRoomAdminAdded") chatRoomAdminAdded(data.message);
-      else if (data.type === "roomInvitation") {
-        const allInvitaions = chatRoomInvitationsRef.current;
-        setChatRoomInvitations([...allInvitaions, data.room]);
-      } else if (data.type === "roomInvitationAccepted")
-        roomInvitationsAcceptedUpdater(data.data);
-      else if (
-        data.type === "chatRoomLeft" ||
-        data.type === "chatRoomDeleted"
-      ) {
-        chatRoomDeleted(data.roomId);
-      }
+    if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
+      chatSocket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.type === "chatRoomAdminAdded")
+          chatRoomAdminAdded(data.message);
+        else if (data.type === "roomInvitation") {
+          const allInvitaions = chatRoomInvitationsRef.current;
+          setChatRoomInvitations([...allInvitaions, data.room]);
+        } else if (data.type === "roomInvitationAccepted")
+          roomInvitationsAcceptedUpdater(data.data);
+        else if (
+          data.type === "chatRoomLeft" ||
+          data.type === "chatRoomDeleted"
+        ) {
+          chatRoomDeleted(data.roomId);
+        }
+      };
     }
-  }, [socketData]);
+  }, [chatSocket]);
 
   useEffect(() => {
     // fetch chat rooms
@@ -126,9 +147,7 @@ const Rooms = () => {
         );
         const { next, results } = await response.json();
         if (response.ok) {
-          console.log("fetch chat rooms", results);
           setMyChatRooms([...myChatRooms, ...results]);
-          console.log("fetch chat rooms", results.length, " ", next);
           if (!next) setHasMoreRooms(false);
         } else {
           console.error("Failed to fetch chat rooms");
@@ -140,6 +159,36 @@ const Rooms = () => {
     if (user) fetchChatRooms();
   }, [currentMyRoomsPage, user]);
 
+  useEffect(() => {
+    if (chatRoomInvitations.length) {
+      const pendingInvitations = chatRoomInvitations.filter(
+        (room) => room.status === "pending"
+      );
+      setPendingInvitationsCount(pendingInvitations.length);
+    }
+  }, [chatRoomInvitations]);
+
+  const updateStatusOfInvitations = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/chatAPI/updateStatusOfInvitations`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ user: user }),
+        }
+      );
+      if (response.ok) {
+        // console.log("updateStatusOfInvitations", response);
+      } else {
+        console.error("Failed to updateStatusOfInvitations");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="rooms-page">
       <Toaster
@@ -195,17 +244,29 @@ const Rooms = () => {
                 setIsBlur(true);
               }}
             />
-            <NotificationAddIcon
-              className="rooms-notifications-icon"
-              onClick={() => {
-                setShowRoomNotifications(true);
-                setIsBlur(true);
-              }}
-            />
+            <div className="room-notifications-icon-conatiner">
+              <NotificationAddIcon
+                className="rooms-notifications-icon"
+                onClick={() => {
+                  setShowRoomNotifications(true);
+                  setIsBlur(true);
+                  updateStatusOfInvitations();
+                  setPendingInvitationsCount(0);
+                }}
+              />
+              {pendingInvitationsCount > 0 ? (
+                <div className="room-notifications-counter">
+                  {pendingInvitationsCount}
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
           </div>
         </div>
         <div className="my-rooms-row">
-          {myChatRooms.length > 4 ? (
+          {/* {myChatRooms.length > 4 ? ( */}
+          {itemsPerScreen < myChatRooms.length ? (
             <>
               <img
                 src={ChatIcons.leftHand}
@@ -251,7 +312,7 @@ const Rooms = () => {
         </div>
         <div className="rooms-header">Suggested Public Rooms</div>
         <div className="suggested-room-row">
-          {suggestedChatRooms.length > 4 ? (
+          {itemsPerScreen < suggestedChatRooms.length ? (
             <>
               <img
                 src={ChatIcons.leftHand}

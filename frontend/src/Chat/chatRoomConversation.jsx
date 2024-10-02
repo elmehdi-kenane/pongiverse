@@ -9,8 +9,17 @@ import SendMessage from "./sendMessage";
 import LeaveChatRoomPopUp from "./chatRoomOptions/leaveChatRoomPopUp";
 import ChatRoomMembersList from "./chatRoomOptions/chatRoomMembersList";
 import ChatRoomInfos from "./chatRoomOptions/chatRoomInfos";
+import { resetChatRoomUnreadMessages  } from "./chatConversationItem"
 
-const ChatRoomConversation = ({ chatRoomMessages, setChatRoomMessages, setChatRooms }) => {
+const ChatRoomConversation = ({
+  chatRoomMessages,
+  setChatRoomMessages,
+  chatRooms,
+  setChatRooms,
+  searchValue,
+  setSearchValue,
+  setChatRoomsSearch,
+}) => {
   const [showChatRoomInfos, setShowChatRoomInfos] = useState(false);
   const [showChatRoomMembers, setShowChatRoomMembers] = useState(false);
   const [showLeaveRoomPopUp, setShowLeaveRoomPopUp] = useState(false);
@@ -26,7 +35,7 @@ const ChatRoomConversation = ({ chatRoomMessages, setChatRoomMessages, setChatRo
   const [firstScroll, setFirstScroll] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  const { selectedChatRoom, setSelectedChatRoom } = useContext(ChatContext);
+  const { selectedChatRoom, setSelectedChatRoom, setSelectedItem } = useContext(ChatContext);
   const { user, chatSocket } = useContext(AuthContext);
 
   const [messageToSend, setMessageToSend] = useState("");
@@ -40,13 +49,47 @@ const ChatRoomConversation = ({ chatRoomMessages, setChatRoomMessages, setChatRo
         JSON.stringify({
           type: "message",
           data: {
-            id: selectedChatRoom.roomId,
+            id: selectedChatRoom.id,
             name: selectedChatRoom.name,
             sender: user,
             message: messageToSend,
           },
         })
       );
+      if(searchValue !== "") {
+        const isExist = chatRooms.some((room) => room.id === selectedChatRoom.id);
+        if(!isExist) {
+          const newChatRoomConversation = {
+            id: selectedChatRoom.id,
+            name: selectedChatRoom.name,
+            icon: selectedChatRoom.icon,
+            lastMessage: messageToSend,
+            unreadCount: 0,
+          };
+          setChatRooms([newChatRoomConversation,...chatRooms]);
+        
+      } else {
+        setChatRooms((prev) => {
+          const updatedChatRooms = prev.map((room) => {
+            if (room.id === selectedChatRoom.id) {
+              return { ...room, lastMessage: messageToSend };
+            }
+            return room;
+          }
+          );
+          return updatedChatRooms;
+        });
+        // move the selected chat room to the top
+        const selectedChatRoomIndex = chatRooms.findIndex(
+          (room) => room.id === selectedChatRoom.id
+        );
+        const splitedChatRooms = chatRooms.splice(selectedChatRoomIndex, 1);
+        setChatRooms([splitedChatRooms[0], ...chatRooms]);
+        resetChatRoomUnreadMessages(user, selectedChatRoom.id);
+      } 
+      }
+      setSearchValue("");
+      setChatRoomsSearch("");        
       setMessageToSend("");
     }
   };
@@ -66,7 +109,7 @@ const ChatRoomConversation = ({ chatRoomMessages, setChatRoomMessages, setChatRo
           `http://${
             import.meta.env.VITE_IPADDRESS
           }:8000/chatAPI/chatRoom/messages/${
-            selectedChatRoom.roomId
+            selectedChatRoom.id
           }?page=${currentChatRoomMessagesPage}`
         );
         if (response.ok) {
@@ -101,12 +144,11 @@ const ChatRoomConversation = ({ chatRoomMessages, setChatRoomMessages, setChatRo
   const updateLastMessage = () => {
     setChatRooms((prev) => {
       const updatedChatRooms = prev.map((room) => {
-        if (room.roomId === selectedChatRoom.roomId) {
+        if (room.roomId === selectedChatRoom.id) {
           return { ...room, lastMessage: chatRoomMessages[0].content };
         }
         return room;
-      }
-      );
+      });
       return updatedChatRooms;
     });
   };
@@ -124,21 +166,21 @@ const ChatRoomConversation = ({ chatRoomMessages, setChatRoomMessages, setChatRo
   });
 
   const handleScroll = () => {
-    if(messageBodyRef.current){
-      const { scrollTop} = messageBodyRef.current;
+    if (messageBodyRef.current) {
+      const { scrollTop } = messageBodyRef.current;
       if (scrollTop === 0 && hasMoreChatRoomMessages && !firstScroll) {
         setLoading(true);
         setCurrentChatRoomMessagesPage((prev) => prev + 1);
       }
     }
-  }
+  };
 
   return (
     <>
       {showLeaveRoomPopUp && (
         <LeaveChatRoomPopUp
           setShowLeaveRoomPopUp={setShowLeaveRoomPopUp}
-          roomId={selectedChatRoom.roomId}
+          roomId={selectedChatRoom.id}
           setSelectedChatRoom={setSelectedChatRoom}
         />
       )}
@@ -146,7 +188,7 @@ const ChatRoomConversation = ({ chatRoomMessages, setChatRoomMessages, setChatRo
         <ChatRoomMembersList
           showChatRoomMembers={showChatRoomMembers}
           setShowChatRoomMembers={setShowChatRoomMembers}
-          roomId={selectedChatRoom.roomId}
+          roomId={selectedChatRoom.id}
           setSelectedChatRoom={setSelectedChatRoom}
         />
       )}
@@ -166,9 +208,9 @@ const ChatRoomConversation = ({ chatRoomMessages, setChatRoomMessages, setChatRo
             onClick={() => {
               setSelectedChatRoom({
                 name: "",
-                memberCount: "",
+                membersCount: "",
                 icon: "",
-                roomId: "",
+                id: "",
               });
               setSelectedItem("");
             }}
@@ -181,7 +223,8 @@ const ChatRoomConversation = ({ chatRoomMessages, setChatRoomMessages, setChatRo
           <div className="conversation-details">
             <div className="conversation-name">{selectedChatRoom.name}</div>
             <div className="conversation-info">
-              {selectedChatRoom.memberCount} Members
+              {selectedChatRoom.membersCount}{" "}
+              {selectedChatRoom.membersCount > 1 ? "Members" : "Member"}
             </div>
           </div>
         </div>
@@ -232,7 +275,11 @@ const ChatRoomConversation = ({ chatRoomMessages, setChatRoomMessages, setChatRo
           )}
         </div>
       </div>
-      <div className="conversation-body" ref={messageBodyRef} onScroll={handleScroll}>
+      <div
+        className="conversation-body"
+        ref={messageBodyRef}
+        onScroll={handleScroll}
+      >
         {chatRoomMessages.length !== 0 &&
           chatRoomMessages.map((message, index) =>
             message.sender === user ? (
@@ -244,9 +291,9 @@ const ChatRoomConversation = ({ chatRoomMessages, setChatRoomMessages, setChatRo
                 length={chatRoomMessages.length}
                 endRef={messageEndRef}
                 index={index}
-                />
-              ) : (
-                <OtherMessage
+              />
+            ) : (
+              <OtherMessage
                 key={index}
                 name={message.sender}
                 content={message.content}

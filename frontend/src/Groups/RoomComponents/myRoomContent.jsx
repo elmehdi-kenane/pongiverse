@@ -13,7 +13,7 @@ const MyRoomContent = (props) => {
   const navigateToChatRoom = () => {
     console.log("Room ID: ",props.roomId)
     setSelectedChatRoom({
-      roomId: props.roomId,
+      id: props.roomId,
       name: props.name,
       icon: props.icon,
       membersCount: props.membersCount,

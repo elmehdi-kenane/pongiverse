@@ -51,9 +51,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			user_channels[user_id] = filtered_channels_name
 
 	async def broadcast_message(self, event):
-		print("\n\n\nbroadcasting message")
-		print("DATA: ",event['data'])
-		print("\n\n\n")
 		await self.send(text_data=json.dumps(event['data']))
 	
 	async def send_message(self, event):
@@ -99,5 +96,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
 				'senderAvatar' : data['senderAvatar'],
 
 			}
+		}
+		await self.send(text_data=json.dumps(message))
+
+	async def you_are_blocked(self, event):
+		data = event['message']
+		message = {
+			'type' : 'youAreBlocked',
+			'data' : data
 		}
 		await self.send(text_data=json.dumps(message))

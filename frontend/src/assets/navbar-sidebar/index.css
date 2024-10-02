@@ -413,6 +413,36 @@ background: radial-gradient(circle, rgba(99,22,214,1) 0%, rgba(33,19,54,1) 100%)
   display: block;
 }
 
+
+/*/ added by abdellah for message notification  counter*/
+
+
+#sidebar-chat {
+  position: relative;
+}
+#sidebar-groups {
+  position: relative;
+}
+
+.sidebar-notifications {
+  position: absolute;
+  top: 30px;
+  right: 24px;
+  background-color: #913dce;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+}
+
+
+/*END*/
+
+
 .profile-dropdown {
   position: absolute;
   background-color: #d9d9d9;

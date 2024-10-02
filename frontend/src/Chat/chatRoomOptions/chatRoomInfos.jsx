@@ -15,7 +15,7 @@ const ChatRoomInfos = (props) => {
             <div className="chat-room-info-name">{props.selectedChatRoom.name}</div>
             <div className="chat-room-info-topic">{props.selectedChatRoom.topic}</div>
             <div className="chat-room-info-members-count">
-            {props.selectedChatRoom.memberCount} Members
+            {props.selectedChatRoom.membersCount} Members
             </div>
         </div>
     </div>

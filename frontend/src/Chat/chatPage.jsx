@@ -9,6 +9,7 @@ import {
 } from "./chatConversationItem";
 import ChatSideBar from "./chatPageSidebar";
 import ChatWindow from "./chatPageWindow";
+import { chat } from "../assets/navbar-sidebar";
 
 const Chat = () => {
   const {
@@ -17,6 +18,7 @@ const Chat = () => {
     selectedDirect,
     selectedChatRoom,
     socketData,
+    setSelectedDirect
   } = useContext(ChatContext);
 
   const { chatSocket, user } = useContext(AuthContext);
@@ -30,6 +32,9 @@ const Chat = () => {
   const [hasMoreChatRooms, setHasMoreChatRooms] = useState(true);
   const chatRoomsListInnerRef = useRef(null);
   const directsListInnerRef = useRef(null);
+  const [searchValue, setSearchValue] = useState("");
+  const [directsSearch, setDirectsSearch] = useState([]);
+  const [chatRoomsSearch, setChatRoomsSearch] = useState([]);
 
   useEffect(() => {
     const handleNewDirectMessage = (data) => {
@@ -79,7 +84,7 @@ const Chat = () => {
 
     const handleChatRoomNewMesssage = (data) => {
       const currentRoom = selectedChatRoomRef.current;
-      if (currentRoom.roomId === data.roomId) {
+      if (currentRoom.id === data.roomId) {
         setChatRoomMessages((prev) => [...prev, data]);
         setChatRooms((prevConversations) =>
           prevConversations.map((room) =>
@@ -92,8 +97,6 @@ const Chat = () => {
           resetChatRoomUnreadMessages(user, data.roomId);
         }
       } else {
-        console.log("updating chat room");
-        console.log(data);
         setChatRooms((prevConversations) =>
           prevConversations.map((room) =>
             room.id === data.roomId
@@ -138,26 +141,39 @@ const Chat = () => {
       setChatRooms(updatedChatRooms);
     };
 
-    if (socketData) {
-      const data = socketData;
-      console.log("socket data: ", data.type);
-      if (data.type === "newDirect") {
-        handleNewDirectMessage(data.data);
-        moveDirectToTop(data.data.senderId, data.data.receiverId);
-      } else if (data.type === "newMessage") {
-        handleChatRoomNewMesssage(data.data);
-        moveChatRoomToTop(data.data.roomId);
-      } else if (data.type === "goToGamingPage") {
-        navigate("/mainpage/game/solo/1vs1/friends");
-      } else if (
-        data.type === "chatRoomLeft" ||
-        data.type === "chatRoomDeleted"
-      ) {
-        chatRoomDeleted(data.roomId);
-      }
+    if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
+      chatSocket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.type === "newDirect") {
+          handleNewDirectMessage(data.data);
+          moveDirectToTop(data.data.senderId, data.data.receiverId);
+        } else if (data.type === "newMessage") {
+          handleChatRoomNewMesssage(data.data);
+          moveChatRoomToTop(data.data.roomId);
+        } else if (data.type === "goToGamingPage") {
+          navigate("/mainpage/game/solo/1vs1/friends");
+        } else if (
+          data.type === "chatRoomLeft" ||
+          data.type === "chatRoomDeleted"
+        ) {
+          chatRoomDeleted(data.roomId);
+        } else if(data.type === "youAreBlocked"){
+          setDirects((prevConversations) => {
+            const updatedDirects = prevConversations.filter(
+              (friend) => friend.id !== data.data.id
+            );
+            return updatedDirects;
+          });
+          setSelectedDirect({
+            id: "",
+            name: "",
+            avatar: "",
+            status: "",
+          });
+        } 
+      };
     }
-    console.log("socket data: ", socketData);
-  }, [socketData]);
+  }, [chatSocket]);
 
   useEffect(() => {
     const fetchDirectsWithMessage = async () => {
@@ -217,18 +233,19 @@ const Chat = () => {
           }:8000/chatAPI/chatRooms/${user}?page=${currentChatRoomPage}`
         );
         const { next, results } = await response.json();
+        console.log("CHAT ROOMS: ",results);
         if (response.ok) {
           setChatRooms((prevConversations) => {
             let allChatRooms = [...prevConversations, ...results];
             if (
               Object.values(selectedChatRoom).every((value) => value !== "")
             ) {
-              const conversationExists = prevConversations.some(
+              const conversationExists = allChatRooms.some(
                 (conv) => conv.id === selectedChatRoom.id
               );
               if (!conversationExists) {
                 const newConversation = {
-                  id: selectedChatRoom.roomId,
+                  id: selectedChatRoom.id,
                   name: selectedChatRoom.name,
                   membersCount: selectedChatRoom.membersCount,
                   icon: selectedChatRoom.icon,
@@ -298,14 +315,28 @@ const Chat = () => {
           chatRoomsListInnerRef={chatRoomsListInnerRef}
           setChatRoomMessages={setChatRoomMessages}
           setMessages={setMessages}
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+          directsSearch={directsSearch}
+          setDirectsSearch={setDirectsSearch}
+          chatRoomsSearch={chatRoomsSearch}
+          setChatRoomsSearch={setChatRoomsSearch}
         />
         <ChatWindow
           messages={messages}
           setMessages={setMessages}
           chatRoomMessages={chatRoomMessages}
           setChatRoomMessages={setChatRoomMessages}
+          directs={directs}
           setDirects={setDirects}
+          chatRooms={chatRooms}
           setChatRooms={setChatRooms}
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+          directsSearch={directsSearch}
+          chatRoomsSearch={chatRoomsSearch}
+          setDirectsSearch={setDirectsSearch}
+          setChatRoomsSearch={setChatRoomsSearch}
         />
       </div>
     </div>

@@ -110,6 +110,36 @@ button.rooms-switch-button-active {
   font-weight: 500;
 }
 
+.chat-rooms-conversation-list-no-results {
+  padding: 10px;
+  color: #ccc;
+  font-size: 14px;
+}
+
+.chat-rooms-conversation-search-header {
+  padding: 0px 10px;
+  font-weight: 600;
+  color: #ccc;
+  font-size: 14px;
+}
+.chat-conversation-list-no-results,
+.chat-rooms-conversation-list-no-results {
+  width: 100%;
+  padding: 10px;
+  color: #ccc;
+  font-size: 14px;
+  opacity: 0.7;
+}
+.chat-conversation-search-list-no-results,
+.chat-rooms-conversation-search-list-no-results {
+  padding: 10px;
+  color: #ccc;
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.chat-rooms-conversations-search-list,
+.chat-conversation-search-list,
 .chat-conversations-list,
 .chat-rooms-conversations-list {
   display: flex;
@@ -761,6 +791,9 @@ transition: ease-in 0.3s;
 
   .chat-sidebar-hidden {
     display: none;
+  }
+  .conversation-emoji-container {
+    width: 100%;
   }
 }
 

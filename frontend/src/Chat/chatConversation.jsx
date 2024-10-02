@@ -4,6 +4,8 @@ import AuthContext from "../navbar-sidebar/Authcontext";
 import SendMessage from "./sendMessage";
 import ChatConversationHeader from "./chatConversationHeader";
 import ChatConversationBody from "./chatConversationBody";
+import { resetUnreadMessages } from "./chatConversationItem";
+
 
 export let useClickOutSide = (handler) => {
   let domNode = useRef();
@@ -19,9 +21,19 @@ export let useClickOutSide = (handler) => {
   return domNode;
 };
 
-const ChatConversation = ({ messages, setMessages, setShowBlockPopup, setDirects }) => {
+const ChatConversation = ({
+  messages,
+  setMessages,
+  setShowBlockPopup,
+  directs,
+  setDirects,
+  searchValue,
+  setSearchValue,
+  directsSearch,
+  setDirectsSearch,
+}) => {
   const [showDirectOptions, setShowDirectOptions] = useState(false);
-  const { selectedDirect, setSelectedDirect,  } = useContext(ChatContext);
+  const { selectedDirect, setSelectedDirect } = useContext(ChatContext);
   const { user, chatSocket, userImg } = useContext(AuthContext);
 
   const [currentMessagePage, setCurrentMessagePage] = useState(1);
@@ -50,6 +62,44 @@ const ChatConversation = ({ messages, setMessages, setShowBlockPopup, setDirects
           },
         })
       );
+      if (searchValue !== "") {
+        const allDirects = directs;
+        const isExist = allDirects.some(
+          (friend) => friend.name === selectedDirect.name
+        );
+        if (!isExist) {
+          const newConversation = {
+            id: selectedDirect.id,
+            name: selectedDirect.name,
+            avatar: selectedDirect.avatar,
+            is_online: selectedDirect.status,
+            lastMessage: messageToSend,
+            unreadCount: 0,
+          };
+          setDirects([newConversation, ...directs]);
+        } else {
+          // Update the last message of the selected direct and unread count and move to the top
+          const updatedDirects = allDirects.map((friend) => {
+            if (selectedDirect.name === friend.name) {
+              return {
+                ...friend,
+                lastMessage: messageToSend,
+                unreadCount: 0,
+              };
+            }
+            return friend;
+          });
+          // move the selected direct to the top
+          const selectedDirectIndex = updatedDirects.findIndex(
+            (friend) => friend.name === selectedDirect.name
+          );
+          const  splitedDirects = updatedDirects.splice(selectedDirectIndex, 1);
+          setDirects([splitedDirects[0], ...updatedDirects]);
+          resetUnreadMessages(user, selectedDirect.id);
+        }
+      }
+      setSearchValue("");
+      setDirectsSearch([]);
       setMessageToSend("");
     }
   };
@@ -116,13 +166,15 @@ const ChatConversation = ({ messages, setMessages, setShowBlockPopup, setDirects
     setDirects((prevDirects) => {
       const updatedDirects = prevDirects.map((friend) => {
         if (friend.name === selectedDirect.name) {
-          return { ...friend, lastMessage: messages[messages.length - 1].content };
+          return {
+            ...friend,
+            lastMessage: messages[messages.length - 1].content,
+          };
         }
         return friend;
       });
       return updatedDirects;
-    }
-    );
+    });
   };
 
   useEffect(() => {

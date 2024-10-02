@@ -19,7 +19,7 @@ export const ChatProvider = ({ child }) => {
     membersCount: "",
     icon: "",
     cover: "",
-    roomId: "",
+    id: "",
     topic: "",
   });
   const [selectedDirect, setSelectedDirect] = useState({
@@ -30,6 +30,7 @@ export const ChatProvider = ({ child }) => {
   });
   const selectedDirectRef = useRef(selectedDirect);
   const selectedChatRoomRef = useRef(selectedChatRoom);
+
 
   useEffect(() => {
     suggestedChatRoomsRef.current = suggestedChatRooms;
@@ -68,17 +69,17 @@ export const ChatProvider = ({ child }) => {
   }, [chatSocket, user, location.pathname]);
 
 
-  useEffect(() => {
-    if (!chatSocket) return;
-    chatSocket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      console.log(data);
-      setSocketData(data);
-    }
-    return () => {
-      chatSocket.onmessage = null;
-    }
-  }, [chatSocket]);
+  // useEffect(() => {
+  //   if (!chatSocket) return;
+  //   chatSocket.onmessage = (event) => {
+  //     const data = JSON.parse(event.data);
+  //     console.log("TYPE: ", data.type);
+  //     setSocketData(data);
+  //   }
+  //   return () => {
+  //     chatSocket.onmessage = null;
+  //   }
+  // }, [chatSocket]);
 
   useEffect(() => {
     const fetchChatRoomInvitations = async () => {
@@ -112,6 +113,9 @@ export const ChatProvider = ({ child }) => {
     if (user && location.pathname === "/mainpage/groups") {
       fetchChatRoomInvitations();
       fetchSuggestedChatRooms();
+      setSocketData(null);
+    } else if (user && location.pathname === "/mainpage/chat") {
+      setSocketData(null);
     }
   }, [location.pathname, user]);
 

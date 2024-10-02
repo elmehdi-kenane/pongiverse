@@ -38,9 +38,9 @@ const LeaveChatRoomPopUp = (props) => {
             );
             props.setSelectedChatRoom({
               name: "",
-              memberCount: "",
+              membersCount: "",
               icon: "",
-              roomId: "",
+              id: "",
             });
           }}
         >
