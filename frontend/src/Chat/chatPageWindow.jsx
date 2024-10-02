@@ -4,6 +4,7 @@ import ChatConversation from "./chatConversation";
 import ChatRoomConversation from "./chatRoomConversation";
 import ChatContext from "../Context/ChatContext";
 import BlockPopUp from "./chatRoomOptions/blockPopUp";
+import AuthContext from "../navbar-sidebar/Authcontext";
 
 const ChatWindow = ({
   messages,
@@ -21,7 +22,8 @@ const ChatWindow = ({
   chatRoomsSearch,
   setChatRoomsSearch,
 }) => {
-  const { selectedChatRoom, selectedDirect, isHome } = useContext(ChatContext);
+  const { selectedChatRoom, selectedDirect, isHome ,setSelectedDirect, setSelectedItem} = useContext(ChatContext);
+  const { user } = useContext(AuthContext);
   const [showBlockPopup, setShowBlockPopup] = useState(false);
   return (
     <div
@@ -32,7 +34,16 @@ const ChatWindow = ({
           : "chat-window-hidden"
       }
     >
-      {showBlockPopup && <BlockPopUp setShowBlockPopup={setShowBlockPopup} />}
+      {showBlockPopup && (
+        <BlockPopUp
+          setShowBlockPopup={setShowBlockPopup}
+          setDirects={setDirects}
+          selectedDirect={selectedDirect}
+          user={user}
+          setSelectedDirect={setSelectedDirect}
+          setSelectedItem={setSelectedItem}
+        />
+      )}
       {isHome &&
       Object.values(selectedDirect).every((value) => value !== "") ? (
         <ChatConversation
