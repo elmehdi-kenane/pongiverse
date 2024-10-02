@@ -211,12 +211,14 @@ class ForgetPasswordView(APIView):
 		email = request.data.get('email')
 		random_number = random.randint(1000, 10000)
 		message = 'Here is the code : ' + str(random_number)
+		html_message = f'<p>Here is the code: <strong>{random_number}</strong></p>'
 		send_mail(
 		'Reset Password',
 		message,
 		'settings.EMAIL_HOST_USER',
 		[email],
 		fail_silently=False,
+		html_message=html_message
 		)
 		response.data = {"Case" : "valid token", "Number" : random_number}
 		return response

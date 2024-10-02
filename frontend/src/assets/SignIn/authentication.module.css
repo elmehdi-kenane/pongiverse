@@ -171,6 +171,7 @@
   background-color: black;
 }
 
+
 .authentication-signin-line {
   display: flex;
   align-items: center;
@@ -242,7 +243,6 @@
   align-items: center;
   justify-content: center;
   width: 90%;
-  height: 550px;
   background-color: #250939;
   gap: 10px;
 }
@@ -256,9 +256,9 @@
 }
 
 .authentication-signup-title {
-	color: rgb(255, 255, 255);
-	font-size: 50px;
-	font-family: "Bebas Neue", sans-serif;
+  color: rgb(255, 255, 255);
+  font-size: 50px;
+  font-family: "Bebas Neue", sans-serif;
 }
 
 .authentication-signup-input {
@@ -315,6 +315,11 @@
   height: 1px;
   width: 45%;
   background-color: rgba(255, 255, 255, 0.8);
+}
+
+.span-messages {
+  color: red;
+  font-size: 13px;
 }
 
 .authentication-signup-or {
@@ -378,6 +383,7 @@
 }
 
 @media (min-width: 1024px) {
+
   .authentication-signindiv,
   .authentication-signupdiv {
     width: 55%;
@@ -386,6 +392,7 @@
 }
 
 @media (max-width: 1023px) {
+
   .authentication-signindiv,
   .authentication-signupdiv {
     width: 99%;
@@ -432,6 +439,7 @@
 }
 
 @media (max-width: 700px) {
+
   .authentication-signin,
   .authentication-signup {
     width: 90%;
@@ -439,6 +447,7 @@
 }
 
 @media (max-width: 425px) {
+
   .authentication-signin,
   .authentication-signup {
     width: 100%;
@@ -446,6 +455,7 @@
 }
 
 @media (max-width: 300px) {
+
   .authentication-signin,
   .authentication-signup {
     width: 100%;
@@ -474,13 +484,15 @@
 }
 
 @media (max-width: 240px) {
+
   .authentication-signin-form,
   .authentication-signup-form {
     margin-top: -100px;
   }
 
-  .authentication-signup-title-div, .authentication-signin-title-div {
-	height: 30px;
+  .authentication-signup-title-div,
+  .authentication-signin-title-div {
+    height: 30px;
   }
 
   .authentication-signin-title,
@@ -497,6 +509,7 @@
     margin-left: 7%;
     margin-top: 10px;
   }
+
   .authentication-signin-forget-password {
     color: rgb(165, 165, 165);
     font-size: 10px;
