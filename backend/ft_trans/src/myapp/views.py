@@ -26,9 +26,12 @@ from urllib.parse import urlencode
 import json
 import os
 import certifi
+import ssl
 from PIL import Image
 from io import BytesIO
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
 
@@ -76,7 +79,8 @@ class SignUpView(APIView):
 			print(f"Serializer errors: {serializer.errors}")  # Add this line to print serializer errors
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class WaysSignUpView(APIView) :
+
+class WaysSignUpView(APIView):
 	parser_classes = (MultiPartParser, FormParser)
 	def post(self, request, *args, **kwargs):
 		my_data = {}
@@ -84,19 +88,20 @@ class WaysSignUpView(APIView) :
 		my_data['email'] = request.data.get('email')
 		my_data['password'] = request.data.get('password')
 		my_data['is_active'] = request.data.get('is_active')
-		image_response = requests.get(request.data.get('avatar'))
+
+		image_response = requests.get(request.data.get('avatar'), verify=False)
+		
 		if image_response.status_code == 200:
 			image_content = image_response.content
 			if image_content:
 				image_file = InMemoryUploadedFile(ContentFile(image_content), None, 'image.jpg', 'image/jpeg', len(image_content), None)
 				my_data['avatar'] = image_file
-		# else:
-			# response.data = {"Case" : "Error"}
+		
 		serializer = MyModelSerializer(data=my_data)
+		
 		if serializer.is_valid():
 			user = serializer.save()
-			response = Response()
-			response.data = {"Case" : "Sign up successfully"}
+			response = Response({"Case": "Sign up successfully"})
 			return response
 		else:
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
