@@ -359,7 +359,7 @@ async def quit_room_mp(self, data, rooms, user_channels):
                                         player_state.paddleY = 265
                                     player_state.playerNo -= 1
                                     await sync_to_async(player_state.save)()
-                                        
+
                                 player = await sync_to_async(customuser.objects.get)(id=player_state.player_id)
                                 with player.avatar.open('rb') as f:
                                     users.append({
@@ -403,7 +403,7 @@ async def starttimer(self, room):
             break
         room['time'] += 1
         await asyncio.sleep(1)
-        
+
 
 async def validate_player_mp(self, data, rooms, user_channels):
     message = data['message']
@@ -580,7 +580,7 @@ async def validate_player_mp(self, data, rooms, user_channels):
             player4_username = await sync_to_async(lambda:match_played.team2_player2.username)()
             player1 = await sync_to_async(customuser.objects.filter(username=player1_username).first)()
             player2 = await sync_to_async(customuser.objects.filter(username=player2_username).first)()
-            player3 = await sync_to_async(customuser.objects.filter(username=player3_username).first)() 
+            player3 = await sync_to_async(customuser.objects.filter(username=player3_username).first)()
             player4 = await sync_to_async(customuser.objects.filter(username=player4_username).first)()
             users = []
             if match_played.match_status == 'aborted':

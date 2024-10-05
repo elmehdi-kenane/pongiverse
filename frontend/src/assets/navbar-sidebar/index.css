@@ -719,19 +719,12 @@ background: radial-gradient(circle, rgba(99,22,214,1) 0%, rgba(33,19,54,1) 100%)
 }
 
 @media screen and (max-width: 280px) {
-    .no-notifications-dropdown {
-        position: fixed;
-        top: 50px;
-        width: 80%;
-        left: 20%;
-    }
-
-    .notifications-container {
-        position: fixed;
-        top: 50px;
-        width: 80%;
-        left: 20%;
-    }
+  .no-notifications-dropdown {
+    position: fixed;
+    top: 50px;
+    width: 80%;
+    left: 20%;
+  }
 
   .notifications-container {
     position: fixed;
@@ -1410,11 +1403,11 @@ background: radial-gradient(circle, rgba(99,22,214,1) 0%, rgba(33,19,54,1) 100%)
   /* #paddle-1 {
         height: 20px;
     }
-    
+
     #paddle-2 {
         height: 20px;
     }
-    
+
     #ball {
         height: 5px;
         width: 5px;
@@ -1496,12 +1489,10 @@ background: radial-gradient(circle, rgba(99,22,214,1) 0%, rgba(33,19,54,1) 100%)
         height: 10px;
         width: 2px;
     }
-    
     #paddle-2 {
         height: 10px;
         width: 2px;
     }
-    
     #ball {
         height: 3px;
         width: 3px;
@@ -2577,12 +2568,11 @@ background: radial-gradient(circle, rgba(99,22,214,1) 0%, rgba(33,19,54,1) 100%)
         height: 15px;
         width: 3px;
     }
-    
+
     #paddle-2 {
         height: 15px;
         width: 3px;
     }
-    
     #ball {
         height: 4px;
         width: 4px;
@@ -2623,11 +2613,11 @@ background: radial-gradient(circle, rgba(99,22,214,1) 0%, rgba(33,19,54,1) 100%)
   /* #paddle-1 {
         height: 20px;
     }
-    
+
     #paddle-2 {
         height: 20px;
     }
-    
+
     #ball {
         height: 5px;
         width: 5px;
@@ -2672,12 +2662,11 @@ background: radial-gradient(circle, rgba(99,22,214,1) 0%, rgba(33,19,54,1) 100%)
         height: 10px;
         width: 2px;
     }
-    
+
     #paddle-2 {
         height: 10px;
         width: 2px;
     }
-    
     #ball {
         height: 3px;
         width: 3px;
@@ -2697,12 +2686,10 @@ background: radial-gradient(circle, rgba(99,22,214,1) 0%, rgba(33,19,54,1) 100%)
         height: 10px;
         width: 2px;
     }
-    
     #paddle-2 {
         height: 10px;
         width: 2px;
     }
-    
     #ball {
         height: 3px;
         width: 3px;

@@ -9,6 +9,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
 import Swal from 'sweetalert2';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import * as Icons from '../../assets/navbar-sidebar'
 
 
 function CreateTournament() {
@@ -17,10 +18,10 @@ function CreateTournament() {
 	const [inviteButton, setInviteButton] = useState(true)
 	const [tournamentId, setTournamentId] = useState(0)
 	const [tournamentMembers, setTournamentMembers] = useState([])
-	const [membersImages, setMemberImages] = useState([])
 	const navigate = useNavigate()
 	const location = useLocation()
-	const { user, userImages, allGameFriends, socket, setAllGameFriends} = useContext(AuthContext)
+	// const [isAnyUserOffline, setIsAnyUserOffline] = useState()	
+	const { user, userImages, allGameFriends, socket, notifSocket, setAllGameFriends } = useContext(AuthContext)
 	const allGameFriendsRef = useRef(allGameFriends);
 	const divRef = useRef(null);
 	const divRef2 = useRef(null);
@@ -30,9 +31,13 @@ function CreateTournament() {
 		setOpen(!open);
 	}
 
+	// useEffect(() =>{
+	// 	setIsAnyUserOffline(tournamentMembers.some(user => !user.is_online));
+	// },[tournamentMembers])
+
 	const handleInviteClick = (name) => {
-		if (socket && socket.readyState === WebSocket.OPEN) {
-			socket.send(JSON.stringify({
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+			notifSocket.send(JSON.stringify({
 				type: 'invite-friend',
 				message: {
 					user: user,
@@ -60,12 +65,14 @@ function CreateTournament() {
 	const Destroy_tournament = () => {
 		Swal.fire({
 			title: "Are you sure?",
-			text: "You won't be able to revert this!",
-			icon: "warning",
 			showCancelButton: true,
 			confirmButtonColor: "#3085d6",
 			cancelButtonColor: "#d33",
 			confirmButtonText: "Yes, Destroy it!",
+			customClass: {
+				popup: styles['destroy-popup'],
+				title: styles['destroy-popup-title'],
+			}
 		}).then((result) => {
 			if (result.isConfirmed) {
 				if (socket && socket.readyState === WebSocket.OPEN) {
@@ -84,7 +91,9 @@ function CreateTournament() {
 		allGameFriendsRef.current = allGameFriends;
 	}, [allGameFriends]);
 
+
 	useEffect(() => {
+
 		const get_members = async () => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/tournament-members`, {
 				method: "POST",
@@ -103,28 +112,11 @@ function CreateTournament() {
 				console.log(data)
 				setTournamentId(data.tournament_id)
 				setTournamentMembers(allMembers)
-				const fetchImages = async () => {
-					const promises = allMembers.map(async (user) => {
-						const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`, {
-							method: "POST",
-							headers: {
-								'Content-Type': 'application/json',
-							},
-							body: JSON.stringify({
-								image: user.image
-							})
-						});
-						const blob = await response.blob();
-						return URL.createObjectURL(blob);
-					});
-					const images = await Promise.all(promises);
-					setMemberImages(images)
-				};
-				fetchImages()
 			} else {
 				console.error('Failed to fetch data');
 			}
 		}
+
 		const set_is_inside = async () => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/set-is-inside`, {
 				method: 'POST',
@@ -184,27 +176,6 @@ function CreateTournament() {
 		}
 	}, [user])
 
-	useEffect(() => {
-		const fetchImages = async () => {
-			const promises = tournamentMembers.map(async (user) => {
-				const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`, {
-					method: "POST",
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({
-						image: user.image
-					})
-				});
-				const blob = await response.blob();
-				return URL.createObjectURL(blob);
-			});
-			const images = await Promise.all(promises);
-			setMemberImages(images)
-		};
-		if (tournamentMembers)
-			fetchImages()
-	}, [tournamentMembers])
 
 	useEffect(() => {
 		const get_member = async (username) => {
@@ -219,8 +190,8 @@ function CreateTournament() {
 			});
 			if (response.ok) {
 				const data = await response.json();
-				console.log(" haha data :", data)
-				const newUser = { 'id': data.id, 'name': data.name, 'level': data.level, 'image': data.image }
+				const newUser = { 'id': data.id, 'name': data.name, 'level': data.level, 'image': data.image, 'background_image': data.background_image }
+				console.log("NEW USERRR:", newUser)
 				setTournamentMembers((prevTournamentMembers) => [...prevTournamentMembers, newUser]);
 				setTournamentMembers((prevTournamentMembers) => {
 					if (!prevTournamentMembers.some(member => member.name === newUser.name)) {
@@ -228,21 +199,6 @@ function CreateTournament() {
 					}
 					return prevTournamentMembers;
 				});
-				const fetchImages = async (user_image) => {
-					const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`, {
-						method: "POST",
-						headers: {
-							'Content-Type': 'application/json',
-						},
-						body: JSON.stringify({
-							image: user_image
-						})
-					});
-					const blob = await response.blob();
-					const image = URL.createObjectURL(blob);
-					setMemberImages((prevMemberImages) => [...prevMemberImages, image]);
-				};
-				fetchImages(data.image)
 			} else {
 				console.error('Failed to fetch data');
 			}
@@ -252,28 +208,7 @@ function CreateTournament() {
 				let data = JSON.parse(event.data)
 				let type = data.type
 				let message = data.message
-				console.log("DATA RECEIVED:", data)
-				if (type === 'user_disconnected') {
-					const currentAllGameFriends = allGameFriendsRef.current;
-					console.log("user disconnected : ", allGameFriends)
-					let uname = data.message.user
-					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname))
-					setTournamentMembers(prevMembers => prevMembers.map(member => member.name === uname ? { ...member, 'is_online': false } : member));
-				} else if (type === 'connected_again_tourn') {
-					setTournamentMembers(prevMembers => prevMembers.map(member => member.name === message.user ? { ...member, 'is_online': true } : member));
-				} else if (type === 'connected_again') {
-					const currentAllGameFriends = allGameFriendsRef.current;
-					const userExists = currentAllGameFriends.some(friend => friend.name === message.user)
-					if (!userExists)
-						setAllGameFriends([...currentAllGameFriends, message.userInfos])
-				} else if (type === 'accepted_invitation') {
-					const currentAllGameFriends = allGameFriendsRef.current;
-					let username = data.message.user
-					if (username !== user) {
-						get_member(data.message.user)
-						setAllGameFriends(currentAllGameFriends.filter(user => user.name !== data.message.user))
-					}
-				} else if (type === 'user_kicked_out') {
+				if (type === 'user_kicked_out') {
 					let kicked = data.message.kicked
 					setTournamentMembers((prevMembers) =>
 						prevMembers.filter((member) => member.name !== kicked));
@@ -298,18 +233,69 @@ function CreateTournament() {
 					if (!userExists)
 						setAllGameFriends([...currentAllGameFriends, message.userInfos])
 				} else if (type === 'tournament_started') {
-					console.log("YESSS")
-					if (socket && socket.readyState === WebSocket.OPEN) {
-						socket.send(JSON.stringify({
+					let tournament_id = data.message.tournament_id
+					if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+						notifSocket.send(JSON.stringify({
 							type: 'Round-16-timer',
+							message: {
+								tournament_id: tournament_id,
+								user: user
+							}
 						}))
 					}
 					navigate('../game/tournamentbracket');
+				} else if (type === 'accepted_invitation') {
+					const currentAllGameFriends = allGameFriendsRef.current;
+					let username = data.message.user
+					if (username !== user) {
+						get_member(data.message.user)
+						setAllGameFriends(currentAllGameFriends.filter(user => user.name !== data.message.user))
+					}
+				} else if (type === 'playingStatus') {
+					if (data.message.is_playing === false) {
+						const currentAllGameFriends = allGameFriendsRef.current;
+						const userExists = currentAllGameFriends.some(friend => friend.name === message.userInfos.name)
+						if (!userExists)
+							setAllGameFriends([...currentAllGameFriends, message.userInfos])
+					}
+					else {
+						const currentAllGameFriends = allGameFriendsRef.current;
+						let username = message.user
+						setAllGameFriends(currentAllGameFriends.filter(user => user.name !== username))
+					}
 				}
 			}
 		}
 
 	}, [socket])
+
+
+	useEffect(() => {
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+			notifSocket.onmessage = (event) => {
+				let data = JSON.parse(event.data)
+				let type = data.type
+				let message = data.message
+				if (type === 'user_disconnected') {
+					console.log("ENTER TO USER DISCONNECTED")
+					const currentAllGameFriends = allGameFriendsRef.current;
+					let uname = data.message.user
+					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname))
+					setTournamentMembers(prevMembers => prevMembers.map(member => member.name === uname ? { ...member, 'is_online': false } : member));
+				} else if (type === 'connected_again_tourn') {
+					console.log("ENTER TO USER CONNECTED AGAIN TOUR")
+					setTournamentMembers(prevMembers => prevMembers.map(member => member.name === message.user ? { ...member, 'is_online': true } : member));
+				} else if (type === 'connected_again') {
+					const currentAllGameFriends = allGameFriendsRef.current;
+					const userExists = currentAllGameFriends.some(friend => friend.name === message.user)
+					if (!userExists)
+						setAllGameFriends([...currentAllGameFriends, message.userInfos])
+				} else if (type === 'tournament_destroyed') {
+					navigate("/mainpage/game")
+				}
+			}
+		}
+	}, [notifSocket])
 
 	useEffect(() => {
 		if (socket && socket.readyState === WebSocket.OPEN) {
@@ -322,28 +308,6 @@ function CreateTournament() {
 		}
 	}, [socket])
 
-	// useEffect(() =>{
-	// 	const is_tournament_advanced = async () =>{
-	// 		const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/is-tournament-advanced`, {
-	// 			method: "POST",
-	// 			headers: {
-	// 				'Content-Type': 'application/json',
-	// 			},
-	// 			body: JSON.stringify({
-	// 				tournament_id: tournamentId
-	// 			})
-	// 		});
-	// 		if (response.ok) {
-	// 			const data = await response.json();
-	// 			if (data.Case === 'tournament_advanced')
-	// 				navigate("../game/tournamentbracket")
-	// 		} else {
-	// 			console.error('Failed to fetch data');
-	// 		}
-	// 	}
-	// 	is_tournament_advanced()
-
-	// },[user, tournamentId])
 	const handleKick = (username) => {
 		if (socket && socket.readyState === WebSocket.OPEN) {
 			socket.send(JSON.stringify({
@@ -399,7 +363,6 @@ function CreateTournament() {
 	const InviteFriendComp = (props) => {
 		return (
 			<div className={styles[props.class]} ref={props.refs}>
-				{/* <h3 className={styles["pop-up-title"]}></h3> */}
 				{
 					allGameFriends.length > 0 && allGameFriends.map((user, key) => {
 						if (user.name !== username) {
@@ -409,10 +372,13 @@ function CreateTournament() {
 										<img className={styles["friend-avatar"]} src={userImages[key]} alt="" />
 										<div className={styles["friend-name-and-status"]}>
 											<h3 className={styles["friend-name"]}>{user.name}</h3>
-											<h3 className={styles["friend-status"]}>online</h3>
+											<h3 className={styles["friend-status"]}>level {user.level}</h3>
 										</div>
 									</div>
-									{inviteButton && <img className={styles["friend-invite-button"]} src={invitefriend} alt="" onClick={() => handleInviteClick(user.name)} />}
+									<div className={styles["friend-invite-button-div"]} onClick={() => handleInviteClick(user.name)}>
+										<img className={styles["friend-invite-button-img"]} src={Icons.console} />
+										<p className={styles["friend-invite-button-p"]}>Invite</p>
+									</div>
 								</div>
 							);
 						}
@@ -424,7 +390,7 @@ function CreateTournament() {
 	return (
 		<>
 			<div className={styles["tournament-page"]}>
-				<Toaster/>
+				<Toaster />
 				<div className={styles["tournament-page-content"]}>
 					<div className={styles["title-and-destroy"]}>
 						<h1 className={styles["tournament-title"]}>Tournament Creation</h1>
@@ -442,7 +408,7 @@ function CreateTournament() {
 									<h4 className={styles["tournament-id-title"]}>Tournament ID:</h4>
 									<div className={styles["tournament-id-value-and-icon"]}>
 										<h5 className={styles["tournament-id-value"]} onClick={copyTournamentId}>{tournamentId}</h5>
-										<ContentCopyIcon onClick={copyTournamentId}/>
+										<ContentCopyIcon onClick={copyTournamentId} />
 									</div>
 								</div>
 								<div className={styles["little-line"]}></div>
@@ -450,7 +416,7 @@ function CreateTournament() {
 						}
 						<div className={styles["players-number"]}>
 							<h4 className={styles["players-number-title"]}>Players:</h4>
-							<h5 className={styles["players-number-value"]}>{tournamentMembers.length}/16</h5>
+							<h5 className={styles["players-number-value"]}>{tournamentMembers.length}/8</h5>
 						</div>
 					</div >
 					{
@@ -458,7 +424,7 @@ function CreateTournament() {
 							<div className={styles["up-buttons"]}>
 								<button className={styles["up-button"]} onClick={isOpen} ref={inviteRef2}>Invite Friend</button>
 								{
-									tournamentMembers.length > 0 ? <button className={styles["up-button"]} onClick={handleStart}>Start</button> : <button className={styles["up-button-disabled"]} onClick={handleStart} disabled>Start</button>
+									tournamentMembers.length === 8 ? <button className={styles["up-button"]} onClick={handleStart}>Start</button> : <button className={styles["up-button-disabled"]} disabled>Start</button>
 								}
 							</div>
 							: <div className={styles["up-buttons"]}>
@@ -467,7 +433,11 @@ function CreateTournament() {
 					}
 					<div className={styles["tournament-members"]}>
 						{
-							tournamentMembers.length >= 1 ? (<div className={styles["player"]}>
+							tournamentMembers.length >= 1 ? (<div className={styles["player"]} style={{
+								backgroundImage: `url(${tournamentMembers[0].background_image})`,
+								backgroundSize: "cover",
+								backgroundPosition: "center",
+							}}>
 								{
 									tournamentMembers[0].is_online === false &&
 									<div className={styles["disconnected-div"]}>
@@ -477,46 +447,59 @@ function CreateTournament() {
 										}
 									</div>
 								}
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[0]} alt="" />
+								<div className={styles["user-avatar"]} >
+									<img className={styles["avatar"]} src={tournamentMembers[0].image} alt="" />
 								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[0].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[0].level}</h5>
+								<div className={styles["line-and-user-info"]}>
+									<div className={styles["user-info"]}>
+										<h4 className={styles["user-info-name"]}>{tournamentMembers[0].name}</h4>
+										<h6 className={styles["user-info-level"]}>level {tournamentMembers[0].level}</h6>
+									</div>
 								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
+							</div>) : (<div className={styles["player-empty"]}>
+								<div className={styles["user-avatar-empty"]}>
+									<img className={styles["avatar-empty"]} src={avatar} alt="" />
 								</div>
 							</div>)
 						}
+
 						{
-							tournamentMembers.length >= 2 ? (<div className={styles["player"]}>
+							tournamentMembers.length >= 2 ? (<div className={styles["player"]} style={{
+								backgroundImage: `url(${tournamentMembers[1].background_image})`,
+								backgroundSize: "cover",
+								backgroundPosition: "center",
+							}}>
 								{
 									tournamentMembers[1].is_online === false &&
 									<div className={styles["disconnected-div"]}>
 										<p>diconnected</p>
 										{
-
 											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[1].name)}>Kick out</button>
 										}
 									</div>
 								}
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[1]} alt="" />
+								<div className={styles["user-avatar"]} >
+									<img className={styles["avatar"]} src={tournamentMembers[1].image} alt="" />
 								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[1].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[1].level}</h5>
+								<div className={styles["line-and-user-info"]}>
+									<div className={styles["user-info"]}>
+										<h4 className={styles["user-info-name"]}>{tournamentMembers[1].name}</h4>
+										<h6 className={styles["user-info-level"]}>level {tournamentMembers[1].level}</h6>
+									</div>
 								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
+							</div>) : (<div className={styles["player-empty"]}>
+								<div className={styles["user-avatar-empty"]}>
+									<img className={styles["avatar-empty"]} src={avatar} alt="" />
 								</div>
 							</div>)
 						}
+
 						{
-							tournamentMembers.length >= 3 ? (<div className={styles["player"]}>
+							tournamentMembers.length >= 3 ? (<div className={styles["player"]} style={{
+								backgroundImage: `url(${tournamentMembers[0].background_image})`,
+								backgroundSize: "cover",
+								backgroundPosition: "center",
+							}}>
 								{
 									tournamentMembers[2].is_online === false &&
 									<div className={styles["disconnected-div"]}>
@@ -526,343 +509,177 @@ function CreateTournament() {
 										}
 									</div>
 								}
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[2]} alt="" />
+								<div className={styles["user-avatar"]} >
+									<img className={styles["avatar"]} src={tournamentMembers[2].image} alt="" />
 								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[2].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[2].level}</h5>
+								<div className={styles["line-and-user-info"]}>
+									<div className={styles["user-info"]}>
+										<h4 className={styles["user-info-name"]}>{tournamentMembers[2].name}</h4>
+										<h6 className={styles["user-info-level"]}>level {tournamentMembers[2].level}</h6>
+									</div>
 								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
+							</div>) : (<div className={styles["player-empty"]}>
+								<div className={styles["user-avatar-empty"]}>
+									<img className={styles["avatar-empty"]} src={avatar} alt="" />
 								</div>
 							</div>)
 						}
+
 						{
-							tournamentMembers.length >= 4 ? (<div className={styles["player"]}>
+							tournamentMembers.length >= 4 ? (<div className={styles["player"]} style={{
+								backgroundImage: `url(${tournamentMembers[0].background_image})`,
+								backgroundSize: "cover",
+								backgroundPosition: "center",
+							}}>
 								{
 									tournamentMembers[3].is_online === false &&
 									<div className={styles["disconnected-div"]}>
 										<p>diconnected</p>
 										{
-
 											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[3].name)}>Kick out</button>
 										}
 									</div>
 								}
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[3]} alt="" />
+								<div className={styles["user-avatar"]} >
+									<img className={styles["avatar"]} src={tournamentMembers[3].image} alt="" />
 								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[3].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[3].level}</h5>
+								<div className={styles["line-and-user-info"]}>
+									<div className={styles["user-info"]}>
+										<h4 className={styles["user-info-name"]}>{tournamentMembers[3].name}</h4>
+										<h6 className={styles["user-info-level"]}>level {tournamentMembers[3].level}</h6>
+									</div>
 								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
+							</div>) : (<div className={styles["player-empty"]}>
+								<div className={styles["user-avatar-empty"]}>
+									<img className={styles["avatar-empty"]} src={avatar} alt="" />
 								</div>
 							</div>)
 						}
+
 						{
-							tournamentMembers.length >= 5 ? (<div className={styles["player"]}>
+							tournamentMembers.length >= 5 ? (<div className={styles["player"]} style={{
+								backgroundImage: `url(${tournamentMembers[0].background_image})`,
+								backgroundSize: "cover",
+								backgroundPosition: "center",
+							}}>
 								{
 									tournamentMembers[4].is_online === false &&
 									<div className={styles["disconnected-div"]}>
 										<p>diconnected</p>
 										{
-
 											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[4].name)}>Kick out</button>
 										}
 									</div>
 								}
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[4]} alt="" />
+								<div className={styles["user-avatar"]} >
+									<img className={styles["avatar"]} src={tournamentMembers[4].image} alt="" />
 								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[4].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[4].level}</h5>
+								<div className={styles["line-and-user-info"]}>
+									<div className={styles["user-info"]}>
+										<h4 className={styles["user-info-name"]}>{tournamentMembers[4].name}</h4>
+										<h6 className={styles["user-info-level"]}>level {tournamentMembers[4].level}</h6>
+									</div>
 								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
+							</div>) : (<div className={styles["player-empty"]}>
+								<div className={styles["user-avatar-empty"]}>
+									<img className={styles["avatar-empty"]} src={avatar} alt="" />
 								</div>
 							</div>)
 						}
+
 						{
-							tournamentMembers.length >= 6 ? (<div className={styles["player"]}>
+							tournamentMembers.length >= 6 ? (<div className={styles["player"]} style={{
+								backgroundImage: `url(${tournamentMembers[0].background_image})`,
+								backgroundSize: "cover",
+								backgroundPosition: "center",
+							}}>
 								{
 									tournamentMembers[5].is_online === false &&
 									<div className={styles["disconnected-div"]}>
 										<p>diconnected</p>
 										{
-
 											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[5].name)}>Kick out</button>
 										}
 									</div>
 								}
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[5]} alt="" />
+								<div className={styles["user-avatar"]} >
+									<img className={styles["avatar"]} src={tournamentMembers[5].image} alt="" />
 								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[5].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[5].level}</h5>
+								<div className={styles["line-and-user-info"]}>
+									<div className={styles["user-info"]}>
+										<h4 className={styles["user-info-name"]}>{tournamentMembers[5].name}</h4>
+										<h6 className={styles["user-info-level"]}>level {tournamentMembers[5].level}</h6>
+									</div>
 								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
+							</div>) : (<div className={styles["player-empty"]}>
+								<div className={styles["user-avatar-empty"]}>
+									<img className={styles["avatar-empty"]} src={avatar} alt="" />
 								</div>
 							</div>)
 						}
+
 						{
-							tournamentMembers.length >= 7 ? (<div className={styles["player"]}>
+							tournamentMembers.length >= 7 ? (<div className={styles["player"]} style={{
+								backgroundImage: `url(${tournamentMembers[0].background_image})`,
+								backgroundSize: "cover",
+								backgroundPosition: "center",
+							}}>
 								{
 									tournamentMembers[6].is_online === false &&
 									<div className={styles["disconnected-div"]}>
 										<p>diconnected</p>
 										{
-
 											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[6].name)}>Kick out</button>
 										}
 									</div>
 								}
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[6]} alt="" />
+								<div className={styles["user-avatar"]} >
+									<img className={styles["avatar"]} src={tournamentMembers[6].image} alt="" />
 								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[6].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[6].level}</h5>
+								<div className={styles["line-and-user-info"]}>
+									<div className={styles["user-info"]}>
+										<h4 className={styles["user-info-name"]}>{tournamentMembers[6].name}</h4>
+										<h6 className={styles["user-info-level"]}>level {tournamentMembers[6].level}</h6>
+									</div>
 								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
+							</div>) : (<div className={styles["player-empty"]}>
+								<div className={styles["user-avatar-empty"]}>
+									<img className={styles["avatar-empty"]} src={avatar} alt="" />
 								</div>
 							</div>)
 						}
+
 						{
-							tournamentMembers.length >= 8 ? (<div className={styles["player"]}>
+							tournamentMembers.length >= 8 ? (<div className={styles["player"]} style={{
+								backgroundImage: `url(${tournamentMembers[0].background_image})`,
+								backgroundSize: "cover",
+								backgroundPosition: "center",
+							}}>
 								{
 									tournamentMembers[7].is_online === false &&
 									<div className={styles["disconnected-div"]}>
 										<p>diconnected</p>
 										{
-
 											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[7].name)}>Kick out</button>
 										}
 									</div>
 								}
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[7]} alt="" />
+								<div className={styles["user-avatar"]} >
+									<img className={styles["avatar"]} src={tournamentMembers[7].image} alt="" />
 								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[7].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[7].level}</h5>
+								<div className={styles["line-and-user-info"]}>
+									<div className={styles["user-info"]}>
+										<h4 className={styles["user-info-name"]}>{tournamentMembers[7].name}</h4>
+										<h6 className={styles["user-info-level"]}>level {tournamentMembers[7].level}</h6>
+									</div>
 								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
+							</div>) : (<div className={styles["player-empty"]}>
+								<div className={styles["user-avatar-empty"]}>
+									<img className={styles["avatar-empty"]} src={avatar} alt="" />
 								</div>
 							</div>)
 						}
-						{
-							tournamentMembers.length >= 9 ? (<div className={styles["player"]}>
-								{
-									tournamentMembers[8].is_online === false &&
-									<div className={styles["disconnected-div"]}>
-										<p>diconnected</p>
-										{
 
-											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[8].name)}>Kick out</button>
-										}
-									</div>
-								}
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[8]} alt="" />
-								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[8].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[8].level}</h5>
-								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
-								</div>
-							</div>)
-						}
-						{
-							tournamentMembers.length >= 10 ? (<div className={styles["player"]}>
-								{
-									tournamentMembers[9].is_online === false &&
-									<div className={styles["disconnected-div"]}>
-										<p>diconnected</p>
-										{
-
-											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[9].name)}>Kick out</button>
-										}
-									</div>
-								}
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[9]} alt="" />
-								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[9].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[9].level}</h5>
-								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
-								</div>
-							</div>)
-						}
-						{
-							tournamentMembers.length >= 11 ? (<div className={styles["player"]}>
-								{
-									tournamentMembers[10].is_online === false &&
-									<div className={styles["disconnected-div"]}>
-										<p>diconnected</p>
-										{
-
-											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[10].name)}>Kick out</button>
-										}
-									</div>
-								}
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[10]} alt="" />
-								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[10].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[10].level}</h5>
-								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
-								</div>
-							</div>)
-						}
-						{
-							tournamentMembers.length >= 12 ? (<div className={styles["player"]}>
-								{
-									tournamentMembers[11].is_online === false &&
-									<div className={styles["disconnected-div"]}>
-										<p>diconnected</p>
-										{
-
-											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[11].name)}>Kick out</button>
-										}
-									</div>
-								}
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[11]} alt="" />
-								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[11].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[11].level}</h5>
-								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
-								</div>
-							</div>)
-						}
-						{
-							tournamentMembers.length >= 13 ? (<div className={styles["player"]}>
-								{
-									tournamentMembers[12].is_online === false &&
-									<div className={styles["disconnected-div"]}>
-										<p>diconnected</p>
-										{
-
-											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[12].name)}>Kick out</button>
-										}
-									</div>
-								}
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[12]} alt="" />
-								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[12].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[12].level}</h5>
-								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
-								</div>
-							</div>)
-						}
-						{
-							tournamentMembers.length >= 14 ? (<div className={styles["player"]}>
-								{
-									tournamentMembers[13].is_online === false &&
-									<div className={styles["disconnected-div"]}>
-										<p>diconnected</p>
-										{
-
-											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[13].name)}>Kick out</button>
-										}
-									</div>
-								}
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[13]} alt="" />
-								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[13].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[13].level}</h5>
-								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
-								</div>
-							</div>)
-						}
-						{
-							tournamentMembers.length >= 15 ? (<div className={styles["player"]}>
-								{
-									tournamentMembers[14].is_online === false &&
-									<div className={styles["disconnected-div"]}>
-										<p>diconnected</p>
-										{
-
-											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[14].name)}>Kick out</button>
-										}
-									</div>
-								}
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[14]} alt="" />
-								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[14].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[14].level}</h5>
-								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
-								</div>
-							</div>)
-						}
-						{
-							tournamentMembers.length >= 16 ? (<div className={styles["player"]}>
-								{
-									tournamentMembers[15].is_online === false &&
-									<div className={styles["disconnected-div"]}>
-										<p>diconnected</p>
-										{
-											isTournamentOwner && <button className={styles["disconnected-button"]} onClick={() => handleKick(tournamentMembers[15].name)}>Kick out</button>
-										}
-									</div>
-								}
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={membersImages[15]} alt="" />
-								</div>
-								<div className={styles["user-info"]}>
-									<h4 className={styles["user-info-name"]}>{tournamentMembers[15].name}</h4>
-									<h5 className={styles["user-info-level"]}>Level {tournamentMembers[15].level}</h5>
-								</div>
-							</div>) : (<div className={styles["player"]}>
-								<div className={styles["user-avatar"]}>
-									<img className={styles["avatar"]} src={avatar} alt="" />
-								</div>
-							</div>)
-						}
 					</div>
 					{
 						isTournamentOwner ?
@@ -873,7 +690,7 @@ function CreateTournament() {
 										<button className={styles["button"]} onClick={isOpen} ref={inviteRef}>Invite Friend</button>
 									</div>
 									{
-										tournamentMembers.length > 0 ? <button className={styles["button"]} onClick={handleStart}>Start</button> : <button className={styles["button-disabled"]} onClick={handleStart} disabled>Start</button>
+										tournamentMembers.length === 8 ? <button className={styles["button"]} onClick={handleStart}>Start</button> : <button className={styles["button-disabled"]} disabled>Start</button>
 									}
 								</div>
 								{open && <InviteFriendComp class="Invite-friend-popup-up" refs={divRef2} />}

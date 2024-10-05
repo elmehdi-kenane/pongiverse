@@ -13,7 +13,6 @@ export const ChatProvider = ({ child }) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const chatRoomInvitationsRef = useRef(chatRoomInvitations);
   const suggestedChatRoomsRef = useRef(suggestedChatRooms);
-  const [socketData, setSocketData] = useState(null);
   const [selectedChatRoom, setSelectedChatRoom] = useState({
     name: "",
     membersCount: "",
@@ -68,19 +67,6 @@ export const ChatProvider = ({ child }) => {
       addUserChannelGroup();
   }, [chatSocket, user, location.pathname]);
 
-
-  // useEffect(() => {
-  //   if (!chatSocket) return;
-  //   chatSocket.onmessage = (event) => {
-  //     const data = JSON.parse(event.data);
-  //     console.log("TYPE: ", data.type);
-  //     setSocketData(data);
-  //   }
-  //   return () => {
-  //     chatSocket.onmessage = null;
-  //   }
-  // }, [chatSocket]);
-
   useEffect(() => {
     const fetchChatRoomInvitations = async () => {
       try {
@@ -113,9 +99,7 @@ export const ChatProvider = ({ child }) => {
     if (user && location.pathname === "/mainpage/groups") {
       fetchChatRoomInvitations();
       fetchSuggestedChatRooms();
-      setSocketData(null);
     } else if (user && location.pathname === "/mainpage/chat") {
-      setSocketData(null);
     }
   }, [location.pathname, user]);
 
@@ -136,7 +120,6 @@ export const ChatProvider = ({ child }) => {
     setSelectedItem: setSelectedItem,
     suggestedChatRoomsRef: suggestedChatRoomsRef,
     selectedChatRoomRef: selectedChatRoomRef,
-    socketData: socketData,
   };
   return (
     <ChatContext.Provider value={contextData}>{child}</ChatContext.Provider>

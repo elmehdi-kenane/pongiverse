@@ -5,7 +5,9 @@ import * as Icons from '../assets/navbar-sidebar'
 
 const OneVersusOne = () => {
     const [roomID, setRoomID] = useState(null)
-    let { privateCheckAuth, socket, user, setAllGameNotifs, allGameNotifs, notifsImgs, notifSocket } = useContext(AuthContext)
+    let { privateCheckAuth, socket, user,
+		setAllGameNotifs, allGameNotifs, notifsImgs,
+		notifSocket, setSocket } = useContext(AuthContext)
     const [selected, setSelected] = useState(0)
     const navigate = useNavigate()
 
@@ -49,10 +51,24 @@ const OneVersusOne = () => {
 				if (type === 'goToGamingPage') {
 					// console.log("navigating now")
 					// navigate(`/mainpage/game/solo/1vs1/friends`)
-					if (message.mode === '1vs1')
-						navigate(`/mainpage/game/solo/1vs1/friends`)
-					else
-						navigate(`/mainpage/game/solo/2vs2/friends`)
+					if (socket.readyState !== WebSocket.OPEN) {
+						const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
+						newSocket.onopen = () => {
+							console.log("+++++++++++=======+++++++++")
+							console.log("GAME SOCKET OPENED AND NOW WE WILL MOVE TO FRIEND PAGE")
+							console.log("+++++++++++=======+++++++++")
+							setSocket(newSocket)
+							if (message.mode === '1vs1')
+								navigate(`/mainpage/game/solo/1vs1/friends`)
+							else
+								navigate(`/mainpage/game/solo/2vs2/friends`)
+						}
+					} else {
+						if (message.mode === '1vs1')
+							navigate(`/mainpage/game/solo/1vs1/friends`)
+						else
+							navigate(`/mainpage/game/solo/2vs2/friends`)
+					}
 				} else if (type === 'receiveFriendGame') {
 					console.log("RECEIVED A GAME REQUEST")
 					setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message])
@@ -154,7 +170,7 @@ const OneVersusOne = () => {
                     <p>Jump into action with a quick match mode where you are randomly paired with another player for a 1 vs 1 game. Enjoy a fast and exciting experience without the wait!</p>
                 </div>
                 <div className={(selected === 2) ? 'duelMode-modes-friendMatch duelMode-modes-friendMatch-selected' : 'duelMode-modes-friendMatch'} onClick={friendMatch} >
-                    <div> 
+                    <div>
                         <img src={Icons.friendMatch} alt="friend-match" />
                     </div>
                     <h1>Play with friends</h1>

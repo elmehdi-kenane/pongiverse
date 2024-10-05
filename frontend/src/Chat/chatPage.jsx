@@ -36,6 +36,34 @@ const Chat = () => {
   const [directsSearch, setDirectsSearch] = useState([]);
   const [chatRoomsSearch, setChatRoomsSearch] = useState([]);
 
+  //START  HADCHI DYAL RIDA
+	const set_is_inside = async () => {
+    try {
+
+      const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/set-is-inside`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          user: user,
+          is_inside: false
+        })
+      })
+    } catch (error) {
+      console.log(error)
+    }
+	}
+
+	useEffect(() => {
+		if (user) {
+			set_is_inside()
+		}
+	}, [user])
+
+	// ENDDDD HADCHI DYAL RIDA
+
+
   useEffect(() => {
     const handleNewDirectMessage = (data) => {
       const currentDirect = selectedDirectRef.current;

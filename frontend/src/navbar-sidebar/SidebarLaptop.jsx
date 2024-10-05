@@ -55,11 +55,6 @@ function SidebarLaptop({ Icons }) {
       setChatRoomInvitationsCounter(0);
     }
   };
-  useEffect(() => {
-  console.log("chatNotificationCounter", chatNotificationRef.current);
-  // console.log("chatRoomInvitationsCounter", RoomsInvitationRef.current);
-  }, [chatNotificationCounter]);
-  // console.log("chatRoomInvitationsCounter", RoomsInvitationRef.current);
 
   return (
     <div className={isGlass ? "blur sidebar" : "sidebar"}>

@@ -21,6 +21,7 @@ export const AuthProvider = ({ children }) => {
   let [user, setUser] = useState("");
   let [userImg, setUserImg] = useState("");
   let [socket, setSocket] = useState(null);
+  let socketRef = useRef(socket);
   let [socketRecreated, setSocketRecreated] = useState(false);
   let [allGameNotifs, setAllGameNotifs] = useState([]);
   let [notifsImgs, setNotifsImgs] = useState([]);
@@ -87,6 +88,11 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     allGameFriendsRef.current = allGameFriends;
   }, [allGameFriends]);
+
+	useEffect(() => {
+		socketRef.current = socket
+	}, [socket])
+
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -287,7 +293,6 @@ export const AuthProvider = ({ children }) => {
         (user) => user.name === newUser.name
       );
       if (!userExists) setAllGameFriends([...currentAllGameFriends, newUser]);
-      // setAllGameFriends(prevFriends => [...prevFriends, newUser]);
     };
     async function sendUserData(uname, currentAllGameFriends) {
       try {
@@ -339,25 +344,6 @@ export const AuthProvider = ({ children }) => {
       newNotifSocket.onmessage = (event) => {
         let data = JSON.parse(event.data);
         console.log("NOTIF SOCKET MESSAGE TYPE: ", data.type);
-        // let message = data.message
-        // let uname = data.username
-        // console.log("GAME SOCKET IN AUTHCONTEXT CLOSED SUCCEFULLY 1")
-        // if (type === 'close_socket') {
-        // 	newSocket.close()
-        // 	setSocket(null)
-        // }
-        // if (type === 'user_disconnected') {
-        // 	const currentAllGameFriends = allGameFriendsRef.current;
-        // 	console.log("user disconnected : ", allGameFriends)
-        // 	let uname = data.username
-        // 	setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname));
-        // }
-        // if (type === 'connected_again') {
-        // 	const currentAllGameFriends = allGameFriendsRef.current;
-        // 	console.log("user connected : ", allGameFriends)
-        // 	console.log("VISITED CONNECTED AGAIN")
-        // 	sendUserData(uname, currentAllGameFriends)
-        // }
       };
     } else if (
       (location.pathname === "/" ||
@@ -383,33 +369,8 @@ export const AuthProvider = ({ children }) => {
         setSocket(newSocket);
         console.log("GAME SOCKET OPENED SUCCEFULLY");
       };
-      // newSocket.onmessage = (event) => {
-      //   console.log("GAME SOCKET IN AUTHCONTEXT CLOSED SUCCEFULLY");
-      //   let data = JSON.parse(event.data);
-      //   let type = data.type;
-        // let message = data.message
-        // let uname = data.username
-        // console.log("GAME SOCKET IN AUTHCONTEXT CLOSED SUCCEFULLY 1")
-        // if (type === "close_socket") {
-        //   newSocket.close();
-        //   setSocket(null);
-        // }
-        // if (type === 'user_disconnected') {
-        // 	const currentAllGameFriends = allGameFriendsRef.current;
-        // 	console.log("user disconnected : ", allGameFriends)
-        // 	let uname = data.username
-        // 	setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname));
-        // }
-        // if (type === 'connected_again') {
-        // 	const currentAllGameFriends = allGameFriendsRef.current;
-        // 	console.log("user connected : ", allGameFriends)
-        // 	console.log("VISITED CONNECTED AGAIN")
-        // 	sendUserData(uname, currentAllGameFriends)
-        // }
-      // };
       newSocket.onclose = () => {
         console.log("GAME SOCKET CLOSED SUCCEFULLY FROM THE BACK");
-        // setSocket(null)
       };
       newSocket.onerror = () => {
         console.log("GAME SOCKET ERROR HAPPENED");
@@ -431,12 +392,10 @@ export const AuthProvider = ({ children }) => {
         `ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/chat_socket`
       );
       newChatSocket.onopen = () => {
-        // console.log("chat Socket Created and opened");
         setChatSocket(newChatSocket);
       };
       newChatSocket.onmessage = (event) => {
         let data = JSON.parse(event.data);
-        // console.log("connection hereeee", data)
       };
     } else if (
       location.pathname !== "/mainpage/chat" &&
@@ -501,40 +460,38 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user]);
 
-  useEffect(() => {
-    if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
-      notifSocket.onmessage = (event) => {
-        // console.log("GAME SOCKET IN AUTHCONTEXT CLOSED SUCCEFULLY");
-        let data = JSON.parse(event.data);
-        console.log("NOTIF SOCKET MESSAGE TYPE: ", data.type);
-        console.log("LOCATION: ", location.pathname);
-        if (
-          data.type === "roomInvitation" &&
-          location.pathname !== "/mainpage/groups"
-        ) {
-          console.log("ROOM INVITATION: ", data);
-          setChatRoomInvitationsCounter((prev) => prev + 1);
-        } else if (
-          data.type === "chatNotificationCounter" &&
-          location.pathname !== "/mainpage/chat"
-        ) {
-          console.log("CHAT NOTIFICATION COUNTER: ", data.count);
-          setChatNotificationCounter(data.count);
-        }
-        else if (data.type === "close_socket") {
-          notifSocket.close();
-          setSocket(null);
-        }
-      };
-    }
-  }, [notifSocket, location.pathname]);
+  // useEffect(() => {
+  //   if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+  //     notifSocket.onmessage = (event) => {
+  //       let data = JSON.parse(event.data);
+  //       console.log("NOTIF SOCKET MESSAGE TYPE: ", data.type);
+  //       console.log("LOCATION: ", location.pathname);
+  //       if (
+  //         data.type === "roomInvitation" &&
+  //         location.pathname !== "/mainpage/groups"
+  //       ) {
+  //         console.log("ROOM INVITATION: ", data);
+  //         setChatRoomInvitationsCounter((prev) => prev + 1);
+  //       } else if (
+  //         data.type === "chatNotificationCounter" &&
+  //         location.pathname !== "/mainpage/chat"
+  //       ) {
+  //         console.log("CHAT NOTIFICATION COUNTER: ", data.count);
+  //         setChatNotificationCounter(data.count);
+  //       }
+  //       else if (data.type === "close_socket") {
+  //         notifSocket.close();
+  //         setSocket(null);
+  //       }
+  //     };
+  //   }
+  // }, [notifSocket, location.pathname]);
 
   async function publicCheckAuth() {
     try {
       let response = await fetch(
         `http://${import.meta.env.VITE_IPADDRESS}:8000/auth/verifytoken/`,
         {
-          // 10.12.7.3   localhost   127.0.0.1
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -562,7 +519,6 @@ export const AuthProvider = ({ children }) => {
       let response = await fetch(
         `http://${import.meta.env.VITE_IPADDRESS}:8000/auth/verifytoken/`,
         {
-          // 10.12.7.3   localhost   127.0.0.1
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -575,9 +531,7 @@ export const AuthProvider = ({ children }) => {
       );
       response = await response.json();
       if (response.Case !== "Invalid token") {
-        // console.log("LOGGEDIN SUCCESSFULY")
         setUser(response.data.username);
-        // console.log("USER USERNSME: ",response.data.username)
       } else {
         console.log("FAILD TO LOGIN SUCCESSFULY");
         setUser("");
@@ -595,6 +549,7 @@ export const AuthProvider = ({ children }) => {
     privateCheckAuth: privateCheckAuth,
     socket: socket,
     setSocket: setSocket,
+    socketRef: socketRef,
     socketRecreated: socketRecreated,
     setSocketRecreated: setSocketRecreated,
     userImg: userImg,

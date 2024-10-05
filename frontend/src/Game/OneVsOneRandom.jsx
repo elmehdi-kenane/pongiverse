@@ -19,7 +19,7 @@ const OneVsOneRandom = () => {
     let { privateCheckAuth, socket, user,
         socketRecreated, setSocketRecreated,
         userImg, loading } = useContext(AuthContext)
-    
+
     let isOut = false
     const userRef = useRef(user)
     const roomIdRef = useRef(roomID)

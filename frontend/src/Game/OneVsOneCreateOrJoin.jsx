@@ -126,9 +126,9 @@ const OneVsOneCreateOrJoin = () => {
                     } else
                         setCodeToShare(message.id)
                 } else if (type === 'invalidCode') {
-                    inputRoomId.current.value = ''
-                    setRoomIdIncorrect(true)
-                    setCheckingCode(false)
+                inputRoomId.current.value = ''
+                setRoomIdIncorrect(true)
+                setCheckingCode(false)
                 } else if (type === 'hmed') {
 					console.log("hmed received")
                     socket.close()
@@ -164,7 +164,7 @@ const OneVsOneCreateOrJoin = () => {
         setExpandCreate(!expandCreate)
         setExpandJoin(false)
     }
-    
+
     const expandJoinRoom = () => {
         setExpandJoin(!expandJoin)
         setExpandCreate(false)

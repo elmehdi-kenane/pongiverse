@@ -28,6 +28,7 @@ import TournamentBracket from "./Tournament/RemoteTournament/TournamentBracket";
 import LocalTournamentBracket from "./Tournament/LocalTournament/LocalTournamentBracket";
 import { ChatProvider } from "./Context/ChatContext";
 import Chat from "./Chat/chatPage";
+import OneVsOnePlayTournamentMatch from "./Game/OneVsOnePlayTournamentMatch"
 import TwoVersusTwo from "./Game/TwoVersusTwo";
 import TwoVsTwoRandom from "./Game/TwoVsTwoRandom";
 import OneVsOnePlayMatch from "./Game/OneVsOnePlayMatch";
@@ -46,6 +47,9 @@ import { DashboardWrapper } from './Dashboard/DashboardWrapper';
 import bg1 from "./assets/Body/2.png"
 import PersonalInfo from './Settings/PersonalInfo';
 import Security from './Settings/Security';
+
+import TournamentCelebration from "./Tournament/RemoteTournament/TournamentCelebration";
+import AuthMiddleware from "./navbar-sidebar/AuthMiddleware";
 
 const App = () => {
   return (
@@ -87,8 +91,10 @@ const App = () => {
                 <Route path="game/createtournament" element={<CreateTournament />} />
                 <Route path="game/jointournament" element={<JoinTournament />} />
                 <Route path="game/tournamentbracket" element={<TournamentBracket />} />
-				        <Route path="game/localtournamentbracket" element={<LocalTournamentBracket />}/>
-				        <Route path="game/localtournamentfillmembers" element={<LocalTournamentFillMembers />}/>
+                <Route path="game/1vs1tournament" element={<OneVsOnePlayTournamentMatch />} />
+				<Route path="game/localtournamentbracket" element={<LocalTournamentBracket />}/>
+				<Route path="game/localtournamentfillmembers" element={<LocalTournamentFillMembers />}/>
+				<Route path="game/tournamentcel" element={<TournamentCelebration />}/>
               </Route>
               <Route path="*" element={<Navigate to="/Error404" />} />
             </Routes>

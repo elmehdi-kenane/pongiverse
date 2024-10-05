@@ -81,7 +81,7 @@ const OneVsOneFriends = () => {
 							level: message.users[0].level
 						})
 					}
-					// friendsSection.current.remove()
+					friendsSection.current.remove()
 					setExpandFriends(false)
 					setGameStarted(false)
 					setRoomID(message.room.id)
@@ -115,10 +115,41 @@ const OneVsOneFriends = () => {
 						if (!userExists)
 							setAllGameFriends([...currentAllGameFriends, message.userInfos])
 					}
+					//     for (let i = 0;i < allGameFriends.length; i++) {
+					//         console.log(allGameFriends[i].name)
+					//     }
+					// }
 				} else if (type === 'hmed') {
 					console.log("hmed received")
-					socket.close()
-				}
+                    socket.close()
+                }
+				// else if (type === "removeRoom") {
+				//     console.log("inside removeRoom")
+				//     if (socket && socket.readyState === WebSocket.OPEN) {
+				//         socket.send(JSON.stringify({
+				//             type: 'OpponentIsOut',
+				//             message: {
+				//                 user: user,
+				//                 roomID: roomID
+				//             }
+				//         }))
+				//     }
+				//     setPlayerNo(0)
+				//     setAllSet(false)
+				//     setRoomID(null)
+				// }
+				// else if (type === "alreadySearching") {
+				//     setIsInSearchMode(true)
+				//     setTimeout(() => {
+				//         setIsInSearchMode(false)
+				//     }, 5000);
+				// } else if (type === "alreadyPlaying") {
+				//     console.log("in a match buddy")
+				//     setIsInPlayingMode(true)
+				//     setTimeout(() => {
+				//         setIsInPlayingMode(false)
+				//     }, 5000);
+				// }
 			}
 		}
 
@@ -206,7 +237,7 @@ const OneVsOneFriends = () => {
 	const expandFriendsList = () => {
 		setExpandFriends(!expandFriends)
 	}
-	
+
 	useEffect(() => {
         return () => {
             if (isOut) {
@@ -254,12 +285,12 @@ const OneVsOneFriends = () => {
 		<div className='onevsone'>
 			<div className='onevsone-dashboard'>
 				<div className='onevsone-dashboard-opponents'>
-					{!allSet && <div className='onevsone-invite-friends'>
+					<div className='onevsone-invite-friends' ref={friendsSection}>
 						<div onClick={expandFriendsList} style={{display: 'flex', flexDirection: 'row', cursor: 'pointer', position: 'relative'}}>
 							<img src={Icons.gameInvite} alt="" style={{width: '20%', paddingLeft: '5px'}} />
 							<div className='invite-friends-button'>invite friend</div>
 						</div>
-					</div>}
+					</div>
 					{expandFriends && (<div className='expand-friends' ref={expandFriendList}>
 						{(allGameFriends.length && !loading) ? allGameFriends.map((user, key) => {
 							return (<div key={user.id} className='game-friend-list'>

@@ -6,6 +6,7 @@ from rest_framework.decorators import api_view
 from .serializers import MyModelSerializer
 from rest_framework.parsers import MultiPartParser, FormParser
 from .models import customuser
+from mainApp.models import UserMatchStatics
 from datetime import datetime
 import requests
 from django.utils import timezone
@@ -26,15 +27,18 @@ from urllib.parse import urlencode
 import json
 import os
 import certifi
-from mainApp.models import UserMatchStatics
+import ssl
+from PIL import Image
+from io import BytesIO
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
 
 class SignUpView(APIView):
 	parser_classes = (MultiPartParser, FormParser)
 	def post(self, request, *args, **kwargs):
-		#print(f"datatata : {request.data}")
 		avatar = request.data.get('avatar')
 		if avatar == 'null' or avatar is None:
 			my_dict = {
@@ -44,12 +48,25 @@ class SignUpView(APIView):
 				'is_active': request.data.get('is_active', True)
 			}
 		else:
+			image = Image.open(avatar)
+			width, height = image.size
+			left = (width - 400) / 2
+			upper = (height - 400) / 2
+			right = (width + 400) / 2
+			lower = (height + 400) / 2
+			image = image.crop((left, upper, right, lower))
+			if image.mode == 'RGBA':
+				image = image.convert('RGB')
+			image_io = BytesIO()
+			image.save(image_io, format='JPEG')
+			image_file = ContentFile(image_io.getvalue(), name=avatar.name)
+
 			my_dict = {
 				'username': request.data.get('username'),
 				'email': request.data.get('email'),
 				'password': request.data.get('password'),
 				'is_active': request.data.get('is_active', True),
-				'avatar': avatar
+				'avatar': image_file
 			}
 
 		serializer = MyModelSerializer(data=my_dict)
@@ -57,24 +74,14 @@ class SignUpView(APIView):
 		if serializer.is_valid():
 			user = serializer.save()
 			response = Response()
-			data = get_tokens_for_user(user)
-			csrf.get_token(request)
-			if user:
-				UserMatchStatics.objects.create(
-					player=user,
-					wins=0,
-					losts=0,
-					level=0,
-					total_xp=0,
-					goals=0
-				)
-			response.data = {"Case": "Sign up successfully", "data": data}
+			response.data = {"Case": "Sign up successfully"}
 			return response
 		else:
 			#print(f"Serializer errors: {serializer.errors}")  # Add this line to #print serializer errors
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class WaysSignUpView(APIView) :
+
+class WaysSignUpView(APIView):
 	parser_classes = (MultiPartParser, FormParser)
 	def post(self, request, *args, **kwargs):
 		my_data = {}
@@ -82,16 +89,17 @@ class WaysSignUpView(APIView) :
 		my_data['email'] = request.data.get('email')
 		my_data['password'] = request.data.get('password')
 		my_data['is_active'] = request.data.get('is_active')
-		image_response = requests.get(request.data.get('avatar'))
+
+		image_response = requests.get(request.data.get('avatar'), verify=False)
+		
 		if image_response.status_code == 200:
 			image_content = image_response.content
 			if image_content:
 				image_file = InMemoryUploadedFile(ContentFile(image_content), None, 'image.jpg', 'image/jpeg', len(image_content), None)
-				#print(f'IMAGE CONTENT IS : {image_file}')
 				my_data['avatar'] = image_file
-		# else:
-			# response.data = {"Case" : "Error"}
+		
 		serializer = MyModelSerializer(data=my_data)
+		
 		if serializer.is_valid():
 			user = serializer.save()
 			if user:
@@ -185,7 +193,6 @@ class VerifyTokenView(APIView):
 			token = request.COOKIES.get('token')
 			decoded_token = AccessToken(token)
 			data = decoded_token.payload
-			# #print(data)
 			if not data.get('user_id'):
 				if username:
 					user = customuser.objects.filter(username=username).first()
@@ -220,12 +227,14 @@ class ForgetPasswordView(APIView):
 		email = request.data.get('email')
 		random_number = random.randint(1000, 10000)
 		message = 'Here is the code : ' + str(random_number)
+		html_message = f'<p>Here is the code: <strong>{random_number}</strong></p>'
 		send_mail(
 		'Reset Password',
 		message,
 		'settings.EMAIL_HOST_USER',
 		[email],
 		fail_silently=False,
+		html_message=html_message
 		)
 		response.data = {"Case" : "valid token", "Number" : random_number}
 		return response
@@ -384,6 +393,7 @@ def SignInIntraGetUserData(request):
 		user_info_data = user_info_response.json()
 		user_email = user_info_data.get('email')
 		image = user_info_data.get('image')
+		print(f"\n\nimage : {image}\n\n")
 		user_picture = image.get('link')
 		return Response({'email': user_email, 'picture': user_picture})
 	except Exception as e:
@@ -453,5 +463,24 @@ def SignUpIntraGetUserData(request):
 		user_picture = image.get('link')
 		return Response({'email': user_email, 'picture': user_picture})
 	except Exception as e:
-		#print(f"Exception: {str(e)}")
+		print(f"Exception: {str(e)}")
 		return Response({'error': str(e)}, status=500)
+
+
+@api_view(['POST'])
+def LogoutView(request):
+	response = Response()
+	response.delete_cookie('token')
+	response.data = {"Case" : "Logout successfully"}
+	return response
+
+@api_view(['GET'])
+def CheckIsAuthenticated(request):
+	token = request.COOKIES.get('token')
+	if token is None:
+		return Response({'is_authenticated': False})
+	try:
+		decoded_token = AccessToken(token)
+		return Response({'is_authenticated': True})
+	except TokenError:
+		return Response({'is_authenticated': False})

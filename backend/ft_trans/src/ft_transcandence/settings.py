@@ -89,7 +89,10 @@ ASGI_APPLICATION = 'ft_transcandence.asgi.application'
 
 CHANNEL_LAYERS = {
 	"default": {
-		"BACKEND": "channels.layers.InMemoryChannelLayer"
+		"BACKEND": "channels.layers.InMemoryChannelLayer",
+    "CONFIG": {
+          "capacity": 5000,
+      },
 	}
 }
 

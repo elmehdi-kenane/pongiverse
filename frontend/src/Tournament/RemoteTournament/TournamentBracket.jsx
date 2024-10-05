@@ -2,38 +2,35 @@ import styles from '../../assets/Tournament/tournamentbracket.module.css'
 import versus from '../../assets/navbar-sidebar/Versus.svg';
 import SvgComponent from './SvgComponent';
 import SvgVerticalComponent from './SvgVerticalComponent'
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AuthContext from '../../navbar-sidebar/Authcontext';
 import { useEffect, useState, useContext } from 'react';
 
 function TournamentBracket() {
 	const navigate = useNavigate()
-	const location = useLocation()
 	const [tournamentMembers, setTournamentMembers] = useState([])
-	const [roundSixteenMembers, setRoundSixteenMembers] = useState([])
 	const [roundQuarterFinalMembers, setroundQuarterFinalMembers] = useState([])
 	const [roundSemiFinalMembers, setroundSemiFinalMembers] = useState([])
+	const [finalMembers, setFinalMembers] = useState([])
 	const [winnerMember, setwinnerMember] = useState([])
-	const [roundSixteenMembersImages, setRoundSixteenMembersImages] = useState([])
-	const [roundQuarterFinalMembersImages, setroundQuarterFinalMembersImages] = useState([])
-	const [roundSemiFinalMembersImages, setroundSemiFinalMembersImages] = useState([])
-	const [winnerMemberImage, setwinnerMemberImage] = useState([])
 	const [isTournamentOwner, setIsTournamentOwner] = useState(false)
 	const [userOneToDisplay, setUserOneToDisplay] = useState('')
 	const [userTwoToDisplay, setUserTwoToDisplay] = useState('')
 	const [createdAt, setCreatedAt] = useState(null)
 	const [timeDiff, setTimeDiff] = useState(null);
-	const { user, socket } = useContext(AuthContext)
+	const { user, socket, notifSocket } = useContext(AuthContext)
 
 	const findMemberByPosition = (roundmembers, name) => {
-		const index = roundmembers.findIndex(member => member.name === name);
-		return index
+		const member = roundmembers.find(member => member.name === name);
+		if (member)
+			return member
+		else
+			return null
 	};
 
 	useEffect(() => {
 		const set_is_inside = async () => {
-			console.log("----SET IS INSIDE")
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/set-is-inside`, {
+			const response = await fetch(`http://localhost:8000/api/set-is-inside`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -64,24 +61,24 @@ function TournamentBracket() {
 				console.error('Failed to fetch data');
 			}
 		}
-		const fetchImages = async (members, setElements) => {
-			const promises = members.map(async (user) => {
-				const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`, {
-					method: "POST",
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({
-						image: user.image
-					})
-				});
-				const blob = await response.blob();
-				return URL.createObjectURL(blob);
-			});
-			const images = await Promise.all(promises);
-			console.log("imageeeesssss", images)
-			setElements(images)
-		}
+		// const fetchImages = async (members, setElements) => {
+		// 	const promises = members.map(async (user) => {
+		// 		const response = await fetch(`http://localhost:8000/api/getImage`, {
+		// 			method: "POST",
+		// 			headers: {
+		// 				'Content-Type': 'application/json',
+		// 			},
+		// 			body: JSON.stringify({
+		// 				image: user.image
+		// 			})
+		// 		});
+		// 		const blob = await response.blob();
+		// 		return URL.createObjectURL(blob);
+		// 	});
+		// 	const images = await Promise.all(promises);
+		// 	console.log("imageeeesssss", images)
+		// 	setElements(images)
+		// }
 		const gameMembersRounds = async () => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-game-members-round`, {
 				method: 'POST',
@@ -95,16 +92,10 @@ function TournamentBracket() {
 			if (response.ok) {
 				const data = await response.json();
 				console.log("----mohamed data : ", data)
-				setRoundSixteenMembers(data.roundsixteen)
 				setroundQuarterFinalMembers(data.roundquarter)
 				setroundSemiFinalMembers(data.roundsemi)
+				setFinalMembers(data.roundfinal)
 				setwinnerMember(data.winner)
-				if (data.roundsixteen.length > 0)
-					fetchImages(data.roundsixteen, setRoundSixteenMembersImages)
-				if (data.roundquarter.length > 0)
-					fetchImages(data.roundquarter, setroundQuarterFinalMembersImages)
-				if (data.roundsemi.length > 0)
-					fetchImages(data.roundsemi, setroundSemiFinalMembersImages)
 			} else {
 				console.error('Failed to fetch data');
 			}
@@ -141,8 +132,8 @@ function TournamentBracket() {
 	}, [user])
 
 	useEffect(() => {
-		if (socket && socket.readyState === WebSocket.OPEN) {
-			socket.onmessage = (event) => {
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+			notifSocket.onmessage = (event) => {
 				let data = JSON.parse(event.data)
 				let type = data.type
 				let message = data.message
@@ -155,6 +146,24 @@ function TournamentBracket() {
 				}
 			}
 		}
+	}, [notifSocket])
+
+
+	useEffect(() => {
+		if (socket && socket.readyState === WebSocket.OPEN) {
+			socket.onmessage = (event) => {
+				let data = JSON.parse(event.data)
+				let type = data.type
+				let message = data.message
+				if (type == 'new_user_win') {
+					const newMember = {'id': message.id, 'name': message.name, 'level': message.level, 'image': message.image, 'position': message.position}
+					if (message.round_reached === 'SEMIFINAL')
+						setroundSemiFinalMembers((prevRoundSemiFinalMembers) => [...prevRoundSemiFinalMembers, newMember])
+					if (message.round_reached === 'FINAL')
+						setFinalMembers((prevFinalMembers) => [...prevFinalMembers, newMember])
+				}
+			}
+		}
 	}, [socket])
 
 	useEffect(() => {
@@ -162,11 +171,19 @@ function TournamentBracket() {
 			const interval = setInterval(() => {
 				const now = new Date();
 				const diffInSeconds = Math.floor((now - createdAt) / 1000);
-				if (diffInSeconds < 20) {
-					setTimeDiff(20 - diffInSeconds);
+				if (diffInSeconds < 3) {
+					setTimeDiff(3 - diffInSeconds);
 				} else {
-					setTimeDiff(null);
-					// navigate("/signin");
+					if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+						notifSocket.send(JSON.stringify({
+							type: 'Delete-display-oponent',
+							message : {
+								user1: userOneToDisplay,
+								user2: userTwoToDisplay
+							}
+						}))
+					}
+					navigate('../game/1vs1tournament')
 				}
 			}, 1000);
 			return () => clearInterval(interval);
@@ -179,21 +196,19 @@ function TournamentBracket() {
 				userOneToDisplay && userTwoToDisplay && timeDiff &&
 				<div className={styles['display-components-div']}>
 					<div className={styles['display-components-div-players-data']}>
-						<img src={roundSixteenMembersImages[findMemberByPosition(roundSixteenMembers, userOneToDisplay)]} alt="" className={styles['display-components-div-players-data-image']} />
+						<img src={findMemberByPosition(roundQuarterFinalMembers, userOneToDisplay).image} alt="" className={styles['display-components-div-players-data-image']} />
 						<img src={versus} className={styles['display-components-div-players-data-svg']} alt="" />
-						<img src={roundSixteenMembersImages[findMemberByPosition(roundSixteenMembers, userTwoToDisplay)]} alt="" className={styles['display-components-div-players-data-image']} />
+						<img src={findMemberByPosition(roundQuarterFinalMembers, userTwoToDisplay).image} alt="" className={styles['display-components-div-players-data-image']} />
 					</div>
 					<p className={styles['display-components-div-text']}>The game will start in {timeDiff}</p>
 				</div>
 			}
 			<div className={styles['normalSvg']}>
-				{/* <img src={<SvgComponent images={membersImages} />} alt="" /> */}
-				<SvgComponent roundsixteenimages={roundSixteenMembersImages} roundsixteenmembers={roundSixteenMembers} roundquarterimages={roundQuarterFinalMembersImages} roundquartermembers={roundQuarterFinalMembers} />
+				<SvgComponent roundquartermembers={roundQuarterFinalMembers} roundsemifinalmembers={roundSemiFinalMembers} roundfinalMembers={finalMembers} roundwinner={winnerMember}/>
 
 			</div>
 			<div className={styles['verticalSvg']}>
-				{/* <img src={<SvgVerticalComponent images={membersImages} />} alt="" /> */}
-				<SvgVerticalComponent roundsixteenimages={roundSixteenMembersImages} roundsixteenmembers={roundSixteenMembers} roundquarterimages={roundQuarterFinalMembersImages} roundquartermembers={roundQuarterFinalMembers} />
+				<SvgVerticalComponent roundquartermembers={roundQuarterFinalMembers} roundsemifinalmembers={roundSemiFinalMembers} roundfinalmembers={finalMembers} roundwinner={winnerMember}/>
 			</div>
 		</div>
 	);

@@ -17,7 +17,7 @@ function Navbar({ Icons, handleExapandSidebar, searchbar, handleSearchBar }) {
                 searchbar={searchbar}
             />
             <NavbarprofNotifs
-                Icons={Icons} 
+                Icons={Icons}
                 handleSearchBar={handleSearchBar}
             />
         </div>

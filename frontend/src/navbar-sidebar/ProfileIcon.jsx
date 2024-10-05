@@ -5,13 +5,30 @@ import MavSvg from "../assets/Profile/Group.svg"
 
 const ProfileIcon = ({ Icons, profileHandleDropDown, profileDropDownisOpen }) => {
 
-    const {user, userImg} = useContext(AuthContext);
+    const {user, privateCheckAuth, setUser, hideNavSideBar, userImg} = useContext(AuthContext);
     const navigate = useNavigate();
 
     const settingsNavigation = () => { // Done by Imad
         navigate(`/mainpage/settings`)
       }
-
+    const logout = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch("http://localhost:8000/auth/logout/", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            if (response.ok) {
+                setUser("");
+                navigate("/signin");
+            }
+        } catch (e) {
+            console.log("Error in network or URL");
+        }
+    }
     return (
         <div id="profile-icon" onClick={profileHandleDropDown}>
             <a href="#">
@@ -45,7 +62,7 @@ const ProfileIcon = ({ Icons, profileHandleDropDown, profileDropDownisOpen }) =>
                         </Link>
                     </div>
                 </div>
-                <div className='logout-symbol-text'>
+                <div className='logout-symbol-text' onClick={logout}>
                     <div id='logout-symbol'>
                         <a href="#">
                             <img src={Icons.logout} alt="logout-logo" />

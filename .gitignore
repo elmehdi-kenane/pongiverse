@@ -1,4 +1,4 @@
-env
+env/
 venv/
 .venv/
 .env
@@ -20,4 +20,3 @@ Network Persistent State
 notes.txt
 SharedStorage
 TransportSecurity
-.env

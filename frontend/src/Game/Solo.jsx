@@ -6,7 +6,9 @@ import * as Icons from '../assets/navbar-sidebar'
 const Solo = () => {
 	const [gameNotif, setGameNotif] = useState([])
 	const [roomID, setRoomID] = useState(null)
-	let { socket, user, setAllGameNotifs, allGameNotifs, notifsImgs, notifSocket } = useContext(AuthContext)
+	let { socket, user, setAllGameNotifs,
+		allGameNotifs, notifsImgs, notifSocket,
+		setSocket } = useContext(AuthContext)
 	const navigate = useNavigate()
 	const [selected, setSelected] = useState(0)
 
@@ -54,10 +56,24 @@ const Solo = () => {
 				if (type === 'goToGamingPage') {
 					// console.log("navigating now")
 					// navigate(`/mainpage/game/solo/1vs1/friends`)
-					if (message.mode === '1vs1')
-						navigate(`/mainpage/game/solo/1vs1/friends`)
-					else
-						navigate(`/mainpage/game/solo/2vs2/friends`)
+					if (socket.readyState !== WebSocket.OPEN) {
+						const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
+						newSocket.onopen = () => {
+							console.log("+++++++++++=======+++++++++")
+							console.log("GAME SOCKET OPENED AND NOW WE WILL MOVE TO FRIEND PAGE")
+							console.log("+++++++++++=======+++++++++")
+							setSocket(newSocket)
+							if (message.mode === '1vs1')
+								navigate(`/mainpage/game/solo/1vs1/friends`)
+							else
+								navigate(`/mainpage/game/solo/2vs2/friends`)
+						}
+					} else {
+						if (message.mode === '1vs1')
+							navigate(`/mainpage/game/solo/1vs1/friends`)
+						else
+							navigate(`/mainpage/game/solo/2vs2/friends`)
+					}
 				} else if (type === 'receiveFriendGame') {
 					console.log("RECEIVED A GAME REQUEST")
 					setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message])

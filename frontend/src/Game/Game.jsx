@@ -2,6 +2,7 @@ import React,  { useContext, useEffect, useState, useRef }  from 'react'
 import AuthContext from '../navbar-sidebar/Authcontext'
 import { Link, useNavigate } from 'react-router-dom';
 
+
 const Game = () => {
     let { privateCheckAuth, socket, setSocket, user, socketRecreated, setSocketRecreated } = useContext(AuthContext)
     const [allSet, setAllSet] = useState(false)
