@@ -6,7 +6,7 @@ import asyncio
 import math
 from rest_framework_simplejwt.tokens import AccessToken
 import datetime
-from chat.models import Friends
+from friends.models import Friendship
 from myapp.models import customuser
 from mainApp.common import user_channels
 from mainApp.models import Tournament, TournamentMembers, GameNotifications, TournamentWarnNotifications, DisplayOpponent, Round, TournamentUserInfo
@@ -31,7 +31,7 @@ async def accept_invite(self, data, notifs_user_channels):
 	channel_layer = get_channel_layer()
 	user.is_playing = True
 	await sync_to_async(user.save)()
-	channel_name_list = notifs_user_channels.get(username)
+	channel_name_list = notifs_user_channels.get(user.id)
 	user_channel_name = user_channels.get(username)
 	new_member = {"username": username, "is_owner": False, "is_eliminated": False, "is_inside": True}
 	tournaments[tournament_id]['members'].append(new_member)
@@ -72,7 +72,8 @@ async def invite_friend(self, data, notifs_user_channels):
 	receiver = await sync_to_async(customuser.objects.filter(username=target).first)()
 	TournamentGameNotify = await sync_to_async(GameNotifications.objects.filter(tournament_id=tournament_id, user=sender, target=receiver).first)()
 	if TournamentGameNotify is None:
-		channel_name_list = notifs_user_channels.get(target)
+		channel_name_list = notifs_user_channels.get(receiver.id)
+		print(f"\n\n CHANNEL NAME LIST : {channel_name_list} \n\n")
 		tournamentInv = GameNotifications(tournament_id=tournament_id, user=sender, target=receiver, mode='TournamentInvitation')
 		await sync_to_async(tournamentInv.save)()
 		for channel_name in channel_name_list:
@@ -96,7 +97,7 @@ async def deny_invite(self, data, notifs_user_channels):
 	receiver = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
 	tournamentInvite = await sync_to_async(GameNotifications.objects.filter(tournament_id=data['message']['tournament_id'], user=sender, target=receiver).first)()
 	await sync_to_async(tournamentInvite.delete)()
-	channel_name_list = notifs_user_channels.get(data['message']['user'])
+	channel_name_list = notifs_user_channels.get(receiver.id)
 	for channel_name in channel_name_list:
 		if channel_name:
 			await self.channel_layer.send(

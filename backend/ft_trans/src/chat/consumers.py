@@ -1,78 +1,108 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 from myapp.models import customuser ###########
 from asgiref.sync import sync_to_async
-from .models import Room, Membership, Message
+from rest_framework_simplejwt.tokens import AccessToken
 import json
+from . import chat_consumers
+from datetime import datetime
+from .common import user_channels
+
 
 class ChatConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
-		await self.accept()
-		message = {
-				'type': 'connected',
-				'message': 'connection established'
-			}
-		self.channel_layer.group_add("tst",self.channel_layer)
-		await self.send(json.dumps(message))
+		cookiess = self.scope.get('cookies', {})
+		token = cookiess.get('token')
+		decoded_token = AccessToken(token)
+		payload_data = decoded_token.payload
+		user_id = payload_data.get('user_id')
+		user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
+		if user is not None:
+			await self.accept()
+			userId = user.id
+			if user_channels.get(userId):
+				user_channels[userId].append(self.channel_name)
+			else:
+				user_channels[userId] = [self.channel_name]
+			message = {
+					'type': 'connected',
+					'message': 'chat connection established'
+				}
+			await self.send(json.dumps(message))
 
 	async def receive(self, text_data):
 		data = json.loads(text_data)
 		print("recived: ", data)
-		if data['type'] == 'join-channel':
-			user_name = data['message']['user']
-			room_name = data['message']['room_name']
-			try:
-				user = await self.get_user_by_name(user_name)
-			except customuser.DoesNotExist:
-				print("User not found:", user_name)
-			room = await sync_to_async(Room.objects.filter(name=room_name).first)()
-			if not room:
-				print("room does not exist")
-				room = await sync_to_async(Room.objects.create)(name=room_name)
-			elif room:
-				print("room already exists")
-			membership = await sync_to_async(Membership.objects.filter(user=user, room=room).exists)()
-			if membership:
-				print("User already in the room")
-				return
-			await sync_to_async(Membership.objects.create)(user=user, room=room)
-			print("the name for group name:",room_name)
-			await self.channel_layer.group_add(room_name, self.channel_name)
-			message = {
-				'type': 'channel-created',
-				'room' : {
-					'id': room.id,
-					'name': room.name,
-				}
-			}
-			await self.send(json.dumps(message))
-		elif data['type'] == 'message':
-			room_id = data['data']['room_id']
-			user_name = data['data']['sender']
-			message = data['data']['message']
-			room  = await sync_to_async(Room.objects.filter(id=room_id).get)()
-			sender = await self.get_user_by_name(user_name)
-			newMessage = await sync_to_async(Message.objects.create)(sender=sender,room=room, content=message)
-			event = {
-				'type': 'send_message',
-				'message': newMessage,
-			}
-			await self.channel_layer.group_add(room.name, self.channel_name)
-			await self.channel_layer.group_send(room.name, event)
+		if data['type'] == 'addUserChannelGroup': await chat_consumers.add_user_channel_group(self, data)
+		elif data['type'] == 'message': await chat_consumers.message(self, data)
+		elif data['type'] == 'directMessage': await chat_consumers.direct_message(self, data, user_channels)
+		elif data['type'] == 'addRoomMemberAdmin' : await chat_consumers.add_chat_room_admin(self, data, user_channels)
+		elif data['type'] == 'inviteChatRoomMember' : await chat_consumers.invite_member_chat_room (self, data, user_channels)
+		elif data['type'] == 'roomInvitationCancelled' : await chat_consumers.chat_room_invitation_declined(self, data)
+	
+	async def disconnect(self, close_code):
+		cookiess = self.scope.get('cookies', {})
+		token = cookiess.get('token')
+		decoded_token = AccessToken(token)
+		payload_data = decoded_token.payload
+		user_id = payload_data.get('user_id')
+		if user_id:
+			user_channels_name = user_channels.get(user_id)
+			filtered_channels_name = [channel_name for channel_name in user_channels_name if channel_name != self.channel_name]
+			user_channels[user_id] = filtered_channels_name
 
+	async def broadcast_message(self, event):
+		await self.send(text_data=json.dumps(event['data']))
+	
 	async def send_message(self, event):
 		data = event['message']
 		timestamp = data.timestamp.isoformat()
+		dt = datetime.fromisoformat(timestamp)
+		formatted_time = dt.strftime('%Y/%m/%d AT %I:%M %p')
 		message  = {
 			'type':'newMessage',
 			'data': {
 				'id':data.id,
+				'roomId' : data.room.id,
 				'content':data.content,
 				'sender' : data.sender.username,
-				'date' : timestamp,
+				'date' : formatted_time,
+			}
+		}
+		await self.send(text_data=json.dumps(message))
+	
+	async def newRoomJoin(self, event):
+		data = event['data']
+		print(data)
+		message  = {
+			'type':'newRoomJoin',
+			'room' : data
+		}
+		await self.send(text_data=json.dumps(message))
+	
+	async def send_direct(self, event):
+		data = event['data']
+		timestamp = data['date'].isoformat()
+		dt = datetime.fromisoformat(timestamp)
+		formatted_time = dt.strftime('%Y/%m/%d AT %I:%M %p')
+		message = {
+			'type' : 'newDirect',
+			'data' : {
+				'sender': data['sender'],
+				'receiver': data['receiver'],
+				'content': data['message'],
+				'date' :  formatted_time,
+				'senderId' : data['senderId'],
+				'receiverId' : data['receiverId'],
+				'senderAvatar' : data['senderAvatar'],
+
 			}
 		}
 		await self.send(text_data=json.dumps(message))
 
-@sync_to_async
-def get_user_by_name(self, user_name):
-	return customuser.objects.get(username=user_name)
+	async def you_are_blocked(self, event):
+		data = event['message']
+		message = {
+			'type' : 'youAreBlocked',
+			'data' : data
+		}
+		await self.send(text_data=json.dumps(message))

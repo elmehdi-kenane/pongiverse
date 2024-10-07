@@ -4,7 +4,7 @@ import random
 import base64
 import asyncio
 import datetime
-from chat.models import Friends
+from friends.models import Friendship
 from myapp.models import customuser
 from asgiref.sync import sync_to_async
 from .gameMultiplayerConsumers import waited_game
@@ -161,7 +161,7 @@ async def get_actual_round_reached(tournament):
 
 
 async def send_playing_status_to_friends(self, user, status, user_channels):
-	friends = await sync_to_async(list)(Friends.objects.filter(user=user))
+	friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
 	for friend in friends:
 		friend_name = await sync_to_async(lambda: friend.friend.username)()
 		friend_channel = user_channels.get(friend_name)
@@ -183,7 +183,7 @@ async def send_playing_status_to_friends(self, user, status, user_channels):
 async def discard_channels_from_tournament_group(self, player, tournament_id):
 	group_name = f'tournament_{tournament_id}'
 	channel_name = user_channels.get(player.username)
-	channel_name_notif_list = notifs_user_channels.get(player.username)
+	channel_name_notif_list = notifs_user_channels.get(player.id)
 	if channel_name:
 		await self.channel_layer.group_discard(group_name, channel_name)
 	if channel_name_notif_list:

@@ -6,6 +6,7 @@ from rest_framework.decorators import api_view
 from .serializers import MyModelSerializer
 from rest_framework.parsers import MultiPartParser, FormParser
 from .models import customuser
+from mainApp.models import UserMatchStatics
 from datetime import datetime
 import requests
 from django.utils import timezone
@@ -76,7 +77,7 @@ class SignUpView(APIView):
 			response.data = {"Case": "Sign up successfully"}
 			return response
 		else:
-			print(f"Serializer errors: {serializer.errors}")  # Add this line to print serializer errors
+			#print(f"Serializer errors: {serializer.errors}")  # Add this line to #print serializer errors
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -101,7 +102,17 @@ class WaysSignUpView(APIView):
 		
 		if serializer.is_valid():
 			user = serializer.save()
-			response = Response({"Case": "Sign up successfully"})
+			if user:
+				UserMatchStatics.objects.create(
+					player=user,
+					wins=0,
+					losts=0,
+					level=0,
+					total_xp=0,
+					goals=0
+				)
+			response = Response()
+			response.data = {"Case" : "Sign up successfully"}
 			return response
 		else:
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -119,10 +130,12 @@ class LoginView(APIView):
 		response = Response()
 		username = data.get('username', None)
 		password = data.get('password', None)
-		print(f"   username : {username}, password : {password}")
+		#print(f"   username : {username}, password : {password}")
 		user = authenticate(username=username, password=password)
+		print(f"*****************   user : {user}")
 		if user is not None:
 			data = get_tokens_for_user(user)
+			print(f"*****************   data : {data}")
 			response.set_cookie('token', data['access'], httponly=True)
 			response.data = {"Case": "Login successfully"}
 			return response
@@ -266,7 +279,7 @@ class TestView(APIView):
 def SignInGoogleGetUrl(request):
 	response = Response()
 	client_id = os.getenv('GOOGLE_SIGNIN_CLIENT_ID')
-	redirect_uri = 'http://localhost:3000/signin'
+	redirect_uri = f"http://{os.getenv('IP_ADDRESS')}:3000/signin"
 	scope = 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'
 	response_type = 'code'
 	auth_url = 'https://accounts.google.com/o/oauth2/auth'
@@ -277,7 +290,7 @@ def SignInGoogleGetUrl(request):
 		'response_type': response_type,
 	}
 	auth_url_with_params = f'{auth_url}?{urlencode(params)}'
-	print(f"heyy : {auth_url_with_params}")
+	#print(f"heyy : {auth_url_with_params}")
 	response.data = {'code' : auth_url_with_params}
 	return response
 
@@ -285,7 +298,7 @@ def SignInGoogleGetUrl(request):
 def SignInIntraGetUrl(request):
 	response = Response()
 	client_id = os.getenv('INTRA_SIGNIN_CLIENT_ID')
-	redirect_uri = 'http://localhost:3000/signin'
+	redirect_uri = f"http://{os.getenv('IP_ADDRESS')}:3000/signin"
 	auth_url = 'https://api.intra.42.fr/oauth/authorize'
 	response_type = 'code'
 	auth_url_with_params = f'{auth_url}?client_id={client_id}&redirect_uri={redirect_uri}&response_type={response_type}'
@@ -298,7 +311,7 @@ def SignInGoogleGetUserData(request):
 		code = request.data.get('code')
 		response = Response()
 		client_id = os.getenv('GOOGLE_SIGNIN_CLIENT_ID')
-		redirect_uri = 'http://localhost:3000/signin'
+		redirect_uri = f"http://{os.getenv('IP_ADDRESS')}:3000/signin"
 		client_secret = os.getenv('GOOGLE_SIGNIN_SECRET_ID')
 		token_url = 'https://oauth2.googleapis.com/token'
 		payload = {
@@ -321,14 +334,14 @@ def SignInGoogleGetUserData(request):
 		user_picture = user_info_data.get('picture')
 		return Response({'email': user_email, 'picture': user_picture})
 	except Exception as e:
-		print(f"Exception: {str(e)}")
+		#print(f"Exception: {str(e)}")
 		return Response({'error': str(e)}, status=500)
 
 @api_view(['GET'])
 def SignUpGoogleGetUrl(request):
 	response = Response()
 	client_id = os.getenv('GOOGLE_SIGNUP_CLIENT_ID')
-	redirect_uri = 'http://localhost:3000/signup'
+	redirect_uri = f"http://{os.getenv('IP_ADDRESS')}:3000/signup"
 	scope = 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'
 	response_type = 'code'
 	auth_url = 'https://accounts.google.com/o/oauth2/auth'
@@ -339,7 +352,7 @@ def SignUpGoogleGetUrl(request):
 		'response_type': response_type,
 	}
 	auth_url_with_params = f'{auth_url}?{urlencode(params)}'
-	print(f"heyy : {auth_url_with_params}")
+	#print(f"heyy : {auth_url_with_params}")
 	response.data = {'code' : auth_url_with_params}
 	return response
 
@@ -348,7 +361,7 @@ def SignUpGoogleGetUrl(request):
 def SignUpIntraGetUrl(request):
 	response = Response()
 	client_id = os.getenv('INTRA_SIGNUP_CLIENT_ID')
-	redirect_uri = 'http://localhost:3000/signup'
+	redirect_uri = f"http://{os.getenv('IP_ADDRESS')}:3000/signup"
 	auth_url = 'https://api.intra.42.fr/oauth/authorize'
 	response_type = 'code'
 	auth_url_with_params = f'{auth_url}?client_id={client_id}&redirect_uri={redirect_uri}&response_type={response_type}'
@@ -362,7 +375,7 @@ def SignInIntraGetUserData(request):
 		response = Response()
 		client_id = os.getenv('INTRA_SIGNIN_CLIENT_ID')
 		client_secret = os.getenv('INTRA_SIGNIN_SECRET_ID')
-		redirect_uri = 'http://localhost:3000/signin'
+		redirect_uri = f"http://{os.getenv('IP_ADDRESS')}:3000/signin"
 		token_url = 'https://api.intra.42.fr/oauth/token'
 		payload = {
 			'grant_type': 'authorization_code',
@@ -386,7 +399,7 @@ def SignInIntraGetUserData(request):
 		user_picture = image.get('link')
 		return Response({'email': user_email, 'picture': user_picture})
 	except Exception as e:
-		print(f"Exception: {str(e)}")
+		#print(f"Exception: {str(e)}")
 		return Response({'error': str(e)}, status=500)
 
 
@@ -396,7 +409,7 @@ def SignUpGoogleGetUserData(request):
 		code = request.data.get('code')
 		response = Response()
 		client_id = os.getenv('GOOGLE_SIGNUP_CLIENT_ID')
-		redirect_uri = 'http://localhost:3000/signup'
+		redirect_uri = f"http://{os.getenv('IP_ADDRESS')}:3000/signup"
 		client_secret = os.getenv('GOOGLE_SIGNUP_SECRET_ID')
 		token_url = 'https://oauth2.googleapis.com/token'
 		payload = {
@@ -419,7 +432,7 @@ def SignUpGoogleGetUserData(request):
 		user_picture = user_info_data.get('picture')
 		return Response({'email': user_email, 'picture': user_picture})
 	except Exception as e:
-		print(f"Exception: {str(e)}")
+		#print(f"Exception: {str(e)}")
 		return Response({'error': str(e)}, status=500)
 
 @api_view(['POST'])
@@ -429,7 +442,7 @@ def SignUpIntraGetUserData(request):
 		response = Response()
 		client_id = os.getenv('INTRA_SIGNUP_CLIENT_ID')
 		client_secret = os.getenv('INTRA_SIGNUP_SECRET_ID')
-		redirect_uri = 'http://localhost:3000/signup'
+		redirect_uri = f"http://{os.getenv('IP_ADDRESS')}:3000/signup"
 		token_url = 'https://api.intra.42.fr/oauth/token'
 		payload = {
 			'grant_type': 'authorization_code',

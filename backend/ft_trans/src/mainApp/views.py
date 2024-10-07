@@ -2,7 +2,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from myapp.models import customuser
-from chat.models import Friends
+from friends.models import Friendship
 from .models import GameCustomisation
 from .models import TournamentMembers, Tournament, Round, TournamentUserInfo, DisplayOpponent, TournamentWarnNotifications
 import random
@@ -18,7 +18,7 @@ from .common import tournament_rooms, tournaments
 # @api_view(['POST'])
 # def signup(request):
 #     serializer = UserSerializer(data=request.data)
-#     print(serializer)
+#     #print(serializer)
 #     serializer.is_valid(raise_exception=True)
 #     serializer.save()
 #     return Response(serializer.data)
@@ -33,7 +33,7 @@ from .common import tournament_rooms, tournaments
 #     if not user.check_password(password):
 #         raise AuthenticationFailed('Incorrect password')
 #     token = request.COOKIES.get('jwt')
-#     print(token)
+#     #print(token)
 #     if token:
 #         response = Response()
 #         response.data = {
@@ -85,10 +85,10 @@ from mimetypes import guess_type
 @api_view(['POST'])
 def online_friends(request):
 	username = request.data['user']
-	# print(f'user is {username}')
+	# #print(f'user is {username}')
 	user = customuser.objects.get(username=username)
 	allFriends = []
-	for user_id in Friends.objects.filter(user=user):
+	for user_id in Friendship.objects.filter(user=user):
 		if user_id.friend.is_online and not user_id.friend.is_playing: ####################  and user_id.friend.is_playing
 			image_path = user_id.friend.avatar.path
 			# with open(image_path, 'rb') as image_file:
@@ -118,7 +118,7 @@ def get_user(request):
 def user_image(request):
 	username = (request.data).get('user')
 	if not username:
-		print("no user is here")
+		#print("no user is here")
 		return Response({'message': 'no username is here'})
 	user = customuser.objects.filter(username=username).first()
 	if user:
@@ -328,7 +328,6 @@ def get_tournament_size(request):
 	else:
 		response.data = {'Case' : 'size_is_valide'}
 	return response
-
 def customize_game(request):
 	paddle_color = request.data['paddle']
 	ball_color = request.data['ball']
@@ -337,7 +336,7 @@ def customize_game(request):
 	username = request.data['username']
 	user = customuser.objects.filter(username=username).first()
 	if user:
-		print(request.data)
+		#print(request.data)
 		game_customize = GameCustomisation.objects.filter(user=user).first()
 		if game_customize:
 			game_customize.paddle_color = paddle_color
@@ -370,7 +369,7 @@ def get_customize_game(request):
 				game_customize = GameCustomisation.objects.filter(user=user).first()
 				if game_customize:
 					return Response({'data' : [game_customize.paddle_color, game_customize.ball_color, game_customize.board_color, game_customize.ball_effect]})
-				return Response({'data' : ['blue', 'red', 'black']})
+				return Response({'data' : ['blue', 'red', '#8a7dac00']})
 		return Response({'data' : None})
 	except TokenError as e:
 		return Response({'data' : None})
@@ -567,6 +566,7 @@ def player_situation(request):
 	if flag == 0:
 		case = 'not joining a tournament'
 	response.data = {'Case': case}
+	print(f"\n\n Case is {case} \n\n")
 	return response
 
 

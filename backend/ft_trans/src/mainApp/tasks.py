@@ -6,7 +6,7 @@ import asyncio
 import math
 from rest_framework_simplejwt.tokens import AccessToken
 import datetime
-from chat.models import Friends
+from friends.models import Friendship
 from myapp.models import customuser
 from mainApp.common import user_channels
 from mainApp.models import Tournament, TournamentMembers, GameNotifications, TournamentWarnNotifications, DisplayOpponent, Round, TournamentUserInfo
@@ -122,7 +122,8 @@ async def send_user_eliminated_after_delay(self, tournament_id, actual_round):
 		for member in tournaments[tournament_id]['rounds'][actual_round]:
 			if member['username'] != 'anounymous':
 				await save_tournament_to_db(tournament_id)
-				channel_name_list = notifs_user_channels.get(member['username'])
+				my_user = await sync_to_async(customuser.objects.get)(username=member['username'])
+				channel_name_list = notifs_user_channels.get(my_user.id)
 				if channel_name_list:
 					for channel_name in channel_name_list:
 						await self.channel_layer.send(
@@ -165,14 +166,15 @@ async def send_user_eliminated_after_delay(self, tournament_id, actual_round):
 				user = await sync_to_async(customuser.objects.filter(username=member['username']).first)()
 				user.is_playing = False
 				await sync_to_async(user.save)()
-				channel_name_list = notifs_user_channels.get(member['username'])
+				my_user = await sync_to_async(customuser.objects.get)(username=member['username'])
+				channel_name_list = notifs_user_channels.get(my_user.id)
 				if channel_name_list:
 					for channel_name in channel_name_list:
 						await self.channel_layer.group_discard(group_name, channel_name)
-				friends = await sync_to_async(list)(Friends.objects.filter(user=user))
+				friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
 				for friend in friends:
-					friend_username = await sync_to_async(lambda: friend.friend.username)()
-					channel_name_list = notifs_user_channels.get(friend_username)
+					friend_id = await sync_to_async(lambda: friend.friend.id)()
+					channel_name_list = notifs_user_channels.get(friend_id)
 					if channel_name_list:
 						for channel_name in channel_name_list:
 							await self.channel_layer.send(
@@ -280,8 +282,10 @@ async def send_user_eliminated_after_delay(self, tournament_id, actual_round):
 					# username2 = await sync_to_async(lambda: member_user2.username)()
 					# print("USERNAME1:", username1)
 					# print("USERNAME2:", username2)
-					channel_name_list1 = notifs_user_channels.get(member_user1)
-					channel_name_list2 = notifs_user_channels.get(member_user2)
+					member_user_obj1 = await sync_to_async(customuser.objects.get)(username=member_user1)
+					member_user_obj2 = await sync_to_async(customuser.objects.get)(username=member_user2)
+					channel_name_list1 = notifs_user_channels.get(member_user_obj1.id)
+					channel_name_list2 = notifs_user_channels.get(member_user_obj2.id)
 					players.append({
 						'user': member_user1,
 						'state': 'walou',

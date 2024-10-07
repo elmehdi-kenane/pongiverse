@@ -3,13 +3,12 @@ from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.exceptions import TokenError
 from myapp.models import customuser
 from asgiref.sync import sync_to_async
-from chat.models import Friends
+from friends.models import Friendship
 import json
 from . import game_notifs_consumers, tournament_notifs_consumers
 from mainApp.models import TournamentMembers
 from .common import notifs_user_channels
 from mainApp.common import tournaments
-# notifs_user_channels = {}
 
 def is_user_joining_tournament(username):
 	for tournament_id, tournament_data in tournaments.items():
@@ -25,26 +24,28 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 		decoded_token = AccessToken(token)
 		payload_data = decoded_token.payload
 		user_id = payload_data.get('user_id')
+		print("USER ID : ", user_id)
 		user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
+		print(" USER : ", user)
 		if user is not None:
 			await self.accept()
 			username = user.username
 			tmp_username = username
 			user.is_online = True
 			await sync_to_async(user.save)()
-			if notifs_user_channels.get(username):
-				notifs_user_channels[username].append(self.channel_name)
+			if notifs_user_channels.get(user_id):
+				notifs_user_channels[user_id].append(self.channel_name)
 			else:
-				notifs_user_channels[username] = [self.channel_name]
+				notifs_user_channels[user_id] = [self.channel_name]
 			self.group_name = f"friends_group{user_id}"
 			await self.channel_layer.group_add(self.group_name, self.channel_name)
 			# channel_layer = get_channel_layer()
-			friends = await sync_to_async(list)(Friends.objects.filter(user=user))
+			friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
 			# #print(f"ALL THE USERS CHANNEL_NAMES : {notifs_user_channels}")
 			for friend in friends:
-				friend_username = await sync_to_async(lambda: friend.friend.username)()
+				friend_id = await sync_to_async(lambda: friend.friend.id)()
 				friend_is_online = await sync_to_async(lambda: friend.friend.is_online)()
-				channel_name_list = notifs_user_channels.get(friend_username)
+				channel_name_list = notifs_user_channels.get(friend_id)
 				if channel_name_list:
 					for channel_name in channel_name_list:
 					# channel_name = notifs_user_channels.get(friend_username)
@@ -69,7 +70,8 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 			if tournament_id != 0:
 				for member in tournaments[tournament_id]['members']:
 					memberusername = member['username']
-					channel_name_list = notifs_user_channels.get(memberusername)
+					memberuser = await sync_to_async(customuser.objects.filter(username=memberusername).first)()
+					channel_name_list = notifs_user_channels.get(memberuser.id)
 					if channel_name_list:
 						for channel_name in channel_name_list:
 							if channel_name:
@@ -131,7 +133,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 						member.is_inside = False
 						await sync_to_async(member.save)()
 				# user_channels.pop(username, None)
-				channel_name_list = notifs_user_channels.get(username)
+				channel_name_list = notifs_user_channels.get(user.id)
 				if channel_name_list:
 					channel_name_list.remove(self.channel_name)
 					if not len(channel_name_list):
@@ -269,4 +271,15 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 		await self.send(text_data=json.dumps({
 			'type': 'youWinTheGame',
 			'message': event['message']
+		}))
+	async def roomInvite(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'roomInvitation',
+			'message': event.get('message'),
+		}))
+	async def chatNotificationCounter(self, event):
+		print("\n\n\nchatNotificationCounter")
+		await self.send(text_data=json.dumps({
+			'type': 'chatNotificationCounter',
+			'count': event.get('message'),
 		}))

@@ -7,7 +7,7 @@ import datetime
 from myapp.models import customuser
 from asgiref.sync import sync_to_async
 from .models import Match, ActiveMatch, PlayerState, NotifPlayer, GameNotifications, MatchStatistics
-from chat.models import Friends
+from friends.models import Friendship
 
 
 ######################### JOIN TO A AN EXISTING ROOM OR A NEW ONE -MULTIPLAYER- ##############################
@@ -78,7 +78,7 @@ async def join_room_mp(self, data, rooms, user_channels):
             user = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
             user.is_playing = True
             await sync_to_async(user.save)()
-            friends = await sync_to_async(list)(Friends.objects.filter(user=user))
+            friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
             for friend in friends:
                 friend_name = await sync_to_async(lambda: friend.friend.username)()
                 friend_channel = user_channels.get(friend_name)
@@ -231,7 +231,7 @@ async def join_room_mp(self, data, rooms, user_channels):
         user = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
         user.is_playing = True
         await sync_to_async(user.save)()
-        friends = await sync_to_async(list)(Friends.objects.filter(user=user))
+        friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
         for friend in friends:
             friend_name = await sync_to_async(lambda: friend.friend.username)()
             friend_channel = user_channels.get(friend_name)
@@ -305,7 +305,7 @@ async def quit_room_mp(self, data, rooms, user_channels):
                                 user = await sync_to_async(customuser.objects.filter(username=user).first)()
                                 user.is_playing = False
                                 await sync_to_async(user.save)()
-                                friends = await sync_to_async(list)(Friends.objects.filter(user=user))
+                                friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
                                 for friend in friends:
                                     friend_name = await sync_to_async(lambda: friend.friend.username)()
                                     friend_channel = user_channels.get(friend_name)
@@ -374,7 +374,7 @@ async def quit_room_mp(self, data, rooms, user_channels):
                     #print("SETTING THE PLAYER TO IS NOT PLAYING")
                     user.is_playing = False
                     await sync_to_async(user.save)()
-                    friends = await sync_to_async(list)(Friends.objects.filter(user=user))
+                    friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
                     for friend in friends:
                         friend_name = await sync_to_async(lambda: friend.friend.username)()
                         friend_channel = user_channels.get(friend_name)
@@ -833,7 +833,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
                     player4 = await sync_to_async(customuser.objects.get)(username=room['players'][3]['user'])
                     player1.is_playing = False
                     await sync_to_async(player1.save)()
-                    friends = await sync_to_async(list)(Friends.objects.filter(user=player1))
+                    friends = await sync_to_async(list)(Friendship.objects.filter(user=player1))
                     for friend in friends:
                             friend_name = await sync_to_async(lambda: friend.friend.username)()
                             friend_channel = user_channels.get(friend_name)
@@ -854,7 +854,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
                                     })
                     player2.is_playing = False
                     await sync_to_async(player2.save)()
-                    friends = await sync_to_async(list)(Friends.objects.filter(user=player2))
+                    friends = await sync_to_async(list)(Friendship.objects.filter(user=player2))
                     for friend in friends:
                             friend_name = await sync_to_async(lambda: friend.friend.username)()
                             friend_channel = user_channels.get(friend_name)
@@ -875,7 +875,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
                                     })
                     player3.is_playing = False
                     await sync_to_async(player3.save)()
-                    friends = await sync_to_async(list)(Friends.objects.filter(user=player3))
+                    friends = await sync_to_async(list)(Friendship.objects.filter(user=player3))
                     for friend in friends:
                             friend_name = await sync_to_async(lambda: friend.friend.username)()
                             friend_channel = user_channels.get(friend_name)
@@ -896,7 +896,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
                                     })
                     player4.is_playing = False
                     await sync_to_async(player4.save)()
-                    friends = await sync_to_async(list)(Friends.objects.filter(user=player4))
+                    friends = await sync_to_async(list)(Friendship.objects.filter(user=player4))
                     for friend in friends:
                             friend_name = await sync_to_async(lambda: friend.friend.username)()
                             friend_channel = user_channels.get(friend_name)
@@ -1066,7 +1066,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
                             player4 = await sync_to_async(customuser.objects.get)(username=room['players'][3]['user'])
                             player1.is_playing = False
                             await sync_to_async(player1.save)()
-                            friends = await sync_to_async(list)(Friends.objects.filter(user=player1))
+                            friends = await sync_to_async(list)(Friendship.objects.filter(user=player1))
                             for friend in friends:
                                     friend_name = await sync_to_async(lambda: friend.friend.username)()
                                     friend_channel = user_channels.get(friend_name)
@@ -1087,7 +1087,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
                                             })
                             player2.is_playing = False
                             await sync_to_async(player2.save)()
-                            friends = await sync_to_async(list)(Friends.objects.filter(user=player2))
+                            friends = await sync_to_async(list)(Friendship.objects.filter(user=player2))
                             for friend in friends:
                                     friend_name = await sync_to_async(lambda: friend.friend.username)()
                                     friend_channel = user_channels.get(friend_name)
@@ -1108,7 +1108,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
                                             })
                             player3.is_playing = False
                             await sync_to_async(player3.save)()
-                            friends = await sync_to_async(list)(Friends.objects.filter(user=player3))
+                            friends = await sync_to_async(list)(Friendship.objects.filter(user=player3))
                             for friend in friends:
                                     friend_name = await sync_to_async(lambda: friend.friend.username)()
                                     friend_channel = user_channels.get(friend_name)
@@ -1129,7 +1129,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
                                             })
                             player4.is_playing = False
                             await sync_to_async(player4.save)()
-                            friends = await sync_to_async(list)(Friends.objects.filter(user=player4))
+                            friends = await sync_to_async(list)(Friendship.objects.filter(user=player4))
                             for friend in friends:
                                     friend_name = await sync_to_async(lambda: friend.friend.username)()
                                     friend_channel = user_channels.get(friend_name)
@@ -1233,7 +1233,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
                             player4 = await sync_to_async(customuser.objects.get)(username=room['players'][3]['user'])
                             player1.is_playing = False
                             await sync_to_async(player1.save)()
-                            friends = await sync_to_async(list)(Friends.objects.filter(user=player1))
+                            friends = await sync_to_async(list)(Friendship.objects.filter(user=player1))
                             for friend in friends:
                                     friend_name = await sync_to_async(lambda: friend.friend.username)()
                                     friend_channel = user_channels.get(friend_name)
@@ -1254,7 +1254,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
                                             })
                             player2.is_playing = False
                             await sync_to_async(player2.save)()
-                            friends = await sync_to_async(list)(Friends.objects.filter(user=player2))
+                            friends = await sync_to_async(list)(Friendship.objects.filter(user=player2))
                             for friend in friends:
                                     friend_name = await sync_to_async(lambda: friend.friend.username)()
                                     friend_channel = user_channels.get(friend_name)
@@ -1275,7 +1275,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
                                             })
                             player3.is_playing = False
                             await sync_to_async(player3.save)()
-                            friends = await sync_to_async(list)(Friends.objects.filter(user=player3))
+                            friends = await sync_to_async(list)(Friendship.objects.filter(user=player3))
                             for friend in friends:
                                     friend_name = await sync_to_async(lambda: friend.friend.username)()
                                     friend_channel = user_channels.get(friend_name)
@@ -1296,7 +1296,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
                                             })
                             player4.is_playing = False
                             await sync_to_async(player4.save)()
-                            friends = await sync_to_async(list)(Friends.objects.filter(user=player4))
+                            friends = await sync_to_async(list)(Friendship.objects.filter(user=player4))
                             for friend in friends:
                                     friend_name = await sync_to_async(lambda: friend.friend.username)()
                                     friend_channel = user_channels.get(friend_name)
@@ -1663,7 +1663,7 @@ async def invite_friend_mp(self, data, rooms, user_channels):
             'id': room_id
         }
     }))
-    friends = await sync_to_async(list)(Friends.objects.filter(user=user1))
+    friends = await sync_to_async(list)(Friendship.objects.filter(user=user1))
     for friend in friends:
         friend_name = await sync_to_async(lambda: friend.friend.username)()
         friend_channel = user_channels.get(friend_name)
@@ -1822,7 +1822,7 @@ async def accept_game_invite_mp(self, data, rooms, user_channels):
                 asyncio.create_task(set_game(self, room, users))
                 friend.is_playing = True
                 await sync_to_async(friend.save)()
-                friends = await sync_to_async(list)(Friends.objects.filter(user=friend))
+                friends = await sync_to_async(list)(Friendship.objects.filter(user=friend))
                 for user in friends:
                     friend_name = await sync_to_async(lambda: user.friend.username)()
                     friend_channel = user_channels.get(friend_name)
@@ -1893,7 +1893,7 @@ async def accept_game_invite_mp(self, data, rooms, user_channels):
                 target = await sync_to_async(customuser.objects.filter(username=data['message']['target']).first)()
                 target.is_playing = True
                 await sync_to_async(target.save)()
-                friends = await sync_to_async(list)(Friends.objects.filter(user=friend))
+                friends = await sync_to_async(list)(Friendship.objects.filter(user=friend))
                 for user in friends:
                     friend_name = await sync_to_async(lambda: user.friend.username)()
                     friend_channel = user_channels.get(friend_name)
@@ -1946,7 +1946,7 @@ async def create_new_room_mp(self, data, rooms, user_channels):
             'creator': True
         }
     }))
-    friends = await sync_to_async(list)(Friends.objects.filter(user=user))
+    friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
     for friend in friends:
         friend_name = await sync_to_async(lambda: friend.friend.username)()
         friend_channel = user_channels.get(friend_name)
@@ -2038,7 +2038,7 @@ async def join_new_room_mp(self, data, rooms, user_channels):
             asyncio.create_task(set_game(self, room, users))
             user.is_playing = True
             await sync_to_async(user.save)()
-            friends = await sync_to_async(list)(Friends.objects.filter(user=user))
+            friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
             for friend in friends:
                 friend_name = await sync_to_async(lambda: friend.friend.username)()
                 friend_channel = user_channels.get(friend_name)
@@ -2112,7 +2112,7 @@ async def join_new_room_mp(self, data, rooms, user_channels):
             # target = await sync_to_async(customuser.objects.filter(username=data['message']['target']).first)()
             user.is_playing = True
             await sync_to_async(user.save)()
-            friends = await sync_to_async(list)(Friends.objects.filter(user=user))
+            friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
             for friend in friends:
                 friend_name = await sync_to_async(lambda: friend.friend.username)()
                 friend_channel = user_channels.get(friend_name)

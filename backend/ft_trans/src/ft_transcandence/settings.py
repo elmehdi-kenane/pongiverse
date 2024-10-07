@@ -38,9 +38,9 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'chat',
     'myapp',
-    'mainApp',
     'Notifications',
-    'Profile',
+    'mainApp',
+    'friends',
     'daphne',
     'channels_redis',
     'django.contrib.admin',
@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     "corsheaders",
+    'Profile',
     'rest_framework_simplejwt.token_blacklist',
 ]
 
@@ -182,8 +183,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "http://10.12.2.12:3000",
+    "http://10.12.3.11:3000",
     "http://127.0.0.1:3000",
-    "http://localhost:3000",
+    "http://127.0.0.1:3001",
+    "http://localhost:3001",
     "https://lh3.googleusercontent.com"
 ]
 

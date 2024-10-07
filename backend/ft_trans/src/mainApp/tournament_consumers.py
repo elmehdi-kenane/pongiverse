@@ -7,7 +7,7 @@ import math
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.exceptions import TokenError
 import datetime
-from chat.models import Friends
+from friends.models import Friendship
 from myapp.models import customuser
 from .models import Match, ActiveMatch, PlayerState, Tournament, TournamentMembers, Round, TournamentUserInfo, TournamentWarnNotifications, DisplayOpponent, GameNotifications
 from asgiref.sync import sync_to_async
@@ -56,7 +56,7 @@ async def create_tournament(self, data, user_channels):
 		invitations = await sync_to_async(lambda: GameNotifications.objects.filter(target=user))()
 		await sync_to_async(invitations.delete)()
 		channel_layer = get_channel_layer()
-		friends = await sync_to_async(list)(Friends.objects.filter(user=user))
+		friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
 		for friend in friends:
 			friend_username = await sync_to_async(lambda: friend.friend.username)()
 			channel_name = user_channels.get(friend_username)
@@ -132,12 +132,11 @@ def is_user_joining_tournament(username):
 
 async def loged_again(self, data, user_channels):
 	username = data['message']['user']
-	user = await sync_to_async(customuser.objects.filter(username=username).first)()
-	members = await sync_to_async(list)(TournamentMembers.objects.filter(user=user))
+	user = await sync_to_async(customuser.objects.get)(username=username)
 	tournament_id = is_user_joining_tournament(username)
 	if tournament_id != 0:
 		group_name = f'tournament_{tournament_id}'
-		channel_names_list = notifs_user_channels.get(username)
+		channel_names_list = notifs_user_channels.get(user.id)
 		if channel_names_list:
 			for channel_names in channel_names_list:
 				await self.channel_layer.group_add(group_name, channel_names)
@@ -178,7 +177,7 @@ async def kick_player(self, data, user_channels):
 
 async def leave_tournament(self, data, user_channels):
 	tournament_id = data['message']['tournament_id']
-	kicked_user = await sync_to_async(customuser.objects.filter(username=data['message']['kicked']).first)()
+	kicked_user = await sync_to_async(customuser.objects.get)(username=data['message']['kicked'])
 	kicked_user.is_playing = False
 	await sync_to_async(kicked_user.save)()
 	delete_member(tournament_id, data['message']['kicked'])
@@ -201,7 +200,7 @@ async def leave_tournament(self, data, user_channels):
 	)
 	channel_name = user_channels.get(data['message']['kicked'])
 	await self.channel_layer.group_discard(group_name, channel_name)
-	channel_name_notif_list = notifs_user_channels.get(data['message']['kicked'])
+	channel_name_notif_list = notifs_user_channels.get(kicked_user.id)
 	if channel_name_notif_list:
 		for channel_name_notif in channel_name_notif_list:
 			await self.channel_layer.group_discard(group_name, channel_name_notif)
@@ -235,14 +234,14 @@ async def destroy_tournament(self, data, user_channels):
 		user.is_playing = False
 		await sync_to_async(user.save)()
 		channel_name = user_channels.get(username)
-		channel_name_notif_list = notifs_user_channels.get(username)
+		channel_name_notif_list = notifs_user_channels.get(user.id)
 		if channel_name:
 			await self.channel_layer.group_discard(group_name, channel_name)
 		if channel_name_notif_list:
 			for channel_name_notif in channel_name_notif_list:
 				await self.channel_layer.group_discard(group_name, channel_name_notif)
 	del tournaments[tournament_id]
-	friends = await sync_to_async(list)(Friends.objects.filter(user=user))
+	friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
 	for friend in friends:
 		friend_username = await sync_to_async(lambda: friend.friend.username)()
 		channel_name = user_channels.get(friend_username)
