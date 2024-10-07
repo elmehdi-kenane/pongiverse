@@ -14,23 +14,23 @@ import { useNavigate } from 'react-router-dom';
 function SignInPage() {
 	const navigate = useNavigate();
 
-	useEffect(() =>{
-		const check_is_authenticated = async () => {
-			const response = await fetch(`http://localhost:8000/auth/check-is-authenticated`, {
-				method: "GET",
-				credentials: "include"
-			});
-			if (response.ok) {
-				const data = await response.json();
-				if (data.is_authenticated) {
-					navigate('/mainpage');
-				}
-			} else {
-				console.error('Failed to fetch data');
-			}
-		}
-		check_is_authenticated();
-	},[])
+	// useEffect(() =>{
+	// 	const check_is_authenticated = async () => {
+	// 		const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/check-is-authenticated`, {
+	// 			method: "GET",
+	// 			credentials: "include"
+	// 		});
+	// 		if (response.ok) {
+	// 			const data = await response.json();
+	// 			if (data.is_authenticated) {
+	// 				navigate('/mainpage');
+	// 			}
+	// 		} else {
+	// 			console.error('Failed to fetch data');
+	// 		}
+	// 	}
+	// 	check_is_authenticated();
+	// },[])
 
 
 	return (

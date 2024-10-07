@@ -305,7 +305,7 @@ function createParticle(x, y) {
 
 	useEffect(() => {
 		const check_player_situation = async () => {
-			const response = await fetch(`http://localhost:8000/api/player-situation`, {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/player-situation`, {
 				method: "POST",
 				headers: {
 					'Content-Type': 'application/json',

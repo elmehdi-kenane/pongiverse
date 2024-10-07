@@ -1,11 +1,11 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import * as ChatIcons from "../assets/chat/media/index";
-import ChatContext from "../Groups/ChatContext";
+import ChatContext from "../Context/ChatContext";
 import AuthContext from "../navbar-sidebar/Authcontext";
-import MyMessage from "./myMessage";
-import OtherMessage from "./otherMessage";
-import { useNavigate } from "react-router-dom";
 import SendMessage from "./sendMessage";
+import ChatConversationHeader from "./chatConversationHeader";
+import ChatConversationBody from "./chatConversationBody";
+import { resetUnreadMessages } from "./chatConversationItem";
+
 
 export let useClickOutSide = (handler) => {
   let domNode = useRef();
@@ -21,210 +21,208 @@ export let useClickOutSide = (handler) => {
   return domNode;
 };
 
-const ChatConversation = () => {
-  const { selectedDirect, setSelectedDirect } = useContext(ChatContext);
-  const [messages, setMessages] = useState([]);
-  const [recivedMessage, setRecivedMessage] = useState(null);
-  const [messageToSend, setMessageToSend] = useState("");
+const ChatConversation = ({
+  messages,
+  setMessages,
+  setShowBlockPopup,
+  directs,
+  setDirects,
+  searchValue,
+  setSearchValue,
+  directsSearch,
+  setDirectsSearch,
+}) => {
   const [showDirectOptions, setShowDirectOptions] = useState(false);
-  const { user, socket, userImg } = useContext(AuthContext);
+  const { selectedDirect, setSelectedDirect } = useContext(ChatContext);
+  const { user, chatSocket, userImg } = useContext(AuthContext);
+
+  const [currentMessagePage, setCurrentMessagePage] = useState(1);
+  const [hasMoreMessages, setHasMoreMessages] = useState(true);
+  const [userChanged, setUserChanged] = useState(false);
   const messageEndRef = useRef(null);
-  const selectedDirectRef = useRef(selectedDirect);
-  const navigate = useNavigate();
+  const messageBodyRef = useRef(null);
+  const [lastMessage, setLastMessage] = useState(messageEndRef);
+  const [firstScroll, setFirstScroll] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    selectedDirectRef.current = selectedDirect;
-  }, [selectedDirect]);
-
+  const [messageToSend, setMessageToSend] = useState("");
   const sendMessage = () => {
-    console.log(messageToSend)
     if (
-      socket &&
-      socket.readyState === WebSocket.OPEN &&
+      chatSocket &&
+      chatSocket.readyState === WebSocket.OPEN &&
       messageToSend.trim() !== ""
     ) {
-      console.log(messageToSend)
-      socket.send(
+      chatSocket.send(
         JSON.stringify({
           type: "directMessage",
           data: {
             sender: user,
-            reciver: selectedDirect.name,
+            receiver: selectedDirect.name,
             message: messageToSend,
           },
         })
       );
-      setMessageToSend("");
-    }
-  };
-
-  useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:8000/chatAPI/Directs/messages`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              user: user,
-              friend: selectedDirect.name,
-            }),
-          }
+      if (searchValue !== "") {
+        const allDirects = directs;
+        const isExist = allDirects.some(
+          (friend) => friend.name === selectedDirect.name
         );
-        const data = await response.json();
-        if (data) {
-          setMessages(data);
+        if (!isExist) {
+          const newConversation = {
+            id: selectedDirect.id,
+            name: selectedDirect.name,
+            avatar: selectedDirect.avatar,
+            is_online: selectedDirect.status,
+            lastMessage: messageToSend,
+            unreadCount: 0,
+          };
+          setDirects([newConversation, ...directs]);
+        } else {
+          // Update the last message of the selected direct and unread count and move to the top
+          const updatedDirects = allDirects.map((friend) => {
+            if (selectedDirect.name === friend.name) {
+              return {
+                ...friend,
+                lastMessage: messageToSend,
+                unreadCount: 0,
+              };
+            }
+            return friend;
+          });
+          // move the selected direct to the top
+          const selectedDirectIndex = updatedDirects.findIndex(
+            (friend) => friend.name === selectedDirect.name
+          );
+          const  splitedDirects = updatedDirects.splice(selectedDirectIndex, 1);
+          setDirects([splitedDirects[0], ...updatedDirects]);
+          resetUnreadMessages(user, selectedDirect.id);
         }
-      } catch (error) {
-        console.log(error);
       }
-    };
-    if (selectedDirect) {
-      fetchMessages();
-    }
-    let scrollView = document.getElementById("start");
-    scrollView.scrollTop = scrollView.scrollHeight;
-  }, [selectedDirect]);
-
-  useEffect(() => {
-    if (socket) {
-      socket.onmessage = (e) => {
-        let data = JSON.parse(e.data);
-        if (data.type === "newDirect") {
-          const currentDirect = selectedDirectRef.current;
-          if (
-            (currentDirect.name === data.data.sender &&
-              data.data.reciver === user) ||
-            (user === data.data.sender && data.data.reciver === user)
-          ){
-            console.log(data.data)
-            setRecivedMessage(data.data);
-          }
-        } else if (data.type === "goToGamingPage") {
-          console.log("navigating now");
-          navigate(`/mainpage/game/solo/1vs1/friends`);
-        }
-      };
-    }
-  }, [socket]);
-
-  useEffect(() => {
-    if (recivedMessage !== null) {
-      setMessages((prev) => [...prev, recivedMessage]);
-    }
-  }, [recivedMessage]);
-
-  useEffect(() => {
-    if (messages) {
-      let scrollView = document.getElementById("start");
-      scrollView.scrollTop = scrollView.scrollHeight;
-    }
-  }, [messages]);
-
-  const inviteFriend = () => {
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      console.log("inside join");
-      socket.send(
-        JSON.stringify({
-          type: "inviteFriendGame",
-          message: {
-            user: user,
-            target: selectedDirect.name,
-          },
-        })
-      );
+      setSearchValue("");
+      setDirectsSearch([]);
+      setMessageToSend("");
     }
   };
   let domNode = useClickOutSide(() => {
     setShowDirectOptions(false);
   });
 
+  const fetchMessages = async () => {
+    try {
+      const response = await fetch(
+        `http://${
+          import.meta.env.VITE_IPADDRESS
+        }:8000/chatAPI/Directs/messages?page=${currentMessagePage}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user: user,
+            friend: selectedDirect.name,
+          }),
+        }
+      );
+      const { results, next } = await response.json();
+      if (response.ok) {
+        setMessages([...results, ...messages]);
+        if (!next) setHasMoreMessages(false);
+      } else console.log("opps! something went wrong");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    setMessages([]);
+    setCurrentMessagePage(1);
+    setHasMoreMessages(true);
+    setUserChanged(true);
+    setFirstScroll(true);
+  }, [selectedDirect.name]);
+
+  useEffect(() => {
+    if (hasMoreMessages && selectedDirect) {
+      if (currentMessagePage > 1) {
+        const previousScrollHeight = messageBodyRef.current.scrollHeight;
+
+        fetchMessages().then(() => {
+          setLoading(false);
+          setTimeout(() => {
+            const newScrollHeight = messageBodyRef.current.scrollHeight;
+            const scrollDifference = newScrollHeight - previousScrollHeight;
+            messageBodyRef.current.scrollTop += scrollDifference;
+          }, 0); // Ensure the DOM is updated before adjusting the scroll
+        });
+      } else {
+        fetchMessages();
+      }
+    }
+    setUserChanged(false);
+  }, [userChanged, currentMessagePage]);
+
+  const updateLastMessage = () => {
+    setDirects((prevDirects) => {
+      const updatedDirects = prevDirects.map((friend) => {
+        if (friend.name === selectedDirect.name) {
+          return {
+            ...friend,
+            lastMessage: messages[messages.length - 1].content,
+          };
+        }
+        return friend;
+      });
+      return updatedDirects;
+    });
+  };
+
+  useEffect(() => {
+    if (messageEndRef && messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+      updateLastMessage();
+      setFirstScroll(false);
+    }
+  }, [messages, lastMessage]);
+
+  const handelScroll = (e) => {
+    if (messageBodyRef.current) {
+      const { scrollTop } = messageBodyRef.current;
+      if (scrollTop === 0 && hasMoreMessages && !firstScroll) {
+        setLoading(true);
+        setCurrentMessagePage(currentMessagePage + 1);
+      }
+    }
+  };
 
   return (
     <>
-      <div className="conversation-header">
-        <div className="conversation-header-info">
-          <img
-            src={ChatIcons.arrowLeft}
-            alt=""
-            className="conversation-back-arrow"
-            onClick={() =>
-              setSelectedDirect({
-                name: "",
-                avatar: "",
-                status: "",
-              })
-            }
-          />
-          <img
-            src={selectedDirect.avatar}
-            alt="Avatar"
-            className="conversation-avatar"
-          />
-          <div className="conversation-details">
-            <div className="conversation-name">{selectedDirect.name}</div>
-            <div className="conversation-info">
-              {selectedDirect.status ? "online" : "offline"}
-            </div>
-          </div>
-        </div>
-        <div className="conversation-options" ref={domNode}>
-          <img
-            src={ChatIcons.InviteToPlay}
-            alt="Invite"
-            className="conversation-invite-icon"
-            onClick={inviteFriend}
-          />
-          <div className="conversation-options-wrapper">
-            <img
-              onClick={() => {
-                showDirectOptions
-                  ? setShowDirectOptions(false)
-                  : setShowDirectOptions(true);
-              }}
-              src={ChatIcons.ThreePoints}
-              alt="Options"
-              className="conversation-options-icon"
-            />
-            {showDirectOptions ? (
-              <div className="direct-options-container">
-                <div className="view-profile-option">View Profile</div>
-                <div className="block-friend-option">Block</div>
-                <div className="change-wallpaper-option">Wallpaper</div>
-              </div>
-            ) : (
-              ""
-            )}
-          </div>
-        </div>
-      </div>
-      <div className="conversation-body" id="start">
-        {messages.length !== 0 &&
-          messages &&
-          messages.map((message, index) =>
-            message.sender === user ? (
-              <MyMessage
-                key={index}
-                content={message.content}
-                avatar={userImg}
-              />
-            ) : (
-              <OtherMessage
-                key={index}
-                content={message.content}
-                avatar={selectedDirect.avatar}
-              />
-            )
-          )}
-        <div ref={messageEndRef}></div>
-      </div>
+      <ChatConversationHeader
+        setSelectedDirect={setSelectedDirect}
+        selectedDirect={selectedDirect}
+        chatSocket={chatSocket}
+        showDirectOptions={showDirectOptions}
+        setShowDirectOptions={setShowDirectOptions}
+        domNode={domNode}
+        user={user}
+        setShowBlockPopup={setShowBlockPopup}
+      />
+      <ChatConversationBody
+        loading={loading}
+        messages={messages}
+        userImg={userImg}
+        messageBodyRef={messageBodyRef}
+        handelScroll={handelScroll}
+        messageEndRef={messageEndRef}
+        user={user}
+        selectedDirect={selectedDirect}
+      />
       <SendMessage
-        sendMessage={sendMessage}
-        messageToSend={messageToSend}
+        showDirectOptions={showDirectOptions}
+        setShowDirectOptions={setShowDirectOptions}
         setMessageToSend={setMessageToSend}
+        messageToSend={messageToSend}
+        sendMessage={sendMessage}
       />
     </>
   );

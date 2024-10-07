@@ -20,7 +20,7 @@ const WebSocketComponent = () => {
 	};
 
 	useEffect(() => {
-		const socket = new WebSocket('ws://localhost:8000/ws/myappsocket');
+		const socket = new WebSocket(`ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/myappsocket`);
 		socket.onopen = () => {
 			console.log('WebSocket connected');
 			setMySocket(socket);
@@ -38,7 +38,7 @@ const WebSocketComponent = () => {
 		return () => {
 			console.log("here")
 			if (!a) {
-				socket.close();
+				// socket.close();
 				a = true
 			}
 		};

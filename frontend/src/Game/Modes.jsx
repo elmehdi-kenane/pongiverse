@@ -22,7 +22,7 @@ const Modes = () => {
 
 	useEffect(() => {
 		const check_is_join = async () => {
-			const response = await fetch(`http://localhost:8000/api/is-joining-tournament`, {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/is-joining-tournament`, {
 				method: "POST",
 				headers: {
 					'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ const Modes = () => {
 			}
 		}
 		const check_is_started_and_not_finished = async () => {
-			const response = await fetch(`http://localhost:8000/api/is-started-and-not-finshed`, {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/is-started-and-not-finshed`, {
 				method: "POST",
 				headers: {
 					'Content-Type': 'application/json',
@@ -142,6 +142,7 @@ const Modes = () => {
 				let data = JSON.parse(event.data)
 				let type = data.type
 				let message = data.message
+				console.log("MESSAGE TYPE", type)
 				if (type === 'goToGamingPage') {
 					// console.log("navigating now")
 					// navigate(`/mainpage/game/solo/1vs1/friends`)
@@ -149,7 +150,7 @@ const Modes = () => {
 					console.log("SOCKET........", socketRefer)
 					if (socketRefer.readyState !== WebSocket.OPEN) {
 						console.log("SOCKET IS CLOSED, SHOULD OPENED")
-						const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
+						const newSocket = new WebSocket(`ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/socket-server`)
 						newSocket.onopen = () => {
 							console.log("+++++++++++=======+++++++++")
 							console.log("GAME SOCKET OPENED AND NOW WE WILL MOVE TO FRIEND PAGE")
@@ -174,7 +175,7 @@ const Modes = () => {
 					const socketRefer = socketRef.current
 					if (socketRefer.readyState !== WebSocket.OPEN) {
 						console.log("SOCKET IS CLOSED, SHOULD OPENED")
-						const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
+						const newSocket = new WebSocket(`ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/socket-server`)
 						newSocket.onopen = () => {
 							setSocket(newSocket)
 							navigate("/mainpage/game/createtournament");
@@ -299,7 +300,7 @@ const Modes = () => {
 				}))
 			} else if (sender.mode === 'TournamentInvitation') {
 				console.log("YES1!")
-				const response = await fetch(`http://localhost:8000/api/get-tournament-size`, {
+				const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-tournament-size`, {
 					method: "POST",
 					headers: {
 						'Content-Type': 'application/json',
@@ -434,16 +435,12 @@ const Modes = () => {
 							discover various tournaments with different challenges.</p>
 					</div>
 				</div>
-			</div>
 			<div className={`${styles['game-modes-page-button']} ${(soloModeSelected || createTournamentModeSelected || joinTournamentModeSelected) ? styles['game-modes-page-button-selected'] : ''}`}>
 				<button onClick={handleButtonClick} disabled={!enableButton}>Next</button>
+			</div>
 			</div>
 		</div>
 	)
 }
 
 export default Modes
-
-// <button onClick={goToSoloPage}>Play solo</button>
-// 			<button onClick={GoToTournamentPage}>Create Tournament</button>
-// 			<button onClick={JoinTournament}>Join Tournament</button>

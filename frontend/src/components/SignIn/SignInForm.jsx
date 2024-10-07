@@ -20,7 +20,7 @@ function SignInForm() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		fetch('http://localhost:8000/auth/login/', {
+		fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/login/`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',

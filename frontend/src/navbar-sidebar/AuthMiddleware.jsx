@@ -7,7 +7,7 @@ const AuthMiddleware = ({ children }) => {
   useEffect(() => {
     async function publicCheckAuth() {
 		try {
-			let response = await fetch('http://localhost:8000/auth/verifytoken/', {
+			let response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/verifytoken/`, {
 				method : 'POST',
 				headers: {
 					'Content-Type': 'application/json',

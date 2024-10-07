@@ -30,7 +30,7 @@ function TournamentBracket() {
 
 	useEffect(() => {
 		const set_is_inside = async () => {
-			const response = await fetch(`http://localhost:8000/api/set-is-inside`, {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/set-is-inside`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -42,7 +42,7 @@ function TournamentBracket() {
 			})
 		}
 		const check_is_join = async () => {
-			const response = await fetch(`http://localhost:8000/api/is-started-and-not-finshed`, {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/is-started-and-not-finshed`, {
 				method: "POST",
 				headers: {
 					'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ function TournamentBracket() {
 		}
 		// const fetchImages = async (members, setElements) => {
 		// 	const promises = members.map(async (user) => {
-		// 		const response = await fetch(`http://localhost:8000/api/getImage`, {
+		// 		const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`, {
 		// 			method: "POST",
 		// 			headers: {
 		// 				'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ function TournamentBracket() {
 		// 	setElements(images)
 		// }
 		const gameMembersRounds = async () => {
-			const response = await fetch('http://localhost:8000/api/get-game-members-round', {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-game-members-round`, {
 				method: 'POST',
 				headers: {
 					'Content-type': 'application/json'
@@ -102,7 +102,7 @@ function TournamentBracket() {
 		}
 
 		const get_oponent = async () => {
-			const response = await fetch('http://localhost:8000/api/get-opponent', {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-opponent`, {
 				method: 'POST',
 				headers: {
 					'Content-type': 'application/json'

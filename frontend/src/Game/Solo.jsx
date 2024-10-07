@@ -29,7 +29,7 @@ const Solo = () => {
 	}
 
 	const nextPage = () => {
-		console.log(socket, socket.readyState === WebSocket.OPEN, user)
+		// console.log(socket, socket.readyState === WebSocket.OPEN, user)
 		if (selected === 1) {
 			navigate('../game/solo/1vs1')
 		}
@@ -57,7 +57,7 @@ const Solo = () => {
 					// console.log("navigating now")
 					// navigate(`/mainpage/game/solo/1vs1/friends`)
 					if (socket.readyState !== WebSocket.OPEN) {
-						const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
+						const newSocket = new WebSocket(`ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/socket-server`)
 						newSocket.onopen = () => {
 							console.log("+++++++++++=======+++++++++")
 							console.log("GAME SOCKET OPENED AND NOW WE WILL MOVE TO FRIEND PAGE")

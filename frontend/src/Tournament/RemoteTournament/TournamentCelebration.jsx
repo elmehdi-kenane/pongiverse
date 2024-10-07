@@ -32,7 +32,7 @@ function TournamentCelebration() {
 
 	useEffect(() => {
 		const set_is_inside = async () => {
-			const response = await fetch(`http://localhost:8000/api/set-is-inside`, {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/set-is-inside`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -44,7 +44,7 @@ function TournamentCelebration() {
 			})
 		}
 		const gameMembersRounds = async () => {
-			const response = await fetch('http://localhost:8000/api/get-tournament-members-rounds', {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-tournament-members-rounds`, {
 				method: 'POST',
 				headers: {
 					'Content-type': 'application/json'

@@ -1,0 +1,660 @@
+:root {
+    --toastify-toast-min-height: 120px;
+    --toastify-toast-max-height: 125px;
+    --toastify-toast-width: 325px;
+    --toastify-color-light: #913DCE;
+    --toastify-color-progress-bgo: 0;
+}
+
+.Toastify__toast-container {
+    min-width: 325px;
+    width: 325px;
+    height: 125px;
+}
+
+.Toastify__progress-bar {
+    --toastify-color-progress-light: white;
+}
+
+.Toastify__progress-bar--bg .Toastify__progress-bar-theme--light .Toastify__progress-bar--default {
+    background-color: red;
+    color: red;
+}
+.Toastify__toast, .Toastify__toast-body, .Toastify__toast-container {
+    padding: 0;
+}
+
+.Toastify__close-button {
+    margin: 3px;
+}
+
+@media (max-width: 425px) {
+    .Toastify__toast-container {
+        width: 100%;
+        min-width: 100%;
+        height: 200px;
+    }
+
+    .Toastify__toast-body {
+        overflow: auto;
+        width: 100%;
+    }
+    
+    .Toastify__toast {
+        width: 80%;
+        overflow: auto;
+        max-height: max-content;
+        min-height: auto;
+        height: auto;
+        padding-bottom: 10px;
+        border-radius: 10px;
+        margin: 0 auto;
+    }
+    
+    .Toastify__toast-body>div:last-child {
+        width: 100%;
+        min-width: 100%;
+        overflow: auto;
+    }
+
+    .NotificationPopupCard {
+        width: 100%;
+        min-width: 100%;
+        max-width: 100%;
+        align-items: center;
+    }
+
+    .NotificationPopupHeader {
+        flex-direction: column;
+    }
+
+    .NotificationPopupHeader p {
+        /* font-size: 5vw; */
+    }
+}
+
+@media (max-width: 240px) {
+    .Toastify__toast-body>div:last-child {
+        width: 80%;
+        min-width: 80%;
+    }
+}
+.embla {
+  overflow: hidden;
+height: 170px;
+    min-height: 170px;
+}
+
+.emblaUndisplayble {
+    display: none;
+}
+
+.embla__container {
+  display: flex;
+  gap: 3%;
+}
+
+.embla__container_centered {
+  justify-content: center;
+}
+
+.embla {
+    width: 100%;
+    align-self: center;
+    min-width: 145px;
+}
+
+.embla__slide {
+  flex: 0 0 19.2%;
+}
+
+.embla__buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 97%;
+        position: relative;
+        margin: 0 auto;
+        /* right: calc(25% - 42px); */
+        top: -109px;
+    z-index: 101;
+}
+
+.disableEmblaBtns {
+    display: none;
+}
+.FriendPage {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    margin: 0 auto;
+    width: 70%;
+    overflow: auto;
+}
+    
+@media (max-width: 1440px) {
+    .FriendPage {
+        width: 85%;
+    }
+}
+
+@media (max-width: 768px) {
+    .embla__buttons {
+        display: flex;
+        justify-content: space-between;
+        width: 97%;
+            position: relative;
+            margin: 0 auto;
+            /* right: calc(25% - 42px); */
+            top: -109px;
+        z-index: 101;
+    }
+    
+    .FriendPage {
+        width: 80%;
+    }
+
+    .disableEmblaBtns {
+        display: none;
+    }
+}
+
+.embla__buttons button {
+    background-color: #D9D9D9;
+    border: none;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    border-radius: 100%;
+}
+
+.FriendsPageHeader {
+    color: white;
+    /* margin: 20px 0; */
+    font-weight: bold;
+    min-width: max-content;
+    font-size: x-large;
+}
+
+.SuggestionsHeader {
+    margin-top: 15px;
+}
+
+.Suggestions {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 30px;
+}
+
+.Carousel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 auto;
+    overflow-x: auto;
+    gap: 30px;
+}
+
+.SuggestionFriendCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    background-color: rgba(58,25,82,1);
+    font-weight: 500;
+    border-radius: 10px;
+    width: 20%;
+    max-width: 188px;
+    min-width: 145px;
+    height: 170px;
+    padding: 20px;
+}
+
+.loading {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.loadingBox {
+    width: 100%;
+    height: 2px;
+}
+
+.loadingBox .loadingLine {
+    border-radius: 4px;
+    width: 0%;
+    height: 100%;
+
+    background-color: white;
+    animation: loading 1s forwards cubic-bezier(0, 0, 0, 0);
+}
+
+@keyframes loading {
+    0% {
+        width: 0%;
+    }
+
+    100% {
+        width: 100%;
+    }
+}
+.Profile {
+    width: 50px;
+}
+
+.FriendBtn {
+    background-color: #D9D9D9;
+    border: none;
+    border-radius: 5px;
+    padding: 7px 12px;
+    color: #4D4EA6;
+    font-weight: 600;
+}
+
+.FriendBtn:hover {
+    color: #D9D9D9;
+    background-color: #4D4EA6;
+    cursor: pointer;
+}
+.Suggestions .FriendBtn:hover {
+    filter: drop-shadow(#4D4EA6 0 0 5px);
+}
+
+.friendPageSections {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    min-height: max-content;
+    height: max-content;
+    margin-bottom: 130px;
+    border-radius: 10px;
+}
+
+.friendSection .FriendsPageHeader {
+    background-color: rgba(58, 25, 82, 1);
+    /* border-radius: 10px; */
+    text-align: center;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    padding: 15px 0;
+    z-index: 99;
+    margin-bottom: 7px;
+}
+
+.spaceLeft {
+    height: 100%;
+    background-color: rgba(58, 25, 82, 1);
+    width: 100%;
+}
+
+.friendSection {
+    width: 48%;
+    height: 400px;
+    /* margin: 5px; */
+    /* background-color: rgba(58, 25, 82, 1); */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* border-radius: 10px; */
+    overflow-y: auto;
+    position: relative;
+    /* filter: drop-shadow(black 0 0 4px); */
+}
+
+.friendSuggestionsEmpty {
+    color: white;
+    font-weight: 600;
+    font-size: 20px;
+    height: 40px;
+    margin: 20px;
+    align-self: center;
+}
+
+.friendPageEmptyList {
+    padding: 20px;
+    text-align: center;
+    color: gainsboro;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(58, 25, 82, 1);
+}
+
+@media (max-width: 425px) {
+    .friendPageEmptyList {
+        font-size: 5vw;
+    }
+    .optionBar {
+        display: flex;
+        align-self: center;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+    .friendPageSections {
+        display: none;
+    }
+    .FriendPage {
+        width: 100%;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 285px) {
+    .SentFriendReqCardSendAt {
+        display: none;
+    }
+}
+
+@media (min-width: 426px) {
+    .optionBar {
+        display: none;
+    }
+}
+
+@media (min-width: 426px) and (max-width: 768px) {
+    .optionBar {
+        display: none;
+    }
+
+    .FriendPage {
+        width: 85%;
+    }
+
+    .friendSection {
+        width: 100%;
+    }
+}
+
+@media (max-width: 425px) {
+    .FriendManagement {
+        font-size: 3vw;
+    }
+
+    .embla__buttons {
+        display: none;
+    }
+
+    .FriendsPageHeader {
+        font-size: 20px;
+    }
+}
+
+.optionBtns {
+    background-color: #3A245C;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 5px;
+    border-radius: 5px;
+}
+
+.optionBtns button {
+    padding: 7px;
+    border: none;
+    color: white;
+    background-color: #250939;
+    font-weight: 600;
+    border-radius: 5px;
+    width: 25%;
+    font-size: 3vw;
+}
+
+/* .redCercle {
+    width: 5px;
+    height: 5px;
+    background-color: red;
+    border-radius: 100%;
+    position: relative;
+    margin-top: -7px;
+    margin-bottom: 1px;
+    left: 100%;
+} */
+
+.optionBtns button:hover {
+    box-shadow: 0px 0px 5px #4D4EA6;
+}
+
+.optionBtns button.selectedBtn {
+    color: #1E1E1E;
+    background-color: white;
+}
+
+.FriendManagement {
+    color: white;
+    margin-top: 10px;
+    margin-bottom: 100px;
+    height: max-content;
+    overflow: scroll;
+    width: 100%;
+}
+
+.Friends, .FriendRequests, .SentRequests, .BlockedAccounts {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    color: white;
+    align-items: center;
+    border-radius: 10px;
+    gap: 8px;
+    width: 100%;
+}
+
+.FriendCard,
+.RecievedFriendReqCard,
+.SentFriendReqCard,
+.BlockedAccountCard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 60px;
+    min-height: 60px;
+    font-weight: 600;
+    padding: 5px 10px;
+    margin-bottom: 4px;
+    /* border: 2px solid #D9D9D9; */
+    /* background-color: rgba(234, 211, 214, 0); */
+    background-color: rgba(58, 25, 82, 1);
+    /* border-radius: 9px; */
+}
+
+.FriendCard:hover,
+.RecievedFriendReqCard:hover,
+.SentFriendReqCard:hover,
+.BlockedAccountCard:hover {
+    background-color: rgba(234, 211, 214, 0.1);
+}
+
+.ProfileName {
+    display: flex;
+    align-items: center;
+    color: white;
+    gap: 10px;
+}
+
+.ProfileName .lvl {
+    font-size: small;
+    font-weight: 300;
+}
+.Profile {
+    border-radius: 100%;
+    border: 1px solid #D9D9D9;
+    width: 40px;
+    height: 40px;
+}
+
+.SentFriendReqCardUsername {
+    font-weight: 600;
+    font-size: 17px;
+}
+
+.SentFriendReqCardSendAt {
+    font-weight: 400;
+    font-size: 14px;
+    color: #D9D9D9;
+}
+
+.SuggestionFriendCard .ProfileName {
+    flex-direction: column;
+    gap: 0px;
+}
+
+.RecievedFriendReqCard .GroupFriendBtn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.FriendBtn.detailsClosed {
+    background-color: transparent;
+    padding: 5px;
+}
+.FriendBtn.detailsClosed:hover {
+    background-color: #913dce;
+    /* border-radius: 100%; */
+    padding: 5px;
+}
+
+.FriendBtn.detailsOpened {
+    background-color: #913dce;
+    /* border-radius: 100%; */
+    padding: 5px;
+}
+
+.optionsFriendCard {
+    background-color: rgba(0, 0, 0, 0.277);
+    align-self: flex-start;
+    display: flex;
+    width: 150px;
+    flex-direction: column;
+    gap: 5px;
+    position: relative;
+    align-self: flex-start;
+    padding: 7px;
+    border-radius: 7px;
+    margin-top: 13px;
+    /* box-shadow: -3px -2px 20px 6px rgb(21 17 17 / 63%); */
+}
+
+.optionsWrapper {
+    display: flex;
+    align-items: center;
+    height: 60px;
+    gap: 4px;
+    position: absolute;
+    right: 10px;
+}
+
+.lastTwoElements {
+    margin-top: -116px;
+}
+
+.optionsFriendCard button {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 3px;
+    /* border: 1px solid white; */
+    border: none;
+    background-color: transparent;
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+    font-weight: 600;
+}
+
+.optionsFriendCard button:hover {
+    background-color: white;
+    color: #913DCE;
+}
+
+.FriendBtn.Remove, .FriendBtn.Cancel, .FriendBtn.Unblock {
+    background-color: transparent;
+    box-shadow:0px 0px 0px 1px #EAD3D6 inset;
+    color: #EAD3D6;
+    font-weight: 500;
+}
+
+.FriendBtn.Remove:hover, .FriendBtn.Cancel:hover, .FriendBtn.Unblock:hover {
+    color: #250939;
+    background-color: #EAD3D6;
+}
+
+.FriendBtn.Confirm {
+    background-color: #913DCE;
+    color: #EAD3D6;
+    font-weight: 500;
+}
+.FriendBtn.Confirm:hover {
+    color: #913DCE;
+    filter: drop-shadow(#913DCE 0 0 20px);
+    background-color: #EAD3D6;
+}
+
+.FriendRequests .Carousel, .SentRequests .Carousel, .BlockedAccounts .Carousel{
+    flex-direction: column;
+    overflow: hidden;
+    overflow-y: scroll;
+    gap: 8px;
+    background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5));
+    border-radius: 10px;
+    padding: 10px;
+}
+
+::-webkit-scrollbar {
+    color: #fff;
+    height: 2px;
+    width: 2px;    
+    /* width: 2px;
+    height: 20px; */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #fff;
+    border-radius: 10px;
+    color: #fff;
+    /* height: 1px;
+   width: 1px;  */
+}
+
+@media (max-width: 291px) {
+    .optionsFriendCard {
+        width: 100px;
+    }
+    
+    .optionsFriendCard button {
+        font-size: 10px;
+    }
+}
+@media (max-width: 425px) {
+    .optionsWrapper {
+        right: 21px;
+    }
+    }
+
+@media (max-width: 240px) {
+    .optionsWrapper {
+        position: absolute;
+        left: 25%;
+        margin: auto 0;
+        top: 100px;
+    }
+    .FriendBtn.detailsOpened {
+        display: none;
+    }
+    .FriendBtn.detailsClosed {
+        display: block;
+    }
+}

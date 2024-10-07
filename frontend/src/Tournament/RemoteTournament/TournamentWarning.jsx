@@ -21,7 +21,7 @@ function TournamentWarning() {
 
     useEffect(() => {
         const getTournamentWarning = async () => {
-            const response = await fetch(`http://localhost:8000/api/get-tournament-warning`, {
+            const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-tournament-warning`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',

@@ -7,7 +7,9 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-color: #211336;
+  /* background-color: #211336; */
+  background: rgb(99,22,214);
+background: radial-gradient(circle, rgba(99,22,214,1) 0%, rgba(33,19,54,1) 100%);
   font-family: "IBM Plex Sans", sans-serif;
   overflow: hidden;
   /* box-shadow:0px 0px 0px 10px black inset; */
@@ -19,6 +21,20 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative;
+
+  background-position: center;
+  background-size: cover;
+}
+
+/* Purple Glass */
+.purple--glass {
+  background: linear-gradient(to bottom, rgb(68, 45, 106, 0.5), rgba(74, 37, 139, 0.3));
+  box-shadow: 0 0.5px 5px 0 #ccc;
+  backdrop-filter: blur( 4px );
+  -webkit-backdrop-filter: blur( 4px );
+  border-radius: 5px;
+  border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
 .navbar {
@@ -38,7 +54,7 @@ body {
 }
 
 .navbar .logo {
-  width: 190px;
+  /* width: 190px; */
   display: flex;
   align-items: center;
 }
@@ -47,15 +63,124 @@ body {
   width: 50%;
   margin-left: -40px;
   display: flex;
+  flex-direction: column;
   align-items: center;
+  /* background-color: green; */
+  height: max-content;
+}
+
+.SearchFilterBar {
+    /* background-color: red; */
+    width: 100%;
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+    align-items: center;
+}
+
+.SearchFilterBar button {
+    border: none;
+    padding: 10px;
+    min-width: 59px;
+    width: max-content;
+    border-radius: 100px;
+    color: #D9D9D9;
+    background-color: #1E0934;
+    font-weight: 600;
+    border: 2px solid transparent;
+}
+
+.SearchFilterBarBtns {
+    width: 98.5%;
+    display: flex;
+    gap:10px;
+}
+
+.verticalRow {
+    Float:left;
+    height:1px;
+    width:100%;
+    background-color: #1E0934;
+    opacity: 0.4;
+} 
+
+.SearchFilterBar .selectedBtn {
+    border: 2px solid #913DCE;
+}
+
+.searchResultWrapper {
+    background-color: #D9D9D9;
+    position: relative;
+    z-index: 100;
+    margin-top: 5px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    padding: 5px 0;
+}
+
+.searchEmpty {
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #1E0934;
+    font-weight: 600;
+    font-size: 17px;
+}
+
+.searchResultItem {
+    width: 99%;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #1E0934;
+    background-color: #D9D9D9;
+    border: none;
+    font-weight: 600;
+    padding: 5px;
+    padding-right: 10px;
+    border-radius: 10px;
+}
+
+.searchResultItem:hover {
+    background-color: white;
+    cursor: pointer;
+}
+
+.searchResultItem img {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    border: 2px solid #1E0934;
+}
+
+.searchResultItem button {
+    color: #D9D9D9;
+    border: none;
+    border-radius: 5px;
+    padding: 7px 7px;
+    background-color: #1E0934;
+    font-weight: 600;
+    margin-left: auto;
+}
+
+.searchResultItem button:hover {
+    background-color: #913dce;
+    cursor: pointer;
 }
 
 .search-bar input {
-  width: 90%;
-  height: 40px;
+  width: 100%;
+  height: 42px;
+  box-sizing: border-box;
   border: 2px solid rgb(255, 255, 255);
   border-radius: 30px;
   background-color: transparent;
+  /* background-color: red; */
   background-image: url("./search.svg");
   background-repeat: no-repeat;
   background-position: 20px center;
@@ -70,6 +195,81 @@ body {
   color: white;
   opacity: 0.7;
   text-indent: 50px;
+}
+
+.NotificationPopupCardDesappeared {
+    display: none;
+}
+
+.NotificationPopupCard {
+    background-color: #913DCE;
+    border-radius: 10px;
+    padding: 10px;
+    /* margin-top: 60px; */
+    min-width: 300px;
+    /* width: 13%; */
+    /* height: max-content; */
+    height: 120px;
+    max-width: max-content;
+    gap: 5px;
+    /* position: absolute; */
+    /* right: 70px; */
+    z-index: 99;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.NotificationPopupCardBtn {
+    align-self: flex-end;
+}
+
+.NotificationPopupCardBtn button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+    color: white;
+    background-color: transparent;
+    border: 1px solid white;
+    padding: 4px;
+    border-radius: 6px;
+}
+.NotificationPopupCard div {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.CheckCircleIcon {
+    background-color: white;
+    color: green;
+    border: none;
+    border-radius: 100%;
+}
+
+.CancelOutlinedIcon {
+    background-color: transparent;
+    border: none;
+    color: white;
+    border-radius: 100%;
+}
+
+.NotificationPopupHeader {
+    color: white;
+}
+
+.NotificationPopupHeader p {
+    color: white;
+    font-weight: 400;
+    font-size: medium;
+}
+
+.NotificationPopupUsername {
+    font-size: medium;
+    color: white;
+    font-weight: bold;
 }
 
 .search-bar input:focus {
@@ -136,6 +336,8 @@ body {
 
 .profile-notifications #profile-icon img {
   width: 35px;
+  height: 35px;
+  border-radius: 50%;
 }
 
 .profile-notifications #notifications-icon img {
@@ -160,33 +362,49 @@ body {
 }
 
 .sidebar {
-  width: 85px;
+  min-width: 85px;
   display: flex;
   flex-direction: column;
   align-items: center;
   height: 100%;
   background-color: rgba(58, 25, 82, 0.5);
+  /* background-color: red; */
   border-radius: 0 15px 0 0;
   overflow-y: auto;
+
+  box-shadow: 0 0.5px 5px 0 #ccc;
+  border-top: 1px solid rgba( 255, 255, 255, 0.18 );
+  border-right: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
-.sidebar .sidebar-navigations .sidebar-icons {
-  text-align: center;
-  padding: 0 0 2px 0;
+.sidebar-icons {
+    padding: 7px 5px;
+    width: 85%;
+    border-radius: 5px;
+}
+.sidebar-icons:hover {
+    /* background-color: #1E0934; */
+}
+
+.sidebar-navigations {
+    /* border: 1px solid red; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
 }
 
 .sidebar .sidebar-navigations {
-  padding: 8px 0 25px 0;
-  margin-left: 0px;
+  text-align: center;
   width: 100%;
 }
 
-.sidebar #sidebar-dashboard {
-  padding-top: 20px;
+.sidebar #sidebar-groups {
+  margin-bottom: 80px;
 }
 
-.sidebar #channels {
-  margin-bottom: 80px;
+.sidebar-titles {
+    cursor: pointer;
 }
 
 .sidebar .sidebar-navigations .sidebar-titles {
@@ -195,12 +413,43 @@ body {
   display: block;
 }
 
+
+/*/ added by abdellah for message notification  counter*/
+
+
+#sidebar-chat {
+  position: relative;
+}
+#sidebar-groups {
+  position: relative;
+}
+
+.sidebar-notifications {
+  position: absolute;
+  top: 30px;
+  right: 24px;
+  background-color: #913dce;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+}
+
+
+/*END*/
+
+
 .profile-dropdown {
   position: absolute;
   background-color: #d9d9d9;
   width: 180px;
   left: -140px;
   border-radius: 20px;
+  z-index: 5;
 }
 
 .navbar .profile-notifications #profile-icon {
@@ -231,6 +480,7 @@ body {
 
 #profile-icon .profile-dropdown #dropdown-profile-pic a img {
   width: 40px;
+  height: 40px;
 }
 
 #profile-icon .profile-dropdown {
@@ -395,6 +645,8 @@ body {
     border-radius: 0;
     overflow: hidden;
     margin: 0 0;
+    box-shadow:none;
+    border: none;
     /* background-color:aquamarine; */
   }
 
@@ -403,13 +655,11 @@ body {
   }
 
   .sidebar #sidebar-dashboard {
-    padding-top: 0;
+    /* padding-top: 0; */
   }
 
-  .sidebar .sidebar-navigations {
-    padding: 0;
-    display: flex;
-    justify-content: space-evenly;
+  .sidebar #sidebar-groups {
+    margin-bottom: 0;
   }
 
   .sidebar .sidebar-navigations .sidebar-icons img {
@@ -1302,7 +1552,7 @@ body {
 .cancel-game-invite-request {
   /* margin: 30px 0 100px 0; */
   position: absolute;
-  top: 20px;
+  top: 0;
   left: 100%;
   z-index: 100;
   transform: translate(-100%);

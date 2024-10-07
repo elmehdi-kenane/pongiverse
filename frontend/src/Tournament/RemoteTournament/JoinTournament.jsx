@@ -56,7 +56,7 @@ function JoinTournament() {
 
 	useEffect(() => {
 		const getTournamentSuggestions = async () => {
-			const response = await fetch(`http://localhost:8000/api/get-tournament-suggestions`, {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-tournament-suggestions`, {
 				method: "GET",
 				headers: {
 					'Content-Type': 'application/json',
@@ -119,7 +119,7 @@ function JoinTournament() {
 					const socketRefer = socketRef.current
 					if (socketRefer.readyState !== WebSocket.OPEN) {
 						console.log("SOCKET IS CLOSED, SHOULD OPENED")
-						const newSocket = new WebSocket(`ws://localhost:8000/ws/socket-server`)
+						const newSocket = new WebSocket(`ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/socket-server`)
 						newSocket.onopen = () => {
 							setSocket(newSocket)
 							navigate("/mainpage/game/createtournament");
@@ -143,7 +143,7 @@ function JoinTournament() {
 
 	useEffect(() => {
 		const get_members = async () => {
-			const response = await fetch(`http://localhost:8000/api/get-tournament-data`, {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-tournament-data`, {
 				method: "POST",
 				headers: {
 					'Content-Type': 'application/json',

@@ -17,3 +17,8 @@ export { default as arrowLeft} from './arrowLeft.svg';
 export { default as sendIcon} from './sendIcon.svg';
 export { default as emojiPicker} from './emojiPicker.svg';
 export { default as fileUploadIcon} from './fileUploadIcon.svg';
+export { default as publicVisibility} from './publicVisibility.svg';
+export { default as protectedVisibility} from './protectedVisibility.svg';
+export { default as privateVisibility} from './privateVisibility.svg';
+export { default as addNewIcon} from './addNewIcon.png';
+export { default as emptyChatIcon} from './emptyChatIcon.svg';

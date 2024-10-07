@@ -21,7 +21,6 @@
   height: 1200px;
   justify-content: center;
   align-items: center;
-  background-color: #250939;
   overflow: auto;
 }
 
@@ -73,25 +72,37 @@
 }
 
 .authentication-signin {
-  display: flex;
-  flex-direction: column;
-  width: 40%;
-  height: 700px;
-  justify-content: center;
-  align-items: center;
-  background-color: #250939;
-  border-radius: 0 10px 10px 0;
+	display: flex;
+	flex-direction: column;
+	width: 40%;
+	height: 700px;
+	justify-content: center;
+	align-items: center;
+	/* background-color: #250939; */
+	border-radius: 0 10px 10px 0;
+	
+	
 }
 
 .authentication-signin-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 90%;
-  height: 550px;
-  background-color: #250939;
-  gap: 10px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 90%;
+	height: 550px;
+	/* background-color: #250939; */
+	gap: 10px;
+
+	
+	/* Done By IMAD */
+	background: linear-gradient(to bottom, rgb(68, 45, 106, 0.6), rgba(74, 37, 139, 0.3));
+	box-shadow: 0 0px 20px 0 #ccc ;
+	box-shadow: 0 0.5px 5px 0 #ccc;
+	backdrop-filter: blur( 4px );
+	-webkit-backdrop-filter: blur( 4px );
+	border-radius: 5px;
+	border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
 .authentication-signin-title-div {
@@ -238,13 +249,23 @@
 /* ---- SIGN UP CSS */
 
 .authentication-signup-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 90%;
-  background-color: #250939;
-  gap: 10px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 90%;
+	height: 550px;
+	gap: 10px;
+	/* background-color: #250939; */
+
+	/* Done By IMAD */
+	background: linear-gradient(to bottom, rgb(68, 45, 106, 0.6), rgba(74, 37, 139, 0.3));
+    box-shadow: 0 0px 20px 0 #ccc ;
+    box-shadow: 0 0.5px 5px 0 #ccc;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 5px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
 .authentication-signup-title-div {
@@ -490,10 +511,6 @@
     margin-top: -100px;
   }
 
-  .authentication-signup-title-div,
-  .authentication-signin-title-div {
-    height: 30px;
-  }
 
   .authentication-signin-title,
   .authentication-signup-title {
