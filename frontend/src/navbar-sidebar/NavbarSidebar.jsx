@@ -17,13 +17,13 @@ function NavbarSidebar() {
 	const [searchbar, setSearchBar] = useState(false);
     let { user, socket, privateCheckAuth, setUser, hideNavSideBar } = useContext(AuthContext)
 	let navigate = useNavigate()
-    const [newRecievedFriendReqNotif, setNewRecievedFriendReqNotif] = useState(false);
+    const [newReceivedFriendReqNotif, setNewReceivedFriendReqNotif] = useState(false);
     const [friendReq, setFriendReq] = useState('');
     const [removeFriendReqNotif, setRemoveFriendReqNotif] = useState(false);
     const data = useContext(SocketDataContext);
 
     const notify = () => {
-        setNewRecievedFriendReqNotif(false)
+        setNewReceivedFriendReqNotif(false)
         toast(
             <NotificationPopupCard secondUsername={friendReq.username} avatar={friendReq.avatar} />,
             {
@@ -41,8 +41,8 @@ function NavbarSidebar() {
     };
 
     useEffect(() => {
-        if (data.type === 'recieve-friend-request') {
-            setNewRecievedFriendReqNotif(true);
+        if (data.type === 'receive-friend-request') {
+            setNewReceivedFriendReqNotif(true);
             setRemoveFriendReqNotif(false);
             setFriendReq(data.message);
         }
@@ -58,13 +58,13 @@ function NavbarSidebar() {
 
     useEffect(() => {
         {
-            (newRecievedFriendReqNotif && location.pathname !== '/mainpage/friends') ?
+            (newReceivedFriendReqNotif && location.pathname !== '/mainpage/friends') ?
                 (
                     notify()
                 )
                 : console.log("")
         }
-    }, [newRecievedFriendReqNotif]);
+    }, [newReceivedFriendReqNotif]);
 
   useEffect(() => {
     privateCheckAuth();

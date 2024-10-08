@@ -12,6 +12,6 @@ urlpatterns = [
     path('get_friend_list/<str:username>', views.get_friend_list, name='get_friend_list'),
     path('get_blocked_list/<str:username>', views.get_blocked_list, name='get_blocked_list'),
     path('get_sent_requests/<str:username>', views.get_sent_requests, name='get_sent_requests'),
-    path('get_recieved_requests/<str:username>', views.get_recieved_requests, name='get_recieved_requests'),
+    path('get_received_requests/<str:username>', views.get_received_requests, name='get_received_requests'),
     path('get_friend_suggestions/<str:username>', views.get_friend_suggestions, name='get_friend_suggestions'),
 ]

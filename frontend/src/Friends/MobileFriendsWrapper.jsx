@@ -1,10 +1,10 @@
 import { useState } from "react";
 import FriendCard from "./FriendCard.jsx";
-import RecievedFriendReqCard from "./RecievedFriendReqCard.jsx";
+import ReceivedFriendReqCard from "./ReceivedFriendReqCard.jsx";
 import SentFriendReqCard from "./SentFriendReqCard.jsx";
 import BlockedAccountCard from './BlockedAccountCard.jsx';
 
-export const MobileFriendsWrapper = ({ friends, recievedRequests, sentRequests, blockedFriends }) => {
+export const MobileFriendsWrapper = ({ friends, receivedRequests, sentRequests, blockedFriends }) => {
     const [selectedButton, setSelectedButton] = useState('Friends');
 
     const handlesSelectedButton = (selectedButton) => {
@@ -89,18 +89,18 @@ export const MobileFriendsWrapper = ({ friends, recievedRequests, sentRequests, 
             )}
             {selectedButton === "Friend_Requests" && (
               <div className="FriendRequests">
-                {recievedRequests.length === 0 ? (
+                {receivedRequests.length === 0 ? (
                   <div className="friendPageEmptyList">
                     There are no pending friend requests.
                   </div>
                 ) : (
-                  recievedRequests.map((request, index) => (
-                    <RecievedFriendReqCard
+                  receivedRequests.map((request, index) => (
+                    <ReceivedFriendReqCard
                       key={index}
                       secondUsername={request.username}
                       send_at={request.send_at}
                       avatar={request.avatar}
-                    ></RecievedFriendReqCard>
+                    ></ReceivedFriendReqCard>
                   ))
                 )}
               </div>

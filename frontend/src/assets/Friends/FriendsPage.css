@@ -452,7 +452,7 @@ height: 170px;
 }
 
 .FriendCard,
-.RecievedFriendReqCard,
+.ReceivedFriendReqCard,
 .SentFriendReqCard,
 .BlockedAccountCard {
     display: flex;
@@ -471,7 +471,7 @@ height: 170px;
 }
 
 .FriendCard:hover,
-.RecievedFriendReqCard:hover,
+.ReceivedFriendReqCard:hover,
 .SentFriendReqCard:hover,
 .BlockedAccountCard:hover {
     background-color: rgba(234, 211, 214, 0.1);
@@ -511,7 +511,7 @@ height: 170px;
     gap: 0px;
 }
 
-.RecievedFriendReqCard .GroupFriendBtn {
+.ReceivedFriendReqCard .GroupFriendBtn {
     display: flex;
     align-items: center;
     gap: 5px;
