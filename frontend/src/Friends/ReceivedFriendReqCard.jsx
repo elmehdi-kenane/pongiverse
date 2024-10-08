@@ -3,7 +3,7 @@ import { cancelFriendRequest, confirmFriendRequest } from "./utils";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import { useContext } from "react";
 
-const RecievedFriendReqCard = ({ secondUsername, send_at, avatar }) => {
+const ReceivedFriendReqCard = ({ secondUsername, send_at, avatar }) => {
   const { user } = useContext(AuthContext);
   const handleConfirmFriendReq = () => {
     confirmFriendRequest(user, secondUsername);
@@ -12,7 +12,7 @@ const RecievedFriendReqCard = ({ secondUsername, send_at, avatar }) => {
     cancelFriendRequest(user, secondUsername, "remove");
   };
   return (
-    <div className="RecievedFriendReqCard">
+    <div className="ReceivedFriendReqCard">
       <div className="ProfileName">
         <img src={avatar} alt="Profile" className="Profile" />
         <p className="SentFriendReqCardUsername">{secondUsername}</p>
@@ -32,4 +32,4 @@ const RecievedFriendReqCard = ({ secondUsername, send_at, avatar }) => {
   );
 };
 
-export default RecievedFriendReqCard
+export default ReceivedFriendReqCard

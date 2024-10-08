@@ -1,9 +1,9 @@
 import FriendCard from "./FriendCard.jsx";
-import RecievedFriendReqCard from "./RecievedFriendReqCard.jsx";
+import ReceivedFriendReqCard from "./ReceivedFriendReqCard.jsx";
 import SentFriendReqCard from "./SentFriendReqCard.jsx";
 import BlockedAccountCard from './BlockedAccountCard.jsx';
 
-export const DesktopFriendsWrapper = ({ friends, recievedRequests, sentRequests, blockedFriends }) => {
+export const DesktopFriendsWrapper = ({ friends, receivedRequests, sentRequests, blockedFriends }) => {
     return (
       <div className="friendPageSections">
         <div className="friendSection">
@@ -36,19 +36,19 @@ export const DesktopFriendsWrapper = ({ friends, recievedRequests, sentRequests,
         </div>
         <div className="friendSection">
           <h3 className="FriendsPageHeader">Pending</h3>
-          {recievedRequests.length === 0 ? (
+          {receivedRequests.length === 0 ? (
             <div className="friendPageEmptyList">
               There are no pending friend requests.
             </div>
           ) : (
             <>
-              {recievedRequests.map((request, index) => (
-                <RecievedFriendReqCard
+              {receivedRequests.map((request, index) => (
+                <ReceivedFriendReqCard
                   key={index}
                   secondUsername={request.username}
                   send_at={request.send_at}
                   avatar={request.avatar}
-                ></RecievedFriendReqCard>
+                ></ReceivedFriendReqCard>
               ))}
               <div className="spaceLeft"></div>
             </>
