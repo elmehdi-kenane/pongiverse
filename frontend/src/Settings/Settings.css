@@ -526,50 +526,94 @@
 
 .adjustpic {
     display: flex;
-    /* height: 400px; */
+    /* height: 550px; */
     flex-direction: column;
-    /* justify-content: center; */
+    justify-content: center;
     align-items: center;
-    gap: 20px;
-    padding: 10px 0;
+    gap: 25px;
+    padding: 10px 20px 20px;
 }
-.adjustpic .adjustpic__img-name {
+.adjustpic h2 {
+    display: flex;
+    align-self: start;
+    color: white;
+    width: 100%;
+    padding: 0 0 5px;
+    font-size: 25px;
+    border-bottom: 0.5px solid white;
+}
+.adjustpic .avatarEditor {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    border-radius: 5px;
+    padding-bottom: 10px;
+    box-shadow: 0 0.5px 5px 0 #ccc;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+.adjustpic .zoomscale {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: white;
+    border: white 1px solid;
+    box-shadow: 0 0.5px 5px 0 #ccc;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 5px;
+    padding: 3px 5px;
+}
+
+.adjustpic .custom-file-upload {
     display: flex;
     gap: 10px;
+    justify-content: center;
     align-items: center;
-    
+    padding: 5px 8px;
+    cursor: pointer;
+    border-radius: 5px;
+    color: #250939;
+    background: white;
+    border: white 1px solid;
+    font-size: 15px;
+    font-weight: 450;
 }
-.adjustpic .adjustpic__img-name img{
-    height: 70px;
-    width: 70px;
-    border-radius: 50%;
+.custom-file-upload input[type="file"] {
+    display: none;
 }
-.adjustpic .adjustpic__img-name h1{
-    font-size: 20px;
+.custom-file-upload:hover {
     color: white;
-    font-weight: 500;
+    background: #250939;
+    transition: ease-in 0.3s;
 }
+
 
 .adjustpic .adjustpic__submit {
     display: flex;
     gap: 10px;
 }
 .adjustpic .adjustpic__submit button{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 80px;
-    height: 30px;
-    border: solid 1px white;
+    background: #2f084b;
     border-radius: 5px;
-    background: #442d6ae6;
-    color: white;
+    font-size: 16px;
     font-weight: 450;
-    font-size: 15px;
+    padding: 8px 16px;
+    color: white;
+    border: solid 1px white;
     cursor: pointer;
 }
 .adjustpic .adjustpic__submit button:nth-child(2) {
     background: #826aed;
+}
+.adjustpic .adjustpic__submit .submit__not-allowed{
+    cursor: not-allowed;
+}
+.adjustpic .adjustpic__submit button:hover{
+    background: #52127f;
+}
+.adjustpic .adjustpic__submit button:nth-child(2):hover{
+    background-color: #927eea;
 }
 
 @media (min-width: 1440px) {
