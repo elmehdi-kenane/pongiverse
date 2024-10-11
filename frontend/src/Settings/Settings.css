@@ -10,7 +10,7 @@
 }
 
 :root {
-    --dark-gray: color-mix( in oklab, hsl( 215 calc( 1 * 8.8%) 73.3% / 1) 100%, black 0% );;
+    --dark-gray: color-mix( in oklab, hsl( 215 calc( 1 * 8.8%) 73.3% / 1) 100%, black 0% );
 }
 
 .shadow-bg {
@@ -400,12 +400,14 @@
     width: 70px;
     border-radius: 50%;
     margin-right: 10px;
+    /* box-shadow: 0 0.5px 5px 0 #ccc;
+    border: 1px solid rgba( 255, 255, 255, 0.18 ); */
 }
 .personal-info__update .update + .update img {
     margin-right: 10px;
     height: 55px;
     width: 70px;
-    border: 1px solid white;
+    /* border: 1px solid white; */
     border-radius: 5px;
 }
 
@@ -500,6 +502,9 @@
     padding: 9px 27px;
     background-color: #927eea;
     transition: ease-in-out 0.2s;
+}
+.update .update__btn p{
+    cursor: inherit;
 }
 
 /*---- Update Country ----*/

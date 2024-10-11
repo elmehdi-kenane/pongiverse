@@ -5,8 +5,6 @@ import { friends } from "../assets/navbar-sidebar";
 import * as Icons from '../assets/navbar-sidebar'
 import { useReducer } from "react";
 
-import userPc from "../Settings/assets/Group.svg"
-
 const AuthContext = createContext();
 
 export default AuthContext;

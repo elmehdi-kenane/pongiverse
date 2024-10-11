@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import AuthContext from "../../navbar-sidebar/Authcontext";
 import SettingsContext from "../SettingsWrapper";
-import SettingsLoading from "./SettingsLoading";
+// import SettingsLoading from "../SettingsLoading";
 
 function UpdateTFQ(props) {
   const { user } = useContext(AuthContext);

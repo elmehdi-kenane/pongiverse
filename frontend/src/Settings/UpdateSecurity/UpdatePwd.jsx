@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import AuthContext from '../../navbar-sidebar/Authcontext';
 import SettingsContext from '../SettingsWrapper';
-import SettingsLoading from './SettingsLoading';
+import SettingsLoading from '../SettingsLoading';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Link } from 'react-router-dom';

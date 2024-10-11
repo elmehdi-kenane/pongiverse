@@ -13,8 +13,13 @@ function UpdateBg(props) {
   const [widthTab, setWidthTab] = useState(false);
   const [scale, setScale] = useState(1.2);
   const editorRef = useRef(null);
+  const [isClicked, setIsClicked] = useState(false)
 
-  const UpdatePic = async (updatedPic) => {
+  const UpdateBg = async () => {
+    const canvas = editorRef.current.getImage();
+    const updatedPic = canvas.toDataURL(); // Get the cropped image data URL
+
+    setIsClicked(true);
     try {
       const response = await fetch("http://localhost:8000/profile/updateUserBg", {
         method: "POST",
@@ -37,13 +42,6 @@ function UpdateBg(props) {
       notifyErr(error);
       console.log(error);
     }
-  };
-
-  const handleConfirmClick = () => {
-    const canvas = editorRef.current.getImage();
-    const croppedImage = canvas.toDataURL(); // Get the cropped image data URL
-    
-    UpdatePic(croppedImage);
     props.setAdjust(false);
   };
 
@@ -54,14 +52,17 @@ function UpdateBg(props) {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
+      if (file.size > 8 * 1024 * 1024) { // Check file size (5MB = 5 * 1024 * 1024 bytes)
+        notifyErr('File size must be less than 8MB.');
+        return;
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
         setBg(reader.result);
       };
       reader.readAsDataURL(file);
-    } else {
-      notifyErr('Please select a JPEG or PNG file.');
-    }
+    } else
+        notifyErr('Please select a JPEG or PNG file.');
   };
 
   window.addEventListener("resize", () => {
@@ -122,7 +123,7 @@ function UpdateBg(props) {
       )}
       <div className="adjustpic__submit">
         <button onClick={handleCancelClick}>Cancel</button>
-        {bgrd ? <button onClick={handleConfirmClick}>Confirm</button> :
+        {(bgrd && !isClicked) ? <button onClick={UpdateBg}>Confirm</button> :
           <button className="submit__not-allowed">Confirm</button>
         }
       </div>

@@ -1,42 +1,18 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import { Toaster } from "react-hot-toast";
-import SettingsContext from "./SettingsWrapper";
 import SettingsLeft from "./SettingsLeft";
 import "./Settings.css";
-import EditIcon from '@mui/icons-material/Edit';
 
 import UpdateNkName from './Update/UpdateNkName';
 import UpdateBio from './Update/UpdateBio';
 import UpdateCountry from './Update/UpdateCountry';
 import UpdateBg from './Update/UpdateBg';
 import UpdateAvatar from './Update/UpdateAvatar';
+import UpdatePictures from './Update/UpdatePictures';
 
 
 function PersonalInfo() {
-  
   const [isUpdate, setIsUpdate] = useState(false);
-  const { userPic, userBg } = useContext(SettingsContext)
-
-  const UpdatePictures = () => {
-    return (
-      <>
-        <div className="update">
-          <img src={userPic} alt="userImg" />
-          <p className='title-pic'> Upload a new picture </p>
-          <div className="update__btn" onClick={() => setIsUpdate('avatar')}> <p> Update </p>
-            <EditIcon /> 
-          </div>
-        </div>
-        <div className="update">
-          <img src={userBg} alt="userBg" />
-          <p className='title-pic'> Upload a new wallpaper </p>
-          <div className="update__btn" onClick={() => setIsUpdate('background')}> <p> Update </p>
-            <EditIcon />
-          </div>
-        </div>
-      </>
-    )
-  }
 
   return (
     <div className="settings-page">
@@ -47,7 +23,7 @@ function PersonalInfo() {
         <div className="personal-info__update linear-purple-bg">
           {!isUpdate && 
             <>
-              <UpdatePictures />
+              <UpdatePictures setIsUpdate={setIsUpdate}/>
               <UpdateNkName />
               <UpdateBio />
               <UpdateCountry />

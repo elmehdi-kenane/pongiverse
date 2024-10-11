@@ -1,5 +1,5 @@
 import React from 'react'
-import Loading from '../../Game/Loading';
+import Loading from '../Game/Loading';
 
 function SettingsLoading() {
   return (

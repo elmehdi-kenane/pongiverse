@@ -9,10 +9,16 @@ function UpdateAvatar(props) {
   const { userPic, setUserPic, notifySuc, notifyErr } = useContext(SettingsContext);
 
   const [avatar, setAvatar] = useState(null);
+  const [widthTab, setWidthTab] = useState(false);
+  const [isClicked, setIsClicked] = useState(false)
   const [scale, setScale] = useState(1.2); // Initial zoom level
   const editorRef = useRef(null);
 
-  const UpdatePic = async (updatedPic) => {
+  const UpdatePic = async () => {
+    const canvas = editorRef.current.getImage();
+    const updatedPic = canvas.toDataURL(); // Get the cropped image data URL
+    
+    setIsClicked(true);
     try {
       const response = await fetch("http://localhost:8000/profile/updateUserPic", {
         method: "POST",
@@ -36,13 +42,6 @@ function UpdateAvatar(props) {
       notifyErr(error);
       console.log(error);
     }
-  };
-
-  const handleConfirmClick = () => {
-    const canvas = editorRef.current.getImage();
-    const croppedImage = canvas.toDataURL(); // Get the cropped image data URL
-    
-    UpdatePic(croppedImage);
     props.setAdjust(false);
   };
 
@@ -53,15 +52,25 @@ function UpdateAvatar(props) {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
+      if (file.size > 5 * 1024 * 1024) { // Check file size (5MB = 5 * 1024 * 1024 bytes)
+        notifyErr('File size must be less than 5MB.');
+        return;
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
         setAvatar(reader.result);
       };
       reader.readAsDataURL(file);
-    } else {
-      notifyErr('Please select a JPEG or PNG file.');
-    }
+    } else
+        notifyErr('Please select a JPEG or PNG file.');
   };
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth <= 768)
+      setWidthTab(true)
+    else
+      setWidthTab(false)
+  });
 
   return (
     <div className="adjustpic">
@@ -75,16 +84,28 @@ function UpdateAvatar(props) {
       }
       {avatar && (
         <div className="avatarEditor">
-          <AvatarEditor
-            ref={editorRef}
-            image={avatar}
-            width={250}
-            height={250}
-            border={50}
-            color={[0, 0, 0, 0.6]} // RGBA
-            scale={scale} // Use state for scale
-            rotate={0}
-          />
+          {!widthTab ?
+            <AvatarEditor
+              ref={editorRef}
+              image={avatar}
+              width={150}
+              height={150}
+              border={50}
+              color={[0, 0, 0, 0.6]} // RGBA
+              scale={scale} // Use state for scale
+              rotate={0}
+            /> :
+            <AvatarEditor
+              ref={editorRef}
+              image={avatar}
+              width={75}
+              height={75}
+              border={50}
+              color={[0, 0, 0, 0.6]} // RGBA
+              scale={scale} // Use state for scale
+              rotate={0}
+            />
+          }
           <div className="zoomscale">
             <label htmlFor="zoom">Zoom:</label>
             <input
@@ -101,7 +122,7 @@ function UpdateAvatar(props) {
       )}
       <div className="adjustpic__submit">
         <button onClick={handleCancelClick}>Cancel</button>
-        {avatar ? <button onClick={handleConfirmClick}>Confirm</button> :
+        {(avatar && !isClicked) ? <button onClick={UpdatePic}>Confirm</button> :
           <button className="submit__not-allowed">Confirm</button>
         }
       </div>
