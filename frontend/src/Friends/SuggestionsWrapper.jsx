@@ -30,7 +30,7 @@ export const SuggestionsWrapper = ({ friendSuggestions }) => {
                         {
                             friendSuggestions.length !== 0 &&
                             friendSuggestions.map((SuggestionUser) => (
-                                <SuggestionFriendCard key={SuggestionUser.username} secondUsername={SuggestionUser.username} avatar={SuggestionUser.avatar}></SuggestionFriendCard>
+                                <SuggestionFriendCard key={SuggestionUser.second_username} username={SuggestionUser.second_username} avatar={SuggestionUser.avatar}></SuggestionFriendCard>
                             ))
                         }
                     </div>

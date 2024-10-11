@@ -1,12 +1,13 @@
 import "../assets/chat/Chat.css";
 import ChatConversationItem from "./chatConversationItem";
-import ChatContext from "../Context/ChatContext";
+import ChatContext from "../Groups/ChatContext";
+import AuthContext from "../navbar-sidebar/Authcontext";
 import ChatConversation from "./chatConversation";
 import ChatRoomConversation from "./chatRoomConversation";
 import { useContext, useEffect, useState } from "react";
 import * as ChatIcons from "../assets/chat/media/index";
 import { Toaster } from "react-hot-toast";
-import AuthContext from "../navbar-sidebar/Authcontext";
+// import AuthContext from "../navbar-sidebar/Authcontext";
 import { resetUnreadMessages } from "./chatConversationItem";
 const Chat = () => {
   const {
@@ -25,7 +26,7 @@ const Chat = () => {
     selectedItem,
     setSelectedItem,
   } = useContext(ChatContext);
-  const { chatSocket , user} = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [query, setQuery] = useState("");
   const filteredConversations = directConversations.filter((conversation) => {
     return conversation.name.includes(query);
@@ -72,7 +73,6 @@ const Chat = () => {
   }, [chatSocket]);
   return (
     <div className="chat-page">
-      <Toaster />
       <div className="chat-container">
         <div
           className={
@@ -116,12 +116,12 @@ const Chat = () => {
               ? filteredConversations.map((friend, key) => (
                   <ChatConversationItem
                     key={key}
-                    friendId={friend.id}
                     name={friend.name}
-                    avatar={friend.avatar}
                     status={friend.is_online}
-                    lastMessage={friend.lastMessage}
-                    unreadCount = {friend.unreadCount}
+                    lastMessage={
+                      "The correct format would typically be chatRoomConversations"
+                    }
+                    imageIndex={key}
                     isDirect={isHome}
                     setSelectedDirect={setSelectedDirect}
                     isSelected={selectedItem === friend.name}
@@ -132,7 +132,6 @@ const Chat = () => {
                   <ChatConversationItem
                     key={key}
                     name={chatRoom.name}
-                    icon={chatRoom.icon}
                     lastMessage={
                       "The correct format would typically be chatRoomConversations"
                     }
@@ -165,19 +164,7 @@ const Chat = () => {
               setSelectedChatRoom={setSelectedChatRoom}
             />
           ) : (
-            <div className="chat-window-empty">
-              <div className="chat-window-empty-wrapper">
-                <img
-                  src={ChatIcons.emptyChatIcon}
-                  alt=""
-                  className="empty-chat-icon"
-                />
-                <p className="chat-window-empty-message">
-                  {" "}
-                  Begin a conversation with a friend to see it show up here!
-                </p>
-              </div>
-            </div>
+            ""
           )}
         </div>
       </div>

@@ -69,7 +69,7 @@ export const MobileFriendsWrapper = ({ friends, receivedRequests, sentRequests, 
                         <FriendCard
                           key={index}
                           isLastTwoElements={false}
-                          secondUsername={request.friend_username}
+                          secondUsername={request.second_username}
                           avatar={request.avatar}
                           friendId={request.friend}
                         ></FriendCard>
@@ -78,7 +78,7 @@ export const MobileFriendsWrapper = ({ friends, receivedRequests, sentRequests, 
                       <FriendCard
                         key={index}
                         isLastTwoElements={friends.length > 2 ? true : false}
-                        secondUsername={request.friend_username}
+                        secondUsername={request.second_username}
                         avatar={request.avatar}
                         friendId={request.friend}
                       ></FriendCard>
@@ -134,7 +134,7 @@ export const MobileFriendsWrapper = ({ friends, receivedRequests, sentRequests, 
                     {blockedFriends.map((blockedFriend, index) => (
                       <BlockedAccountCard
                         key={index}
-                        secondUsername={blockedFriend.friend_username}
+                        secondUsername={blockedFriend.second_username}
                         avatar={blockedFriend.avatar}
                       ></BlockedAccountCard>
                     ))}

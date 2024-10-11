@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
-import AuthContext from "../navbar-sidebar/Authcontext";
-import ChatContext from "../Context/ChatContext";
+import * as ChatIcons from "../assets/chat/media/index";
+import ChatContext from "../Groups/ChatContext";
 
 export const resetUnreadMessages = async (user, friendId) => {
   try {
@@ -31,9 +31,8 @@ const ChatConversationItem = (props) => {
   const handleClick = () => {
     if (props.isDirect && props.name) {
       props.setSelectedDirect({
-        id: props.friendId,
         name: props.name,
-        avatar: props.avatar,
+        avatar: directsImages[props.imageIndex],
         status: props.status,
       });
       let allDirects = directConversationsRef.current;
@@ -50,13 +49,12 @@ const ChatConversationItem = (props) => {
       props.setSelectedChatRoom({
         name: props.name,
         memberCount: props.membersCount,
-        icon: props.icon,
+        icon: chatRoomIcons[props.imageIndex],
         roomId: props.roomId,
       });
     }
     props.setSelectedItem(props.name);
   };
-
   return (
     <div
       className={
@@ -67,7 +65,11 @@ const ChatConversationItem = (props) => {
       onClick={handleClick}
     >
       <img
-        src={props.isDirect ? props.avatar : props.icon}
+        src={
+          props.isDirect
+            ? directsImages[props.imageIndex]
+            : chatRoomIcons[props.imageIndex]
+        }
         alt=""
         className="conversation-item-avatar"
       />
@@ -89,13 +91,6 @@ const ChatConversationItem = (props) => {
           </div>
         </div>
       </div>
-      {parseInt(props.unreadCount) > 0 ? (
-        <div className="conversation-item-last-msg-count">
-          {props.unreadCount}
-        </div>
-      ) : (
-        ""
-      )}
     </div>
   );
 };

@@ -15,7 +15,7 @@ function BarGraph(props) {
     <ResponsiveContainer height="100%" width="100%">
         <BarChart width={500} height={500} data={param.data} margin={{ left: param.left, right: param.right}}>
             <Bar dataKey="wins" fill="#f4effa" barSize={param.brSize}/>
-            <Bar dataKey="lost" fill="#826aed"  barSize={param.brSize}/>
+            <Bar dataKey="losts" fill="#826aed"  barSize={param.brSize}/>
             <XAxis dataKey="day" />
             <YAxis />
             <Tooltip content={<CustomToolTips/>} cursor={{ fill: '#250939', fillOpacity: 0.8 }}/>

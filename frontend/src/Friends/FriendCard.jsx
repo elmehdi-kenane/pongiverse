@@ -113,7 +113,10 @@ const FriendCard = ({
             }`}
             ref={menuRef}
           >
-            <button onClick={handleMessageFriend}>
+            <button onClick={() => {
+                handleMessageFriend();
+                setIsMenuOpen(false);
+                }}>
               <ChatBubbleIcon />
               Message
             </button>
@@ -121,11 +124,17 @@ const FriendCard = ({
               <SportsEsportsIcon />
               Challenge
             </button>
-            <button onClick={handleRemoveFriendship}>
+            <button onClick={() => {
+                handleRemoveFriendship();
+                setIsMenuOpen(false);
+                }}>
               <PersonRemoveIcon />
               Unfriend
             </button>
-            <button onClick={handleBlockFriend}>
+            <button onClick={() => {
+                handleBlockFriend();
+                setIsMenuOpen(false);
+                }}>
               <RemoveCircleOutlineIcon />
               Block
             </button>

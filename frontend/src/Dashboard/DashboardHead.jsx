@@ -1,34 +1,30 @@
-import React from 'react'
+import React, { useContext } from 'react'
 
 import racketSvg from "./assets/racket.svg"
-
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-
-const games = 12;
-  const win = 6;
-  const lost = games - win;
-  const winPcnt = ((win * 100)/games).toFixed(0);
-  const lostPcnt = 100 - winPcnt;
+import DashboardContext from './DashboardWrapper';
 
 function DashboardHead() {
+  const { wins, losts, games, winPcnt, lostPcnt } = useContext(DashboardContext);
+
   return (
     <div className="dashpage__head dash--space"> 
         <div className="head__game-stats dash--bkborder">
           <p className='game'> Games </p>
           <div className="head__games-value-pic">
             <img alt='racket' src={racketSvg} />
-            <p> {games} </p> 
+            <p> {games ? games : 0} </p> 
           </div>
           
           <div className="head__game-stats__percentage">
             <div className='pic-percentage dash--win-color'>
               <AddCircleIcon />
-              <p> {winPcnt} %</p>
+              <p>{isNaN(winPcnt) || winPcnt === 0 ? '0%' : `${winPcnt}%`}</p>
             </div>
             <div className='pic-percentage dash--lost-color'>
               <RemoveCircleIcon />
-              <p> {lostPcnt} %</p>
+              <p>{isNaN(lostPcnt) || lostPcnt === 0 ? '0%' : `${lostPcnt}%`}</p>
             </div>
           </div>
 
@@ -38,8 +34,8 @@ function DashboardHead() {
           </div>
 
           <div className='head__game-stats__statistics'>
-            <p className='dash--win-color'> {win} Won </p>
-            <p className='dash--lost-color'> {lost} Lost</p>
+            <p className='dash--win-color'> {wins ? wins : 0} Wins </p>
+            <p className='dash--lost-color'> {losts ? losts : 0} Losts </p>
           </div>
 
         </div>

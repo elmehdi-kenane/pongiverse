@@ -1,16 +1,21 @@
-import "react-toastify/dist/ReactToastify.css";
+import 'react-toastify/dist/ReactToastify.css';
 import "./assets/navbar-sidebar/index.css";
 import NavbarSidebar from "./navbar-sidebar/NavbarSidebar";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./navbar-sidebar/Authcontext";
+import SignIn from "./homepage/SignIn";
+import SignUp from "./homepage/SignUp";
 import HomePage from "./homepage/HomePage";
 import Modes from "./Game/Modes";
 import Solo from "./Game/Solo";
 import OneVersusOne from "./Game/OneVersusOne";
 import Rooms from "./Groups/roomsPage";
-import Friends from "./Friends/FriendsPage";
+import PlayMatch from "./Game/OneVsOnePlayMatch";
 import Dashboard from "./Dashboard/Dashboard";
 import Profile from "./Profile/Profile";
+import {ProfileWrapper} from "./Profile/ProfileWrapper";
+import { SettingsWrapper } from "./Settings/SettingsWrapper";
+import Friends from "./Friends/FriendsPage";
 import WaysSecondStep from "./components/SignUp/WaysSecondStep";
 import ForgotPassword from "./components/SignIn/ForgotPassword";
 import ChangePassword from "./components/SignIn/ChangePassword";
@@ -24,6 +29,7 @@ import OneVsOneFriends from "./Game/OneVsOneFriends";
 import OneVsOneCreateOrJoin from "./Game/OneVsOneCreateOrJoin";
 import TournamentBracket from "./Tournament/RemoteTournament/TournamentBracket";
 import LocalTournamentBracket from "./Tournament/LocalTournament/LocalTournamentBracket";
+import LoginGoogleTest from "./components/SignIn/LoginGoogleTest";
 import { ChatProvider } from "./Context/ChatContext";
 import Chat from "./Chat/chatPage";
 import TwoVersusTwo from "./Game/TwoVersusTwo";
@@ -38,6 +44,8 @@ import Bot from "./Game/Bot";
 import { ToastContainer, Bounce } from "react-toastify";
 import { SocketDataContextProvider } from "./navbar-sidebar/SocketDataContext";
 import LocalTournamentFillMembers from "./Tournament/LocalTournament/LocalTournamentFillMembers";
+import ErrorPage from "./ErrorPage/ErrorPage";
+import { DashboardWrapper } from './Dashboard/DashboardWrapper';
 
 const ChatGroupsWrapper = ({ element }) => (
   <ChatProvider>{element}</ChatProvider>
@@ -57,18 +65,35 @@ const App = () => {
               <Route path="/WaysSecondStep" element={<WaysSecondStep />} />
               <Route path="/ForgotPassword" element={<ForgotPassword />} />
               <Route path="/ChangePassword" element={<ChangePassword />} />
+              <Route path="/Error404" element={<ErrorPage />} />
               <Route path="/mainpage" element={<NavbarSidebar />}>
-                <Route path="dashboard" element={<Dashboard />} />
-                <Route path="profile" element={<Profile />} />
-                <Route path="settings" element={<Settings />} />
+                <Route
+                  path="dashboard"
+                  element={<DashboardWrapper child={<Dashboard />} />}
+                />
+                <Route
+                  path="profile/:userId"
+                  element={
+                    <ChatProvider
+                      children={<ProfileWrapper child={<Profile />} />}
+                    />
+                  }
+                />
+                <Route
+                  path="settings"
+                  element={<SettingsWrapper child={<Settings />} />}
+                />
                 <Route
                   path="chat"
-                  element={<ChatGroupsWrapper element={<Chat />} />}
+                  element={<ChatProvider children={<Chat />} />}
                 />
-                <Route path="friends" element={<ChatGroupsWrapper element={<Friends />}/>} />
+                <Route
+                  path="friends"
+                  element={<ChatProvider children={<Friends />} />}
+                />
                 <Route
                   path="groups"
-                  element={<ChatGroupsWrapper element={<Rooms />} />}
+                  element={<ChatProvider children={<Rooms />} />}
                 />
                 <Route path="game" element={<Modes />} />
                 <Route path="game/board" element={<GameSettings />} />
@@ -129,6 +154,7 @@ const App = () => {
                   element={<LocalTournamentFillMembers />}
                 />
               </Route>
+              <Route path="*" element={<Navigate to="/Error404" />} />
             </Routes>
             <ToastContainer
               position="top-right"

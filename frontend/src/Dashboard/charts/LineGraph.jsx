@@ -17,7 +17,7 @@ function LineGraph(props) {
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart width={500} height={500} data={param.data} margin={{ left: param.left, right: param.right }}>
           <Area  stackId="1" type="mono-tone" dataKey={"wins"} stroke="#f4effa" fill="#f4effa" />
-          <Area  stackId="1" type="mono-tone" dataKey={"lost"} stroke="#907ad6" fill="#826aed" />
+          <Area  stackId="1" type="mono-tone" dataKey={"losts"} stroke="#907ad6" fill="#826aed" />
           <XAxis dataKey="day" />
           <YAxis />
           <CartesianGrid stroke="rgb(104, 104, 104, 0.3)" strokeDasharray="5 5" />

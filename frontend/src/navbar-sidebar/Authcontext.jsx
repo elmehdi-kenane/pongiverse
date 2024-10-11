@@ -37,6 +37,7 @@ export const AuthProvider = ({children}) => {
 	//-- Glass Background
 	const [isReport, setIsReport] = useState(false);
 	const [isBlock, setIsBlock] = useState(false);
+	const [isGameStats, setIsGameStats] = useState(false);
 	const [isChatBlur, setIsChartBlur] = useState(false);
 
 	const [reportValue, setReportValue] = useState(null);
@@ -44,12 +45,6 @@ export const AuthProvider = ({children}) => {
 	const blockRef = useRef(null);
 	const blockContentRef = useRef(null);
 	
-
-	const [userPic, setUserPic] = useState(userPc);
-	const [nickName, setNickName] = useState("Maverick");
-	const [bio, setBio] = useState("Lorem ipsum dolor sit amet consectetur adipisicing elit.");
-	const [country, setCountry] = useState("Morocco");
-
 	let [notifSocket, setNotifSocket] = useState(null)
 
 	let [hideNavSideBar, setHideNavSideBar] = useState(false)
@@ -57,6 +52,15 @@ export const AuthProvider = ({children}) => {
 	const oneVsOneIdRegex = /^\/mainpage\/play\/1vs1\/\d+$/
 	const twoVsTwoIdRegex = /^\/mainpage\/play\/2vs2\/\d+$/
 	const gamePlayRegex = /^\/mainpage\/(game|play)(\/[\w\d-]*)*$/
+
+
+	// Glass Background Effect
+	useEffect (()=> {
+		if (!isReport && !isBlock && !isGameStats && !isBlur)
+			setIsGlass(false);
+		else
+			setIsGlass(true);
+	}, [isReport, isBlock, isGameStats])
 
 
 	// Glass Background Effect
@@ -253,7 +257,12 @@ export const AuthProvider = ({children}) => {
 				let data = JSON.parse(event.data)
 				let type = data.type
 				// let message = data.message
-				let uname = data.username
+				// let uname = data.username
+				// console.log("GAME SOCKET IN AUTHCONTEXT CLOSED SUCCEFULLY 1")
+				if (type === 'close_socket') {
+					newSocket.close()
+					setSocket(null)
+				}
 				// if (type === 'user_disconnected') {
 				// 	const currentAllGameFriends = allGameFriendsRef.current;
 				// 	console.log("user disconnected : ", allGameFriends)
@@ -399,6 +408,7 @@ export const AuthProvider = ({children}) => {
 		socketRecreated: socketRecreated,
 		setSocketRecreated: setSocketRecreated,
 		userImg: userImg,
+		setUserImg:setUserImg,
 		allGameFriends: allGameFriends,
 		setAllGameFriends: setAllGameFriends,
 		loading: loading,
@@ -418,17 +428,10 @@ export const AuthProvider = ({children}) => {
 		setReportValue: setReportValue,
 		isBlock: isBlock,
 		setIsBlock:setIsBlock,
+		isGameStats:isGameStats, 
+		setIsGameStats:setIsGameStats,
 		blockRef:blockRef,
 		blockContentRef:blockContentRef,
-		// User Credintials
-		userPic:userPic,
-		setUserPic:setUserPic,
-		nickName:nickName,
-		bio:bio,
-		country,country,
-		setNickName:setNickName,
-		setBio:setBio,
-		setCountry:setCountry,
 		// chat blur
 		isBlur:isBlur,
 		setIsBlur:setIsBlur,

@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import * as ChatIcons from "../assets/chat/media/index";
-import ChatContext from "../Context/ChatContext";
+import ChatContext from "../Groups/ChatContext";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import MyMessage from "./myMessage";
 import OtherMessage from "./otherMessage";
@@ -22,21 +22,22 @@ export let useClickOutSide = (handler) => {
 };
 
 const ChatConversation = () => {
-  const {
-    selectedDirect,
-    setSelectedDirect,
-    recivedMessage,
-    setMessages,
-    messages,
-  } = useContext(ChatContext);
-  
+  const { selectedDirect, setSelectedDirect } = useContext(ChatContext);
+  const [messages, setMessages] = useState([]);
+  const [recivedMessage, setRecivedMessage] = useState(null);
   const [messageToSend, setMessageToSend] = useState("");
   const [showDirectOptions, setShowDirectOptions] = useState(false);
   const { user, chatSocket, userImg } = useContext(AuthContext);
   const messageEndRef = useRef(null);
+  const selectedDirectRef = useRef(selectedDirect);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    selectedDirectRef.current = selectedDirect;
+  }, [selectedDirect]);
+
   const sendMessage = () => {
+    console.log(messageToSend);
     if (
       chatSocket &&
       chatSocket.readyState === WebSocket.OPEN &&
@@ -61,9 +62,7 @@ const ChatConversation = () => {
     const fetchMessages = async () => {
       try {
         const response = await fetch(
-          `http://${
-            import.meta.env.VITE_IPADDRESS
-          }:8000/chatAPI/Directs/messages`,
+          `http://localhost:8000/chatAPI/Directs/messages`,
           {
             method: "POST",
             headers: {
@@ -76,19 +75,47 @@ const ChatConversation = () => {
           }
         );
         const data = await response.json();
-        if (response.ok) {
+        if (data) {
           setMessages(data);
-        } else console.log("error");
+        }
       } catch (error) {
         console.log(error);
       }
     };
-    if (selectedDirect.length !== 0) {
+    if (selectedDirect) {
       fetchMessages();
     }
     let scrollView = document.getElementById("start");
     scrollView.scrollTop = scrollView.scrollHeight;
   }, [selectedDirect]);
+
+  useEffect(() => {
+    if (chatSocket) {
+      chatSocket.onmessage = (e) => {
+        let data = JSON.parse(e.data);
+        if (data.type === "newDirect") {
+          const currentDirect = selectedDirectRef.current;
+          if (
+            (currentDirect.name === data.data.sender &&
+              data.data.reciver === user) ||
+            (user === data.data.sender && data.data.reciver === user)
+          ) {
+            console.log(data.data);
+            setRecivedMessage(data.data);
+          }
+        } else if (data.type === "goToGamingPage") {
+          console.log("navigating now");
+          navigate(`/mainpage/game/solo/1vs1/friends`);
+        }
+      };
+    }
+  }, [chatSocket]);
+
+  useEffect(() => {
+    if (recivedMessage !== null) {
+      setMessages((prev) => [...prev, recivedMessage]);
+    }
+  }, [recivedMessage]);
 
   useEffect(() => {
     if (messages) {
@@ -114,6 +141,7 @@ const ChatConversation = () => {
   let domNode = useClickOutSide(() => {
     setShowDirectOptions(false);
   });
+
   return (
     <>
       <div className="conversation-header">
@@ -185,18 +213,14 @@ const ChatConversation = () => {
             message.sender === user ? (
               <MyMessage
                 key={index}
-                name={user}
                 content={message.content}
                 avatar={userImg}
-                date={message.date}
               />
             ) : (
               <OtherMessage
                 key={index}
-                name={message.sender}
                 content={message.content}
                 avatar={selectedDirect.avatar}
-                date={message.date}
               />
             )
           )}

@@ -53,7 +53,7 @@ async def disconnected(self, user_channels):
 			# )
 
 async def create_tournament(self, data, user_channels):
-	print("hmededede")
+	#print("hmededede")
 	username = data['message']['user']
 	userrr = username
 	flag = 0
@@ -151,7 +151,7 @@ async def invite_friend(self, data, user_channels):
 		tournament = await sync_to_async(Tournament.objects.filter(tournament_id=tournament_id).first)()
 		tournamentInvite = await sync_to_async(TournamentInvitation.objects.filter(tournament=tournament, sender=sender, receiver=receiver).first)()
 		if tournamentInvite is None:
-			print(f"sender : {sender.username}, receiver : {receiver.username}, tournament : {tournament.tournament_id}")
+			#print(f"sender : {sender.username}, receiver : {receiver.username}, tournament : {tournament.tournament_id}")
 			tournamentInv = TournamentInvitation(tournament=tournament, sender=sender, receiver=receiver)
 			await sync_to_async(tournamentInv.save)()
 			await self.channel_layer.send(
@@ -182,7 +182,7 @@ async def accept_invite(self, data, user_channels):
 		await sync_to_async(tournamentMember.save)()
 		if channel_name:
 			group_name = f'tournament_{tournament_id}'
-			print(f"GROUP NAME : {group_name}")
+			#print(f"GROUP NAME : {group_name}")
 			await self.channel_layer.group_add(group_name, channel_name)
 			await self.channel_layer.group_send(
 				group_name,
@@ -347,7 +347,7 @@ async def send_user_eliminated_after_delay(self, tournament, user_channels):
 	await asyncio.sleep(10)
 	Tournamentwarnnotification = await sync_to_async(TournamentWarnNotifications.objects.filter(tournament=tournament).first)()
 	await sync_to_async(Tournamentwarnnotification.delete)()
-	print("----after----")
+	#print("----after----")
 	group_name = f'tournament_{the_tournament_id}'
 	members = await sync_to_async(list)(TournamentMembers.objects.filter(tournament=tournament))
 	for member in members :
@@ -381,7 +381,7 @@ async def send_user_eliminated_after_delay(self, tournament, user_channels):
 							}
 						}
 					)
-			print("**********outside******")
+			#print("**********outside******")
 	round = Round(tournament=tournament, type='QUARTERFINAL')
 	await sync_to_async(round.save)()
 	count = 16

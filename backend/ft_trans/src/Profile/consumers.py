@@ -13,7 +13,7 @@ class NotifConsumer(AsyncWebsocketConsumer):
 		# 		'message': 'connection established'
 		# 	}
 		if (self.scope['cookies']).get('token'):
-			# print("TOKEEEEEEEEEEN EXISTTTTTTTT")
+			# #print("TOKEEEEEEEEEEN EXISTTTTTTTT")
 			try:
 				decoded_token = AccessToken(self.scope['cookies']['token'])
 				data = decoded_token.payload
@@ -26,7 +26,7 @@ class NotifConsumer(AsyncWebsocketConsumer):
 						await sync_to_async(user.save)()
 						await self.channel_layer.group_add(user.username + "_friends", self.channel_name)
 			except TokenError as e:
-				print("TOKEN ERROR")
+				#print("TOKEN ERROR")
 		# await self.send(json.dumps(message))
 	
 	async def receive(self, text_data):
@@ -39,7 +39,7 @@ class NotifConsumer(AsyncWebsocketConsumer):
 
 	
 	async def disconnect(self, code):
-		# print(f"DISCONNECTED : {self.scope}")
+		# #print(f"DISCONNECTED : {self.scope}")
 		if (self.scope['cookies']).get('token'):
 			try:
 				decoded_token = AccessToken(self.scope['cookies']['token'])
@@ -52,4 +52,4 @@ class NotifConsumer(AsyncWebsocketConsumer):
 						user.is_online = False
 						await sync_to_async(user.save)()
 			except TokenError as e:
-				print("TOKEN ERROR")
+				#print("TOKEN ERROR")
