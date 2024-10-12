@@ -44,7 +44,7 @@ export const confirmFriendRequest = (currentUsername, secondUsername) => {
 };
 
 
-export const handleAddFriendReq = (currentUsername, secondUsername, setFriendRequestBtn) => {
+export const handleAddFriendReq = (currentUsername, secondUsername) => {
     fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/add_friend_request/`, {
         method: 'POST',
         headers: {
@@ -62,5 +62,4 @@ export const handleAddFriendReq = (currentUsername, secondUsername, setFriendReq
         .catch((error) => {
             console.error('Error:', error);
         });
-    setFriendRequestBtn(true);
 };
