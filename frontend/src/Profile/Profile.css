@@ -32,7 +32,16 @@ h1, h3, p{
     filter: blur(6px);
     pointer-events: none;
     user-select: none;
-  }
+}
+
+/* .purple--glass {
+    background: linear-gradient(to bottom, rgb(68, 45, 106, 0.5), rgba(74, 37, 139, 0.3));
+    box-shadow: 0 0.5px 5px 0 #ccc;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 5px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+} */
 
 /* ------------------- User Info ------------------- */
 
@@ -627,7 +636,7 @@ h1, h3, p{
     width: 100%;
     flex-direction: column;
     gap: 25px;
-    margin-bottom: 130px;
+    margin-bottom: 200px;
     /* border: yellow solid 1px; */
 }
 
@@ -676,7 +685,7 @@ h1, h3, p{
     padding: 10px 5px 10px;
 }
 
-/* ---- Friends - Achievement ---- */
+/* ---- Friends - Diagrame ---- */
 
 .profile-userstats .userstate__friends-diagrame {
     /* border: cyan solid 1px; */
@@ -798,7 +807,6 @@ h1, h3, p{
     cursor: pointer;
 }
 
-
 /* ------------ Achievments ------------*/
 
 .userstate__diagrame .diagrame__container {
@@ -809,6 +817,44 @@ h1, h3, p{
     padding-top: 15px;
     /* border: purple 1px solid; */
 }
+
+/* ---- Match History ---- */
+
+.profile-userstats .userstate_matches {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 400px;
+    align-items: center;
+    position: relative;
+}
+.userstate_matches .matches_head {
+    display: flex;
+    /* border: white .5px solid; */
+    height: 50px;
+    width: 100%;
+    align-items: center;
+    /* background-color: rgb(0, 0, 0, 0.25); */
+    /* margin-top: 8px; */
+}
+.matches_head .match__dtl{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    border-top: 5px solid rgba( 255, 255, 255, 0.25 );
+    border-right: 2px solid rgba( 255, 255, 255, 0.25 );
+    border-left: 2px solid rgba( 255, 255, 255, 0.25 );
+    border-bottom: 5px solid rgba( 255, 255, 255, 0.25 );
+    height: 100%;
+    /* Flex properties */
+    flex: 1; /* Allow each element to grow equally */
+    min-width: 0; /* Prevent growing based on content */
+    overflow: hidden; /* Prevent content overflow */
+    white-space: nowrap; /* Prevent text wrapping */
+    text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+}
+
 
 /*   -------------------   */
 

@@ -3,15 +3,17 @@ import React from 'react';
 import ProfileUserFriends from './Statistics/ProfileUserFriends'
 import ProfileUserStatistics from './Statistics/ProfileUserStatistics';
 import ProfileUserDiagrame from './Statistics/ProfileUserDiagrame';
+import ProfileGames from './ProfileGames';
   
 function ProfileStatistics() {
   return (
     <div className="profile-userstats">
-        <ProfileUserStatistics />
+      <ProfileUserStatistics />
       <div className="userstate__friends-diagrame">
             <ProfileUserFriends />
             <ProfileUserDiagrame />
       </div>
+      <ProfileGames />
     </div>
   )
 }
