@@ -207,36 +207,33 @@ function SecondStep() {
 								className={styles["second-step-form-inputs-image-label"]}
 								htmlFor="image-upload"
 							>
-								Upload your image
+								Upload
 							</label>
-							<button onClick={handleSave}>Save Avatar</button>
+							<button className={styles["second-step-form-inputs-image-label"]} onClick={handleSave}>Save Avatar</button>
 						</div>
 					</div>
 				}
 				<div className={styles["second-step-form"]}>
 					<div className={styles["second-step-form-inputs"]}>
-						<input
-							type="text"
-							value={nextdata.username}
-							name="username"
-							className={styles["second-step-form-inputs-input"]}
-							onChange={handleInputChange}
-							placeholder="Enter a username"
-						/>
-						{exist && (
-							<span className={styles["spans"]}>Username already used</span>
-						)}
-						<div className={styles["second-step-form-inputs-image-input"]}>
-							<button onClick={() => { setDisplayEditImage(true) }}>select image</button>
-							{nextdata.avatar &&
-								<img
-									className={styles["second-step-form-image-default"]}
-									src={getAvatarUrl(nextdata.avatar)}
-									alt=""
-								/>
-							}
+						<div className={styles["second-step-form-inputs-input-div"]}>
+							<input
+								type="text"
+								value={nextdata.username}
+								name="username"
+								className={styles["second-step-form-inputs-input"]}
+								onChange={handleInputChange}
+								placeholder="Enter a username"
+							/>
+						</div>
+						<div className={styles["second-step-select-image-button-div"]}>
+							<button className={styles["second-step-select-image-button"]} onClick={() => { setDisplayEditImage(true) }}>select image</button>
 						</div>
 					</div>
+					{exist && (
+					<div className={styles["spans-div"]}>
+						<span className={styles["spans"]}>Username already used</span>
+					</div>
+					)}
 					<button
 						className={styles["second-step-form-button"]}
 						onClick={handleSubmit}

@@ -25,14 +25,16 @@
 }
 
 .second-step-edit-image{
-	width: 600px;
-    height: 500px;
+	width: 650px;
+    height: 450px;
     position: absolute;
 	display: flex;
 	flex-direction: column;
+	justify-content: center;
     top: 250px;
-    left: calc(50% - 300px);
-    background-color: blue;
+    left: calc(50% - 325px);
+    background-color: rgb(193, 193, 193);
+	border-radius: 10px;
 	gap: 10px;
 }
 
@@ -41,6 +43,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	gap: 20px;
 }
 
 .second-step-avatar-viewer{
@@ -85,15 +88,19 @@
 .second-step-form-inputs {
 	display: flex;
 	width: 100%;
-	flex-direction: column;
 	gap: 20px;
 }
 
-.second-step-form-inputs-input {
-	width: 100%;
+.second-step-form-inputs-input-div{
+	width: 70%;
 	height: 50px;
 	display: flex;
+	flex-direction: column;
+}
+
+.second-step-form-inputs-input {
 	justify-content: center;
+	height: 100%;
 	align-items: center;
 	background-color: rgba(255, 255, 255, 0.2);
 	border: none;
@@ -102,13 +109,25 @@
 	font-size: medium;
 }
 
+.spans-div{
+	width: 100%;
+}
+
+.spans{
+	font-size: 14px;
+}
+
 .second-step-form-inputs-image-label {
-	height: 50px;
+	height: 40px;
+	width: 20%;
+	padding-left: 5px;
+	padding-right: 5px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background-color: rgba(255, 255, 255, 0.2);
+	background-color: #913DCE;
 	border: none;
+	border-radius: 8px;
 	color: white;
 	font-size: medium;
 	cursor: pointer;
@@ -136,9 +155,20 @@
 	color: #EAD3D6;
 }
 
-.second-step-form-inputs-image-input {
+
+.second-step-select-image-button-div{
 	display: flex;
-	gap: 6px;
+	width: 30%;
+}
+.second-step-select-image-button{
+	height: 50px;
+	width: 100%;
+	font-size: 1rem;
+	font-weight: bold;
+	color: white;
+	background-color: #913DCE;
+	border: none;
+	border-radius: 8px;
 }
 
 .second-step-form-inputs-image {
@@ -176,6 +206,9 @@
 	.second-step-form {
 		width: 90%;
 	}
+	.second-step-form-inputs{
+		gap: 10px;
+	}
 }
 
 @media (max-width: 300px) {
@@ -197,6 +230,12 @@
 		margin-top: 10px;
 	}
 
+	.second-step-select-image-button{
+		font-size: 10px;
+	}
+	.spans{
+		font-size: 12px;
+	}
 	.second-step-form-div {
 		justify-content: initial;
 		flex-direction: column;
