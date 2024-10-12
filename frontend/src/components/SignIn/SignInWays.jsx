@@ -132,7 +132,6 @@ function SignInWays() {
 		}
 		getGoogleUrl()
 	}
-	console.log("HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEE: ", `http://${import.meta.env.VITE_IPADDRESS}:8000/auth/intra-get-url`)
 	const handleIntraClick = () => {
 		const getIntraUrl = async () => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/intra-get-url`, {

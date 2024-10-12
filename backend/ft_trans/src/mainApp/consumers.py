@@ -38,7 +38,7 @@ async def get_friends(username):
 class ChatConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
 		cookiess = self.scope.get('cookies', {})
-		token = cookiess.get('token')
+		token = cookiess.get('access_token')
 		decoded_token = AccessToken(token)
 		payload_data = decoded_token.payload
 		user_id = payload_data.get('user_id')

@@ -132,11 +132,10 @@ class LoginView(APIView):
 		password = data.get('password', None)
 		#print(f"   username : {username}, password : {password}")
 		user = authenticate(username=username, password=password)
-		print(f"*****************   user : {user}")
 		if user is not None:
 			data = get_tokens_for_user(user)
-			print(f"*****************   data : {data}")
-			response.set_cookie('token', data['access'], httponly=True)
+			response.set_cookie('access_token', data['access'], httponly=True)
+			response.set_cookie('refresh_token', data['refresh'], httponly=True)
 			response.data = {"Case": "Login successfully"}
 			return response
 		else:
@@ -151,7 +150,8 @@ class GoogleLoginView(APIView):
 		user = customuser.objects.filter(email=email).first()
 		if user is not None:
 			data = get_tokens_for_user(user)
-			response.set_cookie('token', data['access'], httponly=True)
+			response.set_cookie('access_token', data['access'], httponly=True)
+			response.set_cookie('refresh_token', data['refresh'], httponly=True)
 			response.data = {"Case" : "Login successfully"}
 			return response
 		else:
@@ -190,14 +190,23 @@ class CheckUsernameView(APIView):
 class VerifyTokenView(APIView):
 	def post(self, request, format=None):
 		response = Response()
-		username = request.data['user']
+		user_id = -1
 		try:
-			token = request.COOKIES.get('token')
+			refresh_token = request.COOKIES.get('refresh_token')
+			if not refresh_token:
+				response.data = {"Case" : "Invalid token"}
+				return response
+			decoded_token = RefreshToken(refresh_token)
+			data = decoded_token.payload
+			user_id = data['user_id']
+		except TokenError as e:
+			response.data = {"Case" : "Invalid token"}
+			return response
+		try:
+			token = request.COOKIES.get('access_token')
 			decoded_token = AccessToken(token)
 			data = decoded_token.payload
 			if not data.get('user_id'):
-				if username:
-					user = customuser.objects.filter(username=username).first()
 				response.data = {"Case" : "Invalid token"}
 				return response
 			user = customuser.objects.filter(id=data['user_id']).first()
@@ -208,19 +217,16 @@ class VerifyTokenView(APIView):
 			else:
 				response.data = {"Case" : "Invalid token"}
 				return response
-		except TokenError as e:
-			if username == '':
-				response.data = {"Case" : "Invalid token"}
-				return response
-			else:
-				user = customuser.objects.filter(username=username).first()
+		except TokenError:
+			if user_id != -1:
+				user = customuser.objects.filter(id=user_id).first()
 				if user is not None:
 					tokens = get_tokens_for_user(user)
-					response.set_cookie('token', tokens['access'], httponly=True)
+					response.set_cookie('access_token', tokens['access'], httponly=True)
 					return response
-				else:
-					response.data = {"Case" : "Invalid token"}
-					return response
+			else:
+				response.data = {"Case" : "Invalid token"}
+				return response
 
 os.environ['SSL_CERT_FILE'] = certifi.where()
 class ForgetPasswordView(APIView):
@@ -472,13 +478,14 @@ def SignUpIntraGetUserData(request):
 @api_view(['POST'])
 def LogoutView(request):
 	response = Response()
-	response.delete_cookie('token')
+	response.delete_cookie('access_token')
+	response.delete_cookie('refresh_token')
 	response.data = {"Case" : "Logout successfully"}
 	return response
 
 @api_view(['GET'])
 def CheckIsAuthenticated(request):
-	token = request.COOKIES.get('token')
+	token = request.COOKIES.get('access_token')
 	if token is None:
 		return Response({'is_authenticated': False})
 	try:

@@ -360,7 +360,7 @@ def customize_game(request):
 @api_view(['GET'])
 def get_customize_game(request):
 	try:
-		token = request.COOKIES.get('token')
+		token = request.COOKIES.get('access_token')
 		decoded_token = AccessToken(token)
 		data = decoded_token.payload
 		if data.get('user_id'):

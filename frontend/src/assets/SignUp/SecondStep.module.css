@@ -14,15 +14,47 @@
 }
 
 .second-step-form-div {
-
-
 	width: 100%;
+	position: relative;
 	height: 1000px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
 	overflow: auto;
+}
+
+.second-step-edit-image{
+	width: 600px;
+    height: 500px;
+    position: absolute;
+	display: flex;
+	flex-direction: column;
+    top: 250px;
+    left: calc(50% - 300px);
+    background-color: blue;
+	gap: 10px;
+}
+
+.second-step-avatar-button-and-input{
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.second-step-avatar-viewer{
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.second-step-avatar-scale{
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .second-step-form {
@@ -71,7 +103,6 @@
 }
 
 .second-step-form-inputs-image-label {
-	width: calc(100% - 50px);
 	height: 50px;
 	display: flex;
 	justify-content: center;

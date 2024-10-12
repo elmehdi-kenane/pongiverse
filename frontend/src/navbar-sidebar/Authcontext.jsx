@@ -530,6 +530,7 @@ export const AuthProvider = ({ children }) => {
         }
       );
       response = await response.json();
+      console.log(response.Case);
       if (response.Case !== "Invalid token") {
         setUser(response.data.username);
       } else {

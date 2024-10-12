@@ -12,10 +12,10 @@ baseURL: `http://${import.meta.env.VITE_IPADDRESS}:8000`,
 function PrivateRoute({ children }) {
 const [isAuthenticated, setIsAuthenticated] = useState(false);
 const [isLoading, setIsLoading] = useState(true);
-const token = Cookies.get('token')
+const token = Cookies.get('access_token')
 
 useEffect(() => {
-  const token = Cookies.get('token');
+  const token = Cookies.get('access_token');
   const formData = new FormData();
   formData.append('token', token);
 

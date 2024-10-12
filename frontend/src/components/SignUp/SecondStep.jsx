@@ -1,6 +1,6 @@
 import styles from "../../assets/SignUp/SecondStep.module.css";
 import Header from "./Header";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import logo from "../../assets/SignUp/logo.svg";
@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import imagePlaceholder from "../../assets/SignUp/imagePlaceholder.svg";
 import Resizer from "react-image-file-resizer";
 import toast, { Toaster } from "react-hot-toast";
+import AvatarEditor from "react-avatar-editor";
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 const client = axios.create({
@@ -30,6 +31,22 @@ function SecondStep() {
 		navigate("/signup");
 	}
 	const [exist, setExist] = useState(false);
+	const [image, setImage] = useState(null);
+	const [sidplayEditImage, setDisplayEditImage] = useState(false);
+	const [scale, setScale] = useState(1);
+	const editorRef = useRef(null);
+
+	const handleSave = () => {
+		if (editorRef.current) {
+			editorRef.current.getImageScaledToCanvas().toBlob((blob) => {
+				if (blob) {
+					// Convert Blob to File object
+					const file = new File([blob], "avatar.jpg", { type: "image/jpeg" });
+					setNextdata((prevData) => ({ ...prevData, avatar: file || null }));
+				}
+			}, "image/jpeg");
+		}
+	};
 
 	const validateImageDimensions = (file) => {
 		return new Promise((resolve) => {
@@ -152,6 +169,50 @@ function SecondStep() {
 				<img src={logo} alt="" />
 			</div>
 			<div className={styles["second-step-form-div"]}>
+				{
+					sidplayEditImage &&
+					<div className={styles["second-step-edit-image"]}>
+						<div className={styles["second-step-avatar-viewer"]}>
+							<AvatarEditor
+								ref={editorRef}
+								image={image}
+								width={300}
+								height={300}
+								border={10}
+								color={[255, 255, 255, 0.6]} // RGBA color for border
+								scale={scale}
+								rotate={0}
+							/>
+						</div>
+						<div className={styles["second-step-avatar-scale"]}>
+							<input
+								type="range"
+								value={scale}
+								onChange={(e) => setScale(parseFloat(e.target.value))}
+								min="1"
+								max="3"
+								step="0.01"
+							/>
+						</div>
+						<div className={styles["second-step-avatar-button-and-input"]}>
+							<input
+								type="file"
+								name="avatar"
+								id="image-upload"
+								className={styles["second-step-form-inputs-image"]}
+								accept="image/*"
+								onChange={(e) => setImage(URL.createObjectURL(e.target.files[0]))}
+							/>
+							<label
+								className={styles["second-step-form-inputs-image-label"]}
+								htmlFor="image-upload"
+							>
+								Upload your image
+							</label>
+							<button onClick={handleSave}>Save Avatar</button>
+						</div>
+					</div>
+				}
 				<div className={styles["second-step-form"]}>
 					<div className={styles["second-step-form-inputs"]}>
 						<input
@@ -166,35 +227,14 @@ function SecondStep() {
 							<span className={styles["spans"]}>Username already used</span>
 						)}
 						<div className={styles["second-step-form-inputs-image-input"]}>
-							<input
-								type="file"
-								name="avatar"
-								id="image-upload"
-								className={styles["second-step-form-inputs-image"]}
-								accept="image/*"
-								onChange={handleInputChange}
-							/>
-							<label
-								className={styles["second-step-form-inputs-image-label"]}
-								htmlFor="image-upload"
-							>
-								Upload your image (Optional)
-							</label>
-							<div className={styles["second-step-form-display-image"]}>
-								{!nextdata.avatar ? (
-									<img
-										src={imagePlaceholder}
-										className={styles["second-step-form-image-default"]}
-										alt=""
-									/>
-								) : (
-									<img
-										className={styles["second-step-form-image-default"]}
-										src={getAvatarUrl(nextdata.avatar)}
-										alt=""
-									/>
-								)}
-							</div>
+							<button onClick={() => { setDisplayEditImage(true) }}>select image</button>
+							{nextdata.avatar &&
+								<img
+									className={styles["second-step-form-image-default"]}
+									src={getAvatarUrl(nextdata.avatar)}
+									alt=""
+								/>
+							}
 						</div>
 					</div>
 					<button

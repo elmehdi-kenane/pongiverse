@@ -20,7 +20,7 @@ def is_user_joining_tournament(username):
 class NotificationsConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
 		cookiess = self.scope.get('cookies', {})
-		token = cookiess.get('token')
+		token = cookiess.get('access_token')
 		decoded_token = AccessToken(token)
 		payload_data = decoded_token.payload
 		user_id = payload_data.get('user_id')
@@ -113,7 +113,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 
 	async def disconnect(self, close_code):
 		cookiess = self.scope.get('cookies', {})
-		token = cookiess.get('token')
+		token = cookiess.get('access_token')
 		try:
 			decoded_token = AccessToken(token)
 			payload_data = decoded_token.payload

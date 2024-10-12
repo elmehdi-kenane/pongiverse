@@ -24,7 +24,7 @@ from .common import tournament_rooms, user_channels, tournaments
 async def disconnected(self, user_channels):
 	print("\n\n Disconnected \n\n")
 	cookiess = self.scope.get('cookies', {})
-	token = cookiess.get('token')
+	token = cookiess.get('access_token')
 	try:
 		decoded_token = AccessToken(token)
 		payload_data = decoded_token.payload

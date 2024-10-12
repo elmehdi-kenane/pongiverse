@@ -12,7 +12,7 @@ class NotifConsumer(AsyncWebsocketConsumer):
 		# 		'type': 'connected',
 		# 		'message': 'connection established'
 		# 	}
-		if (self.scope['cookies']).get('token'):
+		if (self.scope['cookies']).get('access_token'):
 			# #print("TOKEEEEEEEEEEN EXISTTTTTTTT")
 			try:
 				decoded_token = AccessToken(self.scope['cookies']['token'])
@@ -40,7 +40,7 @@ class NotifConsumer(AsyncWebsocketConsumer):
 	
 	async def disconnect(self, code):
 		# #print(f"DISCONNECTED : {self.scope}")
-		if (self.scope['cookies']).get('token'):
+		if (self.scope['cookies']).get('access_token'):
 			try:
 				decoded_token = AccessToken(self.scope['cookies']['token'])
 				data = decoded_token.payload
