@@ -3,14 +3,13 @@ import { debounce } from "lodash";
 import SearchFilterBar from "./SearchFilterBar";
 import AuthContext from "./Authcontext";
 import { useContext } from "react";
-import { handleAddFriendReq } from '../Friends/utils'
+import SearchResultCard from "./SearchResultCard";
 
 export const SearchBar = () => {
   const searchBarRef = useRef(null);
   const searchInputRef = useRef(null);
   const [inputValue, setInputValue] = useState("");
-    const [addFriendBtn, setAddFriendBtn] = useState("Add friend");
-    const [joinRoomBtn, setJoinRoomBtn] = useState("Join room");
+
   const [searchFilter, setSearchFilter] = useState("all");
   const [searchResult, setSearchResult] = useState([]);
   const [searchUsersResult, setSearchUsersResult] = useState([]);
@@ -19,7 +18,7 @@ export const SearchBar = () => {
   const [isSearchBarOpen, setIsSearchBarOpen] = useState(false);
   const { user } = useContext(AuthContext);
 
-  const termNotFoundText = "Search Term Not Found";
+  const termNotFoundText = `Result with '${inputValue}' Not Found`;
 
   //   console.log("username from context outside:", user);
   //   useEffect(() => {
@@ -37,6 +36,7 @@ export const SearchBar = () => {
       const res = await response.json();
       if (res) {
         setSearchResult(res);
+        // setAddFriendBtn("Add friend");
         setSearchUsersResult(
           res.filter((resultItem) => resultItem.result_type === "user")
         );
@@ -80,26 +80,7 @@ export const SearchBar = () => {
     }
   };
 
-    const handleSearchItemBtn = (currentUsername, secondUsername, successText) => {
-        if (successText === "Request sent") {
-            setAddFriendBtn(successText)
-            setTimeout(() => {
-                console.log("setTimeout 2000");
-                setAddFriendBtn(null);
-            }, 2000);
-            handleAddFriendReq(currentUsername, secondUsername)
-        }
-        else if (successText === "Joined") {
-            setJoinRoomBtn(successText)
-            setTimeout(() => {
-                console.log("setTimeout 2000");
-                setJoinRoomBtn(null);
-            }, 2000);
-        }
-    }
-    const navigateToProfile = () => {
-
-    }
+  const navigateToProfile = () => {};
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleEscapeKey);
@@ -112,12 +93,12 @@ export const SearchBar = () => {
   const openSearchBar = () => {
     setIsSearchBarOpen(true);
   };
-
+  console.log("searchResult", searchResult);
   return (
     <div className="search-bar" ref={searchBarRef}>
       <input
         type="text"
-        placeholder="Search"
+        placeholder="Search for people or rooms..."
         value={inputValue}
         onChange={handleInputChange}
         onClick={openSearchBar}
@@ -147,20 +128,14 @@ export const SearchBar = () => {
                     ) : (
                       searchResult.map((item, index) => {
                         return (
-                          <button key={index} className="searchResultItem">
-                            <img src={item.avatar} alt={item.avatar} />
-                                <p>{item.username}</p>
-                                {item.is_friend === false && item.result_type === "user" && addFriendBtn !== null &&
-                                    <button onClick={() => handleSearchItemBtn(user, item.username, "Request sent")}>
-                                        {addFriendBtn}
-                                    </button>
-                                }
-                                {item.is_joined === false && item.result_type === "room" && joinRoomBtn !== null &&
-                                    <button onClick={() => handleSearchItemBtn(user, item.username, "Joined")}>
-                                        {joinRoomBtn}
-                                    </button>
-                                }
-                          </button>
+                          <SearchResultCard
+                            key={index}
+                            username={item.username}
+                            avatar={item.avatar}
+                            result_type={item.result_type}
+                            is_friend={item.is_friend}
+                            is_joined={item.is_joined}
+                          ></SearchResultCard>
                         );
                       })
                     ))}
@@ -170,13 +145,14 @@ export const SearchBar = () => {
                     ) : (
                       searchUsersResult.map((item, index) => {
                         return (
-                          <button key={index} className="searchResultItem">
-                            <img src={item.avatar} alt={item.avatar} />
-                            <p>{item.username}</p>
-                            {item.is_friend === false && (
-                              <button>Add friend</button>
-                            )}
-                          </button>
+                          <SearchResultCard
+                            key={index}
+                            username={item.username}
+                            avatar={item.avatar}
+                            result_type={item.result_type}
+                            is_friend={item.is_friend}
+                            is_joined={item.is_joined}
+                          ></SearchResultCard>
                         );
                       })
                     ))}
@@ -186,13 +162,14 @@ export const SearchBar = () => {
                     ) : (
                       searchRoomsResult.map((item, index) => {
                         return (
-                          <button key={index} className="searchResultItem">
-                            <img src={item.avatar} alt={item.avatar} />
-                            <p>{item.username}</p>
-                            {item.is_friend === false && (
-                              <button>Join room</button>
-                            )}
-                          </button>
+                          <SearchResultCard
+                            key={index}
+                            username={item.username}
+                            avatar={item.avatar}
+                            result_type={item.result_type}
+                            is_friend={item.is_friend}
+                            is_joined={item.is_joined}
+                          ></SearchResultCard>
                         );
                       })
                     ))}
