@@ -22,8 +22,14 @@ def search_view(request):
     for user_obj in users_objs:
         result_type = "user"
         user_ser = customUserSerializer(user_obj)
+        if (Friendship.objects.filter(user=user, friend=user_obj, block_status=Friendship.BLOCKED).exists()):
+            print("blocked friend")
+            continue
         # [user_ser.data['username'] == username] means the current-user so doesn't make sense to show add friend to itself
-        if (FriendRequest.objects.filter(from_user=user, to_user=user_obj).exists() or Friendship.objects.filter(user=user, friend=user_obj).exists() or user_ser.data['username'] == username):
+        elif (FriendRequest.objects.filter(from_user=user, to_user=user_obj).exists()
+        or Friendship.objects.filter(user=user, friend=user_obj).exists()
+        or user_ser.data['username'] == username):
+            print(user_ser.data['username'], " is friend or friend-request")
             search_result.append({
             'username': user_ser.data['username'],
             'avatar': user_ser.data['avatar'],
