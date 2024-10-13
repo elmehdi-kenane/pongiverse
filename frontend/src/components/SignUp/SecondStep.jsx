@@ -32,17 +32,54 @@ function SecondStep() {
 	}
 	const [exist, setExist] = useState(false);
 	const [image, setImage] = useState(null);
-	const [sidplayEditImage, setDisplayEditImage] = useState(false);
+	const [displayEditImage, setDisplayEditImage] = useState(false);
 	const [scale, setScale] = useState(1);
+	const [editorSize, setEditorSize] = useState({ width: 400, height: 400 });
 	const editorRef = useRef(null);
+	const containerRef = useRef(null);
+	const [imagePreview, setImagePreview] = useState(null);
+
+
+	const updateEditorSize = () => {
+		if (containerRef.current) {
+			const containerWidth = containerRef.current.offsetWidth; 
+			console.log("containerWidth :", containerWidth);
+			setEditorSize({
+				width: Math.min(containerWidth * 0.8, 400), // 80% of the container width
+				height: Math.min(containerWidth * 0.8, 400), // Keep it square
+			});
+		}
+	};
+
+	useEffect(() => {
+		updateEditorSize(); // Set initial size
+		window.addEventListener("resize", updateEditorSize); // Update on window resize
+
+		return () => {
+			window.removeEventListener("resize", updateEditorSize);
+		};
+	}, []);
+
+	const updateImagePreview = () => {
+		if (editorRef.current) {
+		  const canvas = editorRef.current.getImageScaledToCanvas(); // Get the canvas
+		  const dataUrl = canvas.toDataURL(); // Convert the canvas to a data URL
+		  setImagePreview(dataUrl); // Set the image preview state
+		}
+	  };
+
+	useEffect(() => {
+			if (image)
+				updateImagePreview();
+	}, [image, scale]);
 
 	const handleSave = () => {
 		if (editorRef.current) {
 			editorRef.current.getImageScaledToCanvas().toBlob((blob) => {
 				if (blob) {
-					// Convert Blob to File object
 					const file = new File([blob], "avatar.jpg", { type: "image/jpeg" });
 					setNextdata((prevData) => ({ ...prevData, avatar: file || null }));
+					setDisplayEditImage(false);
 				}
 			}, "image/jpeg");
 		}
@@ -104,7 +141,7 @@ function SecondStep() {
 			.catch((error) => {
 				console.error("There was an error!", error);
 			});
-	}, [nextdata]);
+	}, [nextdata.username]);
 
 	useEffect(
 		() =>
@@ -170,18 +207,24 @@ function SecondStep() {
 			</div>
 			<div className={styles["second-step-form-div"]}>
 				{
-					sidplayEditImage &&
-					<div className={styles["second-step-edit-image"]}>
+					displayEditImage &&
+					<div className={styles["second-step-edit-image"]} ref={containerRef}>
+						<div className={styles["second-step-image-preview"]}>
+							{
+								imagePreview && <img src={imagePreview} alt="" />
+							}
+						</div>
 						<div className={styles["second-step-avatar-viewer"]}>
 							<AvatarEditor
 								ref={editorRef}
 								image={image}
-								width={300}
-								height={300}
+								width={editorSize.width}
+								height={editorSize.height}
 								border={10}
 								color={[255, 255, 255, 0.6]} // RGBA color for border
 								scale={scale}
 								rotate={0}
+								onImageChange={image ? updateImagePreview: undefined}
 							/>
 						</div>
 						<div className={styles["second-step-avatar-scale"]}>
@@ -230,9 +273,9 @@ function SecondStep() {
 						</div>
 					</div>
 					{exist && (
-					<div className={styles["spans-div"]}>
-						<span className={styles["spans"]}>Username already used</span>
-					</div>
+						<div className={styles["spans-div"]}>
+							<span className={styles["spans"]}>Username already used</span>
+						</div>
 					)}
 					<button
 						className={styles["second-step-form-button"]}

@@ -24,21 +24,34 @@
 	overflow: auto;
 }
 
-.second-step-edit-image{
+.second-step-edit-image {
 	width: 650px;
-    height: 450px;
-    position: absolute;
+	position: absolute;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-    top: 250px;
-    left: calc(50% - 325px);
-    background-color: rgb(193, 193, 193);
+	top: 250px;
+	padding: 15px 0;
+	margin: 0 auto;
+	background-color: rgb(193, 193, 193);
 	border-radius: 10px;
 	gap: 10px;
 }
 
-.second-step-avatar-button-and-input{
+.second-step-image-preview {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.second-step-image-preview img {
+	width: 80px;
+	height: 80px;
+	border-radius: 8px;
+}
+
+.second-step-avatar-button-and-input {
 	width: 100%;
 	display: flex;
 	justify-content: center;
@@ -46,14 +59,14 @@
 	gap: 20px;
 }
 
-.second-step-avatar-viewer{
+.second-step-avatar-viewer {
 	width: 100%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
 
-.second-step-avatar-scale{
+.second-step-avatar-scale {
 	width: 100%;
 	display: flex;
 	justify-content: center;
@@ -91,7 +104,7 @@
 	gap: 20px;
 }
 
-.second-step-form-inputs-input-div{
+.second-step-form-inputs-input-div {
 	width: 70%;
 	height: 50px;
 	display: flex;
@@ -109,17 +122,18 @@
 	font-size: medium;
 }
 
-.spans-div{
+.spans-div {
 	width: 100%;
 }
 
-.spans{
+.spans {
 	font-size: 14px;
 }
 
 .second-step-form-inputs-image-label {
 	height: 40px;
 	width: 20%;
+	min-width: 75px;
 	padding-left: 5px;
 	padding-right: 5px;
 	display: flex;
@@ -156,11 +170,12 @@
 }
 
 
-.second-step-select-image-button-div{
+.second-step-select-image-button-div {
 	display: flex;
 	width: 30%;
 }
-.second-step-select-image-button{
+
+.second-step-select-image-button {
 	height: 50px;
 	width: 100%;
 	font-size: 1rem;
@@ -202,11 +217,27 @@
 	/* gap: 10px; */
 }
 
+@media (max-width: 700px) {
+	.second-step-edit-image {
+		width: 90%;
+		position: absolute;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		top: 250px;
+		margin: 0 auto;
+		background-color: rgb(193, 193, 193);
+		border-radius: 10px;
+		gap: 10px;
+	}
+}
+
 @media (max-width: 500px) {
 	.second-step-form {
 		width: 90%;
 	}
-	.second-step-form-inputs{
+
+	.second-step-form-inputs {
 		gap: 10px;
 	}
 }
@@ -230,15 +261,21 @@
 		margin-top: 10px;
 	}
 
-	.second-step-select-image-button{
+	.second-step-select-image-button {
 		font-size: 10px;
 	}
-	.spans{
+
+	.spans {
 		font-size: 12px;
 	}
+
 	.second-step-form-div {
 		justify-content: initial;
 		flex-direction: column;
+	}
+
+	.second-step-edit-image {
+		top: 50px;
 	}
 
 }
