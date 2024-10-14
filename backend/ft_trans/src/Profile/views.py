@@ -404,6 +404,42 @@ def get_single_matches(request, username, page):
         return Response(data={"userMatches": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
     return Response(data={'error': 'Error Getting SingleGames!'}, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+@api_view(["GET"])
+def get_user_games(request, username, page):
+    user = customuser.objects.filter(username=username).first()
+    res_data = []
+    if user:
+        user_matches = Match.objects.filter(
+            Q(team1_player1=user) | Q(team2_player1=user),
+            mode="1vs1"
+        ).all()
+        for match in user_matches:
+            match_stq = MatchStatistics.objects.filter(match=match).first()
+            if match_stq:
+                res_data.append({
+                    "date": match.date_ended,
+                    "user1": match.team1_player1.username,
+                    "user2": match.team2_player1.username,
+                    "pic1": f"http://localhost:8000/auth{match.team1_player1.avatar.url}",
+                    "pic2": f"http://localhost:8000/auth{match.team2_player1.avatar.url}",
+                    "score" : f"{match.team1_score} - {match.team2_score}",
+                    "hit1": match_stq.team1_player1_hit,
+                    "hit2": match_stq.team2_player1_hit,
+                    "exp1": match_stq.team1_player1_rating,
+                    "exp2": match_stq.team2_player1_rating,
+                    "acc1": f"{(match_stq.team1_player1_score * 100 / match_stq.team1_player1_hit):.0f}" if match_stq.team1_player1_hit else 0,
+                    "acc2": f"{(match_stq.team2_player1_score * 100 / match_stq.team2_player1_hit):.0f}" if match_stq.team2_player1_hit else 0,
+                })
+                # print("------", match_stq.team1_player1_rating ,"------")
+
+        return Response(data={"data": res_data, "hasMoreMatches": False}, status=status.HTTP_200_OK)
+    return Response(data={'error': 'Error Getting UserGames!'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
 #**------- GetUser SingleMatch Details -------**#
 
 @api_view(["GET"])
@@ -430,7 +466,6 @@ def get_single_match_dtl(request, match_id):
             "acc2": f"{(match_stq.team2_player1_score * 100 / match_stq.team2_player1_hit):.0f}" if match_stq.team2_player1_hit else 0,
         }
         return Response(data={"data": res_data}, status=status.HTTP_200_OK)
-
     return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
 
 
