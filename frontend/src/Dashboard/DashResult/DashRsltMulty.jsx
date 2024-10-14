@@ -34,7 +34,7 @@ function DashRsltMulty() {
     const getMatchDtls = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/profile/getMultyMatchDtl/${104115000}`,
+          `http://localhost:8000/profile/getMultyMatchDtl/${562150859}`,
           {
             method: "GET",
             headers: {
