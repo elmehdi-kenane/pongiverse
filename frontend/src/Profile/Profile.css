@@ -824,7 +824,7 @@ h1, h3, p{
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 420px;
+    height: 430px;
     align-items: center;
     position: relative;
 }
@@ -864,6 +864,7 @@ h1, h3, p{
 .match__states .match--players img{
     height: 30px;
     width: 30px;
+    border-radius: 5px;
 }
 .match__states .match--date{
     flex-direction: column;
@@ -1142,10 +1143,10 @@ h1, h3, p{
 
     /* UserState Games */
     .match__states .match__head{
-        font-size: 6px;
+        font-size: 7px;
     }
     .match__states .match__dtl{
-        font-size: 5px;
+        font-size: 7px;
     }
     .match__states .match--players img{
         height: 12px;
