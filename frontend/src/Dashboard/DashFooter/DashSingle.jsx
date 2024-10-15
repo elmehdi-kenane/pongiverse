@@ -75,13 +75,13 @@ function DashSingle() {
       </div>
     )
   }
+
   const MatchesResults = () => {
     const { setSingleId } = useContext(DashboardContext);
     const showMatchResult = (matchId) => {
       setIsGameStats(true);
       setSingleId(matchId)
-    }
-    
+    }  
     return (
       <>
         {matches.slice((index - 1) * itemsPerPage, index * itemsPerPage)
