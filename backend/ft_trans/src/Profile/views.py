@@ -411,15 +411,29 @@ def get_user_games(request, username, page):
     user = customuser.objects.filter(username=username).first()
     res_data = []
     if user:
+        page_size = 5
+        offset = (page - 1) * page_size
         user_matches = Match.objects.filter(
             Q(team1_player1=user) | Q(team2_player1=user),
             mode="1vs1"
-        ).all()
+        ).order_by('-date_ended')[offset:offset+page_size]
+
+        # Check if there is still matches or not -------
+        total_matches_count = Match.objects.filter(
+            Q(team1_player1=user) | Q(team2_player1=user),
+            mode="1vs1"
+        ).count()
+        has_more_matches = (offset + page_size) < total_matches_count
+
         for match in user_matches:
             match_stq = MatchStatistics.objects.filter(match=match).first()
             if match_stq:
+                date_time = match.date_ended
+                date = date_time.strftime('%Y-%m-%d')
+                time = date_time.strftime('%H:%M')
                 res_data.append({
-                    "date": match.date_ended,
+                    "date": date,
+                    "time": time,
                     "user1": match.team1_player1.username,
                     "user2": match.team2_player1.username,
                     "pic1": f"http://localhost:8000/auth{match.team1_player1.avatar.url}",
@@ -432,12 +446,9 @@ def get_user_games(request, username, page):
                     "acc1": f"{(match_stq.team1_player1_score * 100 / match_stq.team1_player1_hit):.0f}" if match_stq.team1_player1_hit else 0,
                     "acc2": f"{(match_stq.team2_player1_score * 100 / match_stq.team2_player1_hit):.0f}" if match_stq.team2_player1_hit else 0,
                 })
-                # print("------", match_stq.team1_player1_rating ,"------")
 
-        return Response(data={"data": res_data, "hasMoreMatches": False}, status=status.HTTP_200_OK)
+        return Response(data={"data": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
     return Response(data={'error': 'Error Getting UserGames!'}, status=status.HTTP_400_BAD_REQUEST)
-
-
 
 
 #**------- GetUser SingleMatch Details -------**#
