@@ -20,7 +20,7 @@ const MatchHeaderStates = () => {
   )
 }
 
-function ProfileGames() {
+function ProfileUserGames() {
   const {userId} = useContext(ProfileContext);
   const [userGames, setUserGames] = useState([])
   const [page, setPage] = useState(1);
@@ -31,7 +31,7 @@ function ProfileGames() {
 
   
   useEffect(()=> {
-    const GetUserMatches = async () => {
+    const getUserMatches = async () => {
       setLoading(true)
       try {
         const response = await fetch(`http://localhost:8000/profile/getUserMatches1vs1/${userId}/${page}`, {
@@ -54,7 +54,7 @@ function ProfileGames() {
       setLoading(false)
     }
     if (userId)
-      GetUserMatches()
+      getUserMatches()
   }, [userId, page])
 
   const Pagination = () => {
@@ -117,4 +117,4 @@ function ProfileGames() {
   )
 }
 
-export default ProfileGames
+export default ProfileUserGames

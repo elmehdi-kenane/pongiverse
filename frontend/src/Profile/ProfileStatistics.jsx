@@ -3,7 +3,7 @@ import React from 'react';
 import ProfileUserFriends from './Statistics/ProfileUserFriends'
 import ProfileUserStatistics from './Statistics/ProfileUserStatistics';
 import ProfileUserDiagrame from './Statistics/ProfileUserDiagrame';
-import ProfileGames from './Statistics/ProfileGames';
+import ProfileUserGames from './Statistics/ProfileUserGames';
   
 function ProfileStatistics() {
   return (
@@ -13,7 +13,7 @@ function ProfileStatistics() {
             <ProfileUserFriends />
             <ProfileUserDiagrame />
       </div>
-      <ProfileGames />
+      <ProfileUserGames />
     </div>
   )
 }
