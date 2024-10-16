@@ -867,6 +867,7 @@ h1, h3, p{
     height: 30px;
     width: 30px;
     border-radius: 5px;
+    cursor: pointer;
 }
 .match__states .match--date{
     flex-direction: column;

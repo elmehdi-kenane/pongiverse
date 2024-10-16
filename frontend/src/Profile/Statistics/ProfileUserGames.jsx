@@ -4,6 +4,7 @@ import ProfileContext from "../ProfileWrapper"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import CircularProgress from '@mui/material/CircularProgress';
+import { useNavigate } from 'react-router-dom';
 
 const MatchHeaderStates = () => {
   const matchHeader = ["Matches", "Date", "Score", "Hit", "Accuracy", "Rating"]
@@ -29,38 +30,45 @@ function ProfileUserGames() {
   const itemsPerPage = 5;
   const [loading, setLoading] = useState(false);
 
+  const getUserMatches = async (page, index) => {
+    setLoading(true)
+    try {
+      const response = await fetch(`http://localhost:8000/profile/getUserMatches1vs1/${userId}/${page}`, {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      const res = await response.json()
+      if (response.ok){
+        (page === 1) ? setUserGames(res.data) : setUserGames([...userGames, ...res.data])
+        !res.hasMoreMatches && setLimit(index);
+        console.log("Data :", res.data);
+      }
+      else 
+      console.log("Error : ", res.error);
+    } catch (error) {
+      console.log("Error: ", error);
+    }      
+    setLoading(false)
+  }
   
   useEffect(()=> {
-    const getUserMatches = async () => {
-      setLoading(true)
-      try {
-        const response = await fetch(`http://localhost:8000/profile/getUserMatches1vs1/${userId}/${page}`, {
-          method: "GET",
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        });
-        const res = await response.json()
-        if (response.ok){
-          setUserGames([...userGames, ...res.data])
-          !res.hasMoreMatches && setLimit(index);
-          // console.log("Data :", res.data);
-        }
-        else 
-        console.log("Error : ", res.error);
-      } catch (error) {
-        console.log("Error: ", error);
-      }      
-      setLoading(false)
+    if (userId){
+      setPage(1);
+      setIndex(1);
+      setLimit(-1);
+      getUserMatches(1, 1)
     }
-    if (userId)
-      getUserMatches()
-  }, [userId, page])
+  }, [userId])
 
   const Pagination = () => {
     const expandMore = () => {
       setIndex(index + 1);
-      index + 1 > page && setPage(page + 1);
+      if (index + 1 > page){
+        getUserMatches(page + 1, index + 1)
+        setPage(page + 1);
+      }
     };
     const expandLess = () => {
       index - 1 && setIndex(index - 1);
@@ -76,6 +84,7 @@ function ProfileUserGames() {
   }
 
   const MatchStates = () => {
+    const navigate = useNavigate();
     return (
       <>
       {loading ? 
@@ -87,8 +96,8 @@ function ProfileUserGames() {
               return (
                 <div className="match__states" key={key}>
                   <div className='match__dtl match--players'> 
-                    <img src={match.pic1} alt="playerImg" />
-                    <img src={match.pic2} alt="playerImg" />
+                    <img src={match.pic1} alt="playerImg" onClick={()=>navigate(`/mainpage/profile/${match.user1}`)}/>
+                    <img src={match.pic2} alt="playerImg" onClick={()=>navigate(`/mainpage/profile/${match.user2}`)}/>
                   </div>
                   <div className='match__dtl match--date'> 
                     <p> {match.time} </p>
