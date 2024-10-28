@@ -36,7 +36,7 @@ import TwoVsTwoPlayMatch from "./Game/TwoVsTwoPlayMatch";
 import TwoVsTwoFriends from "./Game/TwoVsTwoFriends";
 import TwoVsTwoCreateOrJoin from "./Game/TwoVsTwoCreateOrJoin";
 import GameSettings from "./Game/GameSettings";
-
+import HandleSvg from './Tournament/RemoteTournament/HandleSvg';
 import Bot from "./Game/Bot";
 import { ToastContainer, Bounce } from "react-toastify";
 import { SocketDataContextProvider } from "./navbar-sidebar/SocketDataContext";
@@ -92,6 +92,7 @@ const App = () => {
                 <Route path="game/jointournament" element={<JoinTournament />} />
                 <Route path="game/tournamentbracket" element={<TournamentBracket />} />
                 <Route path="game/1vs1tournament" element={<OneVsOnePlayTournamentMatch />} />
+                {/* <Route path="handlesvg" element={<HandleSvg />} /> */}
 				<Route path="game/localtournamentbracket" element={<LocalTournamentBracket />}/>
 				<Route path="game/localtournamentfillmembers" element={<LocalTournamentFillMembers />}/>
 				<Route path="game/tournamentcel" element={<TournamentCelebration />}/>

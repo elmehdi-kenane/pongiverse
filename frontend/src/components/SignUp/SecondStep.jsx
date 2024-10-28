@@ -11,6 +11,7 @@ import toast, { Toaster } from "react-hot-toast";
 import AvatarEditor from "react-avatar-editor";
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
+import { ImCross } from "react-icons/im";
 const client = axios.create({
 	baseURL: `http://${import.meta.env.VITE_IPADDRESS}:8000`,
 });
@@ -42,7 +43,7 @@ function SecondStep() {
 
 	const updateEditorSize = () => {
 		if (containerRef.current) {
-			const containerWidth = containerRef.current.offsetWidth; 
+			const containerWidth = containerRef.current.offsetWidth;
 			console.log("containerWidth :", containerWidth);
 			setEditorSize({
 				width: Math.min(containerWidth * 0.8, 400), // 80% of the container width
@@ -62,15 +63,15 @@ function SecondStep() {
 
 	const updateImagePreview = () => {
 		if (editorRef.current) {
-		  const canvas = editorRef.current.getImageScaledToCanvas(); // Get the canvas
-		  const dataUrl = canvas.toDataURL(); // Convert the canvas to a data URL
-		  setImagePreview(dataUrl); // Set the image preview state
+			const canvas = editorRef.current.getImageScaledToCanvas(); // Get the canvas
+			const dataUrl = canvas.toDataURL(); // Convert the canvas to a data URL
+			setImagePreview(dataUrl); // Set the image preview state
 		}
-	  };
+	};
 
 	useEffect(() => {
-			if (image)
-				updateImagePreview();
+		if (image)
+			updateImagePreview();
 	}, [image, scale]);
 
 	const handleSave = () => {
@@ -125,6 +126,7 @@ function SecondStep() {
 	};
 
 	useEffect(() => {
+		
 		client
 			.post("/auth/checkusername/", nextdata, {
 				headers: {
@@ -162,15 +164,17 @@ function SecondStep() {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		const validationErrors = {};
-		const regex = /^(?!\d)[a-zA-Z0-9_]{4,10}$/;
+		const regex = /^(?!\d)[a-zA-Z0-9_]{4,8}$/;
 		const containsSingleUnderscore = (nextdata.username.match(/_/g) || []).length <= 1;
-		if (!nextdata.username.trim()) {
+		if (!nextdata.username.trim())
 			validationErrors.username = "username is required";
-		} else if (!regex.test(nextdata.username) || !containsSingleUnderscore) {
-			validationErrors.username = "username must be satisfies : 4-10 characters long, only letters, digits, at most one underscore, not start with digit.";
-		}
+		else if (exist === true)
+			validationErrors.username = "username already exist";
+		else if (!regex.test(nextdata.username) || !containsSingleUnderscore)
+			validationErrors.username = "username must be satisfies : 4-8 characters long, only letters, digits, at most one underscore, not start with digit.";
 		console.log("validationErrors :", Object.keys(validationErrors).length);
 		setErrors(validationErrors);
+		console.log("validate error lenght :", Object.keys(validationErrors).length)
 		if (Object.keys(validationErrors).length === 0) {
 			const formData = new FormData();
 			formData.append("username", nextdata.username);
@@ -209,6 +213,7 @@ function SecondStep() {
 				{
 					displayEditImage &&
 					<div className={styles["second-step-edit-image"]} ref={containerRef}>
+						<ImCross color="white" className={styles["cros-inside-edit-image"]} onClick={() => {setDisplayEditImage(false)}} />
 						<div className={styles["second-step-image-preview"]}>
 							{
 								imagePreview && <img src={imagePreview} alt="" />
@@ -224,7 +229,7 @@ function SecondStep() {
 								color={[255, 255, 255, 0.6]} // RGBA color for border
 								scale={scale}
 								rotate={0}
-								onImageChange={image ? updateImagePreview: undefined}
+								onImageChange={image ? updateImagePreview : undefined}
 							/>
 						</div>
 						<div className={styles["second-step-avatar-scale"]}>
@@ -272,9 +277,9 @@ function SecondStep() {
 							<button className={styles["second-step-select-image-button"]} onClick={() => { setDisplayEditImage(true) }}>select image</button>
 						</div>
 					</div>
-					{exist && (
+					{errors.username && (
 						<div className={styles["spans-div"]}>
-							<span className={styles["spans"]}>Username already used</span>
+							<span className={styles["spans"]}>{errors.username}</span>
 						</div>
 					)}
 					<button

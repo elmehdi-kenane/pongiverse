@@ -33,9 +33,15 @@
 	top: 250px;
 	padding: 15px 0;
 	margin: 0 auto;
-	background-color: rgb(193, 193, 193);
+	background-color: #1b062a;
 	border-radius: 10px;
 	gap: 10px;
+}
+
+.cros-inside-edit-image {
+	position: absolute;
+	top: 10px;
+	right: 10px;
 }
 
 .second-step-image-preview {

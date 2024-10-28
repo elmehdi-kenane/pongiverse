@@ -211,7 +211,7 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 				roundwinner.name && (
 					<foreignObject x="704" y="695" width="88" height="88">
 						<picture>
-							<source srcSet={roundwinner.id === -1 ? nullplayer :roundwinner.image} />
+							<source srcSet={roundwinner.id === -1 ? nullplayer : roundwinner.image} />
 							<img src={roundwinner.id === -1 ? nullplayer : roundwinner.image} alt="Description of the image" width="88" height="88" style={{ borderRadius: '10px' }} />
 						</picture>
 					</foreignObject>

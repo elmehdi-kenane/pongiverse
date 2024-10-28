@@ -29,7 +29,6 @@ function SignUpWays() {
 	}, [])
 
 	const verify_email = async (email, picture) => {
-		console.log("the dta : ", email)
 		const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/checkemail/`, {
 			method: "POST",
 			headers: {

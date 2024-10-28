@@ -1,7 +1,7 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 from myapp.models import customuser ###########
 from asgiref.sync import sync_to_async
-from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 import json
 from . import chat_consumers
 from datetime import datetime
@@ -11,23 +11,27 @@ from .common import user_channels
 class ChatConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
 		cookiess = self.scope.get('cookies', {})
-		token = cookiess.get('access_token')
-		decoded_token = AccessToken(token)
-		payload_data = decoded_token.payload
-		user_id = payload_data.get('user_id')
-		user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
-		if user is not None:
-			await self.accept()
-			userId = user.id
-			if user_channels.get(userId):
-				user_channels[userId].append(self.channel_name)
-			else:
-				user_channels[userId] = [self.channel_name]
-			message = {
-					'type': 'connected',
-					'message': 'chat connection established'
-				}
-			await self.send(json.dumps(message))
+		token = cookiess.get('refresh_token')
+		if token :
+			try:
+				decoded_token = await sync_to_async(RefreshToken)(token)
+				payload_data = await sync_to_async(lambda: decoded_token.payload)()
+				user_id = payload_data.get('user_id')
+				user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
+				if user is not None:
+					await self.accept()
+					userId = user.id
+					if user_channels.get(userId):
+						user_channels[userId].append(self.channel_name)
+					else:
+						user_channels[userId] = [self.channel_name]
+					message = {
+							'type': 'connected',
+							'message': 'chat connection established'
+						}
+					await self.send(json.dumps(message))
+			except Exception as e:
+				pass
 
 	async def receive(self, text_data):
 		data = json.loads(text_data)
@@ -41,14 +45,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	
 	async def disconnect(self, close_code):
 		cookiess = self.scope.get('cookies', {})
-		token = cookiess.get('access_token')
-		decoded_token = AccessToken(token)
-		payload_data = decoded_token.payload
-		user_id = payload_data.get('user_id')
-		if user_id:
-			user_channels_name = user_channels.get(user_id)
-			filtered_channels_name = [channel_name for channel_name in user_channels_name if channel_name != self.channel_name]
-			user_channels[user_id] = filtered_channels_name
+		token = cookiess.get('refresh_token')
+		if token:
+			try:
+				decoded_token = await sync_to_async(RefreshToken)(token)
+				payload_data = await sync_to_async(lambda: decoded_token.payload)()
+				user_id = payload_data.get('user_id')
+				if user_id:
+					user_channels_name = user_channels.get(user_id)
+					filtered_channels_name = [channel_name for channel_name in user_channels_name if channel_name != self.channel_name]
+					user_channels[user_id] = filtered_channels_name
+			except Exception as e:
+				pass
 
 	async def broadcast_message(self, event):
 		await self.send(text_data=json.dumps(event['data']))

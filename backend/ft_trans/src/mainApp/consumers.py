@@ -1,6 +1,6 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
-from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from . import gameConsumers
 from . import gameMultiplayerConsumers, tournamentGameConsumer
 from . import tournament_consumers
@@ -38,87 +38,91 @@ async def get_friends(username):
 class ChatConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
 		cookiess = self.scope.get('cookies', {})
-		token = cookiess.get('access_token')
-		decoded_token = AccessToken(token)
-		payload_data = decoded_token.payload
-		user_id = payload_data.get('user_id')
-		user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
-		if user is not None:
-			await self.accept()
-			username = user.username
-			# tmp_username = username
-			# user.is_online = True
-			# await sync_to_async(user.save)()
-			channel_namee = user_channels.get(username)
-			if channel_namee:
-				# #print(f"**[Previous channel_name 2]: {channel_namee}")
-				# #print(f"THIS IS THE OLD CHANNEL NAME =======> {username}")
-				await self.channel_layer.send(channel_namee, {
-					'type': 'hmed'
-				})
-			user_channels[username] = self.channel_name
-			# #print(f"**[Current channel_name]: {user_channels[username]}")
-			# #print(f"**[USER CHANNELS]: {user_channels}")
-			# channel_layer = get_channel_layer()
-			# friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
-			# #print(f"ALL THE USERS CHANNEL_NAMES : {user_channels}")
-			# for friend in friends:
-			# 	friend_username = await sync_to_async(lambda: friend.friend.username)()
-			# 	friend_is_online = await sync_to_async(lambda: friend.friend.is_online)()
-			# 	#print(f"friend username : {friend_username}")
-			# 	channel_name = user_channels.get(friend_username)
-			# 	#print(f"USER CHANNEL ON CONNECT IS : {channel_name}")
-			# 	if channel_name and friend_is_online and not user.is_playing:
-			# 		await self.channel_layer.send(
-			# 			channel_name,
-			# 			{
-			# 				'type': 'connected_again',
-			# 				'message': {
-			# 						'user': username,
-			# 						'userInfos': {
-			# 							'id': user.id,
-			# 							'name': user.username,
-			# 							'level': 2,
-			# 							'image': user.avatar.path,
-			# 						}
-			# 					}
-			# 			}
-			# 		)
-			# 	if channel_name and friend_is_online:
-			# 		await self.channel_layer.send(
-			# 			channel_name,
-			# 			{
-			# 				'type': 'connected_again_tourn',
-			# 				'message': {
-			# 						'user': username,
-			# 						'userInfos': {
-			# 							'id': user.id,
-			# 							'name': user.username,
-			# 							'level': 2,
-			# 							'image': user.avatar.path,
-			# 						}
-			# 					}
-			# 			}
-			# 		)
-			# for username, channel_name in user_channels.items():
-			# 	user = await sync_to_async(customuser.objects.filter(username=username).first)()
-			# 	await self.channel_layer.send(
-			# 		channel_name,
-			# 		{
-			# 			'type': 'connected_again_tourn',
-			# 			'message': {
-			# 				'user': tmp_username,
-			# 				'userInfos': {
-			# 					'id': user.id,
-			# 					'name': user.username,
-			# 					'level': 2,
-			# 					'image': user.avatar.path,
-			# 				}
-			# 			}
-			# 		}
-			# 	)
-		else:
-			self.socket.close()
+		token = cookiess.get('refresh_token')
+		if token:
+			try:
+				decoded_token = await sync_to_async(RefreshToken)(token)
+				payload_data = await sync_to_async(lambda: decoded_token.payload)()
+				user_id = payload_data.get('user_id')
+				user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
+				if user is not None:
+					await self.accept()
+					username = user.username
+					# tmp_username = username
+					# user.is_online = True
+					# await sync_to_async(user.save)()
+					channel_namee = user_channels.get(username)
+					if channel_namee:
+						# #print(f"**[Previous channel_name 2]: {channel_namee}")
+						# #print(f"THIS IS THE OLD CHANNEL NAME =======> {username}")
+						await self.channel_layer.send(channel_namee, {
+							'type': 'hmed'
+						})
+					user_channels[username] = self.channel_name
+					# #print(f"**[Current channel_name]: {user_channels[username]}")
+					# #print(f"**[USER CHANNELS]: {user_channels}")
+					# channel_layer = get_channel_layer()
+					# friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
+					# #print(f"ALL THE USERS CHANNEL_NAMES : {user_channels}")
+					# for friend in friends:
+					# 	friend_username = await sync_to_async(lambda: friend.friend.username)()
+					# 	friend_is_online = await sync_to_async(lambda: friend.friend.is_online)()
+					# 	#print(f"friend username : {friend_username}")
+					# 	channel_name = user_channels.get(friend_username)
+					# 	#print(f"USER CHANNEL ON CONNECT IS : {channel_name}")
+					# 	if channel_name and friend_is_online and not user.is_playing:
+					# 		await self.channel_layer.send(
+					# 			channel_name,
+					# 			{
+					# 				'type': 'connected_again',
+					# 				'message': {
+					# 						'user': username,
+					# 						'userInfos': {
+					# 							'id': user.id,
+					# 							'name': user.username,
+					# 							'level': 2,
+					# 							'image': user.avatar.path,
+					# 						}
+					# 					}
+					# 			}
+					# 		)
+					# 	if channel_name and friend_is_online:
+					# 		await self.channel_layer.send(
+					# 			channel_name,
+					# 			{
+					# 				'type': 'connected_again_tourn',
+					# 				'message': {
+					# 						'user': username,
+					# 						'userInfos': {
+					# 							'id': user.id,
+					# 							'name': user.username,
+					# 							'level': 2,
+					# 							'image': user.avatar.path,
+					# 						}
+					# 					}
+					# 			}
+					# 		)
+					# for username, channel_name in user_channels.items():
+					# 	user = await sync_to_async(customuser.objects.filter(username=username).first)()
+					# 	await self.channel_layer.send(
+					# 		channel_name,
+					# 		{
+					# 			'type': 'connected_again_tourn',
+					# 			'message': {
+					# 				'user': tmp_username,
+					# 				'userInfos': {
+					# 					'id': user.id,
+					# 					'name': user.username,
+					# 					'level': 2,
+					# 					'image': user.avatar.path,
+					# 				}
+					# 			}
+					# 		}
+					# 	)
+				else:
+					self.socket.close()
+			except Exception as e:
+				pass
 
 	async def receive(self, text_data):
 		data = json.loads(text_data)

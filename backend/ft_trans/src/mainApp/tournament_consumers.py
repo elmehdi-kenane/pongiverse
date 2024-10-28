@@ -4,7 +4,7 @@ import random
 import time
 import asyncio
 import math
-from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 import datetime
 from friends.models import Friendship
@@ -24,27 +24,28 @@ from .common import tournament_rooms, user_channels, tournaments
 async def disconnected(self, user_channels):
 	print("\n\n Disconnected \n\n")
 	cookiess = self.scope.get('cookies', {})
-	token = cookiess.get('access_token')
-	try:
-		decoded_token = AccessToken(token)
-		payload_data = decoded_token.payload
-		user_id = payload_data.get('user_id')
-		if user_id:
-			user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
-			# username = user.username
-			# tmp_username = username
-			# user.is_online = False
-			# await sync_to_async(user.save)()
-			members = await sync_to_async(list)(TournamentMembers.objects.filter(user=user))
-			for member in members:
-				is_started = await sync_to_async(lambda: member.tournament.is_started)()
-				is_finished = await sync_to_async(lambda:  member.tournament.is_finished)()
-				is_eliminated = await sync_to_async(lambda: member.is_eliminated)()
-				if is_started == False or (is_started == True and is_finished == False and is_eliminated == False):
-					member.is_inside = False
-					await sync_to_async(member.save)()
-	except TokenError:
-		pass
+	token = cookiess.get('refresh_token')
+	if token:
+		try:
+			decoded_token = await sync_to_async(RefreshToken)(token)
+			payload_data = await sync_to_async(lambda: decoded_token.payload)()
+			user_id = payload_data.get('user_id')
+			if user_id:
+				user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
+				# username = user.username
+				# tmp_username = username
+				# user.is_online = False
+				# await sync_to_async(user.save)()
+				members = await sync_to_async(list)(TournamentMembers.objects.filter(user=user))
+				for member in members:
+					is_started = await sync_to_async(lambda: member.tournament.is_started)()
+					is_finished = await sync_to_async(lambda:  member.tournament.is_finished)()
+					is_eliminated = await sync_to_async(lambda: member.is_eliminated)()
+					if is_started == False or (is_started == True and is_finished == False and is_eliminated == False):
+						member.is_inside = False
+						await sync_to_async(member.save)()
+		except TokenError:
+			pass
 
 
 async def create_tournament(self, data, user_channels):
