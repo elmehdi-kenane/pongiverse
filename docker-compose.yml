@@ -5,7 +5,7 @@ services:
     image: postgres:latest
     container_name: postgres
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - /var/lib/postgresql/data:/Users/aagouzou/goinfre/PgData
     ports:
       - "5432:5432"
     env_file:
@@ -17,13 +17,19 @@ services:
     ports:
       - "6379:6379"
     restart: on-failure
+  frontend:
+    build: .
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    restart: on-failure
 
 volumes:
   postgres-data:
     driver: local
     driver_opts:
       type: none
-      device: /Users/mmaqbour/Desktop/PgData
+      device: /Users/aagouzou/goinfre/PgData
       o: bind
 
 # /Users/mmaqbour/Desktop/PgData   ====>   MAC
