@@ -10,6 +10,8 @@ COPY frontend/ /frontend/
 
 COPY ./script.sh /
 
+EXPOSE 3000
+
 RUN chmod +x /script.sh
 
 CMD ["/script.sh"]

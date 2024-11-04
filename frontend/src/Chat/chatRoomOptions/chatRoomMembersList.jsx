@@ -13,7 +13,7 @@ const ChatRoomMembersList = (props) => {
       console.log(selectedChatRoom)
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/chatRoomMembersList`,
+          `https://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/chatRoomMembersList`,
           {
             method: "POST",
             headers: {

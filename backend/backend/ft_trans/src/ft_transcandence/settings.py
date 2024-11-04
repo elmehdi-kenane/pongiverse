@@ -31,11 +31,12 @@ DEBUG = True
 
 MEDIA_URL = '/media/'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', '10.11.7.11']
 
 # Application definition
 
 INSTALLED_APPS = [
+    'sslserver',
     'chat',
     'myapp',
     'Notifications',
@@ -156,7 +157,7 @@ DATABASES = {
         'NAME': DB_NAME,
         'USER': DB_USER,
         'PASSWORD': DB_PASSWORD,
-        'HOST': 'localhost',
+        'HOST': "postgres",
         'PORT': '5432',
     }
 }
@@ -165,7 +166,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("localhost", 6379)],
+            "hosts": [("redis", 6379)],
             "capacity": 1000
         },
     },
@@ -199,11 +200,18 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:3001",
-    "http://localhost:3001",
+    "https://localhost:3000",
+    "https://127.0.0.1:3000",
+    'https://10.11.7.11:3000',
+    "https://127.0.0.1:3001",
+    "https://localhost:3001",
     "https://lh3.googleusercontent.com"
+]
+
+
+CORS_ORIGIN_WHITELIST = [
+'https://localhost:3000',
+'https://10.11.7.11:3000',
 ]
 
 # CORS_ALLOW_ALL_ORIGINS: True

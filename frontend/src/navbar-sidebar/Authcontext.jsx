@@ -98,7 +98,7 @@ export const AuthProvider = ({ children }) => {
     const fetchImages = async () => {
       const promises = allGameFriends.map(async (user) => {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`,
+          `https://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`,
           {
             method: "POST",
             headers: {
@@ -128,7 +128,7 @@ export const AuthProvider = ({ children }) => {
     const fetchNotifsImages = async () => {
       const promises = allGameNotifs.map(async (user) => {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`,
+          `https://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`,
           {
             method: "POST",
             headers: {
@@ -152,7 +152,7 @@ export const AuthProvider = ({ children }) => {
     const getAllGameFriends = async () => {
       try {
         let response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/api/onlineFriends`,
+          `https://${import.meta.env.VITE_IPADDRESS}:8000/api/onlineFriends`,
           {
             method: "POST",
             headers: {
@@ -174,7 +174,7 @@ export const AuthProvider = ({ children }) => {
     const getAllNotifsFriends = async () => {
       try {
         let response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/api/notifsFriends`,
+          `https://${import.meta.env.VITE_IPADDRESS}:8000/api/notifsFriends`,
           {
             method: "POST",
             headers: {
@@ -198,7 +198,7 @@ export const AuthProvider = ({ children }) => {
     const getUserImage = async () => {
       try {
         let response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/api/getUserImage`,
+          `https://${import.meta.env.VITE_IPADDRESS}:8000/api/getUserImage`,
           {
             method: "POST",
             headers: {
@@ -220,7 +220,7 @@ export const AuthProvider = ({ children }) => {
     const getGameCustomize = async () => {
       try {
         let response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/api/getCustomizeGame`,
+          `https://${import.meta.env.VITE_IPADDRESS}:8000/api/getCustomizeGame`,
           {
             credentials: "include",
           }
@@ -297,7 +297,7 @@ export const AuthProvider = ({ children }) => {
     async function sendUserData(uname, currentAllGameFriends) {
       try {
         let response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/api/get_user`,
+          `https://${import.meta.env.VITE_IPADDRESS}:8000/api/get_user`,
           {
             method: "POST",
             headers: {
@@ -335,7 +335,7 @@ export const AuthProvider = ({ children }) => {
       user
     ) {
       const newNotifSocket = new WebSocket(
-        `ws://localhost:8000/ws/notif-socket`
+        `wss://${import.meta.env.VITE_IPADDRESS}:8000/ws/notif-socket`
       );
       newNotifSocket.onopen = () => {
         setNotifSocket(newNotifSocket);
@@ -363,7 +363,7 @@ export const AuthProvider = ({ children }) => {
     }
     if (gamePlayRegex.test(location.pathname) && !socket && user) {
       const newSocket = new WebSocket(
-        `ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/socket-server`
+        `wss://${import.meta.env.VITE_IPADDRESS}:8000/ws/socket-server`
       );
       newSocket.onopen = () => {
         setSocket(newSocket);
@@ -389,7 +389,7 @@ export const AuthProvider = ({ children }) => {
       user
     ) {
       const newChatSocket = new WebSocket(
-        `ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/chat_socket`
+        `wss://${import.meta.env.VITE_IPADDRESS}:8000/ws/chat_socket`
       );
       newChatSocket.onopen = () => {
         setChatSocket(newChatSocket);
@@ -490,7 +490,7 @@ export const AuthProvider = ({ children }) => {
   async function publicCheckAuth() {
     try {
       let response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS}:8000/auth/verifytoken/`,
+        `https://${import.meta.env.VITE_IPADDRESS}:8000/auth/verifytoken/`,
         {
           method: "POST",
           headers: {
@@ -517,7 +517,7 @@ export const AuthProvider = ({ children }) => {
   async function privateCheckAuth() {
     try {
       let response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS}:8000/auth/verifytoken/`,
+        `https://${import.meta.env.VITE_IPADDRESS}:8000/auth/verifytoken/`,
         {
           method: "POST",
           headers: {

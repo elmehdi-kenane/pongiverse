@@ -42,7 +42,7 @@ function TournamentBracket() {
 			})
 		}
 		const check_is_join = async () => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/is-started-and-not-finshed`, {
+			const response = await fetch(`https://${import.meta.env.VITE_IPADDRESS}:8000/api/is-started-and-not-finshed`, {
 				method: "POST",
 				headers: {
 					'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ function TournamentBracket() {
 		// 	setElements(images)
 		// }
 		const gameMembersRounds = async () => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-game-members-round`, {
+			const response = await fetch(`https://${import.meta.env.VITE_IPADDRESS}:8000/api/get-game-members-round`, {
 				method: 'POST',
 				headers: {
 					'Content-type': 'application/json'
@@ -102,7 +102,7 @@ function TournamentBracket() {
 		}
 
 		const get_oponent = async () => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-opponent`, {
+			const response = await fetch(`https://${import.meta.env.VITE_IPADDRESS}:8000/api/get-opponent`, {
 				method: 'POST',
 				headers: {
 					'Content-type': 'application/json'

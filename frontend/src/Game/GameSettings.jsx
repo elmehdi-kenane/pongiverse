@@ -92,7 +92,7 @@ const GameSettings = () => {
     console.log("ball selcted : ", isChecked)
     if (user) {
       try {
-        let response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/customizeGame`, {
+        let response = await fetch(`https://${import.meta.env.VITE_IPADDRESS}:8000/api/customizeGame`, {
           method: "POST",
           credentials: 'include',
           headers: {

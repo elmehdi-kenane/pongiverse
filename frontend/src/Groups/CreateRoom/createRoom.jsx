@@ -67,7 +67,7 @@ const CreateRoom = ({setCreateRoom, setIsBlur, myChatRooms, setMyChatRooms}) => 
         
         try {
           // Perform the fetch request
-          const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/createChatRoom`, {
+          const response = await fetch(`https://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/createChatRoom`, {
             method: "POST",
             body: data,
           });

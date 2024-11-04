@@ -10,7 +10,7 @@ const SuggestedRoom = (props) => {
   const joinChatRoomSubmitter = async () => {
     const toastId = toast.loading("Joining the chat room...");
     try  {
-      const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/joinChatRoom`, {
+      const response = await fetch(`https://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/joinChatRoom`, {
         method: 'POST',
         headers: {'Content-type': 'application/json'},
         body: JSON.stringify({

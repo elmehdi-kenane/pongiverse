@@ -14,7 +14,7 @@ const ChangeChatRoomIcon = (props) => {
     formData.append("room", props.roomId);
     try {
       const response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/changeChatRoomIcon`,
+        `https://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/changeChatRoomIcon`,
         {
           method: "POST",
           body: formData,

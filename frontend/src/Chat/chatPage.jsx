@@ -40,7 +40,7 @@ const Chat = () => {
 	const set_is_inside = async () => {
     try {
 
-      const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/set-is-inside`, {
+      const response = await fetch(`https://${import.meta.env.VITE_IPADDRESS}:8000/api/set-is-inside`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

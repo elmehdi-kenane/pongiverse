@@ -6,7 +6,7 @@ const SuggestionFriendCard = ({ secondUsername, avatar }) => {
     const { user } = useContext(AuthContext);
     const [friendRequestBtn, setFriendRequestBtn] = useState(false);
     const handleAddFriendReq = () => {
-    fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/add_friend_request/`, {
+    fetch(`https://${import.meta.env.VITE_IPADDRESS}:8000/friends/add_friend_request/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

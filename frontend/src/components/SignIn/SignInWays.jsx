@@ -33,7 +33,7 @@ function SignInWays() {
 
 	const verify_email = async (email) => {
 		console.log("the dta : ", email)
-		const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/googleLogin/`, {
+		const response = await fetch(`https://${import.meta.env.VITE_IPADDRESS}:8000/auth/googleLogin/`, {
 			method: "POST",
 			headers: {
 				'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ function SignInWays() {
 
 	useEffect(() => {
 		const google_get_data = async () => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/google-login-get-token/`, {
+			const response = await fetch(`https://${import.meta.env.VITE_IPADDRESS}:8000/auth/google-login-get-token/`, {
 				method: "POST",
 				headers: {
 					'Content-Type': 'application/json',
@@ -84,7 +84,7 @@ function SignInWays() {
 
 	useEffect(() => {
 		const intra_get_data = async () => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/intra-login-get-token/`, {
+			const response = await fetch(`https://${import.meta.env.VITE_IPADDRESS}:8000/auth/intra-login-get-token/`, {
 				method: "POST",
 				headers: {
 					'Content-Type': 'application/json',
@@ -117,7 +117,7 @@ function SignInWays() {
 
 	const handleGoogleClick = () => {
 		const getGoogleUrl = async () => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/google-get-url`, {
+			const response = await fetch(`https://${import.meta.env.VITE_IPADDRESS}:8000/auth/google-get-url`, {
 				method: "GET",
 				headers: {
 					'Content-Type': 'application/json',
@@ -132,10 +132,10 @@ function SignInWays() {
 		}
 		getGoogleUrl()
 	}
-	console.log("HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEE: ", `http://${import.meta.env.VITE_IPADDRESS}:8000/auth/intra-get-url`)
+	console.log("HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEE: ", `https://${import.meta.env.VITE_IPADDRESS}:8000/auth/intra-get-url`)
 	const handleIntraClick = () => {
 		const getIntraUrl = async () => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/intra-get-url`, {
+			const response = await fetch(`https://${import.meta.env.VITE_IPADDRESS}:8000/auth/intra-get-url`, {
 				method: "GET",
 				headers: {
 					'Content-Type': 'application/json',

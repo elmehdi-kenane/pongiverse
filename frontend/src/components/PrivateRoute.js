@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 const client = axios.create({
-baseURL: `http://${import.meta.env.VITE_IPADDRESS}:8000`,
+baseURL: `https://${import.meta.env.VITE_IPADDRESS}:8000`,
 });
 
 function PrivateRoute({ children }) {

@@ -95,7 +95,7 @@ function NavbarSidebar() {
     e.preventDefault();
     try {
       let response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS}:8000/api/logout`,
+        `https://${import.meta.env.VITE_IPADDRESS}:8000/api/logout`,
         {
           method: "POST",
           credentials: "include",

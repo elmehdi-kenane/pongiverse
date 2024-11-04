@@ -35,7 +35,7 @@ const MyRoomContent = (props) => {
     formData.append("cover", chatRoomCover);
     const toastId = toast.loading("Updating chat room cover. Please wait...");
     try {
-      const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/changeChatRoomCover`, {
+      const response = await fetch(`https://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/changeChatRoomCover`, {
         method: "POST",
         body: formData,
       });

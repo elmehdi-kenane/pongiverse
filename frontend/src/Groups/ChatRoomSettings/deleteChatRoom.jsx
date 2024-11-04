@@ -19,7 +19,7 @@ const DeleteChatRoom = (props) => {
     const toastId = toast.loading("Deleting chat room...");
     try {
       const response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/deleteChatRoom/${props.roomId}`,
+        `https://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/deleteChatRoom/${props.roomId}`,
         {
           method: "DELETE",
         }

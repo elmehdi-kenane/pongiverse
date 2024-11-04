@@ -8,7 +8,7 @@ export const LeaveChatRoomSubmitter = async (user, rooms, setRooms, roomId) => {
   setTimeout(async () => {
     try {
       const response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/leaveChatRoom`,
+        `https://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/leaveChatRoom`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
