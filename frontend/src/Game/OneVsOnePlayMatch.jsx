@@ -3,6 +3,7 @@ import AuthContext from '../navbar-sidebar/Authcontext'
 import { useNavigate, useParams } from 'react-router-dom'
 import * as Icons from '../assets/navbar-sidebar'
 import '../assets/navbar-sidebar/index.css';
+import OneVsOneStats from './OneVsOneStats';
 
 class Player {
     constructor(x, y, width, height, color, score) {
@@ -161,23 +162,23 @@ const OneVsOnePlayMatch = () => {
 
     const [playersInfos, setPlayersInfos] = useState([
         {
-          totalScore: 0,
-          score: 0,
-          hit: 0,
-          accuracy: 0,
-          rating: 0,
+            totalScore: 0,
+            score: 0,
+            hit: 0,
+            accuracy: 0,
+            rating: 0,
         },
         {
-          totalScore: 0,
-          score: 0,
-          hit: 0,
-          accuracy: 0,
-          rating: 0
+            totalScore: 0,
+            score: 0,
+            hit: 0,
+            accuracy: 0,
+            rating: 0
         },
         {
-          time: 0,
+            time: 0,
         }
-      ])
+        ])
 
     // const radius = Math.random() + 0.8
 
@@ -469,26 +470,26 @@ function createParticle(x, y) {
         // }
     }
 
-    const gamefinishedAborted = (message) => {
-        setUserName1(message.user1)
-        setUserName2(message.user2)
-        setScore1(message.playerScore1)
-        setScore2(message.playerScore2)
-        isGameStarted = false
-        particles = []
-        const canvas = canvasRef.current;
-        const gameCustom = gameCustomizeRef.current
-        console.log(playerNo)
-        if (canvas && gameCustom) {
-            const widthScalingFactor = canvas.width / 710;
-            const heightScalingFactor = canvas.height / 400;
-            const scalingFactor = Math.min(widthScalingFactor, heightScalingFactor);
-            player1.current.changeProperties((15 * widthScalingFactor), (165 * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
-            player2.current.changeProperties((685 * widthScalingFactor), (165 * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
-            ball.current.changeProperties((355 * widthScalingFactor), (200 * heightScalingFactor), (7 * scalingFactor), gameCustom[1]);
-        }
-        draw()
-    }
+    // const gamefinishedAborted = (message) => {
+    //     setUserName1(message.user1)
+    //     setUserName2(message.user2)
+    //     setScore1(message.playerScore1)
+    //     setScore2(message.playerScore2)
+    //     isGameStarted = false
+    //     particles = []
+    //     const canvas = canvasRef.current;
+    //     const gameCustom = gameCustomizeRef.current
+    //     console.log(playerNo)
+    //     if (canvas && gameCustom) {
+    //         const widthScalingFactor = canvas.width / 710;
+    //         const heightScalingFactor = canvas.height / 400;
+    //         const scalingFactor = Math.min(widthScalingFactor, heightScalingFactor);
+    //         player1.current.changeProperties((15 * widthScalingFactor), (165 * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
+    //         player2.current.changeProperties((685 * widthScalingFactor), (165 * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
+    //         ball.current.changeProperties((355 * widthScalingFactor), (200 * heightScalingFactor), (7 * scalingFactor), gameCustom[1]);
+    //     }
+    //     draw()
+    // }
 
     useEffect(() => {
         if (socket && socket.readyState === WebSocket.OPEN && user) {
@@ -540,7 +541,7 @@ function createParticle(x, y) {
                     setScore1(message.playerScore1)
                     setScore2(message.playerScore2)
                     setGameFinished(true)
-                    gamefinishedAborted(message)
+                    // gamefinishedAborted(message)
                     setTime(message.time)
                     allPlayersStats[0].totalScore = message.score[0]
                     allPlayersStats[1].totalScore = message.score[1]
@@ -562,7 +563,7 @@ function createParticle(x, y) {
                     setScore1(message.playerScore1)
                     setScore2(message.playerScore2)
                     setGameAborted(true)
-                    gamefinishedAborted(message)
+                    // gamefinishedAborted(message)
                     setTime(message.time)
                     allPlayersStats[0].totalScore = message.score[0]
                     allPlayersStats[1].totalScore = message.score[1]
@@ -704,101 +705,19 @@ function createParticle(x, y) {
         }
     }, [])
 
-    const exitOneVsOneGame = () => {
-        navigate('../game/solo/1vs1')
-    }
-
     return (
         <>
-            {(gameFinished || gameAborted) && (
-                <div className='onevsone' style={{position: 'relative'}} >
-                {(gameFinished && user === userName1) ? ((playersInfos[0].totalScore > playersInfos[1].totalScore) ? (
-                    <>
-                        <div className='winner_cup' >
-                            <img src={Icons.winnerCup} alt="winner cup" />
-                        </div>
-                        <p className='winner_congrats' >WINNER WINNER CHICKEN DINNER!</p>
-                    </>
-                ) : (
-                    <p className='loser_support' >BETTER LUCK NEXT TIME!</p>
-                )) : (gameFinished && user === userName2) ? ((playersInfos[1].totalScore > playersInfos[0].totalScore) ? (
-                    <>
-                        <div className='winner_cup' >
-                            <img src={Icons.winnerCup} alt="winner cup" />
-                        </div>
-                        <p className='winner_congrats' >WINNER WINNER CHICKEN DINNER!</p>
-                    </>
-                ) : (
-                    <p className='loser_support' >BETTER LUCK NEXT TIME!</p>
-                )) : (
-                    <p className='loser_support' >GAME ABORTED!</p>
-                )}
-
-                {/* {(playerScore1 > playerScore2 && playerNo === 1) && (
-                        <div className='winner_cup' >
-                            <img src={Icons.winnerCup} alt="winner cup" />
-                        </div>
-                    )}
-                {(playerScore1 > playerScore2 && playerNo === 1) ? (<p className='winner_congrats' >WINNER WINNER CHICKEN DINNER!</p>) : (<p className='loser_support' >BETTER LUCK NEXT TIME!</p>)} */}
-                <div className='gameStats_container' >
-                    <div className='gameStats_playerInfos' >
-                    <div className='gameStats_playerInfos-details' >
-                        <div>
-                        {playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[0].avatar}`} alt="" />) : (<img src={Icons.solidGrey} alt="" />)}
-                        <p>{userName1}</p>
-                        </div>
-                        <div>
-                        <p>{userName2}</p>
-                        {playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[1].avatar}`} alt="" />) : (<img src={Icons.solidGrey} alt="" />)}
-                        </div>
-                    </div>
-                    </div>
-                    <div className='gameStats_details' >
-                    <div>
-                        <p>{playersInfos[0].totalScore}</p>
-                        <p>Score</p>
-                        <p>{playersInfos[1].totalScore}</p>
-                    </div>
-                    </div>
-                    <div className='gameStats_details' >
-                    <div>
-                        <p>{playersInfos[0].score}</p>
-                        <p>Goals</p>
-                        <p>{playersInfos[1].score}</p>
-                    </div>
-                    </div>
-                    <div className='gameStats_details' >
-                    <div>
-                        <p>{playersInfos[0].hit}</p>
-                        <p>Hit</p>
-                        <p>{playersInfos[1].hit}</p>
-                    </div>
-                    </div>
-                    <div className='gameStats_details' >
-                    <div>
-                        {(playersInfos[0].hit) ?
-                        (<p>{Math.floor((playersInfos[0].score / playersInfos[0].hit ) * 100)}%</p>) :
-                        (<p>0%</p>)
-                        }
-                        <p>Accuracy</p>
-                        {(playersInfos[1].hit) ?
-                        (<p>{Math.floor((playersInfos[1].score / playersInfos[1].hit ) * 100)}%</p>) :
-                        (<p>0%</p>)
-                        }
-                    </div>
-                    </div>
-                    <div className='gameStats_details' >
-                    <div>
-                        <p>{playersInfos[0].rating}</p>
-                        <p>Rating</p>
-                        <p>{playersInfos[1].rating}</p>
-                    </div>
-                    </div>
-                </div>
-                <div className='stats-selects stats-selects-modes' >
-                    <button onClick={exitOneVsOneGame} >Exit</button>
-                </div>
-                </div>)}
+            {(gameFinished || gameAborted) &&
+                <OneVsOneStats 
+                    gameFinished={gameFinished}
+                    user={user}
+                    userName1={userName1}
+                    userName2={userName2}
+                    playersInfos={playersInfos}
+                    playersPics={playersPics}
+                    mode='online'
+                />
+            }
             {(!gameFinished && !gameAborted) && (<div className='onevsone-pm' ref={wrapperRef} >
                 {gameFinished ? (<div style={{fontWeight:"bolder", textAlign:"center", color:"white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}><p>GAME FINISHED</p></div>) : gameAborted ? (<div style={{fontWeight:"bolder", textAlign:"center", color:"white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}><p>GAME ABORTED</p></div>) : ''}
                 <div ref={resultRef} className='onevsone-pm-infos' >

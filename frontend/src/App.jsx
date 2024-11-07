@@ -39,6 +39,7 @@ import GameSettings from "./Game/GameSettings";
 import Settings from "./Settings/Settings";
 import Bot from "./Game/Bot";
 import LocalTournamentFillMembers from "./Tournament/LocalTournament/LocalTournamentFillMembers";
+import OneVsOneOffline from "./Game/OneVsOneOffline";
 
 const App = () => {
 	return (
@@ -78,6 +79,10 @@ const App = () => {
 								<Route
 									path="game/solo/1vs1/create-or-join"
 									element={<OneVsOneCreateOrJoin />}
+								/>
+								<Route
+									path="game/solo/1vs1/offline"
+									element={<OneVsOneOffline />}
 								/>
 								<Route path="game/solo/2vs2" element={<TwoVersusTwo />} />
 								<Route

@@ -23,6 +23,10 @@ const OneVersusOne = () => {
         setSelected(3)
     }
 
+    const offlineMatch = () => {
+        setSelected(4)
+    }
+
     const returnBackwards = () => {
         navigate('../game/solo')
     }
@@ -37,6 +41,9 @@ const OneVersusOne = () => {
         }
         if (selected === 3) {
             navigate('../game/solo/1vs1/create-or-join')
+        }
+        if (selected === 4) {
+            navigate('../game/solo/1vs1/offline')
         }
     }
 
@@ -188,6 +195,13 @@ const OneVersusOne = () => {
                     </div>
                     <h1>Create or Join Match</h1>
                     <p>Start a new game or join an existing one in Create/Join Match mode. Create a room and wait for other player to join, or jump into an available match for flexible and instant gameplay.</p>
+                </div>
+                <div className={(selected === 4) ? 'duelMode-modes-offlineMatch duelMode-modes-offlineMatch-selected' : 'duelMode-modes-offlineMatch'} onClick={offlineMatch} >
+                    <div>
+                        <img src={Icons.friendMatch} alt="friend-match" />
+                    </div>
+                    <h1>Offline mode</h1>
+                    <p>Challenge your friend to a 1v1 match in Local Duel mode! Share the keyboard, go head-to-head, and enjoy a competitive ping pong showdown—all without leaving the same screen!</p>
                 </div>
             </div>
             <div className='duelMode-cancel-next' >
