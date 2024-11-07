@@ -28,9 +28,13 @@ function SecondStep() {
 	const [errors, setErrors] = useState({});
 	const location = useLocation();
 	const data = location.state || {};
-	if (!data.email || !data.password) {
-		navigate("/signup");
-	}
+	
+	useEffect(() =>{
+		if (!data.email || !data.password) {
+			navigate("/signup");
+		}
+	},[data])
+
 	const [exist, setExist] = useState(false);
 	const [image, setImage] = useState(null);
 	const [displayEditImage, setDisplayEditImage] = useState(false);

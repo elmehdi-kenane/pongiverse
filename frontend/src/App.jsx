@@ -42,6 +42,7 @@ import { ToastContainer, Bounce } from "react-toastify";
 import { SocketDataContextProvider } from "./navbar-sidebar/SocketDataContext";
 import LocalTournamentFillMembers from "./Tournament/LocalTournament/LocalTournamentFillMembers";
 import ErrorPage from "./ErrorPage/ErrorPage";
+import ProtectedRoute from "./components/ProtectedRoute";
 import { DashboardWrapper } from './Dashboard/DashboardWrapper';
 
 import bg1 from "./assets/Body/2.png"
@@ -61,6 +62,8 @@ const App = () => {
               <Route path="/" element={<HomePage />} exact />
               <Route path="/signup" element={<SignUpPage />} />
               <Route path="/signin" element={<SignInPage />} />
+              {/* <Route path="/signup" element={<ProtectedRoute><SignUpPage /></ProtectedRoute>} />
+              <Route path="/signin" element={<ProtectedRoute><SignInPage /></ProtectedRoute>} /> */}
               <Route path="/SecondStep" element={<SecondStep />} />
               <Route path="/WaysSecondStep" element={<WaysSecondStep />} />
               <Route path="/ForgotPassword" element={<ForgotPassword />} />

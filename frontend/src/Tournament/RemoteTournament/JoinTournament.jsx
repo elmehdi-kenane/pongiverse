@@ -148,6 +148,7 @@ function JoinTournament() {
 				headers: {
 					'Content-Type': 'application/json',
 				},
+				credentials: 'include',
 				body: JSON.stringify({
 					id: data
 				})
@@ -168,7 +169,7 @@ function JoinTournament() {
 					})
 				}
 			} else {
-				console.error('Failed to fetch data');
+				navigate('/signin')
 			}
 		}
 		if (user)

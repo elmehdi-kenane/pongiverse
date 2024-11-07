@@ -10,6 +10,7 @@ from django.db.models import Q
 from myapp.serializers import MyModelSerializer
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError, AccessToken
 from .common import tournament_rooms, tournaments
+from myapp.decorators import authentication_required
 # from rest_framework.exceptions import AuthenticationFailed
 # from .serializers import UserSerializer
 # from .models import User
@@ -236,8 +237,11 @@ def notifs_friends(request):
 
 	return Response({'message': allNotifs})
 
+
+@authentication_required
 @api_view(['POST'])
 def get_tournament_data(request):
+	print("*************get_tournament_data")
 	tournament_id = request.data.get('id')
 	if tournament_id == '' :
 		tournament_id = 0

@@ -17,7 +17,6 @@ from .views import SignUpIntraGetUrl
 from .views import SignUpGoogleGetUserData
 from .views import SignUpIntraGetUserData
 from .views import LogoutView
-from .views import CheckIsAuthenticated
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -40,6 +39,5 @@ urlpatterns = [
     path('sign-up-google-login-get-token/', SignUpGoogleGetUserData, name='SignUpGoogleGetUserData'),
     path('sign-up-intra-login-get-token/', SignUpIntraGetUserData, name='SignUpIntraGetUserData'),
     path('logout/', LogoutView, name='logout'),
-    path('check-is-authenticated/', CheckIsAuthenticated, name='CheckIsAuthenticated'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

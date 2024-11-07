@@ -12,590 +12,588 @@ const AuthContext = createContext();
 export default AuthContext;
 
 export const AuthProvider = ({ children }) => {
-  let navigate = useNavigate();
-  let location = useLocation();
-  const [allGameFriends, setAllGameFriends] = useState([]);
-  const [userImages, setUserImages] = useState([]);
-  const [loading, setLoading] = useState(true);
-  // const [gameNotif, setGameNotif] = useState(false)
-  let [user, setUser] = useState("");
-  let [userImg, setUserImg] = useState("");
-  let [socket, setSocket] = useState(null);
-  let socketRef = useRef(socket);
-  let [socketRecreated, setSocketRecreated] = useState(false);
-  let [allGameNotifs, setAllGameNotifs] = useState([]);
-  let [notifsImgs, setNotifsImgs] = useState([]);
-  let allGameFriendsRef = useRef(allGameFriends);
-  let [isBlur, setIsBlur] = useState(false);
-  //chat socket ------------------------------------
-  let [chatSocket, setChatSocket] = useState(null);
+	let navigate = useNavigate();
+	let location = useLocation();
+	const [allGameFriends, setAllGameFriends] = useState([]);
+	const [userImages, setUserImages] = useState([]);
+	const [loading, setLoading] = useState(true);
+	// const [gameNotif, setGameNotif] = useState(false)
+	let [user, setUser] = useState("");
+	let [userImg, setUserImg] = useState("");
+	let [socket, setSocket] = useState(null);
+	let socketRef = useRef(socket);
+	let [socketRecreated, setSocketRecreated] = useState(false);
+	let [allGameNotifs, setAllGameNotifs] = useState([]);
+	let [notifsImgs, setNotifsImgs] = useState([]);
+	let allGameFriendsRef = useRef(allGameFriends);
+	let [isBlur, setIsBlur] = useState(false);
+	//chat socket ------------------------------------
+	let [chatSocket, setChatSocket] = useState(null);
 
-  // Glass Background State --------------------------------------------
-  const [isGlass, setIsGlass] = useState(false);
+	// Glass Background State --------------------------------------------
+	const [isGlass, setIsGlass] = useState(false);
 
-  // Imad's States --------------------------------------------
-  //-- Glass Background
-  const [isReport, setIsReport] = useState(false);
-  const [isBlock, setIsBlock] = useState(false);
-  const [isGameStats, setIsGameStats] = useState(false);
-  const [isChatBlur, setIsChartBlur] = useState(false);
+	// Imad's States --------------------------------------------
+	//-- Glass Background
+	const [isReport, setIsReport] = useState(false);
+	const [isBlock, setIsBlock] = useState(false);
+	const [isGameStats, setIsGameStats] = useState(false);
+	const [isChatBlur, setIsChartBlur] = useState(false);
 
-  const [reportValue, setReportValue] = useState(null);
-  const reportContentRef = useRef(null);
-  const blockRef = useRef(null);
-  const blockContentRef = useRef(null);
+	const [reportValue, setReportValue] = useState(null);
+	const reportContentRef = useRef(null);
+	const blockRef = useRef(null);
+	const blockContentRef = useRef(null);
 
-  let [notifSocket, setNotifSocket] = useState(null);
+	let [notifSocket, setNotifSocket] = useState(null);
 
-  let [hideNavSideBar, setHideNavSideBar] = useState(false);
-  let [gameCustomize, setGameCustomize] = useState([
-    "#FFFFFF",
-    "#1C00C3",
-    "#5241AB",
-    false,
-  ]);
-  const oneVsOneIdRegex = /^\/mainpage\/play\/1vs1\/\d+$/;
-  const twoVsTwoIdRegex = /^\/mainpage\/play\/2vs2\/\d+$/;
-  const gamePlayRegex = /^\/mainpage\/(game|play)(\/[\w\d-]*)*$/;
+	let [hideNavSideBar, setHideNavSideBar] = useState(false);
+	let [gameCustomize, setGameCustomize] = useState([
+		"#FFFFFF",
+		"#1C00C3",
+		"#5241AB",
+		false,
+	]);
+	const oneVsOneIdRegex = /^\/mainpage\/play\/1vs1\/\d+$/;
+	const twoVsTwoIdRegex = /^\/mainpage\/play\/2vs2\/\d+$/;
+	const gamePlayRegex = /^\/mainpage\/(game|play)(\/[\w\d-]*)*$/;
 
-  // Chat Notification and Chat Room Invitation States --------------------------------------------
-  const [chatRoomInvitationsCounter, setChatRoomInvitationsCounter] =
-    useState(0);
-  const [chatNotificationCounter, setChatNotificationCounter] = useState(0);
-  const RoomsInvitationRef = useRef(null);
-  const chatNotificationRef = useRef(null);
+	// Chat Notification and Chat Room Invitation States --------------------------------------------
+	const [chatRoomInvitationsCounter, setChatRoomInvitationsCounter] =
+		useState(0);
+	const [chatNotificationCounter, setChatNotificationCounter] = useState(0);
+	const RoomsInvitationRef = useRef(null);
+	const chatNotificationRef = useRef(null);
 
-  useEffect(() => {
-    RoomsInvitationRef.current = chatRoomInvitationsCounter;
-  }, [chatRoomInvitationsCounter]);
+	useEffect(() => {
+		RoomsInvitationRef.current = chatRoomInvitationsCounter;
+	}, [chatRoomInvitationsCounter]);
 
-  useEffect(() => {
-    chatNotificationRef.current = chatNotificationCounter;
-  }, [chatNotificationCounter]);
+	useEffect(() => {
+		chatNotificationRef.current = chatNotificationCounter;
+	}, [chatNotificationCounter]);
 
-  // Glass Background Effect
-  useEffect(() => {
-    if (!isReport && !isBlock && !isGameStats && !isBlur) setIsGlass(false);
-    else setIsGlass(true);
-  }, [isReport, isBlock, isGameStats]);
+	// Glass Background Effect
+	useEffect(() => {
+		if (!isReport && !isBlock && !isGameStats && !isBlur) setIsGlass(false);
+		else setIsGlass(true);
+	}, [isReport, isBlock, isGameStats]);
 
-  // Glass Background Effect
-  useEffect(() => {
-    if (!isReport && !isBlock && !isBlur) setIsGlass(false);
-    else setIsGlass(true);
-  }, [isReport, isBlock]);
+	// Glass Background Effect
+	useEffect(() => {
+		if (!isReport && !isBlock && !isBlur) setIsGlass(false);
+		else setIsGlass(true);
+	}, [isReport, isBlock]);
 
-  useEffect(() => {
-    allGameFriendsRef.current = allGameFriends;
-  }, [allGameFriends]);
+	useEffect(() => {
+		allGameFriendsRef.current = allGameFriends;
+	}, [allGameFriends]);
 
 	useEffect(() => {
 		socketRef.current = socket
 	}, [socket])
 
 
-  useEffect(() => {
-    const fetchImages = async () => {
-      const promises = allGameFriends.map(async (user) => {
-        const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              image: user.image,
-            }),
-          }
-        );
-        const blob = await response.blob();
-        return URL.createObjectURL(blob);
-      });
-      const images = await Promise.all(promises);
-      setUserImages(images);
-    };
-    if (allGameFriends) {
-      let loadingImage = [];
-      for (let i = 0; i < allGameFriends.length; i++)
-        loadingImage.push(Icons.solidGrey);
-      setUserImages(loadingImage);
-      fetchImages();
-    }
-  }, [allGameFriends]);
+	useEffect(() => {
+		const fetchImages = async () => {
+			const promises = allGameFriends.map(async (user) => {
+				const response = await fetch(
+					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`,
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							image: user.image,
+						}),
+					}
+				);
+				const blob = await response.blob();
+				return URL.createObjectURL(blob);
+			});
+			const images = await Promise.all(promises);
+			setUserImages(images);
+		};
+		if (allGameFriends) {
+			let loadingImage = [];
+			for (let i = 0; i < allGameFriends.length; i++)
+				loadingImage.push(Icons.solidGrey);
+			setUserImages(loadingImage);
+			fetchImages();
+		}
+	}, [allGameFriends]);
 
-  useEffect(() => {
-    const fetchNotifsImages = async () => {
-      const promises = allGameNotifs.map(async (user) => {
-        const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              image: user.avatar,
-            }),
-          }
-        );
-        const blob = await response.blob();
-        return URL.createObjectURL(blob);
-      });
-      const images = await Promise.all(promises);
-      setNotifsImgs(images);
-    };
-    if (allGameFriends) fetchNotifsImages();
-  }, [allGameNotifs]);
+	useEffect(() => {
+		const fetchNotifsImages = async () => {
+			const promises = allGameNotifs.map(async (user) => {
+				const response = await fetch(
+					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`,
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							image: user.avatar,
+						}),
+					}
+				);
+				const blob = await response.blob();
+				return URL.createObjectURL(blob);
+			});
+			const images = await Promise.all(promises);
+			setNotifsImgs(images);
+		};
+		if (allGameFriends) fetchNotifsImages();
+	}, [allGameNotifs]);
 
-  useEffect(() => {
-    const getAllGameFriends = async () => {
-      try {
-        let response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/api/onlineFriends`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              user: user,
-            }),
-          }
-        );
-        let friends = await response.json();
-        if (friends.message.length) setAllGameFriends(friends.message);
-        setLoading(false);
-      } catch (e) {
-        console.log("something wrong with fetch");
-      }
-    };
+	useEffect(() => {
+		const getAllGameFriends = async () => {
+			try {
+				let response = await fetch(
+					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/onlineFriends`,
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							user: user,
+						}),
+					}
+				);
+				let friends = await response.json();
+				if (friends.message.length) setAllGameFriends(friends.message);
+				setLoading(false);
+			} catch (e) {
+				console.log("something wrong with fetch");
+			}
+		};
 
-    const getAllNotifsFriends = async () => {
-      try {
-        let response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/api/notifsFriends`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              user: user,
-            }),
-          }
-        );
-        let friends = await response.json();
-        if (friends.message.length) {
-          console.log(friends.message);
-          setAllGameNotifs(friends.message);
-        }
-      } catch (e) {
-        console.log("something wrong with fetch");
-      }
-    };
+		const getAllNotifsFriends = async () => {
+			try {
+				let response = await fetch(
+					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/notifsFriends`,
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							user: user,
+						}),
+					}
+				);
+				let friends = await response.json();
+				if (friends.message.length) {
+					console.log(friends.message);
+					setAllGameNotifs(friends.message);
+				}
+			} catch (e) {
+				console.log("something wrong with fetch");
+			}
+		};
 
-    const getUserImage = async () => {
-      try {
-        let response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/api/getUserImage`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              user: user,
-            }),
-          }
-        );
-        const blob = await response.blob();
-        const image = URL.createObjectURL(blob);
-        setUserImg(image);
-      } catch (e) {
-        console.log("something wrong with fetch");
-      }
-    };
+		const getUserImage = async () => {
+			try {
+				let response = await fetch(
+					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getUserImage`,
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							user: user,
+						}),
+					}
+				);
+				const blob = await response.blob();
+				const image = URL.createObjectURL(blob);
+				setUserImg(image);
+			} catch (e) {
+				console.log("something wrong with fetch");
+			}
+		};
 
-    const getGameCustomize = async () => {
-      try {
-        let response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/api/getCustomizeGame`,
-          {
-            credentials: "include",
-          }
-        );
-        const res = await response.json();
-        console.log(res);
-        if (res.data) setGameCustomize(res.data);
-      } catch (e) {
-        console.log("something wrong with fetch");
-      }
-    };
+		const getGameCustomize = async () => {
+			try {
+				let response = await fetch(
+					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getCustomizeGame`,
+					{
+						credentials: "include",
+					}
+				);
+				const res = await response.json();
+				console.log(res);
+				if (res.data) setGameCustomize(res.data);
+			} catch (e) {
+				console.log("something wrong with fetch");
+			}
+		};
 
-    if (
-      location.pathname !== "/" &&
-      location.pathname !== "/signup" &&
-      location.pathname !== "/signin" &&
-      location.pathname !== "/SecondStep" &&
-      location.pathname !== "/WaysSecondStep" &&
-      location.pathname !== "/ForgotPassword" &&
-      location.pathname !== "/ChangePassword" &&
-      user &&
-      !allGameNotifs.length
-    )
-      getAllNotifsFriends();
-    // else
-    // 	setAllGameNotifs([])
+		if (
+			location.pathname !== "/" &&
+			location.pathname !== "/signup" &&
+			location.pathname !== "/signin" &&
+			location.pathname !== "/SecondStep" &&
+			location.pathname !== "/WaysSecondStep" &&
+			location.pathname !== "/ForgotPassword" &&
+			location.pathname !== "/ChangePassword" &&
+			user &&
+			!allGameNotifs.length
+		)
+			getAllNotifsFriends();
+		// else
+		// 	setAllGameNotifs([])
 
-    if (
-      (location.pathname === "/mainpage/game/solo/1vs1/friends" ||
-        location.pathname === "/mainpage/game/createtournament" ||
-        location.pathname === "/mainpage/game/solo/2vs2/friends") &&
-      user
-    )
-      getAllGameFriends();
-    else setAllGameFriends([]);
+		if (
+			(location.pathname === "/mainpage/game/solo/1vs1/friends" ||
+				location.pathname === "/mainpage/game/createtournament" ||
+				location.pathname === "/mainpage/game/solo/2vs2/friends") &&
+			user
+		)
+			getAllGameFriends();
+		else setAllGameFriends([]);
 
-    if (
-      location.pathname !== "/" &&
-      location.pathname !== "/signup" &&
-      location.pathname !== "/signin" &&
-      location.pathname !== "/SecondStep" &&
-      location.pathname !== "/WaysSecondStep" &&
-      location.pathname !== "/ForgotPassword" &&
-      location.pathname !== "/ChangePassword" &&
-      user &&
-      !userImg
-    )
-      getUserImage();
+		if (
+			location.pathname !== "/" &&
+			location.pathname !== "/signup" &&
+			location.pathname !== "/signin" &&
+			location.pathname !== "/SecondStep" &&
+			location.pathname !== "/WaysSecondStep" &&
+			location.pathname !== "/ForgotPassword" &&
+			location.pathname !== "/ChangePassword" &&
+			user &&
+			!userImg
+		)
+			getUserImage();
 
-    if (
-      (location.pathname === "/mainpage/game/board" ||
-        oneVsOneIdRegex.test(location.pathname) ||
-        twoVsTwoIdRegex.test(location.pathname)) &&
-      user
-    )
-      getGameCustomize();
+		if (
+			(location.pathname === "/mainpage/game/board" ||
+				oneVsOneIdRegex.test(location.pathname) ||
+				twoVsTwoIdRegex.test(location.pathname)) &&
+			user
+		)
+			getGameCustomize();
 
-    if (
-      oneVsOneIdRegex.test(location.pathname) ||
-      twoVsTwoIdRegex.test(location.pathname) ||
-      location.pathname === "/mainpage/game/solo/computer"
-    )
-      setHideNavSideBar(true);
-    else setHideNavSideBar(false);
-  }, [location.pathname, user]);
+		if (
+			oneVsOneIdRegex.test(location.pathname) ||
+			twoVsTwoIdRegex.test(location.pathname) ||
+			location.pathname === "/mainpage/game/solo/computer"
+		)
+			setHideNavSideBar(true);
+		else setHideNavSideBar(false);
+	}, [location.pathname, user]);
 
-  useEffect(() => {
-    const addUser = (newUser, currentAllGameFriends) => {
-      const userExists = currentAllGameFriends.some(
-        (user) => user.name === newUser.name
-      );
-      if (!userExists) setAllGameFriends([...currentAllGameFriends, newUser]);
-    };
-    async function sendUserData(uname, currentAllGameFriends) {
-      try {
-        let response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/api/get_user`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              uname: uname,
-            }),
-          }
-        );
-        let data = await response.json();
-        const newUser = {
-          id: data.id,
-          name: data.name,
-          level: data.level,
-          image: data.image,
-        };
-        addUser(newUser, currentAllGameFriends);
-      } catch (error) {
-        console.error(
-          "There has been a problem with your fetch operation:",
-          error
-        );
-      }
-    }
-    if (
-      location.pathname !== "/" &&
-      location.pathname !== "/signup" &&
-      location.pathname !== "/signin" &&
-      location.pathname !== "/SecondStep" &&
-      location.pathname !== "/WaysSecondStep" &&
-      location.pathname !== "/ForgotPassword" &&
-      location.pathname !== "/ChangePassword" &&
-      !notifSocket &&
-      user
-    ) {
-      const newNotifSocket = new WebSocket(
-        `ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/notif-socket`
-      );
-      newNotifSocket.onopen = () => {
-        setNotifSocket(newNotifSocket);
-        console.log("NOTIF SOCKET OPENED SUCCEFULLY");
-      };
-      newNotifSocket.onmessage = (event) => {
-        let data = JSON.parse(event.data);
-        console.log("NOTIF SOCKET MESSAGE TYPE: ", data.type);
-      };
-    } else if (
-      (location.pathname === "/" ||
-        location.pathname === "/signup" ||
-        location.pathname === "/signin" ||
-        location.pathname === "/SecondStep" ||
-        location.pathname === "/WaysSecondStep" ||
-        location.pathname === "/ForgotPassword" ||
-        location.pathname === "/ChangePassword") &&
-      notifSocket
-    ) {
-      if (notifSocket) {
-        console.log("NOTIF SOCKET CLOSED SUCCEFULLY");
-        notifSocket.close();
-        setNotifSocket(null);
-      }
-    }
-    if (gamePlayRegex.test(location.pathname) && !socket && user) {
-      const newSocket = new WebSocket(
-        `ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/socket-server`
-      );
-      newSocket.onopen = () => {
-        setSocket(newSocket);
-        console.log("GAME SOCKET OPENED SUCCEFULLY");
-      };
-      newSocket.onclose = () => {
-        console.log("GAME SOCKET CLOSED SUCCEFULLY FROM THE BACK");
-      };
-      newSocket.onerror = () => {
-        console.log("GAME SOCKET ERROR HAPPENED");
-      };
-    } else if (!gamePlayRegex.test(location.pathname) && socket) {
-      if (socket) {
-        console.log("GAME SOCKET CLOSED SUCCEFULLY");
-        socket.close();
-        setSocket(null);
-      }
-    }
-    if (
-      (location.pathname === "/mainpage/chat" ||
-        location.pathname === "/mainpage/groups") &&
-      !chatSocket &&
-      user
-    ) {
-      const newChatSocket = new WebSocket(
-        `ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/chat_socket`
-      );
-      newChatSocket.onopen = () => {
-        setChatSocket(newChatSocket);
-      };
-      newChatSocket.onmessage = (event) => {
-        let data = JSON.parse(event.data);
-      };
-    } else if (
-      location.pathname !== "/mainpage/chat" &&
-      location.pathname !== "/mainpage/groups"
-    ) {
-      if (chatSocket) {
-        console.log("chat Socket Closed");
-        chatSocket.close();
-        setChatSocket(null);
-      }
-    }
-  }, [location.pathname, user]);
+	useEffect(() => {
+		const addUser = (newUser, currentAllGameFriends) => {
+			const userExists = currentAllGameFriends.some(
+				(user) => user.name === newUser.name
+			);
+			if (!userExists) setAllGameFriends([...currentAllGameFriends, newUser]);
+		};
+		async function sendUserData(uname, currentAllGameFriends) {
+			try {
+				let response = await fetch(
+					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get_user`,
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							uname: uname,
+						}),
+					}
+				);
+				let data = await response.json();
+				const newUser = {
+					id: data.id,
+					name: data.name,
+					level: data.level,
+					image: data.image,
+				};
+				addUser(newUser, currentAllGameFriends);
+			} catch (error) {
+				console.error(
+					"There has been a problem with your fetch operation:",
+					error
+				);
+			}
+		}
+		if (
+			location.pathname !== "/" &&
+			location.pathname !== "/signup" &&
+			location.pathname !== "/signin" &&
+			location.pathname !== "/SecondStep" &&
+			location.pathname !== "/WaysSecondStep" &&
+			location.pathname !== "/ForgotPassword" &&
+			location.pathname !== "/ChangePassword" &&
+			!notifSocket &&
+			user
+		) {
+			const newNotifSocket = new WebSocket(
+				`ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/notif-socket`
+			);
+			newNotifSocket.onopen = () => {
+				setNotifSocket(newNotifSocket);
+				console.log("NOTIF SOCKET OPENED SUCCEFULLY");
+			};
+			newNotifSocket.onmessage = (event) => {
+				let data = JSON.parse(event.data);
+				console.log("NOTIF SOCKET MESSAGE TYPE: ", data.type);
+			};
+		} else if (
+			(location.pathname === "/" ||
+				location.pathname === "/signup" ||
+				location.pathname === "/signin" ||
+				location.pathname === "/SecondStep" ||
+				location.pathname === "/WaysSecondStep" ||
+				location.pathname === "/ForgotPassword" ||
+				location.pathname === "/ChangePassword") &&
+			notifSocket
+		) {
+			if (notifSocket) {
+				console.log("NOTIF SOCKET CLOSED SUCCEFULLY");
+				notifSocket.close();
+				setNotifSocket(null);
+			}
+		}
+		if (gamePlayRegex.test(location.pathname) && !socket && user) {
+			const newSocket = new WebSocket(
+				`ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/socket-server`
+			);
+			newSocket.onopen = () => {
+				setSocket(newSocket);
+				console.log("GAME SOCKET OPENED SUCCEFULLY");
+			};
+			newSocket.onclose = () => {
+				console.log("GAME SOCKET CLOSED SUCCEFULLY FROM THE BACK");
+			};
+			newSocket.onerror = () => {
+				console.log("GAME SOCKET ERROR HAPPENED");
+			};
+		} else if (!gamePlayRegex.test(location.pathname) && socket) {
+			if (socket) {
+				console.log("GAME SOCKET CLOSED SUCCEFULLY");
+				socket.close();
+				setSocket(null);
+			}
+		}
+		if (
+			(location.pathname === "/mainpage/chat" ||
+				location.pathname === "/mainpage/groups") &&
+			!chatSocket &&
+			user
+		) {
+			const newChatSocket = new WebSocket(
+				`ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/chat_socket`
+			);
+			newChatSocket.onopen = () => {
+				setChatSocket(newChatSocket);
+			};
+			newChatSocket.onmessage = (event) => {
+				let data = JSON.parse(event.data);
+			};
+		} else if (
+			location.pathname !== "/mainpage/chat" &&
+			location.pathname !== "/mainpage/groups"
+		) {
+			if (chatSocket) {
+				console.log("chat Socket Closed");
+				chatSocket.close();
+				setChatSocket(null);
+			}
+		}
+	}, [location.pathname, user]);
 
-  useEffect(() => {
-    const getUnrecievedRoomInvitee = async () => {
-      try {
-        const response = await fetch(
-          `http://${
-            import.meta.env.VITE_IPADDRESS
-          }:8000/chatAPI/unrecievedRoomInvitee/${user}`
-        );
-        const data = await response.json();
-        if (response.ok) {
-          console.log("DATA COUNT: ", data.count);
-          setChatRoomInvitationsCounter(data.count);
-        } else {
-          console.log("Error in getting unrecieved room invitee");
-        }
-      } catch (error) {
-        console.error(
-          "There has been a problem with your fetch operation:",
-          error
-        );
-      }
-    };
-    const getUnreadConversations = async () => {
-      try {
-        const response = await fetch(
-          `http://${
-            import.meta.env.VITE_IPADDRESS
-          }:8000/chatAPI/unreadConversations/${user}`
-        );
-        const data = await response.json();
-        if (response.ok) {
-          console.log("DATA COUNT CONVERSATIONS: ", data.count);
-          setChatNotificationCounter(data.count);
-        } else {
-          console.log("Error in getting unread conversations");
-        }
-      } catch (error) {
-        console.error(
-          "There has been a problem with your fetch operation:",
-          error
-        );
-      }
-    };
-    if (user && location.pathname !== "/mainpage/groups") {
-      getUnrecievedRoomInvitee();
-    }
-    if (user && location.pathname !== "/mainpage/chat") {
-      getUnreadConversations();
-    }
-  }, [user]);
+	useEffect(() => {
+		const getUnrecievedRoomInvitee = async () => {
+			try {
+				const response = await fetch(
+					`http://${import.meta.env.VITE_IPADDRESS
+					}:8000/chatAPI/unrecievedRoomInvitee/${user}`
+				);
+				const data = await response.json();
+				if (response.ok) {
+					console.log("DATA COUNT: ", data.count);
+					setChatRoomInvitationsCounter(data.count);
+				} else {
+					console.log("Error in getting unrecieved room invitee");
+				}
+			} catch (error) {
+				console.error(
+					"There has been a problem with your fetch operation:",
+					error
+				);
+			}
+		};
+		const getUnreadConversations = async () => {
+			try {
+				const response = await fetch(
+					`http://${import.meta.env.VITE_IPADDRESS
+					}:8000/chatAPI/unreadConversations/${user}`
+				);
+				const data = await response.json();
+				if (response.ok) {
+					console.log("DATA COUNT CONVERSATIONS: ", data.count);
+					setChatNotificationCounter(data.count);
+				} else {
+					console.log("Error in getting unread conversations");
+				}
+			} catch (error) {
+				console.error(
+					"There has been a problem with your fetch operation:",
+					error
+				);
+			}
+		};
+		if (user && location.pathname !== "/mainpage/groups") {
+			getUnrecievedRoomInvitee();
+		}
+		if (user && location.pathname !== "/mainpage/chat") {
+			getUnreadConversations();
+		}
+	}, [user]);
 
-  // useEffect(() => {
-  //   if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
-  //     notifSocket.onmessage = (event) => {
-  //       let data = JSON.parse(event.data);
-  //       console.log("NOTIF SOCKET MESSAGE TYPE: ", data.type);
-  //       console.log("LOCATION: ", location.pathname);
-  //       if (
-  //         data.type === "roomInvitation" &&
-  //         location.pathname !== "/mainpage/groups"
-  //       ) {
-  //         console.log("ROOM INVITATION: ", data);
-  //         setChatRoomInvitationsCounter((prev) => prev + 1);
-  //       } else if (
-  //         data.type === "chatNotificationCounter" &&
-  //         location.pathname !== "/mainpage/chat"
-  //       ) {
-  //         console.log("CHAT NOTIFICATION COUNTER: ", data.count);
-  //         setChatNotificationCounter(data.count);
-  //       }
-  //       else if (data.type === "close_socket") {
-  //         notifSocket.close();
-  //         setSocket(null);
-  //       }
-  //     };
-  //   }
-  // }, [notifSocket, location.pathname]);
+	// useEffect(() => {
+	//   if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+	//     notifSocket.onmessage = (event) => {
+	//       let data = JSON.parse(event.data);
+	//       console.log("NOTIF SOCKET MESSAGE TYPE: ", data.type);
+	//       console.log("LOCATION: ", location.pathname);
+	//       if (
+	//         data.type === "roomInvitation" &&
+	//         location.pathname !== "/mainpage/groups"
+	//       ) {
+	//         console.log("ROOM INVITATION: ", data);
+	//         setChatRoomInvitationsCounter((prev) => prev + 1);
+	//       } else if (
+	//         data.type === "chatNotificationCounter" &&
+	//         location.pathname !== "/mainpage/chat"
+	//       ) {
+	//         console.log("CHAT NOTIFICATION COUNTER: ", data.count);
+	//         setChatNotificationCounter(data.count);
+	//       }
+	//       else if (data.type === "close_socket") {
+	//         notifSocket.close();
+	//         setSocket(null);
+	//       }
+	//     };
+	//   }
+	// }, [notifSocket, location.pathname]);
 
-  async function publicCheckAuth() {
-    try {
-      let response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS}:8000/auth/verifytoken/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            user: user,
-          }),
-        }
-      );
-      response = await response.json();
-      if (response.Case !== "Invalid token") {
-        setUser(response.data.username);
-        navigate("/mainpage");
-      } else {
-        setUser("");
-      }
-    } catch (e) {
-      console.log("something wrong with fetch");
-    }
-  }
+	async function publicCheckAuth() {
+		try {
+			let response = await fetch(
+				`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/verifytoken/`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					credentials: "include",
+					body: JSON.stringify({
+						user: user,
+					}),
+				}
+			);
+			response = await response.json();
+			if (response.Case !== "Invalid token") {
+				setUser(response.data.username);
+				navigate("/mainpage");
+			} else {
+				setUser("");
+			}
+		} catch (e) {
+			console.log("something wrong with fetch");
+		}
+	}
 
-  async function privateCheckAuth() {
-    try {
-      let response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS}:8000/auth/verifytoken/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            user: user,
-          }),
-        }
-      );
-      response = await response.json();
-      console.log(response.Case);
-      if (response.Case !== "Invalid token") {
-        setUser(response.data.username);
-      } else {
-        console.log("FAILD TO LOGIN SUCCESSFULY");
-        setUser("");
-        navigate("/signin");
-      }
-    } catch (e) {
-      console.log("something wrong with fetch");
-    }
-  }
+	async function privateCheckAuth() {
+		try {
+			let response = await fetch(
+				`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/verifytoken/`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					credentials: "include",
+					body: JSON.stringify({
+						user: user,
+					}),
+				}
+			);
+			response = await response.json();
+			console.log(response.Case);
+			if (response.Case !== "Invalid token") {
+				setUser(response.data.username);
+			} else {
+				console.log("FAILD TO LOGIN SUCCESSFULY");
+				setUser("");
+				navigate("/signin");
+			}
+		} catch (e) {
+			console.log("something wrong with fetch");
+		}
+	}
 
-  let contextData = {
-    user: user,
-    setUser: setUser,
-    publicCheckAuth: publicCheckAuth,
-    privateCheckAuth: privateCheckAuth,
-    socket: socket,
-    setSocket: setSocket,
-    socketRef: socketRef,
-    socketRecreated: socketRecreated,
-    setSocketRecreated: setSocketRecreated,
-    userImg: userImg,
-    setUserImg: setUserImg,
-    allGameFriends: allGameFriends,
-    setAllGameFriends: setAllGameFriends,
-    loading: loading,
-    userImages: userImages,
-    setAllGameNotifs: setAllGameNotifs,
-    allGameNotifs: allGameNotifs,
-    notifsImgs: notifsImgs,
-    gameCustomize: gameCustomize,
-    hideNavSideBar: hideNavSideBar,
-    // Profile Settings
-    isGlass: isGlass,
-    setIsGlass: setIsGlass,
-    isReport: isReport,
-    setIsReport: setIsReport,
-    reportContentRef: reportContentRef,
-    reportValue: reportValue,
-    setReportValue: setReportValue,
-    isBlock: isBlock,
-    setIsBlock: setIsBlock,
-    isGameStats: isGameStats,
-    setIsGameStats: setIsGameStats,
-    blockRef: blockRef,
-    blockContentRef: blockContentRef,
-    // chat blur
-    isBlur: isBlur,
-    setIsBlur: setIsBlur,
-    notifSocket: notifSocket,
-    // gameNotif: gameNotif
-    //chat socket
-    chatSocket: chatSocket,
-    setChatSocket: setChatSocket,
-    // Chat Notification and Chat Room Invitation States
-    chatRoomInvitationsCounter: chatRoomInvitationsCounter,
-    setChatRoomInvitationsCounter: setChatRoomInvitationsCounter,
-    chatNotificationCounter: chatNotificationCounter,
-    setChatNotificationCounter: setChatNotificationCounter,
-    RoomsInvitationRef: RoomsInvitationRef,
-    chatNotificationRef: chatNotificationRef,
-  };
+	let contextData = {
+		user: user,
+		setUser: setUser,
+		publicCheckAuth: publicCheckAuth,
+		privateCheckAuth: privateCheckAuth,
+		socket: socket,
+		setSocket: setSocket,
+		socketRef: socketRef,
+		socketRecreated: socketRecreated,
+		setSocketRecreated: setSocketRecreated,
+		userImg: userImg,
+		setUserImg: setUserImg,
+		allGameFriends: allGameFriends,
+		setAllGameFriends: setAllGameFriends,
+		loading: loading,
+		userImages: userImages,
+		setAllGameNotifs: setAllGameNotifs,
+		allGameNotifs: allGameNotifs,
+		notifsImgs: notifsImgs,
+		gameCustomize: gameCustomize,
+		hideNavSideBar: hideNavSideBar,
+		// Profile Settings
+		isGlass: isGlass,
+		setIsGlass: setIsGlass,
+		isReport: isReport,
+		setIsReport: setIsReport,
+		reportContentRef: reportContentRef,
+		reportValue: reportValue,
+		setReportValue: setReportValue,
+		isBlock: isBlock,
+		setIsBlock: setIsBlock,
+		isGameStats: isGameStats,
+		setIsGameStats: setIsGameStats,
+		blockRef: blockRef,
+		blockContentRef: blockContentRef,
+		// chat blur
+		isBlur: isBlur,
+		setIsBlur: setIsBlur,
+		notifSocket: notifSocket,
+		// gameNotif: gameNotif
+		//chat socket
+		chatSocket: chatSocket,
+		setChatSocket: setChatSocket,
+		// Chat Notification and Chat Room Invitation States
+		chatRoomInvitationsCounter: chatRoomInvitationsCounter,
+		setChatRoomInvitationsCounter: setChatRoomInvitationsCounter,
+		chatNotificationCounter: chatNotificationCounter,
+		setChatNotificationCounter: setChatNotificationCounter,
+		RoomsInvitationRef: RoomsInvitationRef,
+		chatNotificationRef: chatNotificationRef,
+	};
 
-  return (
-    <AuthContext.Provider value={contextData}>{children}</AuthContext.Provider>
-  );
+	return (
+		<AuthContext.Provider value={contextData}>{children}</AuthContext.Provider>
+	);
 };

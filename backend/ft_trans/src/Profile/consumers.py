@@ -52,4 +52,4 @@ class NotifConsumer(AsyncWebsocketConsumer):
 						user.is_online = False
 						await sync_to_async(user.save)()
 			except TokenError as e:
-				#print("TOKEN ERROR")
+				print("TOKEN ERROR")

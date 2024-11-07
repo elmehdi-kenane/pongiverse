@@ -20,7 +20,6 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from .serializers import MyModelSerializer
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from urllib.parse import urlencode
@@ -31,7 +30,7 @@ import ssl
 from PIL import Image
 from io import BytesIO
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
-
+from .decorators import authentication_required
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
@@ -465,7 +464,7 @@ def SignUpIntraGetUserData(request):
 		print(f"Exception: {str(e)}")
 		return Response({'error': str(e)}, status=500)
 
-
+@authentication_required
 @api_view(['POST'])
 def LogoutView(request):
 	response = Response()
@@ -473,14 +472,3 @@ def LogoutView(request):
 	response.delete_cookie('refresh_token')
 	response.data = {"Case" : "Logout successfully"}
 	return response
-
-@api_view(['GET'])
-def CheckIsAuthenticated(request):
-	token = request.COOKIES.get('access_token')
-	if token is None:
-		return Response({'is_authenticated': False})
-	try:
-		decoded_token = AccessToken(token)
-		return Response({'is_authenticated': True})
-	except TokenError:
-		return Response({'is_authenticated': False})

@@ -25,9 +25,13 @@ function WaysSecondStep() {
 	const [errors, setErrors] = useState({});
 	const location = useLocation();
 	const data = location.state || {};
-	if (!data.email || !data.avatar) {
-		navigate("/signup");
-	}
+	
+	useEffect(() =>{
+		if (!data.email || !data.avatar) {
+			navigate("/signup");
+		}
+	},[data])
+
 	const handleInputChange = (e) => {
 		e.preventDefault();
 		setNextdata({ ...nextdata, [e.target.name]: e.target.value });

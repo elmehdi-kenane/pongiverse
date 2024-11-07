@@ -7,10 +7,18 @@ import { Link } from 'react-router-dom';
 import logo from '../../assets/SignUp/logo.svg'
 import toast, { Toaster } from 'react-hot-toast';
 import pingPongBg from './signUpImage.svg'
+import { useContext, useEffect, useState } from 'react';
+import AuthContext from '../../navbar-sidebar/Authcontext';
 
 function SignUpPage(props) {
 	const handleSignUpSwitch = () => {
 	}
+	const { publicCheckAuth } = useContext(AuthContext)
+
+	useEffect(() => {
+		publicCheckAuth()
+	}, [])
+
 
 	return (
 		<div className={styles['authentication-page']}>

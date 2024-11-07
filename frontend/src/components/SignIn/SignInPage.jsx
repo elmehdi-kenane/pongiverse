@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import styles from '../../assets/SignIn/authentication.module.css'
 import logo42 from '../../assets/SignUp/42_logo.svg'
 import logo from '../../assets/SignUp/logo.svg'
@@ -11,9 +11,10 @@ import SignUpForm from '../SignUp/SignUpForm';
 import SignUpWays from '../SignUp/SignUpWays';
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import AuthContext from '../../navbar-sidebar/Authcontext';
 function SignInPage() {
 	const navigate = useNavigate();
-
+	const { publicCheckAuth } = useContext(AuthContext)
 	// useEffect(() =>{
 	// 	const check_is_authenticated = async () => {
 	// 		const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/check-is-authenticated`, {
@@ -31,6 +32,10 @@ function SignInPage() {
 	// 	}
 	// 	check_is_authenticated();
 	// },[])
+
+	useEffect(() => {
+		publicCheckAuth()
+	}, [])
 
 
 	return (
