@@ -8,7 +8,7 @@ import { useEffect, useState, useContext } from 'react';
 
 
 function LocalTournamentBracket() {
-	const players = localStorage.getItem('Round16Players')
+	const players = localStorage.getItem('QuarterFinalPlayers')
 	const is_started = localStorage.getItem('is_started')
 	const navigate = useNavigate()
 	const location = useLocation()
@@ -16,8 +16,9 @@ function LocalTournamentBracket() {
 	useEffect(()=>{
 		if (user){
 			console.log("Players : ", players, ", is_started : ", is_started)
-			if (players === null || is_started === null)
+			if (players === null || is_started === null || is_started != "true"){
 				navigate("../game/localtournamentfillmembers")
+			}
 		}
 	},[user])
 	return (

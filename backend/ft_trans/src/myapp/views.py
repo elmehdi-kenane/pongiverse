@@ -38,7 +38,6 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 class SignUpView(APIView):
 	parser_classes = (MultiPartParser, FormParser)
 	def post(self, request, *args, **kwargs):
-		print(f"datatata : {request.data}")
 		avatar = request.data.get('avatar')
 		if avatar == 'null' or avatar is None:
 			my_dict = {
@@ -120,7 +119,6 @@ class LoginView(APIView):
 		response = Response()
 		username = data.get('username', None)
 		password = data.get('password', None)
-		#print(f"   username : {username}, password : {password}")
 		user = authenticate(username=username, password=password)
 		if user is not None:
 			data = get_tokens_for_user(user)
@@ -286,7 +284,6 @@ def SignInGoogleGetUrl(request):
 		'response_type': response_type,
 	}
 	auth_url_with_params = f'{auth_url}?{urlencode(params)}'
-	#print(f"heyy : {auth_url_with_params}")
 	response.data = {'code' : auth_url_with_params}
 	return response
 
@@ -330,7 +327,6 @@ def SignInGoogleGetUserData(request):
 		user_picture = user_info_data.get('picture')
 		return Response({'email': user_email, 'picture': user_picture})
 	except Exception as e:
-		#print(f"Exception: {str(e)}")
 		return Response({'error': str(e)}, status=500)
 
 @api_view(['GET'])
@@ -348,7 +344,6 @@ def SignUpGoogleGetUrl(request):
 		'response_type': response_type,
 	}
 	auth_url_with_params = f'{auth_url}?{urlencode(params)}'
-	#print(f"heyy : {auth_url_with_params}")
 	response.data = {'code' : auth_url_with_params}
 	return response
 
@@ -391,11 +386,9 @@ def SignInIntraGetUserData(request):
 		user_info_data = user_info_response.json()
 		user_email = user_info_data.get('email')
 		image = user_info_data.get('image')
-		print(f"\n\nimage : {image}\n\n")
 		user_picture = image.get('link')
 		return Response({'email': user_email, 'picture': user_picture})
 	except Exception as e:
-		#print(f"Exception: {str(e)}")
 		return Response({'error': str(e)}, status=500)
 
 
@@ -428,7 +421,6 @@ def SignUpGoogleGetUserData(request):
 		user_picture = user_info_data.get('picture')
 		return Response({'email': user_email, 'picture': user_picture})
 	except Exception as e:
-		#print(f"Exception: {str(e)}")
 		return Response({'error': str(e)}, status=500)
 
 @api_view(['POST'])
@@ -461,7 +453,6 @@ def SignUpIntraGetUserData(request):
 		user_picture = image.get('link')
 		return Response({'email': user_email, 'picture': user_picture})
 	except Exception as e:
-		print(f"Exception: {str(e)}")
 		return Response({'error': str(e)}, status=500)
 
 @authentication_required

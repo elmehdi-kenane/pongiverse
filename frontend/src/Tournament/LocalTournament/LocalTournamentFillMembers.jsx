@@ -45,14 +45,20 @@ function LocalTournamentFillMembers() {
 			const item = localStorage.getItem('QuarterFinalPlayers');
 			if (item !== null) {
 				setPlayers(JSON.parse(item));
-				console.log("ITEM EXIST")
 			}
 			else {
 				console.log("ITEM DOES NOT EXIST")
-				const defaultPlayers = Array.from({ length: 8 }, (_, index) => `Player_${index + 1}`);
-				localStorage.setItem('QuarterFinalPlayers', JSON.stringify(defaultPlayers));
-				setPlayers(defaultPlayers)
+				const QuarterFinalPlayers = Array.from({ length: 8 }, (_, index) => `Player_${index + 1}`);
+				const SemiFinalPlayers = Array.from({ length: 4 }, () => null);
+				const FinalPlayers = Array.from({ length: 2 }, () => null);
+				const Winner = Array.from({ length: 1 }, () => null);
+				localStorage.setItem('QuarterFinalPlayers', JSON.stringify(QuarterFinalPlayers));
+				localStorage.setItem('SemiFinalPlayers', JSON.stringify(SemiFinalPlayers));
+				localStorage.setItem('FinalPlayers', JSON.stringify(FinalPlayers));
+				localStorage.setItem('Winner', JSON.stringify(Winner));
+				setPlayers(QuarterFinalPlayers)
 				localStorage.setItem('is_started', 'false');
+				localStorage.setItem('matches_played', 0);
 			}
 			const is_started = localStorage.getItem('is_started');
 			if (is_started !== null && is_started === 'true')
