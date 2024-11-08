@@ -26,9 +26,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 				decoded_token = await sync_to_async(RefreshToken)(token)
 				payload_data = await sync_to_async(lambda: decoded_token.payload)()
 				user_id = payload_data.get('user_id')
-				print("USER ID : ", user_id)
 				user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
-				print(" USER : ", user)
 				if user is not None:
 					await self.accept()
 					username = user.username
@@ -43,7 +41,6 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 					await self.channel_layer.group_add(self.group_name, self.channel_name)
 					# channel_layer = get_channel_layer()
 					friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
-					# #print(f"ALL THE USERS CHANNEL_NAMES : {notifs_user_channels}")
 					for friend in friends:
 						friend_id = await sync_to_async(lambda: friend.friend.id)()
 						friend_is_online = await sync_to_async(lambda: friend.friend.is_online)()
@@ -51,7 +48,6 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 						if channel_name_list:
 							for channel_name in channel_name_list:
 							# channel_name = notifs_user_channels.get(friend_username)
-								# #print(f"USER CHANNEL ON CONNECT IS : {channel_name}")
 								if channel_name and friend_is_online and not user.is_playing:
 									await self.channel_layer.send(
 										channel_name,
@@ -126,36 +122,32 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 				user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
 				username = user.username
 				tmp_username = username
-				user.is_online = False
-				await sync_to_async(user.save)()
-				members = await sync_to_async(list)(TournamentMembers.objects.filter(user=user))
-				for member in members:
-					is_started = await sync_to_async(lambda: member.tournament.is_started)()
-					is_finished = await sync_to_async(lambda:  member.tournament.is_finished)()
-					is_eliminated = await sync_to_async(lambda: member.is_eliminated)()
-					if is_started == False or (is_started == True and is_finished == False and is_eliminated == False):
-						member.is_inside = False
-						await sync_to_async(member.save)()
-				# user_channels.pop(username, None)
 				channel_name_list = notifs_user_channels.get(user.id)
 				if channel_name_list:
 					channel_name_list.remove(self.channel_name)
 					if not len(channel_name_list):
 						notifs_user_channels.pop(username, None)
-				# channel_layer = get_channel_layer()
-				user = await sync_to_async(customuser.objects.filter(username=username).first)()
-				#### in case of logout
-				for username, channel_name_list in notifs_user_channels.items():
-					for channel_name in channel_name_list:
-						await self.channel_layer.send(
-							channel_name,
-							{
-								'type': 'user_disconnected',
-								'message': {
-									'user': tmp_username
-								}
-							}
-						)
+						user.is_online = False
+						await sync_to_async(user.save)()
+						tournament_id = is_user_joining_tournament(username)
+						if tournament_id != 0:
+							for member in tournaments[tournament_id]['members']:
+								if member['username'] == username:
+									member['is_inside'] = False
+						# channel_layer = get_channel_layer()
+						user = await sync_to_async(customuser.objects.filter(username=username).first)()
+						#### in case of logout
+						for username, channel_name_list in notifs_user_channels.items():
+							for channel_name in channel_name_list:
+								await self.channel_layer.send(
+									channel_name,
+									{
+										'type': 'user_disconnected',
+										'message': {
+											'user': tmp_username
+										}
+									}
+								)
 		except TokenError:
 			pass
 
@@ -282,8 +274,17 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 			'message': event.get('message'),
 		}))
 	async def chatNotificationCounter(self, event):
-		print("\n\n\nchatNotificationCounter")
 		await self.send(text_data=json.dumps({
 			'type': 'chatNotificationCounter',
 			'count': event.get('message'),
+		}))
+	async def gameReady(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'gameReady',
+			'message': event['message']
+		}))
+	async def finishedGame(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'finishedGame',
+			'message': event['message']
 		}))
