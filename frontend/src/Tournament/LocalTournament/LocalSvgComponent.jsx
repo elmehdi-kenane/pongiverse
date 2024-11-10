@@ -11,7 +11,7 @@ import { PiNumberSquareSevenFill } from "react-icons/pi";
 import { PiNumberSquareEightFill } from "react-icons/pi";
 
 
-const LocalSvgComponent = () => {
+const LocalSvgComponent = ({players}) => {
 
 	const iconArray = [
 		PiNumberSquareOneFill,
@@ -24,10 +24,10 @@ const LocalSvgComponent = () => {
 		PiNumberSquareEightFill
 	];
 	const navigate = useNavigate()
-	const roundquartermembers = JSON.parse(localStorage.getItem('QuarterFinalPlayers'));
-	const roundsemifinalmembers = JSON.parse(localStorage.getItem('SemiFinalPlayers'));
-	const roundfinalmembers = JSON.parse(localStorage.getItem('FinalPlayers'));
-	const winner = localStorage.getItem('Winner');
+	const roundquartermembers = players.QuarterFinalPlayers;
+	const roundsemifinalmembers = players.SemiFinalPlayers;
+	const roundfinalmembers = players.FinalPlayers;
+	const winner = players.Winner;
 	console.log("Winner", winner);
 
 	const getPlayerIndex = (playerName) => {
