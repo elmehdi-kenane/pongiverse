@@ -12,17 +12,32 @@ import { PiNumberSquareEightFill } from "react-icons/pi";
 
 
 const LocalSvgComponent = () => {
+
+	const iconArray = [
+		PiNumberSquareOneFill,
+		PiNumberSquareTwoFill,
+		PiNumberSquareThreeFill,
+		PiNumberSquareFourFill,
+		PiNumberSquareFiveFill,
+		PiNumberSquareSixFill,
+		PiNumberSquareSevenFill,
+		PiNumberSquareEightFill
+	];
 	const navigate = useNavigate()
 	const roundquartermembers = JSON.parse(localStorage.getItem('QuarterFinalPlayers'));
 	const roundsemifinalmembers = JSON.parse(localStorage.getItem('SemiFinalPlayers'));
 	const roundfinalmembers = JSON.parse(localStorage.getItem('FinalPlayers'));
-	const winner = localStorage.getItem('Round16Winner');
+	const winner = localStorage.getItem('Winner');
+	console.log("Winner", winner);
 
+	const getPlayerIndex = (playerName) => {
+		return roundquartermembers.findIndex(player => player === playerName);
+	};
 
 	return (
 
 		<>
-			<svg width="1538" height="958" viewBox="0 0 1538 958" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<svg width="1438" height="958" viewBox="0 0 1538 958" fill="none" xmlns="http://www.w3.org/2000/svg">
 				<mask id="mask0_2828_1224" style={{ maskType: 'luminance' }} maskUnits="userSpaceOnUse" x="51" y="21" width="602" height="524">
 					<path d="M51 21H652.333V544.886H51V21Z" fill="white" />
 				</mask>
@@ -37,13 +52,15 @@ const LocalSvgComponent = () => {
 				</g>
 				<path d="M744.667 331H716.333C711.731 331 708 334.731 708 339.333V367.667C708 372.269 711.731 376 716.333 376H744.667C749.269 376 753 372.269 753 367.667V339.333C753 334.731 749.269 331 744.667 331Z" fill="white" fillOpacity="0.09" /> { /* WINNER IMAGE */}
 				{
-					winner &&
-					<foreignObject x="709" y="331" width="45" height="45">
-						<picture>
-							<source srcSet={avatar} />
-							<img src={avatar} alt="Description of the" width="45" height="45" style={{ borderRadius: '10px' }} />
-						</picture>
-					</foreignObject>
+					winner && winner != 'null' && (() => {
+						const index = getPlayerIndex(winner);
+						const Comp = iconArray[index];
+						return (
+							<foreignObject x="709" y="331" width="45" height="45">
+								<Comp style={{ width: "51px", height: "51px", borderRadius: '10px' }} color='white' />
+							</foreignObject>
+						)
+					})()
 				}
 				<path d="M706.333 321H831.667C835.717 321 839 324.266 839 328.296V341.893V363.449V378.704C839 382.734 835.717 386 831.667 386H706.333C702.283 386 699 382.734 699 378.704V363.449V341.893V328.296C699 324.266 702.283 321 706.333 321Z" stroke="#FFD700" strokeWidth="2" />
 				<path d="M716.735 89.1631H685.152C685.152 89.1631 678.504 187.89 753.027 187.89" stroke="#FFD700" strokeWidth="7" />
@@ -53,7 +70,7 @@ const LocalSvgComponent = () => {
 				<path d="M792.92 256.998H809.82C812.867 256.998 820.625 273.452 820.625 273.452C820.625 277.072 818.131 280.034 815.36 280.034H726.432C723.385 280.034 721.167 277.072 721.167 273.452C721.167 273.452 728.925 256.998 731.972 256.998H748.871" stroke="#FFD700" strokeWidth="7" />
 				{/* <path d="M769.92 348V341.455H770.892V342.443H770.96C771.08 342.119 771.295 341.857 771.608 341.655C771.92 341.453 772.273 341.352 772.665 341.352C772.739 341.352 772.831 341.354 772.942 341.357C773.053 341.359 773.136 341.364 773.193 341.369V342.392C773.159 342.384 773.081 342.371 772.959 342.354C772.839 342.334 772.713 342.324 772.58 342.324C772.261 342.324 771.977 342.391 771.727 342.524C771.48 342.655 771.284 342.837 771.139 343.07C770.997 343.3 770.926 343.562 770.926 343.858V348H769.92ZM776.93 348.136C776.3 348.136 775.756 347.997 775.298 347.719C774.844 347.438 774.493 347.045 774.246 346.543C774.001 346.037 773.879 345.449 773.879 344.778C773.879 344.108 774.001 343.517 774.246 343.006C774.493 342.491 774.837 342.091 775.277 341.804C775.72 341.514 776.237 341.369 776.828 341.369C777.169 341.369 777.506 341.426 777.838 341.54C778.17 341.653 778.473 341.838 778.746 342.094C779.018 342.347 779.236 342.682 779.398 343.099C779.56 343.517 779.641 344.031 779.641 344.642V345.068H774.595V344.199H778.618C778.618 343.83 778.544 343.5 778.396 343.21C778.251 342.92 778.044 342.692 777.774 342.524C777.507 342.357 777.192 342.273 776.828 342.273C776.428 342.273 776.081 342.372 775.788 342.571C775.499 342.767 775.276 343.023 775.119 343.338C774.963 343.653 774.885 343.991 774.885 344.352V344.932C774.885 345.426 774.97 345.845 775.141 346.189C775.314 346.53 775.554 346.79 775.861 346.969C776.168 347.145 776.524 347.233 776.93 347.233C777.195 347.233 777.433 347.196 777.646 347.122C777.862 347.045 778.048 346.932 778.205 346.781C778.361 346.628 778.482 346.437 778.567 346.21L779.538 346.483C779.436 346.812 779.264 347.102 779.023 347.352C778.781 347.599 778.483 347.793 778.128 347.932C777.773 348.068 777.374 348.136 776.93 348.136ZM782.176 344.062V348H781.17V341.455H782.142V342.477H782.227C782.381 342.145 782.614 341.878 782.926 341.676C783.239 341.472 783.642 341.369 784.136 341.369C784.58 341.369 784.967 341.46 785.3 341.642C785.632 341.821 785.891 342.094 786.075 342.46C786.26 342.824 786.352 343.284 786.352 343.841V348H785.347V343.909C785.347 343.395 785.213 342.994 784.946 342.707C784.679 342.418 784.313 342.273 783.847 342.273C783.526 342.273 783.239 342.342 782.986 342.482C782.736 342.621 782.538 342.824 782.393 343.091C782.249 343.358 782.176 343.682 782.176 344.062ZM789.196 344.062V348H788.19V341.455H789.162V342.477H789.247C789.4 342.145 789.633 341.878 789.946 341.676C790.258 341.472 790.662 341.369 791.156 341.369C791.599 341.369 791.987 341.46 792.319 341.642C792.652 341.821 792.91 342.094 793.095 342.46C793.279 342.824 793.372 343.284 793.372 343.841V348H792.366V343.909C792.366 343.395 792.233 342.994 791.966 342.707C791.699 342.418 791.332 342.273 790.866 342.273C790.545 342.273 790.258 342.342 790.005 342.482C789.755 342.621 789.558 342.824 789.413 343.091C789.268 343.358 789.196 343.682 789.196 344.062ZM797.136 348.153C796.721 348.153 796.344 348.075 796.006 347.919C795.668 347.76 795.4 347.531 795.201 347.233C795.002 346.932 794.903 346.568 794.903 346.142C794.903 345.767 794.977 345.463 795.124 345.23C795.272 344.994 795.469 344.81 795.717 344.676C795.964 344.543 796.237 344.443 796.535 344.378C796.836 344.31 797.138 344.256 797.442 344.216C797.84 344.165 798.163 344.126 798.41 344.101C798.66 344.072 798.842 344.026 798.955 343.96C799.072 343.895 799.13 343.781 799.13 343.619V343.585C799.13 343.165 799.015 342.838 798.785 342.605C798.558 342.372 798.212 342.256 797.749 342.256C797.269 342.256 796.893 342.361 796.62 342.571C796.347 342.781 796.156 343.006 796.045 343.244L795.09 342.903C795.261 342.506 795.488 342.196 795.772 341.974C796.059 341.75 796.371 341.594 796.71 341.506C797.05 341.415 797.386 341.369 797.715 341.369C797.925 341.369 798.167 341.395 798.44 341.446C798.715 341.494 798.981 341.595 799.237 341.749C799.495 341.902 799.71 342.134 799.88 342.443C800.05 342.753 800.136 343.168 800.136 343.688V348H799.13V347.114H799.079C799.011 347.256 798.897 347.408 798.738 347.57C798.579 347.732 798.367 347.869 798.103 347.983C797.839 348.097 797.516 348.153 797.136 348.153ZM797.289 347.25C797.687 347.25 798.022 347.172 798.295 347.016C798.57 346.859 798.778 346.658 798.917 346.411C799.059 346.163 799.13 345.903 799.13 345.631V344.71C799.087 344.761 798.994 344.808 798.849 344.851C798.707 344.891 798.542 344.926 798.354 344.957C798.17 344.986 797.989 345.011 797.813 345.034C797.64 345.054 797.499 345.071 797.391 345.085C797.13 345.119 796.886 345.175 796.658 345.251C796.434 345.325 796.252 345.437 796.113 345.588C795.977 345.736 795.908 345.937 795.908 346.193C795.908 346.543 796.038 346.807 796.296 346.986C796.558 347.162 796.888 347.25 797.289 347.25ZM804.63 348.136C804.017 348.136 803.488 347.991 803.045 347.702C802.602 347.412 802.261 347.013 802.022 346.504C801.784 345.996 801.664 345.415 801.664 344.761C801.664 344.097 801.787 343.51 802.031 343.001C802.278 342.49 802.622 342.091 803.062 341.804C803.505 341.514 804.022 341.369 804.613 341.369C805.074 341.369 805.488 341.455 805.858 341.625C806.227 341.795 806.529 342.034 806.765 342.341C807.001 342.648 807.147 343.006 807.204 343.415H806.199C806.122 343.116 805.951 342.852 805.687 342.622C805.426 342.389 805.074 342.273 804.63 342.273C804.238 342.273 803.895 342.375 803.599 342.58C803.306 342.781 803.078 343.067 802.913 343.436C802.751 343.803 802.67 344.233 802.67 344.727C802.67 345.233 802.75 345.673 802.909 346.048C803.071 346.423 803.298 346.714 803.591 346.922C803.886 347.129 804.233 347.233 804.63 347.233C804.892 347.233 805.129 347.188 805.342 347.097C805.555 347.006 805.735 346.875 805.883 346.705C806.031 346.534 806.136 346.33 806.199 346.091H807.204C807.147 346.477 807.007 346.825 806.782 347.135C806.561 347.442 806.267 347.686 805.9 347.868C805.537 348.047 805.113 348.136 804.63 348.136ZM808.674 348V341.455H809.68V348H808.674ZM809.186 340.364C808.99 340.364 808.821 340.297 808.679 340.163C808.539 340.03 808.47 339.869 808.47 339.682C808.47 339.494 808.539 339.334 808.679 339.2C808.821 339.067 808.99 339 809.186 339C809.382 339 809.549 339.067 809.689 339.2C809.831 339.334 809.902 339.494 809.902 339.682C809.902 339.869 809.831 340.03 809.689 340.163C809.549 340.297 809.382 340.364 809.186 340.364ZM811.522 348V341.455H812.494V342.443H812.562C812.681 342.119 812.897 341.857 813.21 341.655C813.522 341.453 813.874 341.352 814.266 341.352C814.34 341.352 814.433 341.354 814.543 341.357C814.654 341.359 814.738 341.364 814.795 341.369V342.392C814.761 342.384 814.683 342.371 814.56 342.354C814.441 342.334 814.315 342.324 814.181 342.324C813.863 342.324 813.579 342.391 813.329 342.524C813.082 342.655 812.886 342.837 812.741 343.07C812.599 343.3 812.528 343.562 812.528 343.858V348H811.522Z" fill="white" /> WINNER NAME  */}
 				{
-					winner &&
+					winner && winner != 'null' &&
 					<text x="765.92" y="348" fontFamily="Arial" fontSize="13" fill="white">
 						{winner}
 					</text>
@@ -66,38 +83,41 @@ const LocalSvgComponent = () => {
 				<path d="M977.201 418.675L991.568 399.247H1109.2V419.805V445.898V467.247H991.568L977.201 446.604V432.64V418.675Z" stroke="white" strokeOpacity="0.68" strokeWidth="1.5" />
 				<path d="M1054.11 407H1091.69C1095.39 407 1098.4 410.004 1098.4 413.711V451.289C1098.4 454.996 1095.39 458 1091.69 458H1054.11C1050.4 458 1047.4 454.996 1047.4 451.289V413.711C1047.4 410.004 1050.4 407 1054.11 407Z" fill="WHITE" fillOpacity="0.09" /> { /* SEMIFINAL 3 IMAGE */}
 				{
-					roundsemifinalmembers && roundsemifinalmembers.length >= 3 && roundsemifinalmembers[2] && (
-						<foreignObject x="1048.11" y="407" width="51" height="51">
-							<picture>
-								<source srcSet={avatar} />
-								<img src={avatar} alt="Description of the image" width="51" height="51" style={{ borderRadius: '10px' }} />
-							</picture>
-						</foreignObject>
-					)
+					roundsemifinalmembers && roundsemifinalmembers.length >= 3 && roundsemifinalmembers[2] && (() => {
+						const index = getPlayerIndex(roundsemifinalmembers[2]);
+						const Comp = iconArray[index];
+						return (
+							<foreignObject x="1048.11" y="407" width="51" height="51">
+								<Comp style={{ width: "51px", height: "51px", borderRadius: '10px' }} color='white' />
+							</foreignObject>
+						)
+					})()
 				}
 				<path d="M779.397 470.428L793.764 451H911.397V471.558V497.651V519H793.764L779.397 498.357V484.393V470.428Z" stroke="white" strokeOpacity="0.68" strokeWidth="1.5" />
 				<path d="M856.305 458.753H893.884C897.59 458.753 900.594 461.757 900.594 465.463V503.042C900.594 506.749 897.59 509.753 893.884 509.753H856.305C852.599 509.753 849.594 506.749 849.594 503.042V465.463C849.594 461.757 852.599 458.753 856.305 458.753Z" fill="white" fillOpacity="0.09" /> { /* FINAL 2 IMAGE */}
 				{
-					roundfinalmembers && roundfinalmembers.length >= 2 && roundfinalmembers[1] && (
-						<foreignObject x="849.305" y="458.753" width="51" height="51">
-							<picture>
-								<source srcSet={avatar} />
-								<img src={avatar} alt="Description of the image" width="51" height="51" style={{ borderRadius: '10px' }} />
-							</picture>
-						</foreignObject>
-					)
+					roundfinalmembers && roundfinalmembers.length >= 2 && roundfinalmembers[1] && (() => {
+						const index = getPlayerIndex(roundfinalmembers[1]);
+						const Comp = iconArray[index];
+						return (
+							<foreignObject x="849.305" y="458.753" width="51" height="51">
+								<Comp style={{ width: "51px", height: "51px", borderRadius: '10px' }} color='white' />
+							</foreignObject>
+						)
+					})()
 				}
 				<path d="M977.201 520.675L991.568 501.247H1109.2V521.805V547.898V569.247H991.568L977.201 548.604V534.64V520.675Z" stroke="white" strokeOpacity="0.68" strokeWidth="1.5" />
 				<path d="M1098.4 514.711C1098.4 511.004 1095.39 508 1091.69 508H1054.11C1050.4 508 1047.4 511.004 1047.4 514.711V552.289C1047.4 555.995 1050.4 559 1054.11 559H1091.69C1095.39 559 1098.4 555.995 1098.4 552.289V514.711Z" fill="white" fillOpacity="0.09" />  { /* SEMIFINAL 4 IMAGE */}
 				{
-					roundsemifinalmembers && roundsemifinalmembers.length >= 4 && roundsemifinalmembers[3] && (
-						<foreignObject x="1048.11" y="508" width="51" height="51">
-							<picture>
-								<source srcSet={avatar} />
-								<img src={avatar} alt="Description of the image" width="51" height="51" style={{ borderRadius: '10px' }} />
-							</picture>
-						</foreignObject>
-					)
+					roundsemifinalmembers && roundsemifinalmembers.length >= 4 && roundsemifinalmembers[3] && (() => {
+						const index = getPlayerIndex(roundsemifinalmembers[3]);
+						const Comp = iconArray[index];
+						return (
+							<foreignObject x="1048.11" y="508" width="51" height="51">
+								<Comp style={{ width: "51px", height: "51px", borderRadius: '10px' }} color='white' />
+							</foreignObject>
+						)
+					})()
 				}
 				<path d="M954.397 432.5H977.397" stroke="#B9A9B8" />
 				<path d="M911.397 485L954.397 485.5" stroke="#B9A9B8" />
@@ -154,26 +174,29 @@ const LocalSvgComponent = () => {
 				<path d="M561.197 418.675L546.83 399.247H429.197V419.805V445.898V467.247H546.83L561.197 446.604V432.64V418.675Z" stroke="white" strokeOpacity="0.68" strokeWidth="1.5" />
 				<path d="M484.289 407H446.711C443.004 407 440 410.004 440 413.711V451.289C440 454.996 443.004 458 446.711 458H484.289C487.996 458 491 454.996 491 451.289V413.711C491 410.004 487.996 407 484.289 407Z" fill="white" fillOpacity="0.09" /> { /* SEMIFINAL 1 IMAGE */}
 				{
-					roundsemifinalmembers && roundsemifinalmembers.length >= 1 && roundsemifinalmembers[0] && (
-						<foreignObject x="440" y="407" width="51" height="51">
-							<picture>
-								<source srcSet={avatar} />
-								<img src={avatar} alt="Description of the image" width="51" height="51" style={{ borderRadius: '10px' }} />
-							</picture>
-						</foreignObject>
-					)
+
+					roundsemifinalmembers && roundsemifinalmembers.length >= 1 && roundsemifinalmembers[0] && (() => {
+						const index = getPlayerIndex(roundsemifinalmembers[0]);
+						const Comp = iconArray[index];
+						return (
+							<foreignObject x="440" y="407" width="51" height="51">
+								<Comp style={{ width: "51px", height: "51px", borderRadius: '10px' }} color='white' />
+							</foreignObject>
+						)
+					})()
 				}
 				<path d="M759 470.428L744.633 451H627V471.558V497.651V519H744.633L759 498.357V484.393V470.428Z" stroke="white" strokeOpacity="0.68" strokeWidth="1.5" />
 				<path d="M682.093 458.753H644.514C640.808 458.753 637.803 461.757 637.803 465.463V503.042C637.803 506.749 640.808 509.753 644.514 509.753H682.093C685.799 509.753 688.803 506.749 688.803 503.042V465.463C688.803 461.757 685.799 458.753 682.093 458.753Z" fill="white" fillOpacity="0.09" /> { /* FINAL 1 IMAGE */}
 				{
-					roundfinalmembers && roundfinalmembers.length >= 1 && roundfinalmembers[0] && (
-						<foreignObject x="638" y="458.753" width="51" height="51">
-							<picture>
-								<source srcSet={avatar} />
-								<img src={avatar} alt="Description of the image" width="51" height="51" style={{ borderRadius: '10px' }} />
-							</picture>
-						</foreignObject>
-					)
+					roundfinalmembers && roundfinalmembers.length >= 1 && roundfinalmembers[0] && (() => {
+						const index = getPlayerIndex(roundfinalmembers[0]);
+						const Comp = iconArray[index];
+						return (
+							<foreignObject x="638" y="458.753" width="51" height="51">
+								<Comp style={{ width: "51px", height: "51px", borderRadius: '10px' }} color='white' />
+							</foreignObject>
+						)
+					})()
 				}
 				<path d="M561.197 520.675L546.83 501.247H429.197V521.805V547.898V569.247H546.83L561.197 548.604V534.64V520.675Z" stroke="white" strokeOpacity="0.68" strokeWidth="1.5" />
 				<path d="M440 514.711C440 511.004 443.005 508 446.711 508H484.289C487.996 508 491 511.004 491 514.711V552.289C491 555.995 487.996 559 484.289 559H446.711C443.005 559 440 555.995 440 552.289V514.711Z" fill="white" fillOpacity="0.09" /> { /* SEMIFINAL 2 IMAGE */}
@@ -184,14 +207,15 @@ const LocalSvgComponent = () => {
 					</picture>
 				</foreignObject> */}
 				{
-					roundsemifinalmembers && roundsemifinalmembers.length >= 2 && roundsemifinalmembers[1] && (
-						<foreignObject x="440" y="508" width="51" height="51">
-							<picture>
-								<source srcSet={avatar} />
-								<img src={avatar} alt="Description of the image" width="51" height="51" style={{ borderRadius: '10px' }} />
-							</picture>
-						</foreignObject>
-					)
+					roundsemifinalmembers && roundsemifinalmembers.length >= 2 && roundsemifinalmembers[1] && (() => {
+						const index = getPlayerIndex(roundsemifinalmembers[1]);
+						const Comp = iconArray[index];
+						return (
+							<foreignObject x="440" y="508" width="51" height="51">
+								<Comp style={{ width: "51px", height: "51px", borderRadius: '10px' }} color='white' />
+							</foreignObject>
+						)
+					})()
 				}
 				<path d="M584 432.5H561" stroke="#B9A9B8" />
 				<path d="M627 485L584 485.5" stroke="#B9A9B8" />
@@ -269,6 +293,14 @@ const LocalSvgComponent = () => {
 							<PiNumberSquareSixFill style={{ width: "51px", height: "51px", borderRadius: '10px' }} color='white' />
 						</foreignObject>
 					)
+					// roundquartermembers && roundquartermembers.length >= 6 && (() => {
+					// 	const Comp = iconArray[5];
+					// 	return (
+					// 		<foreignObject x="1259.71" y="355.753" width="51" height="51">
+					// 			<Comp style={{ width: "51px", height: "51px", borderRadius: '10px' }} color='white' />
+					// 		</foreignObject>
+					// 	)
+					// })()
 				}
 				<path d="M1166 280.253H1189" stroke="#B9A9B8" />
 				<path d="M1123 332.753L1166 333.253" stroke="#B9A9B8" />

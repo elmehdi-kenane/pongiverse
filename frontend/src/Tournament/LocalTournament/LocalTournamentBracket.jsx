@@ -13,21 +13,28 @@ function LocalTournamentBracket() {
 	const navigate = useNavigate()
 	const location = useLocation()
 	const { user, socket } = useContext(AuthContext)
-	useEffect(()=>{
-		if (user){
-			console.log("Players : ", players, ", is_started : ", is_started)
-			if (players === null || is_started === null || is_started != "true"){
+	useEffect(() => {
+			if (players === null || is_started === null || is_started != "true") {
 				navigate("../game/localtournamentfillmembers")
 			}
-		}
-	},[user])
+	}, [])
 	return (
 		<div className={styles['tournamentbracketpage']}>
+			{
+				<div className={styles['display-components-div']}>
+					<div className={styles['display-components-div-players-data']}>
+						<img src={versus} alt="" className={styles['display-components-div-players-data-image']} />
+						<img src={versus} className={styles['display-components-div-players-data-svg']} alt="" />
+						<img src={versus} alt="" className={styles['display-components-div-players-data-image']} />
+					</div>
+					<p className={styles['display-components-div-text']}>The game will start in</p>
+				</div>
+			}
 			<div className={styles['normalSvg']}>
-				<LocalSvgComponent/>
+				<LocalSvgComponent />
 			</div>
 			<div className={styles['verticalSvg']}>
-				<LocalSvgVerticalComponent/>
+				<LocalSvgVerticalComponent />
 			</div>
 		</div>
 	);

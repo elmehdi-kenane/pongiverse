@@ -55,10 +55,11 @@ function LocalTournamentFillMembers() {
 				localStorage.setItem('QuarterFinalPlayers', JSON.stringify(QuarterFinalPlayers));
 				localStorage.setItem('SemiFinalPlayers', JSON.stringify(SemiFinalPlayers));
 				localStorage.setItem('FinalPlayers', JSON.stringify(FinalPlayers));
-				localStorage.setItem('Winner', JSON.stringify(Winner));
+				localStorage.setItem('Winner', null);
 				setPlayers(QuarterFinalPlayers)
 				localStorage.setItem('is_started', 'false');
 				localStorage.setItem('matches_played', 0);
+				localStorage.setItem('is_game_finished', 'false');
 			}
 			const is_started = localStorage.getItem('is_started');
 			if (is_started !== null && is_started === 'true')
@@ -98,8 +99,8 @@ function LocalTournamentFillMembers() {
 	}
 
 	const handleStart = () => {
-		navigate("../game/localtournamentbracket")
 		localStorage.setItem('is_started', 'true');
+		navigate("../game/localtournamentbracket")
 	}
 
 	const modify_open = () => {

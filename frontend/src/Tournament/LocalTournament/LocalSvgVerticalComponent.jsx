@@ -14,17 +14,23 @@ const LocalSvgVerticalComponent = () => {
 	const roundquartermembers = JSON.parse(localStorage.getItem('QuarterFinalPlayers'));
 	const roundsemifinalmembers = JSON.parse(localStorage.getItem('SemiFinalPlayers'));
 	const roundfinalmembers = JSON.parse(localStorage.getItem('FinalPlayers'));
-	const winner = localStorage.getItem('Round16Winner');
-
-
-	// roundquartermembers && roundquartermembers.length >= 5 && (
-	// 	<foreignObject x="1259.71" y="254.753" width="51" height="51">
-	// 		<PiNumberSquareFiveFill style={{ width: "51px", height: "51px", borderRadius: '10px' }} color='white' />
-	// 	</foreignObject>
-	// )
+	const winner = localStorage.getItem('Winner');
+	const iconArray = [
+		PiNumberSquareOneFill,
+		PiNumberSquareTwoFill,
+		PiNumberSquareThreeFill,
+		PiNumberSquareFourFill,
+		PiNumberSquareFiveFill,
+		PiNumberSquareSixFill,
+		PiNumberSquareSevenFill,
+		PiNumberSquareEightFill
+	];
+	const getPlayerIndex = (playerName) => {
+		return roundquartermembers.findIndex(player => player === playerName);
+	};
 
 	return (
-		<svg width="884" viewBox="0 0 884 1293" style={{ minHeight: 334 }} fill="none" xmlns="http://www.w3.org/2000/svg">
+		<svg width="684" viewBox="0 0 884 1293" style={{ minHeight: 334 }} fill="none" xmlns="http://www.w3.org/2000/svg">
 			<path d="M815.002 184.5H745.002C739.755 184.5 735.502 188.753 735.502 194V264C735.502 269.247 739.755 273.5 745.002 273.5H815.002C820.249 273.5 824.502 269.247 824.502 264V194C824.502 188.753 820.249 184.5 815.002 184.5Z" stroke="white" /> { /* QUARTERFINAL 4*/}
 			{
 				roundquartermembers && roundquartermembers.length >= 4 && (
@@ -91,51 +97,75 @@ const LocalSvgVerticalComponent = () => {
 			}
 			<path d="M353.002 852.5H283.002C277.755 852.5 273.502 856.753 273.502 862V932C273.502 937.247 277.755 941.5 283.002 941.5H353.002C358.249 941.5 362.502 937.247 362.502 932V862C362.502 856.753 358.249 852.5 353.002 852.5Z" stroke="white" /> { /* SEMIFINAL 3*/}
 			{
-				roundsemifinalmembers && roundsemifinalmembers.length >= 3 && roundsemifinalmembers[2] && (
-					<foreignObject x="274" y="853" width="88" height="88">
-						<PiNumberSquareThreeFill style={{ width: "88px", height: "88px", borderRadius: '10px' }} color='white' />
-					</foreignObject>
-				)
+				roundsemifinalmembers && roundsemifinalmembers.length >= 3 && roundsemifinalmembers[2] && (() => {
+					const index = getPlayerIndex(roundsemifinalmembers[2]);
+					const Comp = iconArray[index];
+					return (
+						<foreignObject x="274" y="853" width="88" height="88">
+							<Comp style={{ width: "88px", height: "88px", borderRadius: '10px' }} color='white' />
+						</foreignObject>
+					)
+				})()
 			}
 			<path d="M353.002 357.5H283.002C277.755 357.5 273.502 361.753 273.502 367V437C273.502 442.247 277.755 446.5 283.002 446.5H353.002C358.249 446.5 362.502 442.247 362.502 437V367C362.502 361.753 358.249 357.5 353.002 357.5Z" stroke="white" /> { /* SEMIFINAL 1*/}
 			{
-				roundsemifinalmembers && roundsemifinalmembers.length >= 1 && roundsemifinalmembers[0] && (
-					<foreignObject x="274" y="358" width="88" height="88">
-						<PiNumberSquareOneFill style={{ width: "88px", height: "88px", borderRadius: '10px' }} color='white' />
-					</foreignObject>
-				)
+				roundsemifinalmembers && roundsemifinalmembers.length >= 1 && roundsemifinalmembers[0] && (() => {
+					const index = getPlayerIndex(roundsemifinalmembers[0]);
+					const Comp = iconArray[index];
+					return (
+						<foreignObject x="274" y="358" width="88" height="88">
+							<Comp style={{ width: "88px", height: "88px", borderRadius: '10px' }} color='white' />
+						</foreignObject>
+					)
+				})()
 			}
 			<path d="M474.002 675.5H404.002C398.755 675.5 394.502 679.753 394.502 685V755C394.502 760.247 398.755 764.5 404.002 764.5H474.002C479.249 764.5 483.502 760.247 483.502 755V685C483.502 679.753 479.249 675.5 474.002 675.5Z" stroke="white" /> { /* FINAL 2*/}
 			{
-				roundfinalmembers && roundfinalmembers.length >= 2 && roundfinalmembers[1] && (
-					<foreignObject x="395" y="676" width="88" height="88">
-						<PiNumberSquareTwoFill style={{ width: "88px", height: "88px", borderRadius: '10px' }} color='white' />
-					</foreignObject>
-				)
+				roundfinalmembers && roundfinalmembers.length >= 2 && roundfinalmembers[1] && (() => {
+					const index = getPlayerIndex(roundfinalmembers[1]);
+					const Comp = iconArray[index];
+					return (
+						<foreignObject x="395" y="676" width="88" height="88">
+							<Comp style={{ width: "88px", height: "88px", borderRadius: '10px' }} color='white' />
+						</foreignObject>
+					)
+				})()
 			}
 			<path d="M474.002 534.5H404.002C398.755 534.5 394.502 538.753 394.502 544V614C394.502 619.247 398.755 623.5 404.002 623.5H474.002C479.249 623.5 483.502 619.247 483.502 614V544C483.502 538.753 479.249 534.5 474.002 534.5Z" stroke="white" /> { /* FINAL 1*/}
 			{
-				roundfinalmembers && roundfinalmembers.length >= 1 && roundfinalmembers[0] && (
-					<foreignObject x="395" y="535" width="88" height="88">
-						<PiNumberSquareOneFill style={{ width: "88px", height: "88px", borderRadius: '10px' }} color='white' />
-					</foreignObject>
-				)
+				roundfinalmembers && roundfinalmembers.length >= 1 && roundfinalmembers[0] && (() => {
+					const index = getPlayerIndex(roundfinalmembers[0]);
+					const Comp = iconArray[index];
+					return (
+						<foreignObject x="395" y="535" width="88" height="88">
+							<Comp style={{ width: "88px", height: "88px", borderRadius: '10px' }} color='white' />
+						</foreignObject>
+					)
+				})()
 			}
 			<path d="M601.002 852.5H531.002C525.755 852.5 521.502 856.753 521.502 862V932C521.502 937.247 525.755 941.5 531.002 941.5H601.002C606.249 941.5 610.502 937.247 610.502 932V862C610.502 856.753 606.249 852.5 601.002 852.5Z" stroke="white" /> { /* SEMIFINAL 4*/}
 			{
-				roundsemifinalmembers && roundsemifinalmembers.length >= 4 && roundsemifinalmembers[3] && (
-					<foreignObject x="522" y="853" width="88" height="88">
-						<PiNumberSquareFourFill style={{ width: "88px", height: "88px", borderRadius: '10px' }} color='white' />
-					</foreignObject>
-				)
+				roundsemifinalmembers && roundsemifinalmembers.length >= 4 && roundsemifinalmembers[3] && (() => {
+					const index = getPlayerIndex(roundsemifinalmembers[3]);
+					const Comp = iconArray[index];
+					return (
+						<foreignObject x="522" y="853" width="88" height="88">
+							<Comp style={{ width: "88px", height: "88px", borderRadius: '10px' }} color='white' />
+						</foreignObject>
+					)
+				})()
 			}
 			<path d="M601.002 357.5H531.002C525.755 357.5 521.502 361.753 521.502 367V437C521.502 442.247 525.755 446.5 531.002 446.5H601.002C606.249 446.5 610.502 442.247 610.502 437V367C610.502 361.753 606.249 357.5 601.002 357.5Z" stroke="white" /> { /* SEMIFINAL 2*/}
 			{
-				roundsemifinalmembers && roundsemifinalmembers.length >= 2 && roundsemifinalmembers[1] &&(
-					<foreignObject x="522" y="358" width="88" height="88">
-						<PiNumberSquareTwoFill style={{ width: "88px", height: "88px", borderRadius: '10px' }} color='white' />
-					</foreignObject>
-				)
+				roundsemifinalmembers && roundsemifinalmembers.length >= 2 && roundsemifinalmembers[1] && (() => {
+					const index = getPlayerIndex(roundsemifinalmembers[1]);
+					const Comp = iconArray[index];
+					return (
+						<foreignObject x="522" y="358" width="88" height="88">
+							<Comp style={{ width: "88px", height: "88px", borderRadius: '10px' }} color='white' />
+						</foreignObject>
+					)
+				})()
 			}
 			<path d="M665.551 308.769V282.844" stroke="white" />
 			<path d="M565.857 357.003L565.502 308.008" stroke="white" />
@@ -171,11 +201,15 @@ const LocalSvgVerticalComponent = () => {
 			<path d="M566.445 827.027L318.039 827.027" stroke="white" />
 			<path d="M707.716 694H788.288C790.892 694 793.002 698.52 793.002 704.1V722.927V752.775V773.898C793.002 779.478 790.892 784 788.288 784H707.716C705.112 784 703.002 779.478 703.002 773.898V752.775V722.927V704.1C703.002 698.52 705.112 694 707.716 694Z" stroke="#FFD700" strokeWidth="2" /> { /* WINNER 1*/}
 			{
-				winner && (
-					<foreignObject x="704" y="695" width="88" height="88">
-						<PiNumberSquareTwoFill style={{ width: "88px", height: "88px", borderRadius: '10px' }} color='white' />
-					</foreignObject>
-				)
+				winner && winner != 'null' && (() => {
+					const index = getPlayerIndex(winner);
+					const Comp = iconArray[index];
+					return (
+						<foreignObject x="704" y="695" width="88" height="88">
+							<Comp style={{ width: "88px", height: "88px", borderRadius: '10px' }} color='white' />
+						</foreignObject>
+					)
+				})()
 			}
 			<path d="M704.8 523.699H679.126C679.126 523.699 673.722 603.954 734.302 603.954" stroke="#FFD700" strokeWidth="7" />
 			<path d="M789.477 523.699H813.799C813.799 523.699 819.429 603.954 760.65 603.954" stroke="#FFD700" strokeWidth="7" />
