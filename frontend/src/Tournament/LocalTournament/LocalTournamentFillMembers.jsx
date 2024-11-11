@@ -22,6 +22,38 @@ function LocalTournamentFillMembers() {
 		setIndex(-1);
 	}
 
+	async function generateHash(value) {
+		const encoder = new TextEncoder();
+		const data = encoder.encode(value);
+		const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+		const hashArray = Array.from(new Uint8Array(hashBuffer));
+		const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+		return hashHex;
+	}
+
+	async function setSecureItem(key, value) {
+		const valueString = JSON.stringify(value);
+		const hash = await generateHash(valueString);
+		localStorage.setItem(key, valueString);
+		localStorage.setItem(`${key}_hash`, hash);
+	}
+
+	async function getSecureItem(key) {
+		const valueString = localStorage.getItem(key);
+		const storedHash = localStorage.getItem(`${key}_hash`);
+
+		if (!valueString || !storedHash) return null;
+
+		const currentHash = await generateHash(valueString);
+		if (currentHash === storedHash) {
+			return JSON.parse(valueString);
+		} else {
+			console.warn("Data integrity check failed for:", key);
+			return null; // Or handle accordingly (e.g., reset or alert the user)
+		}
+	}
+
+
 	const Component = () => {
 		return (
 			<div className={styles['change-player-username']}>
@@ -40,6 +72,33 @@ function LocalTournamentFillMembers() {
 			console.log("USER EXIST")
 	}, [user])
 
+	async function checkAndNavigate() {
+		const isStarted = await getSecureItem("is_started");
+		if (isStarted && isStarted === "true") {
+			navigate("../game/localtournamentbracket");
+		}
+	}
+
+	async function verifyDataIntegrity(keys) {
+		for (const key of keys) {
+			const storedValue = localStorage.getItem(key);
+			const storedHash = localStorage.getItem(`${key}_hash`);
+
+			if (!storedValue || !storedHash) {
+				console.warn(`Data for ${key} is missing or incomplete`);
+				return false;
+			}
+
+			const currentHash = await generateHash(storedValue);
+			if (currentHash !== storedHash) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+
 	useEffect(() => {
 		if (user) {
 			const item = localStorage.getItem('QuarterFinalPlayers');
@@ -51,31 +110,27 @@ function LocalTournamentFillMembers() {
 				const QuarterFinalPlayers = Array.from({ length: 8 }, (_, index) => `Player_${index + 1}`);
 				const SemiFinalPlayers = Array.from({ length: 4 }, () => null);
 				const FinalPlayers = Array.from({ length: 2 }, () => null);
-				const Winner = Array.from({ length: 1 }, () => null);
-				localStorage.setItem('QuarterFinalPlayers', JSON.stringify(QuarterFinalPlayers));
-				localStorage.setItem('SemiFinalPlayers', JSON.stringify(SemiFinalPlayers));
-				localStorage.setItem('FinalPlayers', JSON.stringify(FinalPlayers));
-				localStorage.setItem('Winner', null);
+				setSecureItem('QuarterFinalPlayers', QuarterFinalPlayers);
+				setSecureItem('SemiFinalPlayers', SemiFinalPlayers);
+				setSecureItem('FinalPlayers', FinalPlayers);
+				setSecureItem('Winner', null);
 				setPlayers(QuarterFinalPlayers)
-				localStorage.setItem('is_started', 'false');
-				localStorage.setItem('matches_played', 0);
-				localStorage.setItem('is_game_finished', 'false');
+				setSecureItem('is_started', 'false');
+				setSecureItem('matches_played', 0);
+				setSecureItem('is_game_finished', 'false');
 			}
-			const is_started = localStorage.getItem('is_started');
-			if (is_started !== null && is_started === 'true')
-				navigate("../game/localtournamentbracket")
+			checkAndNavigate();
 		}
 	}, [user])
 
 	useEffect(() => {
 		if (players.length > 0) {
 			console.log("PLAYER YSEE")
-			localStorage.setItem('QuarterFinalPlayers', JSON.stringify(players));
+			setSecureItem('QuarterFinalPlayers', players);
 		}
 	}, [players])
 
 	const handleConfirm = () => {
-		console.log("usernane", username, " indexx :", index)
 		const foundPlayer = players.find(player => player === username);
 		if (!regex.test(username)) {
 			toast.error("Invalid or used username", {
@@ -98,8 +153,37 @@ function LocalTournamentFillMembers() {
 		}
 	}
 
-	const handleStart = () => {
-		localStorage.setItem('is_started', 'true');
+	const handleStart = async () => {
+		const keysToCheck = [
+			"QuarterFinalPlayers",
+			"SemiFinalPlayers",
+			"FinalPlayers",
+			"Winner",
+			"is_started",
+			"matches_played",
+			"is_game_finished"
+		];
+
+		const isDataValid = await verifyDataIntegrity(keysToCheck);
+		if (!isDataValid) {
+			toast.error("Please dont touch local storage", {
+				duration: 3000,
+			});
+			const QuarterFinalPlayers = Array.from({ length: 8 }, (_, index) => `Player_${index + 1}`);
+			const SemiFinalPlayers = Array.from({ length: 4 }, () => null);
+			const FinalPlayers = Array.from({ length: 2 }, () => null);
+			setSecureItem('QuarterFinalPlayers', QuarterFinalPlayers);
+			setSecureItem('SemiFinalPlayers', SemiFinalPlayers);
+			setSecureItem('FinalPlayers', FinalPlayers);
+			setSecureItem('Winner', null);
+			setPlayers(QuarterFinalPlayers)
+			setSecureItem('is_started', 'false');
+			setSecureItem('matches_played', 0);
+			setSecureItem('is_game_finished', 'false');
+			return;
+		}
+
+		setSecureItem('is_started', 'true');
 		navigate("../game/localtournamentbracket")
 	}
 
@@ -107,7 +191,6 @@ function LocalTournamentFillMembers() {
 		setOpen(!open);
 	}
 	const div_click = (index) => {
-		console.log("Indexxx : ", index)
 		setIndex(index)
 		modify_open()
 	}

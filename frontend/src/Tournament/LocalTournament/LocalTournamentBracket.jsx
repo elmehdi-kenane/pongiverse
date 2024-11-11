@@ -93,7 +93,6 @@ class Edges {
 
 
 function LocalTournamentBracket() {
-	const is_started = localStorage.getItem('is_started')
 	const navigate = useNavigate()
 	const { user, socket, gameCustomize } = useContext(AuthContext)
 	const [players, setPlayers] = useState({
@@ -114,8 +113,6 @@ function LocalTournamentBracket() {
 		PiNumberSquareEightFill
 	];
 	const [matches_played, setMatchesPlayed] = useState(0);
-	let playerOneName = ''
-	let playerTwoName = ''
 	const quarterFinalPlayers = JSON.parse(localStorage.getItem('QuarterFinalPlayers')) || [];
 	const semiFinalPlayers = JSON.parse(localStorage.getItem('SemiFinalPlayers')) || [];
 	const finalPlayers = JSON.parse(localStorage.getItem('FinalPlayers')) || [];
@@ -123,9 +120,27 @@ function LocalTournamentBracket() {
 	let matchess_played = JSON.parse(localStorage.getItem('matches_played'));
 	const [PlayerOne, setPlayerOne] = useState(null)
 	const [PlayerTwo, setPlayerTwo] = useState(null)
-	useEffect(() => {
+	const [playerOneName, setPlayerOneName] = useState('')
+	const [playerTwoName, setPlayerTwoName] = useState('')
+	const keysToCheck = [
+		"QuarterFinalPlayers",
+		"SemiFinalPlayers",
+		"FinalPlayers",
+		"Winner",
+		"is_started",
+		"matches_played",
+		"is_game_finished"
+	];
 
-		// Set the parsed data in state
+	const check_keys = async () => {
+		const isDataValid = await verifyDataIntegrity(keysToCheck);
+		if (!isDataValid) {
+			localStorage.clear();
+			navigate('../game/localtournamentfillmembers');
+		}
+	}
+	useEffect(() => {
+		check_keys()
 		setPlayers({
 			QuarterFinalPlayers: quarterFinalPlayers,
 			SemiFinalPlayers: semiFinalPlayers,
@@ -136,34 +151,88 @@ function LocalTournamentBracket() {
 	}, []);
 
 
-	useEffect(() => {
+	async function generateHash(value) {
+		const encoder = new TextEncoder();
+		const data = encoder.encode(value);
+		const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+		const hashArray = Array.from(new Uint8Array(hashBuffer));
+		const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+		return hashHex;
+	}
 
+	async function setSecureItem(key, value) {
+		const valueString = JSON.stringify(value);
+		const hash = await generateHash(valueString);
+		localStorage.setItem(key, valueString);
+		localStorage.setItem(`${key}_hash`, hash);
+	}
+
+	async function getSecureItem(key) {
+		const valueString = localStorage.getItem(key);
+		const storedHash = localStorage.getItem(`${key}_hash`);
+
+		if (!valueString || !storedHash) return null;
+
+		const currentHash = await generateHash(valueString);
+		if (currentHash === storedHash) {
+			return JSON.parse(valueString);
+		} else {
+			console.warn("Data integrity check failed for:", key);
+			return null; // Or handle accordingly (e.g., reset or alert the user)
+		}
+	}
+
+	async function verifyDataIntegrity(keys) {
+		for (const key of keys) {
+			const storedValue = localStorage.getItem(key);
+			const storedHash = localStorage.getItem(`${key}_hash`);
+
+			if (!storedValue || !storedHash) {
+				return false;
+			}
+
+			const currentHash = await generateHash(storedValue);
+			if (currentHash !== storedHash) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	useEffect(() => {
+		let player1 = -1
+		let player2 = -1
 		if (matches_played >= 0 && matches_played <= 3) {
-			const player1 = quarterFinalPlayers.findIndex(player => player === quarterFinalPlayers[matches_played * 2])
-			const player2 = quarterFinalPlayers.findIndex(player => player === quarterFinalPlayers[matches_played * 2 + 1])
-			setPlayerOne(() => iconArray[player1])
-			setPlayerTwo(() => iconArray[player2])
+			player1 = quarterFinalPlayers.findIndex(player => player === quarterFinalPlayers[matches_played * 2])
+			player2 = quarterFinalPlayers.findIndex(player => player === quarterFinalPlayers[matches_played * 2 + 1])
+			console.log("1Matches Played:", matches_played)
+			console.log("Player 1:", player1, "Player 2:", player2)
 		}
 		else if (matches_played == 4 || matches_played == 5) {
 			if (matches_played == 4) {
-				const player1 = quarterFinalPlayers.findIndex(player => player === semiFinalPlayers[0])
-				const player2 = quarterFinalPlayers.findIndex(player => player === semiFinalPlayers[1])
-				setPlayerOne(() => iconArray[player1])
-				setPlayerTwo(() => iconArray[player2])
+				player1 = quarterFinalPlayers.findIndex(player => player === players.SemiFinalPlayers[0])
+				player2 = quarterFinalPlayers.findIndex(player => player === players.SemiFinalPlayers[1])
+				console.log("2Matches Played:", matches_played)
+				console.log("Player 1:", player1, "Player 2:", player2)
 			}
 			else {
-				const player1 = quarterFinalPlayers.findIndex(player => player === semiFinalPlayers[2])
-				const player2 = quarterFinalPlayers.findIndex(player => player === semiFinalPlayers[3])
-				setPlayerOne(() => iconArray[player1])
-				setPlayerTwo(() => iconArray[player2])
+				player1 = quarterFinalPlayers.findIndex(player => player === players.SemiFinalPlayers[2])
+				player2 = quarterFinalPlayers.findIndex(player => player === players.SemiFinalPlayers[3])
+				console.log("3Matches Played:", matches_played)
+				console.log("Player 1:", player1, "Player 2:", player2)
 			}
 		}
 		else if (matches_played == 6) {
-			const player1 = quarterFinalPlayers.findIndex(player => player === finalPlayers[0])
-			const player2 = quarterFinalPlayers.findIndex(player => player === finalPlayers[1])
-			setPlayerOne(() => iconArray[player1])
-			setPlayerTwo(() => iconArray[player2])
+			player1 = quarterFinalPlayers.findIndex(player => player === players.FinalPlayers[0])
+			player2 = quarterFinalPlayers.findIndex(player => player === players.FinalPlayers[1])
+			console.log("4Matches Played:", matches_played)
+			console.log("FINAAAAAAALPlayer :", finalPlayers)
 		}
+		setPlayerOne(() => iconArray[player1])
+		setPlayerTwo(() => iconArray[player2])
+		setPlayerOneName(quarterFinalPlayers[player1])
+		setPlayerTwoName(quarterFinalPlayers[player2])
 	}, [matches_played])
 
 	// Game Variables
@@ -507,42 +576,45 @@ function LocalTournamentBracket() {
 					if (matches_played >= 0 && matches_played <= 3) {
 						const p2 = quarterFinalPlayers.findIndex(player => player === quarterFinalPlayers[matches_played * 2 + 1])
 						semiFinalPlayers[matches_played] = quarterFinalPlayers[p2];
-						localStorage.setItem('SemiFinalPlayers', JSON.stringify(semiFinalPlayers));
+						setSecureItem('SemiFinalPlayers', semiFinalPlayers);
 						setPlayers(prevState => ({
 							...prevState, // keep other properties the same
 							SemiFinalPlayers: semiFinalPlayers
 						}));
+						setMatchesPlayed(matches_played + 1)
 					} else if (matches_played == 4 || matches_played == 5) {
 						if (matches_played == 4) {
 							const p2 = quarterFinalPlayers.findIndex(player => player === semiFinalPlayers[1])
 							finalPlayers[0] = quarterFinalPlayers[p2];
-							localStorage.setItem('FinalPlayers', JSON.stringify(finalPlayers));
+							setSecureItem('FinalPlayers', finalPlayers);
 							setPlayers(prevState => ({
 								...prevState, // keep other properties the same
 								FinalPlayers: finalPlayers
 							}));
+							setMatchesPlayed(matches_played + 1)
 						} else {
 							const p2 = quarterFinalPlayers.findIndex(player => player === semiFinalPlayers[3])
+							console.log("HEEEEEEEEEEE:", p2)
 							finalPlayers[1] = quarterFinalPlayers[p2];
-							localStorage.setItem('FinalPlayers', JSON.stringify(finalPlayers));
+							setSecureItem('FinalPlayers', finalPlayers);
 							setPlayers(prevState => ({
 								...prevState, // keep other properties the same
 								FinalPlayers: finalPlayers
 							}));
+							setMatchesPlayed(matches_played + 1)
 						}
 					}
 					else if (matches_played == 6) {
 						const p2 = quarterFinalPlayers.findIndex(player => player === finalPlayers[1])
 						const win = quarterFinalPlayers[p2];
-						localStorage.setItem('Winner', JSON.stringify(win));
+						setSecureItem('Winner', win);
 						setPlayers(prevState => ({
 							...prevState, // keep other properties the same
 							Winner: win
 						}));
 					}
-					setMatchesPlayed(matches_played + 1)
-
-					// setMatchesPlayed(matches_played + 1)
+					let matche_played = JSON.parse(localStorage.getItem('matches_played'));
+					setSecureItem('matches_played', matche_played + 1);
 					const allPlayersInfos = [...playersInfosRef.current]
 					allPlayersInfos[0].accuracy = (allPlayersInfos[0].score * allPlayersInfos[0].hit) / 100
 					allPlayersInfos[1].accuracy = (allPlayersInfos[1].score * allPlayersInfos[1].hit) / 100
@@ -561,36 +633,38 @@ function LocalTournamentBracket() {
 					if (matches_played >= 0 && matches_played <= 3) {
 						const p2 = quarterFinalPlayers.findIndex(player => player === quarterFinalPlayers[matches_played * 2])
 						semiFinalPlayers[matches_played] = quarterFinalPlayers[p2];
-						localStorage.setItem('SemiFinalPlayers', JSON.stringify(semiFinalPlayers));
+						setSecureItem('SemiFinalPlayers', semiFinalPlayers);
 						setPlayers(prevState => ({
 							...prevState, // keep other properties the same
 							SemiFinalPlayers: semiFinalPlayers
 						}));
+						setMatchesPlayed(matches_played + 1)
 					} else if (matches_played == 4 || matches_played == 5) {
 						if (matches_played == 4) {
 							const p2 = quarterFinalPlayers.findIndex(player => player === semiFinalPlayers[0])
 							finalPlayers[0] = quarterFinalPlayers[p2];
-							localStorage.setItem('FinalPlayers', JSON.stringify(finalPlayers));
+							setSecureItem('FinalPlayers', finalPlayers);
 							setPlayers(prevState => ({
 								...prevState, // keep other properties the same
 								FinalPlayers: finalPlayers
 							}));
+							setMatchesPlayed(matches_played + 1)
 						} else {
 							const p2 = quarterFinalPlayers.findIndex(player => player === semiFinalPlayers[2])
-							console.log("Index:", p2)
+							console.log("HEEEEEEEEEEE:", p2)
 							finalPlayers[1] = quarterFinalPlayers[p2];
-							console.log("Final Players:", finalPlayers)
-							localStorage.setItem('FinalPlayers', JSON.stringify(finalPlayers));
+							setSecureItem('FinalPlayers', finalPlayers);
 							setPlayers(prevState => ({
 								...prevState, // keep other properties the same
 								FinalPlayers: finalPlayers
 							}));
+							setMatchesPlayed(matches_played + 1)
 						}
 					}
 					else if (matches_played == 6) {
 						const p2 = quarterFinalPlayers.findIndex(player => player === finalPlayers[0])
 						const win = quarterFinalPlayers[p2];
-						localStorage.setItem('Winner', JSON.stringify(win));
+						setSecureItem('Winner', win);
 						setPlayers(prevState => ({
 							...prevState, // keep other properties the same
 							Winner: win
@@ -600,7 +674,8 @@ function LocalTournamentBracket() {
 					allPlayersInfos[0].accuracy = (allPlayersInfos[0].score * allPlayersInfos[0].hit) / 100
 					allPlayersInfos[1].accuracy = (allPlayersInfos[1].score * allPlayersInfos[1].hit) / 100
 					setPlayersInfos(allPlayersInfos)
-					setMatchesPlayed(matches_played + 1)
+					let matche_played = JSON.parse(localStorage.getItem('matches_played'));
+					setSecureItem('matches_played', matche_played + 1);
 				}
 			}
 
@@ -700,11 +775,11 @@ function LocalTournamentBracket() {
 		}
 	}
 
-	const exitTheGame = () => {
-		setStartGame(false)
-		startGameRef.current = false
-		navigate('../game/solo/1vs1')
-	}
+	// const exitTheGame = () => {
+	// 	setStartGame(false)
+	// 	startGameRef.current = false
+	// 	navigate('../game/solo/1vs1')
+	// }
 
 	const startTimer = () => {
 		timer = setInterval(() => {
@@ -764,6 +839,7 @@ function LocalTournamentBracket() {
 	}, [])
 
 	const restartGame = () => {
+		check_keys()
 		setGameFinished(false)
 		firstDraw = false
 		setalreadyStarted(0)
@@ -804,27 +880,27 @@ function LocalTournamentBracket() {
 				<div className='onevsone-pm' ref={wrapperRef} >
 					<div ref={resultRef} className='onevsone-pm-infos' >
 						<div>
-							{PlayerOne && (<PlayerOne className={styles['display-components-div-players-data-image']} color='white' />)}
-							<div style={{ textAlign: "center" }} ><p>player 1</p></div>
+							{PlayerOne && (<PlayerOne style={{ height: '100%' }} color='white' />)}
+							{playerOneName && <div style={{ textAlign: "center" }} ><p>{playerOneName}</p></div>}
 						</div>
 						<div>
 							<p>{playersInfos[0].totalScore}</p>
 							<div className='onevsone-pm-infos-stats' >
 								<div>
 									<p>Goal: 5</p>
-									<div onClick={(!gameFinished && !gameAborted) ? exitTheGame : undefined} >
+									{/* <div onClick={(!gameFinished && !gameAborted) ? exitTheGame : undefined} >
 										<img src={Icons.logout} alt="" />
 										<p>Exit</p>
-									</div>
+									</div> */}
 								</div>
 								<div>{formatTime(time)}</div>
 							</div>
 							<p>{playersInfos[1].totalScore}</p>
 						</div>
 						<div>
-							<div style={{ textAlign: "center" }}><p>player 2</p></div>
-							{PlayerTwo && (<PlayerTwo className={styles['display-components-div-players-data-image']} color='white' />)}
-							<img src={versus} alt="" style={{ height: '100%' }} />
+							{playerTwoName && <div style={{ textAlign: "center" }} ><p>{playerTwoName}</p></div>}
+							{PlayerTwo && (<PlayerTwo style={{ height: '100%' }} color='white' />)}
+							{/* <img src={versus} alt="" style={{ height: '100%' }} /> */}
 						</div>
 					</div>
 					<canvas ref={canvasRef} ></canvas>
