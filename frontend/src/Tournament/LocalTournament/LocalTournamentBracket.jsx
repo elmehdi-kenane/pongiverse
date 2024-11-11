@@ -909,20 +909,26 @@ function LocalTournamentBracket() {
 				(
 					<>
 						{
-							!players.Winner &&
-							<div className={styles['display-components-div']}>
-								<div className={styles['display-components-div-players-data']}>
-									{
-										PlayerOne && PlayerTwo &&
-										<>
-											<PlayerOne className={styles['display-components-div-players-data-image']} color='white' />
-											<img src={versus} alt="" className={styles['display-components-div-players-data-image']} />
-											<PlayerTwo className={styles['display-components-div-players-data-image']} color='white' />
-										</>
-									}
+							!players.Winner ? (
+
+								<div className={styles['display-components-div']}>
+									<div className={styles['display-components-div-players-data']}>
+										{
+											PlayerOne && PlayerTwo &&
+											<>
+												<PlayerOne className={styles['display-components-div-players-data-image']} color='white' />
+												<img src={versus} alt="" className={styles['display-components-div-players-data-image']} />
+												<PlayerTwo className={styles['display-components-div-players-data-image']} color='white' />
+											</>
+										}
+									</div>
+									<p className={styles['display-components-div-text']} onClick={restartGame}>Start Game</p>
 								</div>
-								<p className={styles['display-components-div-text']} onClick={restartGame}>Start Game</p>
-							</div>
+							) : (
+								<div className={styles['display-components-div-winner']}>
+									<div className={styles['winner-message']}>🎉 Congratulations! {players.Winner}!!! 🎉</div>
+								</div>
+							)
 						}
 						<div className={styles['normalSvg']}>
 							<LocalSvgComponent players={players} />
