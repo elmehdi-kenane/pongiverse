@@ -159,11 +159,6 @@ function SecondStep() {
 		[data.email, data.password]
 	);
 
-	const notifyError = (message) =>
-		toast.error(message, {
-			position: "top-center",
-			duration: 6000,
-		});
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -200,8 +195,6 @@ function SecondStep() {
 				.catch((error) => {
 					console.error("There was an error!", error);
 				});
-		} else if (errors.username) {
-			notifyError(errors.username);
 		}
 	};
 	const getAvatarUrl = (file) => {

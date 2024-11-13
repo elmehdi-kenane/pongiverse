@@ -288,3 +288,8 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 			'type': 'finishedGame',
 			'message': event['message']
 		}))
+	async def send_friend_request(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'send-friend-request',
+			'message': event['message']
+		}))
