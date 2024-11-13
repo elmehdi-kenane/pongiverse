@@ -67,8 +67,10 @@ const TwoVsTwoFriends = () => {
                     setAllSet(true)
                     if (message.mode === '1vs1')
                         navigate(`../play/1vs1/${message.roomID}`)
-                    else
+                    else if(message.mode === '2vs2')
                         navigate(`../play/2vs2/${message.roomID}`)
+                    else
+                        navigate("../game/createtournament")
 				} else if (type === 'gameOnHold') {
                     // console.log(message, playerNo)
                     const playerNbr = playerNoRef.current;
@@ -421,7 +423,7 @@ const TwoVsTwoFriends = () => {
 							return (<div key={user.id} className='game-friend-list'>
 								<div className='game-friend-profile'>
 									<div>
-										<img src={userImages[key]}/>
+										<img src={user.image}/>
 									</div>
 									<div>
 										<p>{user.name}</p>
@@ -455,7 +457,7 @@ const TwoVsTwoFriends = () => {
 						</div>
 						{temmateInfos ? (
 							<div className='twovstwo-dashboard-player' >
-								<div><img src={`data:image/jpeg;base64,${temmateInfos.avatar}`} alt="profile-pic" /></div>
+								<div><img src={temmateInfos.avatar} alt="profile-pic" /></div>
 								<div className='twovstwo-opponent-infos' >
 									<p>{temmateInfos.name}</p>
 									<p>level {temmateInfos.level}</p>
@@ -483,7 +485,7 @@ const TwoVsTwoFriends = () => {
 					<div className='twovstwo-dashboard-opponent'>
 						{enemy1Infos ? (
 							<div className='twovstwo-dashboard-player' >
-								<div><img src={`data:image/jpeg;base64,${enemy1Infos.avatar}`} alt="profile-pic" /></div>
+								<div><img src={enemy1Infos.avatar} alt="profile-pic" /></div>
 								<div className='twovstwo-opponent-infos' >
 									<p>{enemy1Infos.name}</p>
 									<p>level {enemy1Infos.level}</p>
@@ -497,7 +499,7 @@ const TwoVsTwoFriends = () => {
 						)}
 						{enemy2Infos ? (
 							<div className='twovstwo-dashboard-player' >
-								<div><img src={`data:image/jpeg;base64,${enemy2Infos.avatar}`} alt="profile-pic" /></div>
+								<div><img src={enemy2Infos.avatar} alt="profile-pic" /></div>
 								<div className='twovstwo-opponent-infos' >
 									<p>{enemy2Infos.name}</p>
 									<p>level {enemy2Infos.level}</p>

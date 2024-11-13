@@ -61,9 +61,13 @@ const OneVsOneCreateOrJoin = () => {
                 let type = data.type
                 let message = data.message
                 if (type === 'roomAlreadyStarted') {
-                    console.log("inside roomAlreadyStarted")
                     setAllSet(true)
-                    navigate(`../play/1vs1/${message.roomID}`)
+                    if (message.mode === '1vs1')
+                        navigate(`../play/1vs1/${message.roomID}`)
+                    else if (message.mode === '2vs2') 
+                        navigate(`../play/2vs2/${message.roomID}`)
+                    else
+                        navigate("../game/createtournament")
                 } else if (type === "gameReady") {
                     console.log("inside gameReady")
                     console.log(message.avatars)
@@ -328,7 +332,7 @@ const OneVsOneCreateOrJoin = () => {
                     <div className='onevsone-dashboard-opponent'>
                         {enemyInfos ? (
                             <>
-                                <div><img src={`data:image/jpeg;base64,${enemyInfos.avatar}`} alt="profile-pic" style={{borderRadius: '50%'}} /></div>
+                                <div><img src={enemyInfos.avatar} alt="profile-pic" style={{borderRadius: '50%'}} /></div>
                                 <div className='onevsone-opponent-infos'>
                                     <p>{enemyInfos.name}</p>
                                     <p>level {enemyInfos.level}</p>

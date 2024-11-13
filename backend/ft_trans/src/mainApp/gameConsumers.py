@@ -10,8 +10,18 @@ from asgiref.sync import sync_to_async
 from .gameMultiplayerConsumers import waited_game
 from .models import Match, ActiveMatch, PlayerState, NotifPlayer, GameNotifications, MatchStatistics, UserMatchStatics
 from Notifications.common import notifs_user_channels
+from .common import tournaments
+import os
+
+async def is_user_joining_tournament(username):
+	for tournament_id, tournament_data in tournaments.items():
+		for member in tournament_data['members']:
+			if member['username'] == username and member['is_eliminated'] == False and (tournament_data['is_started'] == False or  (tournament_data['is_started'] == True and tournament_data['is_finished'] == False)):
+				return tournament_id
+	return 0
 
 async def isPlayerInAnyRoom(self, data, rooms, user_channels):
+	ip_address = os.getenv("IP_ADDRESS")
 	message = data['message']
 	userRoom = {
 		key: value
@@ -44,7 +54,9 @@ async def isPlayerInAnyRoom(self, data, rooms, user_channels):
 			}))
 		elif ((len(value['players']) == 2 and value['status'] == 'notStarted') or
 			(len(value['players']) == 4 and value['status'] == 'notStarted')):
-			channel_1 = user_channels.get(value['players'][0]['user'])
+			user1 = await sync_to_async(customuser.objects.filter(username=value['players'][0]['user']).first)()
+			user2 = await sync_to_async(customuser.objects.filter(username=value['players'][1]['user']).first)()
+			channel_1 = user_channels.get(user1.id)
 			await self.channel_layer.send(channel_1, {
 				'type': 'sendPlayerNo',
 				'message': {
@@ -52,7 +64,7 @@ async def isPlayerInAnyRoom(self, data, rooms, user_channels):
 					'id': value['id']
 				}
 			})
-			channel_2 = user_channels.get(value['players'][1]['user'])
+			channel_2 = user_channels.get(user2.id)
 			await self.channel_layer.send(channel_2, {
 				'type': 'sendPlayerNo',
 				'message': {
@@ -61,7 +73,9 @@ async def isPlayerInAnyRoom(self, data, rooms, user_channels):
 				}
 			})
 			if len(value['players']) == 4:
-				channel_3 = user_channels.get(value['players'][2]['user'])
+				user3 = await sync_to_async(customuser.objects.filter(username=value['players'][2]['user']).first)()
+				user4 = await sync_to_async(customuser.objects.filter(username=value['players'][3]['user']).first)()
+				channel_3 = user_channels.get(user3.id)
 				await self.channel_layer.send(channel_3, {
 					'type': 'sendPlayerNo',
 					'message': {
@@ -69,7 +83,7 @@ async def isPlayerInAnyRoom(self, data, rooms, user_channels):
 						'id': value['id']
 					}
 				})
-				channel_4 = user_channels.get(value['players'][3]['user'])
+				channel_4 = user_channels.get(user4.id)
 				await self.channel_layer.send(channel_4, {
 					'type': 'sendPlayerNo',
 					'message': {
@@ -78,38 +92,27 @@ async def isPlayerInAnyRoom(self, data, rooms, user_channels):
 					}
 				})
 			users = []
-			user1 = await sync_to_async(customuser.objects.filter(username=value['players'][0]['user']).first)()
-			user2 = await sync_to_async(customuser.objects.filter(username=value['players'][1]['user']).first)()
-			user3 = None
-			user3 = None
+			users.append({
+				'name': user1.username,
+				'image': f"http://{ip_address}:8000/auth{user1.avatar.url}",
+				'level': 2.4
+			})
+			users.append({
+				'name': user2.username,
+				'image': f"http://{ip_address}:8000/auth{user2.avatar.url}",
+				'level': 2.4
+			})
 			if len(value['players']) == 4:
-				user3 = await sync_to_async(customuser.objects.filter(username=value['players'][2]['user']).first)()
-				user4 = await sync_to_async(customuser.objects.filter(username=value['players'][3]['user']).first)()
-			with user1.avatar.open('rb') as f:
 				users.append({
-					'name': user1.username,
-					'image': base64.b64encode(f.read()).decode('utf-8'),
+					'name': user3.username,
+					'image': f"http://{ip_address}:8000/auth{user3.avatar.url}",
 					'level': 2.4
 				})
-			with user2.avatar.open('rb') as f:
 				users.append({
-					'name': user2.username,
-					'image': base64.b64encode(f.read()).decode('utf-8'),
+					'name': user4.username,
+					'image': f"http://{ip_address}:8000/auth{user4.avatar.url}",
 					'level': 2.4
 				})
-			if len(value['players']) == 4:
-				with user3.avatar.open('rb') as f:
-					users.append({
-						'name': user3.username,
-						'image': base64.b64encode(f.read()).decode('utf-8'),
-						'level': 2.4
-					})
-				with user4.avatar.open('rb') as f:
-					users.append({
-						'name': user4.username,
-						'image': base64.b64encode(f.read()).decode('utf-8'),
-						'level': 2.4
-					})
 			# #print(f"ALL USERS ARE : {len(users)}")
 			asyncio.create_task(set_game(self, value, users))
 			# await self.channel_layer.group_send(str(value['id']), {
@@ -122,8 +125,17 @@ async def isPlayerInAnyRoom(self, data, rooms, user_channels):
 	# elif userRoom and userRoom['status'] == 'notStarted':
 	#     value = list(userRoom.values())[0]
 
-
 	else:
+		tournament_id = await is_user_joining_tournament(message['user'])
+		if tournament_id:
+			await self.send(text_data=json.dumps({
+				'type': 'roomAlreadyStarted',
+				'message': {
+					'roomID': 0,
+					'mode': 'tournament'
+				}
+			}))
+			return
 		player = await sync_to_async(customuser.objects.filter(username=message['user']).first)()
 		active_matches = await sync_to_async(list)(ActiveMatch.objects.all())
 		for active_match in active_matches:
@@ -152,12 +164,11 @@ async def isPlayerInAnyRoom(self, data, rooms, user_channels):
 						users = []
 						for player_state in player_states:
 							player = await sync_to_async(customuser.objects.get)(id=player_state.player_id)
-							with player.avatar.open('rb') as f:
-								users.append({
-									'name': player.username,
-									'image': base64.b64encode(f.read()).decode('utf-8'),
-									'level': 2.4
-								})
+							users.append({
+								'name': player.username,
+								'image': f"http://{ip_address}:8000/auth{player.avatar.url}",
+								'level': 2.4
+							})
 						asyncio.create_task(waited_game(self, active_match.room_id, users))
 					return
 				else:
@@ -169,8 +180,8 @@ async def isPlayerInAnyRoom(self, data, rooms, user_channels):
 						await sync_to_async(player.save)()
 						friends = await sync_to_async(list)(Friendship.objects.filter(user=player))
 						for friend in friends:
-							friend_name = await sync_to_async(lambda: friend.friend.username)()
-							friend_channel = user_channels.get(friend_name)
+							friend_id = await sync_to_async(lambda: friend.friend.id)()
+							friend_channel = user_channels.get(friend_id)
 							if friend_channel:
 								await self.channel_layer.send(friend_channel, {
 									'type': 'playingStatus',
@@ -181,7 +192,7 @@ async def isPlayerInAnyRoom(self, data, rooms, user_channels):
 											'id': player.id,
 											'name': player.username,
 											'level': 2,
-											'image': player.avatar.path
+											'image': f"http://{ip_address}:8000/auth{player.avatar.url}"
 											# {'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path}
 										}
 									}
@@ -214,12 +225,11 @@ async def isPlayerInAnyRoom(self, data, rooms, user_channels):
 									player_state.playerNo -= 1
 									await sync_to_async(player_state.save)()
 								player = await sync_to_async(customuser.objects.get)(id=player_state.player_id)
-								with player.avatar.open('rb') as f:
-									users.append({
-										'name': player.username,
-										'image': base64.b64encode(f.read()).decode('utf-8'),
-										'level': 2.4
-									})
+								users.append({
+									'name': player.username,
+									'image': f"http://{ip_address}:8000/auth{player.avatar.url}",
+									'level': 2.4
+								})
 							asyncio.create_task(waited_game(self, active_match.room_id, users))
 									# await sync_to_async(playerInRoom.delete)()
 						#print(f"is_player is false")
@@ -227,8 +237,8 @@ async def isPlayerInAnyRoom(self, data, rooms, user_channels):
 						await sync_to_async(player.save)()
 						friends = await sync_to_async(list)(Friendship.objects.filter(user=player))
 						for friend in friends:
-							friend_name = await sync_to_async(lambda: friend.friend.username)()
-							friend_channel = user_channels.get(friend_name)
+							friend_id = await sync_to_async(lambda: friend.friend.id)()
+							friend_channel = user_channels.get(friend_id)
 							if friend_channel:
 								await self.channel_layer.send(friend_channel, {
 									'type': 'playingStatus',
@@ -239,7 +249,7 @@ async def isPlayerInAnyRoom(self, data, rooms, user_channels):
 											'id': player.id,
 											'name': player.username,
 											'level': 2,
-											'image': player.avatar.path
+											'image': f"http://{ip_address}:8000/auth{player.avatar.url}"
 											# {'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path}
 										}
 									}
@@ -296,7 +306,7 @@ async def joinRoom(self, data, rooms, user_channels):
 	room = None
 	isEmpty = True
 	# global rooms
-
+	ip_address = os.getenv("IP_ADDRESS")
 	# #print("inside join")
 	# #print(f"INSIDDDDE THE JOINNN ROOOM")
 	active_matches = await sync_to_async(list)(ActiveMatch.objects.all())
@@ -319,8 +329,8 @@ async def joinRoom(self, data, rooms, user_channels):
 			# await sync_to_async(user.save)()
 			friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
 			for friend in friends:
-				friend_name = await sync_to_async(lambda: friend.friend.username)()
-				friend_channel = user_channels.get(friend_name)
+				friend_id = await sync_to_async(lambda: friend.friend.id)()
+				friend_channel = user_channels.get(friend_id)
 				# #print(friend_channel)
 				if friend_channel:
 					await self.channel_layer.send(friend_channel, {
@@ -356,11 +366,10 @@ async def joinRoom(self, data, rooms, user_channels):
 					'self_scored': 0, ####### added
 					'tmp_scored': 0 ####### added
 				})
-				with player.avatar.open('rb') as f:
-					users.append({
-						'image': base64.b64encode(f.read()).decode('utf-8'),
-						'level': 2.4
-					})
+				users.append({
+					'image': f"http://{ip_address}:8000/auth{player.avatar.url}",
+					'level': 2.4
+				})
 			room = {
 				'id': active_match.room_id,
 				'players': players,
@@ -420,8 +429,8 @@ async def joinRoom(self, data, rooms, user_channels):
 		# await sync_to_async(user.save)()
 		friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
 		for friend in friends:
-			friend_name = await sync_to_async(lambda: friend.friend.username)()
-			friend_channel = user_channels.get(friend_name)
+			friend_id = await sync_to_async(lambda: friend.friend.id)()
+			friend_channel = user_channels.get(friend_id)
 			# #print(friend_channel)
 			if friend_channel:
 				await self.channel_layer.send(friend_channel, {
@@ -471,6 +480,7 @@ async def startedGameSignal(self, room, users):
 	)
 
 async def quitRoom(self, data, rooms, user_channels):
+	ip_address = os.getenv("IP_ADDRESS")
 	# #print(f"INSIDE THE QUIT THE RANDOM GAME : {data['message']}")
 	room = await sync_to_async(ActiveMatch.objects.filter(room_id=data['message']['id']).first)()
 	if room:
@@ -484,8 +494,8 @@ async def quitRoom(self, data, rooms, user_channels):
 				await sync_to_async(user.save)()
 				friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
 				for friend in friends:
-					friend_name = await sync_to_async(lambda: friend.friend.username)()
-					friend_channel = user_channels.get(friend_name)
+					friend_id = await sync_to_async(lambda: friend.friend.id)()
+					friend_channel = user_channels.get(friend_id)
 					if friend_channel:
 						await self.channel_layer.send(friend_channel, {
 							'type': 'playingStatus',
@@ -496,7 +506,7 @@ async def quitRoom(self, data, rooms, user_channels):
 									'id': user.id,
 									'name': user.username,
 									'level': 2,
-									'image': user.avatar.path
+									'image': f"http://{ip_address}:8000/auth{user.avatar.url}"
 									# {'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path}
 								}
 							}
@@ -588,6 +598,7 @@ async def starttimer(self, room):
 
 async def validatePlayer(self, data, rooms, user_channels):
 	message = data['message']
+	ip_address = os.getenv("IP_ADDRESS")
 	room = rooms.get(str(message['roomID']))
 	# #print(f"ROOM ID TO SEARCH IS : {rooms}")
 	playersReady = 0
@@ -616,12 +627,11 @@ async def validatePlayer(self, data, rooms, user_channels):
 					for player in room['players']:
 						player = await sync_to_async(customuser.objects.filter(username=player['user']).first)()
 						if (player):
-							with player.avatar.open('rb') as f:
-								users.append({
-									'name': player.username,
-									'avatar': base64.b64encode(f.read()).decode('utf-8'),
-									'level': 2.4
-								})
+							users.append({
+								'name': player.username,
+								'avatar': f"http://{ip_address}:8000/auth{player.avatar.url}",
+								'level': 2.4
+							})
 					await self.send(text_data=json.dumps({
 						'type': 'playersInfos',
 						'message': {
@@ -649,12 +659,11 @@ async def validatePlayer(self, data, rooms, user_channels):
 					for player in room['players']:
 						player = await sync_to_async(customuser.objects.filter(username=player['user']).first)()
 						if (player):
-							with player.avatar.open('rb') as f:
-								users.append({
-									'name': player.username,
-									'avatar': base64.b64encode(f.read()).decode('utf-8'),
-									'level': 2.4
-								})
+							users.append({
+								'name': player.username,
+								'avatar': f"http://{ip_address}:8000/auth{player.avatar.url}",
+								'level': 2.4
+							})
 					await self.send(text_data=json.dumps({
 						'type': 'playersInfos',
 						'message': {
@@ -786,18 +795,16 @@ async def validatePlayer(self, data, rooms, user_channels):
 						'rating': [0, 0]
 					}
 				}))
-				with player1.avatar.open('rb') as f:
-					users.append({
-						'name': player1_username,
-						'avatar': base64.b64encode(f.read()).decode('utf-8'),
-						'level': 2.4
-					})
-				with player2.avatar.open('rb') as f:
-					users.append({
-						'name': player2_username,
-						'avatar': base64.b64encode(f.read()).decode('utf-8'),
-						'level': 2.4
-					})
+				users.append({
+					'name': player1_username,
+					'avatar': f"http://{ip_address}:8000/auth{player1.avatar.url}",
+					'level': 2.4
+				})
+				users.append({
+					'name': player2_username,
+					'avatar': f"http://{ip_address}:8000/auth{player2.avatar.url}",
+					'level': 2.4
+				})
 				await self.send(text_data=json.dumps({
 					'type': 'playersInfos',
 					'message': {
@@ -828,18 +835,16 @@ async def validatePlayer(self, data, rooms, user_channels):
 						'rating': [player1_rating, player2_rating]
 					}
 				}))
-				with player1.avatar.open('rb') as f:
-					users.append({
-						'name': player1_username,
-						'avatar': base64.b64encode(f.read()).decode('utf-8'),
-						'level': 2.4
-					})
-				with player2.avatar.open('rb') as f:
-					users.append({
-						'name': player2_username,
-						'avatar': base64.b64encode(f.read()).decode('utf-8'),
-						'level': 2.4
-					})
+				users.append({
+					'name': player1_username,
+					'avatar': f"http://{ip_address}:8000/auth{player1.avatar.url}",
+					'level': 2.4
+				})
+				users.append({
+					'name': player2_username,
+					'avatar': f"http://{ip_address}:8000/auth{player2.avatar.url}",
+					'level': 2.4
+				})
 				await self.send(text_data=json.dumps({
 					'type': 'playersInfos',
 					'message': {
@@ -943,6 +948,7 @@ def collision(self, ball, player, room):
 
 async def runOverGame(self, room, ballProps, rooms, user_channels):
 	# global rooms
+	ip_address = os.getenv("IP_ADDRESS")
 
 	while True:
 		room["ball"]["ballX"] += ballProps["velocityX"]
@@ -969,8 +975,8 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 			await sync_to_async(player1.save)()
 			friends = await sync_to_async(list)(Friendship.objects.filter(user=player1))
 			for friend in friends:
-				friend_name = await sync_to_async(lambda: friend.friend.username)()
-				friend_channel = user_channels.get(friend_name)
+				friend_id = await sync_to_async(lambda: friend.friend.id)()
+				friend_channel = user_channels.get(friend_id)
 				if friend_channel:
 					await self.channel_layer.send(friend_channel, {
 						'type': 'playingStatus',
@@ -981,7 +987,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 								'id': player1.id,
 								'name': player1.username,
 								'level': 2,
-								'image': player1.avatar.path
+								'image':  f"http://{ip_address}:8000/auth{player1.avatar.url}"
 								# {'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path}
 							}
 						}
@@ -991,8 +997,8 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 			await sync_to_async(player2.save)()
 			friends = await sync_to_async(list)(Friendship.objects.filter(user=player2))
 			for friend in friends:
-				friend_name = await sync_to_async(lambda: friend.friend.username)()
-				friend_channel = user_channels.get(friend_name)
+				friend_id = await sync_to_async(lambda: friend.friend.id)()
+				friend_channel = user_channels.get(friend_id)
 				if friend_channel:
 					await self.channel_layer.send(friend_channel, {
 						'type': 'playingStatus',
@@ -1003,7 +1009,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 								'id': player2.id,
 								'name': player2.username,
 								'level': 2,
-								'image': player2.avatar.path
+								'image': f"http://{ip_address}:8000/auth{player2.avatar.url}"
 								# {'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path}
 							}
 						}
@@ -1209,8 +1215,8 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 				await sync_to_async(player1.save)()
 				friends = await sync_to_async(list)(Friendship.objects.filter(user=player1))
 				for friend in friends:
-					friend_name = await sync_to_async(lambda: friend.friend.username)()
-					friend_channel = user_channels.get(friend_name)
+					friend_id = await sync_to_async(lambda: friend.friend.id)()
+					friend_channel = user_channels.get(friend_id)
 					if friend_channel:
 						await self.channel_layer.send(friend_channel, {
 							'type': 'playingStatus',
@@ -1221,7 +1227,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 									'id': player1.id,
 									'name': player1.username,
 									'level': 2,
-									'image': player1.avatar.path
+									'image': f"http://{ip_address}:8000/auth{player1.avatar.url}"
 									# {'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path}
 								}
 							}
@@ -1231,8 +1237,8 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 				await sync_to_async(player2.save)()
 				friends = await sync_to_async(list)(Friendship.objects.filter(user=player2))
 				for friend in friends:
-					friend_name = await sync_to_async(lambda: friend.friend.username)()
-					friend_channel = user_channels.get(friend_name)
+					friend_id = await sync_to_async(lambda: friend.friend.id)()
+					friend_channel = user_channels.get(friend_id)
 					if friend_channel:
 						await self.channel_layer.send(friend_channel, {
 							'type': 'playingStatus',
@@ -1243,7 +1249,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 									'id': player2.id,
 									'name': player2.username,
 									'level': 2,
-									'image': player2.avatar.path
+									'image': f"http://{ip_address}:8000/auth{player2.avatar.url}"
 									# {'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path}
 								}
 							}
@@ -1405,8 +1411,8 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 				await sync_to_async(player1.save)()
 				friends = await sync_to_async(list)(Friendship.objects.filter(user=player1))
 				for friend in friends:
-					friend_name = await sync_to_async(lambda: friend.friend.username)()
-					friend_channel = user_channels.get(friend_name)
+					friend_id = await sync_to_async(lambda: friend.friend.id)()
+					friend_channel = user_channels.get(friend_id)
 					if friend_channel:
 						await self.channel_layer.send(friend_channel, {
 							'type': 'playingStatus',
@@ -1417,7 +1423,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 									'id': player1.id,
 									'name': player1.username,
 									'level': 2,
-									'image': player1.avatar.path
+									'image': f"http://{ip_address}:8000/auth{player1.avatar.url}"
 									# {'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path}
 								}
 							}
@@ -1427,8 +1433,8 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 				await sync_to_async(player2.save)()
 				friends = await sync_to_async(list)(Friendship.objects.filter(user=player2))
 				for friend in friends:
-					friend_name = await sync_to_async(lambda: friend.friend.username)()
-					friend_channel = user_channels.get(friend_name)
+					friend_id = await sync_to_async(lambda: friend.friend.id)()
+					friend_channel = user_channels.get(friend_id)
 					if friend_channel:
 						await self.channel_layer.send(friend_channel, {
 							'type': 'playingStatus',
@@ -1439,7 +1445,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 									'id': player2.id,
 									'name': player2.username,
 									'level': 2,
-									'image': player2.avatar.path
+									'image': f"http://{ip_address}:8000/auth{player2.avatar.url}"
 									# {'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path}
 								}
 							}
@@ -1683,6 +1689,7 @@ async def user_exited(self, data, rooms):
 
 ##### invite a friend from the friends to play with #####
 async def invite_friend(self, data, rooms, user_channels):
+	ip_address = os.getenv("IP_ADDRESS")
 	# active_matches = await sync_to_async(list)(ActiveMatch.objects.all())
 	# for active_match in active_matches:
 	#     player_state = await sync_to_async(PlayerState.objects.filter(active_match=active_match).first)()
@@ -1752,7 +1759,7 @@ async def invite_friend(self, data, rooms, user_channels):
 							'type': 'receiveFriendGame',
 							'message': {
 								'user': data['message']['user'],
-								'avatar': user1.avatar.path,
+								'image': f"http://{ip_address}:8000/auth{user1.avatar.url}",
 								'roomID': active_match.room_id,
 								'mode': '1vs1'
 							}
@@ -1831,7 +1838,7 @@ async def invite_friend(self, data, rooms, user_channels):
 					'type': 'receiveFriendGame',
 					'message': {
 						'user': data['message']['user'],
-						'avatar': user1.avatar.path,
+						'image': f"http://{ip_address}:8000/auth{user1.avatar.url}",
 						'roomID': active_match.room_id,
 						'mode': '1vs1'
 					}
@@ -2013,8 +2020,8 @@ async def create_new_room(self, data, rooms, user_channels):
 	}))
 	friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
 	for friend in friends:
-		friend_name = await sync_to_async(lambda: friend.friend.username)()
-		friend_channel = user_channels.get(friend_name)
+		friend_id = await sync_to_async(lambda: friend.friend.id)()
+		friend_channel = user_channels.get(friend_id)
 		# #print(friend_channel)
 		if friend_channel:
 			await self.channel_layer.send(friend_channel, {
@@ -2033,6 +2040,7 @@ async def create_new_room(self, data, rooms, user_channels):
 
 async def join_new_room(self, data, rooms, user_channels):
 	room_code = (data['message']).get('roomCode')
+	ip_address = os.getenv("IP_ADDRESS")
 	active_match = await sync_to_async(ActiveMatch.objects.filter(room_id=room_code).first)()
 	if active_match:
 		user = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
@@ -2064,11 +2072,10 @@ async def join_new_room(self, data, rooms, user_channels):
 				'self_scored': 0, ####### added
 				'tmp_scored': 0 ####### added
 			})
-			with player.avatar.open('rb') as f:
-				users.append({
-					'image': base64.b64encode(f.read()).decode('utf-8'),
-					'level': 2.4
-				})
+			users.append({
+				'image': f"http://{ip_address}:8000/auth{player_state.avatar.url}",
+				'level': 2.4
+			})
 		room = {
 			'id': active_match.room_id,
 			'players': players,
@@ -2097,8 +2104,8 @@ async def join_new_room(self, data, rooms, user_channels):
 		asyncio.create_task(set_game(self, room, users))
 		friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
 		for friend in friends:
-			friend_name = await sync_to_async(lambda: friend.friend.username)()
-			friend_channel = user_channels.get(friend_name)
+			friend_id = await sync_to_async(lambda: friend.friend.id)()
+			friend_channel = user_channels.get(friend_id)
 			# #print(friend_channel)
 			if friend_channel:
 				await self.channel_layer.send(friend_channel, {

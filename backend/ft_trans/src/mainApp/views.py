@@ -9,7 +9,7 @@ import random
 from django.db.models import Q
 from myapp.serializers import MyModelSerializer
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError, AccessToken
-from .common import tournament_rooms, tournaments
+from .common import tournament_rooms, tournaments, rooms
 from myapp.decorators import authentication_required
 # from rest_framework.exceptions import AuthenticationFailed
 # from .serializers import UserSerializer
@@ -85,16 +85,14 @@ from mimetypes import guess_type
 
 @api_view(['POST'])
 def online_friends(request):
+	ip_address = os.getenv("IP_ADDRESS")
 	username = request.data['user']
 	# #print(f'user is {username}')
 	user = customuser.objects.get(username=username)
 	allFriends = []
 	for user_id in Friendship.objects.filter(user=user):
 		if user_id.friend.is_online and not user_id.friend.is_playing: ####################  and user_id.friend.is_playing
-			image_path = user_id.friend.avatar.path
-			# with open(image_path, 'rb') as image_file:
-				# encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
-			allFriends.append({'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path})
+			allFriends.append({'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': f"http://{ip_address}:8000/auth{user_id.friend.avatar.url}"})
 		# print(f'friends are {friends}')
 	return Response({'message': allFriends})
 
@@ -108,25 +106,24 @@ def serve_image(request):
 @api_view(['POST'])
 def get_user(request):
 	data = request.data
+	ip_address = os.getenv("IP_ADDRESS")
 	username = data.get('uname')
 	user = customuser.objects.filter(username=username).first()
 	if user is not None:
 		response = Response()
-		response.data = {'id' : user.id, 'name' : user.username, 'level' : 2, 'image' : user.avatar.path}
+		response.data = {'id' : user.id, 'name' : user.username, 'level' : 2, 'image' : f"http://{ip_address}:8000/auth{user.avatar.url}" }
 		return response
 
 @api_view(['POST'])
 def user_image(request):
+	ip_address = os.getenv("IP_ADDRESS")
 	username = (request.data).get('user')
 	if not username:
 		#print("no user is here")
 		return Response({'message': 'no username is here'})
 	user = customuser.objects.filter(username=username).first()
 	if user:
-		image_path = user.avatar.path
-		if image_path:
-			with open(image_path, 'rb') as image_file:
-				return HttpResponse(image_file.read(), content_type='image/jpeg')
+		return Response({'image': f"http://{ip_address}:8000/auth{user.avatar.url}"})
 	else:
 		return Response({'message': 'user not exit in the database'})
 
@@ -182,6 +179,7 @@ def tournament_members(request):
 def started_tournament_members(request):
 	username = request.data.get('user')
 	user = customuser.objects.filter(username=username).first()
+	ip_address = os.getenv("IP_ADDRESS")
 	if not user:
 		return Response({'error': 'User not found'}, status=404)
 	tournament_members = TournamentMembers.objects.select_related('tournament').filter(user=user, tournament__is_started=True, tournament__is_finished=False)
@@ -194,12 +192,11 @@ def started_tournament_members(request):
 		return Response({'error': 'Tournament not found'}, status=404)
 	allMembers = []
 	for member in TournamentMembers.objects.filter(tournament=my_tournament):
-		image_path = member.user.avatar.path
 		allMembers.append({
 			'id': member.user.id,
 			'name': member.user.username,
 			'level': 2,  # Assuming level is static for now
-			'image': image_path,
+			'image': f"http://{ip_address}:8000/auth{member.user.avatar.url}",
 			'is_online' : member.user.is_online
 		})
 	response = Response()
@@ -228,12 +225,13 @@ def notifs_friends(request):
 	# print(f'user is {username}')
 	target = customuser.objects.get(username=username)
 	allNotifs = []
+	ip_address = os.getenv("IP_ADDRESS")
 	for gameNotif in GameNotifications.objects.filter(target=target):
 		# print(f'ROOM_ID WHEN FETCHING IS : {gameNotif.room_id}')
 		if gameNotif.active_match is not None:
-			allNotifs.append({'tournament_id' : '', 'user': gameNotif.user.username, 'avatar': gameNotif.user.avatar.path, 'roomID': gameNotif.active_match.room_id, 'mode': gameNotif.mode})
+			allNotifs.append({'tournament_id' : '', 'user': gameNotif.user.username, 'avatar': f"http://{ip_address}:8000/auth{gameNotif.user.avatar.url}", 'roomID': gameNotif.active_match.room_id, 'mode': gameNotif.mode})
 		elif gameNotif.tournament_id != 0:
-			allNotifs.append({'tournament_id' : gameNotif.tournament_id, 'user': gameNotif.user.username, 'avatar': gameNotif.user.avatar.path, 'roomID': '', 'mode': gameNotif.mode})
+			allNotifs.append({'tournament_id' : gameNotif.tournament_id, 'user': gameNotif.user.username, 'avatar': f"http://{ip_address}:8000/auth{gameNotif.user.avatar.url}", 'roomID': '', 'mode': gameNotif.mode})
 
 	return Response({'message': allNotifs})
 
@@ -650,4 +648,42 @@ def get_tournament_members_rounds(request):
 		else:
 			winnerdict.update({'id': -1, 'name' : '', 'level' : -1, 'image' : '', 'position' : winnermember.position})
 	response.data = {'roundquarter' : quartermembers, 'roundsemi' : semimembers, 'roundfinal' : finalmembers , 'winner' : winnerdict}
+	return response
+
+def is_user_joining_tournament(username):
+	for tournament_id, tournament_data in tournaments.items():
+		for member in tournament_data['members']:
+			if member['username'] == username and member['is_eliminated'] == False and (tournament_data['is_started'] == False or  (tournament_data['is_started'] == True and tournament_data['is_finished'] == False)):
+				return 'tournament'
+	userRoom = { key: value for key, value in rooms.items()
+		if (
+			((len(value.get('players')) == 2 and
+			(value['players'][0].get('user') == username or
+			value['players'][1].get('user') == username)) or
+			(len(value.get('players')) == 4 and
+			((value['players'][0].get('user') == username and value['players'][0]['inside'] == True) or
+			(value['players'][1].get('user') == username and value['players'][1]['inside'] == True) or
+			(value['players'][2].get('user') == username and value['players'][2]['inside'] == True) or
+			(value['players'][3].get('user') == username and value['players'][3]['inside'] == True))))
+		)
+	}
+	print("EWAHAHAHAAA: ", userRoom)
+	if userRoom:
+		value = list(userRoom.values())[0]
+		return value['mode']
+	return None
+
+@api_view(['POST'])
+def check_is_in_game(request):
+	response = Response()
+	username = request.data.get('user')
+	if username:
+		print("REQUESTTT: ")
+		is_joining = is_user_joining_tournament(username)
+		if is_joining:
+			response.data = {'mode': is_joining}
+		else:
+			response.data = {'error': 'Not valid'}
+	else:
+		response.data = {'error': 'Not valid'}
 	return response

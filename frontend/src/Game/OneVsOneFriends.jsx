@@ -62,9 +62,13 @@ const OneVsOneFriends = () => {
 				let type = data.type
 				let message = data.message
 				if (type === 'roomAlreadyStarted') {
-					console.log("inside roomAlreadyStarted")
 					setAllSet(true)
-					navigate(`../play/1vs1/${message.roomID}`)
+					if (message.mode === '1vs1')
+                        navigate(`../play/1vs1/${message.roomID}`)
+                    else if (message.mode === '2vs2') 
+                        navigate(`../play/2vs2/${message.roomID}`)
+                    else
+                        navigate("../game/createtournament")
 				} else if (type === "gameReady") {
 					console.log("inside gameReady")
 					console.log(message.avatars)
@@ -97,7 +101,6 @@ const OneVsOneFriends = () => {
 					setPlayerNo(message.playerNo)
 					setTmpRoomID(message.id)
 					setGameStarted(true)
-					// setChosenOne('quickMatch')
 				} else if (type === 'alreadySearching') {
 					console.log("inside alreadySearching")
 					setPlayerNo(message.playerNo)
@@ -105,8 +108,6 @@ const OneVsOneFriends = () => {
 					setGameStarted(true)
 					setLoadMatch(true)
 				} else if (type === 'playingStatus') {
-					// console.log(message.user)
-					// console.log(allGameFriends)
 					const currentAllGameFriends = allGameFriendsRef.current;
 					if (message.is_playing)
 						setAllGameFriends(currentAllGameFriends.filter(friend => friend.name !== message.user))
@@ -115,41 +116,10 @@ const OneVsOneFriends = () => {
 						if (!userExists)
 							setAllGameFriends([...currentAllGameFriends, message.userInfos])
 					}
-					//     for (let i = 0;i < allGameFriends.length; i++) {
-					//         console.log(allGameFriends[i].name)
-					//     }
-					// }
 				} else if (type === 'hmed') {
 					console.log("hmed received")
                     socket.close()
                 }
-				// else if (type === "removeRoom") {
-				//     console.log("inside removeRoom")
-				//     if (socket && socket.readyState === WebSocket.OPEN) {
-				//         socket.send(JSON.stringify({
-				//             type: 'OpponentIsOut',
-				//             message: {
-				//                 user: user,
-				//                 roomID: roomID
-				//             }
-				//         }))
-				//     }
-				//     setPlayerNo(0)
-				//     setAllSet(false)
-				//     setRoomID(null)
-				// }
-				// else if (type === "alreadySearching") {
-				//     setIsInSearchMode(true)
-				//     setTimeout(() => {
-				//         setIsInSearchMode(false)
-				//     }, 5000);
-				// } else if (type === "alreadyPlaying") {
-				//     console.log("in a match buddy")
-				//     setIsInPlayingMode(true)
-				//     setTimeout(() => {
-				//         setIsInPlayingMode(false)
-				//     }, 5000);
-				// }
 			}
 		}
 
@@ -296,7 +266,7 @@ const OneVsOneFriends = () => {
 							return (<div key={user.id} className='game-friend-list'>
 								<div className='game-friend-profile'>
 									<div>
-										<img src={userImages[key]}/>
+										<img src={user.image}/>
 									</div>
 									<div>
 										<p>{user.name}</p>
@@ -347,7 +317,7 @@ const OneVsOneFriends = () => {
 						{enemyInfos ? (
 							<>
 								<div>
-									<img src={`data:image/jpeg;base64,${enemyInfos.avatar}`} alt="profile-pic" style={{borderRadius: '50%'}} />
+									<img src={enemyInfos.avatar} alt="profile-pic" style={{borderRadius: '50%'}} />
 								</div>
 								<div className='onevsone-opponent-infos'>
 									<p>{enemyInfos.name}</p>

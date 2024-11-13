@@ -380,7 +380,7 @@ const Modes = () => {
 							{allGameNotifs.map((user, key) => {
 								return ((
 									<div key={key} className='game-invitation'>
-										<img src={notifsImgs[key]} alt="profile-pic" />
+										<img src={user.image} alt="profile-pic" />
 										<div className='user-infos'>
 											<span>{user.user}</span>
 											<span>level 2.5</span>

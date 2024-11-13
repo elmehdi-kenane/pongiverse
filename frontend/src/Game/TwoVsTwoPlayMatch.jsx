@@ -3,6 +3,7 @@ import AuthContext from '../navbar-sidebar/Authcontext'
 import { useNavigate, useParams } from 'react-router-dom'
 import * as Icons from '../assets/navbar-sidebar'
 import '../assets/navbar-sidebar/index.css';
+import TwoVsTwoStats from './TwoVsTwoStats';
 
 class Player {
     constructor(x, y, width, height, color, score) {
@@ -185,6 +186,40 @@ const TwoVsTwoPlayMatch = () => {
     const userRef = useRef(user)
     const roomIdRef = useRef(roomID)
     const socketRef = useRef(socket)
+
+    const [playersInfos, setPlayersInfos] = useState([
+        {
+            totalScore: 0,
+            score: 0,
+            hit: 0,
+            accuracy: 0,
+            rating: 0,
+        },
+        {
+            totalScore: 0,
+            score: 0,
+            hit: 0,
+            accuracy: 0,
+            rating: 0
+        },
+        {
+            totalScore: 0,
+            score: 0,
+            hit: 0,
+            accuracy: 0,
+            rating: 0
+        },
+        {
+            totalScore: 0,
+            score: 0,
+            hit: 0,
+            accuracy: 0,
+            rating: 0
+        },
+        {
+            time: 0,
+        }
+    ])
 
     const draw = () => {
         const ctx = canvasContextRef.current
@@ -529,31 +564,31 @@ const TwoVsTwoPlayMatch = () => {
     //     }
     // }
     
-    const gamefinishedAborted = (message) => {
-        setUserName1(message.user1)
-        setUserName2(message.user2)
-        setUserName3(message.user3)
-        setUserName4(message.user4)
-        setScore1(message.playerScore1)
-        setScore2(message.playerScore2)
-        setScore3(message.playerScore3)
-        setScore4(message.playerScore4)
-        setUserOut([])
-        isGameStarted = false
-        const canvas = canvasRef.current;
-        const gameCustom = gameCustomizeRef.current
-        if (canvas && gameCustom) {
-            const widthScalingFactor = canvas.width / 710;
-            const heightScalingFactor = canvas.height / 400;
-            const scalingFactor = Math.min(widthScalingFactor, heightScalingFactor);
-            player1.current.changeProperties((15 * widthScalingFactor), (65 * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
-            player2.current.changeProperties((15 * widthScalingFactor), (265 * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
-            player3.current.changeProperties((685 * widthScalingFactor), (65 * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
-            player4.current.changeProperties((685 * widthScalingFactor), (265 * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
-            ball.current.changeProperties((355 * widthScalingFactor), (200 * heightScalingFactor), (7 * scalingFactor), gameCustom[1]);
-        }
-        draw()
-    }
+    // const gamefinishedAborted = (message) => {
+    //     setUserName1(message.user1)
+    //     setUserName2(message.user2)
+    //     setUserName3(message.user3)
+    //     setUserName4(message.user4)
+    //     setScore1(message.playerScore1)
+    //     setScore2(message.playerScore2)
+    //     setScore3(message.playerScore3)
+    //     setScore4(message.playerScore4)
+    //     setUserOut([])
+    //     isGameStarted = false
+    //     const canvas = canvasRef.current;
+    //     const gameCustom = gameCustomizeRef.current
+    //     if (canvas && gameCustom) {
+    //         const widthScalingFactor = canvas.width / 710;
+    //         const heightScalingFactor = canvas.height / 400;
+    //         const scalingFactor = Math.min(widthScalingFactor, heightScalingFactor);
+    //         player1.current.changeProperties((15 * widthScalingFactor), (65 * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
+    //         player2.current.changeProperties((15 * widthScalingFactor), (265 * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
+    //         player3.current.changeProperties((685 * widthScalingFactor), (65 * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
+    //         player4.current.changeProperties((685 * widthScalingFactor), (265 * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
+    //         ball.current.changeProperties((355 * widthScalingFactor), (200 * heightScalingFactor), (7 * scalingFactor), gameCustom[1]);
+    //     }
+    //     draw()
+    // }
 
     useEffect(() => {
         if (socket && socket.readyState === WebSocket.OPEN && user) {
@@ -612,13 +647,73 @@ const TwoVsTwoPlayMatch = () => {
                     navigate("../game/solo/2vs2")
                 } else if (type === "finishedGame") {
                     console.log('time after the match ended', message.time)
+                    let allPlayersStats = [...playersInfos]
+                    setUserName1(message.user1)
+                    setUserName2(message.user2)
+                    setUserName3(message.user3)
+                    setUserName4(message.user4)
+                    setScore1(message.playerScore1)
+                    setScore2(message.playerScore2)
+                    setScore3(message.playerScore3)
+                    setScore4(message.playerScore4)
                     setGameFinished(true)
-                    gamefinishedAborted(message)
+                    // gamefinishedAborted(message)
                     setTime(message.time)
+                    allPlayersStats[0].totalScore = message.score[0]
+                    allPlayersStats[1].totalScore = message.score[1]
+                    allPlayersStats[2].totalScore = message.score[2]
+                    allPlayersStats[3].totalScore = message.score[3]
+                    allPlayersStats[0].score = message.selfScore[0]
+                    allPlayersStats[1].score = message.selfScore[1]
+                    allPlayersStats[2].score = message.selfScore[2]
+                    allPlayersStats[3].score = message.selfScore[3]
+                    allPlayersStats[0].hit = message.hit[0]
+                    allPlayersStats[1].hit = message.hit[1]
+                    allPlayersStats[2].hit = message.hit[2]
+                    allPlayersStats[3].hit = message.hit[3]
+                    allPlayersStats[0].accuracy = message.accuracy[0]
+                    allPlayersStats[1].accuracy = message.accuracy[1]
+                    allPlayersStats[2].accuracy = message.accuracy[2]
+                    allPlayersStats[3].accuracy = message.accuracy[3]
+                    allPlayersStats[0].rating = message.rating[0]
+                    allPlayersStats[1].rating = message.rating[1]
+                    allPlayersStats[2].rating = message.rating[2]
+                    allPlayersStats[3].rating = message.rating[3]
+                    setPlayersInfos(allPlayersStats)
                 } else if (type === "abortedGame") {
+                    let allPlayersStats = [...playersInfos]
+                    setUserName1(message.user1)
+                    setUserName2(message.user2)
+                    setUserName3(message.user3)
+                    setUserName4(message.user4)
+                    setScore1(message.playerScore1)
+                    setScore2(message.playerScore2)
+                    setScore3(message.playerScore3)
+                    setScore4(message.playerScore4)
                     setGameAborted(true)
-                    gamefinishedAborted(message)
+                    // gamefinishedAborted(message)
                     setTime(message.time)
+                    allPlayersStats[0].totalScore = message.score[0]
+                    allPlayersStats[1].totalScore = message.score[1]
+                    allPlayersStats[2].totalScore = message.score[2]
+                    allPlayersStats[3].totalScore = message.score[3]
+                    allPlayersStats[0].score = message.selfScore[0]
+                    allPlayersStats[1].score = message.selfScore[1]
+                    allPlayersStats[2].score = message.selfScore[2]
+                    allPlayersStats[3].score = message.selfScore[3]
+                    allPlayersStats[0].hit = message.hit[0]
+                    allPlayersStats[1].hit = message.hit[1]
+                    allPlayersStats[2].hit = message.hit[2]
+                    allPlayersStats[3].hit = message.hit[3]
+                    allPlayersStats[0].accuracy = message.accuracy[0]
+                    allPlayersStats[1].accuracy = message.accuracy[1]
+                    allPlayersStats[2].accuracy = message.accuracy[2]
+                    allPlayersStats[3].accuracy = message.accuracy[3]
+                    allPlayersStats[0].rating = message.rating[0]
+                    allPlayersStats[1].rating = message.rating[1]
+                    allPlayersStats[2].rating = message.rating[2]
+                    allPlayersStats[3].rating = message.rating[3]
+                    setPlayersInfos(allPlayersStats)
                 } else if (type === "playersInfos")
                     setPlayersPics(message.users)
                 else if (type === "playerOut") {
@@ -735,46 +830,50 @@ const TwoVsTwoPlayMatch = () => {
     }, [])
 
     return (
-        <div className='twovstwo-pm' ref={wrapperRef} >
-            {gameFinished ? (<div style={{fontWeight:"bolder", textAlign:"center", color:"white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}><p>GAME FINISHED</p></div>) : gameAborted ? (<div style={{fontWeight:"bolder", textAlign:"center", color:"white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}><p>GAME ABORTED</p></div>) : ''}
-            {/* {(!gameFinished && !gameAborted) && (<button onClick={exitTheGame} style={{color:"black", padding:"10px"}}>exit</button>)} */}
-            <div ref={resultRef} className='twovstwo-pm-infos' > {/* height: 30px if 425px; height: 50px if 768px; height: 70px if 425px, height: 80px if 425px */}
-                <div>
-                    {playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[0].avatar}`} alt="" style={{height: '100%', opacity: (userOut.length && userOut.includes(1)) ? '0.5' : '1'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%', opacity: (userOut.length && userOut.includes(1)) ? '0.5' : '1'}} />)}
-                    {playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[1].avatar}`} alt="" style={{height: '100%', opacity: (userOut.length && userOut.includes(2)) ? '0.5' : '1'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%', opacity: (userOut.length && userOut.includes(2)) ? '0.5' : '1'}} />)}
-                    <div><p>Team 1</p></div>
-                </div>
-                    {/* <div style={{display: 'flex', height: '50%', alignItems: 'center', justifyContent: 'space-between', opacity: (userOut.length && userOut.includes(2)) ? '0.5' : '1'}}>
-                        {playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[1].avatar}`} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
-                        <div><p>{userName2}</p></div>
-                    </div> */}
-                <div>
-                    <p>{score1}</p>
-                    <div className='onevsone-pm-infos-stats' >
-                        <div>
-                            {/* <img src={Icons.logout} alt="" onClick={(!gameFinished && !gameAborted) ? exitTheGame : undefined} /> */}
-                            <p>Goal: 5</p>
-                            <div onClick={(!gameFinished && !gameAborted) ? exitTheGame : undefined} >
-                                <img src={Icons.logout} alt="" />
-                                <p>Exit</p>
-                            </div>
-                        </div>
-                        <div>{formatTime(time)}</div>
+        <>
+            {(gameFinished || gameAborted) &&
+                <TwoVsTwoStats
+                    gameFinished={gameFinished}
+                    user={user}
+                    userName1={userName1}
+                    userName2={userName2}
+                    userName3={userName3}
+                    userName4={userName4}
+                    playersInfos={playersInfos}
+                    playersPics={playersPics}
+                />
+            }
+            {(!gameFinished && !gameAborted) && (<div className='twovstwo-pm' ref={wrapperRef} >
+                {gameFinished ? (<div style={{fontWeight:"bolder", textAlign:"center", color:"white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}><p>GAME FINISHED</p></div>) : gameAborted ? (<div style={{fontWeight:"bolder", textAlign:"center", color:"white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}><p>GAME ABORTED</p></div>) : ''}
+                <div ref={resultRef} className='twovstwo-pm-infos' >
+                    <div>
+                        {playersPics.length ? (<img src={playersPics[0].avatar} alt="" style={{height: '100%', opacity: (userOut.length && userOut.includes(1)) ? '0.5' : '1'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%', opacity: (userOut.length && userOut.includes(1)) ? '0.5' : '1'}} />)}
+                        {playersPics.length ? (<img src={playersPics[1].avatar} alt="" style={{height: '100%', opacity: (userOut.length && userOut.includes(2)) ? '0.5' : '1'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%', opacity: (userOut.length && userOut.includes(2)) ? '0.5' : '1'}} />)}
+                        <div><p>Team 1</p></div>
                     </div>
-                    <p>{score3}</p>
+                    <div>
+                        <p>{score1}</p>
+                        <div className='onevsone-pm-infos-stats' >
+                            <div>
+                                <p>Goal: 5</p>
+                                <div onClick={(!gameFinished && !gameAborted) ? exitTheGame : undefined} >
+                                    <img src={Icons.logout} alt="" />
+                                    <p>Exit</p>
+                                </div>
+                            </div>
+                            <div>{formatTime(time)}</div>
+                        </div>
+                        <p>{score3}</p>
+                    </div>
+                    <div>
+                        <div><p>Team 2</p></div>
+                        {playersPics.length ? (<img src={playersPics[2].avatar} alt="" style={{height: '100%', opacity: (userOut.length && userOut.includes(3)) ? '0.5' : '1'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%', opacity: (userOut.length && userOut.includes(3)) ? '0.5' : '1'}} />)}
+                        {playersPics.length ? (<img src={playersPics[3].avatar} alt="" style={{height: '100%', opacity: (userOut.length && userOut.includes(4)) ? '0.5' : '1'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%', opacity: (userOut.length && userOut.includes(4)) ? '0.5' : '1'}} />)}
+                    </div>
                 </div>
-                <div>
-                    <div><p>Team 2</p></div>
-                    {playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[2].avatar}`} alt="" style={{height: '100%', opacity: (userOut.length && userOut.includes(3)) ? '0.5' : '1'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%', opacity: (userOut.length && userOut.includes(3)) ? '0.5' : '1'}} />)}
-                    {playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[3].avatar}`} alt="" style={{height: '100%', opacity: (userOut.length && userOut.includes(4)) ? '0.5' : '1'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%', opacity: (userOut.length && userOut.includes(4)) ? '0.5' : '1'}} />)}
-                </div>
-                    {/* <div style={{display: 'flex', height: '50%', alignItems: 'center', justifyContent: 'space-between',opacity: (userOut.length && userOut.includes(4)) ? '0.5' : '1'}}>
-                        <div><p>{userName4}</p></div>
-                        {playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[3].avatar}`} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
-                    </div> */}
-            </div>
-            <canvas ref={canvasRef} ></canvas>
-        </div>
+                <canvas ref={canvasRef} ></canvas>
+            </div>)}
+        </>
     )
 }
 

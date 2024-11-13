@@ -212,6 +212,9 @@ class VerifyTokenView(APIView):
 					tokens = get_tokens_for_user(user)
 					response.set_cookie('access_token', tokens['access'], httponly=True)
 					return response
+				else :
+					response.data = {"Case" : "Invalid token"}
+					return response
 			else:
 				response.data = {"Case" : "Invalid token"}
 				return response

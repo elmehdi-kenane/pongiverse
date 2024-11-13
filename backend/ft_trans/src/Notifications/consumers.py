@@ -9,6 +9,7 @@ from . import game_notifs_consumers, tournament_notifs_consumers
 from mainApp.models import TournamentMembers
 from .common import notifs_user_channels
 from mainApp.common import tournaments
+import os
 
 def is_user_joining_tournament(username):
 	for tournament_id, tournament_data in tournaments.items():
@@ -21,6 +22,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
 		cookiess = self.scope.get('cookies', {})
 		token = cookiess.get('refresh_token')
+		ip_address = os.getenv("IP_ADDRESS")
 		if token:
 			try:
 				decoded_token = await sync_to_async(RefreshToken)(token)
@@ -59,7 +61,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 														'id': user.id,
 														'name': user.username,
 														'level': 2,
-														'image': user.avatar.path,
+														'image': f"http://{ip_address}:8000/auth{user.avatar.url}",
 													}
 												}
 										}
@@ -83,7 +85,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 													'id': user.id,
 													'name': user.username,
 													'level': 2,
-													'image': user.avatar.path,
+													'image': f"http://{ip_address}:8000/auth{user.avatar.url}",
 												}
 											}
 										}
@@ -103,8 +105,8 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 		if data['type'] == 'acceptInvitation': await game_notifs_consumers.accept_game_invite(self, data, notifs_user_channels)
 		elif data['type'] == 'refuseInvitation': await game_notifs_consumers.refuse_game_invite(self, data, notifs_user_channels)
 		elif data['type'] == 'inviteFriendGame': await game_notifs_consumers.invite_friend(self, data, notifs_user_channels)
-		elif data['type'] == 'accept-tournament-invitation': await tournament_notifs_consumers.accept_invite(self, data, notifs_user_channels)
-		elif data['type'] == 'invite-friend': await tournament_notifs_consumers.invite_friend(self, data, notifs_user_channels)
+		# elif data['type'] == 'accept-tournament-invitation': await tournament_notifs_consumers.accept_invite(self, data, notifs_user_channels)
+		# elif data['type'] == 'invite-friend': await tournament_notifs_consumers.invite_friend(self, data, notifs_user_channels)
 		elif data['type'] == 'deny-tournament-invitation': await tournament_notifs_consumers.deny_invite(self, data, notifs_user_channels)
 		elif data['type'] == 'Round-16-timer': await tournament_notifs_consumers.quarterFinal_timer(self, data)
 		elif data['type'] == 'Delete-display-oponent': await tournament_notifs_consumers.delete_display_oponent(self, data)
@@ -291,5 +293,11 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 	async def send_friend_request(self, event):
 		await self.send(text_data=json.dumps({
 			'type': 'send-friend-request',
+			'message': event['message']
+		}))
+
+	async def friend_request_accepted(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'friend-request-accepted',
 			'message': event['message']
 		}))

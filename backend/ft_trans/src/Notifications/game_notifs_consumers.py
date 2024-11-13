@@ -10,6 +10,7 @@ from myapp.models import customuser
 from asgiref.sync import sync_to_async
 from mainApp.models import Match, ActiveMatch, PlayerState, NotifPlayer, GameNotifications, MatchStatistics
 from mainApp.common import rooms, user_channels
+import os
 
 @sync_to_async
 def generate_unique_room_id(self):
@@ -19,6 +20,7 @@ def generate_unique_room_id(self):
 			return room_id
 
 async def invite_friend(self, data, notifs_user_channels):
+	ip_address = os.getenv("IP_ADDRESS")
 	# active_matches = await sync_to_async(list)(ActiveMatch.objects.all())
 	# for active_match in active_matches:
 	#     player_state = await sync_to_async(PlayerState.objects.filter(active_match=active_match).first)()
@@ -91,7 +93,7 @@ async def invite_friend(self, data, notifs_user_channels):
 							'type': 'receiveFriendGame',
 							'message': {
 								'user': data['message']['user'],
-								'avatar': user1.avatar.path,
+								'avatar': f"http://{ip_address}:8000/auth{user1.avatar.url}" ,
 								'roomID': active_match.room_id,
 								'mode': '1vs1'
 							}
@@ -181,7 +183,7 @@ async def invite_friend(self, data, notifs_user_channels):
 					'type': 'receiveFriendGame',
 					'message': {
 						'user': data['message']['user'],
-						'avatar': user1.avatar.path,
+						'avatar': f"http://{ip_address}:8000/auth{user1.avatar.url}",
 						'roomID': active_match.room_id,
 						'mode': '1vs1'
 					}
@@ -283,7 +285,7 @@ async def accept_game_invite(self, data, notifs_user_channels):
 			#     for channel_name in user_channel_list:
 			#         await self.channel_layer.group_add(str(room['id']), channel_name)
 			await self.channel_layer.group_add(str(room['id']), self.channel_name)
-			channel_name = user_channels.get(data['message']['user'])
+			channel_name = user_channels.get(creator.id)
 			if channel_name:
 				await self.channel_layer.group_add(str(room['id']), channel_name)
 			target_channel_list = notifs_user_channels.get(friend.id)

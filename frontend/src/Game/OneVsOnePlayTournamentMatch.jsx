@@ -678,7 +678,7 @@ function createParticle(x, y) {
 		<div className='onevsone-pm' ref={wrapperRef} >
 			<div ref={resultRef} className='onevsone-pm-infos' >
 				<div>
-					{playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[0].avatar}`} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
+					{playersPics.length ? (<img src={playersPics[0].avatar} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
 					<div style={{textAlign:"center"}} ><p>{userName1}</p></div>
 				</div>
 				<div>
@@ -697,7 +697,7 @@ function createParticle(x, y) {
 				</div>
 				<div>
 					<div style={{textAlign:"center"}}><p>{userName2}</p></div>
-					{playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[1].avatar}`} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
+					{playersPics.length ? (<img src={playersPics[1].avatar} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
 				</div>
 			</div>
 			<canvas ref={canvasRef} ></canvas>

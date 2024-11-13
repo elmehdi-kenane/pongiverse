@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
 	let [socketRecreated, setSocketRecreated] = useState(false);
 	let [allGameNotifs, setAllGameNotifs] = useState([]);
 	let [notifsImgs, setNotifsImgs] = useState([]);
-	let allGameFriendsRef = useRef(allGameFriends);
+	// let allGameFriendsRef = useRef(allGameFriends);
 	let [isBlur, setIsBlur] = useState(false);
 	//chat socket ------------------------------------
 	let [chatSocket, setChatSocket] = useState(null);
@@ -85,68 +85,68 @@ export const AuthProvider = ({ children }) => {
 		else setIsGlass(true);
 	}, [isReport, isBlock]);
 
-	useEffect(() => {
-		allGameFriendsRef.current = allGameFriends;
-	}, [allGameFriends]);
+	// useEffect(() => {
+	// 	allGameFriendsRef.current = allGameFriends;
+	// }, [allGameFriends]);
 
 	useEffect(() => {
 		socketRef.current = socket
 	}, [socket])
 
 
-	useEffect(() => {
-		const fetchImages = async () => {
-			const promises = allGameFriends.map(async (user) => {
-				const response = await fetch(
-					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`,
-					{
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json",
-						},
-						body: JSON.stringify({
-							image: user.image,
-						}),
-					}
-				);
-				const blob = await response.blob();
-				return URL.createObjectURL(blob);
-			});
-			const images = await Promise.all(promises);
-			setUserImages(images);
-		};
-		if (allGameFriends) {
-			let loadingImage = [];
-			for (let i = 0; i < allGameFriends.length; i++)
-				loadingImage.push(Icons.solidGrey);
-			setUserImages(loadingImage);
-			fetchImages();
-		}
-	}, [allGameFriends]);
+	// useEffect(() => {
+	// 	const fetchImages = async () => {
+	// 		const promises = allGameFriends.map(async (user) => {
+	// 			const response = await fetch(
+	// 				`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`,
+	// 				{
+	// 					method: "POST",
+	// 					headers: {
+	// 						"Content-Type": "application/json",
+	// 					},
+	// 					body: JSON.stringify({
+	// 						image: user.image,
+	// 					}),
+	// 				}
+	// 			);
+	// 			const blob = await response.blob();
+	// 			return URL.createObjectURL(blob);
+	// 		});
+	// 		const images = await Promise.all(promises);
+	// 		setUserImages(images);
+	// 	};
+	// 	if (allGameFriends) {
+	// 		let loadingImage = [];
+	// 		for (let i = 0; i < allGameFriends.length; i++)
+	// 			loadingImage.push(Icons.solidGrey);
+	// 		setUserImages(loadingImage);
+	// 		fetchImages();
+	// 	}
+	// }, [allGameFriends]);
 
-	useEffect(() => {
-		const fetchNotifsImages = async () => {
-			const promises = allGameNotifs.map(async (user) => {
-				const response = await fetch(
-					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`,
-					{
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json",
-						},
-						body: JSON.stringify({
-							image: user.avatar,
-						}),
-					}
-				);
-				const blob = await response.blob();
-				return URL.createObjectURL(blob);
-			});
-			const images = await Promise.all(promises);
-			setNotifsImgs(images);
-		};
-		if (allGameFriends) fetchNotifsImages();
-	}, [allGameNotifs]);
+	// useEffect(() => {
+	// 	const fetchNotifsImages = async () => {
+	// 		const promises = allGameNotifs.map(async (user) => {
+	// 			const response = await fetch(
+	// 				`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`,
+	// 				{
+	// 					method: "POST",
+	// 					headers: {
+	// 						"Content-Type": "application/json",
+	// 					},
+	// 					body: JSON.stringify({
+	// 						image: user.avatar,
+	// 					}),
+	// 				}
+	// 			);
+	// 			const blob = await response.blob();
+	// 			return URL.createObjectURL(blob);
+	// 		});
+	// 		const images = await Promise.all(promises);
+	// 		setNotifsImgs(images);
+	// 	};
+	// 	if (allGameFriends) fetchNotifsImages();
+	// }, [allGameNotifs]);
 
 	useEffect(() => {
 		const getAllGameFriends = async () => {
@@ -170,6 +170,7 @@ export const AuthProvider = ({ children }) => {
 				console.log("something wrong with fetch");
 			}
 		};
+
 
 		const getAllNotifsFriends = async () => {
 			try {
@@ -209,9 +210,9 @@ export const AuthProvider = ({ children }) => {
 						}),
 					}
 				);
-				const blob = await response.blob();
-				const image = URL.createObjectURL(blob);
-				setUserImg(image);
+				let data = await response.json()
+				console.log("*******data:", data)
+				setUserImg(data.image);
 			} catch (e) {
 				console.log("something wrong with fetch");
 			}
@@ -286,6 +287,37 @@ export const AuthProvider = ({ children }) => {
 			setHideNavSideBar(true);
 		else setHideNavSideBar(false);
 	}, [location.pathname, user]);
+
+	useEffect(() =>{
+		const check_is_in_game = async () => {
+			try {
+				let response = await fetch(
+					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/check_is_in_game`,
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							user: user,
+						}),
+					}
+				);
+				let data = await response.json();
+				if (!data.error) {
+					(data.mode === 'tournament') ? navigate('mainpage/game/createtournament') : (data.mode === '1vs1') ? navigate('/mainpage/game/solo/1vs1/random') : navigate('/mainpage/game/solo/2vs2/random')
+				}
+				
+			} catch (error) {
+				console.error(
+					"There has been a problem with your fetch operation:",
+					error
+				);
+			}
+		}
+		if (user && (location.pathname === '/mainpage/game/solo' || location.pathname === '/mainpage/game/solo/1vs1' || location.pathname === '/mainpage/game/solo/2vs2' || location.pathname === '/mainpage/game/jointournament' || location.pathname === '/mainpage/game'))
+			check_is_in_game()
+	},[location.pathname, user])
 
 	useEffect(() => {
 		const addUser = (newUser, currentAllGameFriends) => {

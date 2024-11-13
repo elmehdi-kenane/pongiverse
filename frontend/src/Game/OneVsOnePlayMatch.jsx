@@ -3,6 +3,7 @@ import AuthContext from '../navbar-sidebar/Authcontext'
 import { useNavigate, useParams } from 'react-router-dom'
 import * as Icons from '../assets/navbar-sidebar'
 import '../assets/navbar-sidebar/index.css';
+import OneVsOneStats from './OneVsOneStats';
 
 class Player {
 	constructor(x, y, width, height, color, score) {
@@ -130,73 +131,73 @@ const OneVsOnePlayMatch = () => {
 	const [canvasContext, setCanvasContext] = useState(null);
 	const canvasContextRef = useRef(canvasContext);
 	const [canvasDimensions, setCanvasDimensions] = useState(null);
-	const canvasDimensionsRef = useRef(canvasDimensions);
-	const gameCustomizeRef = useRef(gameCustomize);
-	const gameFinishedRef = useRef(gameFinished);
-	const gameAbortedRef = useRef(gameAborted);
-	const wrapperRef = useRef(null);
-	const resultRef = useRef(null);
-	const aspectRatio = 710 / 400
+    const canvasDimensionsRef = useRef(canvasDimensions);
+    const gameCustomizeRef = useRef(gameCustomize);
+    const gameFinishedRef = useRef(gameFinished);
+    const gameAbortedRef = useRef(gameAborted);
+    const wrapperRef = useRef(null);
+    const resultRef = useRef(null);
+    const aspectRatio = 710 / 400
 
-	const [canvasDims, setCanvasDims] = useState(null);
-	const canvasDimsRef = useRef(canvasDims);
+    const [canvasDims, setCanvasDims] = useState(null);
+    const canvasDimsRef = useRef(canvasDims);
 
-	const originalPositions = {
-		player1_x: 15,
-		player1_y: 165,
-		player2_x: 685,
-		player2_y: 165,
-		ball_x: 355,
-		ball_y: 200
-	}
+    const originalPositions = {
+        player1_x: 15,
+        player1_y: 165,
+        player2_x: 685,
+        player2_y: 165,
+        ball_x: 355,
+        ball_y: 200
+    }
 
-	const [time, setTime] = useState(0);
-	let timer;
+    const [time, setTime] = useState(0);
+    let timer;
 
-	const userRef = useRef(user)
-	const roomIdRef = useRef(roomID)
-	const socketRef = useRef(socket)
+    const userRef = useRef(user)
+    const roomIdRef = useRef(roomID)
+    const socketRef = useRef(socket)
 
-	let particles = [];
+    let particles = [];
 
-	const [playersInfos, setPlayersInfos] = useState([
-		{
-		  totalScore: 0,
-		  score: 0,
-		  hit: 0,
-		  accuracy: 0,
-		  rating: 0,
-		},
-		{
-		  totalScore: 0,
-		  score: 0,
-		  hit: 0,
-		  accuracy: 0,
-		  rating: 0
-		},
-		{
-		  time: 0,
-		}
-	  ])
+    const [playersInfos, setPlayersInfos] = useState([
+        {
+            totalScore: 0,
+            score: 0,
+            hit: 0,
+            accuracy: 0,
+            rating: 0,
+        },
+        {
+            totalScore: 0,
+            score: 0,
+            hit: 0,
+            accuracy: 0,
+            rating: 0
+        },
+        {
+            time: 0,
+        }
+        ])
 
-	// const radius = Math.random() + 0.8
+    // const radius = Math.random() + 0.8
 
 
-		// let particlesConst = {
-		//     radius: radius,
-		//     speedX: speedX,
-		//     speedY: speedY
-		// }
-		// let particle = {
-		//     x,
-		//     y,
-		//     radius: radius * , // Random radius between 1 and 3 ====> Math.random() * 2 + 1
-		//     color: `hsl(${Math.random() * 40 + 20}, 100%, 50%)`, // Random hue for fire-like colors ====> `hsl(${Math.random() * 40 + 20}, 100%, 50%)`
-		//     speedX: Math.random() * 6 - 3, // Random horizontal speed between -3 and 3
-		//     speedY: Math.random() * 6 - 3, // Random vertical speed between -3 and 3
-		//     life: Math.random() * 50 + 50 // Random lifetime between 50 and 100 frames
-		// };
-		// particles.push(particle);
+        // let particlesConst = {
+        //     radius: radius,
+        //     speedX: speedX,
+        //     speedY: speedY
+        // }
+        // let particle = {
+        //     x,
+        //     y,
+        //     radius: radius * , // Random radius between 1 and 3 ====> Math.random() * 2 + 1
+        //     color: `hsl(${Math.random() * 40 + 20}, 100%, 50%)`, // Random hue for fire-like colors ====> `hsl(${Math.random() * 40 + 20}, 100%, 50%)`
+        //     speedX: Math.random() * 6 - 3, // Random horizontal speed between -3 and 3
+        //     speedY: Math.random() * 6 - 3, // Random vertical speed between -3 and 3
+        //     life: Math.random() * 50 + 50 // Random lifetime between 50 and 100 frames
+        // };
+        // particles.push(particle);
 
 function createParticle(x, y) {
 	let particle = {
@@ -359,227 +360,227 @@ function createParticle(x, y) {
 		}
 	}, [canvasRef, canvasDrawing, socket]);
 
-	const update = () => {
-		if (!isGameStarted)
-			return;
-		const canvas = canvasRef.current;
-		if (playerNo) {
-			if (canvas) {
-				const heightScalingFactor = canvas.height / 400;
-				if (keys['ArrowUp']) {
-					if (!((playerNo === 1 && (player1.current.y - (8 * heightScalingFactor)) < edges.current.height)
-						|| (playerNo === 2 && (player2.current.y - (8 * heightScalingFactor)) < edges.current.height))) {
-						if (socket && socket.readyState === WebSocket.OPEN) {
-							playerNo === 1 ? player1.current.y -= (8 * heightScalingFactor) : player2.current.y -= (8 * heightScalingFactor);
-							playerNo === 1 ? originalPositions.player1_y -= 8 : originalPositions.player2_y -= 8  ////
-							socket.send(JSON.stringify({
-								type: 'moveKey',
-								message: {
-									roomID: roomID,
-									playerNo: playerNo,
-									direction: 'up'
-								}
-							}))
-						}
-					}
-				}
-				else if (keys['ArrowDown']) {
-					if (!((playerNo === 1 && (((player1.current.y + player1.current.height) + (8 * heightScalingFactor)) > (canvas.height - edges.current.height)))
-						|| (playerNo === 2 && (((player2.current.y + player2.current.height) + (8 * heightScalingFactor)) > (canvas.height - edges.current.height))))) {
-						if (socket && socket.readyState === WebSocket.OPEN) {
-							playerNo === 1 ? player1.current.y += (8 * heightScalingFactor) : player2.current.y += (8 * heightScalingFactor);
-							playerNo === 1 ? originalPositions.player1_y += 8 : originalPositions.player2_y += 8 ////
-							socket.send(JSON.stringify({
-								type: 'moveKey',
-								message: {
-									roomID: roomID,
-									playerNo: playerNo,
-									direction: 'down'
-								}
-							}))
-						}
-					}
-				}
-			}
-		}
-		setScore1(player1.current.score)
-		setScore2(player2.current.score)
-	}
+    const update = () => {
+        if (!isGameStarted)
+            return;
+        const canvas = canvasRef.current;
+        if (playerNo) {
+            if (canvas) {
+                const heightScalingFactor = canvas.height / 400;
+                if (keys['ArrowUp']) {
+                    if (!((playerNo === 1 && (player1.current.y - (8 * heightScalingFactor)) < edges.current.height)
+                        || (playerNo === 2 && (player2.current.y - (8 * heightScalingFactor)) < edges.current.height))) {
+                        if (socket && socket.readyState === WebSocket.OPEN) {
+                            playerNo === 1 ? player1.current.y -= (8 * heightScalingFactor) : player2.current.y -= (8 * heightScalingFactor);
+                            playerNo === 1 ? originalPositions.player1_y -= 8 : originalPositions.player2_y -= 8  ////
+                            socket.send(JSON.stringify({
+                                type: 'moveKey',
+                                message: {
+                                    roomID: roomID,
+                                    playerNo: playerNo,
+                                    direction: 'up'
+                                }
+                            }))
+                        }
+                    }
+                }
+                else if (keys['ArrowDown']) {
+                    if (!((playerNo === 1 && (((player1.current.y + player1.current.height) + (8 * heightScalingFactor)) > (canvas.height - edges.current.height)))
+                        || (playerNo === 2 && (((player2.current.y + player2.current.height) + (8 * heightScalingFactor)) > (canvas.height - edges.current.height))))) {
+                        if (socket && socket.readyState === WebSocket.OPEN) {
+                            playerNo === 1 ? player1.current.y += (8 * heightScalingFactor) : player2.current.y += (8 * heightScalingFactor);
+                            playerNo === 1 ? originalPositions.player1_y += 8 : originalPositions.player2_y += 8 ////
+                            socket.send(JSON.stringify({
+                                type: 'moveKey',
+                                message: {
+                                    roomID: roomID,
+                                    playerNo: playerNo,
+                                    direction: 'down'
+                                }
+                            }))
+                        }
+                    }
+                }
+            }
+        }
+        setScore1(player1.current.score)
+        setScore2(player2.current.score)
+    }
 
-	const handleKeyDown = (e) => {
-		keys[e.code] = true;
-	}
+    const handleKeyDown = (e) => {
+        keys[e.code] = true;
+    }
 
-	const handleKeyUp = (e) => {
-		keys[e.code] = false;
-	}
+    const handleKeyUp = (e) => {
+        keys[e.code] = false;
+    }
 
-	const handleMouseMove = (e) => {
-		// console.log(player1.current.height)
-		const canvas = canvasRef.current;
-		const rect = canvas.getBoundingClientRect()
-		// const heightScalingFactor = 400 / canvas.height;
-		// const distance = (e.clientY - rect.top) * heightScalingFactor
-		// console.log(canvas.height / 400, distance)
-		if (!isGameStarted)
-			return;
-		// const rect = canvasDimensionsRef.current
-		// if (rect && canvas) {
-			if (playerNo === 1) {
-				if (player1.current) {
-					console.log(rect.top, rect.bottom, e.clientY, player1.current.height)
-					player1.current.y = e.clientY - rect.top - (player1.current.height / 2)
-					originalPositions.player1_y = e.clientY - rect.top - 35;
-					if (player1.current.y < edges.current.height) {
-						player1.current.y = edges.current.height;
-						originalPositions.player1_y = 10;
-					} else if (player1.current.y + player1.current.height > (canvas.height - edges.current.height)) {
-						player1.current.y = ((canvas.height - edges.current.height) - player1.current.height)
-						originalPositions.player1_y = 320
-					}
-					// console.log((e.clientY - rect.top),rect.bottom, player1.current.y + player1.current.height)
-				}
-			}
-			else if (playerNo === 2) {
-				if (player2.current) {
-					console.log(rect.top, rect.bottom, e.clientY, player1.current.height)
-					player2.current.y = e.clientY - rect.top - (player2.current.height / 2)
-					originalPositions.player2_y = e.clientY - rect.top - 35;
-					if (player2.current.y < edges.current.height) {
-						player2.current.y = edges.current.height
-						originalPositions.player2_y = 10;
-					} else if (player2.current.y + player2.current.height > (canvas.height - edges.current.height)) {
-						player2.current.y = ((canvas.height - edges.current.height) - player2.current.height)
-						originalPositions.player2_y = 320
-					}
-					// console.log((e.clientY - rect.top),rect.bottom, player2.current.y + player2.current.height)
-				}
-			}
-			const heightScalingFactor = 400 / canvas.height;
-			const distance = (e.clientY - rect.top) * heightScalingFactor
-			console.log(distance)
-			socket.send(JSON.stringify({
-				type: 'moveMouse',
-				message: {
-					roomID: roomID,
-					playerNo: playerNo,
-					distance: distance
-				}
-			}))
-		// }
-	}
+    const handleMouseMove = (e) => {
+        // console.log(player1.current.height)
+        const canvas = canvasRef.current;
+        const rect = canvas.getBoundingClientRect()
+        // const heightScalingFactor = 400 / canvas.height;
+        // const distance = (e.clientY - rect.top) * heightScalingFactor
+        // console.log(canvas.height / 400, distance)
+        if (!isGameStarted)
+            return;
+        // const rect = canvasDimensionsRef.current
+        // if (rect && canvas) {
+            if (playerNo === 1) {
+                if (player1.current) {
+                    console.log(rect.top, rect.bottom, e.clientY, player1.current.height)
+                    player1.current.y = e.clientY - rect.top - (player1.current.height / 2)
+                    originalPositions.player1_y = e.clientY - rect.top - 35;
+                    if (player1.current.y < edges.current.height) {
+                        player1.current.y = edges.current.height;
+                        originalPositions.player1_y = 10;
+                    } else if (player1.current.y + player1.current.height > (canvas.height - edges.current.height)) {
+                        player1.current.y = ((canvas.height - edges.current.height) - player1.current.height)
+                        originalPositions.player1_y = 320
+                    }
+                    // console.log((e.clientY - rect.top),rect.bottom, player1.current.y + player1.current.height)
+                }
+            }
+            else if (playerNo === 2) {
+                if (player2.current) {
+                    console.log(rect.top, rect.bottom, e.clientY, player1.current.height)
+                    player2.current.y = e.clientY - rect.top - (player2.current.height / 2)
+                    originalPositions.player2_y = e.clientY - rect.top - 35;
+                    if (player2.current.y < edges.current.height) {
+                        player2.current.y = edges.current.height
+                        originalPositions.player2_y = 10;
+                    } else if (player2.current.y + player2.current.height > (canvas.height - edges.current.height)) {
+                        player2.current.y = ((canvas.height - edges.current.height) - player2.current.height)
+                        originalPositions.player2_y = 320
+                    }
+                    // console.log((e.clientY - rect.top),rect.bottom, player2.current.y + player2.current.height)
+                }
+            }
+            const heightScalingFactor = 400 / canvas.height;
+            const distance = (e.clientY - rect.top) * heightScalingFactor
+            console.log(distance)
+            socket.send(JSON.stringify({
+                type: 'moveMouse',
+                message: {
+                    roomID: roomID,
+                    playerNo: playerNo,
+                    distance: distance
+                }
+            }))
+        // }
+    }
 
-	const gamefinishedAborted = (message) => {
-		setUserName1(message.user1)
-		setUserName2(message.user2)
-		setScore1(message.playerScore1)
-		setScore2(message.playerScore2)
-		isGameStarted = false
-		particles = []
-		const canvas = canvasRef.current;
-		const gameCustom = gameCustomizeRef.current
-		console.log(playerNo)
-		if (canvas && gameCustom) {
-			const widthScalingFactor = canvas.width / 710;
-			const heightScalingFactor = canvas.height / 400;
-			const scalingFactor = Math.min(widthScalingFactor, heightScalingFactor);
-			player1.current.changeProperties((15 * widthScalingFactor), (165 * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
-			player2.current.changeProperties((685 * widthScalingFactor), (165 * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
-			ball.current.changeProperties((355 * widthScalingFactor), (200 * heightScalingFactor), (7 * scalingFactor), gameCustom[1]);
-		}
-		draw()
-	}
+    // const gamefinishedAborted = (message) => {
+    //     setUserName1(message.user1)
+    //     setUserName2(message.user2)
+    //     setScore1(message.playerScore1)
+    //     setScore2(message.playerScore2)
+    //     isGameStarted = false
+    //     particles = []
+    //     const canvas = canvasRef.current;
+    //     const gameCustom = gameCustomizeRef.current
+    //     console.log(playerNo)
+    //     if (canvas && gameCustom) {
+    //         const widthScalingFactor = canvas.width / 710;
+    //         const heightScalingFactor = canvas.height / 400;
+    //         const scalingFactor = Math.min(widthScalingFactor, heightScalingFactor);
+    //         player1.current.changeProperties((15 * widthScalingFactor), (165 * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
+    //         player2.current.changeProperties((685 * widthScalingFactor), (165 * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
+    //         ball.current.changeProperties((355 * widthScalingFactor), (200 * heightScalingFactor), (7 * scalingFactor), gameCustom[1]);
+    //     }
+    //     draw()
+    // }
 
-	useEffect(() => {
-		if (socket && socket.readyState === WebSocket.OPEN && user) {
-			socket.onmessage = (event) => {
-				let data = JSON.parse(event.data)
-				let type = data.type
-				let message = data.message
-				// console.log("THE TYPE IS : ",type)
-				if (type === "setupGame") {
-					playerNo = message.playerNo
-					console.log("INSIDE SETUPGAME")
-					isGameStarted = true
-					setUserName1(message.user1)
-					setUserName2(message.user2)
-					setTime(message.time)
-					startTimer()
-					console.log(socket)
-				} else if (type === "updateGame") {
-					// console.log("INSIDE UPDATEGAME")
-					const canvas = canvasRef.current;
-					if (canvas) {
-						const widthScalingFactor = canvas.width / 710;
-						const heightScalingFactor = canvas.height / 400;
-						player1.current.y = message.playerY1 * heightScalingFactor;
-						player2.current.y = message.playerY2 * heightScalingFactor;
-						player1.current.score = message.playerScore1;
-						player2.current.score = message.playerScore2;
-						ball.current.x = message.ballX * widthScalingFactor;
-						ball.current.y = message.ballY * heightScalingFactor;
+    useEffect(() => {
+        if (socket && socket.readyState === WebSocket.OPEN && user) {
+            socket.onmessage = (event) => {
+                let data = JSON.parse(event.data)
+                let type = data.type
+                let message = data.message
+                // console.log("THE TYPE IS : ",type)
+                if (type === "setupGame") {
+                    playerNo = message.playerNo
+                    console.log("INSIDE SETUPGAME")
+                    isGameStarted = true
+                    setUserName1(message.user1)
+                    setUserName2(message.user2)
+                    setTime(message.time)
+                    startTimer()
+                    console.log(socket)
+                } else if (type === "updateGame") {
+                    // console.log("INSIDE UPDATEGAME")
+                    const canvas = canvasRef.current;
+                    if (canvas) {
+                        const widthScalingFactor = canvas.width / 710;
+                        const heightScalingFactor = canvas.height / 400;
+                        player1.current.y = message.playerY1 * heightScalingFactor;
+                        player2.current.y = message.playerY2 * heightScalingFactor;
+                        player1.current.score = message.playerScore1;
+                        player2.current.score = message.playerScore2;
+                        ball.current.x = message.ballX * widthScalingFactor;
+                        ball.current.y = message.ballY * heightScalingFactor;
 
-						originalPositions.player1_y = message.playerY1
-						originalPositions.player2_y = message.playerY2
-						originalPositions.ball_x = message.ballX
-						originalPositions.ball_y = message.ballY
-						update()
-						resizeCanvas()
-						draw()
-					}
-				} else if (type === "notAuthorized") {
-					console.log("INSIDE LEAVEGAME")
-					console.log("navigating from the playing page")
-					navigate("../game/solo/1vs1")
-				} else if (type === "roomNotExist") {
-					navigate("../game/solo/1vs1")
-				} else if (type === "finishedGame") {
-					let allPlayersStats = [...playersInfos]
-					setUserName1(message.user1)
-					setUserName2(message.user2)
-					setScore1(message.playerScore1)
-					setScore2(message.playerScore2)
-					setGameFinished(true)
-					gamefinishedAborted(message)
-					setTime(message.time)
-					allPlayersStats[0].totalScore = message.score[0]
-					allPlayersStats[1].totalScore = message.score[1]
-					allPlayersStats[0].score = message.selfScore[0]
-					allPlayersStats[1].score = message.selfScore[1]
-					allPlayersStats[0].hit = message.hit[0]
-					allPlayersStats[1].hit = message.hit[1]
-					allPlayersStats[0].accuracy = message.accuracy[0]
-					allPlayersStats[1].accuracy = message.accuracy[1]
-					allPlayersStats[0].rating = message.rating[0]
-					allPlayersStats[1].rating = message.rating[1]
-					allPlayersStats[2].time = message.time
-					setPlayersInfos(allPlayersStats)
-					console.log("playerNo when it is finished : ", playerNo)
-				} else if (type === "abortedGame") {
-					let allPlayersStats = [...playersInfos]
-					setUserName1(message.user1)
-					setUserName2(message.user2)
-					setScore1(message.playerScore1)
-					setScore2(message.playerScore2)
-					setGameAborted(true)
-					gamefinishedAborted(message)
-					setTime(message.time)
-					allPlayersStats[0].totalScore = message.score[0]
-					allPlayersStats[1].totalScore = message.score[1]
-					allPlayersStats[0].score = message.selfScore[0]
-					allPlayersStats[1].score = message.selfScore[1]
-					allPlayersStats[0].hit = message.hit[0]
-					allPlayersStats[1].hit = message.hit[1]
-					allPlayersStats[0].accuracy = message.accuracy[0]
-					allPlayersStats[1].accuracy = message.accuracy[1]
-					allPlayersStats[0].rating = message.rating[0]
-					allPlayersStats[1].rating = message.rating[1]
-					allPlayersStats[2].time = message.time
-					setPlayersInfos(allPlayersStats)
-				}
-				else if (type === "playersInfos")
-					setPlayersPics(message.users)
-				else if (type === 'hmed') {
+                        originalPositions.player1_y = message.playerY1
+                        originalPositions.player2_y = message.playerY2
+                        originalPositions.ball_x = message.ballX
+                        originalPositions.ball_y = message.ballY
+                        update()
+                        resizeCanvas()
+                        draw()
+                    }
+                } else if (type === "notAuthorized") {
+                    console.log("INSIDE LEAVEGAME")
+                    console.log("navigating from the playing page")
+                    navigate("../game/solo/1vs1")
+                } else if (type === "roomNotExist") {
+                    navigate("../game/solo/1vs1")
+                } else if (type === "finishedGame") {
+                    let allPlayersStats = [...playersInfos]
+                    setUserName1(message.user1)
+                    setUserName2(message.user2)
+                    setScore1(message.playerScore1)
+                    setScore2(message.playerScore2)
+                    setGameFinished(true)
+                    // gamefinishedAborted(message)
+                    setTime(message.time)
+                    allPlayersStats[0].totalScore = message.score[0]
+                    allPlayersStats[1].totalScore = message.score[1]
+                    allPlayersStats[0].score = message.selfScore[0]
+                    allPlayersStats[1].score = message.selfScore[1]
+                    allPlayersStats[0].hit = message.hit[0]
+                    allPlayersStats[1].hit = message.hit[1]
+                    allPlayersStats[0].accuracy = message.accuracy[0]
+                    allPlayersStats[1].accuracy = message.accuracy[1]
+                    allPlayersStats[0].rating = message.rating[0]
+                    allPlayersStats[1].rating = message.rating[1]
+                    allPlayersStats[2].time = message.time
+                    setPlayersInfos(allPlayersStats)
+                    console.log("playerNo when it is finished : ", playerNo)
+                } else if (type === "abortedGame") {
+                    let allPlayersStats = [...playersInfos]
+                    setUserName1(message.user1)
+                    setUserName2(message.user2)
+                    setScore1(message.playerScore1)
+                    setScore2(message.playerScore2)
+                    setGameAborted(true)
+                    // gamefinishedAborted(message)
+                    setTime(message.time)
+                    allPlayersStats[0].totalScore = message.score[0]
+                    allPlayersStats[1].totalScore = message.score[1]
+                    allPlayersStats[0].score = message.selfScore[0]
+                    allPlayersStats[1].score = message.selfScore[1]
+                    allPlayersStats[0].hit = message.hit[0]
+                    allPlayersStats[1].hit = message.hit[1]
+                    allPlayersStats[0].accuracy = message.accuracy[0]
+                    allPlayersStats[1].accuracy = message.accuracy[1]
+                    allPlayersStats[0].rating = message.rating[0]
+                    allPlayersStats[1].rating = message.rating[1]
+                    allPlayersStats[2].time = message.time
+                    setPlayersInfos(allPlayersStats)
+                }
+                else if (type === "playersInfos")
+                    setPlayersPics(message.users)
+                else if (type === 'hmed') {
 					console.log("hmed received")
 					socket.close()
 				}
@@ -661,175 +662,93 @@ function createParticle(x, y) {
 		socketRef.current = socket;
 	}, [user, roomID, socket]);
 
-	useEffect(() => {
-		const handleBeforeUnload = (event) => {
-			const user = userRef.current
-			const socket = socketRef.current
-			const roomID = roomIdRef.current
-			console.log("INSIDE THE MATCH : ", user, roomID, socket)
-			if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
-				socket.send(JSON.stringify({
-					type: 'playerChangedPage',
-					message: {
-						user: user,
-						roomID: roomID
-					}
-				}))
-			}
-		}
-		window.addEventListener('beforeunload', handleBeforeUnload)
-		return () => {
-			window.removeEventListener('beforeunload', handleBeforeUnload)
-		}
-	}, [])
+    useEffect(() => {
+        const handleBeforeUnload = (event) => {
+            const user = userRef.current
+            const socket = socketRef.current
+            const roomID = roomIdRef.current
+            console.log("INSIDE THE MATCH : ", user, roomID, socket)
+            if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
+                socket.send(JSON.stringify({
+                    type: 'playerChangedPage',
+                    message: {
+                        user: user,
+                        roomID: roomID
+                    }
+                }))
+            }
+        }
+        window.addEventListener('beforeunload', handleBeforeUnload)
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload)
+        }
+    }, [])
 
-	useEffect(() => {
-		return () => {
-			if (isOut) {
-				const user = userRef.current
-				const socket = socketRef.current
-				const roomID = roomIdRef.current
-				console.log("USER IS GETTING OUT ", user, roomID, socket)
-				if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
-					socket.send(JSON.stringify({
-						type: 'playerChangedPage',
-						message: {
-							user: user,
-							roomID: roomID
-						}
-					}))
-				}
-			} else
-				isOut = true
-		}
-	}, [])
+    useEffect(() => {
+        return () => {
+            if (isOut) {
+                const user = userRef.current
+                const socket = socketRef.current
+                const roomID = roomIdRef.current
+                console.log("USER IS GETTING OUT ", user, roomID, socket)
+                if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
+                    socket.send(JSON.stringify({
+                        type: 'playerChangedPage',
+                        message: {
+                            user: user,
+                            roomID: roomID
+                        }
+                    }))
+                }
+            } else
+                isOut = true
+        }
+    }, [])
 
-	const exitOneVsOneGame = () => {
-		navigate('../game/solo/1vs1')
-	}
-
-	return (
-		<>
-			{(gameFinished || gameAborted) && (
-				<div className='onevsone' style={{position: 'relative'}} >
-				{(gameFinished && user === userName1) ? ((playersInfos[0].totalScore > playersInfos[1].totalScore) ? (
-					<>
-						<div className='winner_cup' >
-							<img src={Icons.winnerCup} alt="winner cup" />
-						</div>
-						<p className='winner_congrats' >WINNER WINNER CHICKEN DINNER!</p>
-					</>
-				) : (
-					<p className='loser_support' >BETTER LUCK NEXT TIME!</p>
-				)) : (gameFinished && user === userName2) ? ((playersInfos[1].totalScore > playersInfos[0].totalScore) ? (
-					<>
-						<div className='winner_cup' >
-							<img src={Icons.winnerCup} alt="winner cup" />
-						</div>
-						<p className='winner_congrats' >WINNER WINNER CHICKEN DINNER!</p>
-					</>
-				) : (
-					<p className='loser_support' >BETTER LUCK NEXT TIME!</p>
-				)) : (
-					<p className='loser_support' >GAME ABORTED!</p>
-				)}
-
-				{/* {(playerScore1 > playerScore2 && playerNo === 1) && (
-						<div className='winner_cup' >
-							<img src={Icons.winnerCup} alt="winner cup" />
-						</div>
-					)}
-				{(playerScore1 > playerScore2 && playerNo === 1) ? (<p className='winner_congrats' >WINNER WINNER CHICKEN DINNER!</p>) : (<p className='loser_support' >BETTER LUCK NEXT TIME!</p>)} */}
-				<div className='gameStats_container' >
-					<div className='gameStats_playerInfos' >
-					<div className='gameStats_playerInfos-details' >
-						<div>
-						{playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[0].avatar}`} alt="" />) : (<img src={Icons.solidGrey} alt="" />)}
-						<p>{userName1}</p>
-						</div>
-						<div>
-						<p>{userName2}</p>
-						{playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[1].avatar}`} alt="" />) : (<img src={Icons.solidGrey} alt="" />)}
-						</div>
-					</div>
-					</div>
-					<div className='gameStats_details' >
-						<div>
-							<p>{playersInfos[0].totalScore}</p>
-							<p>Score</p>
-							<p>{playersInfos[1].totalScore}</p>
-						</div>
-					</div>
-					<div className='gameStats_details' >
-						<div>
-							<p>{playersInfos[0].score}</p>
-							<p>Goals</p>
-							<p>{playersInfos[1].score}</p>
-						</div>
-					</div>
-					<div className='gameStats_details' >
-					<div>
-						<p>{playersInfos[0].hit}</p>
-						<p>Hit</p>
-						<p>{playersInfos[1].hit}</p>
-					</div>
-					</div>
-					<div className='gameStats_details' >
-					<div>
-						{(playersInfos[0].hit) ?
-						(<p>{Math.floor((playersInfos[0].score / playersInfos[0].hit ) * 100)}%</p>) :
-						(<p>0%</p>)
-						}
-						<p>Accuracy</p>
-						{(playersInfos[1].hit) ?
-						(<p>{Math.floor((playersInfos[1].score / playersInfos[1].hit ) * 100)}%</p>) :
-						(<p>0%</p>)
-						}
-					</div>
-					</div>
-					<div className='gameStats_details' >
-					<div>
-						<p>{playersInfos[0].rating}</p>
-						<p>Rating</p>
-						<p>{playersInfos[1].rating}</p>
-					</div>
-					</div>
-				</div>
-				<div className='stats-selects stats-selects-modes' >
-					<button onClick={exitOneVsOneGame} >Exit</button>
-				</div>
-				</div>)}
-			{(!gameFinished && !gameAborted) && (<div className='onevsone-pm' ref={wrapperRef} >
-				{gameFinished ? (<div style={{fontWeight:"bolder", textAlign:"center", color:"white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}><p>GAME FINISHED</p></div>) : gameAborted ? (<div style={{fontWeight:"bolder", textAlign:"center", color:"white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}><p>GAME ABORTED</p></div>) : ''}
-				<div ref={resultRef} className='onevsone-pm-infos' >
-					<div>
-						{playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[0].avatar}`} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
-						<div style={{textAlign:"center"}} ><p>{userName1}</p></div>
-					</div>
-					<div>
-						<p>{score1}</p>
-						<div className='onevsone-pm-infos-stats' >
-							<div>
-								{/* <img src={Icons.logout} alt="" onClick={(!gameFinished && !gameAborted) ? exitTheGame : undefined} /> */}
-								<p>Goal: 5</p>
-								<div onClick={(!gameFinished && !gameAborted) ? exitTheGame : undefined} >
-									<img src={Icons.logout} alt="" />
-									<p>Exit</p>
-								</div>
-							</div>
-							<div>{formatTime(time)}</div>
-						</div>
-						<p>{score2}</p>
-					</div>
-					<div>
-						<div style={{textAlign:"center"}}><p>{userName2}</p></div>
-						{playersPics.length ? (<img src={`data:image/jpeg;base64,${playersPics[1].avatar}`} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
-					</div>
-				</div>
-				<canvas ref={canvasRef} ></canvas>
-			</div>)}
-		</>
-	);
+    return (
+        <>
+            {(gameFinished || gameAborted) &&
+                <OneVsOneStats 
+                    gameFinished={gameFinished}
+                    user={user}
+                    userName1={userName1}
+                    userName2={userName2}
+                    playersInfos={playersInfos}
+                    playersPics={playersPics}
+                    mode='online'
+                />
+            }
+            {(!gameFinished && !gameAborted) && (<div className='onevsone-pm' ref={wrapperRef} >
+                {gameFinished ? (<div style={{fontWeight:"bolder", textAlign:"center", color:"white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}><p>GAME FINISHED</p></div>) : gameAborted ? (<div style={{fontWeight:"bolder", textAlign:"center", color:"white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}><p>GAME ABORTED</p></div>) : ''}
+                <div ref={resultRef} className='onevsone-pm-infos' >
+                    <div>
+                        {playersPics.length ? (<img src={playersPics[0].avatar} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
+                        <div style={{textAlign:"center"}} ><p>{userName1}</p></div>
+                    </div>
+                    <div>
+                        <p>{score1}</p>
+                        <div className='onevsone-pm-infos-stats' >
+                            <div>
+                                {/* <img src={Icons.logout} alt="" onClick={(!gameFinished && !gameAborted) ? exitTheGame : undefined} /> */}
+                                <p>Goal: 5</p>
+                                <div onClick={(!gameFinished && !gameAborted) ? exitTheGame : undefined} >
+                                    <img src={Icons.logout} alt="" />
+                                    <p>Exit</p>
+                                </div>
+                            </div>
+                            <div>{formatTime(time)}</div>
+                        </div>
+                        <p>{score2}</p>
+                    </div>
+                    <div>
+                        <div style={{textAlign:"center"}}><p>{userName2}</p></div>
+                        {playersPics.length ? (<img src={playersPics[1].avatar} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
+                    </div>
+                </div>
+                <canvas ref={canvasRef} ></canvas>
+            </div>)}
+        </>
+    );
 };
 
 export default OneVsOnePlayMatch;

@@ -116,6 +116,7 @@ async def save_tournament_to_db(tournament_id):
 
 
 async def send_user_eliminated_after_delay(self, tournament_id, actual_round):
+	ip_address = os.getenv("IP_ADDRESS")
 	rounds = ['QUARTERFINAL', 'SEMIFINAL', 'FINAL', 'WINNER']
 	next_round = ''
 	if actual_round == 'WINNER':
@@ -187,7 +188,7 @@ async def send_user_eliminated_after_delay(self, tournament_id, actual_round):
 											'id': user.id,
 											'name': member['username'],
 											'level': user.level,
-											'image': user.avatar.path,
+											'image': f"http://{ip_address}:8000/auth{user.avatar.url}" ,
 											'is_playing' : user.is_playing
 										}
 									}

@@ -36,8 +36,8 @@ function CreateTournament() {
 	// },[tournamentMembers])
 
 	const handleInviteClick = (name) => {
-		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
-			notifSocket.send(JSON.stringify({
+		if (socket && socket.readyState === WebSocket.OPEN) {
+			socket.send(JSON.stringify({
 				type: 'invite-friend',
 				message: {
 					user: user,
@@ -263,7 +263,10 @@ function CreateTournament() {
 						let username = message.user
 						setAllGameFriends(currentAllGameFriends.filter(user => user.name !== username))
 					}
-				}
+				} else if (type === 'hmed') {
+					console.log("WWWWWWWWWAAAAA HMEEEEEEEED")
+					socket.close()
+				} 
 			}
 		}
 
@@ -369,7 +372,7 @@ function CreateTournament() {
 							return (
 								<div key={user.id} className={styles["friend"]}>
 									<div className={styles["friend-data"]}>
-										<img className={styles["friend-avatar"]} src={userImages[key]} alt="" />
+										<img className={styles["friend-avatar"]} src={user.image} alt="" />
 										<div className={styles["friend-name-and-status"]}>
 											<h3 className={styles["friend-name"]}>{user.name}</h3>
 											<h3 className={styles["friend-status"]}>level {user.level}</h3>
