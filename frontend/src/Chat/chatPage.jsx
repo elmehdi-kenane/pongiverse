@@ -10,6 +10,7 @@ import {
 import ChatSideBar from "./chatPageSidebar";
 import ChatWindow from "./chatPageWindow";
 import { chat } from "../assets/navbar-sidebar";
+import GameNotifications from "../GameNotif/GameNotifications";
 
 const Chat = () => {
   const {
@@ -331,6 +332,7 @@ const Chat = () => {
   return (
     <div className="chat-page">
       <Toaster />
+      <GameNotifications/>
       <div className="chat-container">
         <ChatSideBar
           directs={directs}

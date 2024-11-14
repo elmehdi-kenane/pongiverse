@@ -1552,10 +1552,10 @@ background: radial-gradient(circle, rgba(99,22,214,1) 0%, rgba(33,19,54,1) 100%)
 .cancel-game-invite-request {
   /* margin: 30px 0 100px 0; */
   position: absolute;
-  top: 0;
-  left: 100%;
+  top: 5%;
+  left: 50%;
   z-index: 100;
-  transform: translate(-100%);
+  transform: translate(-50%);
 }
 
 /* GAME INVITATION DESIGN */
@@ -1584,15 +1584,15 @@ background: radial-gradient(circle, rgba(99,22,214,1) 0%, rgba(33,19,54,1) 100%)
   border-radius: 5px 5px 5px 8px;
   /* position: absolute; */
   width: 100%;
-  animation: notifyAnimation 1s ease-in;
+  animation: notifyAnimation 0.5s ease-in;
 }
 
 @keyframes notifyAnimation {
   0% {
-    margin-left: 100%;
+    margin-top: -100%;
   }
   100% {
-    margin-left: 0;
+    margin-left: 100%;
   }
 }
 
