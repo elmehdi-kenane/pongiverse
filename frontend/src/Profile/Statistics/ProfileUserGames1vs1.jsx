@@ -20,7 +20,7 @@ function ProfileUserGames1vs1() {
     const getUserMatches = async (page, index) => {
         setLoading(true)
         try {
-          const response = await fetch(`http://localhost:8000/profile/getUserMatches1vs1/${userId}/${page}`, {
+          const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserMatches1vs1/${userId}/${page}`, {
             method: "GET",
             headers: {
               'Content-Type': 'application/json',

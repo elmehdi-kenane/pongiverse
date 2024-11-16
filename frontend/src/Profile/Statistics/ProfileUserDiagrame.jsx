@@ -22,7 +22,7 @@ const CustomTooltip = ({ active, payload }) => {
       const fetchUserGames = async () => {
         try {
           const response = await fetch(
-            `http://localhost:8000/profile/getUserDiagram/${userId}`,
+            `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserDiagram/${userId}`,
             {
               method: "GET",
               headers: {

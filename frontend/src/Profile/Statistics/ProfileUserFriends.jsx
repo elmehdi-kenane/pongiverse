@@ -17,7 +17,7 @@ const ProfileUserFriends = () => {
   useEffect(() => {
     const getUserFriends = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/profile/getUserFriends/${userId}`, {
+        const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserFriends/${userId}`, {
           method: "GET",
           headers: {
             'Content-Type': 'application/json',

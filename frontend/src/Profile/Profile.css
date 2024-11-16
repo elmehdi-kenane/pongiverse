@@ -98,10 +98,16 @@ h1, h3, p{
     position: absolute;
     bottom: 26px;
     right: 13px;
-    background-color: #8edf34;
-    color: #8edf34;
     clip-path: circle();
     font-size: 15px;
+}
+.userinfo__pic .online {
+    color: #8edf34;
+    background-color: #8edf34;
+}
+.userinfo__pic .offline {
+    color: gray;
+    background-color: gray;
 }
 .userinfo__pic .is-online:hover {
     color: black;

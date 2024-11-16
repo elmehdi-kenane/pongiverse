@@ -15,7 +15,7 @@ function ProfileUserStatistics(){
   useEffect(()=>{
     const getUserStcs = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/profile/getUserStcs/${userId}/${15}`, {
+        const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserStcs/${userId}/${15}`, {
           method: "GET",
           headers: {
             'Content-Type': 'application/json',
