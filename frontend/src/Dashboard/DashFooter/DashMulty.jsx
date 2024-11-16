@@ -34,7 +34,7 @@ function DashMulty() {
         setLoading(true)
         try {
           const response = await fetch(
-            `http://localhost:8000/profile/getMultiplayerMatches/${user}/${page}`,
+            `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getMultiplayerMatches/${user}/${page}`,
             {
               method: "GET",
               headers: {

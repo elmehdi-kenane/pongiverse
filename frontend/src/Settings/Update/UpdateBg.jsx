@@ -21,7 +21,7 @@ function UpdateBg(props) {
 
     setIsClicked(true);
     try {
-      const response = await fetch("http://localhost:8000/profile/updateUserBg", {
+      const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/updateUserBg`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

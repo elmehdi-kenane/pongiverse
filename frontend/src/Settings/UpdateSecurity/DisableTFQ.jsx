@@ -41,7 +41,7 @@ function DisableTFQ(props) {
         if (user && checkOtp(otp)){
           try {
             const response = await fetch(
-              `http://localhost:8000/profile/DisableTFQ`,
+              `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/DisableTFQ`,
               {
                 method: "POST",
                 headers: {

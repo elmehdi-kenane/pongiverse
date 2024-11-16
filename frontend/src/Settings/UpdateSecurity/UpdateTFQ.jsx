@@ -33,7 +33,7 @@ function UpdateTFQ(props) {
       // setIsLoading(true)
       try {
         const response = await fetch(
-          `http://localhost:8000/profile/EnableTFQ`,
+          `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/EnableTFQ`,
           {
             method: "POST",
             headers: {
@@ -98,7 +98,7 @@ function UpdateTFQ(props) {
       if (checkOtp(otp)){
         try {
           const response = await fetch(
-            `http://localhost:8000/profile/ValidateTFQ`,
+            `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/ValidateTFQ`,
             {
               method: "POST",
               headers: {

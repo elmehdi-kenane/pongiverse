@@ -38,7 +38,7 @@ function UpdatePwd(props) {
     if (checkPwd(oldPwd, newPwd, cfmPwd)) {
       setIsLoading(true);
       try {
-        const response = await fetch('http://localhost:8000/profile/updatePassword', {
+        const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/updatePassword`, {
           method: "POST",
           headers: {
             'Content-Type': 'application/json',
