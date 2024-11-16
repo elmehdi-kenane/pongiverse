@@ -132,28 +132,29 @@ h1, h3, p{
     gap: 20px;
     align-items: center;
 }
-.userinfo__avatar {
+.userinfo__country {
     display: flex;
     align-items: center;
     position: relative;
 }
-.userinfo__avatar img {
-    height: 50px;
+.userinfo__country img {
+    height: 25px;
+    width:  50px;
 }
 
-.avatar-desc {
+.country-desc {
     position: absolute;
-    top: 0%;
-    left: 100%;
+    top: 100%;
     opacity: 0;
-    width: 65px;
-    text-align: center;
-    color: #826aed;
+    /* width: 65px; */
+    /* border-radius: 10px; */
+    padding: 5px;
+    color: white;
     font-size: 13px;
     font-weight: 450;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.7s ease;
 }
-.userinfo__avatar:hover .avatar-desc{
+.userinfo__country:hover .country-desc{
     opacity: 1;
 }
 
@@ -907,8 +908,9 @@ h1, h3, p{
         bottom: 33px;
         right: 15px;
     }
-    .userinfo__avatar img {
-        height: 35px;
+    .userinfo__country img {
+        height: 20px;
+        width:  40px;
     }
     .profile-userstats .userstate-header {
         padding: 8px 0;
@@ -1140,8 +1142,9 @@ h1, h3, p{
     .userinfo__name-avatar .userinfo__name {
         font-size: 20px;
     }
-    .userinfo__avatar img {
-        height: 30px;
+    .userinfo__country img {
+        height: 15px;
+        width:  30px;
     }
     .userinfo__name-bio .userinfo__bio {
         display: none;

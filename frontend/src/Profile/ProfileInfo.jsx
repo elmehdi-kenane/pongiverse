@@ -7,17 +7,21 @@ import ProfileContext from './ProfileWrapper';
 import EditIcon from '@mui/icons-material/Edit';
 import IsFriends from './FriendOptions/IsFriends';
 import Report from './Report/Report';
-import clan5 from "../assets/Profile/Frame5.svg"
 import bg from "../assets/Profile/bg1.jpg"
+import { getName } from 'country-list';
+
 
 
 function ProfileInfo() {
   
   const { user, notifSocket } = useContext(AuthContext);
-  const { userId , userIsOnline,  setUserIsOnline, userBio, userPic, userBg } = useContext(ProfileContext);
-
+  const { userId , userIsOnline,  setUserIsOnline, userBio, userPic, userBg, userCountry } = useContext(ProfileContext);
   const isOwnProfile = user === userId;
-
+  const flagUrl = userCountry 
+        ? `https://flagcdn.com/w320/${userCountry.toLowerCase()}.png` 
+        : `https://flagcdn.com/w320/ma.png`;
+  const countryName = userCountry ? getName(userCountry) : "Unknown Country"; 
+  
   useEffect(()=> {
     if (notifSocket && notifSocket.readyState === WebSocket.OPEN){
       notifSocket.onmessage = (event) => {
@@ -58,9 +62,9 @@ function ProfileInfo() {
       <div className="userinfo__name-bio">
         <div className="userinfo__name-avatar">
           <h1 className="userinfo__name"> {userId} </h1>
-          <div className="userinfo__avatar">
-              <img src={clan5} alt="Avatar" />
-              <p className='avatar-desc filter-glass'> Avatar Level 5 </p>
+          <div className="userinfo__country">
+              <img src={flagUrl} alt="userCountry" />
+              <p className='country-desc filter-glass'> {countryName} </p>
           </div>
         </div>
         <p className="userinfo__bio"> {userBio} </p>

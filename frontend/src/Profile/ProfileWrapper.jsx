@@ -91,11 +91,11 @@ export const ProfileWrapper = ({ child }) => {
         //     document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
         // }
         // topFunction();
-        const element = document.getElementById("scrollTop");
-        if (element){
-            console.log("Scroll Effect Here");
-            element.scrollIntoView({ behavior: 'smooth' });
-        }
+        // const element = document.getElementById("scrollTop");
+        // if (element){
+        //     console.log("Scroll Effect Here");
+        //     element.scrollIntoView({ behavior: 'smooth' });
+        // }
       }, [userId]);
 
     let userInfoData = {
