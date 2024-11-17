@@ -105,7 +105,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 		if data['type'] == 'acceptInvitation': await game_notifs_consumers.accept_game_invite(self, data, notifs_user_channels)
 		elif data['type'] == 'refuseInvitation': await game_notifs_consumers.refuse_game_invite(self, data, notifs_user_channels)
 		elif data['type'] == 'inviteFriendGame': await game_notifs_consumers.invite_friend(self, data, notifs_user_channels)
-		# elif data['type'] == 'accept-tournament-invitation': await tournament_notifs_consumers.accept_invite(self, data, notifs_user_channels)
+		elif data['type'] == 'accept-tournament-invitation': await tournament_notifs_consumers.accept_invite(self, data)
 		# elif data['type'] == 'invite-friend': await tournament_notifs_consumers.invite_friend(self, data, notifs_user_channels)
 		elif data['type'] == 'deny-tournament-invitation': await tournament_notifs_consumers.deny_invite(self, data, notifs_user_channels)
 		elif data['type'] == 'Round-16-timer': await tournament_notifs_consumers.quarterFinal_timer(self, data)
@@ -299,5 +299,23 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 	async def friend_request_accepted(self, event):
 		await self.send(text_data=json.dumps({
 			'type': 'friend-request-accepted',
+			'message': event['message']
+		}))
+
+	async def recieve_friend_request(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'recieve-friend-request',
+			'message': event['message']
+		}))
+	
+	async def confirm_friend_request(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'confirm-friend-request',
+			'message': event['message']
+		}))
+
+	async def remove_tournament_notif(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'remove_tournament_notif',
 			'message': event['message']
 		}))

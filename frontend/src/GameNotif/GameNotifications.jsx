@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import * as Icons from "../assets/navbar-sidebar";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import styles from "../assets/Game/gamemodes.module.css";
@@ -12,9 +12,9 @@ const GameNotifications = () => {
     let { socket, user, setAllGameNotifs,
         allGameNotifs, notifsImgs, notifSocket,
         setSocket, socketRef } = useContext(AuthContext)
-
+    const gamePlayRegex = /^\/mainpage\/(game|play)(\/[\w\d-]*)*$/;
     const navigate = useNavigate()
-
+    const location = useLocation()
     const refuseInvitation = (creator) => {
         let notifSelected = allGameNotifs.filter(
             (user) => user.user === creator.user
@@ -52,15 +52,13 @@ const GameNotifications = () => {
     const notifyError = (message) =>
         toast.error(message, {
             position: "top-center",
-            duration: 6000,
+            duration: 3000,
         });
 
     const acceptInvitation = async (sender) => {
         let notifSelected = allGameNotifs.filter(
             (user) => user.user === sender.user
         );
-        setAllGameNotifs(allGameNotifs.filter((user) => user.user !== sender.user));
-        console.log("SENDER : ", sender);
         if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
             if (sender.mode === "1vs1") {
                 console.log("YES!");
@@ -86,15 +84,20 @@ const GameNotifications = () => {
                         },
                         body: JSON.stringify({
                             tournament_id: sender.tournament_id,
+                            user: user,
                         }),
                     }
                 );
                 if (response.ok) {
                     const data = await response.json();
-                    if (
-                        data.Case === "Tournament_started" ||
-                        data.Case === "Tournament_is_full"
-                    ) {
+                    console.log("******Case", data.Case);
+                    if (data.Case === "Tournament_does_not_exist") {
+                        removeNotification(sender.tournament_id, user);
+                        notifyError("Tournament does not exist");
+                    }
+                    else if (data.Case === "User_is_in_tournament")
+                        navigate("/mainpage/game/createtournament");
+                    else if (data.Case === "Tournament_started" || data.Case === "Tournament_is_full") {
                         if (data.Case === "Tournament_started")
                             notifyError("Tournament is already started");
                         else notifyError("Tournament is full");
@@ -108,7 +111,7 @@ const GameNotifications = () => {
                                 },
                             })
                         );
-                    } else {
+                    } else if (data.Case === "size_is_valide") {
                         await notifSocket.send(
                             JSON.stringify({
                                 type: "accept-tournament-invitation",
@@ -125,6 +128,11 @@ const GameNotifications = () => {
             }
         }
     };
+
+    const removeNotification = (tournament_id, user) => {
+        setAllGameNotifs((prevGameNotif) => prevGameNotif.filter((notif) => notif.tournament_id === tournament_id && notif.user === user));
+    };
+
 
     useEffect(() => {
         if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
@@ -164,7 +172,9 @@ const GameNotifications = () => {
                     setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message]);
                     setRoomID(message.roomID);
                 } else if (type === "accepted_invitation") {
+                    removeNotification(message.user, message.tournament_id);
                     const socketRefer = socketRef.current;
+                    // && gamePlayRegex.test(location.pathname)
                     if (socketRefer?.readyState !== WebSocket.OPEN) {
                         console.log("SOCKET IS CLOSED, SHOULD OPENED");
                         const newSocket = new WebSocket(
@@ -180,12 +190,19 @@ const GameNotifications = () => {
                 } else if (type === "warn_members") {
                     notifyError("your game In tournament will start in 15 seconds");
                 } else if (type === "invited_to_tournament") {
-                    setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message]);
+                    setAllGameNotifs((prevGameNotif) => {
+                        const isDuplicate = prevGameNotif.some(
+                            (notif) => notif.tournament_id === message.tournament_id && notif.user === message.user);
+                        if (!isDuplicate)
+                            return [...prevGameNotif, message];
+                        return prevGameNotif;
+                    });
                 } else if (type === "deny_tournament_invitation") {
                     setAllGameNotifs(
                         allGameNotifs.filter((user) => user.user !== message.user)
                     );
-                }
+                } else if (type === 'remove_tournament_notif')
+                    removeNotification(message.tournament_id, message.user);
             };
         }
     }, [notifSocket]);

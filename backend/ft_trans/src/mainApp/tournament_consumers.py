@@ -313,21 +313,22 @@ async def invite_friend(self, data):
 		print(f"\n\n CHANNEL NAME LIST : {channel_name_list} \n\n")
 		tournamentInv = GameNotifications(tournament_id=tournament_id, user=sender, target=receiver, mode='TournamentInvitation')
 		await sync_to_async(tournamentInv.save)()
-		for channel_name in channel_name_list:
-			if channel_name:
-					await self.channel_layer.send(
-								channel_name,
-								{
-									'type': 'invited_to_tournament',
-									'message': {
-										'tournament_id' : tournament_id,
-										'user' : sender_user,
-										'image' : f"http://{ip_address}:8000/auth{sender.avatar.url}",
-										'roomID' : '',
-										'mode' : 'TournamentInvitation'
+		if channel_name_list:
+			for channel_name in channel_name_list:
+				if channel_name:
+						await self.channel_layer.send(
+									channel_name,
+									{
+										'type': 'invited_to_tournament',
+										'message': {
+											'tournament_id' : tournament_id,
+											'user' : sender_user,
+											'image' : f"http://{ip_address}:8000/auth{sender.avatar.url}",
+											'roomID' : '',
+											'mode' : 'TournamentInvitation'
+										}
 									}
-								}
-							)
+								)
 
 
 async def accept_invite(self, data, user_channels):
@@ -349,16 +350,31 @@ async def accept_invite(self, data, user_channels):
 			await self.channel_layer.group_add(group_name, channel_name)
 		if user_channel_name:
 			await self.channel_layer.group_add(group_name, user_channel_name)
-		await self.channel_layer.group_send(
-			group_name,
-			{
-				'type': 'accepted_invitation',
-				'message':{
-					'user': username,
-					'tournament_id': tournament_id
-				}
+	for member in tournaments[tournament_id]['members']:
+		member_user = await sync_to_async(customuser.objects.filter(username=member['username']).first)()
+		if member_user:
+			channel_name = user_channels.get(member_user.id)
+			if channel_name:
+				await self.channel_layer.send(
+					channel_name,
+					{
+						'type': 'accepted_invitation',
+						'message':{
+							'user': username,
+							'tournament_id': tournament_id
+						}
+					}
+				)
+	await self.channel_layer.send(
+		self.channel_name,
+		{
+			'type': 'accepted_invitation',
+			'message':{
+				'user': username,
+				'tournament_id': tournament_id
 			}
-		)
+		}
+	)
 	for username, channel_name_list in notifs_user_channels.items():
 		for channel_name in channel_name_list:
 			await self.channel_layer.send(

@@ -28,12 +28,12 @@ function SecondStep() {
 	const [errors, setErrors] = useState({});
 	const location = useLocation();
 	const data = location.state || {};
-	
-	useEffect(() =>{
+
+	useEffect(() => {
 		if (!data.email || !data.password) {
 			navigate("/signup");
 		}
-	},[data])
+	}, [data])
 
 	const [exist, setExist] = useState(false);
 	const [image, setImage] = useState(null);
@@ -130,7 +130,7 @@ function SecondStep() {
 	};
 
 	useEffect(() => {
-		
+
 		client
 			.post("/auth/checkusername/", nextdata, {
 				headers: {
@@ -210,7 +210,7 @@ function SecondStep() {
 				{
 					displayEditImage &&
 					<div className={styles["second-step-edit-image"]} ref={containerRef}>
-						<ImCross color="white" className={styles["cros-inside-edit-image"]} onClick={() => {setDisplayEditImage(false)}} />
+						<ImCross color="white" className={styles["cros-inside-edit-image"]} onClick={() => { setDisplayEditImage(false) }} />
 						<div className={styles["second-step-image-preview"]}>
 							{
 								imagePreview && <img src={imagePreview} alt="" />
@@ -279,12 +279,7 @@ function SecondStep() {
 							<span className={styles["spans"]}>{errors.username}</span>
 						</div>
 					)}
-					<button
-						className={styles["second-step-form-button"]}
-						onClick={handleSubmit}
-					>
-						Sign Up
-					</button>
+					<button className={styles["second-step-form-button"]}onClick={handleSubmit}>Sign Up </button>
 				</div>
 			</div>
 		</div>

@@ -203,7 +203,6 @@ function JoinTournament() {
 				}
 			);
 			let data = await response.json();
-			console.log("*******data:", data)
 			if (!data.error) {
 				(data.mode === 'tournament') ? navigate('../game/createtournament') : (data.mode === '1vs1') ? navigate('../game/solo/1vs1/random') : navigate('../game/solo/2vs2/random')
 			}

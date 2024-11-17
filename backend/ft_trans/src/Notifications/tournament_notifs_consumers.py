@@ -22,7 +22,8 @@ from .common import notifs_user_channels
 from mainApp.tasks import manage_tournament
 import os
 
-async def accept_invite(self, data, notifs_user_channels):
+
+async def accept_invite(self, data):
 	tournament_id = data['message']['tournament_id']
 	username = data['message']['user']
 	user = await sync_to_async(customuser.objects.filter(username=username).first)()
@@ -41,16 +42,44 @@ async def accept_invite(self, data, notifs_user_channels):
 			await self.channel_layer.group_add(group_name, channel_name)
 		if user_channel_name:
 			await self.channel_layer.group_add(group_name, user_channel_name)
-		await self.channel_layer.group_send(
-			group_name,
-			{
-				'type': 'accepted_invitation',
-				'message':{
-					'user': username,
-					'tournament_id': tournament_id
-				}
+	for member in tournaments[tournament_id]['members']:
+		member_user = await sync_to_async(customuser.objects.filter(username=member['username']).first)()
+		if member_user:
+			channel_name = user_channels.get(member_user.id)
+			if channel_name:
+				await self.channel_layer.send(
+					channel_name,
+					{
+						'type': 'accepted_invitation',
+						'message':{
+							'user': username,
+							'tournament_id': tournament_id
+						}
+					}
+				)
+	await self.channel_layer.send(
+		self.channel_name,
+		{
+			'type': 'accepted_invitation',
+			'message':{
+				'user': username,
+				'tournament_id': tournament_id
 			}
-		)
+		}
+	)
+	if channel_name_list:
+		for channel_name in channel_name_list:
+			if channel_name != self.channel_name:
+				await self.channel_layer.send(
+					channel_name,
+					{
+						'type': 'remove_tournament_notif',
+						'message': {
+							'tournament_id' : tournament_id,
+							'user' : username
+						}
+					}
+				)
 	for username, channel_name_list in notifs_user_channels.items():
 		for channel_name in channel_name_list:
 			await self.channel_layer.send(
@@ -97,7 +126,8 @@ async def deny_invite(self, data, notifs_user_channels):
 	sender = await sync_to_async(customuser.objects.filter(username=data['message']['sender']).first)()
 	receiver = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
 	tournamentInvite = await sync_to_async(GameNotifications.objects.filter(tournament_id=data['message']['tournament_id'], user=sender, target=receiver).first)()
-	await sync_to_async(tournamentInvite.delete)()
+	if tournamentInvite is not None:
+		await sync_to_async(tournamentInvite.delete)()
 	channel_name_list = notifs_user_channels.get(receiver.id)
 	for channel_name in channel_name_list:
 		if channel_name:

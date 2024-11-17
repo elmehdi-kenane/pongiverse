@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import * as Icons from '../assets/navbar-sidebar'
 import AuthContext from '../navbar-sidebar/Authcontext'
 import styles from '../assets/Game/gamemodes.module.css'
@@ -11,15 +11,13 @@ import GameNotifications from '../GameNotif/GameNotifications'
 
 const Modes = () => {
 	const navigate = useNavigate()
+	const location = useLocation()
 	const [soloModeSelected, setSoloModeSelected] = useState(false)
 	const [createTournamentModeSelected, setcreateTournamentModeSelected] = useState(false)
 	const [joinTournamentModeSelected, setJoinTournamentModeSelected] = useState(false)
 	const [enableButton, setEnableButton] = useState(false)
-	const [gameNotif, setGameNotif] = useState([])
 	const [roomID, setRoomID] = useState(null)
-	let { socket, user, setAllGameNotifs,
-		allGameNotifs, notifsImgs, notifSocket,
-		setSocket, socketRef } = useContext(AuthContext)
+	let { socket, user } = useContext(AuthContext)
 
 	useEffect(() => {
 		const check_is_join = async () => {
@@ -203,12 +201,7 @@ const Modes = () => {
 				let type = data.type
 				let message = data.message
 				if (type === 'goToGamingPage') {
-					console.log("navigating now")
 					navigate(`/mainpage/game/solo/1vs1/friends`)
-				} else if (type === 'receiveFriendGame') {
-					console.log("RECEIVED A GAME REQUEST")
-					setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message])
-					setRoomID(message.roomID)
 				} else if (type === 'tournament_created') {
 					navigate("createtournament")
 				} else if (type === 'hmed') {

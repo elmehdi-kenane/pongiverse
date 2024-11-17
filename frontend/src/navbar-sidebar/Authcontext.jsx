@@ -93,6 +93,8 @@ export const AuthProvider = ({ children }) => {
 		socketRef.current = socket
 	}, [socket])
 
+	useEffect(() =>{
+	},[allGameNotifs])
 
 	// useEffect(() => {
 	// 	const fetchImages = async () => {
@@ -124,29 +126,9 @@ export const AuthProvider = ({ children }) => {
 	// 	}
 	// }, [allGameFriends]);
 
-	// useEffect(() => {
-	// 	const fetchNotifsImages = async () => {
-	// 		const promises = allGameNotifs.map(async (user) => {
-	// 			const response = await fetch(
-	// 				`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`,
-	// 				{
-	// 					method: "POST",
-	// 					headers: {
-	// 						"Content-Type": "application/json",
-	// 					},
-	// 					body: JSON.stringify({
-	// 						image: user.avatar,
-	// 					}),
-	// 				}
-	// 			);
-	// 			const blob = await response.blob();
-	// 			return URL.createObjectURL(blob);
-	// 		});
-	// 		const images = await Promise.all(promises);
-	// 		setNotifsImgs(images);
-	// 	};
-	// 	if (allGameFriends) fetchNotifsImages();
-	// }, [allGameNotifs]);
+	useEffect(() => {
+		console.log("ALL GAME NOTIFS: ", allGameNotifs.length);
+	}, [allGameNotifs]);
 
 	useEffect(() => {
 		const getAllGameFriends = async () => {
@@ -173,6 +155,7 @@ export const AuthProvider = ({ children }) => {
 
 
 		const getAllNotifsFriends = async () => {
+			console.log("********GETTING ALL NOTIFS FRIENDS");
 			try {
 				let response = await fetch(
 					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/notifsFriends`,
@@ -188,7 +171,6 @@ export const AuthProvider = ({ children }) => {
 				);
 				let friends = await response.json();
 				if (friends.message.length) {
-					console.log(friends.message);
 					setAllGameNotifs(friends.message);
 				}
 			} catch (e) {
@@ -211,7 +193,6 @@ export const AuthProvider = ({ children }) => {
 					}
 				);
 				let data = await response.json()
-				console.log("*******data:", data)
 				setUserImg(data.image);
 			} catch (e) {
 				console.log("something wrong with fetch");
@@ -450,7 +431,6 @@ export const AuthProvider = ({ children }) => {
 				);
 				const data = await response.json();
 				if (response.ok) {
-					console.log("DATA COUNT: ", data.count);
 					setChatRoomInvitationsCounter(data.count);
 				} else {
 					console.log("Error in getting unrecieved room invitee");
@@ -560,7 +540,6 @@ export const AuthProvider = ({ children }) => {
 				}
 			);
 			response = await response.json();
-			console.log(response.Case);
 			if (response.Case !== "Invalid token") {
 				setUser(response.data.username);
 			} else {

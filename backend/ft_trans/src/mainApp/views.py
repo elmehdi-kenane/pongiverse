@@ -227,7 +227,6 @@ def notifs_friends(request):
 	allNotifs = []
 	ip_address = os.getenv("IP_ADDRESS")
 	for gameNotif in GameNotifications.objects.filter(target=target):
-		# print(f'ROOM_ID WHEN FETCHING IS : {gameNotif.room_id}')
 		if gameNotif.active_match is not None:
 			allNotifs.append({'tournament_id' : '', 'user': gameNotif.user.username, 'avatar': f"http://{ip_address}:8000/auth{gameNotif.user.avatar.url}", 'roomID': gameNotif.active_match.room_id, 'mode': gameNotif.mode})
 		elif gameNotif.tournament_id != 0:
@@ -318,18 +317,31 @@ def is_started_and_not_finshed(request):
 	response.data = {'Case' : 'no'}
 	return response
 
+
+
 @api_view(['POST'])
 def get_tournament_size(request):
 	response = Response()
 	tournament_id = request.data.get('tournament_id')
-	# tournament = Tournament.objects.filter(tournament_id=tournament_id).first()
-	if tournaments[tournament_id]['is_started'] == True:
-		response.data = {'Case' : 'Tournament_started'}
-	elif len(tournaments[tournament_id]['members']) == 8:
-		response.data = {'Case' : 'Tournament_is_full'}
-	else:
-		response.data = {'Case' : 'size_is_valide'}
-	return response
+	user = request.data.get('user')
+	if tournament_id  not in tournaments:
+		response.data = {'Case' : 'Tournament_does_not_exist'}
+		return response
+	else :
+		if is_user_in_joining_tournament(user) == True:
+			response.data = {'Case' : 'User_is_in_tournament'}
+			return response
+		if tournaments[tournament_id]['is_started'] == True:
+			response.data = {'Case' : 'Tournament_started'}
+		elif len(tournaments[tournament_id]['members']) == 8:
+			response.data = {'Case' : 'Tournament_is_full'}
+		else:
+			response.data = {'Case' : 'size_is_valide'}
+		return response
+
+
+
+
 def customize_game(request):
 	paddle_color = request.data['paddle']
 	ball_color = request.data['ball']
@@ -667,7 +679,6 @@ def is_user_joining_tournament(username):
 			(value['players'][3].get('user') == username and value['players'][3]['inside'] == True))))
 		)
 	}
-	print("EWAHAHAHAAA: ", userRoom)
 	if userRoom:
 		value = list(userRoom.values())[0]
 		return value['mode']
@@ -678,7 +689,6 @@ def check_is_in_game(request):
 	response = Response()
 	username = request.data.get('user')
 	if username:
-		print("REQUESTTT: ")
 		is_joining = is_user_joining_tournament(username)
 		if is_joining:
 			response.data = {'mode': is_joining}
