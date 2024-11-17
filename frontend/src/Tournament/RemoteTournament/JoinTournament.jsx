@@ -122,7 +122,7 @@ function JoinTournament() {
 			socket.onmessage = (event) => {
 				let data = JSON.parse(event.data)
 				let type = data.type
-				 if (type === 'tournament_created_by_user') {
+				if (type === 'tournament_created_by_user') {
 					let newTournament = data.message.tournament_info
 					setTournamentSuggestions((prevTournamentSuggestions) => [...prevTournamentSuggestions, newTournament]);
 				}
@@ -142,22 +142,23 @@ function JoinTournament() {
 				} else if (type === 'hmed') {
 					console.log("WWWWWWWWWAAAAA HMEEEEEEEED")
 					socket.close()
-				} 
-				// else if (type === 'user_join_tournament') {
-				// 	let tournament_id = data.message.tournament_id
-				// 	setTournamentSuggestions(prevSuggestions =>
-				// 		prevSuggestions.map(tournament =>
-				// 			tournament.tournament_id == tournament_id
-				// 				? { ...tournament, size: tournament.size + 1 }
-				// 				: tournament
-				// 		)
-				// 	);
-				// }
+				} else if (type == 'accepted_invitation') {
+					const socketRefer = socketRef.current
+					if (socketRefer?.readyState !== WebSocket.OPEN) {
+						const newSocket = new WebSocket(`ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/socket-server`)
+						newSocket.onopen = () => {
+							setSocket(newSocket)
+							navigate("/mainpage/game/createtournament");
+						}
+					} else {
+						navigate("/mainpage/game/createtournament");
+					}
+				}
 			}
 		}
 	}, [socket])
 
-	useEffect(() =>{
+	useEffect(() => {
 		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
 			notifSocket.onmessage = (event) => {
 				let data = JSON.parse(event.data)
@@ -186,7 +187,7 @@ function JoinTournament() {
 				}
 			}
 		}
-	},[notifSocket])
+	}, [notifSocket])
 
 	const check_is_in_game = async () => {
 		try {
@@ -206,7 +207,7 @@ function JoinTournament() {
 			if (!data.error) {
 				(data.mode === 'tournament') ? navigate('../game/createtournament') : (data.mode === '1vs1') ? navigate('../game/solo/1vs1/random') : navigate('../game/solo/2vs2/random')
 			}
-			
+
 		} catch (error) {
 			console.error(
 				"There has been a problem with your fetch operation:",

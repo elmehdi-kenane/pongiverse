@@ -332,6 +332,7 @@ async def invite_friend(self, data):
 
 
 async def accept_invite(self, data, user_channels):
+	print(f"\nDKHEL HNA\n")
 	tournament_id = data['message']['tournament_id']
 	username = data['message']['user']
 	user = await sync_to_async(customuser.objects.filter(username=username).first)()
@@ -365,6 +366,7 @@ async def accept_invite(self, data, user_channels):
 						}
 					}
 				)
+	print(f"\n channel name: {self.channel_name} \n")
 	await self.channel_layer.send(
 		self.channel_name,
 		{

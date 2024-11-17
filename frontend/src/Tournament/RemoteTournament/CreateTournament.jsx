@@ -20,7 +20,7 @@ function CreateTournament() {
 	const [tournamentMembers, setTournamentMembers] = useState([])
 	const navigate = useNavigate()
 	const location = useLocation()
-	// const [isAnyUserOffline, setIsAnyUserOffline] = useState()	
+	const [isAnyUserOffline, setIsAnyUserOffline] = useState(false)	
 	const { user, userImages, allGameFriends, socket, notifSocket, setAllGameFriends } = useContext(AuthContext)
 	const allGameFriendsRef = useRef(allGameFriends);
 	const divRef = useRef(null);
@@ -31,9 +31,9 @@ function CreateTournament() {
 		setOpen(!open);
 	}
 
-	// useEffect(() =>{
-	// 	setIsAnyUserOffline(tournamentMembers.some(user => !user.is_online));
-	// },[tournamentMembers])
+	useEffect(() =>{
+		setIsAnyUserOffline(tournamentMembers.some(user => !user.is_online));
+	},[tournamentMembers])
 
 	const handleInviteClick = (name) => {
 		if (socket && socket.readyState === WebSocket.OPEN) {
@@ -280,7 +280,6 @@ function CreateTournament() {
 				let type = data.type
 				let message = data.message
 				if (type === 'user_disconnected') {
-					console.log("ENTER TO USER DISCONNECTED")
 					const currentAllGameFriends = allGameFriendsRef.current;
 					let uname = data.message.user
 					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname))
@@ -693,7 +692,7 @@ function CreateTournament() {
 										<button className={styles["button"]} onClick={isOpen} ref={inviteRef}>Invite Friend</button>
 									</div>
 									{
-										tournamentMembers.length === 8 ? <button className={styles["button"]} onClick={handleStart}>Start</button> : <button className={styles["button-disabled"]} disabled>Start</button>
+										tournamentMembers.length === 8 && isAnyUserOffline === false ? <button className={styles["button"]} onClick={handleStart}>Start</button> : <button className={styles["button-disabled"]} disabled>Start</button>
 									}
 								</div>
 								{open && <InviteFriendComp class="Invite-friend-popup-up" refs={divRef2} />}
