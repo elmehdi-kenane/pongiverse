@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import DashboardContext from "../DashboardWrapper";
-import MavSvg from "../../assets/Profile/Group.svg";
+import AvatarSvg from "../../assets/Profile/Group.svg";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../navbar-sidebar/Authcontext";
 

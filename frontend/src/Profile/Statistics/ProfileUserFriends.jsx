@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react'
 import chatSvg from "../../assets/navbar-sidebar/chat.svg"
 import { Link, useNavigate } from "react-router-dom"
-import MavSvg from "../../assets/Profile/Group.svg"
+import AvatarSvg from "../../assets/Profile/Group.svg"
 
 import AuthContext from '../../navbar-sidebar/Authcontext'
 import ProfileContext from '../ProfileWrapper'
@@ -44,7 +44,7 @@ const ProfileUserFriends = () => {
   };
   
   const chatNavigate = (username, pic) => {
-    const userImage = pic ? pic : MavSvg
+    const userImage = pic ? pic : AvatarSvg
     setSelectedDirect({
       name : username,
       status: true,
@@ -61,7 +61,7 @@ const ProfileUserFriends = () => {
           return (
             <div className='classment__friend' key={key}>
               <div className="friend__pic-name" onClick={() => handleProfileClick(player.username)}>
-                <img src={player.pic ? player.pic : MavSvg} alt='playerImg' />
+                <img src={player.pic ? player.pic : AvatarSvg} alt='playerImg' />
                 <p> {player.username} </p>
               </div>
               {(user !== player.username) && 

@@ -6,7 +6,7 @@ import ChatContext from '../../Context/ChatContext';
 import { cancelFriendRequest, handleRemoveFriendship } from "../../Friends/utils";
 
 import ChatIcon from '@mui/icons-material/Chat';
-import MavSvg from "../../assets/Profile/Group.svg"
+import AvatarSvg from "../../assets/Profile/Group.svg"
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import CancelScheduleSendIcon from '@mui/icons-material/CancelScheduleSend';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
@@ -40,7 +40,7 @@ function FriendsParam(props) {
         setIsBlock(!isBlock);
     }
     const chatNavigate = () => {
-        const userImage = userPic ? userPic : MavSvg
+        const userImage = userPic ? userPic : AvatarSvg
         setSelectedDirect({
           name : userId,
           status: true,

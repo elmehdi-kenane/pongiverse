@@ -1,5 +1,5 @@
 import { React, useContext, useEffect, useState } from "react";
-import MavSvg from "../../assets/Profile/Group.svg"
+import AvatarSvg from "../../assets/Profile/Group.svg"
 
 import AuthContext from "../../navbar-sidebar/Authcontext";
 import { Link } from "react-router-dom";
@@ -49,7 +49,7 @@ function DashRanking() {
       <>
         <div className="player__pos_pic">
           <p className={trophyClass}> #{position}</p>
-          <img src={player.pic ? player.pic : MavSvg} />
+          <img src={player.pic ? player.pic : AvatarSvg} />
         </div>
         <div className="player__name_level">
           <p className={championsClass}> {player.username} </p>

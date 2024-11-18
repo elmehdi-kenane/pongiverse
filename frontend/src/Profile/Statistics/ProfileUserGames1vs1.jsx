@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import mavSvg from "../../assets/Profile/Group.svg"
+import AvatarSvg from "../../assets/Profile/Group.svg"
 import ProfileContext from "../ProfileWrapper"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
