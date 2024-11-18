@@ -1,5 +1,5 @@
 import { React, useContext, useEffect, useState } from "react";
-import MavSvg from "../../assets/Profile/Group.svg"
+import AvatarSvg from "../../assets/Profile/Group.svg"
 
 import AuthContext from "../../navbar-sidebar/Authcontext";
 import { Link } from "react-router-dom";
@@ -12,10 +12,10 @@ function DashRanking() {
   const [sortOption, setSortOption] = useState('level');
 
   useEffect(() => {
-    const getUsersData = async () => {
+    const getUsersRank = async () => {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUsersData/${user}`,
+          `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUsersRank/${user}`,
           {
             method: "GET",
             headers: {
@@ -25,7 +25,7 @@ function DashRanking() {
         );
         const res = await response.json();
         if (response.ok) 
-          setUsersData(res.usersData);
+          setUsersData(res.data);
         else
           console.log("Error :", res.error);
       } catch (error) {
@@ -33,7 +33,7 @@ function DashRanking() {
       }
     };
     if (user)
-      getUsersData();
+      getUsersRank();
   }, [user]);
 
   const RankClassment = (player, position) => {
@@ -49,7 +49,7 @@ function DashRanking() {
       <>
         <div className="player__pos_pic">
           <p className={trophyClass}> #{position}</p>
-          <img src={player.pic ? player.pic : MavSvg} />
+          <img src={player.pic ? player.pic : AvatarSvg} />
         </div>
         <div className="player__name_level">
           <p className={championsClass}> {player.username} </p>

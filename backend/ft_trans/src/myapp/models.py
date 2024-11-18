@@ -16,8 +16,8 @@ class customuser(AbstractUser):
 	is_active = models.BooleanField(default=True)
 	is_online = models.BooleanField(default=False)
 	is_playing = models.BooleanField(default=False)
-	level = models.PositiveIntegerField(default=0)
-	total_xp = models.PositiveIntegerField(default=0)
+	is_tfq = models.BooleanField(default=False)
+	# total_xp = models.PositiveIntegerField(default=0)
 
 	background_pic = models.ImageField(upload_to='uploads/', default=default_bg)
 	bio = models.CharField(max_length=150, default='')

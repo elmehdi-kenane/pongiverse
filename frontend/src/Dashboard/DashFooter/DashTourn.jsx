@@ -1,5 +1,5 @@
 import React from 'react'
-import mmaqbourSvg from "../assets/Group5.svg";
+import mmaqbourSvg from "../../assets/Profile/Group.svg";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 

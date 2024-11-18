@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import DashboardContext from "../DashboardWrapper";
-import MavSvg from "../../assets/Profile/Group.svg";
+import AvatarSvg from "../../assets/Profile/Group.svg";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../navbar-sidebar/Authcontext";
 
@@ -34,7 +34,7 @@ function DashRsltMulty() {
     const getMatchDtls = async () => {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getMultyMatchDtl/${104115000}`,
+          `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getMultyMatchDtl/${multyId}`,
           {
             method: "GET",
             headers: {
@@ -47,7 +47,9 @@ function DashRsltMulty() {
           // console.log("data :", res.data);
           setMatchDtls(res.data);
           getDateFormat(res.data.date);
-        } else console.log("Error : ", res.error);
+        }
+        else
+          console.log("Error : ", res.error);
       } catch (error) {
         console.log("Error: ", error);
       }

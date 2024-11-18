@@ -5,8 +5,6 @@ import { friends } from "../assets/navbar-sidebar";
 import * as Icons from "../assets/navbar-sidebar";
 import { useReducer } from "react";
 
-import userPc from "../Settings/assets/Group.svg";
-
 const AuthContext = createContext();
 
 export default AuthContext;
@@ -78,12 +76,6 @@ export const AuthProvider = ({ children }) => {
 		if (!isReport && !isBlock && !isGameStats && !isBlur) setIsGlass(false);
 		else setIsGlass(true);
 	}, [isReport, isBlock, isGameStats]);
-
-	// Glass Background Effect
-	useEffect(() => {
-		if (!isReport && !isBlock && !isBlur) setIsGlass(false);
-		else setIsGlass(true);
-	}, [isReport, isBlock]);
 
 	// useEffect(() => {
 	// 	allGameFriendsRef.current = allGameFriends;

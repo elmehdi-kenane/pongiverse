@@ -32,6 +32,7 @@ from io import BytesIO
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from .decorators import authentication_required
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+from mainApp.models import UserMatchStatics
 
 
 
@@ -62,6 +63,15 @@ class SignUpView(APIView):
 			response = Response()
 			data = get_tokens_for_user(user)
 			csrf.get_token(request)
+			if user:
+				UserMatchStatics.objects.create(
+					player=user,
+					wins=0,
+					losts=0,
+					level=0,
+					total_xp=0,
+					goals=0
+				)
 			response.data = {"Case": "Sign up successfully", "data": data}
 			return response
 		else:
@@ -121,11 +131,15 @@ class LoginView(APIView):
 		password = data.get('password', None)
 		user = authenticate(username=username, password=password)
 		if user is not None:
-			data = get_tokens_for_user(user)
-			response.set_cookie('access_token', data['access'], httponly=True)
-			response.set_cookie('refresh_token', data['refresh'], httponly=True)
-			response.data = {"Case": "Login successfully"}
-			return response
+			if user.is_tfq == True:
+				response.data = {"Case": "Login successfully but have tfq", "user" : user.username}
+				return response
+			else:
+				data = get_tokens_for_user(user)
+				response.set_cookie('access_token', data['access'], httponly=True)
+				response.set_cookie('refresh_token', data['refresh'], httponly=True)
+				response.data = {"Case": "Login successfully"}
+				return response
 		else:
 			response.data = {"Case": "Invalid username or password!!"}
 			return response
@@ -137,11 +151,15 @@ class GoogleLoginView(APIView):
 		email = data.get('email', None)
 		user = customuser.objects.filter(email=email).first()
 		if user is not None:
-			data = get_tokens_for_user(user)
-			response.set_cookie('access_token', data['access'], httponly=True)
-			response.set_cookie('refresh_token', data['refresh'], httponly=True)
-			response.data = {"Case" : "Login successfully"}
-			return response
+			if user.is_tfq == True:
+				response.data = {"Case": "Login successfully but have tfq", "user" : user.username}
+				return response
+			else:
+				data = get_tokens_for_user(user)
+				response.set_cookie('access_token', data['access'], httponly=True)
+				response.set_cookie('refresh_token', data['refresh'], httponly=True)
+				response.data = {"Case" : "Login successfully"}
+				return response
 		else:
 			response.data = {"Case" : "Invalid username or password!!"}
 			return response

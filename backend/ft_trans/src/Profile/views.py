@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from myapp.models import customuser
 from mainApp.models import UserMatchStatics, Match, MatchStatistics
+from friends.models import Friendship, FriendRequest
 from rest_framework.decorators import api_view
 
 from django.http import HttpResponse
@@ -14,6 +15,13 @@ from myapp.models import customuser
 
 from django.db.models import Q
 from datetime import datetime, date, timedelta
+from myapp.views import get_tokens_for_user
+from django.core.files import File
+from .models import UserTFQ
+import pyotp
+import qrcode
+import os
+import secrets
 
 # Create your views here.
 @api_view (['GET'])
@@ -79,13 +87,16 @@ def getUserData(request, username):
         user_states = UserMatchStatics.objects.filter(player=user).first()
         if user_states is not None:
             # print("---------------", f"http://localhost:8000/auth{user.avatar.url}", "-----------------")
+            # print("user :", user.username, "is online:", user.is_online)
             user_data = {'pic': f"http://localhost:8000/auth{user.avatar.url}",
                         'bg': f"http://localhost:8000/auth{user.background_pic.url}",
                         'bio': user.bio,
                         'email' : user.email,
+                        'online' : user.is_online,
                         'level': user_states.level,
                         'xp': user_states.total_xp,
                         'country': user.country,
+                        'tfq': user.is_tfq,
                         }
         success_response = Response(data={"userData": user_data}, status=status.HTTP_200_OK)
         return success_response
@@ -216,16 +227,38 @@ def update_user_password(request):
 #**--------------------- GetFriends User ---------------------** 
 
 @api_view(["GET"])
-def get_user_friends(request, userId):
-    users = customuser.objects.all()
-    user_data = []
-    for user in users:
-        if userId != user.username:
-            user_data.append({
-                'username': user.username,
-                'pic': f"http://localhost:8000/auth{user.avatar.url}"
+def get_user_friends(request, username):
+    user = customuser.objects.filter(username=username).first()
+    friendships = Friendship.objects.filter(user=user).all()
+    friends = []
+    if friendships:
+        for friendship in friendships:
+            friends.append({
+                'username': friendship.friend.username,
+                'pic': f"http://localhost:8000/auth{friendship.friend.avatar.url}"
             })
-    return Response(data={"allUserData": user_data}, status=status.HTTP_200_OK)
+    return Response(data={"data": friends}, status=status.HTTP_200_OK)
+
+#**--------------------- Check User Friendship ---------------------** 
+
+@api_view(["GET"])
+def check_friendship(request, username, username2):
+    user = customuser.objects.filter(username=username).first()
+    user2 = customuser.objects.filter(username=username2).first()
+
+    if not user or not user2:
+        return Response(data={'error': 'users not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    if Friendship.objects.filter(user=user, friend=user2).exists():
+        return Response(data={"data": "true"}, status=status.HTTP_200_OK)
+
+    if FriendRequest.objects.filter(from_user=user, to_user=user2, status='sent').exists():
+        return Response(data={"data": "pending"}, status=status.HTTP_200_OK)
+
+    if FriendRequest.objects.filter(from_user=user, to_user=user2, status='recieved').exists():
+        return Response(data={"data": "accept"}, status=status.HTTP_200_OK)
+
+    return Response(data={"data": "false"}, status=status.HTTP_200_OK)
 
 #**--------------------- GetUsers Data Ranking ---------------------** 
 
@@ -240,7 +273,7 @@ def get_user_friends(request, userId):
 #                  return Response("not found")
 
 @api_view(["GET"])
-def get_users_data(request, username):
+def get_users_rank(request, username):
     # user = customuser.objects.filter(username=username).first()
     users_data = UserMatchStatics.objects.all()
     res_data = []
@@ -256,7 +289,7 @@ def get_users_data(request, username):
                 'goals': user.goals,
                 # 'id': user.player.id,
             })
-        return Response(data={"usersData": res_data}, status=status.HTTP_200_OK)    
+        return Response(data={"data": res_data}, status=status.HTTP_200_OK)    
     return Response(data={'error': 'Error Getting UsersData!'}, status=status.HTTP_400_BAD_REQUEST)
         
 
@@ -373,6 +406,53 @@ def get_single_matches(request, username, page):
         return Response(data={"userMatches": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
     return Response(data={'error': 'Error Getting SingleGames!'}, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+@api_view(["GET"])
+def get_user_games(request, username, page):
+    user = customuser.objects.filter(username=username).first()
+    res_data = []
+    if user:
+        page_size = 5
+        offset = (page - 1) * page_size
+        user_matches = Match.objects.filter(
+            Q(team1_player1=user) | Q(team2_player1=user),
+            mode="1vs1"
+        ).order_by('-date_ended')[offset:offset+page_size]
+
+        # Check if there is still matches or not -------
+        total_matches_count = Match.objects.filter(
+            Q(team1_player1=user) | Q(team2_player1=user),
+            mode="1vs1"
+        ).count()
+        has_more_matches = (offset + page_size) < total_matches_count
+
+        for match in user_matches:
+            match_stq = MatchStatistics.objects.filter(match=match).first()
+            if match_stq:
+                date_time = match.date_ended
+                date = date_time.strftime('%Y-%m-%d')
+                time = date_time.strftime('%H:%M')
+                res_data.append({
+                    "date": date,
+                    "time": time,
+                    "user1": match.team1_player1.username,
+                    "user2": match.team2_player1.username,
+                    "pic1": f"http://localhost:8000/auth{match.team1_player1.avatar.url}",
+                    "pic2": f"http://localhost:8000/auth{match.team2_player1.avatar.url}",
+                    "score" : f"{match.team1_score} - {match.team2_score}",
+                    "hit1": match_stq.team1_player1_hit,
+                    "hit2": match_stq.team2_player1_hit,
+                    "exp1": match_stq.team1_player1_rating,
+                    "exp2": match_stq.team2_player1_rating,
+                    "acc1": f"{(match_stq.team1_player1_score * 100 / match_stq.team1_player1_hit):.0f}" if match_stq.team1_player1_hit else 0,
+                    "acc2": f"{(match_stq.team2_player1_score * 100 / match_stq.team2_player1_hit):.0f}" if match_stq.team2_player1_hit else 0,
+                })
+
+        return Response(data={"data": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
+    return Response(data={'error': 'Error Getting UserGames!'}, status=status.HTTP_400_BAD_REQUEST)
+
+
 #**------- GetUser SingleMatch Details -------**#
 
 @api_view(["GET"])
@@ -399,7 +479,6 @@ def get_single_match_dtl(request, match_id):
             "acc2": f"{(match_stq.team2_player1_score * 100 / match_stq.team2_player1_hit):.0f}" if match_stq.team2_player1_hit else 0,
         }
         return Response(data={"data": res_data}, status=status.HTTP_200_OK)
-
     return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -475,3 +554,110 @@ def get_multy_match_dtl(request, match_id):
         }
         return Response(data={"data": res_data}, status=status.HTTP_200_OK)
     return Response(data={'error': 'Error Getting MultiplayerGames!'}, status=status.HTTP_400_BAD_REQUEST)
+
+#**--------------------- Two-Factor Authenticator {Settings} ---------------------**#
+
+#**------- Enable User TFQ -------**#
+
+def checkExistQrCode(user):
+    user_tfq = UserTFQ.objects.filter(user=user).first()
+    if user_tfq:
+        file_path = user_tfq.qr_code.path
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+        user_tfq.delete()
+
+def checkPath():
+    path = 'uploads/qr_codes/'
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+@api_view(["POST"])
+def enable_user_tfq(request):
+    username = request.data.get('user')
+    user = customuser.objects.filter(username=username).first()
+    if user:
+        checkExistQrCode(user)
+        user_tfq = UserTFQ.objects.filter(user=user).first()
+        checkPath()
+        key = pyotp.random_base32()
+        user_tfq = UserTFQ.objects.create(
+            user = user,
+            key = key,
+        )
+        urc = pyotp.totp.TOTP(user_tfq.key).provisioning_uri(name=user.username, issuer_name="Transcendence")
+        qr_path = f"uploads/qr_codes/{user.username}_Q.png"
+        qrcode.make(urc).save(qr_path)
+        random_string = secrets.token_hex(2)
+        with open(qr_path, 'rb') as qr_file:
+            user_tfq.qr_code.save(f"{user.username}_{random_string}.png", File(qr_file), save=True)
+        if os.path.isfile(qr_path):
+            os.remove(qr_path)
+        res = {
+            "key": user_tfq.key,
+            "img": f"http://localhost:8000/auth{user_tfq.qr_code.url}"
+        }
+        return Response(data={"data": res}, status=status.HTTP_200_OK)
+    return Response(data={'error': 'Error Generating QrCode'}, status=status.HTTP_400_BAD_REQUEST)
+
+#**------- Validate User TFQ -------**#
+
+@api_view(["POST"])
+def validate_user_tfq(request):
+    username = request.data.get('user')
+    otp = request.data.get('otp')
+    user = customuser.objects.filter(username=username).first()
+    if user:
+        user_tfq = UserTFQ.objects.filter(user=user).first()
+        if user_tfq:
+            key = user_tfq.key
+            totp = pyotp.TOTP(key)
+            if totp.verify(otp) == True:
+                user.is_tfq = True
+                user.save()
+                qr_path = user_tfq.qr_code.path
+                if os.path.isfile(qr_path):
+                    os.remove(qr_path)
+                return Response(data={"data": "Congratulation you enabled Two-Factor Authenticator"}, status=status.HTTP_200_OK)
+            return Response(data={'error': 'Wrong otp'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response(data={'error': 'Error Validating UserTFQ'}, status=status.HTTP_400_BAD_REQUEST)
+
+#**------- Disable User TFQ -------**#
+
+@api_view(["POST"])
+def disable_user_tfq(request):
+    username = request.data.get('user')
+    otp = request.data.get('otp')
+    user = customuser.objects.filter(username=username).first()
+    if user is not None:
+        user_tfq = UserTFQ.objects.filter(user=user).first()
+        if user_tfq:
+            key = user_tfq.key
+            totp = pyotp.TOTP(key)
+            if totp.verify(otp) == True:
+                user_tfq.delete()
+                user.is_tfq = False
+                user.save()
+                return Response(data={"data": "Two-Factor Authenticator has been disabled"}, status=status.HTTP_200_OK)
+    return Response(data={'error': 'Error disabling user TFQ'}, status=status.HTTP_400_BAD_REQUEST)
+
+#**------- Check OTP for SignIN -------**#
+
+@api_view(["POST"])
+def check_user_tfq(request):
+    username = request.data.get('user')
+    otp = request.data.get('otp')
+    user = customuser.objects.filter(username=username).first()
+    if user is not None:
+        user_tfq = UserTFQ.objects.filter(user=user).first()
+        if user_tfq is not None:
+            key = user_tfq.key
+            totp = pyotp.TOTP(key)
+            if totp.verify(otp) == True:
+                response = Response()
+                data = get_tokens_for_user(user)
+                response.set_cookie('access_token', data['access'], httponly=True)
+                response.set_cookie('refresh_token', data['refresh'], httponly=True)
+                response.data = {"Case" : "Login successfully"}
+                return response
+            return Response(data={'Case': 'Wrong otp'}, status=status.HTTP_400_BAD_REQUEST)

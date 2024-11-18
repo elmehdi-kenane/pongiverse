@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 
-import racketSvg from "./assets/racket.svg"
+import racketSvg from "../assets/Profile/racket.svg"
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import DashboardContext from './DashboardWrapper';

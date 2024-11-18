@@ -31,7 +31,8 @@ function ForgotPassword() {
 	};
 
 	const handleBack = () => {
-		navigate("/signin")
+		// navigate("/signin")
+		window.history.back();  // Made by Imad - Navigates to the last page not the signin ;)
 	}
 
 	const handleNextClick = (e) => {

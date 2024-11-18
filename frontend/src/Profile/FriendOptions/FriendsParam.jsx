@@ -3,9 +3,10 @@ import {Link, useNavigate} from 'react-router-dom'
 import AuthContext from '../../navbar-sidebar/Authcontext';
 import ProfileContext from '../ProfileWrapper';
 import ChatContext from '../../Context/ChatContext';
+import { cancelFriendRequest, handleRemoveFriendship } from "../../Friends/utils";
 
 import ChatIcon from '@mui/icons-material/Chat';
-import MavSvg from "../../assets/Profile/Group.svg"
+import AvatarSvg from "../../assets/Profile/Group.svg"
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import CancelScheduleSendIcon from '@mui/icons-material/CancelScheduleSend';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
@@ -14,22 +15,32 @@ import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 
 function FriendsParam(props) {
     const friendsPrm = props.Prm;
-    const {isBlock, setIsBlock, blockRef} = useContext(AuthContext);
+    const { user, isBlock, setIsBlock } = useContext(AuthContext);
+    const { setIsFriend, userId, userPic, setIsLoading } = useContext(ProfileContext);
     const navigate = useNavigate();
-    const { userId, userPic } = useContext(ProfileContext);
     const { setSelectedDirect } = useContext(ChatContext);
 
     const handleRmFriend = () => {
-        props.onRmFriend();
+        setIsLoading(true);
+        setTimeout(() => {
+        handleRemoveFriendship(user, userId);
+        setIsLoading(false);
+        setIsFriend('false');
+      }, 1200);
     }
-    const handleCnclRequest = () => {
-        props.onCnclRequest();
+    const handleCnclRequest = (eventType) => {
+        setIsLoading(true);
+        setTimeout(() => {
+        cancelFriendRequest(user, userId, eventType);
+        setIsLoading(false);
+        setIsFriend('false');
+      }, 1200);
     }
     const handleBlock = () => {
         setIsBlock(!isBlock);
     }
     const chatNavigate = () => {
-        const userImage = userPic ? userPic : MavSvg
+        const userImage = userPic ? userPic : AvatarSvg
         setSelectedDirect({
           name : userId,
           status: true,
@@ -52,19 +63,25 @@ function FriendsParam(props) {
         </Link>
     );
     const cancelJsx = (
-        <div className="parameter" onClick={handleCnclRequest}>
+        <div className="parameter" onClick={()=>handleCnclRequest("cancel")}>
             <CancelScheduleSendIcon />
             <p> Cancel Request </p>
         </div>
     )
     const removeJsx = (
+        <div className="parameter" onClick={()=>handleCnclRequest("remove")}>
+            <CancelScheduleSendIcon />
+            <p> Remove Request </p>
+        </div>
+    )
+    const deleteJsx = (
         <div className="parameter" onClick={handleRmFriend}>
             <PersonRemoveIcon />
             <p> Remove Friend </p>
         </div>
     )
     const blockJsx = (
-        <div className="parameter" onClick={handleBlock} ref={blockRef}>
+        <div className="parameter" onClick={handleBlock} id='block-click'>
             <NoAccountsIcon />
             <p> Block </p>
         </div>
@@ -80,6 +97,7 @@ function FriendsParam(props) {
                         {prm === "challenge" && challengeJsx}
                         {prm === "cancel" && cancelJsx}
                         {prm === "remove" && removeJsx}
+                        {prm === "delete" && deleteJsx}
                         {prm === "block" && blockJsx}
                     </ div>
                 )

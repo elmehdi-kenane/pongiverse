@@ -9,19 +9,16 @@ function DashResult() {
   const {isGameStats, setIsGameStats } = useContext(AuthContext);
   const {singleId, setSingleId, multyId, setMultyId} = useContext(DashboardContext);
 
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('#match-click') && isGameStats){  
-      setIsGameStats(!isGameStats);
-      singleId && setSingleId(null);
-      multyId && setMultyId(null);
-    }
-  });
-  
   const closeGameStats = () => {
     setIsGameStats(false);
     singleId && setSingleId(null);
     multyId && setMultyId(null);
   };
+  
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('#match-click') && isGameStats)
+      closeGameStats();
+  });
 
   return (
     <div className="match-result-ctr">

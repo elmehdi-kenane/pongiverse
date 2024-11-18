@@ -30,7 +30,6 @@ export const ChatProvider = ({ child }) => {
   const selectedDirectRef = useRef(selectedDirect);
   const selectedChatRoomRef = useRef(selectedChatRoom);
 
-
   useEffect(() => {
     suggestedChatRoomsRef.current = suggestedChatRooms;
   }, [suggestedChatRooms]);

@@ -29,8 +29,8 @@ function DashRsltSingle() {
       const formattedTime = `${hours}:${minutes}`;
       setMatchDate(formattedDate);
       setMatchTime(formattedTime)
-
     }
+    
     const getMatchDtls = async () => {
       try {
         const response = await fetch(

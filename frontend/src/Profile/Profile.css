@@ -32,7 +32,16 @@ h1, h3, p{
     filter: blur(6px);
     pointer-events: none;
     user-select: none;
-  }
+}
+
+/* .purple--glass {
+    background: linear-gradient(to bottom, rgb(68, 45, 106, 0.5), rgba(74, 37, 139, 0.3));
+    box-shadow: 0 0.5px 5px 0 #ccc;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 5px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+} */
 
 /* ------------------- User Info ------------------- */
 
@@ -89,10 +98,16 @@ h1, h3, p{
     position: absolute;
     bottom: 26px;
     right: 13px;
-    background-color: #8edf34;
-    color: #8edf34;
     clip-path: circle();
     font-size: 15px;
+}
+.userinfo__pic .online {
+    color: #8edf34;
+    background-color: #8edf34;
+}
+.userinfo__pic .offline {
+    color: gray;
+    background-color: gray;
 }
 .userinfo__pic .is-online:hover {
     color: black;
@@ -117,28 +132,29 @@ h1, h3, p{
     gap: 20px;
     align-items: center;
 }
-.userinfo__avatar {
+.userinfo__country {
     display: flex;
     align-items: center;
     position: relative;
 }
-.userinfo__avatar img {
-    height: 50px;
+.userinfo__country img {
+    height: 25px;
+    width:  50px;
 }
 
-.avatar-desc {
+.country-desc {
     position: absolute;
-    top: 0%;
-    left: 100%;
+    top: 100%;
     opacity: 0;
-    width: 65px;
-    text-align: center;
-    color: #826aed;
+    /* width: 65px; */
+    /* border-radius: 10px; */
+    padding: 5px;
+    color: white;
     font-size: 13px;
     font-weight: 450;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.7s ease;
 }
-.userinfo__avatar:hover .avatar-desc{
+.userinfo__country:hover .country-desc{
     opacity: 1;
 }
 
@@ -188,16 +204,23 @@ h1, h3, p{
     justify-content: center;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
+    cursor: not-allowed;
 }
 .profile-userinfo .isfriends__icon-desc p {
     font-size: 14px;
     font-weight: 450;
+    cursor: inherit;
 }
 .profile-userinfo .isfriends__icon-desc svg {
     height: 16px;
 }
+.userinfo__isfriends .adjust-addfriend svg {
+    height: 15px;
+}
+.userinfo__isfriends .accept-friend,
 .userinfo__isfriends .adjust-addfriend{
     height: 100%;
+    cursor: pointer;
 }
 .userinfo__isfriends .adjust-addfriend,
 .userinfo__isfriends .adjust-addfriend p
@@ -205,6 +228,7 @@ h1, h3, p{
     justify-content: flex-start;
     font-size: 12.5px;
 }
+.userinfo__isfriends .accept-friend:hover,
 .userinfo__isfriends .adjust-addfriend:hover {
     background: #250939;
 }
@@ -220,6 +244,7 @@ h1, h3, p{
     width: 20%;
     height: 100%;
     border-left: white solid 1px;
+    cursor: pointer;
 }
 .userinfo__isfriends .isfriends__menu svg {
     height: 100%;
@@ -289,6 +314,7 @@ h1, h3, p{
     align-items: center;
     border-radius: 50px;
     background-color: #250939;
+    cursor: pointer;
 }
 .profile-userinfo .userinfo__report svg {
     color: #826aed;
@@ -617,7 +643,7 @@ h1, h3, p{
     width: 100%;
     flex-direction: column;
     gap: 25px;
-    margin-bottom: 130px;
+    margin-bottom: 150px;
     /* border: yellow solid 1px; */
 }
 
@@ -666,13 +692,13 @@ h1, h3, p{
     padding: 10px 5px 10px;
 }
 
-/* ---- Friends - Achievement ---- */
+/* ---- Friends - Diagrame ---- */
 
 .profile-userstats .userstate__friends-diagrame {
     /* border: cyan solid 1px; */
     display: flex;
     width: 100%;
-    height: 410px;
+    height: 381px;
     gap: 25px;
 }
 
@@ -709,7 +735,8 @@ h1, h3, p{
 .userfriends__classment .classment__friend { /* Friend Player */
     display: flex;
     justify-content: space-between;
-    border-bottom: 3px #250939 solid;
+    /* border-bottom: 3px #250939 solid; */
+    border-bottom: 3px solid rgba( 255, 255, 255, 0.18 );
     height: 47px;
     align-items: center;
     padding: 0 5px;
@@ -717,12 +744,13 @@ h1, h3, p{
 }
 .userfriends__classment .classment__friend:hover {
     background-color: #250939;
+    background-color: #826aed;
     transition: ease-in 0.2s;
-    box-shadow: 0 2px 30px 0 #250939;
+    /* box-shadow: 0 2px 30px 0 #250939; */
 }
 .userfriends__classment .classment__friend:hover .chat__button{
-    background-color: #826aed;
-    transition: ease-in 0.3s;
+    background-color: #250939;
+    transition: ease-in-out 0.3s;
 }
 
 .classment__friend .friend__pic-name{
@@ -747,7 +775,7 @@ h1, h3, p{
 
 .chat__button {
     display: flex;
-    background-color: #250939;
+    background-color: #826aed;
     border-radius: 5px;
     align-items: center;
     gap: 5px;
@@ -788,7 +816,6 @@ h1, h3, p{
     cursor: pointer;
 }
 
-
 /* ------------ Achievments ------------*/
 
 .userstate__diagrame .diagrame__container {
@@ -799,6 +826,60 @@ h1, h3, p{
     padding-top: 15px;
     /* border: purple 1px solid; */
 }
+
+/* ---- Match History Statistics ---- */
+
+.profile-userstats .userstate_matches {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 430px;
+    align-items: center;
+    position: relative;
+}
+.userstate_matches .match__states {
+    display: flex;
+    height: 55px;
+    width: 100%;
+    align-items: center;
+}
+.userstate_matches .head--height{
+    height: 60px;
+}
+.match__states .match__head,
+.match__states .match__dtl{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    border: 5px solid rgba( 255, 255, 255, 0.18 );
+    border-right: 2px solid rgba( 255, 255, 255, 0.18 );
+    border-left: 2px solid rgba( 255, 255, 255, 0.18 );
+    height: 100%;
+    /* Flex properties */
+    flex: 1; /* Allow each element to grow equally */
+    min-width: 0; /* Prevent growing based on content */
+    overflow: hidden; /* Prevent content overflow */
+    white-space: nowrap; /* Prevent text wrapping */
+    text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+}
+.match__states .match__dtl{
+    font-size: 12.5px;
+    font-weight: 420;
+}
+.match__states .match--players{
+    gap: 20px;
+}
+.match__states .match--players img{
+    height: 30px;
+    width: 30px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.match__states .match--date{
+    flex-direction: column;
+}
+
 
 /*   -------------------   */
 
@@ -827,8 +908,9 @@ h1, h3, p{
         bottom: 33px;
         right: 15px;
     }
-    .userinfo__avatar img {
-        height: 35px;
+    .userinfo__country img {
+        height: 20px;
+        width:  40px;
     }
     .profile-userstats .userstate-header {
         padding: 8px 0;
@@ -975,10 +1057,33 @@ h1, h3, p{
         letter-spacing: 0.5px;
         font-size: 14px;
     }
+
+    /* UserState Games */
+    .match__states .match__head{
+        font-size: 12px;
+    }
+    .match__states .match__dtl{
+        font-size: 10px;
+    }
+    .match__states .match--players {
+        gap:0;
+        justify-content: space-around;
+    }
+    .match__states .match--players img{
+        height: 25px;
+        width: 25px;
+    }
+    .match__states .match--date{
+        font-size: 8.5px;
+    }
+    .userinfo__name-bio {
+        gap: 10px;
+    }
+
 }
 
 
-@media (max-width: 600px) {
+@media (max-width: 550px) {
 
     .profile-page {
         padding: 50px 15px 0;
@@ -1041,8 +1146,9 @@ h1, h3, p{
     .userinfo__name-avatar .userinfo__name {
         font-size: 20px;
     }
-    .userinfo__avatar img {
-        height: 30px;
+    .userinfo__country img {
+        height: 15px;
+        width:  30px;
     }
     .userinfo__name-bio .userinfo__bio {
         display: none;
@@ -1050,4 +1156,20 @@ h1, h3, p{
     .chat__button p {
         display: none;
     }
+
+    /* UserState Games */
+    .match__states .match__head{
+        font-size: 7px;
+    }
+    .match__states .match__dtl{
+        font-size: 7px;
+    }
+    .match__states .match--players img{
+        height: 12px;
+        width: 12px;
+    }
+    .match__states .match--date{
+        font-size: 4.5px;
+    }
+
 }

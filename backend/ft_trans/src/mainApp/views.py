@@ -11,6 +11,7 @@ from myapp.serializers import MyModelSerializer
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError, AccessToken
 from .common import tournament_rooms, tournaments, rooms
 from myapp.decorators import authentication_required
+from .models import UserMatchStatics
 # from rest_framework.exceptions import AuthenticationFailed
 # from .serializers import UserSerializer
 # from .models import User
@@ -142,16 +143,18 @@ def get_users_data(usernames):
 	for username in usernames:
 		user = customuser.objects.filter(username=username).first()
 		if user:
-			image_path = user.avatar.url
-			background_image_path = user.background_pic.url
-			allMembers.append({
-			'id': user.id,
-			'name': user.username,
-			'level': user.level,
-			'image': f"http://{ip_address}:8000/auth{image_path}",
-			'background_image' : f"http://{ip_address}:8000/auth{background_image_path}",
-			'is_online' : user.is_online
-		})
+			user_states = UserMatchStatics.objects.filter(player=user).first()
+			if user_states:
+				image_path = user.avatar.url
+				background_image_path = user.background_pic.url
+				allMembers.append({
+					'id': user.id,
+					'name': user.username,
+					'level': user_states.level,
+					'image': f"http://{ip_address}:8000/auth{image_path}",
+					'background_image' : f"http://{ip_address}:8000/auth{background_image_path}",
+					'is_online' : user.is_online
+				})
 	return allMembers
 
 def is_user_owner_in_tournament(user_to_check, tournament_id):
@@ -215,8 +218,9 @@ def get_tournament_member(request):
 	ip_address = os.getenv("IP_ADDRESS")
 	user = customuser.objects.filter(username=username).first()
 	if user is not None:
+		user_states = UserMatchStatics.objects.filter(player=user).first()
 		response = Response()
-		response.data = {'id' : user.id, 'name' : user.username, 'level' : user.level, 'image' : f"http://{ip_address}:8000/auth{user.avatar.url}", 'background_image' : f"http://{ip_address}:8000/auth{user.background_pic.url}", 'is_online' : user.is_online}
+		response.data = {'id' : user.id, 'name' : user.username, 'level' : user_states.level, 'image' : f"http://{ip_address}:8000/auth{user.avatar.url}", 'background_image' : f"http://{ip_address}:8000/auth{user.background_pic.url}", 'is_online' : user.is_online}
 		return response
 
 @api_view(['POST'])
@@ -238,7 +242,6 @@ def notifs_friends(request):
 @authentication_required
 @api_view(['POST'])
 def get_tournament_data(request):
-	print("*************get_tournament_data")
 	tournament_id = request.data.get('id')
 	if tournament_id == '' :
 		tournament_id = 0
@@ -425,10 +428,11 @@ def get_game_members_round(request):
 						for quartermember in tournament_data['rounds']['QUARTERFINAL']:
 							if quartermember['username'] != 'anounymous':
 								user = customuser.objects.filter(username=quartermember['username']).first()
+								user_states = UserMatchStatics.objects.filter(player=user).first()
 								quartermembers.append({
 									'id' : user.id,
 									'name' : quartermember['username'],
-									'level': user.level,
+									'level': user_states.level,
 									'image': f"http://{ip_address}:8000/auth{user.avatar.url}",
 									'position': quartermember['position'],
 								})
@@ -444,10 +448,11 @@ def get_game_members_round(request):
 						for semimember in tournament_data['rounds']['SEMIFINAL']:
 							if semimember['username'] != 'anounymous':
 								user = customuser.objects.filter(username=semimember['username']).first()
+								user_states = UserMatchStatics.objects.filter(player=user).first()
 								semimembers.append({
 									'id' : user.id,
 									'name' : semimember['username'],
-									'level': user.level,
+									'level': user_states.level,
 									'image': f"http://{ip_address}:8000/auth{user.avatar.url}",
 									'position': semimember['position']
 								})
@@ -464,10 +469,11 @@ def get_game_members_round(request):
 						for finalmember in tournament_data['rounds']['FINAL']:
 							if finalmember['username'] != 'anounymous':
 								user = customuser.objects.filter(username=finalmember['username']).first()
+								user_states = UserMatchStatics.objects.filter(player=user).first()
 								finalmembers.append({
 									'id' : user.id,
 									'name' : finalmember['username'],
-									'level': user.level,
+									'level': user_states.level,
 									'image': f"http://{ip_address}:8000/auth{user.avatar.url}",
 									'position': finalmember['position']
 								})
@@ -483,10 +489,11 @@ def get_game_members_round(request):
 						for winner in tournament_data['rounds']['WINNER']:
 							if winner['username'] != 'anounymous':
 								user = customuser.objects.filter(username=winner['username']).first()
+								user_states = UserMatchStatics.objects.filter(player=user).first()
 								winnerdict.update({
 									'id' : user.id,
 									'name': winner['username'],
-									'level' : user.level,
+									'level' : user_states.level,
 									'image': f"http://{ip_address}:8000/auth{user.avatar.url}",
 									'position': winner['position']
 								})
@@ -601,10 +608,11 @@ def get_tournament_members_rounds(request):
 	if roundquarterfinal is not None:
 		for quartermember in TournamentUserInfo.objects.filter(round=roundquarterfinal):
 			if quartermember.user is not None:
+				user_states = UserMatchStatics.objects.filter(player=quartermember.user).first()
 				quartermembers.append({
 					'id' : quartermember.user.id,
 					'name' : quartermember.user.username,
-					'level': quartermember.user.level,
+					'level': user_states.level,
 					'image': f"http://{ip_address}:8000/auth{quartermember.user.avatar.url}",
 					'position': quartermember.position
 				})
@@ -619,10 +627,11 @@ def get_tournament_members_rounds(request):
 	if roundsemierfinal is not None:
 		for semimember in TournamentUserInfo.objects.filter(round=roundsemierfinal):
 			if semimember.user is not None:
+				user_states = UserMatchStatics.objects.filter(player=semimember.user).first()
 				semimembers.append({
 					'id' : semimember.user.id,
 					'name' : semimember.user.username,
-					'level': semimember.user.level,
+					'level': user_states.level,
 					'image': f"http://{ip_address}:8000/auth{semimember.user.avatar.url}",
 					'position': semimember.position
 				})
@@ -637,10 +646,11 @@ def get_tournament_members_rounds(request):
 	if roundfinal is not None:
 		for finalmember in TournamentUserInfo.objects.filter(round=roundfinal):
 			if finalmember.user is not None:
+				user_states = UserMatchStatics.objects.filter(player=finalmember.user).first()
 				finalmembers.append({
 					'id' : finalmember.user.id,
 					'name' : finalmember.user.username,
-					'level': finalmember.user.level,
+					'level': user_states.level,
 					'image': f"http://{ip_address}:8000/auth{finalmember.user.avatar.url}",
 					'position': finalmember.position
 				})

@@ -1,22 +1,31 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import "./Settings.css";
-
-import SettingsContext from "./SettingsWrapper";
 import { Toaster } from "react-hot-toast";
 import UpdatePwd from './UpdateSecurity/UpdatePwd';
-import TwoFaq from './UpdateSecurity/TwoFaq';
+import UpdateTFQ from './UpdateSecurity/UpdateTFQ';
 import SettingsLeft from './SettingsLeft';
+import SettingsContext from './SettingsWrapper';
+import DisableTFQ from './UpdateSecurity/DisableTFQ';
 
 function Security() {
-
-  const [isPwd, setIsPwd] = useState(false);
-  const [isTF, setIsTF] = useState(false);
-
-  const setUpdate = (option) => {
-    if (option === 'pwd')
-      setIsPwd(!isPwd);
-    else
-      setIsTF(!isTF);
+  const [option, setOption] = useState('security');
+  const { userTfq } = useContext(SettingsContext);
+  
+  const SecurityOptions = () => {
+    return (
+      <>
+        <div className="update">
+          <p className='title more-width'> Change Password </p>
+          <div className="update__btn" onClick={() => setOption('pwd')}> Update </div>
+        </div>
+        <div className="update no-bottom">
+          <p className='title more-width'> Authenticator App </p>
+          {!userTfq ? <div className="update__btn" onClick={() => setOption('enable-tfq')}> Enable </div>
+            : <div className="update__btn" onClick={() => setOption('disable-tfq')}> Disable </div>
+          }
+        </div>
+      </>
+    )
   }
 
   return (
@@ -26,20 +35,10 @@ function Security() {
       <div className="settings__security">
         <h1 className='settings__header'> SECURITY </h1>
         <div className="security__update linear-purple-bg">
-          {!isPwd && !isTF &&
-            <>
-              <div className="update">
-                <p className='title more-width'> Change Password </p>
-                <div className="update__btn" onClick={() => setUpdate('pwd')}> Update </div>
-              </div>
-              <div className="update no-bottom">
-                <p className='title more-width'> Authenticator App </p>
-                <div className="update__btn" onClick={() => setUpdate('tf')}> Enable </div>
-              </div>
-            </>
-          }
-          {isPwd && <UpdatePwd cancelPwd={setIsPwd} />}
-          {isTF && <TwoFaq />}
+          {option === 'security' && <SecurityOptions />}
+          {option === 'pwd' && <UpdatePwd cancelPwd={setOption} />}
+          {option === 'enable-tfq' && <UpdateTFQ cancelTFQ={setOption}/>}
+          {option === 'disable-tfq' && <DisableTFQ cancelTFQ={setOption}/>}
         </div>
       </div>
     </div>

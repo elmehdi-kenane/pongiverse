@@ -22,7 +22,7 @@ function ProfileUserStatistics(){
           }
         });
         const res = await response.json()
-        if (response.ok) 
+        if (response.ok)
           setUserStcs(res.userStcs)
         else 
           console.log("Error : ", res.error);
@@ -49,7 +49,7 @@ function ProfileUserStatistics(){
         <div className='userstate-header'><h1> Statistics </h1> </div>
         {isLineChart && <BarChartIcon className="statics__chart-icon" onClick={iconClick}/>}
         {!isLineChart && <ShowChartIcon className="statics__chart-icon" onClick={iconClick}/>}
-        {userStcs ? 
+        {userStcs.length ?
           <div className="statistics__container">
             {!isLineChart && <BarGraph param={chartParameters}/>}
             {isLineChart && <LineGraph param={chartParameters}/>}

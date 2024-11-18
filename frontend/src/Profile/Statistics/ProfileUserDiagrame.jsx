@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip } from 'recharts';
-
 import ProfileContext from '../ProfileWrapper';
 
 const CustomTooltip = ({ active, payload }) => {

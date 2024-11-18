@@ -18,6 +18,7 @@ import asyncio
 import requests
 import base64
 from mainApp.common import tournament_rooms, tournaments
+from .models import UserMatchStatics
 from Notifications.common import notifs_user_channels
 import os
 
@@ -47,12 +48,13 @@ async def send_player_winner(self, tournament_id, username, next_round, position
 	groupe_name = f'tournament_{tournament_id}'
 	if username != 'anounymous':
 		user = await sync_to_async(customuser.objects.filter(username=username).first)()
+		user_states = UserMatchStatics.objects.filter(player=user).first()
 		await self.channel_layer.group_send(groupe_name, {
 			'type': 'new_user_win',
 			'message': {
 				"id" : user.id,
 				"name": user.username,
-				"level" : user.level,
+				"level" : user_states.level,
 				"image" : f"http://{ip_address}:8000/auth{user.avatar.url}",
 				"round_reached": next_round,
 				"position": position // 2 if position % 2 == 0 else (position + 1) // 2 
@@ -165,6 +167,7 @@ async def send_user_eliminated_after_delay(self, tournament_id, actual_round):
 				# tournament_member.is_eliminated = True
 				# await sync_to_async(tournament_member.save)()
 				user = await sync_to_async(customuser.objects.filter(username=member['username']).first)()
+				user_states = UserMatchStatics.objects.filter(player=user).first()
 				user.is_playing = False
 				await sync_to_async(user.save)()
 				my_user = await sync_to_async(customuser.objects.get)(username=member['username'])
@@ -187,7 +190,7 @@ async def send_user_eliminated_after_delay(self, tournament_id, actual_round):
 										'userInfos': {
 											'id': user.id,
 											'name': member['username'],
-											'level': user.level,
+											'level': user_states.level,
 											'image': f"http://{ip_address}:8000/auth{user.avatar.url}" ,
 											'is_playing' : user.is_playing
 										}

@@ -1,4 +1,4 @@
-import { React, useContext, useState } from 'react'
+import { React, useContext, useEffect, useState } from 'react'
 
 import ProfileInfo from './ProfileInfo';
 import ProfileLevel from './ProfileLevel';
@@ -14,7 +14,16 @@ import { Navigate } from 'react-router-dom';
 function Profile() {
 
   const { isReport, isBlock, user } = useContext(AuthContext);
-  const { checkUser } = useContext(ProfileContext);
+  const { userId, checkUser } = useContext(ProfileContext);
+
+  // useEffect(() => {
+  //   console.log("Scroll Effect Here")
+  //   function topFunction() {
+  //     document.body.scrollTop = 0; // For Safari
+  //     document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+  //   }
+  //   topFunction();
+  // }, [userId]);
 
   return (
     <>

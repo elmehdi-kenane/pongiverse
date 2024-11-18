@@ -577,8 +577,7 @@ function createParticle(x, y) {
                     allPlayersStats[1].rating = message.rating[1]
                     allPlayersStats[2].time = message.time
                     setPlayersInfos(allPlayersStats)
-                }
-                else if (type === "playersInfos")
+                } else if (type === "playersInfos")
                     setPlayersPics(message.users)
                 else if (type === 'hmed') {
 					console.log("hmed received")

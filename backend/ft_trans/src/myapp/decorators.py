@@ -14,7 +14,6 @@ def get_tokens_for_user(user):
 def authentication_required(view_func):
 	@wraps(view_func)
 	def _wrapped_view(request, *args, **kwargs):
-		print("*************authentication_required")
 		user_id = -1
 		try:
 			refresh_token = request.COOKIES.get('refresh_token')

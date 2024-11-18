@@ -80,8 +80,7 @@ function DashSingle() {
     const showMatchResult = (matchId) => {
       setIsGameStats(true);
       setSingleId(matchId)
-    }
-    
+    }  
     return (
       <>
         {matches.slice((index - 1) * itemsPerPage, index * itemsPerPage)

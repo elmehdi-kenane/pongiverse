@@ -73,6 +73,7 @@ const App = () => {
 								<Route path="profile/:userId" element={<ChatProvider child={<ProfileWrapper child={<Profile />} />} />} />
 								<Route path="settings" element={<SettingsWrapper child={<PersonalInfo />} />} />
 								<Route path="settings/security" element={<SettingsWrapper child={<Security />} />} />
+								<Route path="settings/security/forgotpassword" element={<ForgotPassword />} />
 								<Route path="chat" element={<ChatProvider child={<Chat />} />} />
 								<Route path="friends" element={<ChatProvider child={<Friends />} />} />
 								<Route path="groups" element={<ChatProvider child={<Rooms />} />} />

@@ -235,7 +235,6 @@ const Rooms = () => {
                 alt=""
                 className="create-room-icon"
               />
-              <div className="create-room-text">Create a Room</div>
             </div>
             <AddIcon
               className="create-room-button-icon"
