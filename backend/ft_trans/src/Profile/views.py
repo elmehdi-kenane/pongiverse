@@ -427,7 +427,7 @@ def get_user_statistics(request, username, date_range):
 def get_single_matches(request, username, page):
     user = customuser.objects.filter(username=username).first()
     res_data = []
-    if user is not None:
+    if user:
         page_size = 3
         offset = (page - 1) * page_size
         user_matches = Match.objects.filter(
@@ -450,18 +450,41 @@ def get_single_matches(request, username, page):
                 "id": user_match.room_id,
             })
         return Response(data={"userMatches": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
-    return Response(data={'error': 'Error Getting SingleGames!'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response(data={'error': 'User not found!!'}, status=status.HTTP_404_NOT_FOUND)
 
+#**--------------------- GetUser TournamentMatches {Dashboard} ---------------------**#
 
 @api_view(["GET"])
 def get_tourn_matches(request, username, page):
     user = customuser.objects.filter(username=username).first()
+    type = "QUARTERFINAL"
     res_data = []
     if user:
-        
-        
-        return Response(data={"userMatches": "res_data", "hasMoreMatches": True}, status=status.HTTP_200_OK)
-    return Response(data={'error': 'Error Getting SingleGames!'}, status=status.HTTP_400_BAD_REQUEST)
+        page_size = 3
+        offset = (page - 1) * page_size
+        all_tournament_memebers = TournamentMembers.objects.filter(user=user).all()[offset:offset+page_size]
+
+        total_matches_count =TournamentMembers.objects.filter(user=user).count()
+        has_more_matches = (offset + page_size) < total_matches_count
+
+        for tournament_memebers in all_tournament_memebers:
+            if tournament_memebers:
+                tournament = tournament_memebers.tournament
+                if tournament.is_finished:
+                    rounds = Round.objects.filter(tournament=tournament).all() #Get all the rounds
+                    for round in rounds:
+                        all_users = TournamentUserInfo.objects.filter(round=round).all() #Get all users inside each round
+                        for user_round in all_users:
+                            if user.username == user_round.user.username:
+                                type = round.type
+                                # print("###-----", type, ":", user_round.user.username)
+                    res_data.append({
+                        "type" : type,
+                        "tourId" : tournament.tournament_id,
+                        "pic": f"http://localhost:8000/auth{user.avatar.url}",
+                    })
+        return Response(data={"data": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
+    return Response(data={'error': 'User not found!'}, status=status.HTTP_404_NOT_FOUND)
 
 #**------- GetUser SingleMatch Details -------**#
 
@@ -498,7 +521,7 @@ def get_single_match_dtl(request, match_id):
 def get_multiplayer_matches(request, username, page):
     user = customuser.objects.filter(username=username).first()
     res_data = []
-    if user is not None:
+    if user:
         page_size = 3
         offset = (page - 1) * page_size
         user_matches = Match.objects.filter(
@@ -523,7 +546,7 @@ def get_multiplayer_matches(request, username, page):
                 "id": user_match.room_id,
             })
         return Response(data={"userMatches": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
-    return Response(data={'error': 'Error Getting MultiplayerGames!'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response(data={'error': 'User not found!'}, status=status.HTTP_404_NOT_FOUND)
 
 #**------- GetUser MultiplayerMatch Details -------**#
 
