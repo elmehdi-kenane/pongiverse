@@ -195,13 +195,13 @@ async def discard_channels_from_tournament_group(self, player, tournament_id):
 async def send_winner_data(self, user, round_reached, tournament_id):
 	ip_address = os.getenv("IP_ADDRESS")
 	groupe_name = f'tournament_{tournament_id}'
-	user_states = UserMatchStatics.objects.filter(player=user).first()
+	match_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=user).first)()
 	await self.channel_layer.group_send(groupe_name, {
 		'type': 'new_user_win',
 		'message': {
 			"id" : user.id,
 			"name": user.username,
-			"level" : user_states.level,
+			"level" : match_statistics.level,
 			"image" : f"http://{ip_address}:8000/auth{user.avatar.url}",
 			"round_reached": round_reached['round_reached'],
 			"position": round_reached['position']
@@ -329,7 +329,9 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 					# await sync_to_async(tournamentuserinfo.save)()
 					tournaments[tournament_id]['rounds'][round_reached['round_reached']].append({'username': room['players'][0]['user'], 'position': round_reached['position']})
 					channel_name = user_channels.get(player1.id)
+					print("CHANNEL NAME : ", channel_name)
 					if channel_name:
+						print("DKHEL HNA : ")
 						await self.channel_layer.send(channel_name, {
 							'type': 'youWinTheGame',
 							'message': {
