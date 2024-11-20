@@ -19,6 +19,7 @@ export const DashboardWrapper = ({ child }) => {
     const [lostPcnt, setLostPcnt] = useState(50);
     const [singleId, setSingleId] = useState(null);
     const [multyId, setMultyId] = useState(null);
+    const [tournId, setTournId] = useState(null);
 
     // Dashboard Head ------------------------
     useEffect(()=>{
@@ -80,6 +81,8 @@ export const DashboardWrapper = ({ child }) => {
         setSingleId:setSingleId,
         multyId:multyId, 
         setMultyId:setMultyId,
+        tournId:tournId,
+        setTournId:setTournId,
     };
     return (
         <DashboardContext.Provider value={userInfoData}> {child} </DashboardContext.Provider>

@@ -78,8 +78,8 @@ function DashMulty() {
     const MatchesResults = () => {
       const { setMultyId } = useContext(DashboardContext);
       const showMatchResult = (matchId) => {
-        setIsGameStats(true);
         setMultyId(matchId)
+        setIsGameStats(true);
       }
       return (
         <>

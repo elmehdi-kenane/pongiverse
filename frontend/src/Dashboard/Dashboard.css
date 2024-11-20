@@ -590,6 +590,11 @@
 
 /* Tournament Match */
 
+.footer__tournament-match .tournament-match__result p{
+    width: 100%;
+    text-align: center;
+}
+
 .footer__tournament-match .tournament-match__result img {
     width: 45px;
     height: 45px;

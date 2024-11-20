@@ -78,8 +78,8 @@ function DashSingle() {
   const MatchesResults = () => {
     const { setSingleId } = useContext(DashboardContext);
     const showMatchResult = (matchId) => {
-      setIsGameStats(true);
       setSingleId(matchId)
+      setIsGameStats(true);
     }  
     return (
       <>
