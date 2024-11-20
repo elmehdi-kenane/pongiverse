@@ -508,7 +508,6 @@ function createParticle(x, y) {
 			}
 			const heightScalingFactor = 400 / canvas.height;
 			const distance = (e.clientY - rect.top) * heightScalingFactor
-			console.log(distance)
 			socket.send(JSON.stringify({
 				type: 'moveMouseTournamentGame',
 				message: {
@@ -547,6 +546,7 @@ function createParticle(x, y) {
 				let data = JSON.parse(event.data)
 				let type = data.type
 				let message = data.message
+				console.log("TYPE : ", type)
 				if (type === "setupGame") {
 					playerNo = message.playerNo
 					console.log("INSIDE SETUPGAME")

@@ -79,7 +79,7 @@ function TournamentCelebration() {
 
 	return (
 		<div className={styles['tournamentbracketpage']}>
-			<div className={styles['confetti-div']}>
+			{/* <div className={styles['confetti-div']}>
 				<Confetti
 					mode='fall'
 					particleCount={1000}
@@ -88,6 +88,9 @@ function TournamentCelebration() {
 					gravity={0.1}
 					wind={0.1}
 				/>
+			</div> */}
+			<div className={styles['display-components-div-winner']}>
+				<div className={styles['winner-message']}>🎉 Congratulations!!!! {winnerMember.name}🎉</div>
 			</div>
 			<div className={styles['normalSvg']}>
 				<SvgComponent roundquartermembers={roundQuarterFinalMembers} roundsemifinalmembers={roundSemiFinalMembers} roundfinalMembers={finalMembers} roundwinner={winnerMember} />

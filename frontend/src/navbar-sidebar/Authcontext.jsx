@@ -548,6 +548,7 @@ export const AuthProvider = ({ children }) => {
 			);
 			console.log("DATA: ", response);
 			response = await response.json();
+			console.log("RESPONSE: ", response);
 			if (response.Case !== "Invalid token") {
 				setUser(response.data.username);
 			} else {
@@ -556,7 +557,7 @@ export const AuthProvider = ({ children }) => {
 				navigate("/signin");
 			}
 		} catch (e) {
-			console.log("something wrong with fetch :", e);
+			console.log("something wrong with fetch: ", e);
 		}
 	}
 

@@ -5,6 +5,11 @@ import { useNavigate } from "react-router-dom";
 const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roundfinalmembers, roundwinner }) => {
 	const navigate = useNavigate()
 
+	console.log("quarter : ", roundquartermembers)
+	console.log("semi : ", roundsemifinalmembers)
+	console.log("final : ", roundfinalmembers)
+	console.log("winner : ", roundwinner)
+
 	const findMemberByPosition = (roundmembers, position) => {
 		const member = roundmembers.find(member => member.position === position);
 		if (member)
@@ -12,15 +17,19 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 		else
 			return null
 	};
-	if (!roundquartermembers) {
-		navigate("../game/createtournament")
-	}
+
+	useEffect(() => {
+		if (!roundquartermembers) {
+			navigate("../game/createtournament")
+		}
+	}, [roundquartermembers])
+
 	console.log("winner lenght", roundwinner)
 	return (
 
 
-		<svg width="884" viewBox="0 0 884 1293" style={{minHeight: 334}} fill="none" xmlns="http://www.w3.org/2000/svg">
-			<path d="M815.002 184.5H745.002C739.755 184.5 735.502 188.753 735.502 194V264C735.502 269.247 739.755 273.5 745.002 273.5H815.002C820.249 273.5 824.502 269.247 824.502 264V194C824.502 188.753 820.249 184.5 815.002 184.5Z" stroke="white" /> { /* QUARTERFINAL 4*/ }
+		<svg width="884" viewBox="0 0 884 1293" style={{ minHeight: 334 }} fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path d="M815.002 184.5H745.002C739.755 184.5 735.502 188.753 735.502 194V264C735.502 269.247 739.755 273.5 745.002 273.5H815.002C820.249 273.5 824.502 269.247 824.502 264V194C824.502 188.753 820.249 184.5 815.002 184.5Z" stroke="white" /> { /* QUARTERFINAL 4*/}
 			{
 				findMemberByPosition(roundquartermembers, 4) && (
 					<foreignObject x="736.002" y="185" width="88" height="88">
@@ -31,7 +40,7 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 					</foreignObject>
 				)
 			}
-			<path d="M815.002 1025.5H745.002C739.755 1025.5 735.502 1029.75 735.502 1035V1105C735.502 1110.25 739.755 1114.5 745.002 1114.5H815.002C820.249 1114.5 824.502 1110.25 824.502 1105V1035C824.502 1029.75 820.249 1025.5 815.002 1025.5Z" stroke="white" /> { /* QUARTERFINAL 8*/ }
+			<path d="M815.002 1025.5H745.002C739.755 1025.5 735.502 1029.75 735.502 1035V1105C735.502 1110.25 739.755 1114.5 745.002 1114.5H815.002C820.249 1114.5 824.502 1110.25 824.502 1105V1035C824.502 1029.75 820.249 1025.5 815.002 1025.5Z" stroke="white" /> { /* QUARTERFINAL 8*/}
 			{
 				findMemberByPosition(roundquartermembers, 8) && (
 					<foreignObject x="736.002" y="1026" width="88" height="88">
@@ -42,7 +51,7 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 					</foreignObject>
 				)
 			}
-			<path d="M369.002 184.5H299.002C293.755 184.5 289.502 188.753 289.502 194V264C289.502 269.247 293.755 273.5 299.002 273.5H369.002C374.249 273.5 378.502 269.247 378.502 264V194C378.502 188.753 374.249 184.5 369.002 184.5Z" stroke="white" /> { /* QUARTERFINAL 2*/ }
+			<path d="M369.002 184.5H299.002C293.755 184.5 289.502 188.753 289.502 194V264C289.502 269.247 293.755 273.5 299.002 273.5H369.002C374.249 273.5 378.502 269.247 378.502 264V194C378.502 188.753 374.249 184.5 369.002 184.5Z" stroke="white" /> { /* QUARTERFINAL 2*/}
 			{
 				findMemberByPosition(roundquartermembers, 2) && (
 					<foreignObject x="290" y="185" width="88" height="88">
@@ -53,7 +62,7 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 					</foreignObject>
 				)
 			}
-			<path d="M368.002 1026.5H298.002C292.755 1026.5 288.502 1030.75 288.502 1036V1106C288.502 1111.25 292.755 1115.5 298.002 1115.5H368.002C373.249 1115.5 377.502 1111.25 377.502 1106V1036C377.502 1030.75 373.249 1026.5 368.002 1026.5Z" stroke="white" /> { /* QUARTERFINAL 6*/ }
+			<path d="M368.002 1026.5H298.002C292.755 1026.5 288.502 1030.75 288.502 1036V1106C288.502 1111.25 292.755 1115.5 298.002 1115.5H368.002C373.249 1115.5 377.502 1111.25 377.502 1106V1036C377.502 1030.75 373.249 1026.5 368.002 1026.5Z" stroke="white" /> { /* QUARTERFINAL 6*/}
 			{
 				findMemberByPosition(roundquartermembers, 6) && (
 					<foreignObject x="289" y="1027" width="88" height="88">
@@ -64,7 +73,7 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 					</foreignObject>
 				)
 			}
-			<path d="M588.002 184.5H518.002C512.755 184.5 508.502 188.753 508.502 194V264C508.502 269.247 512.755 273.5 518.002 273.5H588.002C593.249 273.5 597.502 269.247 597.502 264V194C597.502 188.753 593.249 184.5 588.002 184.5Z" stroke="white" /> { /* QUARTERFINAL 3*/ }
+			<path d="M588.002 184.5H518.002C512.755 184.5 508.502 188.753 508.502 194V264C508.502 269.247 512.755 273.5 518.002 273.5H588.002C593.249 273.5 597.502 269.247 597.502 264V194C597.502 188.753 593.249 184.5 588.002 184.5Z" stroke="white" /> { /* QUARTERFINAL 3*/}
 			{
 				findMemberByPosition(roundquartermembers, 3) && (
 					<foreignObject x="509" y="185" width="88" height="88">
@@ -75,7 +84,7 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 					</foreignObject>
 				)
 			}
-			<path d="M588.002 1025.5H518.002C512.755 1025.5 508.502 1029.75 508.502 1035V1105C508.502 1110.25 512.755 1114.5 518.002 1114.5H588.002C593.249 1114.5 597.502 1110.25 597.502 1105V1035C597.502 1029.75 593.249 1025.5 588.002 1025.5Z" stroke="white" /> { /* QUARTERFINAL 7*/ }
+			<path d="M588.002 1025.5H518.002C512.755 1025.5 508.502 1029.75 508.502 1035V1105C508.502 1110.25 512.755 1114.5 518.002 1114.5H588.002C593.249 1114.5 597.502 1110.25 597.502 1105V1035C597.502 1029.75 593.249 1025.5 588.002 1025.5Z" stroke="white" /> { /* QUARTERFINAL 7*/}
 			{
 				findMemberByPosition(roundquartermembers, 7) && (
 					<foreignObject x="509" y="1026" width="88" height="88">
@@ -86,7 +95,7 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 					</foreignObject>
 				)
 			}
-			<path d="M141.002 184.5H71.002C65.7552 184.5 61.502 188.753 61.502 194V264C61.502 269.247 65.7552 273.5 71.002 273.5H141.002C146.249 273.5 150.502 269.247 150.502 264V194C150.502 188.753 146.249 184.5 141.002 184.5Z" stroke="white" /> { /* QUARTERFINAL 1*/ }
+			<path d="M141.002 184.5H71.002C65.7552 184.5 61.502 188.753 61.502 194V264C61.502 269.247 65.7552 273.5 71.002 273.5H141.002C146.249 273.5 150.502 269.247 150.502 264V194C150.502 188.753 146.249 184.5 141.002 184.5Z" stroke="white" /> { /* QUARTERFINAL 1*/}
 			{
 				findMemberByPosition(roundquartermembers, 1) && (
 					<foreignObject x="62" y="185" width="88" height="88">
@@ -97,7 +106,7 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 					</foreignObject>
 				)
 			}
-			<path d="M141.002 1026.5H71.002C65.7552 1026.5 61.502 1030.75 61.502 1036V1106C61.502 1111.25 65.7552 1115.5 71.002 1115.5H141.002C146.249 1115.5 150.502 1111.25 150.502 1106V1036C150.502 1030.75 146.249 1026.5 141.002 1026.5Z" stroke="white" /> { /* QUARTERFINAL 5*/ }
+			<path d="M141.002 1026.5H71.002C65.7552 1026.5 61.502 1030.75 61.502 1036V1106C61.502 1111.25 65.7552 1115.5 71.002 1115.5H141.002C146.249 1115.5 150.502 1111.25 150.502 1106V1036C150.502 1030.75 146.249 1026.5 141.002 1026.5Z" stroke="white" /> { /* QUARTERFINAL 5*/}
 			{
 				findMemberByPosition(roundquartermembers, 5) && (
 					<foreignObject x="62" y="1027" width="88" height="88">
@@ -108,7 +117,7 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 					</foreignObject>
 				)
 			}
-			<path d="M353.002 852.5H283.002C277.755 852.5 273.502 856.753 273.502 862V932C273.502 937.247 277.755 941.5 283.002 941.5H353.002C358.249 941.5 362.502 937.247 362.502 932V862C362.502 856.753 358.249 852.5 353.002 852.5Z" stroke="white" /> { /* SEMIFINAL 3*/ }
+			<path d="M353.002 852.5H283.002C277.755 852.5 273.502 856.753 273.502 862V932C273.502 937.247 277.755 941.5 283.002 941.5H353.002C358.249 941.5 362.502 937.247 362.502 932V862C362.502 856.753 358.249 852.5 353.002 852.5Z" stroke="white" /> { /* SEMIFINAL 3*/}
 			{
 				findMemberByPosition(roundsemifinalmembers, 3) && (
 					<foreignObject x="274" y="853" width="88" height="88">
@@ -119,7 +128,7 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 					</foreignObject>
 				)
 			}
-			<path d="M353.002 357.5H283.002C277.755 357.5 273.502 361.753 273.502 367V437C273.502 442.247 277.755 446.5 283.002 446.5H353.002C358.249 446.5 362.502 442.247 362.502 437V367C362.502 361.753 358.249 357.5 353.002 357.5Z" stroke="white" /> { /* SEMIFINAL 1*/ }
+			<path d="M353.002 357.5H283.002C277.755 357.5 273.502 361.753 273.502 367V437C273.502 442.247 277.755 446.5 283.002 446.5H353.002C358.249 446.5 362.502 442.247 362.502 437V367C362.502 361.753 358.249 357.5 353.002 357.5Z" stroke="white" /> { /* SEMIFINAL 1*/}
 			{
 				findMemberByPosition(roundsemifinalmembers, 1) && (
 					<foreignObject x="274" y="358" width="88" height="88">
@@ -130,7 +139,7 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 					</foreignObject>
 				)
 			}
-			<path d="M474.002 675.5H404.002C398.755 675.5 394.502 679.753 394.502 685V755C394.502 760.247 398.755 764.5 404.002 764.5H474.002C479.249 764.5 483.502 760.247 483.502 755V685C483.502 679.753 479.249 675.5 474.002 675.5Z" stroke="white" /> { /* FINAL 2*/ }
+			<path d="M474.002 675.5H404.002C398.755 675.5 394.502 679.753 394.502 685V755C394.502 760.247 398.755 764.5 404.002 764.5H474.002C479.249 764.5 483.502 760.247 483.502 755V685C483.502 679.753 479.249 675.5 474.002 675.5Z" stroke="white" /> { /* FINAL 2*/}
 			{
 				findMemberByPosition(roundfinalmembers, 2) && (
 					<foreignObject x="395" y="676" width="88" height="88">
@@ -141,7 +150,7 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 					</foreignObject>
 				)
 			}
-			<path d="M474.002 534.5H404.002C398.755 534.5 394.502 538.753 394.502 544V614C394.502 619.247 398.755 623.5 404.002 623.5H474.002C479.249 623.5 483.502 619.247 483.502 614V544C483.502 538.753 479.249 534.5 474.002 534.5Z" stroke="white" /> { /* FINAL 1*/ }
+			<path d="M474.002 534.5H404.002C398.755 534.5 394.502 538.753 394.502 544V614C394.502 619.247 398.755 623.5 404.002 623.5H474.002C479.249 623.5 483.502 619.247 483.502 614V544C483.502 538.753 479.249 534.5 474.002 534.5Z" stroke="white" /> { /* FINAL 1*/}
 			{
 				findMemberByPosition(roundfinalmembers, 1) && (
 					<foreignObject x="395" y="535" width="88" height="88">
@@ -152,7 +161,7 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 					</foreignObject>
 				)
 			}
-			<path d="M601.002 852.5H531.002C525.755 852.5 521.502 856.753 521.502 862V932C521.502 937.247 525.755 941.5 531.002 941.5H601.002C606.249 941.5 610.502 937.247 610.502 932V862C610.502 856.753 606.249 852.5 601.002 852.5Z" stroke="white" /> { /* SEMIFINAL 4*/ }
+			<path d="M601.002 852.5H531.002C525.755 852.5 521.502 856.753 521.502 862V932C521.502 937.247 525.755 941.5 531.002 941.5H601.002C606.249 941.5 610.502 937.247 610.502 932V862C610.502 856.753 606.249 852.5 601.002 852.5Z" stroke="white" /> { /* SEMIFINAL 4*/}
 			{
 				findMemberByPosition(roundsemifinalmembers, 4) && (
 					<foreignObject x="522" y="853" width="88" height="88">
@@ -163,7 +172,7 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 					</foreignObject>
 				)
 			}
-			<path d="M601.002 357.5H531.002C525.755 357.5 521.502 361.753 521.502 367V437C521.502 442.247 525.755 446.5 531.002 446.5H601.002C606.249 446.5 610.502 442.247 610.502 437V367C610.502 361.753 606.249 357.5 601.002 357.5Z" stroke="white" /> { /* SEMIFINAL 2*/ }
+			<path d="M601.002 357.5H531.002C525.755 357.5 521.502 361.753 521.502 367V437C521.502 442.247 525.755 446.5 531.002 446.5H601.002C606.249 446.5 610.502 442.247 610.502 437V367C610.502 361.753 606.249 357.5 601.002 357.5Z" stroke="white" /> { /* SEMIFINAL 2*/}
 			{
 				findMemberByPosition(roundsemifinalmembers, 2) && (
 					<foreignObject x="522" y="358" width="88" height="88">
@@ -206,7 +215,7 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 			<path d="M439.502 471.996L439.828 534.524" stroke="white" />
 			<path d="M318.707 826.445L318.707 852.419" stroke="white" />
 			<path d="M566.445 827.027L318.039 827.027" stroke="white" />
-			<path d="M707.716 694H788.288C790.892 694 793.002 698.52 793.002 704.1V722.927V752.775V773.898C793.002 779.478 790.892 784 788.288 784H707.716C705.112 784 703.002 779.478 703.002 773.898V752.775V722.927V704.1C703.002 698.52 705.112 694 707.716 694Z" stroke="#FFD700" strokeWidth="2" /> { /* WINNER 1*/ }
+			<path d="M707.716 694H788.288C790.892 694 793.002 698.52 793.002 704.1V722.927V752.775V773.898C793.002 779.478 790.892 784 788.288 784H707.716C705.112 784 703.002 779.478 703.002 773.898V752.775V722.927V704.1C703.002 698.52 705.112 694 707.716 694Z" stroke="#FFD700" strokeWidth="2" /> { /* WINNER 1*/}
 			{
 				roundwinner.name && (
 					<foreignObject x="704" y="695" width="88" height="88">
