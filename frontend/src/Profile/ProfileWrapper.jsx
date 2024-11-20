@@ -92,10 +92,11 @@ export const ProfileWrapper = ({ child }) => {
         // }
         // topFunction();
         // const element = document.getElementById("scrollTop");
-        // if (element){
-        //     console.log("Scroll Effect Here");
-        //     element.scrollIntoView({ behavior: 'smooth' });
-        // }
+        if (document.querySelector(".profile-page")){
+            console.log("Scroll Effect Here");
+            document.querySelector(".profile-page").scrollTop = 0;
+            // document.querySelector(".profile-page").scrollIntoView({ behavior: 'smooth' });
+        }
       }, [userId]);
 
     let userInfoData = {

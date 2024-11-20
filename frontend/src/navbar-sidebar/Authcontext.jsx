@@ -63,6 +63,21 @@ export const AuthProvider = ({ children }) => {
 	const RoomsInvitationRef = useRef(null);
 	const chatNotificationRef = useRef(null);
 
+	// useEffect(()=>{
+    //     const url = window.location.href;
+	// 	const element = document.getElementById("scrollTop");
+	// 	// 	console.log("Scroll Effect Here");
+	// 	// }
+    //     const checkUrlEnd = () => {
+	// 		if (url.endsWith('/profile/IMAD') && (element)){
+	// 			element.scrollIntoView({ behavior: 'smooth' });
+	// 			console.log("RAGRAGUIII")
+	// 		}
+	// 	};
+	// 	if (url)
+	// 		checkUrlEnd();
+    // },[window.location.href])
+
 	useEffect(() => {
 		RoomsInvitationRef.current = chatRoomInvitationsCounter;
 	}, [chatRoomInvitationsCounter]);
@@ -531,6 +546,7 @@ export const AuthProvider = ({ children }) => {
 					}),
 				}
 			);
+			console.log("DATA: ", response);
 			response = await response.json();
 			if (response.Case !== "Invalid token") {
 				setUser(response.data.username);
@@ -540,7 +556,7 @@ export const AuthProvider = ({ children }) => {
 				navigate("/signin");
 			}
 		} catch (e) {
-			console.log("something wrong with fetch");
+			console.log("something wrong with fetch :", e);
 		}
 	}
 
