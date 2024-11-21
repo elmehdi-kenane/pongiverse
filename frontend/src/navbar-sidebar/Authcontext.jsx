@@ -85,8 +85,8 @@ export const AuthProvider = ({ children }) => {
 		socketRef.current = socket
 	}, [socket])
 
-	useEffect(() =>{
-	},[allGameNotifs])
+	useEffect(() => {
+	}, [allGameNotifs])
 
 	// useEffect(() => {
 	// 	const fetchImages = async () => {
@@ -261,7 +261,7 @@ export const AuthProvider = ({ children }) => {
 		else setHideNavSideBar(false);
 	}, [location.pathname, user]);
 
-	useEffect(() =>{
+	useEffect(() => {
 		const check_is_in_game = async () => {
 			try {
 				let response = await fetch(
@@ -280,7 +280,7 @@ export const AuthProvider = ({ children }) => {
 				if (!data.error) {
 					(data.mode === 'tournament') ? navigate('mainpage/game/createtournament') : (data.mode === '1vs1') ? navigate('/mainpage/game/solo/1vs1/random') : navigate('/mainpage/game/solo/2vs2/random')
 				}
-				
+
 			} catch (error) {
 				console.error(
 					"There has been a problem with your fetch operation:",
@@ -290,7 +290,7 @@ export const AuthProvider = ({ children }) => {
 		}
 		if (user && (location.pathname === '/mainpage/game/solo' || location.pathname === '/mainpage/game/solo/1vs1' || location.pathname === '/mainpage/game/solo/2vs2' || location.pathname === '/mainpage/game/jointournament' || location.pathname === '/mainpage/game'))
 			check_is_in_game()
-	},[location.pathname, user])
+	}, [location.pathname, user])
 
 	useEffect(() => {
 		const addUser = (newUser, currentAllGameFriends) => {
@@ -413,6 +413,29 @@ export const AuthProvider = ({ children }) => {
 			}
 		}
 	}, [location.pathname, user]);
+
+
+	useEffect(() => {
+		const set_is_inside = async (flag) => {
+			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/set-is-inside`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					user: user,
+					is_inside: flag
+				})
+			})
+		}
+		if (user) {
+			if (location.pathname !== "/mainpage/game/createtournament" && location.pathname !== "/mainpage/game/tournamentbracket")
+				set_is_inside(false)
+			else
+				set_is_inside(true)
+		}
+	}, [user, location.pathname])
+
 
 	useEffect(() => {
 		const getUnrecievedRoomInvitee = async () => {

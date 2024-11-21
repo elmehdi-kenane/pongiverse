@@ -161,6 +161,9 @@ function TournamentBracket() {
 						setroundSemiFinalMembers((prevRoundSemiFinalMembers) => [...prevRoundSemiFinalMembers, newMember])
 					if (message.round_reached === 'FINAL')
 						setFinalMembers((prevFinalMembers) => [...prevFinalMembers, newMember])
+					if (message.round_reached === 'WINNER')
+						navigate("../game/tournamentcel", { state: { tournament_id: message.tournament_id } });
+
 				}
 			}
 		}

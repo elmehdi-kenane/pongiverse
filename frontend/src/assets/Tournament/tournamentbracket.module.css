@@ -16,6 +16,7 @@
 }
 
 .normalSvg {
+	position: relative;
 	width: 100%;
 	height: 1200px;
 	display: flex;
@@ -33,7 +34,9 @@
 	justify-content: center;
 	align-items: center;
 	position: absolute;
-	top: 400px;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	top: 50%;
 	border-radius: 8px;
 	background-color: #1b062a;
 	width: 500px;
@@ -64,8 +67,8 @@
 .winner-message:after {
 	content: '';
 	position: absolute;
-	width: 80px;
-	height: 80px;
+	width: 50px;
+	height: 50px;
 	background: rgba(255, 255, 255, 0.4);
 	border-radius: 50%;
 	animation: sparkle 2s infinite;
@@ -110,15 +113,12 @@
 .display-components-div-winner {
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
-	align-items: center;
 	position: absolute;
 	top: 80px;
 	border-radius: 8px;
-	width: 100%;
-	height: 100px;
+	left: 50%;
+	transform: translate(-50%, 0);
 	gap: 5px;
-	position: relative;
 }
 
 .display-components-div-text {
@@ -287,10 +287,10 @@
 @media (max-width: 300px) {
 
 	.display-components-div {
-		top: 100px;
+		top: 150px;
 		border-radius: 8px;
 		width: 90%;
-		height: 180px;
+		height: 150px;
 	}
 
 	.display-components-div-winner {
@@ -328,8 +328,21 @@
 
 	.winner-message:before,
 	.winner-message:after {
-		width: 60px;
-		height: 60px;
+		width: 50px;
+		height: 50px;
+	}
+
+	.display-components-div-winner {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		position: absolute;
+		top: unset;
+		border-radius: 8px;
+		width: 100%;
+		height: 100px;
+		gap: 5px;
 	}
 }
 

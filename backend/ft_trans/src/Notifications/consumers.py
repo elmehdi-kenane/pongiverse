@@ -18,6 +18,7 @@ def is_user_joining_tournament(username):
 				return tournament_id
 	return 0
 
+
 class NotificationsConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
 		cookiess = self.scope.get('cookies', {})

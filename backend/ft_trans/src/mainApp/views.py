@@ -401,6 +401,7 @@ def set_is_inside(request):
 			if member['username'] == username:
 				if not tournament_data['is_started'] or (tournament_data['is_started'] and not tournament_data['is_finished'] and not member['is_eliminated']):
 					member['is_inside'] = is_inside
+					print(f"\n\nMember is Inside: {member['is_inside']}\n\n")
 					response.data = {'Case': 'yes'}
 					return response
 

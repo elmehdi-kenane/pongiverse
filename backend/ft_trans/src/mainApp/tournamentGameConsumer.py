@@ -204,7 +204,8 @@ async def send_winner_data(self, user, round_reached, tournament_id):
 			"level" : match_statistics.level,
 			"image" : f"http://{ip_address}:8000/auth{user.avatar.url}",
 			"round_reached": round_reached['round_reached'],
-			"position": round_reached['position']
+			"position": round_reached['position'],
+			"tournament_id": tournament_id
 		}
 	})
 

@@ -426,7 +426,7 @@ function CreateTournament() {
 							<div className={styles["up-buttons"]}>
 								<button className={styles["up-button"]} onClick={isOpen} ref={inviteRef2}>Invite Friend</button>
 								{
-									tournamentMembers.length === 8 ? <button className={styles["up-button"]} onClick={handleStart}>Start</button> : <button className={styles["up-button-disabled"]} disabled>Start</button>
+									tournamentMembers.length === 8 && isAnyUserOffline === false ? <button className={styles["up-button"]} onClick={handleStart}>Start</button> : <button className={styles["up-button-disabled"]} disabled>Start</button>
 								}
 							</div>
 							: <div className={styles["up-buttons"]}>

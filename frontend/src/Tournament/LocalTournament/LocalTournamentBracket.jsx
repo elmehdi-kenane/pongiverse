@@ -875,70 +875,82 @@ function LocalTournamentBracket() {
 
 	//End Game Functions
 	return (
-		<div className={styles['tournamentbracketpage']}>
-			{(alreadyStarted && !gameFinished) ? (
-				<div className='onevsone-pm' ref={wrapperRef} >
-					<div ref={resultRef} className='onevsone-pm-infos' >
-						<div>
-							{PlayerOne && (<PlayerOne style={{ height: '100%' }} color='white' />)}
-							{playerOneName && <div style={{ textAlign: "center" }} ><p>{playerOneName}</p></div>}
+		<>
+			{
+				!players.Winner && (
+
+					<div className={styles['display-components-div']}>
+						<div className={styles['display-components-div-players-data']}>
+							{
+								PlayerOne && PlayerTwo &&
+								<>
+									<PlayerOne className={styles['display-components-div-players-data-image']} color='white' />
+									<img src={versus} alt="" className={styles['display-components-div-players-data-image']} />
+									<PlayerTwo className={styles['display-components-div-players-data-image']} color='white' />
+								</>
+							}
 						</div>
-						<div>
-							<p>{playersInfos[0].totalScore}</p>
-							<div className='onevsone-pm-infos-stats' >
-								<div>
-									<p>Goal: 5</p>
-									{/* <div onClick={(!gameFinished && !gameAborted) ? exitTheGame : undefined} >
+						<p className={styles['display-components-div-text']} onClick={restartGame}>Start Game</p>
+					</div>
+				)
+			}
+			<div className={styles['tournamentbracketpage']}>
+				{(alreadyStarted && !gameFinished) ? (
+					<div className='onevsone-pm' ref={wrapperRef} >
+						<div ref={resultRef} className='onevsone-pm-infos' >
+							<div>
+								{PlayerOne && (<PlayerOne style={{ height: '100%' }} color='white' />)}
+								{playerOneName && <div style={{ textAlign: "center" }} ><p>{playerOneName}</p></div>}
+							</div>
+							<div>
+								<p>{playersInfos[0].totalScore}</p>
+								<div className='onevsone-pm-infos-stats' >
+									<div>
+										<p>Goal: 5</p>
+										{/* <div onClick={(!gameFinished && !gameAborted) ? exitTheGame : undefined} >
 										<img src={Icons.logout} alt="" />
 										<p>Exit</p>
 									</div> */}
-								</div>
-								<div>{formatTime(time)}</div>
-							</div>
-							<p>{playersInfos[1].totalScore}</p>
-						</div>
-						<div>
-							{playerTwoName && <div style={{ textAlign: "center" }} ><p>{playerTwoName}</p></div>}
-							{PlayerTwo && (<PlayerTwo style={{ height: '100%' }} color='white' />)}
-							{/* <img src={versus} alt="" style={{ height: '100%' }} /> */}
-						</div>
-					</div>
-					<canvas ref={canvasRef} ></canvas>
-				</div>
-			) :
-				(
-					<>
-						{
-							!players.Winner ? (
-
-								<div className={styles['display-components-div']}>
-									<div className={styles['display-components-div-players-data']}>
-										{
-											PlayerOne && PlayerTwo &&
-											<>
-												<PlayerOne className={styles['display-components-div-players-data-image']} color='white' />
-												<img src={versus} alt="" className={styles['display-components-div-players-data-image']} />
-												<PlayerTwo className={styles['display-components-div-players-data-image']} color='white' />
-											</>
-										}
 									</div>
-									<p className={styles['display-components-div-text']} onClick={restartGame}>Start Game</p>
+									<div>{formatTime(time)}</div>
 								</div>
-							) : (
-								<div className={styles['display-components-div-winner']}>
-									<div className={styles['winner-message']}>🎉 Congratulations! {players.Winner}!!! 🎉</div>
-								</div>
-							)
-						}
-						<div className={styles['normalSvg']}>
-							<LocalSvgComponent players={players} />
+								<p>{playersInfos[1].totalScore}</p>
+							</div>
+							<div>
+								{playerTwoName && <div style={{ textAlign: "center" }} ><p>{playerTwoName}</p></div>}
+								{PlayerTwo && (<PlayerTwo style={{ height: '100%' }} color='white' />)}
+								{/* <img src={versus} alt="" style={{ height: '100%' }} /> */}
+							</div>
 						</div>
-						<div className={styles['verticalSvg']}>
-							<LocalSvgVerticalComponent players={players} />
-						</div>
-					</>
-				)}
-		</div>
+						<canvas ref={canvasRef} ></canvas>
+					</div>
+				) :
+					(
+						<>
+							<div className={styles['normalSvg']}>
+								{
+									players.Winner && (
+										<div className={styles['display-components-div-winner']}>
+											<div className={styles['winner-message']}>🎉 Congratulations! {players.Winner}!!! 🎉</div>
+										</div>
+									)
+								}
+								<LocalSvgComponent players={players} />
+							</div>
+							<div className={styles['verticalSvg']}>
+								{
+									players.Winner && (
+										<div className={styles['display-components-div-winner']}>
+											<div className={styles['winner-message']}>🎉 Congratulations! {players.Winner}!!! 🎉</div>
+										</div>
+									)
+								}
+								<LocalSvgVerticalComponent players={players} />
+							</div>
+						</>
+					)}
+			</div>
+		</>
 	);
 }
 

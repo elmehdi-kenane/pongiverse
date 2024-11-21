@@ -89,13 +89,16 @@ function TournamentCelebration() {
 					wind={0.1}
 				/>
 			</div> */}
+			<div className={styles['normalSvg']}>
 			<div className={styles['display-components-div-winner']}>
 				<div className={styles['winner-message']}>🎉 Congratulations!!!! {winnerMember.name}🎉</div>
 			</div>
-			<div className={styles['normalSvg']}>
 				<SvgComponent roundquartermembers={roundQuarterFinalMembers} roundsemifinalmembers={roundSemiFinalMembers} roundfinalMembers={finalMembers} roundwinner={winnerMember} />
 			</div>
 			<div className={styles['verticalSvg']}>
+			<div className={styles['display-components-div-winner']}>
+				<div className={styles['winner-message']}>🎉 Congratulations!!!! {winnerMember.name}🎉</div>
+			</div>
 				<SvgVerticalComponent roundquartermembers={roundQuarterFinalMembers} roundsemifinalmembers={roundSemiFinalMembers} roundfinalmembers={finalMembers} roundwinner={winnerMember} />
 			</div>
 		</div>
