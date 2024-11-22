@@ -15,6 +15,11 @@ const GameNotifications = () => {
     const gamePlayRegex = /^\/mainpage\/(game|play)(\/[\w\d-]*)*$/;
     const navigate = useNavigate()
     const location = useLocation()
+    const [createdAt, setCreatedAt] = useState(null)
+    const [timeDiff, setTimeDiff] = useState(null);
+
+
+
     const refuseInvitation = (creator) => {
         let notifSelected = allGameNotifs.filter(
             (user) => user.user === creator.user
@@ -48,6 +53,44 @@ const GameNotifications = () => {
             }
         }
     };
+
+    useEffect(() => {
+        const getTournamentWarning = async () => {
+            const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-tournament-warning`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user: user
+                })
+            });
+            if (response.ok) {
+                const data = await response.json();
+                if (data.Case === 'yes')
+                    setCreatedAt(new Date(data.time))
+            }
+        }
+        if (user)
+            getTournamentWarning()
+    }, [user])
+
+
+    useEffect(() => {
+        if (createdAt) {
+            const interval = setInterval(() => {
+                const now = new Date();
+                const diffInSeconds = Math.floor((now - createdAt) / 1000);
+                if (diffInSeconds < 10) {
+                    setTimeDiff(10 - diffInSeconds);
+                } else {
+                    setTimeDiff(null);
+                }
+            }, 1000);
+            return () => clearInterval(interval);
+        }
+    }, [createdAt])
+
 
     const notifyError = (message) =>
         toast.error(message, {
@@ -188,7 +231,8 @@ const GameNotifications = () => {
                         navigate("/mainpage/game/createtournament");
                     }
                 } else if (type === "warn_members") {
-                    notifyError("your game In tournament will start in 15 seconds");
+                    setCreatedAt(new Date(message.time));
+                    // notifyError("your game In tournament will start in 15 seconds");
                 } else if (type === "invited_to_tournament") {
                     setAllGameNotifs((prevGameNotif) => {
                         const isDuplicate = prevGameNotif.some(
@@ -209,6 +253,13 @@ const GameNotifications = () => {
 
     return (
         <>
+            {
+                timeDiff && (
+                    <div className={styles['tournament_warnings']}>
+                        Your Game will start in {timeDiff}
+                    </div>
+                )
+            }
             <div className="cancel-game-invite-request">
                 {allGameNotifs.length ? (
                     <div className="game-invitations">

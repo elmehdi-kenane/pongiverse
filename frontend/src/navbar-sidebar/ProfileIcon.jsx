@@ -31,7 +31,7 @@ const ProfileIcon = ({ Icons, profileHandleDropDown, profileDropDownisOpen }) =>
     }
     return (
         <div id="profile-icon" onClick={profileHandleDropDown}>
-            <a href="#">
+            <a>
                 <img src={userImg ? userImg : AvatarSvg} alt="" />
             </a>
             {profileDropDownisOpen && (<div className='profile-dropdown'>

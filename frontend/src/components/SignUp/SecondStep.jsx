@@ -39,7 +39,7 @@ function SecondStep() {
 	const [image, setImage] = useState(null);
 	const [displayEditImage, setDisplayEditImage] = useState(false);
 	const [scale, setScale] = useState(1);
-	const [editorSize, setEditorSize] = useState({ width: 400, height: 400 });
+	const [editorSize, setEditorSize] = useState({ width: 300, height: 300 });
 	const editorRef = useRef(null);
 	const containerRef = useRef(null);
 	const [imagePreview, setImagePreview] = useState(null);
@@ -222,8 +222,8 @@ function SecondStep() {
 								image={image}
 								width={editorSize.width}
 								height={editorSize.height}
-								border={10}
-								color={[255, 255, 255, 0.6]} // RGBA color for border
+								border={20}
+								color={[255, 255, 255, 0.2]} // RGBA color for border
 								scale={scale}
 								rotate={0}
 								onImageChange={image ? updateImagePreview : undefined}

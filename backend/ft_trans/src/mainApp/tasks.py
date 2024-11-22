@@ -9,7 +9,7 @@ import datetime
 from friends.models import Friendship
 from myapp.models import customuser
 from mainApp.common import user_channels
-from mainApp.models import Tournament, TournamentMembers, GameNotifications, TournamentWarnNotifications, DisplayOpponent, Round, TournamentUserInfo
+from mainApp.models import Tournament, TournamentMembers, GameNotifications, TournamentWarnNotifications, DisplayOpponent, Round, TournamentUserInfo, UserMatchStatics
 from asgiref.sync import sync_to_async
 from channels.layers import get_channel_layer
 from channels.generic.websocket import AsyncWebsocketConsumer
@@ -47,15 +47,17 @@ async def send_player_winner(self, tournament_id, username, next_round, position
 	groupe_name = f'tournament_{tournament_id}'
 	if username != 'anounymous':
 		user = await sync_to_async(customuser.objects.filter(username=username).first)()
+		match_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=user).first)()
 		await self.channel_layer.group_send(groupe_name, {
 			'type': 'new_user_win',
 			'message': {
 				"id" : user.id,
 				"name": user.username,
-				"level" : user.level,
+				"level" : match_statistics.level,
 				"image" : f"http://{ip_address}:8000/auth{user.avatar.url}",
 				"round_reached": next_round,
-				"position": position // 2 if position % 2 == 0 else (position + 1) // 2 
+				"position": position // 2 if position % 2 == 0 else (position + 1) // 2,
+				"tournament_id": tournament_id
 			}
 		})
 	else:
@@ -142,7 +144,6 @@ async def send_user_eliminated_after_delay(self, tournament_id, actual_round):
 		round_index = rounds.index(actual_round)
 		next_round = rounds[round_index + 1]
 	await asyncio.sleep(10)
-	print(f"\nNEXT ROUND: {next_round}\n")
 	Tournamentwarnnotification = await sync_to_async(TournamentWarnNotifications.objects.filter(tournament_id=tournament_id).first)()
 	if Tournamentwarnnotification:
 		await sync_to_async(Tournamentwarnnotification.delete)()
@@ -212,8 +213,6 @@ async def send_user_eliminated_after_delay(self, tournament_id, actual_round):
 			# member2 = await sync_to_async(TournamentUserInfo.objects.filter(round=actual_round_obj, position=i + 2).first)()
 			player1 = get_player_by_position(tournament_id, actual_round, i + 1)
 			player2 = get_player_by_position(tournament_id, actual_round, i + 2)
-			print(f"\nPLAYER1: {player1}\n")
-			print(f"\nPLAYER2: {player2}\n")
 			# member_user1 = await sync_to_async(lambda: member1.user)()
 			# member_user2 = await sync_to_async(lambda: member2.user)()
 			member_user1 = player1['username']
@@ -381,7 +380,6 @@ async def manage_tournament(self, tournament_id):
 		finalcount = len(tournaments[tournament_id]['rounds']['FINAL'])
 		winnercount = len(tournaments[tournament_id]['rounds']['WINNER'])
 		print(f"\nQUARTERFINAL COUNT: {quarterfinalcount}, SEMIFINAL COUNT: {semifinalcount}, FINAL COUNT: {finalcount}, WINNER COUNT: {winnercount}\n")
-		print(f"\n *************tournament members: {tournaments[tournament_id]['members']}\n")
 		if quarterfinalcount == 8 and semifinalcount == 0 and counter == 0:
 			counter += 1
 			# number_of_null_players = await sync_to_async(TournamentUserInfo.objects.filter(round=roundquarterfinal, user=None).count)()

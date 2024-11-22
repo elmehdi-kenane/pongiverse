@@ -546,7 +546,6 @@ def get_number_of_members_in_a_round(request):
 def get_tournament_warning(request):
 	username = request.data.get('user')
 	response = Response()
-	user = customuser.objects.filter(username=username).first()
 	tournament_id = get_tournament_id(username)
 	if tournament_id != 0:
 		warning = TournamentWarnNotifications.objects.filter(tournament_id=tournament_id).first()

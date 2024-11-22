@@ -3,13 +3,11 @@ import avatar from '../avatar.jpeg'
 import nullplayer from './nullplayer.png'
 import { useNavigate } from "react-router-dom";
 const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roundfinalmembers, roundwinner }) => {
+	console.log("roundquartermembers", roundquartermembers)
+	console.log("roundsemifinalmembers", roundsemifinalmembers)
+	console.log("roundfinalmembers", roundfinalmembers)
+	console.log("roundwinner", roundwinner)
 	const navigate = useNavigate()
-
-	console.log("quarter : ", roundquartermembers)
-	console.log("semi : ", roundsemifinalmembers)
-	console.log("final : ", roundfinalmembers)
-	console.log("winner : ", roundwinner)
-
 	const findMemberByPosition = (roundmembers, position) => {
 		const member = roundmembers.find(member => member.position === position);
 		if (member)
@@ -17,6 +15,12 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 		else
 			return null
 	};
+
+	const navigate_to_profile = (username) => {
+		if (username !== 'anounymous') {
+			navigate(`../mainpage/profile/${username}`)
+		}
+	}
 
 	useEffect(() => {
 		if (!roundquartermembers) {
@@ -32,7 +36,7 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 			<path d="M815.002 184.5H745.002C739.755 184.5 735.502 188.753 735.502 194V264C735.502 269.247 739.755 273.5 745.002 273.5H815.002C820.249 273.5 824.502 269.247 824.502 264V194C824.502 188.753 820.249 184.5 815.002 184.5Z" stroke="white" /> { /* QUARTERFINAL 4*/}
 			{
 				findMemberByPosition(roundquartermembers, 4) && (
-					<foreignObject x="736.002" y="185" width="88" height="88">
+					<foreignObject x="736.002" y="185" width="88" height="88" onClick={() => navigate_to_profile(findMemberByPosition(roundquartermembers, 4).name)}>
 						<picture>
 							<source srcSet={findMemberByPosition(roundquartermembers, 4).image} />
 							<img src={findMemberByPosition(roundquartermembers, 4).image} alt="Description of the image" width="88" height="88" style={{ borderRadius: '10px' }} />
@@ -144,8 +148,8 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 				findMemberByPosition(roundfinalmembers, 2) && (
 					<foreignObject x="395" y="676" width="88" height="88">
 						<picture>
-							<source srcSet={findMemberByPosition(roundfinalmembers, 2).image} />
-							<img src={findMemberByPosition(roundfinalmembers, 2).image} alt="Description of the image" width="88" height="88" style={{ borderRadius: '10px' }} />
+							<source srcSet={findMemberByPosition(roundfinalmembers, 2).id === -1 ? nullplayer : findMemberByPosition(roundfinalmembers, 2).image} />
+							<img src={findMemberByPosition(roundfinalmembers, 2).id === -1 ? nullplayer : findMemberByPosition(roundfinalmembers, 2).image} alt="Description of the image" width="88" height="88" style={{ borderRadius: '10px' }} />
 						</picture>
 					</foreignObject>
 				)

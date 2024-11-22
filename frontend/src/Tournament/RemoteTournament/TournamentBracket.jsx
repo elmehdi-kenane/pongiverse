@@ -29,18 +29,6 @@ function TournamentBracket() {
 	};
 
 	useEffect(() => {
-		const set_is_inside = async () => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/set-is-inside`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-					user: user,
-					is_inside: true
-				})
-			})
-		}
 		const check_is_join = async () => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/is-started-and-not-finshed`, {
 				method: "POST",
@@ -61,24 +49,6 @@ function TournamentBracket() {
 				console.error('Failed to fetch data');
 			}
 		}
-		// const fetchImages = async (members, setElements) => {
-		// 	const promises = members.map(async (user) => {
-		// 		const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`, {
-		// 			method: "POST",
-		// 			headers: {
-		// 				'Content-Type': 'application/json',
-		// 			},
-		// 			body: JSON.stringify({
-		// 				image: user.image
-		// 			})
-		// 		});
-		// 		const blob = await response.blob();
-		// 		return URL.createObjectURL(blob);
-		// 	});
-		// 	const images = await Promise.all(promises);
-		// 	console.log("imageeeesssss", images)
-		// 	setElements(images)
-		// }
 		const gameMembersRounds = async () => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-game-members-round`, {
 				method: 'POST',
@@ -126,7 +96,6 @@ function TournamentBracket() {
 
 		if (user) {
 			check_is_join()
-			set_is_inside()
 			get_oponent()
 		}
 	}, [user])
@@ -140,9 +109,12 @@ function TournamentBracket() {
 				console.log("DATA RECEIVED:", data)
 				if (type == 'you_and_your_user') {
 					console.log("YOU data : ", data)
-						setUserOneToDisplay(message.user1)
-						setUserTwoToDisplay(message.user2)
-						setCreatedAt(new Date(message.time))
+					setUserOneToDisplay(message.user1)
+					setUserTwoToDisplay(message.user2)
+					setCreatedAt(new Date(message.time))
+				} else if (type === 'youWinTheGame') {
+					if (message.round_reached === 'WINNER')
+						navigate("../game/tournamentcel", { state: { tournament_id: message.tournament_id } });
 				}
 			}
 		}
@@ -156,14 +128,11 @@ function TournamentBracket() {
 				let type = data.type
 				let message = data.message
 				if (type == 'new_user_win') {
-					const newMember = {'id': message.id, 'name': message.name, 'level': message.level, 'image': message.image, 'position': message.position}
+					const newMember = { 'id': message.id, 'name': message.name, 'level': message.level, 'image': message.image, 'position': message.position }
 					if (message.round_reached === 'SEMIFINAL')
 						setroundSemiFinalMembers((prevRoundSemiFinalMembers) => [...prevRoundSemiFinalMembers, newMember])
 					if (message.round_reached === 'FINAL')
 						setFinalMembers((prevFinalMembers) => [...prevFinalMembers, newMember])
-					if (message.round_reached === 'WINNER')
-						navigate("../game/tournamentcel", { state: { tournament_id: message.tournament_id } });
-
 				}
 			}
 		}
@@ -180,7 +149,7 @@ function TournamentBracket() {
 					if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
 						notifSocket.send(JSON.stringify({
 							type: 'Delete-display-oponent',
-							message : {
+							message: {
 								user1: userOneToDisplay,
 								user2: userTwoToDisplay
 							}
@@ -211,7 +180,7 @@ function TournamentBracket() {
 
 			</div> */}
 			<div className={styles['verticalSvg']}>
-				<SvgVerticalComponent roundquartermembers={roundQuarterFinalMembers} roundsemifinalmembers={roundSemiFinalMembers} roundfinalmembers={finalMembers} roundwinner={winnerMember}/>
+				<SvgVerticalComponent roundquartermembers={roundQuarterFinalMembers} roundsemifinalmembers={roundSemiFinalMembers} roundfinalmembers={finalMembers} roundwinner={winnerMember} />
 			</div>
 		</div>
 	);

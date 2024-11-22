@@ -31,18 +31,6 @@ function TournamentCelebration() {
 	};
 
 	useEffect(() => {
-		const set_is_inside = async () => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/set-is-inside`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-					user: user,
-					is_inside: false
-				})
-			})
-		}
 		const gameMembersRounds = async () => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-tournament-members-rounds`, {
 				method: 'POST',
@@ -67,7 +55,6 @@ function TournamentCelebration() {
 
 		const fetchData = async () => {
 			if (user) {
-				await set_is_inside();
 				await gameMembersRounds();
 			}
 		};
@@ -93,7 +80,7 @@ function TournamentCelebration() {
 			<div className={styles['display-components-div-winner']}>
 				<div className={styles['winner-message']}>🎉 Congratulations!!!! {winnerMember.name}🎉</div>
 			</div>
-				<SvgComponent roundquartermembers={roundQuarterFinalMembers} roundsemifinalmembers={roundSemiFinalMembers} roundfinalMembers={finalMembers} roundwinner={winnerMember} />
+				<SvgComponent roundquartermembers={roundQuarterFinalMembers} roundsemifinalmembers={roundSemiFinalMembers} roundfinalmembers={finalMembers} roundwinner={winnerMember} />
 			</div>
 			<div className={styles['verticalSvg']}>
 			<div className={styles['display-components-div-winner']}>

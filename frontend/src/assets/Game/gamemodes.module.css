@@ -130,6 +130,19 @@
 	cursor: not-allowed;
 }
 
+.tournament_warnings {
+	position: absolute;
+	display: flex;
+	width: 200px;
+	height: 50px;
+	background-color: white;
+	justify-content: center;
+	align-items: center;
+	border-radius: 10px;
+	z-index: 100;
+	color: black;
+}
+
 .game-modes-page-button button:active {
 	background-color: black;
 }

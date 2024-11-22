@@ -20,7 +20,7 @@ function CreateTournament() {
 	const [tournamentMembers, setTournamentMembers] = useState([])
 	const navigate = useNavigate()
 	const location = useLocation()
-	const [isAnyUserOffline, setIsAnyUserOffline] = useState(false)	
+	const [isAnyUserOffline, setIsAnyUserOffline] = useState(false)
 	const { user, userImages, allGameFriends, socket, notifSocket, setAllGameFriends } = useContext(AuthContext)
 	const allGameFriendsRef = useRef(allGameFriends);
 	const divRef = useRef(null);
@@ -31,9 +31,13 @@ function CreateTournament() {
 		setOpen(!open);
 	}
 
-	useEffect(() =>{
-		setIsAnyUserOffline(tournamentMembers.some(user => !user.is_online));
-	},[tournamentMembers])
+	useEffect(() => {
+		if (tournamentMembers.some(user => !user.is_online) === true)
+			setIsAnyUserOffline(true)
+		else
+			setIsAnyUserOffline(false)
+	}, [tournamentMembers])
+
 
 	const handleInviteClick = (name) => {
 		if (socket && socket.readyState === WebSocket.OPEN) {
@@ -190,7 +194,7 @@ function CreateTournament() {
 			});
 			if (response.ok) {
 				const data = await response.json();
-				const newUser = { 'id': data.id, 'name': data.name, 'level': data.level, 'image': data.image, 'background_image': data.background_image }
+				const newUser = { 'id': data.id, 'name': data.name, 'level': data.level, 'image': data.image, 'background_image': data.background_image, 'is_online': data.is_online }
 				console.log("NEW USERRR:", newUser)
 				setTournamentMembers((prevTournamentMembers) => [...prevTournamentMembers, newUser]);
 				setTournamentMembers((prevTournamentMembers) => {
@@ -266,7 +270,7 @@ function CreateTournament() {
 				} else if (type === 'hmed') {
 					console.log("WWWWWWWWWAAAAA HMEEEEEEEED")
 					socket.close()
-				} 
+				}
 			}
 		}
 
@@ -336,14 +340,21 @@ function CreateTournament() {
 	}
 
 	const handleStart = () => {
-		if (socket && socket.readyState === WebSocket.OPEN) {
-			socket.send(JSON.stringify({
-				type: 'start-tournament',
-				message: {
-					user: user,
-					tournament_id: tournamentId
-				}
-			}))
+		if (tournamentMembers.some(user => !user.is_online) === true) {
+			toast.error('there is an unready player', {
+				position: 'top-center',
+				duration: 2000,
+			});
+		} else {
+			if (socket && socket.readyState === WebSocket.OPEN) {
+				socket.send(JSON.stringify({
+					type: 'start-tournament',
+					message: {
+						user: user,
+						tournament_id: tournamentId
+					}
+				}))
+			}
 		}
 	}
 

@@ -66,7 +66,7 @@ function TournamentWarning() {
             {timeDiff &&
                 <div className={styles['tournament-warning-div']}>
                     <div className={styles['tournament-warning-text']}>
-                        Tournament will start in 14
+                        Game will start in 14
                     </div>
                     <div className={styles['tournament-warning-button']} onClick={hideButton}>
                         <img src={cross} alt="" />
