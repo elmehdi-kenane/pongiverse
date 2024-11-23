@@ -62,12 +62,12 @@ function SignInForm() {
       <div className={styles["otp-input-div"]}>
         <input
           type="text"
-          className="tfq__input"
+          className={styles["tfq-input"]}
           placeholder="Authentication Code (6 digits)"
           maxLength={6}
           ref={inputRef}
         />
-        <button onClick={ValidateTFQ}>enter</button>
+        <button onClick={ValidateTFQ} className={styles["tfq-button"]}>enter</button>
       </div>
     );
   };
