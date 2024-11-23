@@ -20,11 +20,9 @@ export const SearchBar = () => {
 
   const termNotFoundText = `Result with '${inputValue}' Not Found`;
 
-  //   console.log("username from context outside:", user);
   //   useEffect(() => {
   const getSearchResult = async (searchTerm, username) => {
     if (searchTerm !== "") {
-      // console.log("username from context inside:", user);
       console.log("fetch search result with term:", searchTerm);
 
       const response = await fetch(
@@ -36,7 +34,7 @@ export const SearchBar = () => {
       const res = await response.json();
       if (res) {
         setSearchResult(res);
-        // setAddFriendBtn("Add friend");
+        console.log("setSearchResult(res)");
         setSearchUsersResult(
           res.filter((resultItem) => resultItem.result_type === "user")
         );
@@ -49,12 +47,12 @@ export const SearchBar = () => {
   };
   //   });
 
-  const debouncedSearch = useCallback(debounce(getSearchResult, 300), []);
-
+  const delay = 300;
+  const debouncedSearch = useCallback(debounce(getSearchResult, delay), []);
   const handleInputChange = (event) => {
     // Debounced Function Instantiation: The debouncedSearch function is being re-created every time handleInputChange is called. This means the debounce effect might not work as expected because a new debounced function is created on every keystroke. Solution: Move the instantiation of debouncedSearch outside of the handleInputChange function or use the useCallback hook to memoize it.
-    debouncedSearch(event.target.value, user);
     setSearchResult(null);
+    debouncedSearch(event.target.value, user);
     setInputValue(event.target.value);
   };
 
@@ -81,6 +79,7 @@ export const SearchBar = () => {
   };
 
   const navigateToProfile = () => {};
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleEscapeKey);
@@ -90,9 +89,6 @@ export const SearchBar = () => {
     };
   }, []);
 
-  const openSearchBar = () => {
-    setIsSearchBarOpen(true);
-  };
   console.log("searchResult", searchResult);
   return (
     <div className="search-bar" ref={searchBarRef}>
@@ -101,7 +97,7 @@ export const SearchBar = () => {
         placeholder="Search for people or rooms..."
         value={inputValue}
         onChange={handleInputChange}
-        onClick={openSearchBar}
+        onClick={() => setIsSearchBarOpen(true)}
         ref={searchInputRef}
       />
       {isSearchBarOpen && (
@@ -135,6 +131,8 @@ export const SearchBar = () => {
                             result_type={item.result_type}
                             is_friend={item.is_friend}
                             is_joined={item.is_joined}
+                            searchResult={searchResult}
+                            setSearchResult={setSearchResult}
                           ></SearchResultCard>
                         );
                       })
@@ -152,6 +150,8 @@ export const SearchBar = () => {
                             result_type={item.result_type}
                             is_friend={item.is_friend}
                             is_joined={item.is_joined}
+                            searchResult={searchResult}
+                            setSearchResult={setSearchResult}
                           ></SearchResultCard>
                         );
                       })
@@ -169,6 +169,8 @@ export const SearchBar = () => {
                             result_type={item.result_type}
                             is_friend={item.is_friend}
                             is_joined={item.is_joined}
+                            searchResult={searchResult}
+                            setSearchResult={setSearchResult}
                           ></SearchResultCard>
                         );
                       })
