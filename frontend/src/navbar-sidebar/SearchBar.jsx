@@ -109,7 +109,7 @@ export const SearchBar = () => {
               <p>show history</p>
             )
           ) : (
-            <>
+            <div className="searchResultWrapperFilterBar">
               <SearchFilterBar
                 selectedBtn={searchFilter}
                 setSelectedBtn={setSearchFilter}
@@ -117,7 +117,7 @@ export const SearchBar = () => {
               {searchResult === null ? (
                 <p className="searchEmpty">Loading...</p>
               ) : (
-                <>
+                <div className="searchResultWrapperNoFilterBar">
                   {searchFilter === "all" &&
                     (searchResult.length === 0 ? (
                       <p className="searchEmpty">{termNotFoundText}</p>
@@ -175,9 +175,9 @@ export const SearchBar = () => {
                         );
                       })
                     ))}
-                </>
+                </div>
               )}
-            </>
+            </div>
           )}
         </div>
       )}
