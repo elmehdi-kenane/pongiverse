@@ -49,12 +49,17 @@
     flex-direction: column;
     width: 70%;
     top: 250px;
-    border: #826aed solid 2px; 
+    border: #826aed solid 2px;
     border-radius: 5px;
     background-color: #1b062a;
     color: white;
     position: relative;
     z-index: 4;
+}
+.match-result-ctr .tourn-result {
+    width: 90%;
+    top: 50px;
+    /* border: white solid 2px; */
 }
 .match-result h1{
     display: flex;
@@ -65,6 +70,22 @@
     width: 100%;
     border-bottom: 2px #826aed solid;
     height: 55px;
+}
+
+.match-result .match-result__close { 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    color: #826aed;
+    top: 10px;
+    right: 6px;
+    height: 32px;
+    width: 32px;
+    cursor: pointer;
+}
+.match-result .match-result__close:hover{
+    color: #9e88fd;
 }
 
 /* Single Fields */
@@ -174,26 +195,16 @@
     width: 100%;
 }
 
+/* Tournament Field */
 
-
-
-.match-result .match-result__close { 
+.tournament__svg {
+    height: 700px;
     display: flex;
-    justify-content: center;
     align-items: center;
-    position: absolute;
-    color: #826aed;
-    top: 10px;
-    right: 6px;
-    height: 32px;
-    width: 32px;
-    cursor: pointer;
-}
-.match-result .match-result__close:hover{
-    color: #9e88fd;
+    font-size: 35px;
 }
 
-/* -------HEAD------ */
+/* ---------------------HEAD-------------------- */
 
 .dashpage .dashpage__head {
     display: flex;

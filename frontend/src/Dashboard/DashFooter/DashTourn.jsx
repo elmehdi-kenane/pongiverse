@@ -83,7 +83,7 @@ function DashTourn() {
     const {setTournId} = useContext(DashboardContext);
     const showMatchResult = (matchId) => {
       setTournId(matchId);
-      // setIsGameStats(true);
+      setIsGameStats(true);
     }
 
     return (
@@ -91,10 +91,9 @@ function DashTourn() {
         {matches.slice((index - 1) * itemsPerPage, index * itemsPerPage)
           .map((match, key)=>{
             return (
-              <div className="tournament-match__result footer__result" key={key} onClick={()=>showMatchResult(match.tourId)}>
+              <div className="tournament-match__result footer__result" key={key} onClick={()=>showMatchResult(match.tourId)} id="match-click">
                 <img src={match.pic} alt="Player" />
                 <p> {match.type} </p>
-                {/* <p> 4th </p> */}
               </div>
             )
           })}

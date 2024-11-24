@@ -199,6 +199,7 @@ export const AuthProvider = ({ children }) => {
 						}),
 					}
 				);
+				// console.log("HEEEERE-----------------------");
 				let data = await response.json()
 				setUserImg(data.image);
 			} catch (e) {
