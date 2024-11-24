@@ -16,7 +16,11 @@ export const SearchBarMobile = ({ handleSearchBar }) => {
   const [searchRoomsResult, setSearchRoomsResult] = useState([]);
   const { user } = useContext(AuthContext);
 
-  const termNotFoundText = `Result with '${inputValue}' Not Found`;
+  let termNotFoundText;
+  if (searchFilter === "all")
+    termNotFoundText = `No results found for '${inputValue}'`;
+  else
+    termNotFoundText = `No results found for '${inputValue}' under ${searchFilter} filter`;
 
   //   useEffect(() => {
   const getSearchResult = async (searchTerm, username) => {
