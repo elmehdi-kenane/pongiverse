@@ -9,7 +9,7 @@ function DashboardFooter() {
     <div className="dashpage__footer dash--space">
       <DashSingle />
       <DashMulty />
-      <DashTourn />
+      <DashTourn items={3} class={"footer__tournament-match"}/>
     </div>
   );
 }

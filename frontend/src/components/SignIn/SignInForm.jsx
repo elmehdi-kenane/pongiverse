@@ -17,10 +17,17 @@ function SignInForm() {
   const [openTfq, setOpenTfq] = useState(false);
   const inputRef = useRef(null);
 
+  const notifyError = (message) =>
+    toast.error(message, {
+        position: "top-center",
+        duration: 3000,
+    });
+
+
   const checkOtp = (otpStr) => {
-    const regex = /^\d{6}$/; // Matches exactly 6 digits
+    const regex = /^\d{6}$/;
     if (regex.test(otpStr)) return true;
-    else notifyErr("Wrong One-Time-Password");
+    else notifyError("Wrong One-Time-Password");
   };
 
   const ValidateTFQ = async () => {
@@ -43,10 +50,9 @@ function SignInForm() {
             }
           );
           if (response.ok) {
-            navigate("/mainpage")
+            navigate("/mainpage/dashboard")
           } else {
-            console.log("Error : ", res.error);
-            alert("wrong one time password")
+            notifyError("Wrong One-Time-Password");
             setOpenTfq(false)
           }
         }

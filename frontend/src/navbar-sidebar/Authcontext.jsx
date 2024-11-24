@@ -63,6 +63,21 @@ export const AuthProvider = ({ children }) => {
 	const RoomsInvitationRef = useRef(null);
 	const chatNotificationRef = useRef(null);
 
+	// useEffect(()=>{
+    //     const url = window.location.href;
+	// 	const element = document.getElementById("scrollTop");
+	// 	// 	console.log("Scroll Effect Here");
+	// 	// }
+    //     const checkUrlEnd = () => {
+	// 		if (url.endsWith('/profile/IMAD') && (element)){
+	// 			element.scrollIntoView({ behavior: 'smooth' });
+	// 			console.log("RAGRAGUIII")
+	// 		}
+	// 	};
+	// 	if (url)
+	// 		checkUrlEnd();
+    // },[window.location.href])
+
 	useEffect(() => {
 		RoomsInvitationRef.current = chatRoomInvitationsCounter;
 	}, [chatRoomInvitationsCounter]);
@@ -184,6 +199,7 @@ export const AuthProvider = ({ children }) => {
 						}),
 					}
 				);
+				// console.log("HEEEERE-----------------------");
 				let data = await response.json()
 				setUserImg(data.image);
 			} catch (e) {
@@ -530,7 +546,7 @@ export const AuthProvider = ({ children }) => {
 			response = await response.json();
 			if (response.Case !== "Invalid token") {
 				setUser(response.data.username);
-				navigate("/mainpage");
+				navigate("/mainpage/dashboard");
 			} else {
 				setUser("");
 			}
@@ -554,6 +570,7 @@ export const AuthProvider = ({ children }) => {
 					}),
 				}
 			);
+			console.log("DATA: ", response);
 			response = await response.json();
 			console.log("RESPONSE: ", response);
 			if (response.Case !== "Invalid token") {

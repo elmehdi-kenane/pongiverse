@@ -1,8 +1,7 @@
 import { React } from 'react'
-
-import DashTournament from './DashBody/DashTournament';
 import DashRanking from './DashBody/DashRanking';
 import DashStatistics from './DashBody/DashStatistics';
+import DashTourn from './DashFooter/DashTourn';
 
 function DashboardBody() {
   return (
@@ -10,7 +9,7 @@ function DashboardBody() {
       <DashStatistics />
       <div className="rank-classment">
         <DashRanking />
-        <DashTournament />
+        <DashTourn items={6} class={"footer__tournament-match2"}/>
       </div>
     </div>
   )

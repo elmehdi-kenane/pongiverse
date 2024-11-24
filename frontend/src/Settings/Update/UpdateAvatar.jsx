@@ -9,10 +9,11 @@ function UpdateAvatar(props) {
   const { userPic, setUserPic, notifySuc, notifyErr } = useContext(SettingsContext);
 
   const [avatar, setAvatar] = useState(null);
-  const [widthTab, setWidthTab] = useState(false);
   const [isClicked, setIsClicked] = useState(false)
   const [scale, setScale] = useState(1.2); // Initial zoom level
   const editorRef = useRef(null);
+  const width = window.innerWidth <= 768 ? true : false;
+  const [widthTab, setWidthTab] = useState(width);
 
   const UpdatePic = async () => {
     const canvas = editorRef.current.getImage();

@@ -47,9 +47,9 @@ function DashSingle() {
           setMatches([...matches, ...res.userMatches]);
           !res.hasMoreMatches && setLimit(index);
         } else
-            console.log("Error : ", res.error);
+            console.error("Error : ", res.error);
       } catch (error) {
-        console.log("Error: ", error);
+        console.error("Error: ", error);
       }
       setLoading(false)
     };
@@ -78,8 +78,8 @@ function DashSingle() {
   const MatchesResults = () => {
     const { setSingleId } = useContext(DashboardContext);
     const showMatchResult = (matchId) => {
-      setIsGameStats(true);
       setSingleId(matchId)
+      setIsGameStats(true);
     }  
     return (
       <>

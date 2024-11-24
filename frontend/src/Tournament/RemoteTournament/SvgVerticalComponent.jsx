@@ -32,7 +32,7 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 	return (
 
 
-		<svg width="884" viewBox="0 0 884 1293" style={{ minHeight: 334 }} fill="none" xmlns="http://www.w3.org/2000/svg">
+		<svg width="100%" viewBox="0 0 884 1293" style={{ minHeight: 334 }} fill="none" xmlns="http://www.w3.org/2000/svg">
 			<path d="M815.002 184.5H745.002C739.755 184.5 735.502 188.753 735.502 194V264C735.502 269.247 739.755 273.5 745.002 273.5H815.002C820.249 273.5 824.502 269.247 824.502 264V194C824.502 188.753 820.249 184.5 815.002 184.5Z" stroke="white" /> { /* QUARTERFINAL 4*/}
 			{
 				findMemberByPosition(roundquartermembers, 4) && (

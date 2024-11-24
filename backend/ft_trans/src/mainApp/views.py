@@ -517,6 +517,7 @@ def get_game_members_round(request):
 	}
 	return response
 
+
 @api_view(['POST'])
 def get_opponent(request):
 	response = Response()

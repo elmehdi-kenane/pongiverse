@@ -43,7 +43,7 @@ function SignInWays() {
             }
           );
           if (response.ok) {
-            navigate("/mainpage");
+            navigate("/mainpage/dashboard");
           } else {
             alert("wrong one time password");
             setOpenTfq(false);

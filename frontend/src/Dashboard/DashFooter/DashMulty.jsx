@@ -47,9 +47,9 @@ function DashMulty() {
             setMatches([...matches, ...res.userMatches]);
             !res.hasMoreMatches && setLimit(index);
           } else 
-              console.log("Error : ", res.error);
+              console.error("Error : ", res.error);
         } catch (error) {
-          console.log("Error: ", error);
+          console.error("Error: ", error);
         }
         setLoading(false)
       };
@@ -78,8 +78,8 @@ function DashMulty() {
     const MatchesResults = () => {
       const { setMultyId } = useContext(DashboardContext);
       const showMatchResult = (matchId) => {
-        setIsGameStats(true);
         setMultyId(matchId)
+        setIsGameStats(true);
       }
       return (
         <>

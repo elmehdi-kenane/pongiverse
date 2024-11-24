@@ -24,7 +24,7 @@ const SvgComponent = ({ roundquartermembers, roundsemifinalmembers, roundfinalme
 	return (
 
 		<>
-			<svg width="1538" height="958" viewBox="0 0 1538 958" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<svg width="100%" height="958" viewBox="0 0 1538 958" fill="none" xmlns="http://www.w3.org/2000/svg">
 				<mask id="mask0_2828_1224" style={{ maskType: 'luminance' }} maskUnits="userSpaceOnUse" x="51" y="21" width="602" height="524">
 					<path d="M51 21H652.333V544.886H51V21Z" fill="white" />
 				</mask>

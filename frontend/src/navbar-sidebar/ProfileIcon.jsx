@@ -5,7 +5,7 @@ import AvatarSvg from "../assets/Profile/Group.svg"
 
 const ProfileIcon = ({ Icons, profileHandleDropDown, profileDropDownisOpen }) => {
 
-    const {user, privateCheckAuth, setUser, hideNavSideBar, userImg} = useContext(AuthContext);
+    const {user, privateCheckAuth, setUser, hideNavSideBar, userImg, setUserImg} = useContext(AuthContext);
     const navigate = useNavigate();
 
     const settingsNavigation = () => { // Done by Imad
@@ -23,6 +23,7 @@ const ProfileIcon = ({ Icons, profileHandleDropDown, profileDropDownisOpen }) =>
             });
             if (response.ok) {
                 setUser("");
+                setUserImg(null)
                 navigate("/signin");
             }
         } catch (e) {

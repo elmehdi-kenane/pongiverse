@@ -45,7 +45,7 @@ function ProfileInfo() {
   },[notifSocket])
 
   return (
-    <div id="scrollTop" className="profile-userinfo purple-glass" style={{backgroundImage: `url(${userBg ? userBg : bg})`}}>
+    <div className="profile-userinfo purple-glass" style={{backgroundImage: `url(${userBg ? userBg : bg})`}}>
       {isOwnProfile ? 
       <Link to="/mainpage/settings" className="info-position">
         <EditIcon className='userinfo__edit info-position'/>

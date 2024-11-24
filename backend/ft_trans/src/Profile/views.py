@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from myapp.models import customuser
-from mainApp.models import UserMatchStatics, Match, MatchStatistics
+from mainApp.models import UserMatchStatics, Match, MatchStatistics, Tournament, TournamentMembers, Round, TournamentUserInfo
 from friends.models import Friendship, FriendRequest
 from rest_framework.decorators import api_view
 
@@ -338,75 +338,7 @@ def get_user_diagram(request, username):
             return Response(data={"userGames": res_data}, status=status.HTTP_200_OK)
     return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
 
-#**--------------------- GetUser Statistics {Profile-Dashboard} ---------------------**#
-
-@api_view(["GET"])
-def get_user_statistics(request, username, date_range):
-    user = customuser.objects.filter(username=username).first()
-    if user is not None:
-        res_data = []
-        date = date_range - 1
-        while date >= 0:
-            day_bfr = (datetime.now().date() - timedelta(days=date)).isoformat()
-            day_afr = (datetime.now().date() - timedelta(days=date-1)).isoformat()
-
-            user_matches = Match.objects.filter(
-                Q(team1_player1=user) | Q(team1_player2=user) | Q(team2_player1=user) | Q(team2_player2=user),
-                date_ended__gte=day_bfr,
-                date_ended__lte=day_afr
-            ).all()
-
-            wins, losts = 0, 0
-            for user_match in user_matches:
-                if user_match.team1_player1 == user or user_match.team1_player2 == user:
-                    wins += int(user_match.team1_status == "winner")
-                    losts += int(user_match.team1_status != "winner")
-                elif user_match.team2_player1 == user or user_match.team2_player2 == user:
-                    wins += int(user_match.team2_status == "winner")
-                    losts += int(user_match.team2_status != "winner")
-
-            day_int = int(datetime.strptime(day_bfr, "%Y-%m-%d").day)
-            res_data.append({
-                'day': f"{day_int:02}",
-                'wins': wins,
-                'losts': losts,
-            })
-            date -= 1
-        return Response(data={"userStcs": res_data}, status=status.HTTP_200_OK)
-    return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
-
-#**--------------------- GetUser SingleMatches {Dashboard} ---------------------**#
-
-@api_view(["GET"])
-def get_single_matches(request, username, page):
-    user = customuser.objects.filter(username=username).first()
-    res_data = []
-    if user is not None:
-        page_size = 3
-        offset = (page - 1) * page_size
-        user_matches = Match.objects.filter(
-            Q(team1_player1=user) | Q(team2_player1=user),
-            mode="1vs1"
-        ).order_by('-date_ended')[offset:offset+page_size]
-
-        # Check if there is still matches or not -------
-        total_matches_count = Match.objects.filter(
-            Q(team1_player1=user) | Q(team2_player1=user),
-            mode="1vs1"
-        ).count()
-        has_more_matches = (offset + page_size) < total_matches_count
-
-        for user_match in user_matches:
-            res_data.append({
-                "pic1": f"http://localhost:8000/auth{user_match.team1_player1.avatar.url}",
-                "score" : f"{user_match.team1_score} - {user_match.team2_score}",
-                "pic2": f"http://localhost:8000/auth{user_match.team2_player1.avatar.url}",
-                "id": user_match.room_id,
-            })
-        return Response(data={"userMatches": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
-    return Response(data={'error': 'Error Getting SingleGames!'}, status=status.HTTP_400_BAD_REQUEST)
-
-
+#**--------------------- GetUsers Games Lost - Wins {Profile/Match History}---------------------**#
 
 @api_view(["GET"])
 def get_user_games(request, username, page):
@@ -452,6 +384,107 @@ def get_user_games(request, username, page):
         return Response(data={"data": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
     return Response(data={'error': 'Error Getting UserGames!'}, status=status.HTTP_400_BAD_REQUEST)
 
+#**--------------------- GetUser Statistics {Profile-Dashboard} ---------------------**#
+
+@api_view(["GET"])
+def get_user_statistics(request, username, date_range):
+    user = customuser.objects.filter(username=username).first()
+    if user is not None:
+        res_data = []
+        date = date_range - 1
+        while date >= 0:
+            day_bfr = (datetime.now().date() - timedelta(days=date)).isoformat()
+            day_afr = (datetime.now().date() - timedelta(days=date-1)).isoformat()
+
+            user_matches = Match.objects.filter(
+                Q(team1_player1=user) | Q(team1_player2=user) | Q(team2_player1=user) | Q(team2_player2=user),
+                date_ended__gte=day_bfr,
+                date_ended__lte=day_afr
+            ).all()
+
+            wins, losts = 0, 0
+            for user_match in user_matches:
+                if user_match.team1_player1 == user or user_match.team1_player2 == user:
+                    wins += int(user_match.team1_status == "winner")
+                    losts += int(user_match.team1_status != "winner")
+                elif user_match.team2_player1 == user or user_match.team2_player2 == user:
+                    wins += int(user_match.team2_status == "winner")
+                    losts += int(user_match.team2_status != "winner")
+
+            day_int = int(datetime.strptime(day_bfr, "%Y-%m-%d").day)
+            res_data.append({
+                'day': f"{day_int:02}",
+                'wins': wins,
+                'losts': losts,
+            })
+            date -= 1
+        return Response(data={"userStcs": res_data}, status=status.HTTP_200_OK)
+    return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
+
+#**--------------------- GetUser SingleMatches {Dashboard} ---------------------**#
+
+@api_view(["GET"])
+def get_single_matches(request, username, page):
+    user = customuser.objects.filter(username=username).first()
+    res_data = []
+    if user:
+        page_size = 3
+        offset = (page - 1) * page_size
+        user_matches = Match.objects.filter(
+            Q(team1_player1=user) | Q(team2_player1=user),
+            mode="1vs1"
+        ).order_by('-date_ended')[offset:offset+page_size]
+
+        # Check if there is still matches or not -------
+        total_matches_count = Match.objects.filter(
+            Q(team1_player1=user) | Q(team2_player1=user),
+            mode="1vs1"
+        ).count()
+        has_more_matches = (offset + page_size) < total_matches_count
+
+        for user_match in user_matches:
+            res_data.append({
+                "pic1": f"http://localhost:8000/auth{user_match.team1_player1.avatar.url}",
+                "score" : f"{user_match.team1_score} - {user_match.team2_score}",
+                "pic2": f"http://localhost:8000/auth{user_match.team2_player1.avatar.url}",
+                "id": user_match.room_id,
+            })
+        return Response(data={"userMatches": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
+    return Response(data={'error': 'User not found!!'}, status=status.HTTP_404_NOT_FOUND)
+
+#**--------------------- GetUser TournamentMatches {Dashboard} ---------------------**#
+
+@api_view(["GET"])
+def get_tourn_matches(request, username, page, items):
+    user = customuser.objects.filter(username=username).first()
+    type = "QUARTERFINAL"
+    res_data = []
+    if user:
+        # page_size = 3
+        offset = (page - 1) * items
+        all_tournament_memebers = TournamentMembers.objects.filter(user=user).all()[offset:offset+items]
+
+        total_matches_count =TournamentMembers.objects.filter(user=user).count()
+        has_more_matches = (offset + items) < total_matches_count
+
+        for tournament_memebers in all_tournament_memebers:
+            if tournament_memebers:
+                tournament = tournament_memebers.tournament
+                if tournament.is_finished:
+                    rounds = Round.objects.filter(tournament=tournament).all() #Get all the rounds
+                    for round in rounds:
+                        all_users = TournamentUserInfo.objects.filter(round=round).all() #Get all users inside each round
+                        for user_round in all_users:
+                            if user.username == user_round.user.username:
+                                type = round.type
+                                # print("###-----", type, ":", user_round.user.username)
+                    res_data.append({
+                        "type" : type,
+                        "tourId" : tournament.tournament_id,
+                        "pic": f"http://localhost:8000/auth{user.avatar.url}",
+                    })
+        return Response(data={"data": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
+    return Response(data={'error': 'User not found!'}, status=status.HTTP_404_NOT_FOUND)
 
 #**------- GetUser SingleMatch Details -------**#
 
@@ -488,7 +521,7 @@ def get_single_match_dtl(request, match_id):
 def get_multiplayer_matches(request, username, page):
     user = customuser.objects.filter(username=username).first()
     res_data = []
-    if user is not None:
+    if user:
         page_size = 3
         offset = (page - 1) * page_size
         user_matches = Match.objects.filter(
@@ -513,7 +546,7 @@ def get_multiplayer_matches(request, username, page):
                 "id": user_match.room_id,
             })
         return Response(data={"userMatches": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
-    return Response(data={'error': 'Error Getting MultiplayerGames!'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response(data={'error': 'User not found!'}, status=status.HTTP_404_NOT_FOUND)
 
 #**------- GetUser MultiplayerMatch Details -------**#
 

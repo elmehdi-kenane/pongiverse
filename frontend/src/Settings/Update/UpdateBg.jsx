@@ -10,10 +10,11 @@ function UpdateBg(props) {
   const { setUserBg, notifySuc, notifyErr } = useContext(SettingsContext);
 
   const [bgrd, setBg] = useState(null);
-  const [widthTab, setWidthTab] = useState(false);
   const [scale, setScale] = useState(1.2);
   const editorRef = useRef(null);
   const [isClicked, setIsClicked] = useState(false)
+  const width = window.innerWidth <= 768 ? true : false;
+  const [widthTab, setWidthTab] = useState(width);
 
   const UpdateBg = async () => {
     const canvas = editorRef.current.getImage();

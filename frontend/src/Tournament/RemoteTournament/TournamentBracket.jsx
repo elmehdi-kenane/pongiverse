@@ -175,10 +175,10 @@ function TournamentBracket() {
 					<p className={styles['display-components-div-text']}>The game will start in {timeDiff}</p>
 				</div>
 			}
-			{/* <div className={styles['normalSvg']}>
-				<SvgComponent roundquartermembers={roundQuarterFinalMembers} roundsemifinalmembers={roundSemiFinalMembers} roundfinalMembers={finalMembers} roundwinner={winnerMember}/>
+			<div className={styles['normalSvg']}>
+				<SvgComponent roundquartermembers={roundQuarterFinalMembers} roundsemifinalmembers={roundSemiFinalMembers} roundfinalmembers={finalMembers} roundwinner={winnerMember}/>
 
-			</div> */}
+			</div>
 			<div className={styles['verticalSvg']}>
 				<SvgVerticalComponent roundquartermembers={roundQuarterFinalMembers} roundsemifinalmembers={roundSemiFinalMembers} roundfinalmembers={finalMembers} roundwinner={winnerMember} />
 			</div>

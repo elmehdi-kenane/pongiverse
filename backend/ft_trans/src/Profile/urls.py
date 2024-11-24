@@ -35,7 +35,9 @@ urlpatterns = [
     path('getUserStcs/<str:username>/<int:date_range>', views.get_user_statistics),
 
     path('getSingleMatches/<str:username>/<int:page>', views.get_single_matches),
-    path('getMultiplayerMatches/<str:username>/<int:page>', views.get_multiplayer_matches),
     path('getSingleMatchDtl/<int:match_id>', views.get_single_match_dtl),
+    path('getMultiplayerMatches/<str:username>/<int:page>', views.get_multiplayer_matches),
     path('getMultyMatchDtl/<int:match_id>', views.get_multy_match_dtl),
+
+    path('getTournMatches/<str:username>/<int:page>/<int:items>', views.get_tourn_matches),
 ]
