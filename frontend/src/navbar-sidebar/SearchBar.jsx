@@ -14,11 +14,14 @@ export const SearchBar = () => {
   const [searchResult, setSearchResult] = useState([]);
   const [searchUsersResult, setSearchUsersResult] = useState([]);
   const [searchRoomsResult, setSearchRoomsResult] = useState([]);
-  const [searchHistory, setSearchHistory] = useState([]);
   const [isSearchBarOpen, setIsSearchBarOpen] = useState(false);
   const { user } = useContext(AuthContext);
 
-  const termNotFoundText = `Result with '${inputValue}' Not Found`;
+  let termNotFoundText;
+  if (searchFilter === "all")
+    termNotFoundText = `No results found for '${inputValue}'`;
+  else
+    termNotFoundText = `No results found for '${inputValue}' under ${searchFilter} filter`;
 
   //   useEffect(() => {
   const getSearchResult = async (searchTerm, username) => {
@@ -103,11 +106,7 @@ export const SearchBar = () => {
       {isSearchBarOpen && (
         <div className="searchResultWrapper">
           {inputValue === "" ? (
-            searchHistory.length === 0 ? (
-              <p className="searchEmpty">Search History is Empty</p>
-            ) : (
-              <p>show history</p>
-            )
+            <p className="searchEmpty">Search for people or rooms...</p>
           ) : (
             <div className="searchResultWrapperFilterBar">
               <SearchFilterBar

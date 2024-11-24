@@ -14,7 +14,7 @@ import { Outlet } from 'react-router-dom'
 function NavbarSidebar() {
 	const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
     const location = useLocation()
-	const [searchbar, setSearchBar] = useState(false);
+	const [isSearchBarMobileOpen, setIsSearchBarMobileOpen] = useState(false);
     let { user, socket, privateCheckAuth, setUser, hideNavSideBar } = useContext(AuthContext)
 	let navigate = useNavigate()
     const [newReceivedFriendReqNotif, setNewReceivedFriendReqNotif] = useState(false);
@@ -74,16 +74,11 @@ function NavbarSidebar() {
   window.addEventListener("resize", () => {
     if (window.innerWidth > 768) {
       setSidebarIsOpen(false);
-      setSearchBar(false);
     }
   });
 
-  const handleExapandSidebar = () => {
-    setSidebarIsOpen(!sidebarIsOpen);
-  };
-
   const handleSearchBar = () => {
-    setSearchBar(!searchbar);
+    setIsSearchBarMobileOpen(!isSearchBarMobileOpen);
   };
 
   let logout = async (e) => {
@@ -110,8 +105,8 @@ function NavbarSidebar() {
       {!hideNavSideBar && (
         <Navbar
           Icons={Icons}
-          searchbar={searchbar}
-          setSearchBar={setSearchBar}
+          isSearchBarMobileOpen={isSearchBarMobileOpen}
+          setIsSearchBarMobileOpen={setIsSearchBarMobileOpen}
           handleSearchBar={handleSearchBar}
         />
       )}
