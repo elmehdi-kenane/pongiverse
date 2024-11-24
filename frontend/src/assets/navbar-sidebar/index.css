@@ -618,7 +618,7 @@ body {
     width: 67px;
   }
 
-  .search-bar {
+  .search-bar-desktop {
     display: none;
   }
 
@@ -4308,4 +4308,42 @@ body {
   .gameStats_details div p:nth-child(2) {
     font-size: 15px;
   }
+}
+
+.sidebar-mobile {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .sidebar-mobile {
+        display: flex;
+        width: 80%;
+        align-items: center;
+        margin: 0 auto;
+        justify-content: space-between;
+    }
+    .sidebar-navigations {
+        display: flex;
+    }
+    .sidebar-icons-mobile {
+        padding: 20px;
+        border-radius: 5px;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .sidebar-icons-mobile img {
+        width: 25px;
+        height: 25px;
+    }
+
+    .sidebar-icons-mobile:hover {
+        background-color: #ae3dff;
+        /* background-color: red; */
+    }
+    .sidebar {
+        display: none;
+    }
 }
