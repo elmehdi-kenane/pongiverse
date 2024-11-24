@@ -128,7 +128,6 @@ height: 170px;
     gap: 40px;
     margin: 0 auto;
     width: 70%;
-    overflow: auto;
 }
     
 @media (max-width: 1440px) {
