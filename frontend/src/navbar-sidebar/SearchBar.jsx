@@ -133,6 +133,7 @@ export const SearchBar = () => {
                             is_joined={item.is_joined}
                             searchResult={searchResult}
                             setSearchResult={setSearchResult}
+                            searchTerm={inputValue}
                           ></SearchResultCard>
                         );
                       })
@@ -152,6 +153,7 @@ export const SearchBar = () => {
                             is_joined={item.is_joined}
                             searchResult={searchResult}
                             setSearchResult={setSearchResult}
+                            searchTerm={inputValue}
                           ></SearchResultCard>
                         );
                       })
@@ -171,6 +173,7 @@ export const SearchBar = () => {
                             is_joined={item.is_joined}
                             searchResult={searchResult}
                             setSearchResult={setSearchResult}
+                            searchTerm={inputValue}
                           ></SearchResultCard>
                         );
                       })

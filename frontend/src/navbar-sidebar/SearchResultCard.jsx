@@ -11,6 +11,7 @@ const SearchResultCard = ({
   is_joined,
   searchResult,
   setSearchResult,
+  searchTerm
 }) => {
   const [addFriendBtn, setAddFriendBtn] = useState("Add friend");
   const [joinRoomBtn, setJoinRoomBtn] = useState("Join room");
@@ -42,10 +43,26 @@ const SearchResultCard = ({
     }
   };
 
+  const HighlightSearchTerm = (searchTerm, resultText) => {
+    resultText = resultText.toLowerCase();
+    console.log("resultText", resultText);
+    const index = resultText.indexOf(searchTerm);
+    return [
+      resultText.slice(0, index),
+      searchTerm,
+      resultText.slice(index + searchTerm.length),
+    ];
+  };
+
+  const resultTextArr = HighlightSearchTerm(searchTerm, username);
   return (
     <div className="searchResultItem">
       <img src={avatar} alt={avatar} />
-      <p>{username}</p>
+      <p>
+        {resultTextArr[0]}
+        <span>{resultTextArr[1]}</span>
+        {resultTextArr[2]}
+      </p>
       {result_type === "user" &&
         is_friend === false &&
         addFriendBtn !== null && (

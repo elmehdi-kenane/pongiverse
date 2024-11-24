@@ -133,6 +133,17 @@ body {
     font-size: 17px;
 }
 
+.searchResultItem p {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.searchResultItem p span {
+    font-weight: 700;
+    font-size: 15px;
+    color: #1E0934;
+}
+
 .searchResultItem {
     width: 99%;
     display: flex;
