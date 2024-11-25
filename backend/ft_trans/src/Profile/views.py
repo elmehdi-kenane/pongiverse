@@ -87,7 +87,7 @@ def getUserData(request, username):
         user_states = UserMatchStatics.objects.filter(player=user).first()
         if user_states is not None:
             # print("---------------", f"http://localhost:8000/auth{user.avatar.url}", "-----------------")
-            print("-----------------user :", user.username, "is online:", user.is_online)
+            # print("-----------------user :", user.username, "is online:", user.is_online)
             user_data = {'pic': f"http://localhost:8000/auth{user.avatar.url}",
                         'bg': f"http://localhost:8000/auth{user.background_pic.url}",
                         'bio': user.bio,
@@ -229,14 +229,15 @@ def update_user_password(request):
 @api_view(["GET"])
 def get_user_friends(request, username):
     user = customuser.objects.filter(username=username).first()
-    friendships = Friendship.objects.filter(user=user).all()
+    friendships = Friendship.objects.filter(user=user, isBlocked=False).all()
     friends = []
     if friendships:
         for friendship in friendships:
-            friends.append({
-                'username': friendship.friend.username,
-                'pic': f"http://localhost:8000/auth{friendship.friend.avatar.url}"
-            })
+            if Friendship.objects.filter(user=friendship.friend, friend=user, isBlocked=False).exists():
+                friends.append({
+                    'username': friendship.friend.username,
+                    'pic': f"http://localhost:8000/auth{friendship.friend.avatar.url}"
+                })
     return Response(data={"data": friends}, status=status.HTTP_200_OK)
 
 #**--------------------- Check User Friendship ---------------------** 
@@ -248,6 +249,12 @@ def check_friendship(request, username, username2):
 
     if not user or not user2:
         return Response(data={'error': 'users not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    if Friendship.objects.filter(user=user, friend=user2, isBlocked=True).exists():
+        return Response(data={"data": "blocked"}, status=status.HTTP_200_OK)
+    
+    if Friendship.objects.filter(user=user2, friend=user, isBlocked=True).exists():
+        return Response(data={"data": "blocked"}, status=status.HTTP_200_OK)
 
     if Friendship.objects.filter(user=user, friend=user2).exists():
         return Response(data={"data": "true"}, status=status.HTTP_200_OK)
