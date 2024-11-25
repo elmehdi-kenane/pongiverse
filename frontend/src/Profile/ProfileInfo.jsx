@@ -31,14 +31,12 @@ function ProfileInfo() {
           const userConnected = data.message.user;
           if (userConnected === userId){
             setUserIsOnline(true);
-            console.log("Connected Again: ", userConnected);
           }
         }
         if (type === "user_disconnected"){
           const userDisConnected = data.message.user;
           if (userDisConnected === userId){
             setUserIsOnline(false);
-            console.log("DisConnected Again: ", userDisConnected);
           }
         }
       }

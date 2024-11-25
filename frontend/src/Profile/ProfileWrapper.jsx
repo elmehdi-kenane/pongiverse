@@ -2,7 +2,7 @@ import { createContext, useEffect, useState, useContext } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import mavPic from "../assets/Profile/Group.svg"
 import bg from "../assets/Profile/bg1.jpg"
-import { useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 const ProfileContext = createContext();
 
@@ -12,6 +12,7 @@ export const ProfileWrapper = ({ child }) => {
 
     const [userData, setUserData] = useState(null)
     const { user, notifSocket } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const { userId } = useParams();
     const [userPic, setUserPic] = useState(mavPic);
@@ -23,7 +24,6 @@ export const ProfileWrapper = ({ child }) => {
     const [userXp, setUserXp] = useState(0);
     const [userCountry, setUserCountry] = useState(null);
 
-    const [checkUser, setCheckUser] = useState(true);
     const [isFriend, setIsFriend] = useState('false');
     const [isLoading, setIsLoading] = useState(false);
 
@@ -39,12 +39,12 @@ export const ProfileWrapper = ({ child }) => {
                 const res = await response.json()
                 if (response.ok){
                     setUserData(res.userData);
-                    console.log("DATA:", res.userData);
                 }
                 else 
-                    setCheckUser(false);
+                    navigate("/Error404")
+                // setCheckUser(false);
             } catch (error) {
-                console.log("Error: ", error);
+                console.log("Error:  ", error);
             }
         }
         const checkFriendship = async () => {
@@ -57,8 +57,9 @@ export const ProfileWrapper = ({ child }) => {
                 });
                 const res = await response.json()
                 if (response.ok) {
+                    if(res.data === "blocked")
+                        navigate("/Error404")
                     setIsFriend(res.data);
-                    // console.log(res.data)
                 }
                 else
                     console.log(res.error);
@@ -80,7 +81,6 @@ export const ProfileWrapper = ({ child }) => {
             setUserBio(userData.bio)
             setUserEmail(userData.email)
             setUserIsOnline(userData.online)
-            console.log(userId ,"is online: ",userData.online)
             setUserLevel(userData.level)
             setUserXp(userData.xp)
             setUserCountry(userData.country)
@@ -113,8 +113,6 @@ export const ProfileWrapper = ({ child }) => {
         userCountry: userCountry,
         setUserCountry: setUserCountry,
 
-        checkUser: checkUser,
-        setCheckUser: setCheckUser,
         isFriend:isFriend,
         setIsFriend:setIsFriend,
         isLoading: isLoading, 
