@@ -16,15 +16,6 @@ function Profile() {
   const { isReport, isBlock, user } = useContext(AuthContext);
   const { userId, checkUser } = useContext(ProfileContext);
 
-  // useEffect(() => {
-  //   console.log("Scroll Effect Here")
-  //   function topFunction() {
-  //     document.body.scrollTop = 0; // For Safari
-  //     document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-  //   }
-  //   topFunction();
-  // }, [userId]);
-
   return (
     <>
       {isBlock && <Block />}

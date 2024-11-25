@@ -59,6 +59,7 @@
 .match-result-ctr .tourn-result {
     width: 90%;
     top: 50px;
+    max-width: 1110px;
     /* border: white solid 2px; */
 }
 .match-result h1{
@@ -522,6 +523,7 @@
     font-size: 19px;
     font-weight: 450;
     margin-bottom: 15px;
+    text-align: center;
 }
 .no-result .start-game{
     display: flex;

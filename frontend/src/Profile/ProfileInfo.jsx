@@ -29,20 +29,21 @@ function ProfileInfo() {
         const type = data.type;
         if (type === "connected_again"){
           const userConnected = data.message.user;
-          if (userConnected === userId)
+          if (userConnected === userId){
             setUserIsOnline(true);
-          console.log("Connected Again: ", userConnected);
+            console.log("Connected Again: ", userConnected);
+          }
         }
         if (type === "user_disconnected"){
           const userDisConnected = data.message.user;
-          if (userDisConnected === userId)
+          if (userDisConnected === userId){
             setUserIsOnline(false);
-          console.log("DisConnected Again: ", userDisConnected);
+            console.log("DisConnected Again: ", userDisConnected);
+          }
         }
       }
     }
-
-  },[notifSocket])
+  },[userId, notifSocket])
 
   return (
     <div className="profile-userinfo purple-glass" style={{backgroundImage: `url(${userBg ? userBg : bg})`}}>

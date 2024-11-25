@@ -11,7 +11,7 @@ export default ProfileContext;
 export const ProfileWrapper = ({ child }) => {
 
     const [userData, setUserData] = useState(null)
-    const { user } = useContext(AuthContext);
+    const { user, notifSocket } = useContext(AuthContext);
 
     const { userId } = useParams();
     const [userPic, setUserPic] = useState(mavPic);
@@ -37,8 +37,10 @@ export const ProfileWrapper = ({ child }) => {
                     }
                 });
                 const res = await response.json()
-                if (response.ok)
+                if (response.ok){
                     setUserData(res.userData);
+                    console.log("DATA:", res.userData);
+                }
                 else 
                     setCheckUser(false);
             } catch (error) {
@@ -64,12 +66,12 @@ export const ProfileWrapper = ({ child }) => {
                 console.log("Error: ", error);
             }
         }
-        if (userId){
+        if (userId && notifSocket && notifSocket.readyState === WebSocket.OPEN){
             getUserData();
             if (user && (user != userId))
                 checkFriendship();
         }
-    }, [user, userId])
+    }, [user, userId, notifSocket])
 
     useEffect(() => {
         if (userData) {
@@ -78,6 +80,7 @@ export const ProfileWrapper = ({ child }) => {
             setUserBio(userData.bio)
             setUserEmail(userData.email)
             setUserIsOnline(userData.online)
+            console.log(userId ,"is online: ",userData.online)
             setUserLevel(userData.level)
             setUserXp(userData.xp)
             setUserCountry(userData.country)
@@ -85,15 +88,7 @@ export const ProfileWrapper = ({ child }) => {
     }, [userData])
 
     useEffect(() => {
-        // function topFunction() {
-        //     console.log("Scroll Effect Here");
-        //     document.body.scrollTop = 0; // For Safari
-        //     document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-        // }
-        // topFunction();
-        // const element = document.getElementById("scrollTop");
         if (document.querySelector(".profile-page")){
-            console.log("Scroll Effect Here");
             document.querySelector(".profile-page").scrollTop = 0;
             // document.querySelector(".profile-page").scrollIntoView({ behavior: 'smooth' });
         }

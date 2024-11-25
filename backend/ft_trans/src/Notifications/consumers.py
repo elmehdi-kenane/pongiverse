@@ -6,7 +6,7 @@ from asgiref.sync import sync_to_async
 from friends.models import Friendship
 import json
 from . import game_notifs_consumers, tournament_notifs_consumers
-from mainApp.models import TournamentMembers
+from mainApp.models import TournamentMembers, UserMatchStatics
 from .common import notifs_user_channels
 from mainApp.common import tournaments
 import os
@@ -43,30 +43,30 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 					self.group_name = f"friends_group{user_id}"
 					await self.channel_layer.group_add(self.group_name, self.channel_name)
 					# channel_layer = get_channel_layer()
-					friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
-					for friend in friends:
-						friend_id = await sync_to_async(lambda: friend.friend.id)()
-						friend_is_online = await sync_to_async(lambda: friend.friend.is_online)()
-						channel_name_list = notifs_user_channels.get(friend_id)
-						if channel_name_list:
-							for channel_name in channel_name_list:
-							# channel_name = notifs_user_channels.get(friend_username)
-								if channel_name and friend_is_online and not user.is_playing:
-									await self.channel_layer.send(
-										channel_name,
-										{
-											'type': 'connected_again',
-											'message': {
-													'user': username,
-													'userInfos': {
-														'id': user.id,
-														'name': user.username,
-														'level': 2,
-														'image': f"http://{ip_address}:8000/auth{user.avatar.url}",
-													}
+					user_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=user).first)()
+					if user_statistics:
+						for user_id, channel_name_list in notifs_user_channels.items():
+							other_user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
+							if other_user is not None:
+								channel_name_list = notifs_user_channels.get(user_id)
+								if channel_name_list:
+									for channel_name in channel_name_list:
+										if channel_name and not user.is_playing:
+											await self.channel_layer.send(
+												channel_name,
+												{
+													'type': 'connected_again',
+													'message': {
+															'user': username,
+															'userInfos': {
+																'id': user.id,
+																'name': user.username,
+																'level': user_statistics.level,
+																'image': f"http://{ip_address}:8000/auth{user.avatar.url}",
+															}
+														}
 												}
-										}
-									)
+											)
 					tournament_id = is_user_joining_tournament(username)
 					if tournament_id != 0:
 						for member in tournaments[tournament_id]['members']:
