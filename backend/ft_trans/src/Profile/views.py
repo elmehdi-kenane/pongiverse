@@ -87,7 +87,7 @@ def getUserData(request, username):
         user_states = UserMatchStatics.objects.filter(player=user).first()
         if user_states is not None:
             # print("---------------", f"http://localhost:8000/auth{user.avatar.url}", "-----------------")
-            # print("user :", user.username, "is online:", user.is_online)
+            # print("-----------------user :", user.username, "is online:", user.is_online)
             user_data = {'pic': f"http://localhost:8000/auth{user.avatar.url}",
                         'bg': f"http://localhost:8000/auth{user.background_pic.url}",
                         'bio': user.bio,
@@ -229,14 +229,15 @@ def update_user_password(request):
 @api_view(["GET"])
 def get_user_friends(request, username):
     user = customuser.objects.filter(username=username).first()
-    friendships = Friendship.objects.filter(user=user).all()
+    friendships = Friendship.objects.filter(user=user, isBlocked=False).all()
     friends = []
     if friendships:
         for friendship in friendships:
-            friends.append({
-                'username': friendship.friend.username,
-                'pic': f"http://localhost:8000/auth{friendship.friend.avatar.url}"
-            })
+            if Friendship.objects.filter(user=friendship.friend, friend=user, isBlocked=False).exists():
+                friends.append({
+                    'username': friendship.friend.username,
+                    'pic': f"http://localhost:8000/auth{friendship.friend.avatar.url}"
+                })
     return Response(data={"data": friends}, status=status.HTTP_200_OK)
 
 #**--------------------- Check User Friendship ---------------------** 
@@ -248,6 +249,12 @@ def check_friendship(request, username, username2):
 
     if not user or not user2:
         return Response(data={'error': 'users not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    if Friendship.objects.filter(user=user, friend=user2, isBlocked=True).exists():
+        return Response(data={"data": "blocked"}, status=status.HTTP_200_OK)
+    
+    if Friendship.objects.filter(user=user2, friend=user, isBlocked=True).exists():
+        return Response(data={"data": "blocked"}, status=status.HTTP_200_OK)
 
     if Friendship.objects.filter(user=user, friend=user2).exists():
         return Response(data={"data": "true"}, status=status.HTTP_200_OK)
@@ -452,40 +459,6 @@ def get_single_matches(request, username, page):
         return Response(data={"userMatches": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
     return Response(data={'error': 'User not found!!'}, status=status.HTTP_404_NOT_FOUND)
 
-#**--------------------- GetUser TournamentMatches {Dashboard} ---------------------**#
-
-@api_view(["GET"])
-def get_tourn_matches(request, username, page, items):
-    user = customuser.objects.filter(username=username).first()
-    type = "QUARTERFINAL"
-    res_data = []
-    if user:
-        # page_size = 3
-        offset = (page - 1) * items
-        all_tournament_memebers = TournamentMembers.objects.filter(user=user).all()[offset:offset+items]
-
-        total_matches_count =TournamentMembers.objects.filter(user=user).count()
-        has_more_matches = (offset + items) < total_matches_count
-
-        for tournament_memebers in all_tournament_memebers:
-            if tournament_memebers:
-                tournament = tournament_memebers.tournament
-                if tournament.is_finished:
-                    rounds = Round.objects.filter(tournament=tournament).all() #Get all the rounds
-                    for round in rounds:
-                        all_users = TournamentUserInfo.objects.filter(round=round).all() #Get all users inside each round
-                        for user_round in all_users:
-                            if user.username == user_round.user.username:
-                                type = round.type
-                                # print("###-----", type, ":", user_round.user.username)
-                    res_data.append({
-                        "type" : type,
-                        "tourId" : tournament.tournament_id,
-                        "pic": f"http://localhost:8000/auth{user.avatar.url}",
-                    })
-        return Response(data={"data": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
-    return Response(data={'error': 'User not found!'}, status=status.HTTP_404_NOT_FOUND)
-
 #**------- GetUser SingleMatch Details -------**#
 
 @api_view(["GET"])
@@ -513,7 +486,6 @@ def get_single_match_dtl(request, match_id):
         }
         return Response(data={"data": res_data}, status=status.HTTP_200_OK)
     return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
-
 
 #**--------------------- GetUser MultiplayerMatches {Dashboard} ---------------------**#
 
@@ -587,6 +559,39 @@ def get_multy_match_dtl(request, match_id):
         }
         return Response(data={"data": res_data}, status=status.HTTP_200_OK)
     return Response(data={'error': 'Error Getting MultiplayerGames!'}, status=status.HTTP_400_BAD_REQUEST)
+
+#**--------------------- GetUser TournamentMatches {Dashboard} ---------------------**#
+
+@api_view(["GET"])
+def get_tourn_matches(request, username, page, items):
+    user = customuser.objects.filter(username=username).first()
+    type = "QUARTERFINAL"
+    res_data = []
+    if user:
+        offset = (page - 1) * items
+        all_tournament_memebers = TournamentMembers.objects.filter(user=user).order_by('-id').all()[offset:offset+items]
+
+        total_matches_count =TournamentMembers.objects.filter(user=user).count()
+        has_more_matches = (offset + items) < total_matches_count
+
+        for tournament_memebers in all_tournament_memebers:
+            if tournament_memebers:
+                tournament = tournament_memebers.tournament
+                if tournament.is_finished:
+                    rounds = Round.objects.filter(tournament=tournament).all() #Get all the rounds
+                    for round in rounds:
+                        all_users = TournamentUserInfo.objects.filter(round=round).all() #Get all users inside each round
+                        for user_round in all_users:
+                            if user.username == user_round.user.username:
+                                type = round.type
+                                # print("###-----", type, ":", user_round.user.username)
+                    res_data.append({
+                        "type" : type,
+                        "tourId" : tournament.tournament_id,
+                        "pic": f"http://localhost:8000/auth{user.avatar.url}",
+                    })
+        return Response(data={"data": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
+    return Response(data={'error': 'User not found!'}, status=status.HTTP_404_NOT_FOUND)
 
 #**--------------------- Two-Factor Authenticator {Settings} ---------------------**#
 

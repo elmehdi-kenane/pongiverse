@@ -2,7 +2,7 @@ import { createContext, useEffect, useState, useContext } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import mavPic from "../assets/Profile/Group.svg"
 import bg from "../assets/Profile/bg1.jpg"
-import { useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 const ProfileContext = createContext();
 
@@ -11,7 +11,8 @@ export default ProfileContext;
 export const ProfileWrapper = ({ child }) => {
 
     const [userData, setUserData] = useState(null)
-    const { user } = useContext(AuthContext);
+    const { user, notifSocket } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const { userId } = useParams();
     const [userPic, setUserPic] = useState(mavPic);
@@ -23,7 +24,6 @@ export const ProfileWrapper = ({ child }) => {
     const [userXp, setUserXp] = useState(0);
     const [userCountry, setUserCountry] = useState(null);
 
-    const [checkUser, setCheckUser] = useState(true);
     const [isFriend, setIsFriend] = useState('false');
     const [isLoading, setIsLoading] = useState(false);
 
@@ -37,12 +37,14 @@ export const ProfileWrapper = ({ child }) => {
                     }
                 });
                 const res = await response.json()
-                if (response.ok)
+                if (response.ok){
                     setUserData(res.userData);
+                }
                 else 
-                    setCheckUser(false);
+                    navigate("/Error404")
+                // setCheckUser(false);
             } catch (error) {
-                console.log("Error: ", error);
+                console.log("Error:  ", error);
             }
         }
         const checkFriendship = async () => {
@@ -55,8 +57,9 @@ export const ProfileWrapper = ({ child }) => {
                 });
                 const res = await response.json()
                 if (response.ok) {
+                    if(res.data === "blocked")
+                        navigate("/Error404")
                     setIsFriend(res.data);
-                    // console.log(res.data)
                 }
                 else
                     console.log(res.error);
@@ -64,12 +67,12 @@ export const ProfileWrapper = ({ child }) => {
                 console.log("Error: ", error);
             }
         }
-        if (userId){
+        if (userId && notifSocket && notifSocket.readyState === WebSocket.OPEN){
             getUserData();
             if (user && (user != userId))
                 checkFriendship();
         }
-    }, [user, userId])
+    }, [user, userId, notifSocket])
 
     useEffect(() => {
         if (userData) {
@@ -85,15 +88,7 @@ export const ProfileWrapper = ({ child }) => {
     }, [userData])
 
     useEffect(() => {
-        // function topFunction() {
-        //     console.log("Scroll Effect Here");
-        //     document.body.scrollTop = 0; // For Safari
-        //     document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-        // }
-        // topFunction();
-        // const element = document.getElementById("scrollTop");
         if (document.querySelector(".profile-page")){
-            console.log("Scroll Effect Here");
             document.querySelector(".profile-page").scrollTop = 0;
             // document.querySelector(".profile-page").scrollIntoView({ behavior: 'smooth' });
         }
@@ -118,8 +113,6 @@ export const ProfileWrapper = ({ child }) => {
         userCountry: userCountry,
         setUserCountry: setUserCountry,
 
-        checkUser: checkUser,
-        setCheckUser: setCheckUser,
         isFriend:isFriend,
         setIsFriend:setIsFriend,
         isLoading: isLoading, 

@@ -1,15 +1,20 @@
 import React, { useContext, useEffect, useRef } from 'react'
 import AuthContext from '../../navbar-sidebar/Authcontext';
 import { Link } from 'react-router-dom';
+import { handleBlockFriend } from "../../Friends/utils";
+import ProfileContext from '../ProfileWrapper';
+
 
 function Block() {
-    const {isBlock, setIsBlock} = useContext(AuthContext);
+    const {user, isBlock, setIsBlock} = useContext(AuthContext);
+    const {userId} = useContext(ProfileContext);
 
     const handleCancel = () => {
       setIsBlock(false);
     }
     const handleBlock = () => {
       setIsBlock(false);
+      handleBlockFriend(user, userId)
     }
 
     document.addEventListener('click', (e) => {
@@ -33,7 +38,7 @@ function Block() {
         </p>
         <div className="block__submit">
           <Link className="block-cancel" onClick={handleCancel}> Cancel </Link>
-          <Link to={"/mainpage"} className="block-confirm" onClick={handleBlock}> Confirm </Link>
+          <Link to={"/mainpage/dashboard"} className="block-confirm" onClick={handleBlock}> Confirm </Link>
         </div>
       </div>
     </div>

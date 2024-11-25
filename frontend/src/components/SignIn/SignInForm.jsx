@@ -100,7 +100,7 @@ function SignInForm() {
       })
       .then(data => {
         if (data.Case === "Login successfully") {
-          navigate('/mainpage');
+          navigate("/mainpage/dashboard")
         } else if (data.Case === "Invalid username or password!!") {
           toast.error(data.Case, {
             duration: 1000,

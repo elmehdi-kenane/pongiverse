@@ -85,3 +85,23 @@ export const handleRemoveFriendship = (user, secondUsername) => {
       console.error("Error:", error);
     });
 };
+
+export const handleBlockFriend = (user, secondUsername) => {
+  fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/block_friend/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from_username: user,
+      to_username: secondUsername,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Success:", data);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+};
