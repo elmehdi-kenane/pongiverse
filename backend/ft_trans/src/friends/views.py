@@ -152,7 +152,7 @@ def cancel_friend_request(request):
         {
             'type': 'cancel_friend_request',
             'message': {
-                'second_usernameX': to_username,
+                'second_username': to_username,
                 'send_at': sent_request_ser.data['send_at'],
                 'avatar': sent_request_ser.data['avatar']
             }
