@@ -42,6 +42,7 @@
 	width: 500px;
 	height: 200px;
 	gap: 5px;
+	z-index: 100;	
 }
 
 .winner-message {

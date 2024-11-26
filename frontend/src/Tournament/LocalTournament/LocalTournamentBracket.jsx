@@ -132,6 +132,14 @@ function LocalTournamentBracket() {
 		"is_game_finished"
 	];
 
+	useEffect(() => {
+		const winner = JSON.parse(localStorage.getItem('Winner')) || null;
+		if (winner && winner !== null) {
+			localStorage.clear();
+			navigate('../game/localtournamentfillmembers');
+		}
+	}, [])
+
 	const check_keys = async () => {
 		const isDataValid = await verifyDataIntegrity(keysToCheck);
 		if (!isDataValid) {
@@ -877,7 +885,7 @@ function LocalTournamentBracket() {
 	return (
 		<>
 			{
-				!players.Winner && (
+				!players.Winner && ((!alreadyStarted || gameFinished)) &&  (
 
 					<div className={styles['display-components-div']}>
 						<div className={styles['display-components-div-players-data']}>
