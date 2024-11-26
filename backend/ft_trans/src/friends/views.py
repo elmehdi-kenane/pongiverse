@@ -199,6 +199,7 @@ def confirm_friend_request(request):
     async_to_sync(channel_layer.group_send)(
         f"friends_group{from_user_id}",
         {
+            # weird behavior :)
             'type': 'confirm_friend_request',
             'message': {
                 'second_username': to_username,
