@@ -146,6 +146,7 @@ def cancel_friend_request(request):
     from_user_id = from_user.id
     to_user_id = to_user.id
     channel_layer = get_channel_layer()
+    # weird behavior :)
     async_to_sync(channel_layer.group_send)(
         f"friends_group{from_user_id}",
         {
@@ -199,7 +200,6 @@ def confirm_friend_request(request):
     async_to_sync(channel_layer.group_send)(
         f"friends_group{from_user_id}",
         {
-            # weird behavior :)
             'type': 'confirm_friend_request',
             'message': {
                 'second_username': to_username,
