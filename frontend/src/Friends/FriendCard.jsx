@@ -20,11 +20,11 @@ const FriendCard = ({
   const buttonRef = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user } = useContext(AuthContext);
-  const { setSelectedDirect, setIsHome, setSelectedItem} = useContext(ChatContext);
+  const { setSelectedDirect } = useContext(ChatContext);
   const navigate = useNavigate();
 
   const handleBlockFriend = () => {
-    fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/block_friend/`, {
+    fetch("http://localhost:8000/friends/block_friend/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -49,12 +49,10 @@ const FriendCard = ({
       avatar: avatar,
       status: "true",
     });
-    setIsHome(true)
-    setSelectedItem(secondUsername);
     navigate("/mainpage/chat");
   };
   const handleRemoveFriendship = () => {
-    fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/remove_friendship/`, {
+    fetch("http://localhost:8000/friends/remove_friendship/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -90,6 +88,17 @@ const FriendCard = ({
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const navigateToChat = () => {
+    setSelectedDirect({
+      id: id,
+      name: secondUsername,
+      status: true,
+      avatar: avatar,
+    });
+    setSelectedItem(secondUsername);
+    setIsHome(true);
+    navigate(`/mainpage/chat`);
+  };
   return (
     <div className="FriendCard">
       <div className="ProfileName">
@@ -104,7 +113,10 @@ const FriendCard = ({
             }`}
             ref={menuRef}
           >
-            <button onClick={handleMessageFriend}>
+            <button onClick={() => {
+                handleMessageFriend();
+                setIsMenuOpen(false);
+                }}>
               <ChatBubbleIcon />
               Message
             </button>
@@ -112,11 +124,17 @@ const FriendCard = ({
               <SportsEsportsIcon />
               Challenge
             </button>
-            <button onClick={handleRemoveFriendship}>
+            <button onClick={() => {
+                handleRemoveFriendship();
+                setIsMenuOpen(false);
+                }}>
               <PersonRemoveIcon />
               Unfriend
             </button>
-            <button onClick={handleBlockFriend}>
+            <button onClick={() => {
+                handleBlockFriend();
+                setIsMenuOpen(false);
+                }}>
               <RemoveCircleOutlineIcon />
               Block
             </button>

@@ -291,9 +291,36 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 			'type': 'finishedGame',
 			'message': event['message']
 		}))
+
+	async def remove_tournament_notif(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'remove_tournament_notif',
+			'message': event['message']
+		}))
+
+			##################################### FRIENDS #####################################
+
 	async def send_friend_request(self, event):
 		await self.send(text_data=json.dumps({
 			'type': 'send-friend-request',
+			'message': event['message']
+		}))
+
+	async def receive_friend_request(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'receive-friend-request',
+			'message': event['message']
+		}))
+
+	async def cancel_friend_request(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'cancel-friend-request',
+			'message': event['message']
+		}))
+
+	async def remove_friend_request(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'remove-friend-request',
 			'message': event['message']
 		}))
 
@@ -303,20 +330,32 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 			'message': event['message']
 		}))
 
-	async def recieve_friend_request(self, event):
-		await self.send(text_data=json.dumps({
-			'type': 'recieve-friend-request',
-			'message': event['message']
-		}))
-	
 	async def confirm_friend_request(self, event):
 		await self.send(text_data=json.dumps({
 			'type': 'confirm-friend-request',
 			'message': event['message']
 		}))
 
-	async def remove_tournament_notif(self, event):
+	async def remove_friendship(self, event):
 		await self.send(text_data=json.dumps({
-			'type': 'remove_tournament_notif',
+			'type': 'remove-friendship',
+			'message': event['message']
+		}))
+
+	async def blocker_friend(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'blocker-friend',
+			'message': event['message']
+		}))
+
+	async def blocked_friend(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'blocked-friend',
+			'message': event['message']
+		}))
+
+	async def unblock_friend(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'unblock-friend',
 			'message': event['message']
 		}))

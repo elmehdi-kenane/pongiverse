@@ -3,7 +3,7 @@ export const cancelFriendRequest = (
   secondUsername,
   eventType
 ) => {
-  fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/cancel_friend_request/`, {
+  fetch("http://localhost:8000/friends/cancel_friend_request/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -11,7 +11,7 @@ export const cancelFriendRequest = (
     body: JSON.stringify({
       from_username: currentUsername,
       to_username: secondUsername,
-      eventType: eventType,
+      event_type: eventType,
     }),
   })
     .then((response) => response.json())
@@ -24,7 +24,7 @@ export const cancelFriendRequest = (
 };
 
 export const confirmFriendRequest = (currentUsername, secondUsername) => {
-  fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/confirm_friend_request/`, {
+  fetch("http://localhost:8000/friends/confirm_friend_request/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -44,7 +44,7 @@ export const confirmFriendRequest = (currentUsername, secondUsername) => {
 };
 
 
-export const handleAddFriendReq = (currentUsername, secondUsername, setFriendRequestBtn) => {
+export const handleAddFriendReq = (currentUsername, secondUsername) => {
     fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/add_friend_request/`, {
         method: 'POST',
         headers: {
@@ -62,7 +62,6 @@ export const handleAddFriendReq = (currentUsername, secondUsername, setFriendReq
         .catch((error) => {
             console.error('Error:', error);
         });
-    setFriendRequestBtn(true);
 };
 
 // Added by Imad ---

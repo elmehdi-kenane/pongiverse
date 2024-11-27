@@ -6,7 +6,7 @@ const SocketDataContext = createContext();
 export default SocketDataContext
 
 export const SocketDataContextProvider = ({ children }) => {
-    const { socket } = useContext(AuthContext);
+    const { notifSocket } = useContext(AuthContext);
     const [data, setData] = useState({ message: 'messageStart', type: 'typeStart' });
     // useEffect(() => {
     //     if (socket) {
@@ -24,6 +24,22 @@ export const SocketDataContextProvider = ({ children }) => {
     //     // else
     //         // console.log("socket", socket, "doesn't exist");
     // }, [socket]);
+    useEffect(() => {
+        if (notifSocket) {
+            console.log(".............. NEW MESSAGE FROM BACKEND ..............");
+            notifSocket.onmessage = (e) => {
+                const parsedData = JSON.parse(e.data);
+                const data =
+                {
+                    message: parsedData.message,
+                    type: parsedData.type,
+                };
+                setData(data)
+            }
+        }
+        else
+            console.log("notifSocket", notifSocket, "doesn't exist");
+    }, [notifSocket]);
     return (
         <SocketDataContext.Provider value={data}>
             {children}

@@ -93,62 +93,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	async def disconnect(self, close_code):
 		await tournament_consumers.disconnected(self, user_channels)
 
-	##################################### FRIENDS #####################################
-
-	async def send_friend_request(self, event):
-		await self.send(text_data=json.dumps({
-			'type': 'send-friend-request',
-			'message': event['message']
-		}))
-
-	async def recieve_friend_request(self, event):
-		await self.send(text_data=json.dumps({
-			'type': 'recieve-friend-request',
-			'message': event['message']
-		}))
-
-	async def cancel_friend_request(self, event):
-		await self.send(text_data=json.dumps({
-			'type': 'cancel-friend-request',
-			'message': event['message']
-		}))
-
-	async def remove_friend_request(self, event):
-		await self.send(text_data=json.dumps({
-			'type': 'remove-friend-request',
-			'message': event['message']
-		}))
-
-	async def friend_request_accepted(self, event):
-		await self.send(text_data=json.dumps({
-			'type': 'friend-request-accepted',
-			'message': event['message']
-		}))
-
-	async def confirm_friend_request(self, event):
-		await self.send(text_data=json.dumps({
-			'type': 'confirm-friend-request',
-			'message': event['message']
-		}))
-
-	async def remove_friends(self, event):
-		await self.send(text_data=json.dumps({
-			'type': 'remove-friends',
-			'message': event['message']
-		}))
-
-	async def block_friend(self, event):
-		await self.send(text_data=json.dumps({
-			'type': 'block-friend',
-			'message': event['message']
-		}))
-
-	async def unblock_friend(self, event):
-		await self.send(text_data=json.dumps({
-			'type': 'unblock-friend',
-			'message': event['message']
-		}))
-
 	##################################### 1vs1 (GAME) #####################################
 
 	async def gameReady(self, event):

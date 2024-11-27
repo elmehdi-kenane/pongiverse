@@ -12,66 +12,61 @@ import NotificationPopupCard from "./NotificationPopupCard";
 import { Outlet } from "react-router-dom";
 
 function NavbarSidebar() {
-  const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
-  const location = useLocation();
-  const [searchbar, setSearchBar] = useState(false);
-  let { user, socket, privateCheckAuth, setUser, hideNavSideBar } =
-    useContext(AuthContext);
-  let navigate = useNavigate();
-  const [newRecievedFriendReqNotif, setNewRecievedFriendReqNotif] =
-    useState(false);
-  const [friendReq, setFriendReq] = useState("");
-  const [removeFriendReqNotif, setRemoveFriendReqNotif] = useState(false);
-  const data = useContext(SocketDataContext);
+	const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
+    const location = useLocation()
+	const [isSearchBarMobileOpen, setIsSearchBarMobileOpen] = useState(false);
+    let { user, socket, privateCheckAuth, setUser, hideNavSideBar } = useContext(AuthContext)
+	let navigate = useNavigate()
+    const [newReceivedFriendReqNotif, setNewReceivedFriendReqNotif] = useState(false);
+    const [friendReq, setFriendReq] = useState('');
+    const [removeFriendReqNotif, setRemoveFriendReqNotif] = useState(false);
+    const data = useContext(SocketDataContext);
 
-  const notify = () => {
-    setNewRecievedFriendReqNotif(false);
-    toast(
-      <NotificationPopupCard
-        secondUsername={friendReq.username}
-        avatar={friendReq.avatar}
-      />,
-      {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      }
-    );
-  };
+    const notify = () => {
+        setNewReceivedFriendReqNotif(false)
+        toast(
+            <NotificationPopupCard secondUsername={friendReq.username} avatar={friendReq.avatar} />,
+            {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+            }
+        );
+    };
 
-  // useEffect(() => {
-  //   if (data.type === "recieve-friend-request") {
-  //     setNewRecievedFriendReqNotif(true);
-  //     setRemoveFriendReqNotif(false);
-  //     setFriendReq(data.message);
-  //   } else if (
-  //     data.type === "confirm-friend-request" &&
-  //     data.message.username === friendReq.username
-  //   ) {
-  //     setRemoveFriendReqNotif(true);
-  //   } else if (
-  //     data.type === "remove-friend-request" &&
-  //     data.message.username === friendReq.username
-  //   ) {
-  //     setRemoveFriendReqNotif(true);
-  //   }
-  //   // else
-  //   //     console.log("unknown notif type");
-  // }, [data.message.to_user, data.type]);
+    useEffect(() => {
+        if (data.type === "receive-friend-request") {
+          setNewReceivedFriendReqNotif(true);
+          setRemoveFriendReqNotif(false);
+          setFriendReq(data.message);
+        } else if (
+          data.type === "confirm-friend-request" &&
+          data.message.second_username === friendReq.username
+        ) {
+          setRemoveFriendReqNotif(true);
+        } else if (
+          data.type === "remove-friend-request" &&
+          data.message.second_username === friendReq.username
+        ) {
+          setRemoveFriendReqNotif(true);
+        } else console.log("unknown notif type");
+    }, [data.message.to_user, data.type]);
 
-  useEffect(() => {
-    {
-      newRecievedFriendReqNotif && location.pathname !== "/mainpage/friends"
-        ? notify()
-        : console.log("");
-    }
-  }, [newRecievedFriendReqNotif]);
+    useEffect(() => {
+        {
+            (newReceivedFriendReqNotif && location.pathname !== '/mainpage/friends') ?
+                (
+                    notify()
+                )
+                : console.log("")
+        }
+    }, [newReceivedFriendReqNotif]);
 
   useEffect(() => {
     privateCheckAuth();
@@ -79,16 +74,11 @@ function NavbarSidebar() {
   window.addEventListener("resize", () => {
     if (window.innerWidth > 768) {
       setSidebarIsOpen(false);
-      setSearchBar(false);
     }
   });
 
-  const handleExapandSidebar = () => {
-    setSidebarIsOpen(!sidebarIsOpen);
-  };
-
   const handleSearchBar = () => {
-    setSearchBar(!searchbar);
+    setIsSearchBarMobileOpen(!isSearchBarMobileOpen);
   };
 
   let logout = async (e) => {
@@ -118,8 +108,8 @@ function NavbarSidebar() {
       {!hideNavSideBar && (
         <Navbar
           Icons={Icons}
-          searchbar={searchbar}
-          setSearchBar={setSearchBar}
+          isSearchBarMobileOpen={isSearchBarMobileOpen}
+          setIsSearchBarMobileOpen={setIsSearchBarMobileOpen}
           handleSearchBar={handleSearchBar}
         />
       )}
