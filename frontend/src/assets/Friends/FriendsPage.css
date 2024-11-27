@@ -490,11 +490,20 @@ height: 170px;
     align-items: center;
     color: white;
     gap: 10px;
+    width: 100%;
 }
 
 .ProfileName .lvl {
     font-size: small;
-    font-weight: 300;
+    font-weight: 400;
+    display: flex;
+    justify-content: space-between;
+    width: 35%;
+    min-width: 47px;
+}
+
+.ProfileName .lvl span {
+    color: white;
 }
 
 .avatar {

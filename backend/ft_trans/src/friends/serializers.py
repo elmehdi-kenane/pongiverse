@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import FriendRequest
+from mainApp.models import UserMatchStatics
 from .models import Friendship
 from myapp.models import customuser
 
@@ -46,10 +47,12 @@ class friendSerializer(serializers.ModelSerializer):
 class customuserSerializer(serializers.ModelSerializer):
     second_username = serializers.CharField(source='username')
     avatar = serializers.SerializerMethodField()
+    level = serializers.SerializerMethodField()
+    total_xp = serializers.SerializerMethodField()
 
     class Meta:
         model = customuser
-        fields = ['second_username', 'avatar']
+        fields = ['second_username', 'avatar', 'level', 'total_xp']
 
     def get_avatar(self, obj):
         request = self.context.get('request')
@@ -60,3 +63,13 @@ class customuserSerializer(serializers.ModelSerializer):
             else:
                 return f"http://localhost:8000/auth{avatar_url}"
         return None
+
+    def get_level(self, obj):
+        user = customuser.objects.filter(username=obj.username).first()
+        user_stat = UserMatchStatics.objects.filter(player=user).first()
+        return user_stat.level if user_stat else None
+
+    def get_total_xp(self, obj):
+        user = customuser.objects.filter(username=obj.username).first()
+        user_stat = UserMatchStatics.objects.filter(player=user).first()
+        return user_stat.total_xp if user_stat else None
