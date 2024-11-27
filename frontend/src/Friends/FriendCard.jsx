@@ -13,6 +13,7 @@ const FriendCard = ({
   isLastTwoElements,
   secondUsername,
   avatar,
+  isOnline,
   friendId,
 }) => {
   const menuRef = useRef(null);
@@ -100,9 +101,15 @@ const FriendCard = ({
     navigate(`/mainpage/chat`);
   };
   return (
-      <div className="FriendCard" onClick={() => navigate(`/mainpage/profile/${secondUsername}`)}>
+    <div
+      className="FriendCard"
+      onClick={() => navigate(`/mainpage/profile/${secondUsername}`)}
+    >
       <div className="ProfileName">
-        <img src={avatar} alt="Profile" className="Profile" />
+        <div className="avatar">
+          <img src={avatar} alt="Profile" className="Profile" />
+          <span className={`status ${isOnline === true ? "online" : "offline"}`}></span>
+        </div>
         {secondUsername}
       </div>
       {isMenuOpen ? (
@@ -113,11 +120,13 @@ const FriendCard = ({
             }`}
             ref={menuRef}
           >
-            <button onClick={(e) => {
+            <button
+              onClick={(e) => {
                 e.stopPropagation();
                 handleMessageFriend();
                 setIsMenuOpen(false);
-                }}>
+              }}
+            >
               <ChatBubbleIcon />
               Message
             </button>
@@ -125,19 +134,23 @@ const FriendCard = ({
               <SportsEsportsIcon />
               Challenge
             </button>
-            <button onClick={(e) => {
+            <button
+              onClick={(e) => {
                 e.stopPropagation();
                 handleRemoveFriendship();
                 setIsMenuOpen(false);
-                }}>
+              }}
+            >
               <PersonRemoveIcon />
               Unfriend
             </button>
-            <button onClick={(e) => {
+            <button
+              onClick={(e) => {
                 e.stopPropagation();
                 handleBlockFriend();
                 setIsMenuOpen(false);
-                }}>
+              }}
+            >
               <RemoveCircleOutlineIcon />
               Block
             </button>
@@ -155,7 +168,7 @@ const FriendCard = ({
           <img src={ThreeDots} alt="ThreeDots" />
         </button>
       )}
-      </div>
+    </div>
   );
 };
 

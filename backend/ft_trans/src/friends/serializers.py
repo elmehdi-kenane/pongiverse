@@ -26,11 +26,12 @@ class friendRequestSerializer(serializers.ModelSerializer):
 
 class friendSerializer(serializers.ModelSerializer):
     second_username = serializers.CharField(source='friend.username')
+    is_online = serializers.BooleanField(source='friend.is_online')
     avatar = serializers.SerializerMethodField()
 
     class Meta:
         model = Friendship
-        fields = ['second_username', 'avatar']
+        fields = ['second_username', 'avatar', 'is_online']
 
     def get_avatar(self, obj):
         request = self.context.get('request')

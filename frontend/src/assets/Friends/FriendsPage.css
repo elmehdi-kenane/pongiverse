@@ -496,6 +496,30 @@ height: 170px;
     font-size: small;
     font-weight: 300;
 }
+
+.avatar {
+    width: 40px;
+    height: 40px;
+}
+
+.avatar .status {
+  height: 9px;
+  width: 9px;
+  display: inline-block;
+  border-radius: 100%;
+  position: absolute;
+  margin-top: 33px;
+  margin-left: -12px;
+}
+
+.status.online {
+    background-color: rgb(9, 186, 9);
+}
+
+.status.offline {
+    background-color: gray;
+}
+
 .Profile {
     border-radius: 100%;
     border: 1px solid #D9D9D9;
