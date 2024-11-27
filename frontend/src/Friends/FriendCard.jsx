@@ -8,7 +8,6 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 import AuthContext from '../navbar-sidebar/Authcontext'
 import ChatContext from "../Context/ChatContext";
-import { Navigate } from 'react-router-dom';
 
 const FriendCard = ({
   isLastTwoElements,
@@ -84,7 +83,8 @@ const FriendCard = ({
     };
   }, []);
 
-  const toggleMenu = () => {
+  const toggleMenu = (e) => {
+    e.stopPropagation();
     setIsMenuOpen(!isMenuOpen);
   };
 
@@ -100,7 +100,7 @@ const FriendCard = ({
     navigate(`/mainpage/chat`);
   };
   return (
-    <div className="FriendCard">
+      <div className="FriendCard" onClick={() => navigate(`/mainpage/profile/${secondUsername}`)}>
       <div className="ProfileName">
         <img src={avatar} alt="Profile" className="Profile" />
         {secondUsername}
@@ -113,7 +113,8 @@ const FriendCard = ({
             }`}
             ref={menuRef}
           >
-            <button onClick={() => {
+            <button onClick={(e) => {
+                e.stopPropagation();
                 handleMessageFriend();
                 setIsMenuOpen(false);
                 }}>
@@ -124,14 +125,16 @@ const FriendCard = ({
               <SportsEsportsIcon />
               Challenge
             </button>
-            <button onClick={() => {
+            <button onClick={(e) => {
+                e.stopPropagation();
                 handleRemoveFriendship();
                 setIsMenuOpen(false);
                 }}>
               <PersonRemoveIcon />
               Unfriend
             </button>
-            <button onClick={() => {
+            <button onClick={(e) => {
+                e.stopPropagation();
                 handleBlockFriend();
                 setIsMenuOpen(false);
                 }}>
@@ -152,7 +155,7 @@ const FriendCard = ({
           <img src={ThreeDots} alt="ThreeDots" />
         </button>
       )}
-    </div>
+      </div>
   );
 };
 

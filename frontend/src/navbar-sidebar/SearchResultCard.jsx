@@ -2,20 +2,23 @@ import { handleAddFriendReq } from "../Friends/utils";
 import { useState } from "react";
 import AuthContext from "./Authcontext";
 import { useContext } from "react";
+import { useNavigate } from 'react-router-dom';
 
 const SearchResultCard = ({
-  username,
-  avatar,
-  result_type,
-  is_friend,
-  is_joined,
-  searchResult,
-  setSearchResult,
-  searchTerm
+    resultText,
+    avatar,
+    result_type,
+    is_friend,
+    is_joined,
+    searchResult,
+    searchTerm,
+    setIsSearchBarOpen,
+    setInputValue
 }) => {
   const [addFriendBtn, setAddFriendBtn] = useState("Add friend");
   const [joinRoomBtn, setJoinRoomBtn] = useState("Join room");
   const { user } = useContext(AuthContext);
+    const navigate = useNavigate();
   const copiedResult = [...searchResult];
 
   const handleSearchItemBtn = (
@@ -43,7 +46,8 @@ const SearchResultCard = ({
     }
   };
 
-  const HighlightSearchTerm = (searchTerm, resultText) => {
+    const HighlightSearchTerm = () => {
+        console.log(resultText, searchTerm);
     resultText = resultText.toLowerCase();
     searchTerm = searchTerm.toLowerCase();
     console.log("resultText", resultText);
@@ -54,10 +58,18 @@ const SearchResultCard = ({
       resultText.slice(index + searchTerm.length),
     ];
   };
+    const resultTextArr = HighlightSearchTerm();
 
-  const resultTextArr = HighlightSearchTerm(searchTerm, username);
+    const handleClickItem = () => {
+        setIsSearchBarOpen(false);
+        setInputValue("");
+        if (result_type === "user")
+            navigate(`/mainpage/profile/${resultText}`)
+        else if (result_type === "room")
+            console.log("tinkywinky");
+    }
   return (
-    <div className="searchResultItem">
+      <div className="searchResultItem" onClick={handleClickItem}>
       <img src={avatar} alt={avatar} />
       <p>
         {resultTextArr[0]}
@@ -68,7 +80,11 @@ const SearchResultCard = ({
         is_friend === false &&
         addFriendBtn !== null && (
           <button
-            onClick={() => handleSearchItemBtn(user, username, "Request sent")}
+                  onClick={(e) => {
+                      e.stopPropagation();
+                      handleSearchItemBtn(user, resultText, "Request sent");
+                  }
+                  }
           >
             {addFriendBtn}
           </button>
@@ -76,7 +92,12 @@ const SearchResultCard = ({
       {result_type === "room" &&
         is_joined === false &&
         joinRoomBtn !== null && (
-          <button onClick={() => handleSearchItemBtn(user, username, "Joined")}>
+              <button onClick={(e) => {
+                  e.stopPropagation();
+                  handleSearchItemBtn(user, resultText, "Joined");
+              }
+              }
+              >
             {joinRoomBtn}
           </button>
         )}

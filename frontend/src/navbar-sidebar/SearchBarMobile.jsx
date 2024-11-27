@@ -123,7 +123,7 @@ export const SearchBarMobile = ({ handleSearchBar }) => {
                       return (
                         <SearchResultCard
                           key={index}
-                          username={item.username}
+                              resultText={item.username}
                           avatar={item.avatar}
                           result_type={item.result_type}
                           is_friend={item.is_friend}
@@ -131,6 +131,8 @@ export const SearchBarMobile = ({ handleSearchBar }) => {
                           searchResult={searchResult}
                           setSearchResult={setSearchResult}
                           searchTerm={inputValue}
+                              setIsSearchBarOpen={setIsSearchBarOpen}
+                              setInputValue={setInputValue}
                         ></SearchResultCard>
                       );
                     })
@@ -143,7 +145,7 @@ export const SearchBarMobile = ({ handleSearchBar }) => {
                       return (
                         <SearchResultCard
                           key={index}
-                          username={item.username}
+                              resultText={item.username}
                           avatar={item.avatar}
                           result_type={item.result_type}
                           is_friend={item.is_friend}
@@ -151,6 +153,8 @@ export const SearchBarMobile = ({ handleSearchBar }) => {
                           searchResult={searchResult}
                           setSearchResult={setSearchResult}
                           searchTerm={inputValue}
+                              setIsSearchBarOpen={setIsSearchBarOpen}
+                              setInputValue={setInputValue}
                         ></SearchResultCard>
                       );
                     })
@@ -163,7 +167,7 @@ export const SearchBarMobile = ({ handleSearchBar }) => {
                       return (
                         <SearchResultCard
                           key={index}
-                          username={item.username}
+                              resultText={item.username}
                           avatar={item.avatar}
                           result_type={item.result_type}
                           is_friend={item.is_friend}
@@ -171,6 +175,8 @@ export const SearchBarMobile = ({ handleSearchBar }) => {
                           searchResult={searchResult}
                           setSearchResult={setSearchResult}
                           searchTerm={inputValue}
+                              setIsSearchBarOpen={setIsSearchBarOpen}
+                              setInputValue={setInputValue}
                         ></SearchResultCard>
                       );
                     })

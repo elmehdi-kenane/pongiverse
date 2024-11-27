@@ -1,10 +1,12 @@
 import { useState, useContext } from 'react'
 import AuthContext from '../navbar-sidebar/Authcontext'
 import { handleAddFriendReq } from './utils'
+import { useNavigate } from 'react-router-dom';
 
 const SuggestionFriendCard = ({ username, avatar }) => {
     const { user } = useContext(AuthContext);
     const [friendRequestBtn, setFriendRequestBtn] = useState(false);
+    const navigate = useNavigate();
     const handleAddFriendReq = () => {
     fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/add_friend_request/`, {
         method: 'POST',
@@ -26,7 +28,7 @@ const SuggestionFriendCard = ({ username, avatar }) => {
         setFriendRequestBtn(true);
     };
     return (
-      <div className="SuggestionFriendCard embla__slide">
+        <div className="SuggestionFriendCard embla__slide" onClick={() => navigate(`/mainpage/profile/${username}`)}>
         <div className="ProfileName">
           <img src={avatar} alt="Profile" className="Profile" />
           {username}
@@ -44,8 +46,10 @@ const SuggestionFriendCard = ({ username, avatar }) => {
         ) : (
           <button
             className="FriendBtn Add"
-            onClick={() =>
-              handleAddFriendReq(user, username, setFriendRequestBtn)
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddFriendReq(user, username, setFriendRequestBtn);
+                        }
             }
           >
             Add friend
