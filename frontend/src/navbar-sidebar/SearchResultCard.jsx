@@ -45,6 +45,7 @@ const SearchResultCard = ({
 
   const HighlightSearchTerm = (searchTerm, resultText) => {
     resultText = resultText.toLowerCase();
+    searchTerm = searchTerm.toLowerCase();
     console.log("resultText", resultText);
     const index = resultText.indexOf(searchTerm);
     return [
