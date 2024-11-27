@@ -60,18 +60,17 @@ function SignInWays() {
       }
     }
   };
-
   const OtfInput = () => {
     return (
       <div className={styles["otp-input-div"]}>
         <input
           type="text"
-          className="tfq__input"
+          className={styles["tfq-input"]}
           placeholder="Authentication Code (6 digits)"
           maxLength={6}
           ref={inputRef}
         />
-        <button onClick={ValidateTFQ}>enter</button>
+        <button onClick={ValidateTFQ} className={styles["tfq-button"]}>enter</button>
       </div>
     );
   };
@@ -125,6 +124,9 @@ function SignInWays() {
         notifyError("There is no account");
       } else if (data.Case === "Invalid email signature") {
         notifyError("Invalid email signature");
+      } else if (data.Case === "Login successfully but have tfq") {
+        setUser(data.user)
+        setOpenTfq(true);
       }
     } else {
       console.error('Failed to fetch data');
