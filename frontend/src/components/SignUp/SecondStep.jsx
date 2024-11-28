@@ -129,25 +129,25 @@ function SecondStep() {
 		}
 	};
 
-	useEffect(() => {
-
-		client
-			.post("/auth/checkusername/", nextdata, {
+	const check_username = async (nextdata) => {
+		try {
+			const response = await client.post("/auth/checkusername/", nextdata, {
 				headers: {
 					"Content-Type": "application/json",
 				},
-			})
-			.then((response) => {
-				if (response.data.Case === "Username already exist") {
-					setExist(true);
-				} else {
-					setExist(false);
-				}
-			})
-			.catch((error) => {
-				console.error("There was an error!", error);
 			});
-	}, [nextdata.username]);
+			if (response.data.Case === "Username already exist") {
+				return true; // Indicate the username already exists
+			} else {
+				return false; // Indicate the username does not exist
+			}
+		} catch (error) {
+			console.error("There was an error!", error);
+			return null; // Indicate an error occurred
+		}
+	};
+
+
 
 	useEffect(
 		() =>
@@ -160,9 +160,11 @@ function SecondStep() {
 	);
 
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const validationErrors = {};
+		const checkusername = await check_username(nextdata)
+		console.log("CHECK USERNAME:", checkusername)
 		const regex = /^(?!\d)[a-zA-Z0-9_]{4,8}$/;
 		const containsSingleUnderscore = (nextdata.username.match(/_/g) || []).length <= 1;
 		if (!nextdata.username.trim())
@@ -171,7 +173,8 @@ function SecondStep() {
 			validationErrors.username = "username already exist";
 		else if (!regex.test(nextdata.username) || !containsSingleUnderscore)
 			validationErrors.username = "username must be satisfies : 4-8 characters long, only letters, digits, at most one underscore, not start with digit.";
-		console.log("validationErrors :", Object.keys(validationErrors).length);
+		else if (checkusername === true)
+			validationErrors.username = "Username already used";
 		setErrors(validationErrors);
 		console.log("validate error lenght :", Object.keys(validationErrors).length)
 		if (Object.keys(validationErrors).length === 0) {
@@ -279,7 +282,7 @@ function SecondStep() {
 							<span className={styles["spans"]}>{errors.username}</span>
 						</div>
 					)}
-					<button className={styles["second-step-form-button"]}onClick={handleSubmit}>Sign Up </button>
+					<button className={styles["second-step-form-button"]} onClick={handleSubmit}>Sign Up </button>
 				</div>
 			</div>
 		</div>
