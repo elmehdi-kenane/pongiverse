@@ -224,7 +224,9 @@ const Friends = () => {
     };
     if (user) getBlockedList();
   }, [user]);
-
+  console.log("friends", friends);
+  console.log("receivedRequests", receivedRequests);
+  console.log("sentRequests", sentRequests);
   return (
     <div className="FriendPage">
       <SuggestionsWrapper

@@ -84,7 +84,6 @@ def get_received_requests(request, username):
 
 @api_view(['POST'])
 def add_friend_request(request):
-    print("request.data", request.data)
     from_username = request.data['from_username']
     to_username = request.data['to_username']
     from_user = customuser.objects.get(username=from_username)
@@ -136,11 +135,10 @@ def cancel_friend_request(request):
     to_user = customuser.objects.get(username=to_username)
     try:
         friend_request = FriendRequest.objects.get(from_user=from_user, to_user=to_user)
-        sent_request_ser = friendRequestSerializer(friend_request)
-        #print(sent_request_ser.data)
+        sent_request_ser = friendRequestSerializer(friend_request, context={'type': 'sent'})
         friend_request.delete()
         friend_request = FriendRequest.objects.get(from_user=to_user, to_user=from_user)
-        received_request_ser = friendRequestSerializer(friend_request)
+        received_request_ser = friendRequestSerializer(friend_request, context={'type': 'received'})
         friend_request.delete()
     except FriendRequest.DoesNotExist:
         return Response({"error": "Friend request doesn't exist."})
@@ -155,7 +153,8 @@ def cancel_friend_request(request):
             'message': {
                 'second_username': to_username,
                 'send_at': sent_request_ser.data['send_at'],
-                'avatar': sent_request_ser.data['avatar']
+                'avatar': sent_request_ser.data['avatar'],
+                'level': sent_request_ser.data['level']
             }
         }
     )
@@ -166,7 +165,8 @@ def cancel_friend_request(request):
             'message': {
                 'second_username': from_username,
                 'send_at': received_request_ser.data['send_at'],
-                'avatar': received_request_ser.data['avatar']
+                'avatar': received_request_ser.data['avatar'],
+                'level': received_request_ser.data['level']
             }
         }
     )

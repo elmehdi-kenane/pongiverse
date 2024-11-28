@@ -21,11 +21,10 @@ function NavbarSidebar() {
     const [friendReq, setFriendReq] = useState('');
     const [removeFriendReqNotif, setRemoveFriendReqNotif] = useState(false);
     const data = useContext(SocketDataContext);
-
     const notify = () => {
         setNewReceivedFriendReqNotif(false)
         toast(
-            <NotificationPopupCard secondUsername={friendReq.username} avatar={friendReq.avatar} />,
+            <NotificationPopupCard secondUsername={friendReq.second_username} avatar={friendReq.avatar} />,
             {
                 position: "top-center",
                 autoClose: 5000,
