@@ -31,6 +31,7 @@ export const SearchBarMobile = ({ handleSearchBar }) => {
         `http://localhost:8000/navBar/search_view/?searchTerm=${searchTerm}&username=${username}`,
         {
           method: "GET",
+          credentials: "include",
         }
       );
       const res = await response.json();

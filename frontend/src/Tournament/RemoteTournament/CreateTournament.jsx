@@ -101,6 +101,7 @@ function CreateTournament() {
 		const get_members = async () => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/tournament-members`, {
 				method: "POST",
+				credentials: "include",
 				headers: {
 					'Content-Type': 'application/json',
 				},
@@ -124,6 +125,7 @@ function CreateTournament() {
 		const set_is_inside = async () => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/set-is-inside`, {
 				method: 'POST',
+				credentials: "include",
 				headers: {
 					'Content-Type': 'application/json'
 				},
@@ -137,6 +139,7 @@ function CreateTournament() {
 		const check_is_join = async () => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/is-joining-tournament`, {
 				method: "POST",
+				credentials: "include",
 				headers: {
 					'Content-Type': 'application/json',
 				},
@@ -157,6 +160,7 @@ function CreateTournament() {
 		const check_is_started_and_not_finished = async () => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/is-started-and-not-finshed`, {
 				method: "POST",
+				credentials: "include",
 				headers: {
 					'Content-Type': 'application/json',
 				},
@@ -185,6 +189,7 @@ function CreateTournament() {
 		const get_member = async (username) => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-tournament-member`, {
 				method: "POST",
+				credentials: "include",
 				headers: {
 					'Content-Type': 'application/json',
 				},
@@ -218,12 +223,27 @@ function CreateTournament() {
 						prevMembers.filter((member) => member.name !== kicked));
 				} else if (type === 'leave_tournament') {
 					let kicked = data.message.kicked
+					let is_a_friend = data.message.is_a_friend
 					const currentAllGameFriends = allGameFriendsRef.current;
 					setTournamentMembers((prevMembers) =>
 						prevMembers.filter((member) => member.name !== kicked));
-					setAllGameFriends([...currentAllGameFriends, message.userInfos])
+					if (is_a_friend === true) {
+						const userExists = currentAllGameFriends.some(friend => friend.name === message.userInfos.name)
+						if (!userExists)
+							setAllGameFriends([...currentAllGameFriends, message.userInfos])
+					}
+						
 					if (kicked === user) {
 						navigate("/mainpage/game")
+					}
+				} else if (type === 'user_leave_tournament') {
+					console.log("ENTER TO USER LEAVE TOURNAMENT")
+					const currentAllGameFriends = allGameFriendsRef.current;
+					let is_a_friend = data.message.is_a_friend
+					if (is_a_friend === true){
+						const userExists = currentAllGameFriends.some(friend => friend.name === message.userInfos.name)
+						if (!userExists)
+							setAllGameFriends([...currentAllGameFriends, message.userInfos])
 					}
 				} else if (type === 'tournament_destroyed') {
 					navigate("/mainpage/game")
@@ -298,6 +318,10 @@ function CreateTournament() {
 						setAllGameFriends([...currentAllGameFriends, message.userInfos])
 				} else if (type === 'tournament_destroyed') {
 					navigate("/mainpage/game")
+				} else if (type === 'user_join_tournament') {
+					console.log("ENTER TO USER JOIN TOURNAMENT")
+					const currentAllGameFriends = allGameFriendsRef.current;
+					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== message.user))
 				}
 			}
 		}

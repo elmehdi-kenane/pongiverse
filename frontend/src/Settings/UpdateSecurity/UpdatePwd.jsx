@@ -40,6 +40,7 @@ function UpdatePwd(props) {
       try {
         const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/updatePassword`, {
           method: "POST",
+          credentials: "include",
           headers: {
             'Content-Type': 'application/json',
           },

@@ -90,6 +90,7 @@ const CreateRoom = (props) => {
           // Perform the fetch request
           const response = await fetch("http://localhost:8000/chatAPI/createChatRoom", {
             method: "POST",
+            credentials: "include",
             body: data,
           });
           

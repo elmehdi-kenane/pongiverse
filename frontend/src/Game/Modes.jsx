@@ -23,6 +23,7 @@ const Modes = () => {
 		const check_is_join = async () => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/is-joining-tournament`, {
 				method: "POST",
+				credentials: "include",
 				headers: {
 					'Content-Type': 'application/json',
 				},
@@ -41,6 +42,7 @@ const Modes = () => {
 		const check_is_started_and_not_finished = async () => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/is-started-and-not-finshed`, {
 				method: "POST",
+				credentials: "include",
 				headers: {
 					'Content-Type': 'application/json',
 				},

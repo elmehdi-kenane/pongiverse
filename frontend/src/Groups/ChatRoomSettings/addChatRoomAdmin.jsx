@@ -8,7 +8,10 @@ const AddChatRoomAdmin = (props) => {
     const fetchAllChatRoomMembers = async () => {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/allRoomMembers/${props.name}`
+          `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/allRoomMembers/${props.name}`,
+          {
+            credentials: "include",
+          }
         );
         const data = await response.json();
         console.log("all chat room: ", data);

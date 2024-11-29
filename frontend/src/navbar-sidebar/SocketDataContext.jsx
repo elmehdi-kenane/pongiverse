@@ -24,22 +24,22 @@ export const SocketDataContextProvider = ({ children }) => {
     //     // else
     //         // console.log("socket", socket, "doesn't exist");
     // }, [socket]);
-    useEffect(() => {
-        if (notifSocket) {
-            console.log(".............. NEW MESSAGE FROM BACKEND ..............");
-            notifSocket.onmessage = (e) => {
-                const parsedData = JSON.parse(e.data);
-                const data =
-                {
-                    message: parsedData.message,
-                    type: parsedData.type,
-                };
-                setData(data)
-            }
-        }
-        else
-            console.log("notifSocket", notifSocket, "doesn't exist");
-    }, [notifSocket]);
+    // useEffect(() => {
+    //     if (notifSocket) {
+    //         console.log(".............. NEW MESSAGE FROM BACKEND ..............");
+    //         notifSocket.onmessage = (e) => {
+    //             const parsedData = JSON.parse(e.data);
+    //             const data =
+    //             {
+    //                 message: parsedData.message,
+    //                 type: parsedData.type,
+    //             };
+    //             setData(data)
+    //         }
+    //     }
+    //     else
+    //         console.log("notifSocket", notifSocket, "doesn't exist");
+    // }, [notifSocket]);
     return (
         <SocketDataContext.Provider value={data}>
             {children}

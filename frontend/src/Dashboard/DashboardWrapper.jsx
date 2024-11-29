@@ -45,6 +45,7 @@ export const DashboardWrapper = ({ child }) => {
               `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserGames/${user}`,
               {
                 method: "GET",
+                credentials: "include",
                 headers: {
                   "Content-Type": "application/json",
                 },

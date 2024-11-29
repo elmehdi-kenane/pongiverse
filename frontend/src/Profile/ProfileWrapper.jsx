@@ -32,6 +32,7 @@ export const ProfileWrapper = ({ child }) => {
             try {
                 const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserData/${userId}`, {
                     method: "GET",
+                    credentials: "include",
                     headers: {
                         'Content-Type': 'application/json',
                     }

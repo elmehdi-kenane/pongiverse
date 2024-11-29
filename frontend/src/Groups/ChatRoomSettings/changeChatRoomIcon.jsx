@@ -17,6 +17,7 @@ const ChangeChatRoomIcon = (props) => {
         `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/changeChatRoomIcon`,
         {
           method: "POST",
+          credentials: "include",
           body: formData,
         }
       );

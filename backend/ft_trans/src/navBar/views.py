@@ -6,7 +6,9 @@ from myapp.models import customuser
 from friends.models import Friendship
 from friends.models import FriendRequest
 from .serializers import customUserSerializer
+from myapp.decorators import authentication_required
 
+@authentication_required
 @api_view(['GET'])
 def search_view(request):
     # This is the default value that will be returned if the key searchTerm is not found in the dictionary-like object.

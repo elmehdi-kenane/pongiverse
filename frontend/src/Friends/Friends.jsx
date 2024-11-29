@@ -13,7 +13,8 @@ const Friends = () => {
   useEffect(() => {
     const getUsers = async () => {
         const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/profile/${user}`, {
-          method: 'GET'
+          method: 'GET',
+          credentials: "include",
         })
         const res = await response.json()
         // set
@@ -28,6 +29,7 @@ const Friends = () => {
   const addFriend = async (myuser) => {
     const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/users/add/${user}`, {
       method: 'POST',
+      credentials: "include",
       headers: {
         'Content-Type': 'application/json'
       },
@@ -44,6 +46,7 @@ const Friends = () => {
         `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/friends/${user}`,
         {
           method: "GET",
+          credentials: "include",
         }
       );
       const res = await response.json();

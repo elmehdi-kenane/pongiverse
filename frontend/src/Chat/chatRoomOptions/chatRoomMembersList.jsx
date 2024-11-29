@@ -16,6 +16,7 @@ const ChatRoomMembersList = (props) => {
           `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/chatRoomMembersList`,
           {
             method: "POST",
+            credentials: "include",
             headers: {
               "Content-type": "application/json",
             },

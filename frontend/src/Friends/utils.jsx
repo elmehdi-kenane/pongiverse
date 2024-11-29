@@ -26,6 +26,7 @@ export const cancelFriendRequest = (
 export const confirmFriendRequest = (currentUsername, secondUsername) => {
   fetch("http://localhost:8000/friends/confirm_friend_request/", {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -47,6 +48,7 @@ export const confirmFriendRequest = (currentUsername, secondUsername) => {
 export const handleAddFriendReq = (currentUsername, secondUsername) => {
     fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/add_friend_request/`, {
         method: 'POST',
+        credentials: "include",
         headers: {
             'Content-Type': 'application/json',
         },
@@ -68,6 +70,7 @@ export const handleAddFriendReq = (currentUsername, secondUsername) => {
 export const handleRemoveFriendship = (user, secondUsername) => {
   fetch("http://localhost:8000/friends/remove_friendship/", {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -88,6 +91,7 @@ export const handleRemoveFriendship = (user, secondUsername) => {
 export const handleBlockFriend = (user, secondUsername) => {
   fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/block_friend/`, {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },

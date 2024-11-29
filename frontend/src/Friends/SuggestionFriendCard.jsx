@@ -8,6 +8,7 @@ const SuggestionFriendCard = ({ username, avatar }) => {
     const handleAddFriendReq = () => {
     fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/add_friend_request/`, {
         method: 'POST',
+        credentials: "include",
         headers: {
             'Content-Type': 'application/json',
         },

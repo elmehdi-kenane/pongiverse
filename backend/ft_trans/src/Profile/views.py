@@ -22,14 +22,17 @@ import pyotp
 import qrcode
 import os
 import secrets
+from myapp.decorators import authentication_required
 
 # Create your views here.
+@authentication_required
 @api_view (['GET'])
 def list_users(request, username):
     users_list = [user.username for user in customuser.objects.exclude(username=username)]
     print(users_list)
     return Response(users_list)
 
+@authentication_required
 @api_view(['POST'])
 def add_users(request, username):
     print(username , "add " ,request.data['user'])
@@ -46,6 +49,7 @@ def add_users(request, username):
     Friendship.objects.create(user=user_add_row , friend=user_sender_row)
     return Response({'message':'sucess'})
 
+@authentication_required
 @api_view(['GET'])
 def show_friends(request, username):
     user = customuser.objects.get(username=username)
@@ -59,7 +63,7 @@ def show_friends(request, username):
     # Friendship.objects.create(user=user_sender_row , friend=user_add_row)
     # Friendship.objects.create(user=user_add_row , friend=user_sender_row)
     # return Response({'message':'sucess'})
-
+@authentication_required
 @api_view(['GET'])
 def friends_with_directs(request, username):
     user = customuser.objects.get(username=username)
@@ -79,7 +83,7 @@ def friends_with_directs(request, username):
 
 
 #**--------------------- UserData ---------------------** 
-
+@authentication_required
 @api_view(['GET'])
 def getUserData(request, username):
     user = customuser.objects.filter(username=username).first()
@@ -114,7 +118,7 @@ def save_base64_image(base64_image): # Save the Base64 Image as a file
     # Create a ContentFile object from the decoded image data
     img_file = ContentFile(img_data, name='Picture.png')
     return img_file
-
+@authentication_required
 @api_view(['POST'])
 def update_user_pic(request):
     username= request.data.get('user')
@@ -131,7 +135,7 @@ def update_user_pic(request):
         error_response = Response(data={"error": "Failed to update picture"}, status=status.HTTP_400_BAD_REQUEST)
         return error_response
 
-
+@authentication_required
 @api_view(['POST'])
 def update_user_bg(request):
     username= request.data.get('user')
@@ -155,7 +159,7 @@ def check_used_username(new_username):
         return new_username
     else:
         return None
-
+@authentication_required
 @api_view(['POST'])
 def update_username(request):
     username = request.data.get('user')
@@ -175,7 +179,7 @@ def update_username(request):
         return error_response
         
 #**--------------------- UserBio ---------------------** 
-
+@authentication_required
 @api_view(['POST'])
 def update_user_bio(request):
     username = request.data.get('user')
@@ -191,7 +195,7 @@ def update_user_bio(request):
         return err_res
         
 #**--------------------- UserCountry ---------------------** 
-
+@authentication_required
 @api_view(['POST'])
 def update_user_country(request):
     username = request.data.get('user')
@@ -207,7 +211,7 @@ def update_user_country(request):
         return err_res
         
 #**--------------------- UserPassword ---------------------** 
-
+@authentication_required
 @api_view(["POST"])
 def update_user_password(request):
     username = request.data.get('user')
@@ -225,7 +229,7 @@ def update_user_password(request):
         return err_res
 
 #**--------------------- GetFriends User ---------------------** 
-
+@authentication_required
 @api_view(["GET"])
 def get_user_friends(request, username):
     user = customuser.objects.filter(username=username).first()
@@ -241,7 +245,7 @@ def get_user_friends(request, username):
     return Response(data={"data": friends}, status=status.HTTP_200_OK)
 
 #**--------------------- Check User Friendship ---------------------** 
-
+@authentication_required
 @api_view(["GET"])
 def check_friendship(request, username, username2):
     user = customuser.objects.filter(username=username).first()
@@ -278,7 +282,7 @@ def check_friendship(request, username, username2):
 #                 return HttpResponse(image_file.read(), content_type='image/jpeg')
 #              else:
 #                  return Response("not found")
-
+@authentication_required
 @api_view(["GET"])
 def get_users_rank(request, username):
     # user = customuser.objects.filter(username=username).first()
@@ -301,7 +305,7 @@ def get_users_rank(request, username):
         
 
 #**--------------------- GetUsers Games Lost - Wins {Dashboard}---------------------**#
-   
+@authentication_required
 @api_view(["GET"])
 def get_user_games_wl(request, username):
     user = customuser.objects.filter(username=username).first()
@@ -317,7 +321,7 @@ def get_user_games_wl(request, username):
     return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
 
 #**--------------------- GetUsers Games Lost - Wins {Profile/Diagram}---------------------**#
-   
+@authentication_required
 @api_view(["GET"])
 def get_user_diagram(request, username):
     user = customuser.objects.filter(username=username).first()
@@ -346,7 +350,7 @@ def get_user_diagram(request, username):
     return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
 
 #**--------------------- GetUsers Games Lost - Wins {Profile/Match History}---------------------**#
-
+@authentication_required
 @api_view(["GET"])
 def get_user_games(request, username, page):
     user = customuser.objects.filter(username=username).first()
@@ -392,7 +396,7 @@ def get_user_games(request, username, page):
     return Response(data={'error': 'Error Getting UserGames!'}, status=status.HTTP_400_BAD_REQUEST)
 
 #**--------------------- GetUser Statistics {Profile-Dashboard} ---------------------**#
-
+@authentication_required
 @api_view(["GET"])
 def get_user_statistics(request, username, date_range):
     user = customuser.objects.filter(username=username).first()
@@ -429,7 +433,7 @@ def get_user_statistics(request, username, date_range):
     return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
 
 #**--------------------- GetUser SingleMatches {Dashboard} ---------------------**#
-
+@authentication_required
 @api_view(["GET"])
 def get_single_matches(request, username, page):
     user = customuser.objects.filter(username=username).first()
@@ -460,7 +464,7 @@ def get_single_matches(request, username, page):
     return Response(data={'error': 'User not found!!'}, status=status.HTTP_404_NOT_FOUND)
 
 #**------- GetUser SingleMatch Details -------**#
-
+@authentication_required
 @api_view(["GET"])
 def get_single_match_dtl(request, match_id):
     match = Match.objects.filter(room_id=match_id).first()
@@ -488,7 +492,7 @@ def get_single_match_dtl(request, match_id):
     return Response(data={'error': 'Error Getting userGames!'}, status=status.HTTP_400_BAD_REQUEST)
 
 #**--------------------- GetUser MultiplayerMatches {Dashboard} ---------------------**#
-
+@authentication_required
 @api_view(["GET"])
 def get_multiplayer_matches(request, username, page):
     user = customuser.objects.filter(username=username).first()
@@ -521,7 +525,7 @@ def get_multiplayer_matches(request, username, page):
     return Response(data={'error': 'User not found!'}, status=status.HTTP_404_NOT_FOUND)
 
 #**------- GetUser MultiplayerMatch Details -------**#
-
+@authentication_required
 @api_view(["GET"])
 def get_multy_match_dtl(request, match_id):
     match = Match.objects.filter(room_id=match_id).first()
@@ -561,7 +565,7 @@ def get_multy_match_dtl(request, match_id):
     return Response(data={'error': 'Error Getting MultiplayerGames!'}, status=status.HTTP_400_BAD_REQUEST)
 
 #**--------------------- GetUser TournamentMatches {Dashboard} ---------------------**#
-
+@authentication_required
 @api_view(["GET"])
 def get_tourn_matches(request, username, page, items):
     user = customuser.objects.filter(username=username).first()
@@ -609,7 +613,7 @@ def checkPath():
     path = 'uploads/qr_codes/'
     if not os.path.exists(path):
         os.makedirs(path)
-
+@authentication_required
 @api_view(["POST"])
 def enable_user_tfq(request):
     username = request.data.get('user')
@@ -639,7 +643,7 @@ def enable_user_tfq(request):
     return Response(data={'error': 'Error Generating QrCode'}, status=status.HTTP_400_BAD_REQUEST)
 
 #**------- Validate User TFQ -------**#
-
+@authentication_required
 @api_view(["POST"])
 def validate_user_tfq(request):
     username = request.data.get('user')
@@ -661,7 +665,7 @@ def validate_user_tfq(request):
     return Response(data={'error': 'Error Validating UserTFQ'}, status=status.HTTP_400_BAD_REQUEST)
 
 #**------- Disable User TFQ -------**#
-
+@authentication_required
 @api_view(["POST"])
 def disable_user_tfq(request):
     username = request.data.get('user')
@@ -680,7 +684,7 @@ def disable_user_tfq(request):
     return Response(data={'error': 'Error disabling user TFQ'}, status=status.HTTP_400_BAD_REQUEST)
 
 #**------- Check OTP for SignIN -------**#
-
+@authentication_required
 @api_view(["POST"])
 def check_user_tfq(request):
     username = request.data.get('user')

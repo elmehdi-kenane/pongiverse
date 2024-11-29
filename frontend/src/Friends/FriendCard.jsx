@@ -26,6 +26,7 @@ const FriendCard = ({
   const handleBlockFriend = () => {
     fetch("http://localhost:8000/friends/block_friend/", {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -54,6 +55,7 @@ const FriendCard = ({
   const handleRemoveFriendship = () => {
     fetch("http://localhost:8000/friends/remove_friendship/", {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },

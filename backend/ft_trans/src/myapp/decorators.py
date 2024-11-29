@@ -17,7 +17,6 @@ def authentication_required(view_func):
 		user_id = -1
 		try:
 			refresh_token = request.COOKIES.get('refresh_token')
-			print("refresh_token: ", refresh_token)
 			if not refresh_token:
 				response = JsonResponse({"Case": "Invalid token"}, status=401)
 				response.delete_cookie('access_token')

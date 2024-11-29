@@ -64,11 +64,11 @@ export const AuthProvider = ({ children }) => {
 	const chatNotificationRef = useRef(null);
 
 	// useEffect(()=>{
-    //     const url = window.location.href;
+	//     const url = window.location.href;
 	// 	const element = document.getElementById("scrollTop");
 	// 	// 	console.log("Scroll Effect Here");
 	// 	// }
-    //     const checkUrlEnd = () => {
+	//     const checkUrlEnd = () => {
 	// 		if (url.endsWith('/profile/IMAD') && (element)){
 	// 			element.scrollIntoView({ behavior: 'smooth' });
 	// 			console.log("RAGRAGUIII")
@@ -76,7 +76,7 @@ export const AuthProvider = ({ children }) => {
 	// 	};
 	// 	if (url)
 	// 		checkUrlEnd();
-    // },[window.location.href])
+	// },[window.location.href])
 
 	useEffect(() => {
 		RoomsInvitationRef.current = chatRoomInvitationsCounter;
@@ -144,6 +144,7 @@ export const AuthProvider = ({ children }) => {
 					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/onlineFriends`,
 					{
 						method: "POST",
+						credentials: "include",
 						headers: {
 							"Content-Type": "application/json",
 						},
@@ -168,6 +169,7 @@ export const AuthProvider = ({ children }) => {
 					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/notifsFriends`,
 					{
 						method: "POST",
+						credentials: "include",
 						headers: {
 							"Content-Type": "application/json",
 						},
@@ -191,6 +193,7 @@ export const AuthProvider = ({ children }) => {
 					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getUserImage`,
 					{
 						method: "POST",
+						credentials: "include",
 						headers: {
 							"Content-Type": "application/json",
 						},
@@ -284,6 +287,7 @@ export const AuthProvider = ({ children }) => {
 					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/check_is_in_game`,
 					{
 						method: "POST",
+						credentials: "include",
 						headers: {
 							"Content-Type": "application/json",
 						},
@@ -321,6 +325,7 @@ export const AuthProvider = ({ children }) => {
 					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get_user`,
 					{
 						method: "POST",
+						credentials: "include",
 						headers: {
 							"Content-Type": "application/json",
 						},
@@ -435,6 +440,7 @@ export const AuthProvider = ({ children }) => {
 		const set_is_inside = async (flag) => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/set-is-inside`, {
 				method: 'POST',
+				credentials: "include",
 				headers: {
 					'Content-Type': 'application/json'
 				},
@@ -458,7 +464,10 @@ export const AuthProvider = ({ children }) => {
 			try {
 				const response = await fetch(
 					`http://${import.meta.env.VITE_IPADDRESS
-					}:8000/chatAPI/unrecievedRoomInvitee/${user}`
+					}:8000/chatAPI/unrecievedRoomInvitee/${user}`,
+					{
+						credentials: "include",
+					}
 				);
 				const data = await response.json();
 				if (response.ok) {
@@ -477,7 +486,9 @@ export const AuthProvider = ({ children }) => {
 			try {
 				const response = await fetch(
 					`http://${import.meta.env.VITE_IPADDRESS
-					}:8000/chatAPI/unreadConversations/${user}`
+					}:8000/chatAPI/unreadConversations/${user}`, {
+					credentials: "include",
+				}
 				);
 				const data = await response.json();
 				if (response.ok) {

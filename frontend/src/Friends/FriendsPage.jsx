@@ -26,6 +26,7 @@ const Friends = () => {
         }:8000/friends/get_friend_suggestions/${user}`,
         {
           method: "GET",
+          credentials: "include",
           headers: {},
         }
       );
@@ -43,6 +44,7 @@ const Friends = () => {
         }:8000/friends/get_friend_list/${user}`,
         {
           method: "GET",
+          credentials: "include",
           headers: {},
         }
       );
@@ -182,6 +184,7 @@ const Friends = () => {
         }:8000/friends/get_sent_requests/${user}`,
         {
           method: "GET",
+          credentials: "include",
           headers: {},
         }
       );
@@ -199,6 +202,7 @@ const Friends = () => {
         }:8000/friends/get_received_requests/${user}`,
         {
           method: "GET",
+          credentials: "include",
           headers: {},
         }
       );
@@ -216,6 +220,7 @@ const Friends = () => {
         }:8000/friends/get_blocked_list/${user}`,
         {
           method: "GET",
+          credentials: "include",
           headers: {},
         }
       );

@@ -15,6 +15,7 @@ function DashStatistics() {
             try {
                 const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserStcs/${user}/${31}`, {
                 method: "GET",
+                credentials: "include",
                 headers: {
                     'Content-Type': 'application/json',
                 }

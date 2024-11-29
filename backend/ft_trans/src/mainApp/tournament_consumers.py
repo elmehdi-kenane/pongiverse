@@ -152,43 +152,69 @@ async def kick_player(self, data, user_channels):
 			}
 		)
 
+
+async def check_user_is_a_friend(user, to_check):
+	friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
+	for friend in friends:
+		friend_username = await sync_to_async(lambda: friend.friend.username)()
+		if friend_username == to_check.username:
+			return True
+	return False
+
 async def leave_tournament(self, data, user_channels):
 	tournament_id = data['message']['tournament_id']
 	ip_address = os.getenv("IP_ADDRESS")
 	kicked_user = await sync_to_async(customuser.objects.get)(username=data['message']['kicked'])
 	kicked_user.is_playing = False
 	await sync_to_async(kicked_user.save)()
-	delete_member(tournament_id, data['message']['kicked'])
 	group_name = f'tournament_{tournament_id}'
-	await self.channel_layer.group_send(
-		group_name,
-		{
-			'type': 'leave_tournament',
-			'message':{
-				'kicked': data['message']['kicked'],
-				'userInfos': {
-					'id': kicked_user.id,
-					'name': kicked_user.username,
-					'level': 2,
-					'image': f"http://{ip_address}:8000/auth{kicked_user.avatar.url}" ,
-					'is_playing' : kicked_user.is_playing
+	for member in tournaments[tournament_id]['members']:
+		user = await sync_to_async(customuser.objects.filter(username=member['username']).first)()
+		is_a_friend = await check_user_is_a_friend(kicked_user, user)
+		channel_name = user_channels.get(user.id)
+		if channel_name:
+			await self.channel_layer.send(
+			channel_name,
+			{
+				'type': 'leave_tournament',
+				'message':{
+					'kicked': data['message']['kicked'],
+					'is_a_friend': is_a_friend,
+					'userInfos': {
+						'id': kicked_user.id,
+						'name': kicked_user.username,
+						'level': 2,
+						'image': f"http://{ip_address}:8000/auth{kicked_user.avatar.url}" ,
+						'is_playing' : kicked_user.is_playing
+					}
 				}
 			}
-		}
 	)
+	delete_member(tournament_id, data['message']['kicked'])
 	channel_name = user_channels.get(kicked_user.id)
 	await self.channel_layer.group_discard(group_name, channel_name)
 	channel_name_notif_list = notifs_user_channels.get(kicked_user.id)
 	if channel_name_notif_list:
 		for channel_name_notif in channel_name_notif_list:
 			await self.channel_layer.group_discard(group_name, channel_name_notif)
-	for username, channel_name in user_channels.items():
+	for user_id, channel_name in user_channels.items():
+		user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
+		is_a_friend = await check_user_is_a_friend(kicked_user, user)
 		await self.channel_layer.send(
 			channel_name,
 			{
 				'type': 'user_leave_tournament',
 				'message': {
+					'user': data['message']['kicked'],
+					'is_a_friend': is_a_friend,
 					'tournament_id' : tournament_id,
+					'userInfos': {
+						'id': kicked_user.id,
+						'name': kicked_user.username,
+						'level': 2,
+						'image': f"http://{ip_address}:8000/auth{kicked_user.avatar.url}" ,
+						'is_playing' : kicked_user.is_playing
+					}
 				}
 			}
 		)
@@ -332,7 +358,6 @@ async def invite_friend(self, data):
 
 
 async def accept_invite(self, data, user_channels):
-	print(f"\nDKHEL HNA\n")
 	tournament_id = data['message']['tournament_id']
 	username = data['message']['user']
 	user = await sync_to_async(customuser.objects.filter(username=username).first)()
@@ -377,13 +402,14 @@ async def accept_invite(self, data, user_channels):
 			}
 		}
 	)
-	for username, channel_name_list in notifs_user_channels.items():
+	for name, channel_name_list in notifs_user_channels.items():
 		for channel_name in channel_name_list:
 			await self.channel_layer.send(
 				channel_name,
 				{
 					'type': 'user_join_tournament',
 					'message': {
+						'user' : username,
 						'tournament_id' : tournament_id,
 					}
 				}

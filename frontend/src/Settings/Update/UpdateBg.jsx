@@ -24,6 +24,7 @@ function UpdateBg(props) {
     try {
       const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/updateUserBg`, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },

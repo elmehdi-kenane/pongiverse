@@ -12,6 +12,7 @@ function UpdateCountry() {
     try {
       const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/updateUserCountry`, {
         method: "POST",
+        credentials: "include",
         headers: {
           'Content-Type': 'application/json',
         },

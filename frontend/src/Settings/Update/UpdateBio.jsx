@@ -37,6 +37,7 @@ function UpdateBio() {
     try {
       const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/updateUserBio`, {
         method: "POST",
+        credentials: "include",
         headers: {
           'Content-Type': 'application/json',
         },

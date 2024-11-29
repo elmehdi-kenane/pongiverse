@@ -48,6 +48,7 @@ const MyRoom = (props) => {
 
         const response = await fetch(`http://localhost:8000/chatAPI/chatRoomUpdateName/${props.roomId}`, {
           method: 'PATCH',
+          credentials: "include",
           headers: {
             'Content-Type': 'application/json',
           },
@@ -99,7 +100,10 @@ const MyRoom = (props) => {
     const fetchAllChatRoomMembers = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/chatAPI/allRoomMembers/${props.name}`
+          `http://localhost:8000/chatAPI/allRoomMembers/${props.name}`,
+          {
+            credentials: "include",
+          }
         );
         const data = await response.json();
         console.log("all chat room: ", data);
@@ -120,6 +124,7 @@ const MyRoom = (props) => {
           "http://localhost:8000/chatAPI/listAllFriends",
           {
             method: "POST",
+            credentials: "include",
             headers: {
               "Content-Type": "application/json",
             },

@@ -26,6 +26,7 @@ const ChangeChatRoomName = (props) => {
           `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/chatRoomUpdateName/${props.roomId}`,
           {
             method: "PATCH",
+            credentials: "include",
             headers: {
               "Content-Type": "application/json",
             },

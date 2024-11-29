@@ -14,7 +14,9 @@ from .models import Friendship
 from .serializers import friendRequestSerializer
 from .serializers import friendSerializer
 from .serializers import customuserSerializer
+from myapp.decorators import authentication_required
 
+@authentication_required
 @api_view(['GET'])
 def get_friend_list(request, username):
     user = customuser.objects.filter(username=username).first()
@@ -22,6 +24,7 @@ def get_friend_list(request, username):
     friends_ser = friendSerializer(friend_objs, many=True)
     return Response(friends_ser.data)
 
+@authentication_required
 @api_view(['GET'])
 def get_blocked_list(request, username):
     user = customuser.objects.filter(username=username).first()
@@ -29,7 +32,7 @@ def get_blocked_list(request, username):
     blocked_list_ser = friendSerializer(blocked_objs, many=True)
     return Response(blocked_list_ser.data)
 
-
+@authentication_required
 @api_view(['GET'])
 def get_friend_suggestions(request, username):
     user = customuser.objects.filter(username=username).first()
@@ -66,6 +69,7 @@ def get_friend_suggestions(request, username):
     print(suggestion_list)
     return Response(suggestion_list)
 
+@authentication_required
 @api_view(['GET'])
 def get_sent_requests(request, username):
     user = customuser.objects.get(username=username)
@@ -74,6 +78,7 @@ def get_sent_requests(request, username):
     # #print(request_list_ser.data)
     return Response(request_list_ser.data)
 
+@authentication_required
 @api_view(['GET'])
 def get_received_requests(request, username):
     user = customuser.objects.get(username=username)
@@ -81,6 +86,7 @@ def get_received_requests(request, username):
     request_list_ser = friendRequestSerializer(received_requests_objs, many=True)
     return Response(request_list_ser.data)
 
+@authentication_required
 @api_view(['POST'])
 def add_friend_request(request):
     print("request.data", request.data)
@@ -127,6 +133,7 @@ def add_friend_request(request):
     #print(f"++++++++++++++ Friend request sent ++++++++++++++")
     return Response({"success": "Friend request added successfully."})
 
+@authentication_required
 @api_view(['POST'])
 def cancel_friend_request(request):
     from_username = request.data['from_username']
@@ -171,6 +178,7 @@ def cancel_friend_request(request):
     )
     return Response({"success": "Friend request deleted successfully."})
 
+@authentication_required
 @api_view(['POST'])
 def confirm_friend_request(request):
     print("request.data", request.data)
@@ -221,6 +229,7 @@ def confirm_friend_request(request):
     )
     return Response({"success": "Friendship created successfully."})
 
+@authentication_required
 @api_view(['POST'])
 def remove_friendship(request):
     from_username = request.data['from_username']
@@ -261,6 +270,7 @@ def remove_friendship(request):
     )
     return Response({"success": "Friendship removed successfully."})
 
+@authentication_required
 @api_view(['POST'])
 def block_friend(request):
     from_username = request.data['from_username']
@@ -303,6 +313,7 @@ def block_friend(request):
     )
     return Response({"success": "friend blocked successfully."})
 
+@authentication_required
 @api_view(['POST'])
 def unblock_friend(request):
     from_username = request.data['from_username']

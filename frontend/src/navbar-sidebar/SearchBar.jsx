@@ -32,6 +32,7 @@ export const SearchBar = () => {
         `http://${import.meta.env.VITE_IPADDRESS}:8000/navBar/search_view/?searchTerm=${searchTerm}&username=${username}`,
         {
           method: "GET",
+          credentials: "include",
         }
       );
       const res = await response.json();

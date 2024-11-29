@@ -25,6 +25,7 @@ const CustomTooltip = ({ active, payload }) => {
             `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserDiagram/${userId}`,
             {
               method: "GET",
+              credentials: "include",
               headers: {
                 "Content-Type": "application/json",
               },
