@@ -135,17 +135,16 @@ def cancel_friend_request(request):
     to_user = customuser.objects.get(username=to_username)
     try:
         friend_request = FriendRequest.objects.get(from_user=from_user, to_user=to_user)
-        sent_request_ser = friendRequestSerializer(friend_request, context={'type': 'sent'})
+        sent_request_ser = friendRequestSerializer(friend_request)
         friend_request.delete()
         friend_request = FriendRequest.objects.get(from_user=to_user, to_user=from_user)
-        received_request_ser = friendRequestSerializer(friend_request, context={'type': 'received'})
+        received_request_ser = friendRequestSerializer(friend_request)
         friend_request.delete()
     except FriendRequest.DoesNotExist:
         return Response({"error": "Friend request doesn't exist."})
     from_user_id = from_user.id
     to_user_id = to_user.id
     channel_layer = get_channel_layer()
-    # weird behavior :)
     async_to_sync(channel_layer.group_send)(
         f"friends_group{from_user_id}",
         {
@@ -205,7 +204,8 @@ def confirm_friend_request(request):
             'message': {
                 'second_username': to_username,
                 'send_at': request_accepted_ser.data['send_at'],
-                'avatar': request_accepted_ser.data['avatar']
+                'avatar': request_accepted_ser.data['avatar'],
+                'is_online': request_accepted_ser.data['is_online']
             }
         }
     )
@@ -216,7 +216,8 @@ def confirm_friend_request(request):
             'message': {
                 'second_username': from_username,
                 'send_at': confirm_request_ser.data['send_at'],
-                'avatar': confirm_request_ser.data['avatar']
+                'avatar': confirm_request_ser.data['avatar'],
+                'is_online': confirm_request_ser.data['is_online']
             }
         }
     )
@@ -246,7 +247,8 @@ def remove_friendship(request):
             'type': 'remove_friendship',
             'message': {
                 'second_username': to_username,
-                'avatar': friendship_obj_from_ser.data['avatar']
+                'avatar': friendship_obj_from_ser.data['avatar'],
+                'level': friendship_obj_from_ser.data['level']
             }
         }
     )
@@ -256,7 +258,8 @@ def remove_friendship(request):
             'type': 'remove_friendship',
             'message': {
                 'second_username': from_username,
-                'avatar': friendship_obj_to_ser.data['avatar']
+                'avatar': friendship_obj_to_ser.data['avatar'],
+                'level': friendship_obj_to_ser.data['level']
             }
         }
     )
@@ -312,14 +315,12 @@ def unblock_friend(request):
     to_user = customuser.objects.get(username=to_username)
     try:
         friendship_obj = Friendship.objects.get(user=from_user, friend=to_user)
-        friendship_obj.isBlocked = False
-        friendship_obj.save()
         friend_ser_from = friendSerializer(friendship_obj)
-        print("friend_ser_from", friend_ser_from.data)
+        # print("friend_ser_from", friend_ser_from.data)
         friendship_obj.delete()
         friendship_obj = Friendship.objects.get(user=to_user, friend=from_user)
         friend_ser_to = friendSerializer(friendship_obj)
-        print("friend_ser_to", friend_ser_to.data)
+        # print("friend_ser_to", friend_ser_to.data)
         friendship_obj.delete()
     except Friendship.DoesNotExist:
         return Response({"success": "Friendship obj does not exist."})
@@ -333,6 +334,7 @@ def unblock_friend(request):
                 'message': {
                     'second_username': to_username,
                     'avatar': friend_ser_from.data['avatar'],
+                    'level': friend_ser_from.data['level'],
                 }
             }
         )
@@ -343,6 +345,7 @@ def unblock_friend(request):
                 'message': {
                     'second_username': from_username,
                     'avatar': friend_ser_to.data['avatar'],
+                    'level': friend_ser_to.data['level'],
                 }
             }
     )

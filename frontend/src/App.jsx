@@ -39,7 +39,7 @@ import TwoVsTwoCreateOrJoin from "./Game/TwoVsTwoCreateOrJoin";
 import GameSettings from "./Game/GameSettings";
 import Bot from "./Game/Bot";
 import { ToastContainer, Bounce } from "react-toastify";
-import { SocketDataContextProvider } from "./navbar-sidebar/SocketDataContext";
+// import { SocketDataContextProvider } from "./navbar-sidebar/SocketDataContext";
 import LocalTournamentFillMembers from "./Tournament/LocalTournament/LocalTournamentFillMembers";
 import ErrorPage from "./ErrorPage/ErrorPage";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -57,7 +57,7 @@ const App = () => {
 		<div className="page" style={{ backgroundImage: `url(${bg1})` }}>
 			<Router>
 				<AuthProvider>
-					<SocketDataContextProvider>
+					{/* <SocketDataContextProvider> */}
 						<Routes>
 							<Route path="/" element={<HomePage />} exact />
 							<Route path="/signup" element={<SignUpPage />} />
@@ -115,7 +115,7 @@ const App = () => {
 							theme="light"
 							transition={Bounce}
 						/>
-					</SocketDataContextProvider>
+					{/* </SocketDataContextProvider> */}
 				</AuthProvider>
 			</Router>
 		</div>

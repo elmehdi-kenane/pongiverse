@@ -38,24 +38,24 @@ function NavbarSidebar() {
             }
         );
     };
-
-    useEffect(() => {
-        if (data.type === "receive-friend-request") {
-          setNewReceivedFriendReqNotif(true);
-          setRemoveFriendReqNotif(false);
-          setFriendReq(data.message);
-        } else if (
-          data.type === "confirm-friend-request" &&
-          data.message.second_username === friendReq.username
-        ) {
-          setRemoveFriendReqNotif(true);
-        } else if (
-          data.type === "remove-friend-request" &&
-          data.message.second_username === friendReq.username
-        ) {
-          setRemoveFriendReqNotif(true);
-        } else console.log("unknown notif type");
-    }, [data.message.to_user, data.type]);
+    // friendReq notification functionality
+    // useEffect(() => {
+    //     if (data.type === "receive-friend-request") {
+    //       setNewReceivedFriendReqNotif(true);
+    //       setRemoveFriendReqNotif(false);
+    //       setFriendReq(data.message);
+    //     } else if (
+    //       data.type === "confirm-friend-request" &&
+    //       data.message.second_username === friendReq.username
+    //     ) {
+    //       setRemoveFriendReqNotif(true);
+    //     } else if (
+    //       data.type === "remove-friend-request" &&
+    //       data.message.second_username === friendReq.username
+    //     ) {
+    //       setRemoveFriendReqNotif(true);
+    //     } else console.log("unknown notif type");
+    // }, [data.message.to_user, data.type]);
 
     useEffect(() => {
         {

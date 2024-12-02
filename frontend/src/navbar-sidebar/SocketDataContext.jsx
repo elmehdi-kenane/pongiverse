@@ -38,7 +38,7 @@ export const SocketDataContextProvider = ({ children }) => {
             }
         }
         else
-            console.log("notifSocket", notifSocket, "doesn't exist");
+            console.log("notifSocket doesn't exist");
     }, [notifSocket]);
     return (
         <SocketDataContext.Provider value={data}>

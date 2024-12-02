@@ -11,12 +11,31 @@ import { SuggestionsWrapper } from "./SuggestionsWrapper.jsx";
 
 const Friends = () => {
   const { user, socket } = useContext(AuthContext);
-  const { message, type } = useContext(SocketDataContext);
+//   const { message, type } = useContext(SocketDataContext);
   const [friends, setFriends] = useState([]);
   const [blockedFriends, setBlockedFriends] = useState([]);
   const [sentRequests, setSentRequests] = useState([]);
   const [receivedRequests, setReceivedRequests] = useState([]);
   const [friendSuggestions, setFriendSuggestions] = useState([]);
+
+    const { notifSocket } = useContext(AuthContext);
+    const [data, setData] = useState({ message: 'messageStart', type: 'typeStart' });
+    useEffect(() => {
+        if (notifSocket) {
+            // console.log(".............. NEW MESSAGE FROM BACKEND ..............");
+            notifSocket.onmessage = (e) => {
+                const parsedData = JSON.parse(e.data);
+                const data =
+                {
+                    message: parsedData.message,
+                    type: parsedData.type,
+                };
+                setData(data)
+            }
+        }
+        else
+            console.log("notifSocket doesn't exist");
+    }, [notifSocket]);
 
   useEffect(() => {
     const getFriendSuggestions = async () => {
@@ -48,7 +67,7 @@ const Friends = () => {
       );
       const res = await response.json();
       if (res) {
-        console.log("FRIENDS:  ", res);
+        // console.log("FRIENDS:  ", res);
         setFriends(res);
       }
     };
@@ -56,123 +75,123 @@ const Friends = () => {
   }, [user]);
 
   useEffect(() => {
-    console.log("============ socket-start ============");
-    console.log("message:", message, "type:", type);
-    console.log("============ socket-end ============");
-    if (type === "cancel-friend-request") {
+    // console.log("============ socket-start ============");
+    // console.log("data.message:", data.message, "data.type:", data.type);
+    // console.log("============ socket-end ============");
+    if (data.type === "cancel-friend-request") {
       setSentRequests((prevSentRequests) => {
         const updatedSentRequests = prevSentRequests.filter(
           (SentRequest) =>
-            SentRequest.second_username !== message.second_username
+            SentRequest.second_username !== data.message.second_username
         );
         return updatedSentRequests;
       });
       setReceivedRequests((prevReceivedRequests) => {
         const updatedReceivedRequests = prevReceivedRequests.filter(
           (ReceivedRequest) =>
-            ReceivedRequest.second_username !== message.second_username
+            ReceivedRequest.second_username !== data.message.second_username
         );
         return updatedReceivedRequests;
       });
       // delay added because when cancel clicked immediately after add friend that make bad ui
       setTimeout(() => {
         setFriendSuggestions((prevSuggestions) => {
-          const updatedSuggestions = [message, ...prevSuggestions];
+          const updatedSuggestions = [data.message, ...prevSuggestions];
           return updatedSuggestions;
         });
       }, 1000);
-    } else if (type === "remove-friendship") {
+    } else if (data.type === "remove-friendship") {
       setFriends((prevFriends) => {
         const updatedFriends = prevFriends.filter(
-          (Friend) => Friend.second_username !== message.second_username
+          (Friend) => Friend.second_username !== data.message.second_username
         );
         return updatedFriends;
       });
       setFriendSuggestions((prevSuggestions) => {
-        const updatedSuggestions = [message, ...prevSuggestions];
+        const updatedSuggestions = [data.message, ...prevSuggestions];
         return updatedSuggestions;
       });
-    } else if (type === "blocker-friend") {
+    } else if (data.type === "blocker-friend") {
       setFriends((prevFriends) => {
         const updatedFriends = prevFriends.filter(
-          (Friend) => Friend.second_username !== message.second_username
+          (Friend) => Friend.second_username !== data.message.second_username
         );
         return updatedFriends;
       });
       setBlockedFriends((prevBlockedFriends) => {
-        const updatedBlockedFriends = [message, ...prevBlockedFriends];
+        const updatedBlockedFriends = [data.message, ...prevBlockedFriends];
         return updatedBlockedFriends;
       });
-    } else if (type === "blocked-friend") {
+    } else if (data.type === "blocked-friend") {
       setFriends((prevFriends) => {
         const updatedFriends = prevFriends.filter(
-          (Friend) => Friend.second_username !== message.second_username
+          (Friend) => Friend.second_username !== data.message.second_username
         );
         return updatedFriends;
       });
-    } else if (type === "unblock-friend") {
+    } else if (data.type === "unblock-friend") {
       setFriendSuggestions((prevSuggestions) => {
-        const updatedSuggestions = [message, ...prevSuggestions];
+        const updatedSuggestions = [data.message, ...prevSuggestions];
         return updatedSuggestions;
       });
       setBlockedFriends((prevBlockedFriends) => {
         const updatedBlockedFriends = prevBlockedFriends.filter(
           (UnblockedFriend) =>
-            UnblockedFriend.second_username !== message.second_username
+            UnblockedFriend.second_username !== data.message.second_username
         );
         return updatedBlockedFriends;
       });
-    } else if (type === "friend-request-accepted") {
+    } else if (data.type === "friend-request-accepted") {
       setSentRequests((prevSentRequests) => {
         const updatedSentRequests = prevSentRequests.filter(
           (SentRequest) =>
-            SentRequest.second_username !== message.second_username
+            SentRequest.second_username !== data.message.second_username
         );
         return updatedSentRequests;
       });
       setFriends((prevFriends) => {
-        const updatedFriends = [message, ...prevFriends];
+        const updatedFriends = [data.message, ...prevFriends];
         return updatedFriends;
       });
-    } else if (type === "confirm-friend-request") {
+    } else if (data.type === "confirm-friend-request") {
       setReceivedRequests((prevReceivedRequests) => {
         const updatedReceivedRequests = prevReceivedRequests.filter(
           (ReceivedRequest) =>
-            ReceivedRequest.second_username !== message.second_username
+            ReceivedRequest.second_username !== data.message.second_username
         );
         return updatedReceivedRequests;
       });
       setFriends((prevFriends) => {
-        const updatedFriends = [message, ...prevFriends];
+        const updatedFriends = [data.message, ...prevFriends];
         return updatedFriends;
       });
-    } else if (type === "send-friend-request") {
+    } else if (data.type === "send-friend-request") {
       setSentRequests((prevSentRequests) => {
-        const updatedSentRequests = [message, ...prevSentRequests];
+        const updatedSentRequests = [data.message, ...prevSentRequests];
         return updatedSentRequests;
       });
       setTimeout(() => {
         setFriendSuggestions((prevFriendSuggestions) => {
           const updatedFriendSuggestions = prevFriendSuggestions.filter(
             (suggestion) =>
-              suggestion.second_username !== message.second_username
+              suggestion.second_username !== data.message.second_username
           );
           return updatedFriendSuggestions;
         });
       }, 1000);
-    } else if (type === "receive-friend-request") {
+    } else if (data.type === "receive-friend-request") {
       setReceivedRequests((prevReceivedRequests) => {
-        const updatedReceivedRequests = [message, ...prevReceivedRequests];
+        const updatedReceivedRequests = [data.message, ...prevReceivedRequests];
         return updatedReceivedRequests;
       });
       setFriendSuggestions((prevFriendSuggestions) => {
         const updatedFriendSuggestions = prevFriendSuggestions.filter(
-          (suggestion) => suggestion.second_username !== message.second_username
+          (suggestion) => suggestion.second_username !== data.message.second_username
         );
         return updatedFriendSuggestions;
       });
-    } else console.log("unknown type");
-  }, [message, type, socket]);
+    } else console.log("unknown data.type");
+  }, [data.message, data.type, socket]);
 
   useEffect(() => {
     const getSentRequests = async () => {
@@ -224,9 +243,9 @@ const Friends = () => {
     };
     if (user) getBlockedList();
   }, [user]);
-  console.log("friends", friends);
-  console.log("receivedRequests", receivedRequests);
-  console.log("sentRequests", sentRequests);
+//   console.log("friends", friends);
+//   console.log("receivedRequests", receivedRequests);
+//   console.log("sentRequests", sentRequests);
   return (
     <div className="FriendPage">
       <SuggestionsWrapper

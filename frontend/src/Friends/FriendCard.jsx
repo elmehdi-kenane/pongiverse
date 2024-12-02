@@ -130,7 +130,13 @@ const FriendCard = ({
               <ChatBubbleIcon />
               Message
             </button>
-            <button>
+            <button 
+            onClick={(e) => {
+                e.stopPropagation();
+                // handle invite friend to play
+                setIsMenuOpen(false);
+            }}
+            >
               <SportsEsportsIcon />
               Challenge
             </button>
