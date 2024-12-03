@@ -2,12 +2,15 @@ import React, { useContext, useState } from 'react'
 import DoneIcon from '@mui/icons-material/Done';
 import AuthContext from '../../navbar-sidebar/Authcontext';
 import ProfileContext from '../ProfileWrapper';
+import { handleBlockFriend } from '../../Friends/utils';
+import { useNavigate } from 'react-router-dom';
 
 function ReportFooter() {
 
-  const {reportValue, setIsReport} = useContext(AuthContext);
+  const { user, reportValue, setIsReport } = useContext(AuthContext);
   const [isBlock, setIsBlock] = useState(false);
-  const {userId} = useContext(ProfileContext);
+  const { userId, isFriend } = useContext(ProfileContext);
+  const navigate = useNavigate();
 
   const handleBlockClick = () => {
     setIsBlock(!isBlock);
@@ -16,7 +19,10 @@ function ReportFooter() {
     setIsReport(false);
   }
   const  handleReportSubmit = () => {
-      console.log("Report :", `${reportValue}`, isBlock ? "+ Blocking" : '');
+      if (isBlock && isFriend === 'true'){
+        handleBlockFriend(user, userId)
+        navigate('/mainpage/dashboard');
+      }
       setIsReport(false);
   }
 

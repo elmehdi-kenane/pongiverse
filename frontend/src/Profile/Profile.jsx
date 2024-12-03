@@ -6,6 +6,7 @@ import AuthContext from '../navbar-sidebar/Authcontext';
 import ReportContent from "./Report/ReportContent"
 import "./Profile.css"
 import Block from './Report/Block';
+import GameNotifications from '../GameNotif/GameNotifications';
 
 
 function Profile() {
@@ -18,6 +19,7 @@ function Profile() {
 
       {user &&
         <div className={(isReport || isBlock) ? 'profile-page profile-blur' : 'profile-page'}>
+          <GameNotifications />
           <ProfileInfo />
           <ProfileLevel />
           <ProfileStatistics />

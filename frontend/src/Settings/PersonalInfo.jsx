@@ -9,6 +9,7 @@ import UpdateCountry from './Update/UpdateCountry';
 import UpdateBg from './Update/UpdateBg';
 import UpdateAvatar from './Update/UpdateAvatar';
 import UpdatePictures from './Update/UpdatePictures';
+import GameNotifications from '../GameNotif/GameNotifications';
 
 
 function PersonalInfo() {
@@ -17,6 +18,7 @@ function PersonalInfo() {
   return (
     <div className="settings-page">
       <Toaster />
+      <GameNotifications />
       <SettingsLeft />
       <div className="settings__personal-info ">
         <h1 className='settings__header'> PERSONAL INFO </h1>

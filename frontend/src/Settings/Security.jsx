@@ -6,6 +6,7 @@ import UpdateTFQ from './UpdateSecurity/UpdateTFQ';
 import SettingsLeft from './SettingsLeft';
 import SettingsContext from './SettingsWrapper';
 import DisableTFQ from './UpdateSecurity/DisableTFQ';
+import GameNotifications from '../GameNotif/GameNotifications';
 
 function Security() {
   const [option, setOption] = useState('security');
@@ -31,6 +32,7 @@ function Security() {
   return (
     <div className="settings-page">
       <Toaster />
+      <GameNotifications />
       <SettingsLeft />
       <div className="settings__security">
         <h1 className='settings__header'> SECURITY </h1>

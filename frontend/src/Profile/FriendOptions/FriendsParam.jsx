@@ -15,10 +15,27 @@ import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 
 function FriendsParam(props) {
     const friendsPrm = props.Prm;
-    const { user, isBlock, setIsBlock } = useContext(AuthContext);
+    const { user, isBlock, setIsBlock, notifSocket } = useContext(AuthContext);
     const { setIsFriend, userId, userPic, setIsLoading } = useContext(ProfileContext);
     const navigate = useNavigate();
     const { setSelectedDirect } = useContext(ChatContext);
+
+
+    const handelChallengeRequest = () => {
+        if (notifSocket && notifSocket.readyState === WebSocket.OPEN && user) {
+            console.log("inside join")
+            notifSocket.send(JSON.stringify({
+                type: 'inviteFriendGame',
+                message: {
+                    user: user,
+                    target: userId
+                }
+            }))
+            navigate('/mainpage/game/solo/1vs1/friends');
+        }
+        else
+            console.log("Socket ga3ma me7lola")
+    }
 
     const handleRmFriend = () => {
         setIsLoading(true);
@@ -57,10 +74,10 @@ function FriendsParam(props) {
         </div>
     );
     const challengeJsx = (
-        <Link className='parameter' to='/mainpage/game'>
+        <div className='parameter' onClick={handelChallengeRequest}>
             <SportsEsportsIcon />
             <p> Challenge </p>
-        </Link>
+        </div>
     );
     const cancelJsx = (
         <div className="parameter" onClick={()=>handleCnclRequest("cancel")}>

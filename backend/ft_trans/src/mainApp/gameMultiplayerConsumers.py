@@ -6,7 +6,7 @@ import asyncio
 import datetime
 from myapp.models import customuser
 from asgiref.sync import sync_to_async
-from .models import Match, ActiveMatch, PlayerState, NotifPlayer, GameNotifications, MatchStatistics
+from .models import Match, ActiveMatch, PlayerState, NotifPlayer, GameNotifications, MatchStatistics, UserMatchStatics
 from friends.models import Friendship
 import os
 
@@ -1020,28 +1020,62 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
                             team1_player2_rating=player2_rating,
                             team2_player1_rating=player3_rating,
                             team2_player2_rating=player4_rating,
-                            team1_player1_level=player1.level,
-                            team1_player2_level=player2.level,
-                            team2_player1_level=player3.level,
-                            team2_player2_level=player4.level,
                     )
                     if room['status'] == 'finished':
-                        player1_totalXP = player1.total_xp + player1_rating
-                        player1.level += (player1_totalXP / 1000)
-                        player1.total_xp = (player1_totalXP % 1000)
-                        await sync_to_async(player1.save)()
-                        player2_totalXP = player2.total_xp + player2_rating
-                        player2.level += (player2_totalXP / 1000)
-                        player2.total_xp = (player2_totalXP % 1000)
-                        await sync_to_async(player2.save)()
-                        player3_totalXP = player3.total_xp + player3_rating
-                        player3.level += (player3_totalXP / 1000)
-                        player3.total_xp = (player3_totalXP % 1000)
-                        await sync_to_async(player3.save)()
-                        player4_totalXP = player4.total_xp + player4_rating
-                        player4.level += (player4_totalXP / 1000)
-                        player4.total_xp = (player4_totalXP % 1000)
-                        await sync_to_async(player4.save)()
+                        player1_match_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=player1).first)()
+                        player2_match_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=player2).first)()
+                        player3_match_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=player3).first)()
+                        player4_match_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=player4).first)()
+                        if room['players'][0]['score'] > room['players'][2]['score']:
+                            player1_match_statistics.wins += 1
+                            player1_totalXP = player1_match_statistics.total_xp + player1_rating
+                            player1_match_statistics.level += (player1_totalXP / 1000)
+                            player1_match_statistics.total_xp = (player1_totalXP % 1000)
+                            player1_match_statistics.goals += room['players'][0]['score']
+                            await sync_to_async(player1_match_statistics.save)()
+                            player2_match_statistics.wins += 1
+                            player2_totalXP = player2_match_statistics.total_xp + player2_rating
+                            player2_match_statistics.level += (player2_totalXP / 1000)
+                            player2_match_statistics.total_xp = (player2_totalXP % 1000)
+                            player2_match_statistics.goals += room['players'][1]['score']
+                            await sync_to_async(player2_match_statistics.save)()
+                            player3_match_statistics.losts += 1
+                            player3_totalXP = player3_match_statistics.total_xp + player3_rating
+                            player3_match_statistics.level += (player3_totalXP / 1000)
+                            player3_match_statistics.total_xp = (player3_totalXP % 1000)
+                            player3_match_statistics.goals += room['players'][2]['score']
+                            await sync_to_async(player3_match_statistics.save)()
+                            player4_match_statistics.losts += 1
+                            player4_totalXP = player4_match_statistics.total_xp + player4_rating
+                            player4_match_statistics.level += (player4_totalXP / 1000)
+                            player4_match_statistics.total_xp = (player4_totalXP % 1000)
+                            player4_match_statistics.goals += room['players'][3]['score']
+                            await sync_to_async(player4_match_statistics.save)()
+                        else:
+                            player1_match_statistics.losts += 1
+                            player1_totalXP = player1_match_statistics.total_xp + player1_rating
+                            player1_match_statistics.level += (player1_totalXP / 1000)
+                            player1_match_statistics.total_xp = (player1_totalXP % 1000)
+                            player1_match_statistics.goals += room['players'][0]['score']
+                            await sync_to_async(player1_match_statistics.save)()
+                            player2_match_statistics.losts += 1
+                            player2_totalXP = player2_match_statistics.total_xp + player2_rating
+                            player2_match_statistics.level += (player2_totalXP / 1000)
+                            player2_match_statistics.total_xp = (player2_totalXP % 1000)
+                            player2_match_statistics.goals += room['players'][1]['score']
+                            await sync_to_async(player2_match_statistics.save)()
+                            player3_match_statistics.wins += 1
+                            player3_totalXP = player3_match_statistics.total_xp + player3_rating
+                            player3_match_statistics.level += (player3_totalXP / 1000)
+                            player3_match_statistics.total_xp = (player3_totalXP % 1000)
+                            player3_match_statistics.goals += room['players'][2]['score']
+                            await sync_to_async(player1_match_statistics.save)()
+                            player4_match_statistics.wins += 1
+                            player4_totalXP = player4_match_statistics.total_xp + player4_rating
+                            player4_match_statistics.level += (player4_totalXP / 1000)
+                            player4_match_statistics.total_xp = (player4_totalXP % 1000)
+                            player4_match_statistics.goals += room['players'][3]['score']
+                            await sync_to_async(player4_match_statistics.save)()
                     # group_channels = await sync_to_async(self.channel_layer.group_channels)(str(room['id'])) #######################
                     # for channel_name in group_channels: #######################
                     #     sync_to_async(self.channel_layer.group_discard)(str(room['id']), channel_name) #######################
@@ -1242,27 +1276,35 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
                                     team1_player2_rating=player2_rating,
                                     team2_player1_rating=player3_rating,
                                     team2_player2_rating=player4_rating,
-                                    team1_player1_level=player1.level,
-                                    team1_player2_level=player2.level,
-                                    team2_player1_level=player3.level,
-                                    team2_player2_level=player4.level,
                             )
-                            player1_totalXP = player1.total_xp + player1_rating
-                            player1.level += (player1_totalXP / 1000)
-                            player1.total_xp = (player1_totalXP % 1000)
-                            await sync_to_async(player1.save)()
-                            player2_totalXP = player2.total_xp + player2_rating
-                            player2.level += (player2_totalXP / 1000)
-                            player2.total_xp = (player2_totalXP % 1000)
-                            await sync_to_async(player2.save)()
-                            player3_totalXP = player3.total_xp + player3_rating
-                            player3.level += (player3_totalXP / 1000)
-                            player3.total_xp = (player3_totalXP % 1000)
-                            await sync_to_async(player3.save)()
-                            player4_totalXP = player4.total_xp + player4_rating
-                            player4.level += (player4_totalXP / 1000)
-                            player4.total_xp = (player4_totalXP % 1000)
-                            await sync_to_async(player4.save)()
+                            player1_match_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=player1).first)()
+                            player2_match_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=player2).first)()
+                            player3_match_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=player3).first)()
+                            player4_match_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=player4).first)()
+                            player1_match_statistics.wins += 1
+                            player1_totalXP = player1_match_statistics.total_xp + player1_rating
+                            player1_match_statistics.level += (player1_totalXP / 1000)
+                            player1_match_statistics.total_xp = (player1_totalXP % 1000)
+                            player1_match_statistics.goals += room['players'][0]['score']
+                            await sync_to_async(player1_match_statistics.save)()
+                            player2_match_statistics.wins += 1
+                            player2_totalXP = player2_match_statistics.total_xp + player2_rating
+                            player2_match_statistics.level += (player2_totalXP / 1000)
+                            player2_match_statistics.total_xp = (player2_totalXP % 1000)
+                            player2_match_statistics.goals += room['players'][1]['score']
+                            await sync_to_async(player2_match_statistics.save)()
+                            player3_match_statistics.losts += 1
+                            player3_totalXP = player3_match_statistics.total_xp + player3_rating
+                            player3_match_statistics.level += (player3_totalXP / 1000)
+                            player3_match_statistics.total_xp = (player3_totalXP % 1000)
+                            player3_match_statistics.goals += room['players'][2]['score']
+                            await sync_to_async(player3_match_statistics.save)()
+                            player4_match_statistics.losts += 1
+                            player4_totalXP = player4_match_statistics.total_xp + player4_rating
+                            player4_match_statistics.level += (player4_totalXP / 1000)
+                            player4_match_statistics.total_xp = (player4_totalXP % 1000)
+                            player4_match_statistics.goals += room['players'][3]['score']
+                            await sync_to_async(player4_match_statistics.save)()
                             # group_channels = await sync_to_async(self.channel_layer.group_channels)(str(room['id'])) #######################
                             # for channel_name in group_channels: #######################
                             #     sync_to_async(self.channel_layer.group_discard)(str(room['id']), channel_name) #######################
@@ -1409,27 +1451,35 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
                                 team1_player2_rating=player2_rating,
                                 team2_player1_rating=player3_rating,
                                 team2_player2_rating=player4_rating,
-                                team1_player1_level=player1.level,
-                                team1_player2_level=player2.level,
-                                team2_player1_level=player3.level,
-                                team2_player2_level=player4.level,
                             )
-                            player1_totalXP = player1.total_xp + player1_rating
-                            player1.level += (player1_totalXP / 1000)
-                            player1.total_xp = (player1_totalXP % 1000)
-                            await sync_to_async(player1.save)()
-                            player2_totalXP = player2.total_xp + player2_rating
-                            player2.level += (player2_totalXP / 1000)
-                            player2.total_xp = (player2_totalXP % 1000)
-                            await sync_to_async(player2.save)()
-                            player3_totalXP = player3.total_xp + player3_rating
-                            player3.level += (player3_totalXP / 1000)
-                            player3.total_xp = (player3_totalXP % 1000)
-                            await sync_to_async(player3.save)()
-                            player4_totalXP = player4.total_xp + player4_rating
-                            player4.level += (player4_totalXP / 1000)
-                            player4.total_xp = (player4_totalXP % 1000)
-                            await sync_to_async(player4.save)()
+                            player1_match_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=player1).first)()
+                            player2_match_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=player2).first)()
+                            player3_match_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=player3).first)()
+                            player4_match_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=player4).first)()
+                            player1_match_statistics.losts += 1
+                            player1_totalXP = player1_match_statistics.total_xp + player1_rating
+                            player1_match_statistics.level += (player1_totalXP / 1000)
+                            player1_match_statistics.total_xp = (player1_totalXP % 1000)
+                            player1_match_statistics.goals += room['players'][0]['score']
+                            await sync_to_async(player1_match_statistics.save)()
+                            player2_match_statistics.losts += 1
+                            player2_totalXP = player2_match_statistics.total_xp + player2_rating
+                            player2_match_statistics.level += (player2_totalXP / 1000)
+                            player2_match_statistics.total_xp = (player2_totalXP % 1000)
+                            player2_match_statistics.goals += room['players'][1]['score']
+                            await sync_to_async(player2_match_statistics.save)()
+                            player3_match_statistics.wins += 1
+                            player3_totalXP = player3_match_statistics.total_xp + player3_rating
+                            player3_match_statistics.level += (player3_totalXP / 1000)
+                            player3_match_statistics.total_xp = (player3_totalXP % 1000)
+                            player3_match_statistics.goals += room['players'][2]['score']
+                            await sync_to_async(player1_match_statistics.save)()
+                            player4_match_statistics.wins += 1
+                            player4_totalXP = player4_match_statistics.total_xp + player4_rating
+                            player4_match_statistics.level += (player4_totalXP / 1000)
+                            player4_match_statistics.total_xp = (player4_totalXP % 1000)
+                            player4_match_statistics.goals += room['players'][3]['score']
+                            await sync_to_async(player4_match_statistics.save)()
                             # group_channels = await sync_to_async(self.channel_layer.group_channels)(str(room['id'])) #######################
                             # for channel_name in group_channels: #######################
                             #     sync_to_async(self.channel_layer.group_discard)(str(room['id']), channel_name) #######################
