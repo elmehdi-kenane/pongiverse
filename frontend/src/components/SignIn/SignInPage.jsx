@@ -15,34 +15,21 @@ import AuthContext from '../../navbar-sidebar/Authcontext';
 function SignInPage() {
 	const navigate = useNavigate();
 	const { publicCheckAuth } = useContext(AuthContext)
-	// useEffect(() =>{
-	// 	const check_is_authenticated = async () => {
-	// 		const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/check-is-authenticated`, {
-	// 			method: "GET",
-	// 			credentials: "include"
-	// 		});
-	// 		if (response.ok) {
-	// 			const data = await response.json();
-	// 			if (data.is_authenticated) {
-	// 				navigate('/mainpage');
-	// 			}
-	// 		} else {
-	// 			console.error('Failed to fetch data');
-	// 		}
-	// 	}
-	// 	check_is_authenticated();
-	// },[])
+
 
 	useEffect(() => {
 		publicCheckAuth()
 	}, [])
 
+	const navigating = () => {
+		navigate('/')
+	}
 
 	return (
 		<div className={styles['authentication-page']}>
 			<Toaster />
 			<div className={styles['authentication-navbar']}>
-				<img src={logo} alt="" />
+				<img src={logo} alt=""  onClick={navigating}/>
 			</div>
 			<div className={styles['authentication-container']}>
 				<div className={styles['authentication-signindiv']}>

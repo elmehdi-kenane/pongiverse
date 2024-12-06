@@ -3,14 +3,21 @@ import styles from '../../assets/SignIn/authentication.module.css'
 import Header from './Header';
 import SignUpWays from './SignUpWays'
 import SignUpForm from './SignUpForm'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../assets/SignUp/logo.svg'
 import toast, { Toaster } from 'react-hot-toast';
 import pingPongBg from './signUpImage.svg'
 import { useContext, useEffect, useState } from 'react';
 import AuthContext from '../../navbar-sidebar/Authcontext';
 
-function SignUpPage(props) {
+function SignUpPage() {
+	const navigate = useNavigate()
+	
+	const navigating = () => {
+		navigate('/')
+	}
+
+
 	const handleSignUpSwitch = () => {
 	}
 	const { publicCheckAuth } = useContext(AuthContext)
@@ -24,7 +31,7 @@ function SignUpPage(props) {
 		<div className={styles['authentication-page']}>
 			<Toaster/>
 			<div className={styles['authentication-navbar']}>
-				<img src={logo} alt="" />
+				<img src={logo} alt="" onClick = { navigating }/>
 			</div>
 			<div className={styles['authentication-container']}>
 				<div className={styles['authentication-signupdiv']}>

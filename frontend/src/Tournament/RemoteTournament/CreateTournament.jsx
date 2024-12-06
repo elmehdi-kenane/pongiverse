@@ -424,6 +424,7 @@ function CreateTournament() {
 			</div>
 		);
 	}
+
 	return (
 		<>
 			<div className={styles["tournament-page"]}>

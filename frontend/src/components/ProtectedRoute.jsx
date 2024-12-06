@@ -13,7 +13,6 @@ const ProtectedRoute = ({ children }) => {
 					`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/verifytoken/`,
 					{
 						method: "POST",
-						credentials: "include",
 						headers: {
 							"Content-Type": "application/json",
 						},

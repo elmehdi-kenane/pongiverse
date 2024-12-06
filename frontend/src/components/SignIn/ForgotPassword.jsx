@@ -14,6 +14,7 @@ const client = axios.create({
 
 function ForgotPassword() {
 
+
 	const [data, setData] = useState({
 		email: ''
 	});
@@ -25,7 +26,9 @@ function ForgotPassword() {
 	const [exist, SetExist] = useState('');
 	const navigate = useNavigate();
 	const MySwal = withReactContent(Swal);
-
+	const navigating = () => {
+		navigate('/')
+	}
 	const handleChange = (e) => {
 		setData({ ...data, [e.target.name]: e.target.value });
 	};
@@ -139,7 +142,7 @@ function ForgotPassword() {
 	return (
 		<div className={styles["full_page"]}>
 			<div className={styles['forgot-password-navbar']}>
-				<img src={logo} alt="" />
+				<img src={logo} alt="" onClick = { navigating }/>
 			</div>
 			<div className={styles["mainPage"]}>
 				<div className={styles["signUpContainer"]}>

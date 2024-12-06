@@ -17,11 +17,17 @@ function SignInWays() {
   const navigate = useNavigate()
   const inputRef = useRef(null);
 
-  const notifyError = (message) =>
-    toast.error(message, {
+  const notifyError = (message) => {
+    const toastId = toast.error(message, {
         position: "top-center",
-        duration: 3000,
+        duration: 1500,
     });
+    setTimeout(() => {
+        toast.dismiss(toastId);
+    }, 1500);
+};
+
+
 
   const checkOtp = (otpStr) => {
     const regex = /^\d{6}$/; // Matches exactly 6 digits
