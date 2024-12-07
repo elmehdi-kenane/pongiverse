@@ -18,6 +18,13 @@ def is_user_joining_tournament(username):
 				return tournament_id
 	return 0
 
+async def check_user_is_a_friend(user, to_check):
+	friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
+	for friend in friends:
+		friend_username = await sync_to_async(lambda: friend.friend.username)()
+		if friend_username == to_check.username:
+			return True
+	return False
 
 class NotificationsConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
@@ -48,6 +55,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 						for user_id, channel_name_list in notifs_user_channels.items():
 							other_user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
 							if other_user is not None:
+								is_a_friend = await check_user_is_a_friend(user, other_user)
 								channel_name_list = notifs_user_channels.get(user_id)
 								if channel_name_list:
 									for channel_name in channel_name_list:
@@ -57,6 +65,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 												{
 													'type': 'connected_again',
 													'message': {
+															'is_a_friend': is_a_friend,
 															'user': username,
 															'userInfos': {
 																'id': user.id,

@@ -5,6 +5,7 @@ export const cancelFriendRequest = (
 ) => {
   fetch("http://localhost:8000/friends/cancel_friend_request/", {
     method: "POST",
+    credentials: 'include',
     headers: {
       "Content-Type": "application/json",
     },

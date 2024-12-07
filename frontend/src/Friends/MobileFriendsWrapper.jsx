@@ -10,7 +10,9 @@ export const MobileFriendsWrapper = ({ friends, receivedRequests, sentRequests, 
     const handlesSelectedButton = (selectedButton) => {
         setSelectedButton(selectedButton);
     }
-
+    // console.log("receivedRequests", receivedRequests);
+    // console.log("sentRequests", sentRequests);
+    // console.log("blockedFriends", blockedFriends);
     return (
       <div className="optionBar">
         <div className="optionBtns">
@@ -71,6 +73,7 @@ export const MobileFriendsWrapper = ({ friends, receivedRequests, sentRequests, 
                           isLastTwoElements={false}
                           secondUsername={request.second_username}
                           avatar={request.avatar}
+                          isOnline={request.is_online}
                           friendId={request.friend}
                         ></FriendCard>
                       ))}
@@ -80,6 +83,7 @@ export const MobileFriendsWrapper = ({ friends, receivedRequests, sentRequests, 
                         isLastTwoElements={friends.length > 2 ? true : false}
                         secondUsername={request.second_username}
                         avatar={request.avatar}
+                        isOnline={request.is_online}
                         friendId={request.friend}
                       ></FriendCard>
                     ))}
@@ -97,7 +101,7 @@ export const MobileFriendsWrapper = ({ friends, receivedRequests, sentRequests, 
                   receivedRequests.map((request, index) => (
                     <ReceivedFriendReqCard
                       key={index}
-                      secondUsername={request.username}
+                      secondUsername={request.second_username}
                       send_at={request.send_at}
                       avatar={request.avatar}
                     ></ReceivedFriendReqCard>
@@ -115,7 +119,7 @@ export const MobileFriendsWrapper = ({ friends, receivedRequests, sentRequests, 
                   sentRequests.map((request, index) => (
                     <SentFriendReqCard
                       key={index}
-                      secondUsername={request.username}
+                      secondUsername={request.second_username}
                       send_at={request.send_at}
                       avatar={request.avatar}
                     ></SentFriendReqCard>

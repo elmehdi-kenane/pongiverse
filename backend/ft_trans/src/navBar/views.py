@@ -7,6 +7,7 @@ from friends.models import Friendship
 from friends.models import FriendRequest
 from .serializers import customUserSerializer
 from myapp.decorators import authentication_required
+from django.db.models import Q
 
 @authentication_required
 @api_view(['GET'])
@@ -24,7 +25,7 @@ def search_view(request):
     for user_obj in users_objs:
         result_type = "user"
         user_ser = customUserSerializer(user_obj)
-        if (Friendship.objects.filter(user=user, friend=user_obj, block_status=Friendship.BLOCKED).exists()):
+        if (Friendship.objects.filter(Q(block_status=Friendship.BLOCKED) | Q(block_status=Friendship.BLOCKER), user=user, friend=user_obj).exists()):
             print("blocked friend")
             continue
         # [user_ser.data['username'] == username] means the current-user so doesn't make sense to show add friend to itself

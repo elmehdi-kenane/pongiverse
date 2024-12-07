@@ -179,9 +179,7 @@ export const AuthProvider = ({ children }) => {
 					}
 				);
 				let friends = await response.json();
-				if (friends.message.length) {
 					setAllGameNotifs(friends.message);
-				}
 			} catch (e) {
 				console.log("something wrong with fetch");
 			}
@@ -202,7 +200,6 @@ export const AuthProvider = ({ children }) => {
 						}),
 					}
 				);
-				// console.log("HEEEERE-----------------------");
 				let data = await response.json()
 				setUserImg(data.image);
 			} catch (e) {
@@ -234,8 +231,7 @@ export const AuthProvider = ({ children }) => {
 			location.pathname !== "/WaysSecondStep" &&
 			location.pathname !== "/ForgotPassword" &&
 			location.pathname !== "/ChangePassword" &&
-			user &&
-			!allGameNotifs.length
+			user
 		)
 			getAllNotifsFriends();
 		// else

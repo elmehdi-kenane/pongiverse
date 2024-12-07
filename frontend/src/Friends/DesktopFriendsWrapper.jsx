@@ -18,6 +18,7 @@ export const DesktopFriendsWrapper = ({ friends, receivedRequests, sentRequests,
                   isLastTwoElements={false}
                   secondUsername={request.second_username}
                   avatar={request.avatar}
+                  isOnline={request.is_online}
                   friendId={request.friend}
                 ></FriendCard>
               ))}
@@ -27,6 +28,7 @@ export const DesktopFriendsWrapper = ({ friends, receivedRequests, sentRequests,
                   isLastTwoElements={friends.length > 3 ? true : false}
                   secondUsername={request.second_username}
                   avatar={request.avatar}
+                  isOnline={request.is_online}
                   friendId={request.friend}
                 ></FriendCard>
               ))}

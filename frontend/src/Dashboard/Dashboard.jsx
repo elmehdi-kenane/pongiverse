@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import AuthContext from '../navbar-sidebar/Authcontext';
 import './Dashboard.css'
+import GameNotifications from "../GameNotif/GameNotifications";
 
 import DashboardHead from './DashboardHead';
 import DashboardBody from './DashboardBody';
@@ -12,14 +13,15 @@ const Dashboard = () => {
 
   return (
     <>
-      { isGameStats && <DashResult/> }
+      <GameNotifications />
+      {isGameStats && <DashResult />}
       <div className={`${!isGameStats ? `dashpage` : `dashpage dash-blur`}`}>
         <DashboardHead />
         <DashboardBody />
         <DashboardFooter />
       </div>
     </>
-  )
+  );
 }
 
 export default Dashboard

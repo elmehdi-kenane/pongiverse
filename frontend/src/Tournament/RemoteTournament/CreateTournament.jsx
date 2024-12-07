@@ -312,10 +312,13 @@ function CreateTournament() {
 					console.log("ENTER TO USER CONNECTED AGAIN TOUR")
 					setTournamentMembers(prevMembers => prevMembers.map(member => member.name === message.user ? { ...member, 'is_online': true } : member));
 				} else if (type === 'connected_again') {
+                    console.log("****IS A FRIEND:", message.is_a_friend);
 					const currentAllGameFriends = allGameFriendsRef.current;
-					const userExists = currentAllGameFriends.some(friend => friend.name === message.user)
-					if (!userExists)
-						setAllGameFriends([...currentAllGameFriends, message.userInfos])
+                    if (message.is_a_friend === true) {
+                        const userExists = currentAllGameFriends.some(friend => friend.name === message.user)
+                        if (!userExists)
+                            setAllGameFriends([...currentAllGameFriends, message.userInfos])
+                    }
 				} else if (type === 'tournament_destroyed') {
 					navigate("/mainpage/game")
 				} else if (type === 'user_join_tournament') {
