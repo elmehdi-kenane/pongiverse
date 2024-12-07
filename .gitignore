@@ -1,0 +1,22 @@
+venv/
+.venv/
+env/
+__pycache__/
+migrations/
+db.sqlite3
+uploads
+/.vscode
+.DS_Store
+README.md
+
+Backups/
+Cache/
+CachedData/
+databases/
+logs/
+User/
+Network Persistent State
+notes.txt
+SharedStorage
+TransportSecurity
+.env

@@ -1,0 +1,48 @@
+.navBar {
+	background-color: #250939;
+	display: flex;
+	justify-content: space-between;
+}
+
+.homeLogo,
+.logo {
+	background: transparent;
+	border: none;
+	cursor: pointer;
+}
+
+.homeLogo {
+	margin-top: 15px;
+}
+
+.logo {
+	margin-top: 3px;
+}
+
+@media (max-width: 500px) {
+
+	.homeLogo,
+	.logo {
+		background: transparent;
+		border: none;
+		cursor: pointer;
+	}
+
+	.logo img
+	{
+		height: 30px;
+		margin-top: 8px;
+	}
+	.homeLogo img
+	{
+		margin-top: 3px;
+		height: 20px;
+	}
+
+	.navBar {
+		background-color: #250939;
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 40px;
+	}
+}

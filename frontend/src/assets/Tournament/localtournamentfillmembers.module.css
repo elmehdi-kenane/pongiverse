@@ -1,0 +1,1024 @@
+.tournament-page {
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+}
+
+.tournament-page {
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+}
+
+.tournament-page-content {
+  margin-top: 80px;
+  margin-bottom: 110px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.title-and-destroy {
+  display: flex;
+  justify-content: space-between;
+  margin-right: 8%;
+  align-items: center;
+}
+
+.tournament-title {
+  margin-left: 8%;
+  color: white;
+  font-weight: bold;
+}
+
+.destroy-button {
+  border: none;
+  background-color: #913dce;
+  height: 40px;
+  margin-top: 10px;
+  border-radius: 7px;
+  color: white;
+  font-size: 20px;
+  width: 130px;
+}
+
+.change-player-username {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  gap: 20px;
+  width: 400px;
+  height: 200px;
+  background-color: #1b062a;
+  z-index: 999;
+  border-radius: 8px;
+}
+
+.change-player-username-title {
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.change-player-username-input {
+  height: 40px;
+  padding: 5px 0;
+  border-radius: 5px;
+  width: 80%;
+  border: 1.5px solid black;
+  box-sizing: border-box;
+  text-indent: 10px;
+}
+
+.change-player-buttons {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.change-player-button {
+  padding: 0 5px;
+  border: none;
+  height: 40px;
+  width: 100px;
+  background-color: #913dce;
+  border-radius: 5px;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.line {
+  margin-top: 1%;
+  width: 85%;
+  height: 1px;
+  background-color: white;
+  opacity: 40%;
+  margin-left: 8%;
+}
+
+.tournament-infos {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5%;
+  margin-top: 3%;
+  margin-left: 8%;
+  align-items: center;
+}
+
+.little-line {
+  width: 1px;
+  height: 60%;
+  background-color: white;
+}
+
+.tournament-id-title,
+.players-number-title {
+  display: inline;
+  white-space: nowrap;
+  font-size: 90%;
+  color: white;
+}
+
+.tournament-id-value-and-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+.tournament-id-value-and-icon svg {
+  color: white;
+  height: 14px;
+  width: 14px;
+  cursor: pointer;
+}
+
+.tournament-id-value {
+  color: white;
+  font-size: 90%;
+  cursor: pointer;
+}
+
+.players-number-value {
+  color: white;
+  font-size: 90%;
+}
+
+.up-buttons {
+  display: none;
+  margin-top: 3%;
+  margin-left: 8%;
+  column-gap: 30px;
+}
+
+.up-button {
+  background-color: #913dce;
+  border-radius: 7px;
+  color: white;
+  border: none;
+  height: 40px;
+  width: 130px;
+  padding: 0 5px;
+  font-size: 20px;
+}
+
+.up-button-disabled {
+  background-color: #913dce;
+  border-radius: 7px;
+  color: white;
+  border: none;
+  height: 40px;
+  width: 130px;
+  padding: 0 5px;
+  font-size: 20px;
+  opacity: 50%;
+}
+
+.down-button {
+  background-color: #913dce;
+  border-radius: 7px;
+  color: white;
+  border: none;
+  height: 50px;
+  width: 150px;
+  padding: 0 5px;
+  font-size: 20px;
+  /* background-size: cover;
+			background-position: center; */
+}
+
+.tournament-members {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  width: 90%;
+  margin: 0 auto;
+  align-content: center;
+  justify-content: center;
+  gap: 40px;
+  padding-top: 2%;
+  scrollbar-color: transparent transparent;
+  height: 600px;
+}
+
+.disconnected-div {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: rgba(41, 36, 48, 0.9);
+  height: 100%;
+  width: 100%;
+  border-radius: 10px;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.disconnected-div p {
+  font-size: 20px;
+  font-weight: bold;
+  color: rgb(204, 63, 63);
+}
+
+.disconnected-button {
+  background-color: rgb(204, 63, 63);
+  border-radius: 7px;
+  color: white;
+  border: none;
+  height: 20px;
+  width: 100px;
+  padding: 0 5px;
+  font-size: 12px;
+}
+
+.down-popup-button {
+  position: relative;
+}
+
+.Invite-friend-popup-up {
+  display: none;
+  border-radius: 10px;
+  top: 60%;
+  left: 50%;
+  height: 250px;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  overflow: auto;
+  background-color: #1b062a;
+}
+
+.Invite-friend-popup-down {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  row-gap: 2px;
+  border-radius: 10px;
+  z-index: 1;
+  left: 117%;
+  bottom: -216px;
+  height: 534px;
+  transform: translate(-50%, -50%);
+  width: 350px;
+  overflow: auto;
+  background-color: #1b062a;
+}
+
+.friend {
+  display: flex;
+  width: 350px;
+  height: 50px;
+  justify-content: space-between;
+  padding: 0 5px;
+  align-items: center;
+}
+
+.error-container {
+  margin-top: 10%;
+}
+
+.title-swal {
+  color: #b00020;
+  font-size: 20px;
+}
+
+.friend-data {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  column-gap: 10px;
+}
+
+.friend-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+}
+
+.friend-name-and-status {
+  display: flex;
+  flex-direction: column;
+  column-gap: 2px;
+}
+
+.friend-name {
+  color: rgb(255, 255, 255);
+  font-size: 14px;
+}
+
+.friend-status {
+  color: rgb(255, 255, 255);
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.friend-invite-button {
+  margin-top: 2px;
+  border: none;
+  width: 50px;
+  height: 50px;
+}
+
+.player {
+  width: calc(90% / 4);
+  position: relative;
+  max-width: 400px;
+  height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  /* background: linear-gradient(to right bottom, rgb(68, 45, 106), rgba(74, 37, 139, 0.5)); */
+  border-radius: 5px;
+  /* row-gap: 20px; */
+}
+
+.player-opened {
+  width: calc(90% / 4);
+  position: relative;
+  max-width: 400px;
+  height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  border-radius: 5px;
+  cursor: not-allowed;
+}
+
+.player-selected{
+  border: 3px solid rgba(255, 255, 255, 0.6);
+}
+
+.player-empty {
+  width: calc(90% / 4);
+  position: relative;
+  max-width: 400px;
+  height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    to right bottom,
+    rgb(68, 45, 106),
+    rgba(74, 37, 139, 0.5)
+  );
+  border-radius: 10px;
+}
+
+.user-avatar {
+  width: 100%;
+  height: 50%;
+  position: relative;
+}
+
+.avatar {
+  height: 80px;
+  width: 80px;
+  border-radius: 5px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%);
+}
+
+.avatar-empty {
+  margin-top: 10%;
+  height: 100px;
+  width: 100px;
+  border-radius: 10px;
+}
+
+.line-and-user-info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  border-radius: 0 5px 5px;
+  height: 50%;
+  gap: 3px;
+  background: linear-gradient(
+    to right bottom,
+    rgb(68, 45, 106),
+    rgba(74, 37, 139, 0.9)
+  );
+}
+
+.user-info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 35px;
+}
+
+.user-info-name,
+.user-info-level {
+  color: white;
+}
+
+.line-inside-player {
+  width: 100%;
+  height: 1px;
+  background-color: white;
+}
+
+.down-buttons {
+  display: flex;
+  margin-top: 3%;
+  margin-left: 8%;
+  column-gap: 30px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  column-gap: 10px;
+  margin-top: 40px;
+}
+
+.button {
+  background-color: #913dce;
+  border-radius: 7px;
+  color: white;
+  border: none;
+  height: 50px;
+  width: 150px;
+  padding: 0 5px;
+  font-size: 20px;
+}
+
+.button-disabled {
+  background-color: #913dce;
+  border-radius: 7px;
+  color: white;
+  border: none;
+  height: 50px;
+  width: 150px;
+  padding: 0 5px;
+  font-size: 20px;
+  opacity: 50%;
+}
+
+.notifications {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: end;
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+    /* Move from right to left */
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.notif {
+  margin-right: 5px;
+  background-color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  flex-direction: column;
+  width: 270px;
+  right: 2%;
+  z-index: 1;
+  height: 75px;
+  /* position: fixed; */
+  border-radius: 8px;
+  gap: 10px;
+  opacity: 0;
+  animation: fadeInRight 0.5s ease-in-out forwards;
+}
+
+.destroy-popup {
+  background-color: #1b062a;
+}
+
+.destroy-popup-title {
+  color: white;
+}
+
+.invite-notif-text {
+  margin-top: 5px;
+  text-align: center;
+  font-size: 15px;
+}
+
+.invite-notif-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.invite-notif-button-accept {
+  background-color: #00ff43;
+  width: 70px;
+  height: 30px;
+  border-radius: 7px;
+  border: none;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.invite-notif-button-deny {
+  background-color: #ff2222;
+  width: 70px;
+  height: 30px;
+  font-weight: bold;
+  border-radius: 7px;
+  border: none;
+  font-size: 15px;
+}
+
+@media (min-width: 1440px) {
+  .tournament-page {
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+  }
+
+  .tournament-page-content {
+    margin-top: 80px;
+    margin-bottom: 110px;
+    width: 1440px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 1413px) {
+  .tournament-members {
+    height: 700px;
+  }
+}
+
+@media (max-width: 1170px) {
+  .tournament-members {
+    width: 90%;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 1%;
+    align-content: flex-start;
+    justify-content: center;
+    row-gap: 20px;
+    column-gap: 20px;
+    padding-top: 2%;
+  }
+
+  .player-opened {
+    width: 350px;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    cursor: not-allowed;
+  }
+
+  .player {
+    width: 350px;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+  }
+
+  .player-empty {
+    width: 350px;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+  }
+
+  .tournament-title {
+    font-size: 27px;
+  }
+
+  .Invite-friend-popup-up {
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    position: fixed;
+    top: 60%;
+    left: 50%;
+    height: 500px;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    overflow: auto;
+    background-color: #1b062a;
+  }
+
+  .friend {
+    display: flex;
+    width: 300px;
+    height: 50px;
+    justify-content: space-between;
+    padding: 0 5px;
+    align-items: center;
+  }
+
+  .buttons {
+    display: none;
+    justify-content: space-around;
+    width: 100%;
+    column-gap: 10px;
+    margin-top: 20%;
+  }
+
+  .up-buttons {
+    display: flex;
+    margin-top: 3%;
+    margin-left: 8%;
+    column-gap: 30px;
+  }
+
+  .up-button {
+    background-color: #913dce;
+    border-radius: 7px;
+    color: white;
+    border: none;
+    height: 40px;
+    width: 130px;
+    padding: 0 5px;
+    font-size: 20px;
+  }
+
+  .up-button-disabled {
+    background-color: #913dce;
+    border-radius: 7px;
+    color: white;
+    border: none;
+    height: 40px;
+    width: 130px;
+    padding: 0 5px;
+    font-size: 20px;
+  }
+
+  .down-button {
+    display: none;
+    background-color: #913dce;
+    border-radius: 7px;
+    color: white;
+    border: none;
+    height: 50px;
+    width: 150px;
+    padding: 0 5px;
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 978px) {
+  .player {
+    width: 300px;
+  }
+
+  .change-player-username {
+    top: 10%;
+    /* left: 50%; */
+    gap: 20px;
+    width: 300px;
+    height: 150px;
+  }
+
+  .change-player-username-title {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .change-player-username-input {
+    height: 30px;
+    padding: 5px 0;
+    border-radius: 5px;
+    width: 80%;
+  }
+
+  .player-empty {
+    width: 300px;
+  }
+
+  .player-opened {
+    width: 300px;
+  }
+
+  .tournament-title {
+    font-size: 25px;
+  }
+}
+
+@media (max-width: 852px) {
+  .player {
+    width: 40%;
+  }
+  .player-opened {
+    width: 40%;
+  }
+  .player-empty {
+    width: 40%;
+    column-gap: 4px;
+  }
+}
+
+@media (max-width: 578px) {
+  .player {
+    width: 300px;
+  }
+  .player-opened {
+    width: 300px;
+  }
+  .player-empty {
+    width: 300px;
+    column-gap: 10px;
+  }
+
+  .change-player-username {
+    top: 5%;
+    /* left: 50%; */
+    gap: 20px;
+    width: 300px;
+    height: 150px;
+  }
+  .buttons {
+    margin-top: 20%;
+  }
+
+  .tournament-title {
+    font-size: 22px;
+  }
+
+  .destroy-button {
+    height: 30px;
+    width: 100px;
+  }
+}
+
+@media (max-width: 400px) {
+  .player {
+    width: 300px;
+  }
+
+  .player-opened {
+    width: 300px;
+  }
+  .player-empty {
+    width: 300px;
+    justify-content: center;
+    gap: 2px;
+  }
+
+  .avatar {
+    height: 75px;
+    width: 75px;
+    border-radius: 10px;
+  }
+
+  .tournament-members {
+    margin: 0 auto;
+    align-items: center;
+    position: relative;
+    z-index: 0;
+  }
+
+  .buttons {
+    margin-top: 20%;
+  }
+
+  .Invite-friend-popup-up {
+    border-radius: 10px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    height: 400px;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    overflow: auto;
+    background-color: #1b062a;
+  }
+
+  .friend {
+    display: flex;
+    width: 200px;
+    height: 50px;
+    justify-content: space-between;
+    padding: 0 5px;
+    align-items: center;
+  }
+
+  .tournament-infos {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 3%;
+    align-items: flex-start;
+  }
+
+  .little-line {
+    display: none;
+  }
+
+  .tournament-id {
+    display: flex;
+    column-gap: 20px;
+  }
+
+  .players-number {
+    display: flex;
+    column-gap: 30px;
+  }
+
+  .tournament-title {
+    margin-top: 5%;
+    font-size: 18px;
+  }
+
+  .up-buttons {
+    position: sticky;
+    top: 0;
+    display: flex;
+    margin: 3% auto;
+    column-gap: 10px;
+    justify-content: flex-start;
+  }
+
+  .up-button {
+    background-color: #913dce;
+    border-radius: 7px;
+    color: white;
+    border: none;
+    height: 30px;
+    width: 85px;
+    padding: 0 5px;
+    font-size: 13px;
+  }
+
+  .up-button-disabled {
+    background-color: #913dce;
+    border-radius: 7px;
+    color: white;
+    border: none;
+    height: 30px;
+    width: 85px;
+    padding: 0 5px;
+    font-size: 13px;
+  }
+
+  .destroy-button {
+    background-color: #913dce;
+    border-radius: 7px;
+    color: white;
+    border: none;
+    height: 30px;
+    width: 85px;
+    padding: 0 5px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 261px) {
+  .tournament-page-content {
+    margin-top: 10px;
+  }
+
+  .tournament-infos {
+    margin-top: 10px;
+  }
+
+  .tournament-title {
+    font-size: 20px;
+  }
+
+  .tournament-id-title,
+  .tournament-id-value,
+  .players-number-title,
+  .players-number-value {
+    font-size: 70%;
+    color: white;
+  }
+
+  .tournament-members {
+    width: 90%;
+    gap: 5px;
+    height: 800px;
+  }
+
+  .tournament-title {
+    margin-top: 5%;
+    font-size: 13px;
+  }
+
+  .Invite-friend-popup-up {
+    border-radius: 10px;
+    top: 60%;
+    left: 50%;
+    height: 250px;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    overflow: auto;
+    background-color: #1b062a;
+  }
+
+  .friend-invite-button {
+    margin-top: 2px;
+    margin-right: 5px;
+    border: none;
+    width: 50px;
+    height: 50px;
+  }
+
+  .up-buttons {
+    position: sticky;
+    top: 0;
+    display: flex;
+    margin: 3% auto;
+    column-gap: 10px;
+  }
+
+  .up-button {
+    background-color: #913dce;
+    border-radius: 7px;
+    color: white;
+    border: none;
+    height: 25px;
+    width: 85px;
+    padding: 0 5px;
+    font-size: 10px;
+  }
+
+  .up-button-disabled {
+    background-color: #913dce;
+    border-radius: 7px;
+    color: white;
+    border: none;
+    height: 25px;
+    width: 85px;
+    padding: 0 5px;
+    font-size: 10px;
+  }
+  .tournament-id-value-and-icon svg {
+    color: white;
+    height: 12px;
+    width: 12px;
+  }
+
+  .tournament-id-value {
+    font-size: 10px;
+  }
+
+  .destroy-button {
+    background-color: #913dce;
+    border-radius: 7px;
+    color: white;
+    border: none;
+    height: 25px;
+    width: 85px;
+    padding: 0 5px;
+    font-size: 10px;
+  }
+
+  .change-player-username {
+    top: 5%;
+    /* left: 50%; */
+    width: 95%;
+    height: 150px;
+  }
+
+  .change-player-username-title {
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+  }
+
+  .change-player-username-input {
+    height: 25px;
+    padding: 5px 0;
+    border-radius: 5px;
+    width: 90%;
+  }
+
+  .change-player-button {
+    height: 30px;
+    width: 70px;
+    font-size: 15px;
+  }
+}
