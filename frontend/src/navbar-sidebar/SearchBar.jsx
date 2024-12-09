@@ -93,7 +93,6 @@ export const SearchBar = () => {
     };
   }, []);
 
-  console.log("searchResult", searchResult);
   return (
     <div className="search-bar" ref={searchBarRef}>
       <input

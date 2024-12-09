@@ -148,23 +148,16 @@ async def send_user_eliminated_after_delay(self, tournament_id, actual_round):
 	if Tournamentwarnnotification:
 		await sync_to_async(Tournamentwarnnotification.delete)()
 	group_name = f'tournament_{tournament_id}'
-	# actual_round_obj = await sync_to_async(Round.objects.filter(tournament=tournament, type=actual_round).first)()
-	# members = await sync_to_async(list)(TournamentUserInfo.objects.filter(round=actual_round_obj))
 	members = tournaments[tournament_id]['rounds'][actual_round]
 	print(f"\nMEMBERS: {members}\n")
 	for member in members :
 		if member['username'] != 'anounymous': 
-			# tournament_member = await sync_to_async(TournamentMembers.objects.filter(tournament=tournament, user=member_user).first)()
-			# is_inside = await sync_to_async(lambda: tournament_member.is_inside)()
-			# is_inside = next((member['is_inside'] for member in tournaments[tournament_id]['members'] if member['username'] == 'user1'), None)
 			for m in tournaments[tournament_id]['members']:
 				if m['username'] == member['username']:
 					is_inside = m['is_inside']
 					break
 			if is_inside == False:
 				update_is_eliminated(tournament_id, member['username'], True)
-				# tournament_member.is_eliminated = True
-				# await sync_to_async(tournament_member.save)()
 				user = await sync_to_async(customuser.objects.filter(username=member['username']).first)()
 				user.is_playing = False
 				await sync_to_async(user.save)()
@@ -198,23 +191,14 @@ async def send_user_eliminated_after_delay(self, tournament_id, actual_round):
 									}
 								}
 							)
-
+	
+	await asyncio.sleep(2)
 	if next_round:
-		# round_to_check = await sync_to_async(Round.objects.filter(tournament=tournament, type=next_round).first)()
-		# if round_to_check is None:
-			# round = Round(tournament=tournament, type=next_round)
-			# await sync_to_async(round.save)()
-		# else:
-		# round = round_to_check
 		for i in range(0, len(members), 2):
 			players = []
 			users = []
-			# member1 = await sync_to_async(TournamentUserInfo.objects.filter(round=actual_round_obj, position=i + 1).first)()
-			# member2 = await sync_to_async(TournamentUserInfo.objects.filter(round=actual_round_obj, position=i + 2).first)()
 			player1 = get_player_by_position(tournament_id, actual_round, i + 1)
 			player2 = get_player_by_position(tournament_id, actual_round, i + 2)
-			# member_user1 = await sync_to_async(lambda: member1.user)()
-			# member_user2 = await sync_to_async(lambda: member2.user)()
 			member_user1 = player1['username']
 			member_user2 = player2['username']
 			if member_user1 == 'anounymous' and member_user2 == 'anounymous':
@@ -240,8 +224,6 @@ async def send_user_eliminated_after_delay(self, tournament_id, actual_round):
 					tournaments[tournament_id]['rounds'][next_round].append({'username': member_user1, 'position': (position + 1) / 2})
 				await send_player_winner(self, tournament_id, member_user1, next_round, position)
 			else:
-				# tournament_member1 = await sync_to_async(TournamentMembers.objects.filter(tournament=tournament, user=member_user1).first)()
-				# tournament_member2 = await sync_to_async(TournamentMembers.objects.filter(tournament=tournament, user=member_user2).first)()
 				is_eliminated1 = get_is_eliminated(tournament_id, member_user1)
 				is_eliminated2 = get_is_eliminated(tournament_id, member_user2)
 				if is_eliminated1 == True and is_eliminated2 == True:

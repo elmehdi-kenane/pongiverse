@@ -56,7 +56,6 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 							other_user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
 							if other_user is not None:
 								is_a_friend = await check_user_is_a_friend(user, other_user)
-								channel_name_list = notifs_user_channels.get(user_id)
 								if channel_name_list:
 									for channel_name in channel_name_list:
 										if channel_name and not user.is_playing:
