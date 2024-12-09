@@ -136,7 +136,7 @@ function LocalTournamentBracket() {
 		const winner = JSON.parse(localStorage.getItem('Winner')) || null;
 		if (winner && winner !== null) {
 			localStorage.clear();
-			navigate('../game/localtournamentfillmembers');
+			navigate('/localtournamentfillmembers');
 		}
 	}, [])
 
@@ -144,7 +144,7 @@ function LocalTournamentBracket() {
 		const isDataValid = await verifyDataIntegrity(keysToCheck);
 		if (!isDataValid) {
 			localStorage.clear();
-			navigate('../game/localtournamentfillmembers');
+			navigate('/localtournamentfillmembers');
 		}
 	}
 	useEffect(() => {
@@ -875,10 +875,6 @@ function LocalTournamentBracket() {
 		])
 		setTime(0)
 		setTimeout(() => setalreadyStarted(1), 3000);
-	}
-
-	const exitOfflineGame = () => {
-		navigate('../game/solo')
 	}
 
 	//End Game Functions

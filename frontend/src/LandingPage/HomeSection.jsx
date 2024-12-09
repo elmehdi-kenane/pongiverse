@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar.jsx";
 import ThreejsObj from "./ThreejsObj.jsx";
 
@@ -7,6 +7,12 @@ import arrow1 from "../assets/LandingPage/arrow1.svg";
 import arrow2 from "../assets/LandingPage/arrow2.svg";
 
 const HomeSection = () => {
+  const navigate = useNavigate()
+
+  const playOfflineModes = () => {
+    navigate("/localtournamentfillmembers")
+  }
+
   return (
     <div className="homeLandingPage" id="Home">
       <div className="navbarBgLandingPage">
@@ -61,7 +67,7 @@ const HomeSection = () => {
           height={50}
           className="arrow1"
         />
-        <button className="localGameBtn">Play Local Game 🏓</button>
+        <button className="localGameBtn" onClick={playOfflineModes}>Play Local Game 🏓</button>
         <img
           src={arrow2}
           alt="arrow"

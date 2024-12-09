@@ -33,7 +33,6 @@ function LocalTournamentFillMembers() {
 	const [index, setIndex] = useState(-1)
 	const [username, setUsername] = useState('')
 	const regex = /^(?!\d)[a-zA-Z0-9_]{4,8}$/;
-	const { user } = useContext(AuthContext)
 
 	const handleCancel = () => {
 		setOpen(false);
@@ -85,15 +84,11 @@ function LocalTournamentFillMembers() {
 		);
 	}
 
-	useEffect(() => {
-		if (user)
-			console.log("USER EXIST")
-	}, [user])
 
 	async function checkAndNavigate() {
 		const isStarted = await getSecureItem("is_started");
 		if (isStarted && isStarted === "true") {
-			navigate("../game/localtournamentbracket");
+			navigate("/localtournamentbracket");
 		}
 	}
 
@@ -118,7 +113,6 @@ function LocalTournamentFillMembers() {
 
 
 	useEffect(() => {
-		if (user) {
 			const item = localStorage.getItem('QuarterFinalPlayers');
 			if (item !== null) {
 				setPlayers(JSON.parse(item));
@@ -138,8 +132,7 @@ function LocalTournamentFillMembers() {
 				setSecureItem('is_game_finished', 'false');
 			}
 			checkAndNavigate();
-		}
-	}, [user])
+	}, [])
 
 	useEffect(() => {
 		if (players.length > 0) {
@@ -202,7 +195,7 @@ function LocalTournamentFillMembers() {
 		}
 
 		setSecureItem('is_started', 'true');
-		navigate("../game/localtournamentbracket")
+		navigate("/localtournamentbracket")
 	}
 
 	const modify_open = () => {
