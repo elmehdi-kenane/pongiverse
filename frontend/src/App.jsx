@@ -45,7 +45,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { DashboardWrapper } from './Dashboard/DashboardWrapper';
 import LocalModes from './Game/LocalModes';
 
-// import bg1 from "./assets/Body/2.png"
+import bg1 from "./assets/Body/2.png"
 import PersonalInfo from './Settings/PersonalInfo';
 import Security from './Settings/Security';
 
@@ -55,7 +55,7 @@ import AuthMiddleware from "./navbar-sidebar/AuthMiddleware";
 const App = () => {
   return (
     // <div className="page" style={{ backgroundImage: `url(${bg1})` }}>
-    <div className="page">
+    <div className="page" style={{ backgroundImage: `url(${bg1})` }}>
       <Router>
         <AuthProvider>
           <Routes>
