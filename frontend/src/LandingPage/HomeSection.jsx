@@ -67,7 +67,7 @@ const HomeSection = () => {
           height={50}
           className="arrow1"
         />
-        <button className="localGameBtn" onClick={playOfflineModes}>Play Local Game 🏓</button>
+        <button className="localGameBtn" onClick={playOfflineModes}>Try A Local Game 🏓</button>
         <img
           src={arrow2}
           alt="arrow"

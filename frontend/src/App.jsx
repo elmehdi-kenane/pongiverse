@@ -44,7 +44,7 @@ import ErrorPage from "./ErrorPage/ErrorPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { DashboardWrapper } from './Dashboard/DashboardWrapper';
 
-import bg1 from "./assets/Body/2.png"
+// import bg1 from "./assets/Body/2.png"
 import PersonalInfo from './Settings/PersonalInfo';
 import Security from './Settings/Security';
 
@@ -53,7 +53,8 @@ import AuthMiddleware from "./navbar-sidebar/AuthMiddleware";
 
 const App = () => {
   return (
-    <div className="page" style={{ backgroundImage: `url(${bg1})` }}>
+    // <div className="page" style={{ backgroundImage: `url(${bg1})` }}>
+    <div className="page">
       <Router>
         <AuthProvider>
           <Routes>
