@@ -4,8 +4,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from myapp.models import customuser
 from friends.models import Friendship
+from .models import Notification
 from friends.models import FriendRequest
 from .serializers import customUserSerializer
+from .serializers import NotificationSerializer
 from myapp.decorators import authentication_required
 from django.db.models import Q
 
@@ -58,3 +60,27 @@ def search_view(request):
 
     # users_ser = customUserSerializer(users_objs, many=True)
     return Response(search_result)
+
+@authentication_required
+@api_view(['POST'])
+def add_notification(request):
+    user = customuser.objects.get(username=request.data['username'])
+    print(request.data['avatar'])
+    Notification.objects.create(user=user, notification_text=request.data['notification_text'], url_redirection=request.data['url_redirection'], avatar=request.data['avatar'] or 'http://localhost:8000/auth/media/uploads_default/defaultNotificationIcon.png')
+    return Response("success :)")
+
+@authentication_required
+@api_view(['POST'])
+def clear_all_notifications(request):
+    user = customuser.objects.get(username=request.data['username'])
+    notification_objs = Notification.objects.filter(user=user)
+    notification_objs.delete()
+    return Response("success :)")
+
+@authentication_required
+@api_view(['GET'])
+def get_notifications(request, username):
+    user = customuser.objects.filter(username=username).first()
+    objs = Notification.objects.filter(user=user).order_by('-send_at') # he dash (-) in front tells Django to order the results in descending order, meaning the most recent notifications (those with the latest send_at timestamp) will appear first.
+    notifications_ser = NotificationSerializer(objs, many=True)
+    return Response(notifications_ser.data)

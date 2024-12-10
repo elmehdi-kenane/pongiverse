@@ -21,6 +21,9 @@ const GameNotifications = () => {
     notifSocket,
     setSocket,
     socketRef,
+    notifications,
+    setNotifications,
+    setIsNotificationsRead,
   } = useContext(AuthContext);
   const gamePlayRegex = /^\/mainpage\/(game|play)(\/[\w\d-]*)*$/;
   const navigate = useNavigate();
@@ -33,27 +36,78 @@ const GameNotifications = () => {
   const [newReceivedFriendReqNotif, setNewReceivedFriendReqNotif] =
     useState(false);
 
+  const addNotificationToList = ({
+    avatar,
+    notificationText,
+    urlRedirection,
+    notifications,
+    setNotifications,
+    user,
+  }) => {
+    const addNewNotification = async () => {
+      const response = await fetch(
+        `http://${
+          import.meta.env.VITE_IPADDRESS
+        }:8000/navBar/add_notification/`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            notification_text: notificationText,
+            url_redirection: urlRedirection,
+            username: user,
+            avatar: avatar,
+          }),
+        }
+      );
+      const res = await response.json();
+      //   if (res) setFriendSuggestions(res);
+    };
+    if (user) {
+      addNewNotification();
+      const newNotification = {
+        notification_text: trimStringWithEllipsis(notificationText),
+        url_redirection: urlRedirection,
+        send_at: new Date().toISOString(),
+        avatar: avatar,
+      };
+      setNotifications([newNotification, ...notifications]);
+      setIsNotificationsRead(false);
+    }
+  };
+
   // friendReq notification functionality
   useEffect(() => {
-    if (dataSocket !== null)
-    {
-        if (dataSocket.type === "receive-friend-request") {
-          setNewReceivedFriendReqNotif(true);
-          setRemoveFriendReqNotif(false);
-          setFriendReq(dataSocket.message);
-        } else if (
-          dataSocket.type === "confirm-friend-request" &&
-          dataSocket.message.second_username === friendReq.username
-        ) {
-          setRemoveFriendReqNotif(true);
-        } else if (
-          dataSocket.type === "remove-friend-request" &&
-          dataSocket.message.second_username === friendReq.username
-        ) {
-          setRemoveFriendReqNotif(true);
-        } else console.log("unknown notif type");
+    if (dataSocket !== null) {
+      if (dataSocket.type === "receive-friend-request") {
+        setNewReceivedFriendReqNotif(true);
+        setRemoveFriendReqNotif(false);
+        setFriendReq(dataSocket.message);
+        console.log("avatar", dataSocket.message.avatar);
+        addNotificationToList({
+          notificationText: `${dataSocket.message.second_username} sent you a friend request`,
+          urlRedirection: "friends",
+          avatar: dataSocket.message.avatar,
+          notifications: notifications,
+          setNotifications: setNotifications,
+          user: user,
+        });
+      } else if (
+        dataSocket.type === "confirm-friend-request" &&
+        dataSocket.message.second_username === friendReq.username
+      ) {
+        setRemoveFriendReqNotif(true);
+      } else if (
+        dataSocket.type === "remove-friend-request" &&
+        dataSocket.message.second_username === friendReq.username
+      ) {
+        setRemoveFriendReqNotif(true);
+      } else console.log("unknown notif type");
     }
-  }, [dataSocket?.message.to_user, dataSocket?.type]);
+  }, [dataSocket, user]);
 
   const notify = () => {
     setNewReceivedFriendReqNotif(false);
@@ -78,9 +132,9 @@ const GameNotifications = () => {
 
   useEffect(() => {
     {
-      newReceivedFriendReqNotif && location.pathname !== "/mainpage/friends"
-        ? notify()
-        : console.log("");
+      newReceivedFriendReqNotif &&
+        location.pathname !== "/mainpage/friends" &&
+        notify();
     }
   }, [newReceivedFriendReqNotif]);
 
@@ -371,3 +425,11 @@ const GameNotifications = () => {
 };
 
 export default GameNotifications;
+
+export function trimStringWithEllipsis(str) {
+  const maxLength = 30;
+  if (str.length > maxLength) {
+    return str.slice(0, maxLength) + "...";
+  }
+  return str;
+}

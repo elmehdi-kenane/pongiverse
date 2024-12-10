@@ -82,8 +82,6 @@ export const SearchBar = () => {
     }
   };
 
-  const navigateToProfile = () => {};
-
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleEscapeKey);
@@ -93,7 +91,6 @@ export const SearchBar = () => {
     };
   }, []);
 
-  console.log("searchResult", searchResult);
   return (
     <div className="search-bar" ref={searchBarRef}>
       <input
