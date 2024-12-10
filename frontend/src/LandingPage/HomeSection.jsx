@@ -10,7 +10,7 @@ const HomeSection = () => {
   const navigate = useNavigate()
 
   const playOfflineModes = () => {
-    navigate("/localtournamentfillmembers")
+    navigate("/localmodes")
   }
 
   return (

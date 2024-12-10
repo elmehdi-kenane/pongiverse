@@ -43,6 +43,7 @@ import LocalTournamentFillMembers from "./Tournament/LocalTournament/LocalTourna
 import ErrorPage from "./ErrorPage/ErrorPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { DashboardWrapper } from './Dashboard/DashboardWrapper';
+import LocalModes from './Game/LocalModes';
 
 import bg1 from "./assets/Body/2.png"
 import PersonalInfo from './Settings/PersonalInfo';
@@ -67,6 +68,8 @@ const App = () => {
             <Route path="/Error404" element={<ErrorPage />} />
             <Route path="/localtournamentbracket" element={<LocalTournamentBracket />} />
             <Route path="/localtournamentfillmembers" element={<LocalTournamentFillMembers />} />
+            <Route path="/localmodes" element={<LocalModes />} />
+
             <Route path="/mainpage" element={<NavbarSidebar />}>
               <Route
                 path="dashboard"

@@ -1,18 +1,12 @@
-.game-modes-page {
-	overflow: auto;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	width: 100%;
-}
 
 .game-modes-page-local {
 	overflow: auto;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+    justify-content: center;
 	width: 100%;
-	height: 100vh;
+
 }
 
 .game-modes-div{
@@ -36,6 +30,7 @@
 	border-radius: 10px;
 	gap: 50px;
 }
+
 
 .play-solo-mode-image {
 	margin-left: 20px;
@@ -117,17 +112,24 @@
 	width: 60%;
 }
 
+.game-modes-page-buttons {
+    width: 80%;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 10px;
+}
+
 .game-modes-page-button {
 	display: flex;
-	justify-content: flex-end;
 	align-items: center;
-	width: 100%;
 	height: 150px;
 }
 
 .game-modes-page-button button {
-	width: 140px;
 	height: 45px;
+    width: 145px;
 	color: white;
 	font-size: 18px;
 	padding: 10px 50px;
@@ -159,6 +161,16 @@
 .game-modes-page-button-selected button {
 	opacity: 1;
 	cursor: pointer;
+	height: 45px;
+    width: 145px;
+	color: white;
+    white-space: nowrap; /* Prevents the text from wrapping */
+	font-size: 15px;
+	padding: 10px 50px;
+	background-color: #913dce;
+	text-align: center;
+	border: none;
+	border-radius: 5px;
 }
 
 .mode-selected {
@@ -169,28 +181,15 @@
 
 	.play-solo-mode,
 	.create-tournament-mode,
-	.join-tournament-mode {
+	.join-tournament-mode, 
+    .game-modes-page-buttons{
 		width: 45%;
 		min-width: 1000px;
 	}
-
-	.game-modes-page-button {
-		width: 45%;
-		min-width: 1000px;
-	}
+    
 }
 
 @media (max-width: 1439px) {
-
-	.play-solo-mode,
-	.create-tournament-mode,
-	.join-tournament-mode {
-		width: 70%;
-	}
-
-	.game-modes-page-button {
-		width: 70%;
-	}
 
 	.play-solo-mode-description,
 	.join-tournament-mode-description {
@@ -202,7 +201,7 @@
 
 	.play-solo-mode,
 	.create-tournament-mode,
-	.join-tournament-mode {
+	.join-tournament-mode{
 		gap: 30px;
 	}
 
@@ -241,11 +240,6 @@
 
 @media (max-width: 425px) {
 
-	.play-solo-mode,
-	.create-tournament-mode,
-	.join-tournament-mode {
-		width: 95%;
-	}
 
 	.play-solo-mode-image,
 	.create-tournament-mode-image,
@@ -270,26 +264,6 @@
 
 	}
 
-	.game-modes-page-button {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		width: 70%;
-		margin-top: 10px;
-		height: 40px;
-	}
-
-	.game-modes-page-button button {
-		width: 140px;
-		height: 40px;
-		color: white;
-		font-size: 18px;
-		padding: 10px 50px;
-		background-color: #913dce;
-		text-align: center;
-		border: none;
-		border-radius: 5px;
-	}
 }
 
 @media (max-width: 375px) {
@@ -298,6 +272,11 @@
 	.create-tournament-mode,
 	.join-tournament-mode {
 		flex-direction: column;
+		gap: 0px;
+	}
+
+    .game-modes-page-buttons {
+		flex-direction: column-reverse;
 		gap: 0px;
 	}
 
@@ -337,7 +316,8 @@
 
 	.play-solo-mode,
 	.create-tournament-mode,
-	.join-tournament-mode {
+	.join-tournament-mode,
+    .game-modes-page-buttons {
 		height: 180px;
 	}
 
