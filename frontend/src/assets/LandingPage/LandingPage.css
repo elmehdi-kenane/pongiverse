@@ -23,7 +23,7 @@ body {
 	align-items: center;
 	flex-direction: column;
 	gap: 100px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .footerLandingPage {
@@ -31,6 +31,9 @@ body {
 	color: white;
 	display: flex;
 	justify-content: center;
+	align-items: center;
+    min-height: 50px;
+    font-size: 15px;
     width: 100%;
 }
 
@@ -100,6 +103,9 @@ body {
 
 .signUpBtnLandingPage {
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .navbarBgLandingPage {
@@ -323,7 +329,7 @@ body {
     } */
     
     .DescriptionLandingPage h1 {
-        padding: 0 45px;
+        margin: 24.12px 0 24.12px 45px;
     }
 
     .teamLandingPage {
@@ -538,6 +544,7 @@ body {
     color: inherit;  /* Inherit color from parent */
     text-decoration: none;  /* Remove underline */
     display: block;  /* Make the link fill the button */
+    text-align: center;
     width: 100%;
     height: 100%;
     }
@@ -593,7 +600,7 @@ body {
     .DescriptionLandingPage h1 {
         padding: 0;
         box-sizing: border-box;
-        /* margin: 24.12px 0 24.12px 50px; */
+        margin: 24.12px 0 24.12px 50px;
         margin-left: 50px;
         z-index: 10;
         align-self: flex-start;
@@ -722,13 +729,9 @@ body {
     .navbarLandingPage {
     	width: 100%;
     	display: flex;
-    	padding: 10px;
+    	padding: 10px 20px;
     	justify-content: space-between;
     	background-color: #250939;
-    }
-
-    .pingLogo {
-        margin-left: 50px;
     }
     
     .PlayLocalGame {
@@ -741,7 +744,6 @@ body {
     }
 
 	.sidebarLandingPage {
-        margin-right: 50px;
         display: flex;
 		flex-direction: column;
         justify-content: center;
@@ -749,7 +751,7 @@ body {
 		/* position: absolute; */
         top: 100%;
 		gap: 20px;
-        width: 2.5%;
+        /* width: 2.5%; */
         background-color: #250939;
 	}
 	.sidebarLandingPage img {
@@ -780,7 +782,6 @@ body {
 	.sidebarSectionsLandingPage {
         background-color: #913dce;
         padding: 10px;
-        margin-right: -10px;
         display: flex;
 		flex-direction: column;
         justify-content: center;
@@ -789,6 +790,7 @@ body {
 		gap: 10px;
 		position: absolute;
         width: 20%;
+        min-width: 115px;
 		top: 100%;
 	}
 
@@ -864,6 +866,7 @@ body {
         color: white;
         text-decoration: none;
         text-align: center;
+        font-size: 15px;
     }
     
     .header-imgLandingPage {
@@ -945,7 +948,6 @@ body {
         all:unset;
     }
     .ctaLandingPage .signUpBtnLandingPage {
-        align-self: flex-start;
         background-color: #913dce;
         border: none;
         border-radius: 10px;
@@ -998,13 +1000,13 @@ body {
     .navbarLandingPage {
     	width: 100%;
     	display: flex;
-    	padding: 10px;
+    	padding: 10px 20px;
     	justify-content: space-between;
     	background-color: #250939;
     }
     
 	.sidebarLandingPage {
-        margin-right: 50px;
+
         display: flex;
 		flex-direction: column;
         /* justify-content: flex-end; */
@@ -1012,13 +1014,12 @@ body {
 		/* position: absolute; */
         top: 100%;
 		gap: 20px;
-        width: 2.5%;
         background-color: #250939;
 	}
 
     .sidebarLandingPage img.menuLandingPage
     {
-        width: 20px;
+        width: 44px;
     }
 
 	.sidebarLandingPage img.crossLandingPage {
@@ -1044,7 +1045,6 @@ body {
 	.sidebarSectionsLandingPage {
         background-color: #913dce;
         padding: 15px;
-        margin-right: -10px;
         display: flex;
 		flex-direction: column;
         justify-content: center;
@@ -1088,7 +1088,7 @@ body {
     }
     .sidebarSectionsLandingPage .sidebarSectionsElement {
         font-weight: 700;
-        font-size: 10px;
+        font-size: 15px;
         border-radius: 7px;
         color: white;
         text-decoration: none;
@@ -1284,32 +1284,37 @@ body {
         display: flex;
         justify-content: center;
         align-items: center;
+        text-align: center;
     }
 
     .ctaLandingPage .signUpBtnLandingPage {
-        align-self: flex-start;
         background-color: #913dce;
         border: none;
         border-radius: 10px;
         min-width: 20%;
-        padding: 9px 15px;
-        margin: 0px 5px;
+        padding: 5px 10px;
+        margin-left: 5px;
         font-size: 10px;
         font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
         .signUpBtnLandingPage:hover {
             color: #913dce;
             background-color: white;
         }
     .signUpBtnLandingPage a {
-    color: inherit;  /* Inherit color from parent */
-    text-decoration: none;  /* Remove underline */
-    display: block;  /* Make the link fill the button */
+    color: inherit;
+    text-decoration: none;
+    display: block;
     width: 100%;
     height: 100%;
     }
     .footerLandingPage {
         width: 100%;
+        font-size: 13px;
+        min-height: 45px;
     }
 }
 
