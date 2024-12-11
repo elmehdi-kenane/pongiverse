@@ -103,39 +103,6 @@ export const AuthProvider = ({ children }) => {
 	useEffect(() => {
 	}, [allGameNotifs])
 
-	// useEffect(() => {
-	// 	const fetchImages = async () => {
-	// 		const promises = allGameFriends.map(async (user) => {
-	// 			const response = await fetch(
-	// 				`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`,
-	// 				{
-	// 					method: "POST",
-	// 					headers: {
-	// 						"Content-Type": "application/json",
-	// 					},
-	// 					body: JSON.stringify({
-	// 						image: user.image,
-	// 					}),
-	// 				}
-	// 			);
-	// 			const blob = await response.blob();
-	// 			return URL.createObjectURL(blob);
-	// 		});
-	// 		const images = await Promise.all(promises);
-	// 		setUserImages(images);
-	// 	};
-	// 	if (allGameFriends) {
-	// 		let loadingImage = [];
-	// 		for (let i = 0; i < allGameFriends.length; i++)
-	// 			loadingImage.push(Icons.solidGrey);
-	// 		setUserImages(loadingImage);
-	// 		fetchImages();
-	// 	}
-	// }, [allGameFriends]);
-
-	useEffect(() => {
-		console.log("ALL GAME NOTIFS: ", allGameNotifs.length);
-	}, [allGameNotifs]);
 
 	useEffect(() => {
 		const getAllGameFriends = async () => {
@@ -508,46 +475,17 @@ export const AuthProvider = ({ children }) => {
 		}
 	}, [user]);
 
-	// useEffect(() => {
-	//   if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
-	//     notifSocket.onmessage = (event) => {
-	//       let data = JSON.parse(event.data);
-	//       console.log("NOTIF SOCKET MESSAGE TYPE: ", data.type);
-	//       console.log("LOCATION: ", location.pathname);
-	//       if (
-	//         data.type === "roomInvitation" &&
-	//         location.pathname !== "/mainpage/groups"
-	//       ) {
-	//         console.log("ROOM INVITATION: ", data);
-	//         setChatRoomInvitationsCounter((prev) => prev + 1);
-	//       } else if (
-	//         data.type === "chatNotificationCounter" &&
-	//         location.pathname !== "/mainpage/chat"
-	//       ) {
-	//         console.log("CHAT NOTIFICATION COUNTER: ", data.count);
-	//         setChatNotificationCounter(data.count);
-	//       }
-	//       else if (data.type === "close_socket") {
-	//         notifSocket.close();
-	//         setSocket(null);
-	//       }
-	//     };
-	//   }
-	// }, [notifSocket, location.pathname]);
 
 	async function publicCheckAuth() {
 		try {
 			let response = await fetch(
 				`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/verifytoken/`,
 				{
-					method: "POST",
+					method: "GET",
 					headers: {
 						"Content-Type": "application/json",
 					},
 					credentials: "include",
-					body: JSON.stringify({
-						user: user,
-					}),
 				}
 			);
 			response = await response.json();
@@ -567,14 +505,11 @@ export const AuthProvider = ({ children }) => {
 			let response = await fetch(
 				`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/verifytoken/`,
 				{
-					method: "POST",
+					method: "GET",
 					headers: {
 						"Content-Type": "application/json",
 					},
 					credentials: "include",
-					body: JSON.stringify({
-						user: user,
-					}),
 				}
 			);
 			console.log("DATA: ", response);
