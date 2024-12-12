@@ -55,6 +55,7 @@ import AuthMiddleware from "./navbar-sidebar/AuthMiddleware";
 const App = () => {
   return (
     // <div className="page" style={{ backgroundImage: `url(${bg1})` }}>
+    // <div className="page" style={{ backgroundImage: `url(${bg1})` }}>
     <div className="page" style={{ backgroundImage: `url(${bg1})` }}>
       <Router>
         <AuthProvider>

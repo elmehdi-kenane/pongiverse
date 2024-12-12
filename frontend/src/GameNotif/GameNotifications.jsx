@@ -335,7 +335,7 @@ const GameNotifications = () => {
         </div>
       )}
       <div className="cancel-game-invite-request">
-        {allGameNotifs.length ? (
+        {allGameNotifs && allGameNotifs.length ? (
           <div className="game-invitations">
             {allGameNotifs.map((user, key) => {
               return (
