@@ -78,7 +78,7 @@ class Edges {
 }
 
 const OneVsOneOffline = () => {
-    let { privateCheckAuth, gameCustomize, user, userImg } = useContext(AuthContext)
+    let { gameCustomize, user, userImg } = useContext(AuthContext)
 
     const [gameAborted, setGameAborted] = useState(false)
     const [gameFinished, setGameFinished] = useState(false)
@@ -166,9 +166,6 @@ const OneVsOneOffline = () => {
     particles.push(particle);
   }
 
-  useEffect(() => {
-    privateCheckAuth()
-  }, [])
 
   const draw = () => {
     const ctx = canvasContextRef.current
@@ -543,7 +540,7 @@ const OneVsOneOffline = () => {
   const exitTheGame = () => {
     setStartGame(false)
     startGameRef.current = false
-    navigate('../game/solo/1vs1')
+    navigate('/localmodes')
   }
 
   const startTimer = () => {

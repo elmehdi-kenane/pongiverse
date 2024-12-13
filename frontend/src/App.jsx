@@ -71,7 +71,7 @@ const App = () => {
             <Route path="/localtournamentbracket" element={<LocalTournamentBracket />} />
             <Route path="/localtournamentfillmembers" element={<LocalTournamentFillMembers />} />
             <Route path="/localmodes" element={<LocalModes />} />
-
+            <Route path="/1vs1/offline" element={<OneVsOneOffline />} />
             <Route path="/mainpage" element={<NavbarSidebar />}>
               <Route
                 path="dashboard"
@@ -122,10 +122,6 @@ const App = () => {
               <Route
                 path="game/solo/1vs1/create-or-join"
                 element={<OneVsOneCreateOrJoin />}
-              />
-              <Route
-                path="game/solo/1vs1/offline"
-                element={<OneVsOneOffline />}
               />
               <Route path="game/solo/2vs2" element={<TwoVersusTwo />} />
               <Route

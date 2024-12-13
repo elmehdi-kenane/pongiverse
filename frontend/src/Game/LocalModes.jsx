@@ -18,7 +18,7 @@ const LocalModes = () => {
     let { socket, user } = useContext(AuthContext)
 
     const goToSoloPage = () => {
-        navigate("../game/solo")
+        navigate("/1vs1/offline")
     }
 
     const GoToLocalTournament = () => {
@@ -40,7 +40,7 @@ const LocalModes = () => {
 
     const handleButtonClick = () => {
         if (soloModeSelected) {
-            // goToSoloPage()
+            goToSoloPage()
 
         }
         if (createTournamentModeSelected)

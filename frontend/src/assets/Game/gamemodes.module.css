@@ -142,14 +142,15 @@
 .tournament_warnings {
 	position: absolute;
 	display: flex;
-	width: 200px;
+	gap: 2px;
+	width: 250px;
 	height: 50px;
-	background-color: white;
+	background: rgba(68, 45, 106, 1);
 	justify-content: center;
 	align-items: center;
 	border-radius: 10px;
 	z-index: 100;
-	color: black;
+	color: white;
 }
 
 .game-modes-page-button button:active {

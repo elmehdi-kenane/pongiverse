@@ -9,7 +9,7 @@ import joinTournamentImage from "../assets/Game/joinTournamentMode.svg";
 import toastDrari, { Toaster } from "react-hot-toast";
 import { toast, Bounce } from "react-toastify";
 import NotificationPopupCard from "../navbar-sidebar/NotificationPopupCard";
-
+import { ImWarning } from "react-icons/im";
 const GameNotifications = () => {
   const [roomID, setRoomID] = useState(null);
   let {
@@ -331,6 +331,7 @@ const GameNotifications = () => {
     <>
       {timeDiff && (
         <div className={styles["tournament_warnings"]}>
+          <ImWarning size={30} color="red"/> 
           Your Game will start in {timeDiff}
         </div>
       )}
