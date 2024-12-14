@@ -24,64 +24,6 @@ import os
 import secrets
 from myapp.decorators import authentication_required
 
-# Create your views here.
-@authentication_required
-@api_view (['GET'])
-def list_users(request, username):
-    users_list = [user.username for user in customuser.objects.exclude(username=username)]
-    print(users_list)
-    return Response(users_list)
-
-@authentication_required
-@api_view(['POST'])
-def add_users(request, username):
-    print(username , "add " ,request.data['user'])
-    user_to_add = request.data['user']
-    sender = username
-    user_add_row = customuser.objects.get(username=user_to_add)
-    user_sender_row = customuser.objects.get(username=sender)
-    isFriends = Friendship.objects.filter(user=user_sender_row, friend=user_add_row).exists() or \
-        Friendship.objects.filter(user=user_add_row, friend=user_sender_row).exists()
-    if(isFriends):
-        print("already friends")
-        return Response({'message':'already firends'})
-    Friendship.objects.create(user=user_sender_row , friend=user_add_row)
-    Friendship.objects.create(user=user_add_row , friend=user_sender_row)
-    return Response({'message':'sucess'})
-
-@authentication_required
-@api_view(['GET'])
-def show_friends(request, username):
-    user = customuser.objects.get(username=username)
-    friends = [user_id.user.username for user_id in Friendship.objects.filter(user=user)]
-    print(friends)
-    return Response({"friends": friends})
-
-    # friends = Friendship.objects.filter(user=username)
-    # user_add_row = customuser.objects.get(username=user_to_add)
-    # user_sender_row = customuser.objects.get(username=sender)
-    # Friendship.objects.create(user=user_sender_row , friend=user_add_row)
-    # Friendship.objects.create(user=user_add_row , friend=user_sender_row)
-    # return Response({'message':'sucess'})
-@authentication_required
-@api_view(['GET'])
-def friends_with_directs(request, username):
-    user = customuser.objects.get(username=username)
-    friends = Friendship.objects.filter(user=user)
-    data = []
-    for friend in friends:
-        print("my friend name: ",friend.friend.username)
-        friend_data = {
-            'id' : friend.friend.id,
-            'name' : friend.friend.username,
-            'is_online' : friend.friend.is_online,
-            'is_playing' : friend.friend.is_playing,
-            'image' :friend.friend.avatar.path,
-        }
-        data.append(friend_data)
-    return Response(data)
-
-
 #**--------------------- UserData ---------------------** 
 @authentication_required
 @api_view(['GET'])
@@ -118,6 +60,7 @@ def save_base64_image(base64_image): # Save the Base64 Image as a file
     # Create a ContentFile object from the decoded image data
     img_file = ContentFile(img_data, name='Picture.png')
     return img_file
+
 @authentication_required
 @api_view(['POST'])
 def update_user_pic(request):
@@ -233,15 +176,14 @@ def update_user_password(request):
 @api_view(["GET"])
 def get_user_friends(request, username):
     user = customuser.objects.filter(username=username).first()
-    friendships = Friendship.objects.filter(user=user, isBlocked=False).all()
+    friendships = Friendship.objects.filter(user=user, block_status='none').all()
     friends = []
     if friendships:
         for friendship in friendships:
-            if Friendship.objects.filter(user=friendship.friend, friend=user, isBlocked=False).exists():
-                friends.append({
-                    'username': friendship.friend.username,
-                    'pic': f"http://localhost:8000/auth{friendship.friend.avatar.url}"
-                })
+            friends.append({
+                'username': friendship.friend.username,
+                'pic': f"http://localhost:8000/auth{friendship.friend.avatar.url}"
+            })
     return Response(data={"data": friends}, status=status.HTTP_200_OK)
 
 #**--------------------- Check User Friendship ---------------------** 
@@ -254,10 +196,7 @@ def check_friendship(request, username, username2):
     if not user or not user2:
         return Response(data={'error': 'users not found'}, status=status.HTTP_404_NOT_FOUND)
 
-    if Friendship.objects.filter(user=user, friend=user2, isBlocked=True).exists():
-        return Response(data={"data": "blocked"}, status=status.HTTP_200_OK)
-    
-    if Friendship.objects.filter(user=user2, friend=user, isBlocked=True).exists():
+    if Friendship.objects.filter(Q(block_status='blocked') | Q(block_status='blocker'), user=user, friend=user2).exists():
         return Response(data={"data": "blocked"}, status=status.HTTP_200_OK)
 
     if Friendship.objects.filter(user=user, friend=user2).exists():
@@ -266,26 +205,16 @@ def check_friendship(request, username, username2):
     if FriendRequest.objects.filter(from_user=user, to_user=user2, status='sent').exists():
         return Response(data={"data": "pending"}, status=status.HTTP_200_OK)
 
-    if FriendRequest.objects.filter(from_user=user, to_user=user2, status='recieved').exists():
+    if FriendRequest.objects.filter(from_user=user, to_user=user2, status='received').exists():
         return Response(data={"data": "accept"}, status=status.HTTP_200_OK)
 
     return Response(data={"data": "false"}, status=status.HTTP_200_OK)
 
 #**--------------------- GetUsers Data Ranking ---------------------** 
 
-# @api_view(["GET"])
-# def get_user_image(request, username):
-#     user = customuser.objects.filter(username=username).first()
-#     if user is not None:
-#         with open(user.avatar.path, 'rb') as image_file:
-#              if image_file:
-#                 return HttpResponse(image_file.read(), content_type='image/jpeg')
-#              else:
-#                  return Response("not found")
 @authentication_required
 @api_view(["GET"])
 def get_users_rank(request, username):
-    # user = customuser.objects.filter(username=username).first()
     users_data = UserMatchStatics.objects.all()
     res_data = []
     if users_data is not None:
@@ -502,23 +431,23 @@ def get_multiplayer_matches(request, username, page):
         offset = (page - 1) * page_size
         user_matches = Match.objects.filter(
             Q(team1_player1=user) | Q(team1_player2=user) | Q(team2_player1=user) | Q(team2_player2=user),
-            mode="1vs1"
+            mode="2vs2"
         ).order_by('-date_ended')[offset:offset+page_size]
 
         # Check if there is still matches or not -------
         total_matches_count = Match.objects.filter(
             Q(team1_player1=user) | Q(team1_player2=user) | Q(team2_player1=user) | Q(team2_player2=user),
-            mode="1vs1"
+            mode="2vs2"
         ).count()
         has_more_matches = (offset + page_size) < total_matches_count
 
         for user_match in user_matches:
             res_data.append({
                 "p1Pic1": f"http://localhost:8000/auth{user_match.team1_player1.avatar.url}",
-                "p1Pic2": f"http://localhost:8000/auth{user_match.team1_player1.avatar.url}",
+                "p1Pic2": f"http://localhost:8000/auth{user_match.team1_player2.avatar.url}",
                 "score" : f"{user_match.team1_score} - {user_match.team2_score}",
                 "p2Pic1": f"http://localhost:8000/auth{user_match.team2_player1.avatar.url}",
-                "p2Pic2": f"http://localhost:8000/auth{user_match.team2_player1.avatar.url}",
+                "p2Pic2": f"http://localhost:8000/auth{user_match.team2_player2.avatar.url}",
                 "id": user_match.room_id,
             })
         return Response(data={"userMatches": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
@@ -535,31 +464,31 @@ def get_multy_match_dtl(request, match_id):
         res_data = {
             "date": match.date_ended,
             "pic1": f"http://localhost:8000/auth{match.team1_player1.avatar.url}",
-            "pic2": f"http://localhost:8000/auth{match.team1_player1.avatar.url}",
+            "pic2": f"http://localhost:8000/auth{match.team1_player2.avatar.url}",
             "pic3": f"http://localhost:8000/auth{match.team2_player1.avatar.url}",
-            "pic4": f"http://localhost:8000/auth{match.team2_player1.avatar.url}",
+            "pic4": f"http://localhost:8000/auth{match.team2_player2.avatar.url}",
             "user1": match.team1_player1.username,
-            "user2": match.team1_player1.username,
+            "user2": match.team1_player2.username,
             "user3": match.team2_player1.username,
-            "user4": match.team2_player1.username,
+            "user4": match.team2_player2.username,
             "score1": match.team1_score,
             "score2": match.team2_score,
             "goals1": match_stq.team1_player1_score,
-            "goals2": match_stq.team1_player1_score,
+            "goals2": match_stq.team1_player2_score,
             "goals3": match_stq.team2_player1_score,
-            "goals4": match_stq.team2_player1_score,
+            "goals4": match_stq.team2_player2_score,
             "hit1": match_stq.team1_player1_hit,
-            "hit2": match_stq.team1_player1_hit,
+            "hit2": match_stq.team1_player2_hit,
             "hit3": match_stq.team2_player1_hit,
-            "hit4": match_stq.team2_player1_hit,
+            "hit4": match_stq.team2_player2_hit,
             "exp1": match_stq.team1_player1_rating,
-            "exp2": match_stq.team1_player1_rating,
+            "exp2": match_stq.team1_player2_rating,
             "exp3": match_stq.team2_player1_rating,
-            "exp4": match_stq.team2_player1_rating,
+            "exp4": match_stq.team2_player2_rating,
             "acc1": f"{(match_stq.team1_player1_score * 100 / match_stq.team1_player1_hit):.0f}" if match_stq.team1_player1_hit else 0,
-            "acc2": f"{(match_stq.team1_player1_score * 100 / match_stq.team1_player1_hit):.0f}" if match_stq.team1_player1_hit else 0,
+            "acc2": f"{(match_stq.team1_player2_score * 100 / match_stq.team1_player2_hit):.0f}" if match_stq.team1_player2_hit else 0,
             "acc3": f"{(match_stq.team2_player1_score * 100 / match_stq.team2_player1_hit):.0f}" if match_stq.team2_player1_hit else 0,
-            "acc4": f"{(match_stq.team2_player1_score * 100 / match_stq.team2_player1_hit):.0f}" if match_stq.team2_player1_hit else 0,
+            "acc4": f"{(match_stq.team2_player2_score * 100 / match_stq.team2_player2_hit):.0f}" if match_stq.team2_player2_hit else 0,
         }
         return Response(data={"data": res_data}, status=status.HTTP_200_OK)
     return Response(data={'error': 'Error Getting MultiplayerGames!'}, status=status.HTTP_400_BAD_REQUEST)
