@@ -7,14 +7,14 @@ import { AiFillCloseSquare } from "react-icons/ai";
 
 
 const loadingStates = [
-  "Buying a condo",
-  "Travelling in a flight",
-  "Meeting Tyler Durden",
-  "He makes soap",
-  "We goto a bar",
-  "Start a fight",
-  "We like it",
-  "Welcome to F**** C***",
+  "Choose Solo Mode to play 1 vs. 1, 2 vs. 2, or against an AI.",
+  "Play Solo Mode by matchmaking, inviting friends, or creating a room.",
+  "Score points by hitting the ball and making your opponent miss.",
+  "Use Friend Invite to challenge your friends in Solo Mode.",
+  "Practice against the AI to improve your skills.",
+  "Win matches by earning the most points!",
+  "In Tournament Mode, create or join a tournament to compete.",
+  "Join tournaments to meet skilled players and challenge yourself.",
 ];
 
 
@@ -42,7 +42,7 @@ const Instructions = ({hideInst, setHideInst}) => {
             {
               loadingStates.map((state, index) => (
                 <div className={styles['p-and-icon']} key={index} >
-                  <GrValidate size={25} color={index <= counter ? '#913dce' : 'white'} />
+                  <GrValidate className={styles['p-icons']} color={index <= counter ? '#913dce' : 'white'} />
                   <p style={{ color: index <= counter ? '#913dce' : 'white', fontWeight: index <= counter ? 'bold' : 'normal' }} className={styles['instructions-div-p']}> {state} </p>
                 </div>
               ))
