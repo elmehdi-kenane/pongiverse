@@ -37,6 +37,7 @@ const MyRoomContent = (props) => {
     try {
       const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/changeChatRoomCover`, {
         method: "POST",
+        credentials: "include",
         body: formData,
       });
       const data = await response.json();

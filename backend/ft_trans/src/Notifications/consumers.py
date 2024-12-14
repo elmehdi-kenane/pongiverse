@@ -18,6 +18,13 @@ def is_user_joining_tournament(username):
 				return tournament_id
 	return 0
 
+async def check_user_is_a_friend(user, to_check):
+	friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
+	for friend in friends:
+		friend_username = await sync_to_async(lambda: friend.friend.username)()
+		if friend_username == to_check.username:
+			return True
+	return False
 
 class NotificationsConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
@@ -48,7 +55,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 						for user_id, channel_name_list in notifs_user_channels.items():
 							other_user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
 							if other_user is not None:
-								channel_name_list = notifs_user_channels.get(user_id)
+								is_a_friend = await check_user_is_a_friend(user, other_user)
 								if channel_name_list:
 									for channel_name in channel_name_list:
 										if channel_name and not user.is_playing:
@@ -57,6 +64,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 												{
 													'type': 'connected_again',
 													'message': {
+															'is_a_friend': is_a_friend,
 															'user': username,
 															'userInfos': {
 																'id': user.id,
@@ -291,9 +299,36 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 			'type': 'finishedGame',
 			'message': event['message']
 		}))
+
+	async def remove_tournament_notif(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'remove_tournament_notif',
+			'message': event['message']
+		}))
+
+			##################################### FRIENDS #####################################
+
 	async def send_friend_request(self, event):
 		await self.send(text_data=json.dumps({
 			'type': 'send-friend-request',
+			'message': event['message']
+		}))
+
+	async def receive_friend_request(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'receive-friend-request',
+			'message': event['message']
+		}))
+
+	async def cancel_friend_request(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'cancel-friend-request',
+			'message': event['message']
+		}))
+
+	async def remove_friend_request(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'remove-friend-request',
 			'message': event['message']
 		}))
 
@@ -303,20 +338,32 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 			'message': event['message']
 		}))
 
-	async def recieve_friend_request(self, event):
-		await self.send(text_data=json.dumps({
-			'type': 'recieve-friend-request',
-			'message': event['message']
-		}))
-	
 	async def confirm_friend_request(self, event):
 		await self.send(text_data=json.dumps({
 			'type': 'confirm-friend-request',
 			'message': event['message']
 		}))
 
-	async def remove_tournament_notif(self, event):
+	async def remove_friendship(self, event):
 		await self.send(text_data=json.dumps({
-			'type': 'remove_tournament_notif',
+			'type': 'remove-friendship',
+			'message': event['message']
+		}))
+
+	async def blocker_friend(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'blocker-friend',
+			'message': event['message']
+		}))
+
+	async def blocked_friend(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'blocked-friend',
+			'message': event['message']
+		}))
+
+	async def unblock_friend(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'unblock-friend',
 			'message': event['message']
 		}))

@@ -32,6 +32,7 @@ export const ProfileWrapper = ({ child }) => {
             try {
                 const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserData/${userId}`, {
                     method: "GET",
+                    credentials: "include",
                     headers: {
                         'Content-Type': 'application/json',
                     }
@@ -42,7 +43,6 @@ export const ProfileWrapper = ({ child }) => {
                 }
                 else 
                     navigate("/Error404")
-                // setCheckUser(false);
             } catch (error) {
                 console.log("Error:  ", error);
             }
@@ -51,6 +51,7 @@ export const ProfileWrapper = ({ child }) => {
             try {
                 const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/CheckFriendship/${user}/${userId}`, {
                     method: "GET",
+                    credentials: "include",
                     headers: {
                         'Content-Type': 'application/json',
                     }
@@ -90,7 +91,6 @@ export const ProfileWrapper = ({ child }) => {
     useEffect(() => {
         if (document.querySelector(".profile-page")){
             document.querySelector(".profile-page").scrollTop = 0;
-            // document.querySelector(".profile-page").scrollIntoView({ behavior: 'smooth' });
         }
       }, [userId]);
 

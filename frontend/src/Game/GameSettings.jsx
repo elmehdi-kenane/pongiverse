@@ -94,6 +94,7 @@ const GameSettings = () => {
       try {
         let response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/customizeGame`, {
           method: "POST",
+          
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json',

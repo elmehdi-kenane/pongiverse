@@ -2,17 +2,19 @@ import { formatDistanceToNowStrict } from 'date-fns';
 import { cancelFriendRequest, confirmFriendRequest } from "./utils";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import { useContext } from "react";
+import { useNavigate } from 'react-router-dom';
 
-const RecievedFriendReqCard = ({ secondUsername, send_at, avatar }) => {
-  const { user } = useContext(AuthContext);
-  const handleConfirmFriendReq = () => {
+const ReceivedFriendReqCard = ({ secondUsername, send_at, avatar }) => {
+    const { user } = useContext(AuthContext);
+    const navigate = useNavigate();
+    const handleConfirmFriendReq = () => {
     confirmFriendRequest(user, secondUsername);
   };
   const handleCancelFriendReq = () => {
     cancelFriendRequest(user, secondUsername, "remove");
   };
   return (
-    <div className="RecievedFriendReqCard">
+      <div className="ReceivedFriendReqCard" onClick={() => navigate(`/mainpage/profile/${secondUsername}`)}>
       <div className="ProfileName">
         <img src={avatar} alt="Profile" className="Profile" />
         <p className="SentFriendReqCardUsername">{secondUsername}</p>
@@ -21,10 +23,18 @@ const RecievedFriendReqCard = ({ secondUsername, send_at, avatar }) => {
         </p>
       </div>
       <div className="GroupFriendBtn">
-        <button className="FriendBtn Confirm" onClick={handleConfirmFriendReq}>
+              <button className="FriendBtn Confirm" onClick={(e) => {
+                  e.stopPropagation()
+                  handleConfirmFriendReq()
+              }
+              }>
           Confirm
         </button>
-        <button className="FriendBtn Remove" onClick={handleCancelFriendReq}>
+              <button className="FriendBtn Remove" onClick={(e) => {
+                  e.stopPropagation()
+                  handleCancelFriendReq()
+              }
+              }>
           Remove
         </button>
       </div>
@@ -32,4 +42,4 @@ const RecievedFriendReqCard = ({ secondUsername, send_at, avatar }) => {
   );
 };
 
-export default RecievedFriendReqCard
+export default ReceivedFriendReqCard

@@ -1,26 +1,23 @@
+import { Divider } from "@mui/material";
 import { SearchBar } from "./SearchBar";
+import { SearchBarMobile } from "./SearchBarMobile";
 
-function NavbarIconSearch({ Icons, handleExapandSidebar, handleSearchBar, searchbar }) {
-    return (
-      <>
-        <div className="logo">
-          <a href="#">
-            <img src={Icons.pingpong} alt="ping pong" />
-          </a>
-        </div>
+function NavbarIconSearch({ Icons, handleSearchBar, isSearchBarMobileOpen }) {
+  return (
+    <div className="searchBarsWrapperWithLogo">
+      <div className="logo">
+        <a href="#">
+          <img src={Icons.pingpong} alt="ping pong" />
+        </a>
+      </div>
+      <div className="searchBarsWrapper">
         <SearchBar></SearchBar>
-        {searchbar && (
-          <div className="search-bar-mobile">
-            <input
-              type="text"
-              placeholder="Search"
-              onBlur={handleSearchBar}
-              autoFocus
-            />
-          </div>
+        {isSearchBarMobileOpen && (
+          <SearchBarMobile handleSearchBar={handleSearchBar}></SearchBarMobile>
         )}
-      </>
-    );
+      </div>
+    </div>
+  );
 }
- 
+
 export default NavbarIconSearch;

@@ -23,6 +23,7 @@ function TournamentWarning() {
         const getTournamentWarning = async () => {
             const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-tournament-warning`, {
                 method: "POST",
+                credentials: "include",
                 headers: {
                     'Content-Type': 'application/json',
                 },

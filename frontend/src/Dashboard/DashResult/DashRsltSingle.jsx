@@ -37,6 +37,7 @@ function DashRsltSingle() {
           `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getSingleMatchDtl/${singleId}`,
           {
             method: "GET",
+            credentials: "include",
             headers: {
               "Content-Type": "application/json",
             },

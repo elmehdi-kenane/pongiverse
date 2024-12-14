@@ -59,6 +59,7 @@ function JoinTournament() {
 		const check_is_join = async () => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/is-joining-tournament`, {
 				method: "POST",
+				credentials: "include",
 				headers: {
 					'Content-Type': 'application/json',
 				},
@@ -77,6 +78,7 @@ function JoinTournament() {
 		const check_is_started_and_not_finished = async () => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/is-started-and-not-finshed`, {
 				method: "POST",
+				credentials: "include",
 				headers: {
 					'Content-Type': 'application/json',
 				},
@@ -102,6 +104,7 @@ function JoinTournament() {
 		const getTournamentSuggestions = async () => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-tournament-suggestions`, {
 				method: "GET",
+				credentials: "include",
 				headers: {
 					'Content-Type': 'application/json',
 				},
@@ -195,6 +198,7 @@ function JoinTournament() {
 				`http://${import.meta.env.VITE_IPADDRESS}:8000/api/check_is_in_game`,
 				{
 					method: "POST",
+					credentials: "include",
 					headers: {
 						"Content-Type": "application/json",
 					},
@@ -220,10 +224,10 @@ function JoinTournament() {
 		const get_members = async () => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-tournament-data`, {
 				method: "POST",
+				credentials: "include",
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				credentials: 'include',
 				body: JSON.stringify({
 					id: data
 				})

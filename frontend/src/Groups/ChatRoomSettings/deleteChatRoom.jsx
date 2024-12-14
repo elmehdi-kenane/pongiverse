@@ -22,6 +22,7 @@ const DeleteChatRoom = (props) => {
         `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/deleteChatRoom/${props.roomId}`,
         {
           method: "DELETE",
+          credentials: "include",
         }
       );
   

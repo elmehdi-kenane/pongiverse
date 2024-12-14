@@ -12,6 +12,7 @@ from asgiref.sync import async_to_sync
 from datetime import datetime
 from .serializers import friends_with_directs_serializer, direct_message_serializer, room_serializer, room_message_serializer
 from rest_framework.pagination import PageNumberPagination
+from myapp.decorators import authentication_required
 # from Notifications.consumers import notifs_user_channels
 
 def get_protocol(request):
@@ -28,6 +29,7 @@ class CustomMyChatRoomLimitOffsetPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
     max_page_size = 100  # Maximum page size the user can request
 
+@authentication_required
 @api_view(["GET"])
 def friends_with_directs(request, username):
     try:
@@ -58,6 +60,7 @@ def friends_with_directs(request, username):
 
     return paginator.get_paginated_response(serializer.data)
 
+@authentication_required
 @api_view(["POST"])
 def direct_messages(request):
     if request.method == "POST":
@@ -73,6 +76,7 @@ def direct_messages(request):
         return paginator.get_paginated_response(serializer.data)
     return Response({"error": "Invalid request method"}, status=400)
 
+@authentication_required
 @api_view(["GET"])
 def chat_rooms_list(request, username):
     if request.method == "GET":
@@ -93,6 +97,7 @@ def chat_rooms_list(request, username):
         return paginator.get_paginated_response(serializer.data)
     return Response({"error": "Invalid request method"}, status=400)
 
+@authentication_required
 @api_view(["GET"])
 def my_chat_rooms(request, username):
     if request.method == "GET":
@@ -105,6 +110,7 @@ def my_chat_rooms(request, username):
     return Response({"error": "Invalid request method"}, status=400)
 
 
+@authentication_required
 @api_view(["GET"])
 def chat_room_messages(request, room_id):
     if request.method == "GET":
@@ -118,6 +124,7 @@ def chat_room_messages(request, room_id):
 
 
 
+@authentication_required
 @api_view(["POST"])
 def leave_chat_room(request):
     if request.method == "POST":
@@ -185,7 +192,7 @@ def leave_chat_room(request):
 
 
 
-
+@authentication_required
 @api_view(["POST"])
 def chat_room_update_icon(request):
     if request.method == "POST":
@@ -204,7 +211,7 @@ def chat_room_update_icon(request):
         return Response({"success": "chat room icon changed successfully"}, status=200)
     return Response({"error": "Invalid request method"}, status=400)
 
-
+@authentication_required
 @api_view(["POST"])
 def chat_room_update_cover(request):
     if request.method == "POST":
@@ -234,7 +241,7 @@ def chat_room_update_cover(request):
         )
     return Response({"error": "Invalid request method"}, status=400)
 
-
+@authentication_required
 @api_view(["PATCH"])
 def chat_room_update_name(request, id):
     if request.method == "PATCH":
@@ -255,7 +262,7 @@ def chat_room_update_name(request, id):
         )
     return Response({"error": "Invalid request method"}, status=400)
 
-
+@authentication_required
 @api_view(["POST"])
 def create_chat_room(request):
     if request.method == "POST":
@@ -312,7 +319,7 @@ def create_chat_room(request):
         )
     return Response({"error": "Invalid request method"}, status=400)
 
-
+@authentication_required
 @api_view(["DELETE"])
 def delete_chat_room(request, id):
     if request.method == "DELETE":
@@ -349,7 +356,7 @@ def delete_chat_room(request, id):
 
 
 
-
+@authentication_required
 @api_view(["GET"])
 def all_chat_room_memebers(request, chat_room_name):
     room = Room.objects.get(name=chat_room_name)
@@ -362,7 +369,7 @@ def all_chat_room_memebers(request, chat_room_name):
             data.append(member_data)
     return Response(data)
 
-
+@authentication_required
 @api_view(["POST"])
 def list_all_friends(request):
     if request.method == "POST":
@@ -395,7 +402,7 @@ def list_all_friends(request):
         return Response(all_friend)
     return Response({"error": "Invalid request method"}, status=400)
 
-
+@authentication_required
 @api_view(["GET"])
 def rooms_invitations(request, username):
     if request.method == "GET":
@@ -418,7 +425,7 @@ def rooms_invitations(request, username):
         return Response(all_invitations)
     return Response({"error": "Invalid request method"}, status=400)
 
-
+@authentication_required
 @api_view(["GET"])
 def suggested_chat_rooms(request, username):
     if request.method == "GET":
@@ -447,7 +454,7 @@ def suggested_chat_rooms(request, username):
         return Response(rooms)
     return Response({"error": "Invalid request method"}, status=400)
 
-
+@authentication_required
 @api_view(["POST"])
 def chat_room_members_list(request):
     if request.method == "POST":
@@ -469,7 +476,7 @@ def chat_room_members_list(request):
 
     return Response({"error": "Invalid request method"}, status=400)
 
-
+@authentication_required
 @api_view(["POST"])
 def accept_chat_room_invite(request):
     if request.method == "POST":
@@ -514,7 +521,7 @@ def accept_chat_room_invite(request):
 
     return Response({"error": "Invalid request method"}, status=400)
 
-
+@authentication_required
 @api_view(["POST"])
 def cancel_chat_room_invite(request):
     if request.method == "POST":
@@ -534,7 +541,7 @@ def cancel_chat_room_invite(request):
         return Response({"success": "invitation has been canceled successfully", 'roomId': room.id}, status=200)
     return Response({"error": "Invalid request method"}, status=400)
 
-
+@authentication_required
 @api_view(["POST"])
 def reset_chat_room_unread_messages(request):
     if request.method == "POST":
@@ -550,6 +557,7 @@ def reset_chat_room_unread_messages(request):
         return Response({"success": "reset unread message successfully"}, status=200)
     return Response({"error": "Invalid request method"}, status=400)
 
+@authentication_required
 @api_view(["POST"])
 def reset_unread_messages(request):
     if request.method == "POST":
@@ -567,7 +575,7 @@ def reset_unread_messages(request):
         return Response({"success": "reset unread message successfully"}, status=200)
     return Response({"error": "Invalid request method"}, status=400)
 
-
+@authentication_required
 @api_view(["POST"])
 def join_chat_room(request):
     if request.method == "POST":
@@ -607,6 +615,7 @@ def join_chat_room(request):
 
     return Response({"error": "Invalid request method"}, status=400)
 
+@authentication_required
 @api_view(["GET"])
 def directs_search(request):
     if (request.method == 'GET'):
@@ -623,7 +632,7 @@ def directs_search(request):
         
     return Response({"error": "Invalid request method"}, status=400)
 
-
+@authentication_required
 @api_view(["GET"])
 def chat_rooms_search(request):
     if request.method == "GET":
@@ -636,6 +645,7 @@ def chat_rooms_search(request):
         return Response(serializer.data)
     return Response({"error": "Invalid request method"}, status=400)
 
+@authentication_required
 @api_view(["POST"])
 def update_status_of_invitations(request):
     if request.method == 'POST':
@@ -647,6 +657,7 @@ def update_status_of_invitations(request):
         return Response({"success": "status updated successfully"}, status=200)
     return Response({"error": "Invalid request method"}, status=400)
 
+@authentication_required
 @api_view(["GET"])
 def unrecieved_room_invitee(request, username):
     if request.method == 'GET':
@@ -659,7 +670,7 @@ def unrecieved_room_invitee(request, username):
 
     return Response({"error": "Invalid request method"}, status=400)
 
-
+@authentication_required
 @api_view(["GET"])
 def unread_conversations_count(request, username):
     if request.method == 'GET':

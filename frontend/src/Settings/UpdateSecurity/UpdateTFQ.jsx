@@ -36,6 +36,7 @@ function UpdateTFQ(props) {
           `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/EnableTFQ`,
           {
             method: "POST",
+            credentials: "include",
             headers: {
               "Content-Type": "application/json",
             },
@@ -101,6 +102,7 @@ function UpdateTFQ(props) {
             `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/ValidateTFQ`,
             {
               method: "POST",
+              credentials: "include",
               headers: {
                 "Content-Type": "application/json",
               },

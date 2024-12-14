@@ -3,15 +3,16 @@ export const cancelFriendRequest = (
   secondUsername,
   eventType
 ) => {
-  fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/cancel_friend_request/`, {
+  fetch("http://localhost:8000/friends/cancel_friend_request/", {
     method: "POST",
+    credentials: 'include',
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
       from_username: currentUsername,
       to_username: secondUsername,
-      eventType: eventType,
+      event_type: eventType,
     }),
   })
     .then((response) => response.json())
@@ -24,8 +25,9 @@ export const cancelFriendRequest = (
 };
 
 export const confirmFriendRequest = (currentUsername, secondUsername) => {
-  fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/confirm_friend_request/`, {
+  fetch("http://localhost:8000/friends/confirm_friend_request/", {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -44,9 +46,10 @@ export const confirmFriendRequest = (currentUsername, secondUsername) => {
 };
 
 
-export const handleAddFriendReq = (currentUsername, secondUsername, setFriendRequestBtn) => {
+export const handleAddFriendReq = (currentUsername, secondUsername) => {
     fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/add_friend_request/`, {
         method: 'POST',
+        credentials: "include",
         headers: {
             'Content-Type': 'application/json',
         },
@@ -62,13 +65,13 @@ export const handleAddFriendReq = (currentUsername, secondUsername, setFriendReq
         .catch((error) => {
             console.error('Error:', error);
         });
-    setFriendRequestBtn(true);
 };
 
 // Added by Imad ---
 export const handleRemoveFriendship = (user, secondUsername) => {
   fetch("http://localhost:8000/friends/remove_friendship/", {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -89,6 +92,7 @@ export const handleRemoveFriendship = (user, secondUsername) => {
 export const handleBlockFriend = (user, secondUsername) => {
   fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/block_friend/`, {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },

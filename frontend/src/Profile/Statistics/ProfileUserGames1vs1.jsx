@@ -22,6 +22,7 @@ function ProfileUserGames1vs1() {
         try {
           const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserMatches1vs1/${userId}/${page}`, {
             method: "GET",
+            credentials: "include",
             headers: {
               'Content-Type': 'application/json',
             }

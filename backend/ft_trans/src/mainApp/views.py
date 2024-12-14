@@ -84,6 +84,7 @@ import os
 from .models import GameNotifications
 from mimetypes import guess_type
 
+@authentication_required
 @api_view(['POST'])
 def online_friends(request):
 	ip_address = os.getenv("IP_ADDRESS")
@@ -97,13 +98,14 @@ def online_friends(request):
 		# print(f'friends are {friends}')
 	return Response({'message': allFriends})
 
-
+@authentication_required
 @api_view(['POST'])
 def serve_image(request):
 	if (request.data).get('image'):
 		with open(request.data['image'], 'rb') as image_file:
 			return HttpResponse(image_file.read(), content_type='image/jpeg')
 
+@authentication_required
 @api_view(['POST'])
 def get_user(request):
 	data = request.data
@@ -115,19 +117,18 @@ def get_user(request):
 		response.data = {'id' : user.id, 'name' : user.username, 'level' : 2, 'image' : f"http://{ip_address}:8000/auth{user.avatar.url}" }
 		return response
 
+@authentication_required
 @api_view(['POST'])
 def user_image(request):
 	ip_address = os.getenv("IP_ADDRESS")
 	username = (request.data).get('user')
 	if not username:
-		#print("no user is here")
 		return Response({'message': 'no username is here'})
 	user = customuser.objects.filter(username=username).first()
 	if user:
 		return Response({'image': f"http://{ip_address}:8000/auth{user.avatar.url}"})
 	else:
 		return Response({'message': 'user not exit in the database'})
-
 
 def is_user_in_any_tournament(username):
 	for tournament_id, tournament_data in tournaments.items():
@@ -136,6 +137,7 @@ def is_user_in_any_tournament(username):
 				if member['username'] == username and member['is_eliminated'] == False:
 					return True, tournament_id, [m['username'] for m in tournament_data['members']]
 	return False, 0, []
+
 
 def get_users_data(usernames):
 	allMembers = []
@@ -164,7 +166,7 @@ def is_user_owner_in_tournament(user_to_check, tournament_id):
 				return member['is_owner']
 	return False
 
-
+@authentication_required
 @api_view(['POST'])
 def tournament_members(request):
 	username = request.data.get('user')
@@ -177,7 +179,7 @@ def tournament_members(request):
 		response.data = {'tournament_id': tournament_id, 'allMembers': get_users_data(members_usernames), 'is_owner' : 'yes'}
 	return response
 
-
+@authentication_required
 @api_view(['POST'])
 def started_tournament_members(request):
 	username = request.data.get('user')
@@ -211,7 +213,7 @@ def started_tournament_members(request):
 	return response
 
 
-
+@authentication_required
 @api_view(['POST'])
 def get_tournament_member(request):
 	username = request.data.get('user')
@@ -223,6 +225,7 @@ def get_tournament_member(request):
 		response.data = {'id' : user.id, 'name' : user.username, 'level' : user_states.level, 'image' : f"http://{ip_address}:8000/auth{user.avatar.url}", 'background_image' : f"http://{ip_address}:8000/auth{user.background_pic.url}", 'is_online' : user.is_online}
 		return response
 
+@authentication_required
 @api_view(['POST'])
 def notifs_friends(request):
 	username = request.data['user']
@@ -257,7 +260,7 @@ def get_tournament_data(request):
 		response.data = {'case' : 'does not exist'}
 	return response
 
-
+@authentication_required
 @api_view(['GET'])
 def get_tournament_suggestions(request):
 	available_tournaments = []
@@ -282,6 +285,7 @@ def is_user_in_joining_tournament(username):
 					return True
 	return False
 
+@authentication_required
 @api_view(['POST'])
 def is_joining_tournament(request):
 	username = request.data.get('user')
@@ -307,6 +311,7 @@ def check_is_eliminated(username, tournament_id):
 				return member['is_eliminated']
 	return False
 
+@authentication_required
 @api_view(['POST'])
 def is_started_and_not_finshed(request):
 	username = request.data.get('user')
@@ -321,7 +326,7 @@ def is_started_and_not_finshed(request):
 	return response
 
 
-
+@authentication_required
 @api_view(['POST'])
 def get_tournament_size(request):
 	response = Response()
@@ -374,6 +379,7 @@ def customize_game(request):
 	else:
 		return Response({'message': 'user not exit in the database'})
 
+@authentication_required
 @api_view(['GET'])
 def get_customize_game(request):
 	try:
@@ -391,6 +397,7 @@ def get_customize_game(request):
 	except TokenError as e:
 		return Response({'data' : None})
 
+@authentication_required
 @api_view(['POST'])
 def set_is_inside(request):
 	response = Response()
@@ -408,6 +415,7 @@ def set_is_inside(request):
 	response.data = {'Case': 'no'}
 	return response
 
+@authentication_required
 @api_view(['POST'])
 def get_game_members_round(request):
 	username = request.data.get('user')  # Get the username from the request
@@ -518,6 +526,7 @@ def get_game_members_round(request):
 	return response
 
 
+@authentication_required
 @api_view(['POST'])
 def get_opponent(request):
 	response = Response()
@@ -529,6 +538,7 @@ def get_opponent(request):
 		response.data = {'Case' : 'does not exist'}
 	return response
 
+@authentication_required
 @api_view(['POST'])
 def get_number_of_members_in_a_round(request):
 	response = Response()
@@ -543,6 +553,7 @@ def get_number_of_members_in_a_round(request):
 	response.data = {'Case': 'Tournament round not found'}
 	return response
 
+@authentication_required
 @api_view(['POST'])
 def get_tournament_warning(request):
 	username = request.data.get('user')
@@ -566,6 +577,7 @@ def get_right_room(tournament_id, tournament_rooms, username):
 	return room
  
 
+@authentication_required
 @api_view(['POST'])
 def player_situation(request):
 	username = request.data.get('user')
@@ -591,7 +603,7 @@ def player_situation(request):
 	print(f"\n\n Case is {case} \n\n")
 	return response
 
-
+@authentication_required
 @api_view(['POST'])
 def get_tournament_members_rounds(request):
 	tournament_id = request.data.get('tournament_id')
@@ -695,6 +707,7 @@ def is_user_joining_tournament(username):
 		return value['mode']
 	return None
 
+@authentication_required
 @api_view(['POST'])
 def check_is_in_game(request):
 	response = Response()

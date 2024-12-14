@@ -17,6 +17,7 @@ function ProfileUserStatistics(){
       try {
         const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserStcs/${userId}/${15}`, {
           method: "GET",
+          credentials: "include",
           headers: {
             'Content-Type': 'application/json',
           }

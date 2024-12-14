@@ -8,24 +8,25 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 import AuthContext from '../navbar-sidebar/Authcontext'
 import ChatContext from "../Context/ChatContext";
-import { Navigate } from 'react-router-dom';
 
 const FriendCard = ({
   isLastTwoElements,
   secondUsername,
   avatar,
+  isOnline,
   friendId,
 }) => {
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user } = useContext(AuthContext);
-  const { setSelectedDirect, setIsHome, setSelectedItem} = useContext(ChatContext);
+  const { setSelectedDirect } = useContext(ChatContext);
   const navigate = useNavigate();
 
   const handleBlockFriend = () => {
-    fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/block_friend/`, {
+    fetch("http://localhost:8000/friends/block_friend/", {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -49,13 +50,12 @@ const FriendCard = ({
       avatar: avatar,
       status: "true",
     });
-    setIsHome(true)
-    setSelectedItem(secondUsername);
     navigate("/mainpage/chat");
   };
   const handleRemoveFriendship = () => {
-    fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/remove_friendship/`, {
+    fetch("http://localhost:8000/friends/remove_friendship/", {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -86,14 +86,32 @@ const FriendCard = ({
     };
   }, []);
 
-  const toggleMenu = () => {
+  const toggleMenu = (e) => {
+    e.stopPropagation();
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const navigateToChat = () => {
+    setSelectedDirect({
+      id: id,
+      name: secondUsername,
+      status: true,
+      avatar: avatar,
+    });
+    setSelectedItem(secondUsername);
+    setIsHome(true);
+    navigate(`/mainpage/chat`);
+  };
   return (
-    <div className="FriendCard">
+    <div
+      className="FriendCard"
+      onClick={() => navigate(`/mainpage/profile/${secondUsername}`)}
+    >
       <div className="ProfileName">
-        <img src={avatar} alt="Profile" className="Profile" />
+        <div className="avatar">
+          <img src={avatar} alt="Profile" className="Profile" />
+          <span className={`status ${isOnline === true ? "online" : "offline"}`}></span>
+        </div>
         {secondUsername}
       </div>
       {isMenuOpen ? (
@@ -104,19 +122,43 @@ const FriendCard = ({
             }`}
             ref={menuRef}
           >
-            <button onClick={handleMessageFriend}>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleMessageFriend();
+                setIsMenuOpen(false);
+              }}
+            >
               <ChatBubbleIcon />
               Message
             </button>
-            <button>
+            <button 
+            onClick={(e) => {
+                e.stopPropagation();
+                // handle invite friend to play
+                setIsMenuOpen(false);
+            }}
+            >
               <SportsEsportsIcon />
               Challenge
             </button>
-            <button onClick={handleRemoveFriendship}>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRemoveFriendship();
+                setIsMenuOpen(false);
+              }}
+            >
               <PersonRemoveIcon />
               Unfriend
             </button>
-            <button onClick={handleBlockFriend}>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleBlockFriend();
+                setIsMenuOpen(false);
+              }}
+            >
               <RemoveCircleOutlineIcon />
               Block
             </button>

@@ -12,6 +12,7 @@ const SuggestedRoom = (props) => {
     try  {
       const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/joinChatRoom`, {
         method: 'POST',
+        credentials: "include",
         headers: {'Content-type': 'application/json'},
         body: JSON.stringify({
           user : user,

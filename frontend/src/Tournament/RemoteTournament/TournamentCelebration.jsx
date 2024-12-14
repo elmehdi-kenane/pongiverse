@@ -34,6 +34,7 @@ function TournamentCelebration() {
 		const gameMembersRounds = async () => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-tournament-members-rounds`, {
 				method: 'POST',
+				credentials: "include",
 				headers: {
 					'Content-type': 'application/json'
 				},

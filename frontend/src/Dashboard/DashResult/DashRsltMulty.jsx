@@ -37,6 +37,7 @@ function DashRsltMulty() {
           `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getMultyMatchDtl/${multyId}`,
           {
             method: "GET",
+            credentials: "include",
             headers: {
               "Content-Type": "application/json",
             },

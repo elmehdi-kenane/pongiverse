@@ -64,11 +64,11 @@ export const AuthProvider = ({ children }) => {
 	const chatNotificationRef = useRef(null);
 
 	// useEffect(()=>{
-    //     const url = window.location.href;
+	//     const url = window.location.href;
 	// 	const element = document.getElementById("scrollTop");
 	// 	// 	console.log("Scroll Effect Here");
 	// 	// }
-    //     const checkUrlEnd = () => {
+	//     const checkUrlEnd = () => {
 	// 		if (url.endsWith('/profile/IMAD') && (element)){
 	// 			element.scrollIntoView({ behavior: 'smooth' });
 	// 			console.log("RAGRAGUIII")
@@ -76,7 +76,7 @@ export const AuthProvider = ({ children }) => {
 	// 	};
 	// 	if (url)
 	// 		checkUrlEnd();
-    // },[window.location.href])
+	// },[window.location.href])
 
 	useEffect(() => {
 		RoomsInvitationRef.current = chatRoomInvitationsCounter;
@@ -103,39 +103,6 @@ export const AuthProvider = ({ children }) => {
 	useEffect(() => {
 	}, [allGameNotifs])
 
-	// useEffect(() => {
-	// 	const fetchImages = async () => {
-	// 		const promises = allGameFriends.map(async (user) => {
-	// 			const response = await fetch(
-	// 				`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getImage`,
-	// 				{
-	// 					method: "POST",
-	// 					headers: {
-	// 						"Content-Type": "application/json",
-	// 					},
-	// 					body: JSON.stringify({
-	// 						image: user.image,
-	// 					}),
-	// 				}
-	// 			);
-	// 			const blob = await response.blob();
-	// 			return URL.createObjectURL(blob);
-	// 		});
-	// 		const images = await Promise.all(promises);
-	// 		setUserImages(images);
-	// 	};
-	// 	if (allGameFriends) {
-	// 		let loadingImage = [];
-	// 		for (let i = 0; i < allGameFriends.length; i++)
-	// 			loadingImage.push(Icons.solidGrey);
-	// 		setUserImages(loadingImage);
-	// 		fetchImages();
-	// 	}
-	// }, [allGameFriends]);
-
-	useEffect(() => {
-		console.log("ALL GAME NOTIFS: ", allGameNotifs.length);
-	}, [allGameNotifs]);
 
 	useEffect(() => {
 		const getAllGameFriends = async () => {
@@ -144,6 +111,7 @@ export const AuthProvider = ({ children }) => {
 					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/onlineFriends`,
 					{
 						method: "POST",
+						credentials: "include",
 						headers: {
 							"Content-Type": "application/json",
 						},
@@ -168,6 +136,7 @@ export const AuthProvider = ({ children }) => {
 					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/notifsFriends`,
 					{
 						method: "POST",
+						credentials: "include",
 						headers: {
 							"Content-Type": "application/json",
 						},
@@ -177,9 +146,7 @@ export const AuthProvider = ({ children }) => {
 					}
 				);
 				let friends = await response.json();
-				if (friends.message.length) {
 					setAllGameNotifs(friends.message);
-				}
 			} catch (e) {
 				console.log("something wrong with fetch");
 			}
@@ -191,6 +158,7 @@ export const AuthProvider = ({ children }) => {
 					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getUserImage`,
 					{
 						method: "POST",
+						credentials: "include",
 						headers: {
 							"Content-Type": "application/json",
 						},
@@ -199,7 +167,6 @@ export const AuthProvider = ({ children }) => {
 						}),
 					}
 				);
-				// console.log("HEEEERE-----------------------");
 				let data = await response.json()
 				setUserImg(data.image);
 			} catch (e) {
@@ -231,8 +198,7 @@ export const AuthProvider = ({ children }) => {
 			location.pathname !== "/WaysSecondStep" &&
 			location.pathname !== "/ForgotPassword" &&
 			location.pathname !== "/ChangePassword" &&
-			user &&
-			!allGameNotifs.length
+			user
 		)
 			getAllNotifsFriends();
 		// else
@@ -284,6 +250,7 @@ export const AuthProvider = ({ children }) => {
 					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/check_is_in_game`,
 					{
 						method: "POST",
+						credentials: "include",
 						headers: {
 							"Content-Type": "application/json",
 						},
@@ -321,6 +288,7 @@ export const AuthProvider = ({ children }) => {
 					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get_user`,
 					{
 						method: "POST",
+						credentials: "include",
 						headers: {
 							"Content-Type": "application/json",
 						},
@@ -435,6 +403,7 @@ export const AuthProvider = ({ children }) => {
 		const set_is_inside = async (flag) => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/set-is-inside`, {
 				method: 'POST',
+				credentials: "include",
 				headers: {
 					'Content-Type': 'application/json'
 				},
@@ -458,7 +427,10 @@ export const AuthProvider = ({ children }) => {
 			try {
 				const response = await fetch(
 					`http://${import.meta.env.VITE_IPADDRESS
-					}:8000/chatAPI/unrecievedRoomInvitee/${user}`
+					}:8000/chatAPI/unrecievedRoomInvitee/${user}`,
+					{
+						credentials: "include",
+					}
 				);
 				const data = await response.json();
 				if (response.ok) {
@@ -477,7 +449,9 @@ export const AuthProvider = ({ children }) => {
 			try {
 				const response = await fetch(
 					`http://${import.meta.env.VITE_IPADDRESS
-					}:8000/chatAPI/unreadConversations/${user}`
+					}:8000/chatAPI/unreadConversations/${user}`, {
+					credentials: "include",
+				}
 				);
 				const data = await response.json();
 				if (response.ok) {
@@ -501,46 +475,17 @@ export const AuthProvider = ({ children }) => {
 		}
 	}, [user]);
 
-	// useEffect(() => {
-	//   if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
-	//     notifSocket.onmessage = (event) => {
-	//       let data = JSON.parse(event.data);
-	//       console.log("NOTIF SOCKET MESSAGE TYPE: ", data.type);
-	//       console.log("LOCATION: ", location.pathname);
-	//       if (
-	//         data.type === "roomInvitation" &&
-	//         location.pathname !== "/mainpage/groups"
-	//       ) {
-	//         console.log("ROOM INVITATION: ", data);
-	//         setChatRoomInvitationsCounter((prev) => prev + 1);
-	//       } else if (
-	//         data.type === "chatNotificationCounter" &&
-	//         location.pathname !== "/mainpage/chat"
-	//       ) {
-	//         console.log("CHAT NOTIFICATION COUNTER: ", data.count);
-	//         setChatNotificationCounter(data.count);
-	//       }
-	//       else if (data.type === "close_socket") {
-	//         notifSocket.close();
-	//         setSocket(null);
-	//       }
-	//     };
-	//   }
-	// }, [notifSocket, location.pathname]);
 
 	async function publicCheckAuth() {
 		try {
 			let response = await fetch(
 				`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/verifytoken/`,
 				{
-					method: "POST",
+					method: "GET",
 					headers: {
 						"Content-Type": "application/json",
 					},
 					credentials: "include",
-					body: JSON.stringify({
-						user: user,
-					}),
 				}
 			);
 			response = await response.json();
@@ -560,14 +505,11 @@ export const AuthProvider = ({ children }) => {
 			let response = await fetch(
 				`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/verifytoken/`,
 				{
-					method: "POST",
+					method: "GET",
 					headers: {
 						"Content-Type": "application/json",
 					},
 					credentials: "include",
-					body: JSON.stringify({
-						user: user,
-					}),
 				}
 			);
 			console.log("DATA: ", response);

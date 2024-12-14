@@ -307,6 +307,7 @@ function createParticle(x, y) {
 		const check_player_situation = async () => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/player-situation`, {
 				method: "POST",
+				credentials: "include",
 				headers: {
 					'Content-Type': 'application/json',
 				},

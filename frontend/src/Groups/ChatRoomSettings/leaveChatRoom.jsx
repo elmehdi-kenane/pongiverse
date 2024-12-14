@@ -11,6 +11,7 @@ export const LeaveChatRoomSubmitter = async (user, rooms, setRooms, roomId) => {
         `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/leaveChatRoom`,
         {
           method: "POST",
+          credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             member: user,

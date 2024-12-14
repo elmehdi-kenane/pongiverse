@@ -33,6 +33,9 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from .decorators import authentication_required
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 from mainApp.models import UserMatchStatics
+import hmac
+import hashlib
+import base64
 
 
 
@@ -144,11 +147,29 @@ class LoginView(APIView):
 			response.data = {"Case": "Invalid username or password!!"}
 			return response
 
+
+def encode_email(email):
+	SECRET_KEY = os.getenv('SECRET_KEY')
+	signature = hmac.new(SECRET_KEY.encode(), email.encode(), hashlib.sha256).digest()
+	return base64.urlsafe_b64encode(signature).decode().rstrip("=")
+
+def verify_email(email, signature):
+	expected_signature = encode_email(email)
+	return hmac.compare_digest(expected_signature, signature)
+
+
 class GoogleLoginView(APIView):
 	def post(self, request, format=None):
 		data = request.data
 		response = Response()
 		email = data.get('email', None)
+		signature = data.get('signature', None)
+		if not email or not signature:
+			response.data = {"Case" : "Missing email or signature"}
+			return response
+		if not verify_email(email, signature):
+			response.data = {"Case" : "Invalid email signature"}
+			return response
 		user = customuser.objects.filter(email=email).first()
 		if user is not None:
 			if user.is_tfq == True:
@@ -193,7 +214,7 @@ class CheckUsernameView(APIView):
 			return response
 
 class VerifyTokenView(APIView):
-	def post(self, request, format=None):
+	def get(self, request, format=None):
 		response = Response()
 		user_id = -1
 		try:

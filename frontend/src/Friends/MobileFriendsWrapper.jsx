@@ -1,16 +1,18 @@
 import { useState } from "react";
 import FriendCard from "./FriendCard.jsx";
-import RecievedFriendReqCard from "./RecievedFriendReqCard.jsx";
+import ReceivedFriendReqCard from "./ReceivedFriendReqCard.jsx";
 import SentFriendReqCard from "./SentFriendReqCard.jsx";
 import BlockedAccountCard from './BlockedAccountCard.jsx';
 
-export const MobileFriendsWrapper = ({ friends, recievedRequests, sentRequests, blockedFriends }) => {
+export const MobileFriendsWrapper = ({ friends, receivedRequests, sentRequests, blockedFriends }) => {
     const [selectedButton, setSelectedButton] = useState('Friends');
 
     const handlesSelectedButton = (selectedButton) => {
         setSelectedButton(selectedButton);
     }
-
+    // console.log("receivedRequests", receivedRequests);
+    // console.log("sentRequests", sentRequests);
+    // console.log("blockedFriends", blockedFriends);
     return (
       <div className="optionBar">
         <div className="optionBtns">
@@ -69,8 +71,9 @@ export const MobileFriendsWrapper = ({ friends, recievedRequests, sentRequests, 
                         <FriendCard
                           key={index}
                           isLastTwoElements={false}
-                          secondUsername={request.friend_username}
+                          secondUsername={request.second_username}
                           avatar={request.avatar}
+                          isOnline={request.is_online}
                           friendId={request.friend}
                         ></FriendCard>
                       ))}
@@ -78,8 +81,9 @@ export const MobileFriendsWrapper = ({ friends, recievedRequests, sentRequests, 
                       <FriendCard
                         key={index}
                         isLastTwoElements={friends.length > 2 ? true : false}
-                        secondUsername={request.friend_username}
+                        secondUsername={request.second_username}
                         avatar={request.avatar}
+                        isOnline={request.is_online}
                         friendId={request.friend}
                       ></FriendCard>
                     ))}
@@ -89,18 +93,18 @@ export const MobileFriendsWrapper = ({ friends, recievedRequests, sentRequests, 
             )}
             {selectedButton === "Friend_Requests" && (
               <div className="FriendRequests">
-                {recievedRequests.length === 0 ? (
+                {receivedRequests.length === 0 ? (
                   <div className="friendPageEmptyList">
                     There are no pending friend requests.
                   </div>
                 ) : (
-                  recievedRequests.map((request, index) => (
-                    <RecievedFriendReqCard
+                  receivedRequests.map((request, index) => (
+                    <ReceivedFriendReqCard
                       key={index}
-                      secondUsername={request.username}
+                      secondUsername={request.second_username}
                       send_at={request.send_at}
                       avatar={request.avatar}
-                    ></RecievedFriendReqCard>
+                    ></ReceivedFriendReqCard>
                   ))
                 )}
               </div>
@@ -115,7 +119,7 @@ export const MobileFriendsWrapper = ({ friends, recievedRequests, sentRequests, 
                   sentRequests.map((request, index) => (
                     <SentFriendReqCard
                       key={index}
-                      secondUsername={request.username}
+                      secondUsername={request.second_username}
                       send_at={request.send_at}
                       avatar={request.avatar}
                     ></SentFriendReqCard>
@@ -134,7 +138,7 @@ export const MobileFriendsWrapper = ({ friends, recievedRequests, sentRequests, 
                     {blockedFriends.map((blockedFriend, index) => (
                       <BlockedAccountCard
                         key={index}
-                        secondUsername={blockedFriend.friend_username}
+                        secondUsername={blockedFriend.second_username}
                         avatar={blockedFriend.avatar}
                       ></BlockedAccountCard>
                     ))}

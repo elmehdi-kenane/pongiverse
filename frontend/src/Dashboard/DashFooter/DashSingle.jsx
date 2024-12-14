@@ -37,6 +37,7 @@ function DashSingle() {
           `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getSingleMatches/${user}/${page}`,
           {
             method: "GET",
+            credentials: "include",
             headers: {
               "Content-Type": "application/json",
             },

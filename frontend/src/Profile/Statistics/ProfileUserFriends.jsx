@@ -19,6 +19,7 @@ const ProfileUserFriends = () => {
       try {
         const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserFriends/${userId}`, {
           method: "GET",
+          credentials: "include",
           headers: {
             'Content-Type': 'application/json',
           }

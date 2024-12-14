@@ -6,16 +6,33 @@ import AuthContext from '../../navbar-sidebar/Authcontext'
 import { useNavigate } from 'react-router-dom';
 import backgroundImage from './bg.jpg'
 import { Avatar } from '@mui/material';
+import { PiNumberSquareOneFill } from "react-icons/pi";
+import { PiNumberSquareTwoFill } from "react-icons/pi";
+import { PiNumberSquareThreeFill } from "react-icons/pi";
+import { PiNumberSquareFourFill } from "react-icons/pi";
+import { PiNumberSquareFiveFill } from "react-icons/pi";
+import { PiNumberSquareSixFill } from "react-icons/pi";
+import { PiNumberSquareSevenFill } from "react-icons/pi";
+import { PiNumberSquareEightFill } from "react-icons/pi";
 
 
 function LocalTournamentFillMembers() {
+	const iconArray = [
+		PiNumberSquareOneFill,
+		PiNumberSquareTwoFill,
+		PiNumberSquareThreeFill,
+		PiNumberSquareFourFill,
+		PiNumberSquareFiveFill,
+		PiNumberSquareSixFill,
+		PiNumberSquareSevenFill,
+		PiNumberSquareEightFill
+	];
 	const [players, setPlayers] = useState([]);
 	const navigate = useNavigate()
 	const [open, setOpen] = useState(false)
 	const [index, setIndex] = useState(-1)
 	const [username, setUsername] = useState('')
 	const regex = /^(?!\d)[a-zA-Z0-9_]{4,8}$/;
-	const { user } = useContext(AuthContext)
 
 	const handleCancel = () => {
 		setOpen(false);
@@ -67,15 +84,11 @@ function LocalTournamentFillMembers() {
 		);
 	}
 
-	useEffect(() => {
-		if (user)
-			console.log("USER EXIST")
-	}, [user])
 
 	async function checkAndNavigate() {
 		const isStarted = await getSecureItem("is_started");
 		if (isStarted && isStarted === "true") {
-			navigate("../game/localtournamentbracket");
+			navigate("/localtournamentbracket");
 		}
 	}
 
@@ -100,7 +113,6 @@ function LocalTournamentFillMembers() {
 
 
 	useEffect(() => {
-		if (user) {
 			const item = localStorage.getItem('QuarterFinalPlayers');
 			if (item !== null) {
 				setPlayers(JSON.parse(item));
@@ -120,8 +132,7 @@ function LocalTournamentFillMembers() {
 				setSecureItem('is_game_finished', 'false');
 			}
 			checkAndNavigate();
-		}
-	}, [user])
+	}, [])
 
 	useEffect(() => {
 		if (players.length > 0) {
@@ -184,7 +195,7 @@ function LocalTournamentFillMembers() {
 		}
 
 		setSecureItem('is_started', 'true');
-		navigate("../game/localtournamentbracket")
+		navigate("/localtournamentbracket")
 	}
 
 	const modify_open = () => {
@@ -201,33 +212,39 @@ function LocalTournamentFillMembers() {
 			<div className={styles["tournament-page-content"]}>
 				<div className={styles["title-and-destroy"]}>
 					<h1 className={styles["tournament-title"]}>Tournament Creation</h1>
-					<button className={styles["destroy-button"]} onClick={handleStart}>Start</button>
+					<button className={styles["destroy-button"]} onClick={handleStart}>
+						Start
+					</button>
 				</div>
 				<div className={styles["tournament-members"]}>
-					{
-						open && <Component />
-					}
-					{
-						players.map((player, ind) => (
-							<div key={ind} className={`
-							${open ? styles["player-opened"] : styles["player"]} 
-							${ind === index ? styles["player-selected"] : ""} 
-						  `} onClick={!open ? () => div_click(ind) : null} style={{
+					{open && <Component />}
+					{players.map((player, ind) => {
+						const Icon = iconArray[ind];
+						return (
+							<div
+								key={ind}
+								className={`
+					  ${open ? styles["player-opened"] : styles["player"]} 
+					  ${ind === index ? styles["player-selected"] : ""} 
+					`}
+								onClick={!open ? () => div_click(ind) : null}
+								style={{
 									backgroundImage: `url(${backgroundImage})`,
 									backgroundSize: "cover",
 									backgroundPosition: "center",
-								}}>
-								<div className={styles["user-avatar"]} >
-									<img className={styles["avatar"]} src={avatar} alt="" />
+								}}
+							>
+								<div className={styles["user-avatar"]}>
+									<Icon className={styles["avatar"]} color='white'/>
 								</div>
 								<div className={styles["line-and-user-info"]}>
 									<div className={styles["user-info"]}>
-										<h4 className={styles["user-info-name"]}>{players[ind]}</h4>
+										<h4 className={styles["user-info-name"]}>{player}</h4>
 									</div>
 								</div>
 							</div>
-						))
-					}
+						);
+					})}
 				</div>
 			</div>
 		</div>

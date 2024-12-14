@@ -32,6 +32,7 @@ export const resetChatRoomUnreadMessages = async (user, roomId) => {
       }:8000/chatAPI/resetChatRoomUndreadMessages`,
       {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },

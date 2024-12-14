@@ -15,6 +15,7 @@ const { user } = useContext(AuthContext);
           `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/listAllFriends`,
           {
             method: "POST",
+            credentials: "include",
             headers: {
               "Content-Type": "application/json",
             },

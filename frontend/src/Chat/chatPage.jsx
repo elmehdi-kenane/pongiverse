@@ -184,7 +184,10 @@ const Chat = () => {
         const response = await fetch(
           `http://${
             import.meta.env.VITE_IPADDRESS
-          }:8000/chatAPI/firendwithdirects/${user}?page=${currentDirectPage}`
+          }:8000/chatAPI/firendwithdirects/${user}?page=${currentDirectPage}`,
+          {
+            credentials: 'include',
+          }
         );
         const { next, results } = await response.json();
         if (response.ok) {
@@ -233,7 +236,10 @@ const Chat = () => {
         const response = await fetch(
           `http://${
             import.meta.env.VITE_IPADDRESS
-          }:8000/chatAPI/chatRooms/${user}?page=${currentChatRoomPage}`
+          }:8000/chatAPI/chatRooms/${user}?page=${currentChatRoomPage}`,
+          {
+            credentials: "include",
+          }
         );
         const { next, results } = await response.json();
         console.log("CHAT ROOMS: ",results);

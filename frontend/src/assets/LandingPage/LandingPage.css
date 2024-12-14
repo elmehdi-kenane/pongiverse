@@ -1,0 +1,1328 @@
+:root {
+	--mobile-size: 425px;
+	--tablet-size: 768px;
+	--laptop-size: 1440px;
+	--desktop-size: 2560px;
+}
+
+body {
+	font-family: IBM Plex Sans, sans-serif;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+#root {
+    width: 100%;
+}
+
+.LandingPage {
+    width: 100%;
+    background-color: #250939;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	gap: 100px;
+    overflow-y: auto;
+}
+
+.footerLandingPage {
+	background-color: #334568;
+	color: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+    min-height: 50px;
+    font-size: 15px;
+    width: 100%;
+}
+
+.read-btn {
+    margin-top: 5px;
+    padding: 10px;
+    background-color: #913dce;
+    color: white;
+    border: none;
+    display: flex;
+    gap: 3px;
+    border-radius: 7px;
+    align-self: flex-end;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.PlayLocalGame {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.localGameBtn {
+    background-color: white;
+    font-weight: 800;
+    font-size: 20px;
+    padding: 15px;
+    color: #913dce;
+    border-radius: 20px;
+    border: 3px solid #913dce;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+}
+
+.arrow1 {
+    position: relative;
+    top: 50px;
+    left: 30px;
+}
+
+.arrow2 {
+    position: relative;
+    top: -35px;
+}
+
+.localGameBtn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 1em 0.25em #913dce;
+}
+
+.read-btn:hover {
+    color: #913dce;
+    background-color: white;
+}
+
+.DescriptionLandingPage {
+    max-width: 820px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.DescriptionLandingPage h1 {
+    z-index: 10;
+}
+
+.signUpBtnLandingPage {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbarBgLandingPage {
+    position: fixed;
+    z-index: 20;
+	width: 100%;
+    height: 70px;
+    display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #250939;
+	box-shadow: -3px -2px 20px 6px rgb(21 17 17 / 63%);
+}
+
+.navbarLandingPage {
+    left: 50%;
+    right: 50%;
+}
+
+/* ======================== DESKTOP =========================== */
+
+/* @media screen and (max-width: 2560px) { */
+@media screen and (min-width: 1441px) {
+    .sidebarLandingPage {
+        display: none;
+	}
+
+    .homeLandingPage {
+    	width: 100%;
+    	display: flex;
+    	flex-direction: column;
+    	align-items: center;
+    	gap: 100px;
+    }
+    
+    .sectionsLandingPage {
+        color: white;
+    	display: flex;
+    	gap: 10px;
+    }
+    .navbarLandingPage {
+    	width: 100%;
+        max-width: 1250px;
+    	display: flex;
+    	padding: 10px;
+    	justify-content: space-between;
+    	background-color: #250939;
+    }
+    
+    .pingLogo {
+        height: 50px;
+    }
+    
+    .sectionsBtnsLandingPage {
+        text-decoration: none;  /* Remove underline */
+        align-self: center;
+    	border: none;
+    	padding: 10px 20px;
+    	background-color: transparent;
+    	font-size: larger;
+    	color: white;
+    	border-radius: 5px;
+        font-weight: 700;
+        position: relative;
+    }
+
+    .sectionsBtnsLandingPage::before {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 0;
+        height: 3px;
+        background-color: white;
+        
+        transition: all .5s;
+    }
+    
+    .sectionsBtnsLandingPage:hover::before {
+        width: 80%;
+        left: 10%;
+    }
+    
+    .loginBtnLandingPage {
+        text-decoration: none;
+        border: 2px solid white;
+        color: white;
+        background-color: transparent;
+    	align-self: center;
+    	font-weight: 600;
+    	padding: 10px 30px;
+    	font-size: 20px;
+    	border-radius: 25px;
+    }
+
+    .loginBtnLandingPage:hover {
+        color: #250939;
+        background-color: white;
+        transition: all .8s;
+    }
+
+    .loginBtnLandingPage a {
+    color: inherit;  /* Inherit color from parent */
+    text-decoration: none;  /* Remove underline */
+    display: block;  /* Make the link fill the button */
+    width: 100%;
+    height: 100%;
+}
+
+    .headerLandingPage {
+        display: flex;
+    	justify-content: center;
+        align-self: center;
+    	align-items: center;
+    	width: 70%;
+        max-width: 1250px;
+    	margin-top: 120px;
+    }
+
+    .headerTextLandingPage {
+        display: flex;
+    	flex-direction: column;
+    	gap: 20px;
+    	width: 60%;
+        width: 100%;
+        height: 100%;
+    }
+
+    .titleLandingPage {
+        color: white;
+    	font-weight: 900;
+        font-size: 60px;
+    }
+    
+    .subTitleLandingPage {
+        color: white;
+        font-size: 20px;
+    	font-weight: 400;
+    	font-style: italic;
+    	width: 100%;
+    }
+    
+    .signUpBtnLandingPage {
+        align-self: flex-start;
+    	background-color: #913dce;
+    	border: none;
+    	border-radius: 10px;
+    	padding: 12px 19px;
+    	font-size: 20px;
+    	font-weight: 600;
+    	color: white;
+    }
+
+    .signUpBtnLandingPage:hover {
+        color: #913dce;
+        background-color: white;
+        transition: all .8s;
+    }
+
+    .header-imgLandingPage {
+        max-width: 100%;
+        height: auto; /* Allows the image to maintain its aspect ratio */
+        display: block; /* Ensures image behaves like a block-level element */
+    }
+    .header-imgLandingPage img {
+        width: 100%; /* Makes the image fill the width of its container */
+        height: auto; /* Allows the image to scale proportionally */
+        display: block; /* Ensures image behaves like a block-level element */
+    }
+
+    .aboutLandingPage {
+        color: white;
+    	display: flex;
+    	flex-direction: column;
+    	align-items: center;
+    }
+
+    .aboutCardsLandingPage {
+    	color: white;
+    	font-weight: 600;
+    	font-style: italic;
+    	font-size: large;
+    	display: flex;
+    	gap: 70px;
+    	flex-wrap: wrap;
+    	justify-content: center;
+    }
+
+    .DescriptionLandingPage div {
+    	background-color: #334568;
+    	border-radius: 10px;
+    	padding: 50px 45px;
+    	width: 500px;
+        margin-top: -45px;
+        font-size: 25px;
+    }
+    
+    /* .text-container {
+        transition: max-height 5s ease, opacity 5s ease;
+        transition: min-height 5s ease, opacity 5s ease;
+        overflow: hidden;
+        opacity: 1;
+        max-height: 0;
+    }
+    
+    .text-container.expanded {
+        height: max-content;
+        max-height: 1000px;
+        min-height: 200px;
+    }
+    
+    .text-container.collapsed {
+        height: max-content;
+        min-height: 80px;
+        max-height: 100px;
+    } */
+    
+    /* .text-container.collapsed {
+        opacity: 0;
+        max-height: 0;
+    } */
+    
+    .DescriptionLandingPage h1 {
+        margin: 24.12px 0 24.12px 45px;
+    }
+
+    .teamLandingPage {
+    	display: flex;
+    	flex-direction: column;
+    	align-items: center;
+    	color: white;
+    	gap: 30px;
+    }
+
+    .teamListLandingPage {
+    	display: flex;
+    	justify-content: center;
+    	flex-wrap: wrap;
+    	gap: 20px;
+    }
+
+    .teamCardLandingPage {
+    	color: #334568;
+    	background: white;
+    	border: 1px solid white;
+    	height: 250px;
+    	width: 230px;
+    	border-radius: 10px;
+    	display: flex;
+    	flex-direction: column;
+    	align-items: center;
+    	gap: 20px;
+    	font-weight: 600;
+    }
+
+    .teamCardLandingPage img {
+    	margin: 15px 0 0 0;
+    	height: 100px;
+    	width: 100px;
+    }
+
+    .teamCardLandingPage span {
+    	display: flex;
+    	gap: 20px;
+    	color: transparent;
+    }
+
+    .teamCardLandingPage span a img {
+    	display: flex;
+    	align-items: center;
+    	justify-content: center;
+    	background-color: transparent;
+    	height: 30px;
+    	border: none;
+    	width: 30px;
+    }
+
+    .teamCardLandingPage span button img {
+    	height: 30px;
+    	width: 30px;
+    	margin: 0;
+    }
+
+    .ctaLandingPage {
+    	background-color: white;
+        width: 800px;
+    	border-radius: 15px;
+    	padding: 15px 15px;
+    	display: flex;
+    	color: #334568;
+    	justify-content: space-between;
+    	align-items: center;
+    }
+
+    .ctaLandingPage p {
+    	font-size: larger;
+    	font-weight: 600;
+    }
+
+    .ctaLandingPage button {
+        align-self: center;
+        cursor: pointer;
+        border: 1px solid #913dce;
+    	width: 200px;
+    }
+    
+    .ctaLandingPage button:hover {
+        border: 1px solid #913dce;
+        transition: all .8s;
+    }
+
+    .footerLandingPage {
+    	background-color: #334568;
+    	color: white;
+    	display: flex;
+    	justify-content: center;
+        width: 100%;
+    }
+}
+
+/* ================================ LAPTOP ======================================== */
+
+@media screen and (max-width: 1440px) {
+    .sidebarLandingPage {
+        display: none;
+    }
+    .homeLandingPage {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 100px;
+    }
+    
+    .sectionsLandingPage {
+        color: white;
+        display: flex;
+        gap: 10px;
+    }
+    .navbarLandingPage {
+        width: 100%;
+        max-width: 820px;
+        display: flex;
+        padding: 10px;
+        justify-content: space-between;
+        background-color: #250939;
+    }
+    
+    .pingLogo {
+        height: 50px;
+    }
+    
+    .sectionsBtnsLandingPage {
+        text-decoration: none;  /* Remove underline */
+        align-self: center;
+        border: none;
+        padding: 10px 20px;
+        background-color: transparent;
+        font-size: larger;
+        color: white;
+        border-radius: 5px;
+    }
+    
+    .loginBtnLandingPage {
+        text-decoration: none;  /* Remove underline */
+        border: 2px solid white;
+        color: white;
+        background-color: transparent;
+        align-self: center;
+        font-weight: 600;
+        font-size: 20px;
+        padding: 10px 30px;
+        border-radius: 25px;
+    }
+
+    .loginBtnLandingPage a {
+    color: inherit;  /* Inherit color from parent */
+    text-decoration: none;  /* Remove underline */
+    display: block;  /* Make the link fill the button */
+    width: 100%;
+    height: 100%;
+}
+    
+    .headerLandingPage {
+        display: flex;
+        justify-content: center;
+        align-self: center;
+        align-items: center;
+        width: 100%;
+        max-width: 820px;
+        margin-top: 120px;
+    }
+    
+    .headerTextLandingPage {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 60%;
+        width: 100%;
+        height: 100%;
+    }
+    
+    .titleLandingPage {
+        color: white;
+        font-weight: 900;
+        font-size: 40px;
+    }
+    
+    .subTitleLandingPage {
+        color: white;
+        font-size: 10px;
+        font-weight: 400;
+        font-style: italic;
+        width: 100%;
+    }
+    
+    .signUpBtnLandingPage {
+        align-self: flex-start;
+        background-color: #913dce;
+        cursor: pointer;
+        border: none;
+        border-radius: 10px;
+        padding: 12px 19px;
+        font-size: 20px;
+        font-weight: 600;
+        color: white;
+    }
+
+    .signUpBtnLandingPage:hover {
+        color: #913dce;
+        background-color: white;
+        transition: all .8s;
+    }
+    
+    .signUpBtnLandingPage a {
+    color: inherit;  /* Inherit color from parent */
+    text-decoration: none;  /* Remove underline */
+    display: block;  /* Make the link fill the button */
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    }
+
+    .header-imgLandingPage {
+        max-width: 100%;
+        height: auto; /* Allows the image to maintain its aspect ratio */
+        display: block; /* Ensures image behaves like a block-level element */
+    }
+    .header-imgLandingPage img {
+        width: 100%; /* Makes the image fill the width of its container */
+        height: auto; /* Allows the image to scale proportionally */
+        display: block; /* Ensures image behaves like a block-level element */
+    }
+    
+    .aboutLandingPage {
+        color: white;
+    	display: flex;
+    	flex-direction: column;
+    	align-items: center;
+    }
+
+    .aboutCardsLandingPage {
+    	color: white;
+    	font-weight: 600;
+    	font-style: italic;
+    	font-size: large;
+    	display: flex;
+    	gap: 40px;
+    	flex-wrap: wrap;
+    	justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    .DescriptionLandingPage {
+        /* width: 80%; */
+        max-width: 820px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .DescriptionLandingPage div {
+    	background-color: #334568;
+    	border-radius: 10px;
+    	padding: 50px 45px;
+    	width: 100%;
+        margin-top: -45px;
+        box-sizing: border-box;
+    }
+
+    .DescriptionLandingPage h1 {
+        padding: 0;
+        box-sizing: border-box;
+        margin: 24.12px 0 24.12px 50px;
+        margin-left: 50px;
+        z-index: 10;
+        align-self: flex-start;
+    }
+    
+    .teamLandingPage h1 {
+
+    }
+    .teamLandingPage {
+    	display: flex;
+    	flex-direction: column;
+        max-width: 820px;
+    	align-items: center;
+    	color: white;
+    	gap: 20px;
+    }
+
+    .teamListLandingPage {
+    	display: flex;
+    	justify-content: center;
+    	flex-wrap: wrap;
+    	gap: 30px;
+    }
+
+    .teamCardLandingPage {
+    	color: #334568;
+    	background: white;
+    	border: 1px solid white;
+    	height: 220px;
+    	width: 180px;
+    	border-radius: 10px;
+    	display: flex;
+    	flex-direction: column;
+    	align-items: center;
+    	gap: 20px;
+    	font-weight: 600;
+    }
+
+    .teamCardLandingPage img {
+    	margin: 15px 0 0 0;
+    	height: 100px;
+    	width: 100px;
+    }
+
+    .teamCardLandingPage span {
+    	display: flex;
+    	gap: 20px;
+    	color: transparent;
+        margin-top: -15px;
+    }
+
+    .teamCardLandingPage span a img {
+    	display: flex;
+    	align-items: center;
+    	justify-content: center;
+    	background-color: transparent;
+    	height: 30px;
+    	border: none;
+    	width: 30px;
+    }
+
+    .teamCardLandingPage span button img {
+    	height: 30px;
+    	width: 30px;
+    	margin: 0;
+    }
+    
+    .ctaLandingPage {
+        background-color: white;
+        width: 760px;
+        border-radius: 15px;
+        padding: 15px 15px;
+        display: flex;
+        color: #334568;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .cta-textLandingPage {
+        font-size: larger;
+        font-weight: 600;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+    }
+    
+    .ctaLandingPage button {
+        align-self: center;
+        width: 200px;
+    }
+}
+@media screen and (min-width: 769px) {
+    .threeDObjectAtTop {
+        display: none;
+    }
+}
+
+/* ================================ TABLET ==================================== */
+
+@media screen and (max-width: 768px) {
+    ol,
+	ul,
+	li,
+	a {
+        margin: 0;
+		padding: 0;
+	}
+	.loginBtnLandingPage,
+	.sectionsBtnsLandingPage {
+        text-decoration: none;  /* Remove underline */
+        display: none;
+	}
+    
+    .threeDObjectAtTop {
+        margin-top: 80px;
+    }
+
+    .threeDObjectAtRight {
+        display: none;
+    }
+
+    .homeLandingPage {
+        gap: 0;
+    }
+
+    .navbarLandingPage {
+    	width: 100%;
+    	display: flex;
+    	padding: 10px 20px;
+    	justify-content: space-between;
+    	background-color: #250939;
+    }
+    
+    .PlayLocalGame {
+        margin-top: 35px;
+    }
+
+    .localGameBtn {
+        font-size: 10px;
+        border-radius: 17px;
+    }
+
+	.sidebarLandingPage {
+        display: flex;
+		flex-direction: column;
+        justify-content: center;
+        align-items: flex-end;
+		/* position: absolute; */
+        top: 100%;
+		gap: 20px;
+        /* width: 2.5%; */
+        background-color: #250939;
+	}
+	.sidebarLandingPage img {
+        width: 20px;
+	}
+	.sidebarLandingPage img.crossLandingPage {
+        background-color: #913dce;
+        align-self: center;
+        padding: 10px;
+        border-radius: 10px;
+	}
+    
+	.sidebarLandingPage img.menuLandingPage {
+        align-self: center;
+        padding: 10px;
+        border-radius: 10px;
+        width: 100%;
+	}
+
+    .sidebarLandingPage img.menuLandingPage:hover {
+        background-color: #913dce;
+    }
+
+    .sidebarLandingPage img.openMenuLandingPage {
+        background-color: #913dce;
+    }
+
+	.sidebarSectionsLandingPage {
+        background-color: #913dce;
+        padding: 10px;
+        display: flex;
+		flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-radius: 20px;
+		gap: 10px;
+		position: absolute;
+        width: 20%;
+        min-width: 115px;
+		top: 100%;
+	}
+
+    .sidebarSectionsLandingPage button .loginLink {
+        text-decoration: none;
+        color: white;
+        font-size: 100%;
+        display: flex;
+    }
+
+    .aboutCardsLandingPage {
+        flex-wrap: wrap;
+    }
+    
+    .DescriptionLandingPage {
+        width: 80%;
+    }
+
+    .DescriptionLandingPage h1 {
+        padding: 0;
+        margin-left: 20px;
+    }
+
+    .DescriptionLandingPage div {
+        width: 100%;
+        padding: 35px 30px;
+        box-sizing: border-box;
+    }
+
+    .aboutCardsLandingPage {
+        flex-wrap: wrap;
+    }
+
+    .sidebarSectionsLandingPage button {
+        text-decoration: none;
+        background-color: transparent;
+        text-decoration: none;
+        color: white;
+        align-self: center;
+        font-weight: 600;
+        width: 100%;
+        font-size: 20px;
+        padding: 5% 0%;
+        border: 2px solid white;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .sidebarSectionsLandingPage button:hover {
+        background-color: white;
+        color: #913dce;
+        transition: all .8s;
+    }
+
+    .sidebarSectionsLandingPage button:hover .loginLink {
+        color: #913dce;
+        transition: all .8s;
+    }
+    
+    .sidebarSectionsLandingPage .sidebarSectionsElement:hover {
+        color: #913dce;
+        background-color: white;
+        transition: all .8s;
+    }
+    .sidebarSectionsLandingPage .sidebarSectionsElement {
+        width: 100%;
+        font-weight: 600;
+        /* padding: 10px 50px; */
+        padding: 7% 0%;
+        border-radius: 10px;
+        color: white;
+        text-decoration: none;
+        text-align: center;
+        font-size: 15px;
+    }
+    
+    .header-imgLandingPage {
+        display: none;
+    }
+
+    .headerLandingPage {
+        display: flex;
+        /* justify-content: space-between; */
+        align-items: center;
+        width: 100%;
+        max-width: 1250px;
+        margin-top: 0;
+    }
+	
+    .headerTextLandingPage {
+        width: 80%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .titleLandingPage {
+        text-align: center;
+        max-width: 100%;
+        max-height: 100%;
+        color: white;
+        font-size: 8vw;
+        font-weight: 900;
+    }
+    
+    .subTitleLandingPage {
+        text-align: center;
+        max-width: 100%;
+        max-height: 100%;
+        color: white;
+        font-size: 3vw;
+        font-weight: 400;
+        font-style: italic;
+        width: 100%;
+    }
+    
+    .signUpBtnLandingPage {
+        align-self: center;
+        background-color: #913dce;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-size: 15px;
+        font-weight: 600;
+        color: white;
+    }
+
+    .signUpBtnLandingPage:hover {
+        color: #913dce;
+        background-color: white;
+        transition: all .8s;
+    }
+
+    .signUpBtnLandingPage a {
+    color: inherit;  /* Inherit color from parent */
+    text-decoration: none;  /* Remove underline */
+    display: block;  /* Make the link fill the button */
+    width: 100%;
+    height: 100%;
+    }
+
+    .ctaLandingPage {
+        display: flex;
+        width: 80%;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .cta-textLandingPage {
+        font-size: 10px;
+    }
+
+    .ctaLandingPage button {
+        all:unset;
+    }
+    .ctaLandingPage .signUpBtnLandingPage {
+        background-color: #913dce;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 15px;
+        font-size: 15px;
+        font-weight: 600;
+        color: white;
+    }
+
+    .signUpBtnLandingPage:hover {
+        color: #913dce;
+        transition: all .8s;
+        background-color: white;
+    }
+}
+    .signUpBtnLandingPage a {
+    color: inherit;  /* Inherit color from parent */
+    text-decoration: none;  /* Remove underline */
+    display: block;  /* Make the link fill the button */
+    width: 100%;
+    height: 100%;
+    }
+
+
+/* ================================== MOBILE ====================================== */
+
+@media screen and (max-width: 425px) {
+    ol,
+    ul,
+    li,
+    a {
+        margin: 0;
+        padding: 0;
+    }
+    
+    .loginBtnLandingPage,
+    .sectionsBtnsLandingPage {
+        text-decoration: none;  /* Remove underline */
+        display: none;
+    }
+
+    .homeLandingPage {
+    	width: 100%;
+    	display: flex;
+    	flex-direction: column;
+    	align-items: center;
+    	gap: 100px;
+    }
+
+    .navbarLandingPage {
+    	width: 100%;
+    	display: flex;
+    	padding: 10px 20px;
+    	justify-content: space-between;
+    	background-color: #250939;
+    }
+    
+	.sidebarLandingPage {
+
+        display: flex;
+		flex-direction: column;
+        /* justify-content: flex-end; */
+        align-items: flex-end;
+		/* position: absolute; */
+        top: 100%;
+		gap: 20px;
+        background-color: #250939;
+	}
+
+    .sidebarLandingPage img.menuLandingPage
+    {
+        width: 44px;
+    }
+
+	.sidebarLandingPage img.crossLandingPage {
+        background-color: #913dce;
+        align-self: center;
+        padding: 10px;
+        border-radius: 10px;
+	}
+    
+	.sidebarLandingPage img.menuLandingPage {
+        align-self: center;
+        padding: 10px;
+        border-radius: 10px;
+	}
+    .sidebarLandingPage img.menuLandingPage:hover {
+        background-color: #913dce;
+    }
+    
+    .sidebarLandingPage img.openMenuLandingPage {
+        background-color: #913dce;
+    }
+
+	.sidebarSectionsLandingPage {
+        background-color: #913dce;
+        padding: 15px;
+        display: flex;
+		flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-radius: 15px;
+		gap: 10px;
+		position: absolute;
+        width: 20%;
+		top: 100%;
+	}
+
+    .sidebarSectionsLandingPage button {
+        padding: 5% 13%;
+    }
+
+    .sidebarSectionsLandingPage button a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .sidebarSectionsLandingPage a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .sidebarSectionsLandingPage button .loginLink {
+        font-size: 15px;
+        padding: 5px 0;
+    }
+    
+    .sidebarSectionsLandingPage a button:hover {
+        color: #913dce;
+        background-color: white;
+        transition: all .8s;
+    }
+    
+    .sidebarSectionsLandingPage .sidebarSectionsElement:hover {
+        color: #913dce;
+        background-color: white;
+        transition: all .8s;
+    }
+    .sidebarSectionsLandingPage .sidebarSectionsElement {
+        font-weight: 700;
+        font-size: 15px;
+        border-radius: 7px;
+        color: white;
+        text-decoration: none;
+        text-align: center;
+        padding: 10% 0%;
+    }
+    
+    .header-imgLandingPage {
+        display: none;
+    }
+
+    .homeLandingPage {
+        gap: 0;
+    }
+
+    .headerLandingPage {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 80%;
+        max-width: 1250px;
+    }
+    
+    .headerTextLandingPage {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+    }
+    
+    .headerText.titleLandingPage {
+        width: 100%;
+        height: 100%;
+        color: white;
+        font-size: 8vw;
+        font-weight: 900;
+    }
+    
+    .subTitleLandingPage {
+        width: 100%;
+        height: 100%;
+        color: white;
+        font-size: 3vw;
+        font-weight: 400;
+        font-style: italic;
+        width: 100%;
+    }
+    
+    .signUpBtnLandingPage {
+        align-self: center;
+        background-color: #913dce;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-size: 15px;
+        font-weight: 600;
+        color: white;
+    }
+
+    .signUpBtnLandingPage:hover {
+        color: #913dce;
+        background-color: white;
+        transition: all .8s;
+    }
+
+    .signUpBtnLandingPage a {
+    color: inherit;  /* Inherit color from parent */
+    text-decoration: none;  /* Remove underline */
+    display: block;  /* Make the link fill the button */
+    width: 100%;
+    height: 100%;
+    }
+
+    .aboutLandingPage {
+        color: white;
+    	display: flex;
+    	flex-direction: column;
+    	justify-content: center;
+    	align-items: center;
+    }
+
+    .about.titleLandingPage {
+        font-size: 8vw;
+        font-weight: 900;
+    }
+
+    .aboutCardsLandingPage {
+    	color: white;
+    	font-weight: 600;
+    	font-style: italic;
+    	font-size: large;
+    	display: flex;
+    	gap: 40px;
+    	flex-wrap: wrap;
+    	justify-content: center;
+    }
+
+    .DescriptionLandingPage div {
+    	background-color: #334568;
+    	border-radius: 10px;
+    	padding: 35px 25px;
+    	width: 100%;
+        margin-top: -30px;
+        font-size: 15px;
+    }
+
+    .DescriptionLandingPage h1 {
+        padding: 0;
+        margin: 0;
+        margin-top: 10px;
+        margin-bottom: 15px;
+        margin-left: 10px;
+        font-size: 30px;
+    }
+
+    .teamLandingPage {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: white;
+        gap: 30px;
+    }
+    
+    .teamListLandingPage {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+    
+    .teamCardLandingPage {
+        color: #334568;
+        background-color: white;
+        border: 1px solid rgba(255, 255, 255, 0.81);
+        height: 210px;
+        width: 180px;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        font-weight: 600;
+    }
+    
+    .teamCardLandingPage img {
+        margin: 15px 0 0 0;
+        height: 100px;
+        width: 100px;
+    }
+    
+    .teamCardLandingPage span {
+        display: flex;
+        gap: 20px;
+        color: transparent;
+        margin-top: -20px;
+    }
+    
+    .teamCardLandingPage span a img {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: transparent;
+        height: 30px;
+        border: none;
+        /* border-color: #334568; */
+        /* border-radius: 5px; */
+        width: 30px;
+    }
+    
+    .teamCardLandingPage span button img {
+        height: 30px;
+        width: 30px;
+        margin: 0;
+    }
+
+    .ctaLandingPage {
+        display: flex;
+        width: 80%;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .cta-textLandingPage {
+        font-size: 8px;
+        flex-grow: 1;
+        font-weight: 800;
+    }
+    
+    .ctaLandingPage button {
+        all: unset;
+    }
+
+    .ctaLandingPage button a{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .ctaLandingPage .signUpBtnLandingPage {
+        background-color: #913dce;
+        border: none;
+        border-radius: 10px;
+        min-width: 20%;
+        padding: 5px 10px;
+        margin-left: 5px;
+        font-size: 10px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+        .signUpBtnLandingPage:hover {
+            color: #913dce;
+            background-color: white;
+        }
+    .signUpBtnLandingPage a {
+    color: inherit;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    height: 100%;
+    }
+    .footerLandingPage {
+        width: 100%;
+        font-size: 13px;
+        min-height: 45px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+   .DescriptionLandingPage h1 {
+        font-size: 6vw;
+        padding-left: 25px;
+        margin-top: 10px;
+        margin-bottom: 17px;
+   }
+}

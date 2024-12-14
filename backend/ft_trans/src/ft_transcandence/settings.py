@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'chat',
     'myapp',
     'Notifications',
+    'navBar',
     'mainApp',
     'friends',
     'daphne',

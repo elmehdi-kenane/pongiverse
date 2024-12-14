@@ -4,6 +4,7 @@ import styles from '../../assets/SignIn/authentication.module.css'
 import logo42 from '../../assets/SignUp/42_logo.svg'
 import logoGoogle from '../../assets/SignIn/GoogleIcon.svg'
 import toast, { Toaster } from 'react-hot-toast';
+import CryptoJS from "crypto-js";
 
 
 function SignInWays() {
@@ -16,11 +17,22 @@ function SignInWays() {
   const navigate = useNavigate()
   const inputRef = useRef(null);
 
+  const notifyError = (message) => {
+    const toastId = toast.error(message, {
+        position: "top-center",
+        duration: 1500,
+    });
+    setTimeout(() => {
+        toast.dismiss(toastId);
+    }, 1500);
+};
+
+
 
   const checkOtp = (otpStr) => {
     const regex = /^\d{6}$/; // Matches exactly 6 digits
     if (regex.test(otpStr)) return true;
-    else notifyErr("Wrong One-Time-Password");
+    else notifyError("Wrong One-Time-Password");
   };
 
   const ValidateTFQ = async () => {
@@ -54,18 +66,17 @@ function SignInWays() {
       }
     }
   };
-
   const OtfInput = () => {
     return (
       <div className={styles["otp-input-div"]}>
         <input
           type="text"
-          className="tfq__input"
+          className={styles["tfq-input"]}
           placeholder="Authentication Code (6 digits)"
           maxLength={6}
           ref={inputRef}
         />
-        <button onClick={ValidateTFQ}>enter</button>
+        <button onClick={ValidateTFQ} className={styles["tfq-button"]}>enter</button>
       </div>
     );
   };
@@ -87,8 +98,17 @@ function SignInWays() {
     }
   }, [])
 
+  const SECRET_KEY = import.meta.env.VITE_SECRET_KEY;
+
+  const encodeEmail = (email) => {
+    const hash = CryptoJS.HmacSHA256(email, SECRET_KEY);
+    let signature = CryptoJS.enc.Base64.stringify(hash); // Standard Base64
+    signature = signature.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); // URL-safe
+    return signature;
+  };
+
   const verify_email = async (email) => {
-    console.log("the dta : ", email)
+    const signature = encodeEmail(email);
     const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/googleLogin/`, {
       method: "POST",
       headers: {
@@ -96,7 +116,8 @@ function SignInWays() {
       },
       credentials: 'include',
       body: JSON.stringify({
-        email: email
+        email: email,
+        signature: signature
       })
     });
     if (response.ok) {
@@ -106,7 +127,12 @@ function SignInWays() {
         console.log("CASE OF LOGIN SUCCESS")
         navigate('/mainpage');
       } else if (data.Case === "Invalid username or password!!") {
-        toast.error("There is no account", { duration: 2000, });
+        notifyError("There is no account");
+      } else if (data.Case === "Invalid email signature") {
+        notifyError("Invalid email signature");
+      } else if (data.Case === "Login successfully but have tfq") {
+        setUser(data.user)
+        setOpenTfq(true);
       }
     } else {
       console.error('Failed to fetch data');
