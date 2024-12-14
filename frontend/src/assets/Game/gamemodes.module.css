@@ -123,6 +123,7 @@
 	align-items: center;
 	width: 100%;
 	height: 150px;
+	margin-bottom: 100px;
 }
 
 .game-modes-page-button button {
@@ -354,6 +355,9 @@
 		text-align: center;
 		width: 100%;
 	}
+	.instructions-div-p {
+		font-size: 14px;
+	}
 
 }
 
@@ -362,6 +366,7 @@
 	position: absolute;
 	display: flex;
 	justify-content: center;
+	align-items: center;
 	width: 100%;
 	height: 100vh;
 	z-index: 120;
@@ -372,14 +377,15 @@
 	position: absolute;
 	display: flex;
 	flex-direction: column;
-	/* justify-content: center; */
 	align-items: center;
-	width: 100%;
+	justify-content: center;
+	width: 98%;
 	max-width: 981px;
 	height: 600px;
 	top: 2%;
 	background-color: rgba(0, 0, 0, 0.7);
 	border-radius: 10px;
+	overflow: auto;
 }
 
 .instructions-div-button {
@@ -400,11 +406,13 @@
 }
 
 .instructions-div-content-div {
-	position: absolute;
 	display: flex;
-	top: 60px;
+	top: 100px;
+	width: 100%;
+	max-width: 545px;
 	flex-direction: column;
 	gap: 10px;
+	overflow: auto;
 }
 
 .instructions-div-p {
@@ -413,9 +421,10 @@
 
 .p-and-icon {
 	display: flex;
-	gap: 5px;
+	gap: 2px;
 	align-items: center;
 }
+
 
 .question-mark-icon {
 	color: rgb(189, 189, 189);

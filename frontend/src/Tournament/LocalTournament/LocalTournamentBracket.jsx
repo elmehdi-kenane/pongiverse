@@ -903,7 +903,7 @@ function LocalTournamentBracket() {
 					<div className='onevsone-pm' ref={wrapperRef} >
 						<div ref={resultRef} className='onevsone-pm-infos' >
 							<div>
-								{PlayerOne && (<PlayerOne style={{ height: '100%' }} color='white' />)}
+								{PlayerOne && (<PlayerOne size={60} color='white' />)}
 								{playerOneName && <div style={{ textAlign: "center" }} ><p>{playerOneName}</p></div>}
 							</div>
 							<div>
@@ -922,7 +922,7 @@ function LocalTournamentBracket() {
 							</div>
 							<div>
 								{playerTwoName && <div style={{ textAlign: "center" }} ><p>{playerTwoName}</p></div>}
-								{PlayerTwo && (<PlayerTwo style={{ height: '100%' }} color='white' />)}
+								{PlayerTwo && (<PlayerTwo size={60}  color='white' />)}
 								{/* <img src={versus} alt="" style={{ height: '100%' }} /> */}
 							</div>
 						</div>

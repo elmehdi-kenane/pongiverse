@@ -4,154 +4,155 @@ import { useNavigate, useParams } from 'react-router-dom'
 import * as Icons from '../assets/navbar-sidebar'
 import '../assets/navbar-sidebar/index.css';
 import OneVsOneStats from './OneVsOneStats';
-
+import { PiNumberSquareOneFill } from "react-icons/pi";
+import { PiNumberSquareTwoFill } from "react-icons/pi";
 class Player {
-    constructor(x, y, width, height, color, score) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.color = color;
-        this.score = score;
-    }
+  constructor(x, y, width, height, color, score) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.color = color;
+    this.score = score;
+  }
 
-    changeProperties(newX, newY, newWidth, newHeight, newColor, newScore) {
-        this.x = newX
-        this.y = newY
-        this.width = newWidth
-        this.height = newHeight
-        this.color = newColor
-        this.score = newScore
-    }
+  changeProperties(newX, newY, newWidth, newHeight, newColor, newScore) {
+    this.x = newX
+    this.y = newY
+    this.width = newWidth
+    this.height = newHeight
+    this.color = newColor
+    this.score = newScore
+  }
 
-    draw(ctx) {
-        ctx.fillStyle = this.color;
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-    }
+  draw(ctx) {
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.x, this.y, this.width, this.height);
+  }
 }
 
 class Ball {
-    constructor(x, y, radius, color, velocityX, velocityY, speed) {
-        this.x = x;
-        this.y = y;
-        this.radius = radius;
-        this.color = color;
-        this.velocityX = velocityX;
-        this.velocityY = velocityY;
-        this.speed = speed;
-    }
+  constructor(x, y, radius, color, velocityX, velocityY, speed) {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.color = color;
+    this.velocityX = velocityX;
+    this.velocityY = velocityY;
+    this.speed = speed;
+  }
 
-    changeProperties(newX, newY, newRadius, newColor, newVelocityX, newVelocityY, newSpeed) {
-        this.x = newX
-        this.y = newY
-        this.radius = newRadius
-        this.color = newColor
-        this.velocityX = newVelocityX
-        this.velocityY = newVelocityY
-        this.speed = newSpeed
-    }
+  changeProperties(newX, newY, newRadius, newColor, newVelocityX, newVelocityY, newSpeed) {
+    this.x = newX
+    this.y = newY
+    this.radius = newRadius
+    this.color = newColor
+    this.velocityX = newVelocityX
+    this.velocityY = newVelocityY
+    this.speed = newSpeed
+  }
 
-    draw(ctx) {
-        ctx.fillStyle = this.color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
-        ctx.fill();
-    }
+  draw(ctx) {
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+    ctx.fill();
+  }
 }
 
 class Edges {
-    constructor(newHeight, newColor) {
-        this.height = newHeight
-        this.color = newColor
-    }
+  constructor(newHeight, newColor) {
+    this.height = newHeight
+    this.color = newColor
+  }
 
-    changeProperties(newHeight) {
-        this.height = newHeight
-    }
+  changeProperties(newHeight) {
+    this.height = newHeight
+  }
 
-    draw(ctx) {
-        ctx.fillStyle = this.color
-        ctx.fillRect(0, 0, ctx.canvas.width, this.height)
-        ctx.fillStyle = this.color
-        ctx.fillRect(0, ctx.canvas.height - this.height, ctx.canvas.width, this.height)
-    }
+  draw(ctx) {
+    ctx.fillStyle = this.color
+    ctx.fillRect(0, 0, ctx.canvas.width, this.height)
+    ctx.fillStyle = this.color
+    ctx.fillRect(0, ctx.canvas.height - this.height, ctx.canvas.width, this.height)
+  }
 }
 
 const OneVsOneOffline = () => {
-    let { gameCustomize, user, userImg } = useContext(AuthContext)
+  let { gameCustomize } = useContext(AuthContext)
 
-    const [gameAborted, setGameAborted] = useState(false)
-    const [gameFinished, setGameFinished] = useState(false)
-    const [canvasContext, setCanvasContext] = useState(null);
-    const [time, setTime] = useState(0);
-    const [alreadyStarted, setalreadyStarted] = useState(0)
-    const [startGame, setStartGame] = useState(false)
-    const [difficultyMode, setDifficultyMode] = useState(0)
-    const [playersInfos, setPlayersInfos] = useState([
-        {
-            totalScore: 0,
-            tmpScore: 0,
-            score: 0,
-            hit: 0,
-            accuracy: 0,
-            rating: 0,
-        },
-        {
-            totalScore: 0,
-            tmpScore: 0,
-            score: 0,
-            hit: 0,
-            accuracy: 0,
-            rating: 0
-        },
-        {
-            time: 0,
-            alreadyStarted: 0
-        }
-    ])
-
-    const navigate = useNavigate()
-
-    let canvasRef = useRef(null);
-    let player1 = useRef(null)
-    let player2 = useRef(null)
-    let ball = useRef(null)
-    let edges = useRef(null)
-    const canvasContextRef = useRef(canvasContext);
-    const gameCustomizeRef = useRef(gameCustomize);
-    const wrapperRef = useRef(null);
-    const resultRef = useRef(null);
-    const alreadyStartedRef = useRef(alreadyStarted)
-    const playersInfosRef = useRef(playersInfos)
-    const timeRef = useRef(time)
-    const startGameRef = useRef(startGame)
-    const gameState = useRef(null)
-
-    let isOut = false
-    let isGameStarted = false
-    let isGameFinished = false
-    let keys = {
-        player1: {
-            KeyW: false,
-            KeyS: false
-        },
-        player2: {
-            ArrowUp: false,
-            ArrowDown: false
-        }
+  const [gameAborted, setGameAborted] = useState(false)
+  const [gameFinished, setGameFinished] = useState(false)
+  const [canvasContext, setCanvasContext] = useState(null);
+  const [time, setTime] = useState(0);
+  const [alreadyStarted, setalreadyStarted] = useState(0)
+  const [startGame, setStartGame] = useState(false)
+  const [difficultyMode, setDifficultyMode] = useState(0)
+  const [playersInfos, setPlayersInfos] = useState([
+    {
+      totalScore: 0,
+      tmpScore: 0,
+      score: 0,
+      hit: 0,
+      accuracy: 0,
+      rating: 0,
+    },
+    {
+      totalScore: 0,
+      tmpScore: 0,
+      score: 0,
+      hit: 0,
+      accuracy: 0,
+      rating: 0
+    },
+    {
+      time: 0,
+      alreadyStarted: 0
     }
-    const aspectRatio = 710 / 400
-    const originalPositions = {
-        player1_x: 15,
-        player1_y: 165,
-        player2_x: 685,
-        player2_y: 165,
-        ball_x: 355,
-        ball_y: 200
+  ])
+
+  const navigate = useNavigate()
+
+  let canvasRef = useRef(null);
+  let player1 = useRef(null)
+  let player2 = useRef(null)
+  let ball = useRef(null)
+  let edges = useRef(null)
+  const canvasContextRef = useRef(canvasContext);
+  const gameCustomizeRef = useRef(gameCustomize);
+  const wrapperRef = useRef(null);
+  const resultRef = useRef(null);
+  const alreadyStartedRef = useRef(alreadyStarted)
+  const playersInfosRef = useRef(playersInfos)
+  const timeRef = useRef(time)
+  const startGameRef = useRef(startGame)
+  const gameState = useRef(null)
+
+  let isOut = false
+  let isGameStarted = false
+  let isGameFinished = false
+  let keys = {
+    player1: {
+      KeyW: false,
+      KeyS: false
+    },
+    player2: {
+      ArrowUp: false,
+      ArrowDown: false
     }
-    let timer;
-    let firstDraw = false
-    let particles = [];
+  }
+  const aspectRatio = 710 / 400
+  const originalPositions = {
+    player1_x: 15,
+    player1_y: 165,
+    player2_x: 685,
+    player2_y: 165,
+    ball_x: 355,
+    ball_y: 200
+  }
+  let timer;
+  let firstDraw = false
+  let particles = [];
 
   function createParticle(x, y) {
     let particle = {
@@ -319,47 +320,47 @@ const OneVsOneOffline = () => {
       const heightScalingFactor = canvas.height / 400
       const widthScalingFactor = canvas.width / 710
 
-        if (keys.player1['KeyW'] || keys.player2['ArrowUp']) {
-            // console.log("ARROW UP")
-            if (keys.player1['KeyW']) {
-                if (!((player1.current.y - (8 * heightScalingFactor)) <= edges.current.height)) {
-                    player1.current.y -= (8 * heightScalingFactor);
-                    originalPositions.player1_y -= 8
-                } else {
-                    player1.current.y = edges.current.height
-                    originalPositions.player1_y = 10
-                }
-              }
-            if (keys.player2['ArrowUp']) {
-              if (!((player2.current.y - (8 * heightScalingFactor)) <= edges.current.height)) {
-                  player2.current.y -= (8 * heightScalingFactor);
-                  originalPositions.player1_y -= 8
-              } else {
-                  player2.current.y = edges.current.height
-                  originalPositions.player1_y = 10
-              }
-            }
-        } else if (keys.player1['KeyS'] || keys.player2['ArrowDown']) {
-        // console.log("ARROW DOWN")
-            if (keys.player1['KeyS']) {
-              if (!(((player1.current.y + player1.current.height) + (8 * heightScalingFactor)) >= (canvas.height - edges.current.height))) {
-                  player1.current.y += (8 * heightScalingFactor)
-                  originalPositions.player1_y += 8
-              } else {
-                  player1.current.y = ((canvas.height - edges.current.height) - player1.current.height)
-                  originalPositions.player1_y = 320
-              }
-            }
-            if (keys.player2['ArrowDown']) {
-              if (!(((player2.current.y + player2.current.height) + (8 * heightScalingFactor)) >= (canvas.height - edges.current.height))) {
-                  player2.current.y += (8 * heightScalingFactor)
-                  originalPositions.player1_y += 8
-              } else {
-                  player2.current.y = ((canvas.height - edges.current.height) - player2.current.height)
-                  originalPositions.player1_y = 320
-              }
-            }
+      if (keys.player1['KeyW'] || keys.player2['ArrowUp']) {
+        // console.log("ARROW UP")
+        if (keys.player1['KeyW']) {
+          if (!((player1.current.y - (8 * heightScalingFactor)) <= edges.current.height)) {
+            player1.current.y -= (8 * heightScalingFactor);
+            originalPositions.player1_y -= 8
+          } else {
+            player1.current.y = edges.current.height
+            originalPositions.player1_y = 10
+          }
         }
+        if (keys.player2['ArrowUp']) {
+          if (!((player2.current.y - (8 * heightScalingFactor)) <= edges.current.height)) {
+            player2.current.y -= (8 * heightScalingFactor);
+            originalPositions.player1_y -= 8
+          } else {
+            player2.current.y = edges.current.height
+            originalPositions.player1_y = 10
+          }
+        }
+      } else if (keys.player1['KeyS'] || keys.player2['ArrowDown']) {
+        // console.log("ARROW DOWN")
+        if (keys.player1['KeyS']) {
+          if (!(((player1.current.y + player1.current.height) + (8 * heightScalingFactor)) >= (canvas.height - edges.current.height))) {
+            player1.current.y += (8 * heightScalingFactor)
+            originalPositions.player1_y += 8
+          } else {
+            player1.current.y = ((canvas.height - edges.current.height) - player1.current.height)
+            originalPositions.player1_y = 320
+          }
+        }
+        if (keys.player2['ArrowDown']) {
+          if (!(((player2.current.y + player2.current.height) + (8 * heightScalingFactor)) >= (canvas.height - edges.current.height))) {
+            player2.current.y += (8 * heightScalingFactor)
+            originalPositions.player1_y += 8
+          } else {
+            player2.current.y = ((canvas.height - edges.current.height) - player2.current.height)
+            originalPositions.player1_y = 320
+          }
+        }
+      }
 
       const localBall = {
         ballX: ball.current.x * originalWidth,
@@ -434,7 +435,7 @@ const OneVsOneOffline = () => {
           const allPlayersInfos = [...playersInfosRef.current]
           allPlayersInfos[0].accuracy = (allPlayersInfos[0].score * allPlayersInfos[0].hit) / 100
           allPlayersInfos[1].accuracy = (allPlayersInfos[1].score * allPlayersInfos[1].hit) / 100
-          setPlayersInfos(allPlayersInfos)          
+          setPlayersInfos(allPlayersInfos)
         }
       }
 
@@ -445,30 +446,30 @@ const OneVsOneOffline = () => {
 
   let gameAlreadyCheck = false
 
-    useEffect(() => {
-        if (gameAlreadyCheck) {
-            let fiendGameStatusJson = localStorage.getItem('fiendGameStatus')
-            if (fiendGameStatusJson) {
-                let fiendGameStatus = JSON.parse(fiendGameStatusJson)
-                // console.log(fiendGameStatus)
-                localStorage.removeItem('fiendGameStatus')
-                setalreadyStarted(fiendGameStatus[2].alreadyStarted)
-                setTime(fiendGameStatus[2].time)
-                setPlayersInfos(fiendGameStatus)
-                setalreadyStarted(1)
-                // console.log('already a running game')
-            } else {
-                setTimeout(() => setalreadyStarted(1), 3000);
-                // console.log('not a single running game')
-            }
-        } else
-            gameAlreadyCheck = true
-    }, [])
+  useEffect(() => {
+    if (gameAlreadyCheck) {
+      let fiendGameStatusJson = localStorage.getItem('fiendGameStatus')
+      if (fiendGameStatusJson) {
+        let fiendGameStatus = JSON.parse(fiendGameStatusJson)
+        // console.log(fiendGameStatus)
+        localStorage.removeItem('fiendGameStatus')
+        setalreadyStarted(fiendGameStatus[2].alreadyStarted)
+        setTime(fiendGameStatus[2].time)
+        setPlayersInfos(fiendGameStatus)
+        setalreadyStarted(1)
+        // console.log('already a running game')
+      } else {
+        setTimeout(() => setalreadyStarted(1), 3000);
+        // console.log('not a single running game')
+      }
+    } else
+      gameAlreadyCheck = true
+  }, [])
 
-    const gameLoop = () => {
-        update();
-        draw();
-    };
+  const gameLoop = () => {
+    update();
+    draw();
+  };
 
   const runGame = () => {
     setTimeout(() => {
@@ -515,27 +516,27 @@ const OneVsOneOffline = () => {
     }
   }, [canvasRef, alreadyStarted])
 
-    const handleKeyDown = (e) => {
-        // console.log("key down", )
-        const gameStarted = startGameRef.current
-        if (gameStarted && (e.code === 'ArrowUp' || e.code === 'ArrowDown' || e.code === 'KeyW' || e.code === 'KeyS')) {
-            if (e.code === 'KeyW' || e.code === 'KeyS')
-                keys.player1[e.code] = true;
-            else
-                keys.player2[e.code] = true;
-        }
+  const handleKeyDown = (e) => {
+    // console.log("key down", )
+    const gameStarted = startGameRef.current
+    if (gameStarted && (e.code === 'ArrowUp' || e.code === 'ArrowDown' || e.code === 'KeyW' || e.code === 'KeyS')) {
+      if (e.code === 'KeyW' || e.code === 'KeyS')
+        keys.player1[e.code] = true;
+      else
+        keys.player2[e.code] = true;
     }
+  }
 
-    const handleKeyUp = (e) => {
-        // console.log("key up")
-        const gameStarted = startGameRef.current
-        if (gameStarted && (e.code === 'ArrowUp' || e.code === 'ArrowDown' || e.code === 'KeyW' || e.code === 'KeyS')) {
-            if (e.code === 'KeyW' || e.code === 'KeyS')
-                keys.player1[e.code] = false;
-            else
-                keys.player2[e.code] = false;
-        }
+  const handleKeyUp = (e) => {
+    // console.log("key up")
+    const gameStarted = startGameRef.current
+    if (gameStarted && (e.code === 'ArrowUp' || e.code === 'ArrowDown' || e.code === 'KeyW' || e.code === 'KeyS')) {
+      if (e.code === 'KeyW' || e.code === 'KeyS')
+        keys.player1[e.code] = false;
+      else
+        keys.player2[e.code] = false;
     }
+  }
 
   const exitTheGame = () => {
     setStartGame(false)
@@ -630,29 +631,27 @@ const OneVsOneOffline = () => {
   }
 
   const exitOfflineGame = () => {
-    navigate('../game/solo')
+    navigate('/localmodes')
   }
 
   return (
     <>
-      {gameFinished && 
-        <OneVsOneStats 
-            gameFinished={gameFinished}
-            user={user}
-            userName1='player 1'
-            userName2='player 2'
-            playersInfos={playersInfos}
-            userImg={userImg}
-            exitOfflineGame={exitOfflineGame}
-            restartGame={restartGame}
-            mode='offline'
+      {gameFinished &&
+        <OneVsOneStats
+          gameFinished={gameFinished}
+          userName1='player 1'
+          userName2='player 2'
+          playersInfos={playersInfos}
+          exitOfflineGame={exitOfflineGame}
+          restartGame={restartGame}
+          mode='offline'
         />
       }
       {(alreadyStarted && !gameFinished) && (
         <div className='onevsone-pm' ref={wrapperRef} >
           <div ref={resultRef} className='onevsone-pm-infos' >
             <div>
-              {userImg ? (<img src={userImg} alt="" style={{ height: '100%' }} />) : (<img src={Icons.solidGrey} alt="" style={{ height: '100%' }} />)}
+              <PiNumberSquareOneFill size={60} />
               <div style={{ textAlign: "center" }} ><p>player 1</p></div>
             </div>
             <div>
@@ -671,7 +670,7 @@ const OneVsOneOffline = () => {
             </div>
             <div>
               <div style={{ textAlign: "center" }}><p>player 2</p></div>
-              <img src={userImg} alt="" style={{ height: '100%' }} />
+              <PiNumberSquareTwoFill style={{ height: '100%' }} size={60}/>
             </div>
           </div>
           <canvas ref={canvasRef} ></canvas>
@@ -680,25 +679,23 @@ const OneVsOneOffline = () => {
       {(!alreadyStarted && !gameFinished) && (
         <div className='onevsone'>
           <div className='onevsone-dashboard' >
-              <div className='onevsone-dashboard-opponents' style={{position: "relative"}}>
-                  <div className='onevsone-dashboard-opponent'>
-                      <div><img src={userImg} alt="profile-pic" style={{borderRadius: '50%'}} /></div>
-                      <div className='onevsone-opponent-infos'>
-                          <p>player 1</p>
-                          {/* <p>level 6.5</p> */}
-                      </div>
-                  </div>
-                  <div className='onevsone-dashboard-logo' >
-                    <img id='versus-logo' src={Icons.versus} alt="profile-pic" />
-                  </div>
-                  <div className='onevsone-dashboard-opponent'>
-                      <div><img src={userImg} alt="profile-pic" style={{borderRadius: '50%'}} /></div>
-                      <div className='onevsone-opponent-infos'>
-                          <p>player 2</p>
-                          {/* <p>level {enemyInfos.level}</p> */}
-                      </div>
-                  </div>
+            <div className='onevsone-dashboard-opponents' style={{ position: "relative" }}>
+              <div className='onevsone-dashboard-opponent'>
+                <div><PiNumberSquareOneFill style={{ borderRadius: '50%' }} size={60} /></div>
+                <div className='onevsone-opponent-infos'>
+                  <p>player 1</p>
+                </div>
               </div>
+              <div className='onevsone-dashboard-logo' >
+                <img id='versus-logo' src={Icons.versus} alt="profile-pic" />
+              </div>
+              <div className='onevsone-dashboard-opponent'>
+                <div><PiNumberSquareTwoFill style={{ borderRadius: '50%' }} size={60}/></div>
+                <div className='onevsone-opponent-infos'>
+                  <p>player 2</p>
+                </div>
+              </div>
+            </div>
           </div>
           {/* {gameStarted && (<div className='onevsone-cancel' ><div className='onevsone-cancel-game' onClick={cancelTheGame} >cancel</div></div>)} */}
         </div>
