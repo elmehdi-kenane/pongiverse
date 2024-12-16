@@ -37,7 +37,7 @@ import OneVsOneOffline from "./Game/OneVsOneOffline"
 import TwoVsTwoFriends from "./Game/TwoVsTwoFriends";
 import TwoVsTwoCreateOrJoin from "./Game/TwoVsTwoCreateOrJoin";
 import GameSettings from "./Game/GameSettings";
-import Bot from "./Game/Bot";
+import AiOpponent from "./Game/AiOpponent";
 import { ToastContainer, Bounce } from "react-toastify";
 import LocalTournamentFillMembers from "./Tournament/LocalTournament/LocalTournamentFillMembers";
 import ErrorPage from "./ErrorPage/ErrorPage";
@@ -102,7 +102,7 @@ const App = () => {
               <Route path="game" element={<Modes />} />
               <Route path="game/board" element={<GameSettings />} />
               <Route path="game/solo" element={<Solo />} />
-              <Route path="game/solo/computer" element={<Bot />} />
+              <Route path="game/solo/computer" element={<AiOpponent />} />
               <Route path="game/solo/1vs1" element={<OneVersusOne />} />
               <Route
                 path="game/solo/1vs1/random"
