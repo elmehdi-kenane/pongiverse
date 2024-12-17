@@ -5,10 +5,7 @@ import AuthContext from "../navbar-sidebar/Authcontext";
 import aiOpponentAvatar from "../assets/Game/aiOpponentAvatar.svg";
 
 const AiOpponent = () => {
-  const {
-    user,
-    userImg,
-  } = useContext(AuthContext);
+  const { user, userImg } = useContext(AuthContext);
 
   const [score, setScore] = useState(() => {
     const savedScore = localStorage.getItem("savedScore");
@@ -400,7 +397,7 @@ const AiOpponent = () => {
       const currentTime = Date.now();
       const elapsedTime = currentTime - startTime;
       if (elapsedTime >= 1000) {
-        // console.log(`updateBotView executed. Elapsed time: ${elapsedTime}ms`);
+        console.log(`updateBotView executed. Elapsed time: ${elapsedTime}ms`);
         bot.ballPosition = {
           x: ballPositionRef.current.x,
           y: ballPositionRef.current.y,
@@ -479,8 +476,16 @@ const AiOpponent = () => {
           <p>Final Result</p>
         </div>
       )}
-      <ScoreBarDesktop score={score} username={user} avatar={userImg}></ScoreBarDesktop>
-      <ScoreBarMobile score={score} username={user} avatar={userImg}></ScoreBarMobile>
+      <ScoreBarDesktop
+        score={score}
+        username={user}
+        avatar={userImg}
+      ></ScoreBarDesktop>
+      <ScoreBarMobile
+        score={score}
+        username={user}
+        avatar={userImg}
+      ></ScoreBarMobile>
       {score.bot === maxScore || score.user === maxScore ? (
         <div
           style={{ width: canvasWidth, height: canvasHeight }}
@@ -531,7 +536,7 @@ const AiOpponent = () => {
 
 export default AiOpponent;
 
-const ScoreBarDesktop = ({ score, username, avatar}) => {
+const ScoreBarDesktop = ({ score, username, avatar }) => {
   return (
     <div className="score-bar">
       <div className="player">
@@ -549,7 +554,7 @@ const ScoreBarDesktop = ({ score, username, avatar}) => {
   );
 };
 
-const ScoreBarMobile = ({ score, username, avatar}) => {
+const ScoreBarMobile = ({ score, username, avatar }) => {
   return (
     <div className="score-bar-mobile">
       <div className="player">

@@ -11,7 +11,7 @@ import Dashboard from "./Dashboard/Dashboard";
 import Profile from "./Profile/Profile";
 import { ProfileWrapper } from "./Profile/ProfileWrapper";
 import { SettingsWrapper } from "./Settings/SettingsWrapper";
-import Friends from "./Friends/FriendsPage";
+import FriendshipPage from "./Friends/FriendsPage";
 import WaysSecondStep from "./components/SignUp/WaysSecondStep";
 import ForgotPassword from "./components/SignIn/ForgotPassword";
 import ChangePassword from "./components/SignIn/ChangePassword";
@@ -92,8 +92,8 @@ const App = () => {
               />
               <Route path="chat" element={<ChatProvider child={<Chat />} />} />
               <Route
-                path="friends"
-                element={<ChatProvider child={<Friends />} />}
+                path="Friendship"
+                element={<ChatProvider child={<FriendshipPage />} />}
               />
               <Route
                 path="groups"
