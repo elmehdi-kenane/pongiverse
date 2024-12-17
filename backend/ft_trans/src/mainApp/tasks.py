@@ -73,6 +73,27 @@ async def send_player_winner(self, tournament_id, username, next_round, position
 			}
 		})
 
+async def send_playing_status_to_friends(self, user, status, user_channels):
+	ip_address = os.getenv("IP_ADDRESS")
+	friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
+	for friend in friends:
+		friend_id = await sync_to_async(lambda: friend.friend.id)()
+		friend_channel = user_channels.get(friend_id)
+		if friend_channel:
+			await self.channel_layer.send(friend_channel, {
+				'type': 'playingStatus',
+				'message': {
+					'user': user.username,
+					'is_playing': status,
+					'userInfos': {
+						'id': user.id,
+						'name': user.username,
+						'level': 2,
+						'image': f"http://{ip_address}:8000/auth{user.avatar.url}"
+					}
+				}
+			})
+
 def update_is_eliminated(tournament_id, username, flag):
 	if tournament_id in tournaments:
 		members = tournaments[tournament_id]['members']
@@ -191,6 +212,7 @@ async def send_user_eliminated_after_delay(self, tournament_id, actual_round):
 									}
 								}
 							)
+				await send_playing_status_to_friends(self,user, False, user_channels )
 	
 	await asyncio.sleep(2)
 	if next_round:

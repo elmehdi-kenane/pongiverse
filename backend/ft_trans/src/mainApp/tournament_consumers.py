@@ -25,6 +25,27 @@ async def disconnected(self, user_channels):
 	pass
 
 
+async def send_playing_status_to_friends(self, user, status, user_channels):
+	ip_address = os.getenv("IP_ADDRESS")
+	friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
+	for friend in friends:
+		friend_id = await sync_to_async(lambda: friend.friend.id)()
+		friend_channel = user_channels.get(friend_id)
+		if friend_channel:
+			await self.channel_layer.send(friend_channel, {
+				'type': 'playingStatus',
+				'message': {
+					'user': user.username,
+					'is_playing': status,
+					'userInfos': {
+						'id': user.id,
+						'name': user.username,
+						'level': 2,
+						'image': f"http://{ip_address}:8000/auth{user.avatar.url}"
+					}
+				}
+			})
+
 async def create_tournament(self, data, user_channels):
 	ip_address = os.getenv("IP_ADDRESS")
 	username = data['message']['user']
@@ -97,6 +118,7 @@ async def create_tournament(self, data, user_channels):
 					}
 				}
 			)
+		await send_playing_status_to_friends(self, user, True, user_channels)
 
 
 def is_user_joining_tournament(username):
@@ -151,6 +173,7 @@ async def kick_player(self, data, user_channels):
 				}
 			}
 		)
+
 
 
 async def check_user_is_a_friend(user, to_check):
@@ -218,6 +241,7 @@ async def leave_tournament(self, data, user_channels):
 				}
 			}
 		)
+	await send_playing_status_to_friends(self, kicked_user, False, user_channels)
 
 
 
@@ -266,6 +290,7 @@ async def destroy_tournament(self, data, user_channels):
 					}
 				}
 			)
+	await send_playing_status_to_friends(self, user, False, user_channels)
 	for username, channel_name in user_channels.items():
 		await self.channel_layer.send(
 			channel_name,
@@ -416,3 +441,5 @@ async def accept_invite(self, data, user_channels):
 						}
 					}
 				)
+		
+		await send_playing_status_to_friends(self, user, True, user_channels)

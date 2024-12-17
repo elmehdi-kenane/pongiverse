@@ -177,7 +177,6 @@ async def send_playing_status_to_friends(self, user, status, user_channels):
 						'name': user.username,
 						'level': 2,
 						'image': f"http://{ip_address}:8000/auth{user.avatar.url}"
-						# {'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path}
 					}
 				}
 			})

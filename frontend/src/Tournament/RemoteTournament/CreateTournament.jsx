@@ -184,7 +184,6 @@ function CreateTournament() {
 		}
 	}, [user])
 
-
 	useEffect(() => {
 		const get_member = async (username) => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-tournament-member`, {
@@ -237,7 +236,6 @@ function CreateTournament() {
 						navigate("/mainpage/game")
 					}
 				} else if (type === 'user_leave_tournament') {
-					console.log("ENTER TO USER LEAVE TOURNAMENT")
 					const currentAllGameFriends = allGameFriendsRef.current;
 					let is_a_friend = data.message.is_a_friend
 					if (is_a_friend === true){

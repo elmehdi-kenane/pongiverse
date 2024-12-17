@@ -18,8 +18,8 @@ const SvgComponent = ({ roundquartermembers, roundsemifinalmembers, roundfinalme
 
 	const findMemberByPosition = (roundMembers = [], position) => {
 		return roundMembers.find((member) => member.position === position) || null;
-	  };
-	  
+	};
+
 
 	return (
 

@@ -1,11 +1,13 @@
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import avatar from '../avatar.jpeg'
 import nullplayer from './nullplayer.png'
 import { useNavigate } from "react-router-dom";
+import AuthContext from '../../navbar-sidebar/Authcontext';
 const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roundfinalmembers, roundwinner }) => {
 	console.log("roundquartermembers", roundquartermembers)
 	console.log("roundsemifinalmembers", roundsemifinalmembers)
 	console.log("roundfinalmembers", roundfinalmembers)
+	const {setIsGameStats} = useContext(AuthContext)
 	console.log("roundwinner", roundwinner)
 	const navigate = useNavigate()
 	const findMemberByPosition = (roundmembers, position) => {
@@ -19,6 +21,7 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 
 	const navigate_to_profile = (username) => {
 		if (username !== 'anounymous') {
+			setIsGameStats(false)
 			navigate(`/mainpage/profile/${username}`)
 		}
 	}

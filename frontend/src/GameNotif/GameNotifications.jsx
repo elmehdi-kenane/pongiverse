@@ -10,7 +10,7 @@ import toastDrari, { Toaster } from "react-hot-toast";
 import { toast, Bounce } from "react-toastify";
 import NotificationPopupCard from "../navbar-sidebar/NotificationPopupCard";
 import { ImWarning } from "react-icons/im";
-const GameNotifications = () => {
+const GameNotifications = (props) => {
   const [roomID, setRoomID] = useState(null);
   let {
     socket,
@@ -35,23 +35,22 @@ const GameNotifications = () => {
 
   // friendReq notification functionality
   useEffect(() => {
-    if (dataSocket !== null)
-    {
-        if (dataSocket.type === "receive-friend-request") {
-          setNewReceivedFriendReqNotif(true);
-          setRemoveFriendReqNotif(false);
-          setFriendReq(dataSocket.message);
-        } else if (
-          dataSocket.type === "confirm-friend-request" &&
-          dataSocket.message.second_username === friendReq.username
-        ) {
-          setRemoveFriendReqNotif(true);
-        } else if (
-          dataSocket.type === "remove-friend-request" &&
-          dataSocket.message.second_username === friendReq.username
-        ) {
-          setRemoveFriendReqNotif(true);
-        } else console.log("unknown notif type");
+    if (dataSocket !== null) {
+      if (dataSocket.type === "receive-friend-request") {
+        setNewReceivedFriendReqNotif(true);
+        setRemoveFriendReqNotif(false);
+        setFriendReq(dataSocket.message);
+      } else if (
+        dataSocket.type === "confirm-friend-request" &&
+        dataSocket.message.second_username === friendReq.username
+      ) {
+        setRemoveFriendReqNotif(true);
+      } else if (
+        dataSocket.type === "remove-friend-request" &&
+        dataSocket.message.second_username === friendReq.username
+      ) {
+        setRemoveFriendReqNotif(true);
+      } else console.log("unknown notif type");
     }
   }, [dataSocket?.message.to_user, dataSocket?.type]);
 
@@ -121,8 +120,7 @@ const GameNotifications = () => {
   useEffect(() => {
     const getTournamentWarning = async () => {
       const response = await fetch(
-        `http://${
-          import.meta.env.VITE_IPADDRESS
+        `http://${import.meta.env.VITE_IPADDRESS
         }:8000/api/get-tournament-warning`,
         {
           method: "POST",
@@ -184,8 +182,7 @@ const GameNotifications = () => {
       } else if (sender.mode === "TournamentInvitation") {
         console.log("YES1!");
         const response = await fetch(
-          `http://${
-            import.meta.env.VITE_IPADDRESS
+          `http://${import.meta.env.VITE_IPADDRESS
           }:8000/api/get-tournament-size`,
           {
             method: "POST",
@@ -321,8 +318,19 @@ const GameNotifications = () => {
           setAllGameNotifs(
             allGameNotifs.filter((user) => user.user !== message.user)
           );
-        } else if (type === "remove_tournament_notif")
+        } else if (type === "remove_tournament_notif") {
           removeNotification(message.tournament_id, message.user);
+        } else if (type === "connected_again") {
+          const userConnected = data.message.user;
+          if (userConnected === props.userId) {
+            props.setUserIsOnline(true);
+          }
+        } else if (type === "user_disconnected") {
+          const userDisConnected = data.message.user;
+          if (userDisConnected === props.userId) {
+            props.setUserIsOnline(false);
+          }
+        }
       };
     }
   }, [notifSocket]);
@@ -331,7 +339,7 @@ const GameNotifications = () => {
     <>
       {timeDiff && (
         <div className={styles["tournament_warnings"]}>
-          <ImWarning size={30} color="red"/> 
+          <ImWarning size={30} color="red" />
           Your Game will start in {timeDiff}
         </div>
       )}

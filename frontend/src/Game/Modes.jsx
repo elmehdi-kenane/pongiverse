@@ -8,8 +8,6 @@ import createTournamentImage from '../assets/Game/createTournamentMode.svg'
 import joinTournamentImage from '../assets/Game/joinTournamentMode.svg'
 import toast, { Toaster } from 'react-hot-toast';
 import GameNotifications from '../GameNotif/GameNotifications'
-import Instructions from './Instructions'
-import { BsQuestionSquareFill } from "react-icons/bs";
 const Modes = () => {
 	const navigate = useNavigate()
 	const location = useLocation()
@@ -369,17 +367,11 @@ const Modes = () => {
 	}
 
 	return (
-		<>
-			<button className={styles['instructions-div-button-modes']} onClick={() => { setHideInst(false) }}><BsQuestionSquareFill className={styles['question-mark-icon']} size={25} /></button>
-			{
-				!hideInst && 
-				<Instructions hideInst={hideInst} setHideInst={setHideInst}/>
-			}
-			<div className={styles['game-modes-page']}>
-				<Toaster />
-				<GameNotifications />
-				<div className={styles['game-modes-div']}>
-					{/* <div className='cancel-game-invite-request'>
+		<div className={styles['game-modes-page']}>
+			<Toaster />
+			<GameNotifications />
+			<div className={styles['game-modes-div']}>
+				{/* <div className='cancel-game-invite-request'>
 					{(allGameNotifs.length) ? (
 						<div className='game-invitations'>
 							{allGameNotifs.map((user, key) => {
@@ -410,42 +402,41 @@ const Modes = () => {
 					) : ''
 					}
 				</div> */}
-					<div className={`${styles['play-solo-mode']} ${soloModeSelected ? styles['mode-selected'] : ''}`} onClick={() => handleSelect('play_solo')}>
-						<div className={styles['play-solo-mode-image']}>
-							<img src={playSoloImage} alt="" />
-						</div>
-						<div className={styles['play-solo-mode-title-and-description']}>
-							<h1 className={styles['play-solo-mode-title']}>Play Solo</h1>
-							<p className={styles['play-solo-mode-description']}>Initiate a solo team ping pong match where you, as a single player,
-								compete against other players.</p>
-						</div>
+				<div className={`${styles['play-solo-mode']} ${soloModeSelected ? styles['mode-selected'] : ''}`} onClick={() => handleSelect('play_solo')}>
+					<div className={styles['play-solo-mode-image']}>
+						<img src={playSoloImage} alt="" />
 					</div>
-					<div className={`${styles['create-tournament-mode']} ${createTournamentModeSelected ? styles['mode-selected'] : ''}`} onClick={() => handleSelect('create_tournament')}>
-						<div className={styles['create-tournament-mode-image']}>
-							<img src={createTournamentImage} alt="" />
-						</div>
-						<div className={styles['create-tournament-mode-title-and-description']}>
-							<h1 className={styles['create-tournament-mode-title']}>Create Tournament</h1>
-							<p className={styles['create-tournament-mode-description']}> Kick off the process of creating a ping pong tournament,
-								Craft your own competitive event.</p>
-						</div>
-					</div>
-					<div className={`${styles['join-tournament-mode']} ${joinTournamentModeSelected ? styles['mode-selected'] : ''}`} onClick={() => handleSelect('join_tournament')}>
-						<div className={styles['join-tournament-mode-image']}>
-							<img src={joinTournamentImage} alt="" />
-						</div>
-						<div className={styles['join-tournament-mode-title-and-description']}>
-							<h1 className={styles['join-tournament-mode-title']}>Join Tournament</h1>
-							<p className={styles['join-tournament-mode-description']}>Join an existing ping pong tournament hosted by other players,
-								discover various tournaments with different challenges.</p>
-						</div>
-					</div>
-					<div className={`${styles['game-modes-page-button']} ${(soloModeSelected || createTournamentModeSelected || joinTournamentModeSelected) ? styles['game-modes-page-button-selected'] : ''}`}>
-						<button onClick={handleButtonClick} disabled={!enableButton}>Next</button>
+					<div className={styles['play-solo-mode-title-and-description']}>
+						<h1 className={styles['play-solo-mode-title']}>Play Solo</h1>
+						<p className={styles['play-solo-mode-description']}>Initiate a solo team ping pong match where you, as a single player,
+							compete against other players.</p>
 					</div>
 				</div>
+				<div className={`${styles['create-tournament-mode']} ${createTournamentModeSelected ? styles['mode-selected'] : ''}`} onClick={() => handleSelect('create_tournament')}>
+					<div className={styles['create-tournament-mode-image']}>
+						<img src={createTournamentImage} alt="" />
+					</div>
+					<div className={styles['create-tournament-mode-title-and-description']}>
+						<h1 className={styles['create-tournament-mode-title']}>Create Tournament</h1>
+						<p className={styles['create-tournament-mode-description']}> Kick off the process of creating a ping pong tournament,
+							Craft your own competitive event.</p>
+					</div>
+				</div>
+				<div className={`${styles['join-tournament-mode']} ${joinTournamentModeSelected ? styles['mode-selected'] : ''}`} onClick={() => handleSelect('join_tournament')}>
+					<div className={styles['join-tournament-mode-image']}>
+						<img src={joinTournamentImage} alt="" />
+					</div>
+					<div className={styles['join-tournament-mode-title-and-description']}>
+						<h1 className={styles['join-tournament-mode-title']}>Join Tournament</h1>
+						<p className={styles['join-tournament-mode-description']}>Join an existing ping pong tournament hosted by other players,
+							discover various tournaments with different challenges.</p>
+					</div>
+				</div>
+				<div className={`${styles['game-modes-page-button']} ${(soloModeSelected || createTournamentModeSelected || joinTournamentModeSelected) ? styles['game-modes-page-button-selected'] : ''}`}>
+					<button onClick={handleButtonClick} disabled={!enableButton}>Next</button>
+				</div>
 			</div>
-		</>
+		</div>
 	)
 }
 
