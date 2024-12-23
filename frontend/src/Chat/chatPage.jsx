@@ -10,8 +10,7 @@ import {
 import ChatSideBar from "./chatPageSidebar";
 import ChatWindow from "./chatPageWindow";
 import { chat } from "../assets/navbar-sidebar";
-import GameNotifications from "../GameNotif/GameNotifications";
-
+import GameNotifications from '../GameNotif/GameNotifications'
 const Chat = () => {
   const {
     selectedDirectRef,
@@ -36,7 +35,6 @@ const Chat = () => {
   const [searchValue, setSearchValue] = useState("");
   const [directsSearch, setDirectsSearch] = useState([]);
   const [chatRoomsSearch, setChatRoomsSearch] = useState([]);
-
 
 
   useEffect(() => {
@@ -75,10 +73,10 @@ const Chat = () => {
           return prevConversations.map((friend) =>
             friend.id === data.senderId
               ? {
-                  ...friend,
-                  unreadCount: String(Number(friend.unreadCount) + 1),
-                  lastMessage: data.content,
-                }
+                ...friend,
+                unreadCount: String(Number(friend.unreadCount) + 1),
+                lastMessage: data.content,
+              }
               : friend
           );
         });
@@ -104,10 +102,10 @@ const Chat = () => {
           prevConversations.map((room) =>
             room.id === data.roomId
               ? {
-                  ...room,
-                  unreadCount: String(Number(room.unreadCount) + 1),
-                  lastMessage: data.content,
-                }
+                ...room,
+                unreadCount: String(Number(room.unreadCount) + 1),
+                lastMessage: data.content,
+              }
               : room
           )
         );
@@ -160,7 +158,7 @@ const Chat = () => {
           data.type === "chatRoomDeleted"
         ) {
           chatRoomDeleted(data.roomId);
-        } else if(data.type === "youAreBlocked"){
+        } else if (data.type === "youAreBlocked") {
           setDirects((prevConversations) => {
             const updatedDirects = prevConversations.filter(
               (friend) => friend.id !== data.data.id
@@ -173,24 +171,24 @@ const Chat = () => {
             avatar: "",
             status: "",
           });
-        } 
+        }
       };
     }
-  }, [chatSocket]);
+  }, [currentChatRoomPage, user]);
+
 
   useEffect(() => {
     const fetchDirectsWithMessage = async () => {
       try {
         const response = await fetch(
-          `http://${
-            import.meta.env.VITE_IPADDRESS
-          }:8000/chatAPI/firendwithdirects/${user}?page=${currentDirectPage}`,
-          {
-            credentials: 'include',
-          }
+          `http://${import.meta.env.VITE_IPADDRESS
+          }:8000/chatAPI/firendwithdirects/${user}?page=${currentDirectPage}`, {
+          credentials: 'include'
+        }
         );
         const { next, results } = await response.json();
         if (response.ok) {
+          console.log("RESPONSE: ", response)
           setDirects((prevConversations) => {
             let allDirects = [...prevConversations, ...results];
             if (Object.values(selectedDirect).every((value) => value !== "")) {
@@ -234,15 +232,13 @@ const Chat = () => {
     const fetchChatRooms = async () => {
       try {
         const response = await fetch(
-          `http://${
-            import.meta.env.VITE_IPADDRESS
-          }:8000/chatAPI/chatRooms/${user}?page=${currentChatRoomPage}`,
-          {
-            credentials: "include",
-          }
+          `http://${import.meta.env.VITE_IPADDRESS
+          }:8000/chatAPI/chatRooms/${user}?page=${currentChatRoomPage}`, {
+            credentials: 'include'
+        }
         );
         const { next, results } = await response.json();
-        console.log("CHAT ROOMS: ",results);
+        console.log("CHAT ROOMS: ", results);
         if (response.ok) {
           setChatRooms((prevConversations) => {
             let allChatRooms = [...prevConversations, ...results];
@@ -312,7 +308,7 @@ const Chat = () => {
   return (
     <div className="chat-page">
       <Toaster />
-      <GameNotifications/>
+      <GameNotifications />
       <div className="chat-container">
         <ChatSideBar
           directs={directs}

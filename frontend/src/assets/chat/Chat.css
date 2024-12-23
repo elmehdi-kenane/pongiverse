@@ -15,13 +15,6 @@
   --toastify-font-family: "IBM Plex Sans", sans-serif;
 }
 
-:root {
-  --toastify-toast-top: 90px;
-  --toastify-color-progress-light: #bb86fc;
-  --toastify-color-transparent: rgba(255, 255, 255, 1);
-  --toastify-font-family: "IBM Plex Sans", sans-serif;
-}
-
 .chat-page {
   width: 100%;
   height: 100%;

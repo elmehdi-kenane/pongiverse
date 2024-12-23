@@ -29,14 +29,82 @@ class CustomMyChatRoomLimitOffsetPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
     max_page_size = 100  # Maximum page size the user can request
 
+
+# @api_view(["POST"])
+# def direct_messages(request):
+#     if request.method == "POST":
+#         username = customuser.objects.get(username=(request.data).get("user"))
+#         friend = customuser.objects.get(username=(request.data).get("friend"))
+#         messages = Directs.objects.filter(
+#             Q(sender=username, receiver=friend) | Q(sender=friend, receiver=username)
+#         ).order_by('-timestamp')
+#         paginator = CustomLimitOffsetPagination()
+#         result_page = paginator.paginate_queryset(messages, request)
+#         reversed_page = list(reversed(result_page))
+#         serializer = direct_message_serializer(reversed_page,  many=True)
+#         return paginator.get_paginated_response(serializer.data)
+#     return Response({"error": "Invalid request method"}, status=400)
+
+# @api_view(["GET"])
+# def chat_rooms_list(request, username):
+#     if request.method == "GET":
+#         user = customuser.objects.get(username=username)
+#         # get memberships for the user that have at least one message
+#         memberships = Membership.objects.filter (user=user, room__message__isnull=False).distinct()
+#         # sort the rooms by the message date
+#         ordered_memberships = sorted(
+#             memberships,
+#             key=lambda membership: membership.room.message_set.last().timestamp
+#             if membership.room.message_set.last()
+#             else membership.room.membership_set.last().joined_at,
+#             reverse=True,
+#         )
+#         paginator = CustomLimitOffsetPagination()
+#         result_page = paginator.paginate_queryset(ordered_memberships, request)
+#         serializer = room_serializer(result_page, many=True, context={"user": user})
+#         return paginator.get_paginated_response(serializer.data)
+#     return Response({"error": "Invalid request method"}, status=400)
+
+# @api_view(["GET"])
+# def my_chat_rooms(request, username):
+#     if request.method == "GET":
+#         user = customuser.objects.get(username=username)
+#         memberships = Membership.objects.filter(user=user)
+#         paginator = CustomMyChatRoomLimitOffsetPagination()
+#         result_page = paginator.paginate_queryset(memberships, request)
+#         serializer = room_serializer(result_page, many=True, context={"user": user})
+#         return paginator.get_paginated_response(serializer.data)
+#     return Response({"error": "Invalid request method"}, status=400)
+
+
+# @api_view(["GET"])
+# def chat_room_messages(request, room_id):
+#     if request.method == "GET":
+#         messages = Message.objects.filter(room_id=room_id).order_by("-timestamp")
+#         paginator = CustomLimitOffsetPagination()
+#         result_page = paginator.paginate_queryset(messages, request)
+#         reversed_page = list(reversed(result_page))
+#         serializer = room_message_serializer(reversed_page, many=True)
+#         return paginator.get_paginated_response(serializer.data)
+#     return Response({"error": "Invalid request method"}, status=400)
+
+
+
+# class CustomMyChatRoomLimitOffsetPagination(PageNumberPagination):
+#     page_size = 6  # Default page size
+#     page_size_query_param = 'page_size'
+#     max_page_size = 100  # Maximum page size the user can request
+
 @authentication_required
 @api_view(["GET"])
 def friends_with_directs(request, username):
+    print()
     try:
         user = customuser.objects.get(username=username)
     except customuser.DoesNotExist:
         return Response({"error": "user not found"}, status=400)
-    friends = Friendship.objects.filter(user=user, isBlocked=False)
+    friends = Friendship.objects.filter(user=user)
+    # friends = Friendship.objects.filter(user=user, isBlocked=False)
     last_message_subquery = Directs.objects.filter(
         Q(sender=user, receiver=OuterRef('friend')) | 
         Q(receiver=user, sender=OuterRef('friend'))

@@ -56,7 +56,7 @@ const App = () => {
   return (
     // <div className="page" style={{ backgroundImage: `url(${bg1})` }}>
     // <div className="page" style={{ backgroundImage: `url(${bg1})` }}>
-    <div className="page" style={{ backgroundImage: `url(${bg1})` }}>
+    <div className="page" style={{ backgroundColor: '#250939' }}>
       <Router>
         <AuthProvider>
           <Routes>

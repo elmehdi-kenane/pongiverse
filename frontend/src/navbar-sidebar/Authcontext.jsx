@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }) => {
 		false,
 	]);
 	const oneVsOneIdRegex = /^\/mainpage\/play\/1vs1\/\d+$/;
-	const twoVsTwoIdRegex = /^\/mainpage\/play\/2vs2\/\d+$/;
+	const twoVsTwoIdRegex = /^\/mainpage\/play\/2vs2\/\d+$/;		
 	const gamePlayRegex = /^\/mainpage\/(game|play)(\/[\w\d-]*)*$/;
 
 	// Chat Notification and Chat Room Invitation States --------------------------------------------
@@ -63,20 +63,6 @@ export const AuthProvider = ({ children }) => {
 	const RoomsInvitationRef = useRef(null);
 	const chatNotificationRef = useRef(null);
 
-	// useEffect(()=>{
-	//     const url = window.location.href;
-	// 	const element = document.getElementById("scrollTop");
-	// 	// 	console.log("Scroll Effect Here");
-	// 	// }
-	//     const checkUrlEnd = () => {
-	// 		if (url.endsWith('/profile/IMAD') && (element)){
-	// 			element.scrollIntoView({ behavior: 'smooth' });
-	// 			console.log("RAGRAGUIII")
-	// 		}
-	// 	};
-	// 	if (url)
-	// 		checkUrlEnd();
-	// },[window.location.href])
 
 	useEffect(() => {
 		RoomsInvitationRef.current = chatRoomInvitationsCounter;

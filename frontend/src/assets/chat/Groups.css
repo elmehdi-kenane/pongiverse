@@ -1472,6 +1472,29 @@ svg.room-invitation-cancel-icon:hover {
   font-size: 12px;
 }
 
+.room-notifications-icon-conatiner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.room-notifications-counter {
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  background-color: #826aed;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+}
+
 @media screen and (min-width: 1440px) {
   .rooms-wrapper {
     width: 1360px;

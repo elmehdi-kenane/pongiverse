@@ -143,10 +143,7 @@ const Rooms = () => {
     const fetchChatRooms = async () => {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/myChatRooms/${user}?page=${currentMyRoomsPage}`,
-          {
-            credentials: "include",
-          }
+          `http://localhost:8000/chatAPI/myChatRooms/${user}?page=${currentMyRoomsPage}`
         );
         const { next, results } = await response.json();
         if (response.ok) {
@@ -174,10 +171,9 @@ const Rooms = () => {
   const updateStatusOfInvitations = async () => {
     try {
       const response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/updateStatusOfInvitations`,
+        `http://localhost:8000/chatAPI/updateStatusOfInvitations`,
         {
           method: "POST",
-          credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },
@@ -239,6 +235,7 @@ const Rooms = () => {
                 alt=""
                 className="create-room-icon"
               />
+              <div className="create-room-text">Create a Room</div>
             </div>
             <AddIcon
               className="create-room-button-icon"

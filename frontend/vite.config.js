@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [
+    // basicSsl(),
     {
       name: "treat-js-files-as-jsx",
       async transform(code, id) {
@@ -31,3 +32,10 @@ export default defineConfig({
     open: true,
   }
 });
+import basicSsl from '@vitejs/plugin-basic-ssl'
+
+// export default {
+//   plugins: [
+//     basicSsl()
+//   ]
+// }

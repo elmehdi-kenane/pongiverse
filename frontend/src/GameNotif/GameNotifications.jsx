@@ -29,30 +29,30 @@ const GameNotifications = (props) => {
   const [timeDiff, setTimeDiff] = useState(null);
   const [friendReq, setFriendReq] = useState("");
   const [removeFriendReqNotif, setRemoveFriendReqNotif] = useState(false);
-  const [dataSocket, setDataSocket] = useState(null);
+  // const [dataSocket, setDataSocket] = useState(null);
   const [newReceivedFriendReqNotif, setNewReceivedFriendReqNotif] =
     useState(false);
 
-  // friendReq notification functionality
-  useEffect(() => {
-    if (dataSocket !== null) {
-      if (dataSocket.type === "receive-friend-request") {
-        setNewReceivedFriendReqNotif(true);
-        setRemoveFriendReqNotif(false);
-        setFriendReq(dataSocket.message);
-      } else if (
-        dataSocket.type === "confirm-friend-request" &&
-        dataSocket.message.second_username === friendReq.username
-      ) {
-        setRemoveFriendReqNotif(true);
-      } else if (
-        dataSocket.type === "remove-friend-request" &&
-        dataSocket.message.second_username === friendReq.username
-      ) {
-        setRemoveFriendReqNotif(true);
-      } else console.log("unknown notif type");
-    }
-  }, [dataSocket?.message.to_user, dataSocket?.type]);
+  // // friendReq notification functionality
+  // useEffect(() => {
+  //   if (dataSocket !== null) {
+  //     if (dataSocket.type === "receive-friend-request") {
+  //       setNewReceivedFriendReqNotif(true);
+  //       setRemoveFriendReqNotif(false);
+  //       setFriendReq(dataSocket.message);
+  //     } else if (
+  //       dataSocket.type === "confirm-friend-request" &&
+  //       dataSocket.message.second_username === friendReq.username
+  //     ) {
+  //       setRemoveFriendReqNotif(true);
+  //     } else if (
+  //       dataSocket.type === "remove-friend-request" &&
+  //       dataSocket.message.second_username === friendReq.username
+  //     ) {
+  //       setRemoveFriendReqNotif(true);
+  //     } else console.log("unknown notif type");
+  //   }
+  // }, [dataSocket?.message.to_user, dataSocket?.type]);
 
   const notify = () => {
     setNewReceivedFriendReqNotif(false);
@@ -251,7 +251,7 @@ const GameNotifications = (props) => {
     if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
       notifSocket.onmessage = (event) => {
         let data = JSON.parse(event.data);
-        setDataSocket(data);
+        // setDataSocket(data);
         let type = data.type;
         let message = data.message;
         console.log("MESSAGE TYPE", type);
@@ -330,7 +330,21 @@ const GameNotifications = (props) => {
           if (userDisConnected === props.userId) {
             props.setUserIsOnline(false);
           }
-        }
+        } else if (type === "receive-friend-request") {
+          setNewReceivedFriendReqNotif(true);
+          setRemoveFriendReqNotif(false);
+          setFriendReq(message);
+        } else if (
+          type === "confirm-friend-request" &&
+          message.second_username === friendReq.username
+        ) {
+          setRemoveFriendReqNotif(true);
+        } else if (
+          type === "remove-friend-request" &&
+          message.second_username === friendReq.username
+        ) {
+          setRemoveFriendReqNotif(true);
+        } else console.log("unknown notif type");
       };
     }
   }, [notifSocket]);

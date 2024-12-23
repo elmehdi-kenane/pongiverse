@@ -31,11 +31,12 @@ DEBUG = True
 
 MEDIA_URL = '/media/'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', '10.11.7.11']
 
 # Application definition
 
 INSTALLED_APPS = [
+    # 'sslserver',
     'chat',
     'myapp',
     'Notifications',
@@ -88,14 +89,14 @@ TEMPLATES = [
 # WSGI_APPLICATION = 'ft_transcandence.wsgi.application'
 ASGI_APPLICATION = 'ft_transcandence.asgi.application'
 
-CHANNEL_LAYERS = {
-	"default": {
-		"BACKEND": "channels.layers.InMemoryChannelLayer",
-    "CONFIG": {
-          "capacity": 5000,
-      },
-	}
-}
+# CHANNEL_LAYERS = {
+# 	"default": {
+# 		"BACKEND": "channels.layers.InMemoryChannelLayer",
+#     "CONFIG": {
+#           "capacity": 5000,
+#       },
+# 	}
+# }
 
 AUTHENTICATION_BACKENDS = [
 	'myapp.authentication.CustomUserModelBackend',
@@ -148,10 +149,32 @@ REST_FRAMEWORK = {
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+DB_NAME = "ft_transcendance"
+DB_USER = "aagouzou"
+DB_PASSWORD = "123456789"
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.sqlite3',
 		'NAME': BASE_DIR / 'db.sqlite3',
+	}
+}
+
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [("redis", 6379)],
+#             "capacity": 1000
+#         },
+#     },
+# }
+
+CHANNEL_LAYERS = {
+	"default": {
+		"BACKEND": "channels.layers.InMemoryChannelLayer",
+    "CONFIG": {
+          "capacity": 5000,
+      },
 	}
 }
 
@@ -190,6 +213,12 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3001",
     "http://localhost:3001",
     "https://lh3.googleusercontent.com"
+]
+
+
+CORS_ORIGIN_WHITELIST = [
+'http://localhost:3000',
+'http://10.11.7.11:3000',
 ]
 
 # CORS_ALLOW_ALL_ORIGINS: True

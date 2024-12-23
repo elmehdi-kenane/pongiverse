@@ -44,9 +44,8 @@ const ChatSideBar = ({
         const response = await fetch(
           `http://${
             import.meta.env.VITE_IPADDRESS
-          }:8000/chatAPI/directsSreach?searchUsername=${searchValue}&user=${user}`,
-          {
-            credentials: "include",
+          }:8000/chatAPI/directsSreach?searchUsername=${searchValue}&user=${user}`, {
+            credentials: 'include'
           }
         );
         const data = await response.json();
@@ -64,8 +63,9 @@ const ChatSideBar = ({
         const response = await fetch(
           `http://${
             import.meta.env.VITE_IPADDRESS
-          }:8000/chatAPI/chatRoomsSreach?searchRoomName=${searchValue}&user=${user}`,
-          {credentials: "include",}
+          }:8000/chatAPI/chatRoomsSreach?searchRoomName=${searchValue}&user=${user}`, {
+            credentials: "include"
+          }
         );
         const data = await response.json();
         if (response.ok) {
