@@ -174,7 +174,7 @@ const Chat = () => {
         }
       };
     }
-  }, [currentChatRoomPage, user]);
+  }, [currentChatRoomPage, user, chatSocket]);
 
 
   useEffect(() => {

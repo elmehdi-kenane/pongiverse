@@ -21,6 +21,8 @@ const GameNotifications = (props) => {
     notifSocket,
     setSocket,
     socketRef,
+    setChatNotificationCounter,
+    setChatRoomInvitationsCounter,
   } = useContext(AuthContext);
   const gamePlayRegex = /^\/mainpage\/(game|play)(\/[\w\d-]*)*$/;
   const navigate = useNavigate();
@@ -120,7 +122,8 @@ const GameNotifications = (props) => {
   useEffect(() => {
     const getTournamentWarning = async () => {
       const response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS
+        `http://${
+          import.meta.env.VITE_IPADDRESS
         }:8000/api/get-tournament-warning`,
         {
           method: "POST",
@@ -182,7 +185,8 @@ const GameNotifications = (props) => {
       } else if (sender.mode === "TournamentInvitation") {
         console.log("YES1!");
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS
+          `http://${
+            import.meta.env.VITE_IPADDRESS
           }:8000/api/get-tournament-size`,
           {
             method: "POST",
@@ -251,6 +255,7 @@ const GameNotifications = (props) => {
     if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
       notifSocket.onmessage = (event) => {
         let data = JSON.parse(event.data);
+        console.log("DATA", data);
         // setDataSocket(data);
         let type = data.type;
         let message = data.message;
@@ -344,10 +349,21 @@ const GameNotifications = (props) => {
           message.second_username === friendReq.username
         ) {
           setRemoveFriendReqNotif(true);
+        } else if (
+          data.type === "chatNotificationCounter" &&
+          location.pathname !== "/mainpage/chat"
+        ) {
+          setChatNotificationCounter(data.count);
+        } else if (
+          data.type === "roomInvitation" &&
+          location.pathname !== "/mainpage/groups"
+        ) {
+          console.log("ROOM INVITATION: ", data);
+          setChatRoomInvitationsCounter((prev) => prev + 1);
         } else console.log("unknown notif type");
       };
     }
-  }, [notifSocket]);
+  }, [notifSocket, location.pathname]);
 
   return (
     <>

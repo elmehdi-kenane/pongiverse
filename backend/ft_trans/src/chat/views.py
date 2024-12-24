@@ -547,6 +547,7 @@ def chat_room_members_list(request):
 @authentication_required
 @api_view(["POST"])
 def accept_chat_room_invite(request):
+    print("inside accept_chat_room_invite")
     if request.method == "POST":
         try:
             user = customuser.objects.get(username=request.data.get("user"))

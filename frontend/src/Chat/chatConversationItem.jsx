@@ -10,6 +10,7 @@ export const resetUnreadMessages = async (user, friendId) => {
       }:8000/chatAPI/resetUndreadMessages`,
       {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },

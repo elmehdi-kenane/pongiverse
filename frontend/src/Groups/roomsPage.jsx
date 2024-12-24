@@ -143,7 +143,10 @@ const Rooms = () => {
     const fetchChatRooms = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/chatAPI/myChatRooms/${user}?page=${currentMyRoomsPage}`
+          `http://localhost:8000/chatAPI/myChatRooms/${user}?page=${currentMyRoomsPage}`, 
+          {
+            credentials: "include",
+          }
         );
         const { next, results } = await response.json();
         if (response.ok) {
@@ -174,6 +177,7 @@ const Rooms = () => {
         `http://localhost:8000/chatAPI/updateStatusOfInvitations`,
         {
           method: "POST",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },

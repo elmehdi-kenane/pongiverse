@@ -12,6 +12,7 @@ const InvitationRoom = (props) => {
     try { 
       const response = await fetch (`http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/accpetChatRoomInvite`, {
         method: 'POST',
+        cridentials: 'include',
         headers: {'Content-type': 'application/json'},
         body: JSON.stringify({
           room: props.id,
@@ -47,6 +48,7 @@ const InvitationRoom = (props) => {
     try {
       const response = await fetch (`http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/cancelChatRoomInvite`, {
         method: 'POST',
+        cridentials: 'include',
         headers: {'Content-type' : 'application/json'},
         body: JSON.stringify({
           room: props.id,

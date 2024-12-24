@@ -72,7 +72,9 @@ export const ChatProvider = ({ child }) => {
       try {
         const response = await fetch(
           `http://${import.meta.env.VITE_IPADDRESS
-          }:8000/chatAPI/chatRoomInvitations/${user}`
+          }:8000/chatAPI/chatRoomInvitations/${user}`,{
+            credentials: "include"
+          }
         );
         let data = await response.json();
         if (response.ok) {
@@ -86,7 +88,10 @@ export const ChatProvider = ({ child }) => {
       try {
         const response = await fetch(
           `http://${import.meta.env.VITE_IPADDRESS
-          }:8000/chatAPI/suggestedChatRooms/${user}`
+          }:8000/chatAPI/suggestedChatRooms/${user}`,
+          {
+            credentials: "include",
+          }
         );
         let data = await response.json();
         if (response.ok) {
