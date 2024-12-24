@@ -10,8 +10,6 @@ import NotificationAddIcon from "@mui/icons-material/NotificationAdd";
 import { Toaster } from "react-hot-toast";
 import RoomsNotifications from "./RoomComponents/roomsNotifications";
 import AddIcon from "@mui/icons-material/Add";
-import { chat } from "../assets/navbar-sidebar";
-import { set } from "lodash";
 
 const Rooms = () => {
   const [createRoom, setCreateRoom] = useState(false);

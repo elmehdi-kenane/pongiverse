@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import AuthContext from "../../navbar-sidebar/Authcontext";
 import ChatContext from "../../Context/ChatContext";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -6,13 +6,19 @@ import toast from "react-hot-toast";
 
 const InvitationRoom = (props) => {
   const {user } = useContext(AuthContext);
-  const {chatRoomInvitationsRef, setChatRoomInvitations } = useContext(ChatContext);
+  const {chatRoomInvitationsRef, setChatRoomInvitations,  } = useContext(ChatContext);
+  const {privateCheckAuth} = useContext(AuthContext);
+
+  useEffect(() => {
+    privateCheckAuth()
+  }, [])
+
   const onClickAcceptInvitaion = async () => {
     const toastId = toast.loading("Processing invitation...");
     try { 
       const response = await fetch (`http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/accpetChatRoomInvite`, {
         method: 'POST',
-        cridentials: 'include',
+        credentials: 'include',
         headers: {'Content-type': 'application/json'},
         body: JSON.stringify({
           room: props.id,
@@ -48,7 +54,7 @@ const InvitationRoom = (props) => {
     try {
       const response = await fetch (`http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/cancelChatRoomInvite`, {
         method: 'POST',
-        cridentials: 'include',
+        credentials: 'include',
         headers: {'Content-type' : 'application/json'},
         body: JSON.stringify({
           room: props.id,
@@ -56,6 +62,7 @@ const InvitationRoom = (props) => {
         })
       })
       const data = await response.json()
+      console.log("Data:",data)
       if(response.ok) {
         let roomInvitations = chatRoomInvitationsRef.current
         let updatedRooms = roomInvitations.filter(
