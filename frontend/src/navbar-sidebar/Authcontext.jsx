@@ -17,6 +17,7 @@ export const AuthProvider = ({ children }) => {
 	const [allGameFriends, setAllGameFriends] = useState([]);
 	const [userImages, setUserImages] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const [userLevel, setUserLevel] = useState(null)
 	// const [gameNotif, setGameNotif] = useState(false)
 	let [user, setUser] = useState("");
 	let [userImg, setUserImg] = useState("");
@@ -50,7 +51,7 @@ export const AuthProvider = ({ children }) => {
 	let [hideNavSideBar, setHideNavSideBar] = useState(false);
 	let [gameCustomize, setGameCustomize] = useState([
 		"#FFFFFF",
-		"#1C00C3",
+		"#C100BA",
 		"#5241AB",
 		false,
 	]);
@@ -535,9 +536,11 @@ export const AuthProvider = ({ children }) => {
 			response = await response.json();
 			if (response.Case !== "Invalid token") {
 				setUser(response.data.username);
+				setUserLevel(response.level)
 				navigate("/mainpage");
 			} else {
 				setUser("");
+				setUserLevel(null);
 			}
 		} catch (e) {
 			console.log("something wrong with fetch");
@@ -563,9 +566,11 @@ export const AuthProvider = ({ children }) => {
 			console.log(response.Case);
 			if (response.Case !== "Invalid token") {
 				setUser(response.data.username);
+				setUserLevel(response.level)
 			} else {
 				console.log("FAILD TO LOGIN SUCCESSFULY");
 				setUser("");
+				setUserLevel(null);
 				navigate("/signin");
 			}
 		} catch (e) {
@@ -575,6 +580,7 @@ export const AuthProvider = ({ children }) => {
 
 	let contextData = {
 		user: user,
+		userLevel: userLevel,
 		setUser: setUser,
 		publicCheckAuth: publicCheckAuth,
 		privateCheckAuth: privateCheckAuth,

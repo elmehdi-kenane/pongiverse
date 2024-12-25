@@ -330,6 +330,9 @@ def get_tournament_size(request):
 	else:
 		response.data = {'Case' : 'size_is_valide'}
 	return response
+
+@authentication_required
+@api_view(['POST'])
 def customize_game(request):
 	paddle_color = request.data['paddle']
 	ball_color = request.data['ball']

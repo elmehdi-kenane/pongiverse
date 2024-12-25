@@ -50,7 +50,7 @@ export { default as ball7 } from './white-ball.svg';
 export { default as board0 } from './black-board.svg';
 export { default as board1 } from './violet-board.svg';
 export { default as board2 } from './brown-board.svg';
-export { default as board3 } from './green-board.svg';
+export { default as board3 } from './transparent-board.svg';
 export { default as board4 } from './blue-board.svg';
 export { default as paddleEmpty } from './paddle-empty.svg';
 export { default as paddleFilled } from './paddle-filled.svg';

@@ -29,7 +29,7 @@ const OneVsOneCreateOrJoin = () => {
     const generateCodeRef = useRef(null)
     const navigate = useNavigate()
     let { privateCheckAuth, socket, user,
-        userImg, setAllGameNotifs } = useContext(AuthContext)
+        userImg, setAllGameNotifs, userLevel } = useContext(AuthContext)
 
     let isOut = false
     const userRef = useRef(user)
@@ -315,8 +315,8 @@ const OneVsOneCreateOrJoin = () => {
                             <p>level 6.5</p>
                         </div>)} */}
                         <div className='onevsone-opponent-infos'>
-                            <p>mmaqbour</p>
-                            <p>level 6.5</p>
+                            <p>{user}</p>
+                            <p>level {userLevel}</p>
                         </div>
                     </div>
                     <div className={(!allSet && loadMatch) ? 'onevsone-dashboard-logo onevsone-dashboard-logo-loading' : 'onevsone-dashboard-logo'} >

@@ -62,6 +62,15 @@ class SignUpView(APIView):
 			response = Response()
 			data = get_tokens_for_user(user)
 			csrf.get_token(request)
+			if user:
+				UserMatchStatics.objects.create(
+					player=user,
+					wins=0,
+					losts=0,
+					level=0,
+					total_xp=0,
+					goals=0
+				)
 			response.data = {"Case": "Sign up successfully", "data": data}
 			return response
 		else:
@@ -200,8 +209,13 @@ class VerifyTokenView(APIView):
 			user = customuser.objects.filter(id=data['user_id']).first()
 			if user is not None:
 				serializer = MyModelSerializer(user)
-				response.data = {"Case" : "valid token", "data" : serializer.data}
-				return response
+				usermatchstats = UserMatchStatics.objects.filter(player=user).first()
+				if usermatchstats :
+					response.data = {"Case" : "valid token", "data" : serializer.data, "level" : usermatchstats.level}
+					return response
+				else:
+					response.data = {"Case" : "Invalid token"}
+					return response
 			else:
 				response.data = {"Case" : "Invalid token"}
 				return response

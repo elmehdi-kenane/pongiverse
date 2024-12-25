@@ -30,7 +30,7 @@ const TwoVsTwoFriends = () => {
 	let { privateCheckAuth, socket, user,
 		socketRecreated, setSocketRecreated,
 		userImg, loading, allGameFriends,
-		userImages, setAllGameFriends } = useContext(AuthContext)
+		userImages, setAllGameFriends, userLevel } = useContext(AuthContext)
 	const allGameFriendsRef = useRef(allGameFriends);
 
 	let isOut = false
@@ -451,8 +451,8 @@ const TwoVsTwoFriends = () => {
 						<div className='twovstwo-dashboard-player' >
 							<div><img src={userImg} alt="profile-pic" /></div>
 							<div className='twovstwo-opponent-infos'>
-								<p>mmaqbour</p>
-								<p>level 6.5</p>
+								<p>{user}</p>
+								<p>level {userLevel}</p>
 							</div>
 						</div>
 						{temmateInfos ? (

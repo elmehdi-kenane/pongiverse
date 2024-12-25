@@ -26,7 +26,7 @@ const OneVsOneFriends = () => {
 	let { privateCheckAuth, socket, user,
 		socketRecreated, setSocketRecreated,
 		userImg, loading, allGameFriends,
-		userImages, setAllGameFriends, notifSocket } = useContext(AuthContext)
+		userImages, setAllGameFriends, notifSocket, userLevel } = useContext(AuthContext)
 	const allGameFriendsRef = useRef(allGameFriends);
 
 	let isOut = false
@@ -299,8 +299,8 @@ const OneVsOneFriends = () => {
 							<p>level 6.5</p>
 						</div>)} */}
 						<div className='onevsone-opponent-infos'>
-							<p>mmaqbour</p>
-							<p>level 6.5</p>
+							<p>{user}</p>
+							<p>level {userLevel}</p>
 						</div>
 					</div>
 					<div className={(!allSet && loadMatch) ? 'onevsone-dashboard-logo onevsone-dashboard-logo-loading' : 'onevsone-dashboard-logo'} >
