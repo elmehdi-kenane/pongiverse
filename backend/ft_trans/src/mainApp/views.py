@@ -235,9 +235,9 @@ def notifs_friends(request):
 	ip_address = os.getenv("IP_ADDRESS")
 	for gameNotif in GameNotifications.objects.filter(target=target):
 		if gameNotif.active_match is not None:
-			allNotifs.append({'tournament_id' : '', 'user': gameNotif.user.username, 'avatar': f"http://{ip_address}:8000/auth{gameNotif.user.avatar.url}", 'roomID': gameNotif.active_match.room_id, 'mode': gameNotif.mode})
+			allNotifs.append({'tournament_id' : '', 'user': gameNotif.user.username, 'image': f"http://{ip_address}:8000/auth{gameNotif.user.avatar.url}", 'roomID': gameNotif.active_match.room_id, 'mode': gameNotif.mode})
 		elif gameNotif.tournament_id != 0:
-			allNotifs.append({'tournament_id' : gameNotif.tournament_id, 'user': gameNotif.user.username, 'avatar': f"http://{ip_address}:8000/auth{gameNotif.user.avatar.url}", 'roomID': '', 'mode': gameNotif.mode})
+			allNotifs.append({'tournament_id' : gameNotif.tournament_id, 'user': gameNotif.user.username, 'image': f"http://{ip_address}:8000/auth{gameNotif.user.avatar.url}", 'roomID': '', 'mode': gameNotif.mode})
 
 	return Response({'message': allNotifs})
 

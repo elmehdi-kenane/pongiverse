@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }) => {
 		false,
 	]);
 	const oneVsOneIdRegex = /^\/mainpage\/play\/1vs1\/\d+$/;
-	const twoVsTwoIdRegex = /^\/mainpage\/play\/2vs2\/\d+$/;		
+	const twoVsTwoIdRegex = /^\/mainpage\/play\/2vs2\/\d+$/;
 	const gamePlayRegex = /^\/mainpage\/(game|play)(\/[\w\d-]*)*$/;
 
 	// Chat Notification and Chat Room Invitation States --------------------------------------------
@@ -116,7 +116,6 @@ export const AuthProvider = ({ children }) => {
 
 
 		const getAllNotifsFriends = async () => {
-			console.log("********GETTING ALL NOTIFS FRIENDS");
 			try {
 				let response = await fetch(
 					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/notifsFriends`,
@@ -132,7 +131,8 @@ export const AuthProvider = ({ children }) => {
 					}
 				);
 				let friends = await response.json();
-					setAllGameNotifs(friends.message);
+				console.log("*****Friends: ", friends)
+				setAllGameNotifs(friends.message);
 			} catch (e) {
 				console.log("something wrong with fetch");
 			}

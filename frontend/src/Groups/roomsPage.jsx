@@ -10,6 +10,7 @@ import NotificationAddIcon from "@mui/icons-material/NotificationAdd";
 import { Toaster } from "react-hot-toast";
 import RoomsNotifications from "./RoomComponents/roomsNotifications";
 import AddIcon from "@mui/icons-material/Add";
+import GameNotifications from "../GameNotif/GameNotifications"
 
 const Rooms = () => {
   const [createRoom, setCreateRoom] = useState(false);
@@ -204,6 +205,7 @@ const Rooms = () => {
           },
         }}
       />
+      <GameNotifications/>
       {createRoom && (
         <CreateRoom
           setCreateRoom={setCreateRoom}

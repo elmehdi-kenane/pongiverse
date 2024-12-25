@@ -357,12 +357,13 @@ async def invite_friend(self, data):
 	tournament_id = data['message']['tournament_id']
 	channel_layer = get_channel_layer()
 	sender = await sync_to_async(customuser.objects.filter(username=sender_user).first)()
-	receiver = await sync_to_async(customuser.objects.filter(username=target).first)()
+	receiver = await sync_to_async(customuser.objects.filter(username=target).first)()	
 	TournamentGameNotify = await sync_to_async(GameNotifications.objects.filter(tournament_id=tournament_id, user=sender, target=receiver).first)()
 	if TournamentGameNotify is None:
 		channel_name_list = notifs_user_channels.get(receiver.id)
 		print(f"\n\n CHANNEL NAME LIST : {channel_name_list} \n\n")
 		tournamentInv = GameNotifications(tournament_id=tournament_id, user=sender, target=receiver, mode='TournamentInvitation')
+		# tournament_id, user, avatar, roomID, mode
 		await sync_to_async(tournamentInv.save)()
 		if channel_name_list:
 			for channel_name in channel_name_list:

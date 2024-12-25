@@ -56,6 +56,7 @@ const GameNotifications = (props) => {
   //   }
   // }, [dataSocket?.message.to_user, dataSocket?.type]);
 
+
   const notify = () => {
     setNewReceivedFriendReqNotif(false);
     toast(
