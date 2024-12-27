@@ -9,7 +9,7 @@ import { MobileFriendsWrapper } from "./MobileFriendsWrapper.jsx";
 import { SuggestionsWrapper } from "./SuggestionsWrapper.jsx";
 import GameNotifications from "../GameNotif/GameNotifications.jsx";
 
-const Friends = () => {
+const FriendshipPage = () => {
   const { user, socket } = useContext(AuthContext);
   const [friends, setFriends] = useState([]);
   const [blockedFriends, setBlockedFriends] = useState([]);
@@ -270,4 +270,4 @@ const Friends = () => {
   );
 };
 
-export default Friends;
+export default FriendshipPage;

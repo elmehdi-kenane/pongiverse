@@ -66,8 +66,6 @@ def get_friend_suggestions(request, username):
     exclude_ids.update([req['second_username'] for req in received_reqs_ser.data])
 
     suggestion_list = [user for user in user_ser_list.data if user['second_username'] not in exclude_ids]
-    print("suggestion_list")
-    print(suggestion_list)
     return Response(suggestion_list)
 
 @authentication_required

@@ -65,6 +65,8 @@ export const AuthProvider = ({ children }) => {
 	const [chatNotificationCounter, setChatNotificationCounter] = useState(0);
 	const RoomsInvitationRef = useRef(null);
 	const chatNotificationRef = useRef(null);
+  const [notifications, setNotifications] = useState([]);
+  const [isNotificationsRead, setIsNotificationsRead] = useState();
 
 	useEffect(() => {
 		RoomsInvitationRef.current = chatRoomInvitationsCounter;
@@ -529,6 +531,10 @@ export const AuthProvider = ({ children }) => {
 		loading: loading,
 		userImages: userImages,
 		setAllGameNotifs: setAllGameNotifs,
+    notifications: notifications,
+    isNotificationsRead: isNotificationsRead,
+    setNotifications: setNotifications,
+    setIsNotificationsRead: setIsNotificationsRead,
 		allGameNotifs: allGameNotifs,
 		notifsImgs: notifsImgs,
 		gameCustomize: gameCustomize,

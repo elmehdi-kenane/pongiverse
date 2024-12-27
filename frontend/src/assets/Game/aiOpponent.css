@@ -1,0 +1,324 @@
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+
+.container canvas {
+    background-color: white;
+    border-radius: 7px;
+}
+
+.details-element {
+    background-color: white;
+    width: 100%;
+    
+    color: black;
+}
+
+.score-bar p{
+    margin: 0;
+}
+.score-bar {
+    /* min-height: 65px; */
+    width: 75%;
+    max-width: 620px;
+    background-color: white;
+    border-radius: 20px;
+    display: flex;
+    position: relative;
+    z-index: 10;
+    justify-content: space-between;
+    padding: 0 5px;
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 48px;
+    border: 3px rgb(68, 45, 106) solid;
+}
+
+.score-bar .aiOpponent-separator { 
+    color: #913dce;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    width: 35px;
+    font-size: 40px;
+}
+.score-bar .player { 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    width: 50%;
+    color: rgb(68, 45, 106);
+}
+.score-bar .player .score { 
+    font-size: 40px;
+    font-weight: 700;
+}
+
+.score-bar .player .name {
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.score-bar .player img {
+    border-radius: 100%;
+    border: 3px #913dce solid;
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    min-height: 40px;
+    padding: 3px;
+} 
+
+.score-bar > .player:first-child .name {
+    margin-left: 10px;
+    margin-right: auto;
+}
+
+.score-bar > .player:last-child .name {
+    margin-right: 10px;
+    margin-left: auto;
+}
+
+.aiOpponent-optionBtns {
+    display: flex;
+    /* flex-direction: column; */
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    width: 100%;
+}
+
+.aiOpponent-optionBtns button {
+    height: 40px;
+    font-weight: 700;
+    width: 45%;
+    max-width: 310px;
+    color: rgb(68, 45, 106);
+    border-radius: 8px;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+}
+
+@media (min-width: 425px) {
+    .score-bar-mobile {
+        display: none;
+    }
+}
+
+
+.loading-screen {
+    position: absolute;
+    background: rgba(145, 61, 206, 0.3);
+    border-radius: 7px;
+    margin-top: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@keyframes loading-text {
+  from {
+    scale: 1;
+    opacity: 1;
+    }
+  to {
+    scale: 2;
+    opacity: 0;
+    }
+}
+
+.step-1,
+.step-2,
+.step-3 {
+    animation: loading-text 1s forwards;
+    color: rgb(68, 45, 106);
+    font-size: 50px;
+    margin: 0;
+    margin-bottom: 70px;
+    font-weight: 700;
+}
+
+.step-START, .step-CONTINUE {
+    color: rgb(68, 45, 106);
+    font-size: 50px;
+    margin: 0;
+    margin-bottom: 70px;
+    font-weight: 700;
+    font-style: italic;
+    animation: loading-text 1s forwards;
+}
+
+.result p {
+    margin: 0;
+}
+
+.result {
+    background: rgba(145, 61, 206);
+    border-radius: 20px;
+    width: 75%;
+    max-width: 620px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@keyframes showup {
+    from {
+    opacity: 0;
+    transform: translateY(50px); /* Starts 100px below its original position */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0); /* Ends at its actual position */
+        opacity: 1;
+        z-index: 0;
+        height: 70px;
+        padding: 0 5px;
+        border-radius: 20px;
+        width: 75%;
+        max-width: 620px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 25px;
+        font-weight: 700;
+        margin-bottom: -50px;
+        animation: showup 2s backwards;
+        border: 3px rgb(68, 45, 106) solid;
+        background-color: rgb(68, 45, 106);
+        border-bottom: none;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        /* transform: translate(0px, -100px); */
+    }
+}
+
+.final p {
+    margin: 0;
+    margin-bottom: 13px;
+}
+
+.final {
+    position: relative;
+    height: 70px;
+    padding: 0 5px;
+    border-radius: 20px;
+    width: 75%;
+    max-width: 620px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    font-weight: 700;
+    margin-bottom: -50px;
+    color: white;
+    animation: showup 2s backwards;
+    border: 3px rgb(68, 45, 106) solid;
+    border-bottom: none;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    background-color: rgb(68, 45, 106);
+}
+
+.header {
+    font-weight: 800;
+    font-size: 40px;
+    color: white;
+}
+
+.sub-header {
+    color: white;
+    font-weight: 600;
+    font-size: 20px;
+    font-style: italic;
+}
+    @media (max-width: 425px) {
+        .score-bar {
+            display: none;
+        }
+    
+        .score-bar-mobile p{
+        margin: 0;
+        }
+    
+        .loading-screen {
+            margin-top: 75px;
+        }
+    
+        .score-bar-mobile {
+            width: 75%;
+            max-width: 620px;
+            position: relative;
+            z-index: 10;
+            background-color: white;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 5px 5px;
+            box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 48px;
+            border: 3px rgb(68, 45, 106) solid;
+        }
+    
+        .score-bar-mobile .aiOpponent-separator { 
+            color: #913dce;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+            height: 15px;
+            width: 30%;
+            font-size: 30px;
+        }
+        .score-bar-mobile .player { 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            color: rgb(68, 45, 106);
+        }
+        .score .scoreNumber {
+            color: rgb(68, 45, 106);
+            font-size: 30px;
+            font-weight: 700;
+        }
+    
+        .score-bar-mobile .player .name {
+            font-size: 15px;
+            font-weight: 700;
+        }
+        
+        .score {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40%;
+            text-align: center;
+        }
+    
+        .avatarAndName {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .score-bar-mobile .player img {
+            border-radius: 100%;
+            border: 3px #913dce solid;
+            width: 30px;
+            min-width: 30px;
+            height: 30px;
+            min-height: 30px;
+            padding: 3px;
+        } 
+    }

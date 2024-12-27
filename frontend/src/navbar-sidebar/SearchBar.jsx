@@ -81,8 +81,6 @@ export const SearchBar = () => {
     }
   };
 
-  const navigateToProfile = () => {};
-
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleEscapeKey);

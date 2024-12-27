@@ -23,6 +23,9 @@ const GameNotifications = (props) => {
     socketRef,
     setChatNotificationCounter,
     setChatRoomInvitationsCounter,
+    notifications,
+    setNotifications,
+    setIsNotificationsRead,
   } = useContext(AuthContext);
   const gamePlayRegex = /^\/mainpage\/(game|play)(\/[\w\d-]*)*$/;
   const navigate = useNavigate();
@@ -31,33 +34,51 @@ const GameNotifications = (props) => {
   const [timeDiff, setTimeDiff] = useState(null);
   const [friendReq, setFriendReq] = useState("");
   const [removeFriendReqNotif, setRemoveFriendReqNotif] = useState(false);
-  // const [dataSocket, setDataSocket] = useState(null);
   const [newReceivedFriendReqNotif, setNewReceivedFriendReqNotif] =
     useState(false);
 
-  // // friendReq notification functionality
-  // useEffect(() => {
-  //   if (dataSocket !== null) {
-  //     if (dataSocket.type === "receive-friend-request") {
-  //       setNewReceivedFriendReqNotif(true);
-  //       setRemoveFriendReqNotif(false);
-  //       setFriendReq(dataSocket.message);
-  //     } else if (
-  //       dataSocket.type === "confirm-friend-request" &&
-  //       dataSocket.message.second_username === friendReq.username
-  //     ) {
-  //       setRemoveFriendReqNotif(true);
-  //     } else if (
-  //       dataSocket.type === "remove-friend-request" &&
-  //       dataSocket.message.second_username === friendReq.username
-  //     ) {
-  //       setRemoveFriendReqNotif(true);
-  //     } else console.log("unknown notif type");
-  //   }
-  // }, [dataSocket?.message.to_user, dataSocket?.type]);
-  useEffect(()=> {
-    console.log("****: ", allGameNotifs)
-  },[allGameNotifs])
+  const addNotificationToList = ({
+    avatar,
+    notificationText,
+    urlRedirection,
+    notifications,
+    setNotifications,
+    user,
+  }) => {
+    const addNewNotification = async () => {
+      const response = await fetch(
+        `http://${import.meta.env.VITE_IPADDRESS
+        }:8000/navBar/add_notification/`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            notification_text: notificationText,
+            url_redirection: urlRedirection,
+            username: user,
+            avatar: avatar,
+          }),
+        }
+      );
+      const res = await response.json();
+      //   if (res) setFriendSuggestions(res);
+    };
+    if (user) {
+      addNewNotification();
+      const newNotification = {
+        notification_text: trimStringWithEllipsis(notificationText),
+        url_redirection: urlRedirection,
+        send_at: new Date().toISOString(),
+        avatar: avatar,
+      };
+      setNotifications([newNotification, ...notifications]);
+      setIsNotificationsRead(false);
+    }
+  };
+
 
   const notify = () => {
     setNewReceivedFriendReqNotif(false);
@@ -82,9 +103,9 @@ const GameNotifications = (props) => {
 
   useEffect(() => {
     {
-      newReceivedFriendReqNotif && location.pathname !== "/mainpage/friends"
-        ? notify()
-        : console.log("");
+      newReceivedFriendReqNotif &&
+        location.pathname !== "/mainpage/friends" &&
+        notify();
     }
   }, [newReceivedFriendReqNotif]);
 
@@ -93,7 +114,7 @@ const GameNotifications = (props) => {
       (user) => user.user === creator.user
     );
     // console.log("****AL GAME NOTT: ", allGameNotifs.filter((user) => ((user?.tournament_id && user.tournament_id !== creator.tournament_id) || (user.roomID !== creator.roomID))))
-    setAllGameNotifs((prevAllGameNotifs) => 
+    setAllGameNotifs((prevAllGameNotifs) =>
       prevAllGameNotifs.filter((user) => ((user?.tournament_id && user.tournament_id !== creator.tournament_id) || (user.roomID !== creator.roomID)))
     );
     if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
@@ -337,7 +358,7 @@ const GameNotifications = (props) => {
             if (!isDuplicate) return [...prevGameNotif, message];
             return prevGameNotif;
           });
-        }else if (type === "remove_tournament_notif") {
+        } else if (type === "remove_tournament_notif") {
           removeNotification(message.tournament_id, message.user);
         } else if (type === "connected_again") {
           const userConnected = data.message.user;
@@ -350,10 +371,18 @@ const GameNotifications = (props) => {
             props.setUserIsOnline(false);
           }
         } else if (type === "receive-friend-request") {
-          console.log("**************GAME NOTIFFF")
           setNewReceivedFriendReqNotif(true);
           setRemoveFriendReqNotif(false);
           setFriendReq(message);
+          console.log("avatar", message.avatar);
+          addNotificationToList({
+            notificationText: `${message.second_username} sent you a friend request`,
+            urlRedirection: "friendship",
+            avatar: message.avatar,
+            notifications: notifications,
+            setNotifications: setNotifications,
+            user: user,
+          });
         } else if (
           type === "confirm-friend-request" &&
           message.second_username === friendReq.username
@@ -438,3 +467,11 @@ const GameNotifications = (props) => {
 };
 
 export default GameNotifications;
+
+export function trimStringWithEllipsis(str) {
+  const maxLength = 30;
+  if (str.length > maxLength) {
+    return str.slice(0, maxLength) + "...";
+  }
+  return str;
+}
