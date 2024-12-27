@@ -459,6 +459,9 @@ def get_multiplayer_matches(request, username, page):
 def get_multy_match_dtl(request, match_id):
     match = Match.objects.filter(room_id=match_id).first()
     match_stq = MatchStatistics.objects.filter(match=match).first()
+    if not match_stq:
+        print("##### ", match.id)
+
 
     if match and match_stq:
         res_data = {
@@ -515,8 +518,9 @@ def get_tourn_matches(request, username, page, items):
                     for round in rounds:
                         all_users = TournamentUserInfo.objects.filter(round=round).all() #Get all users inside each round
                         for user_round in all_users:
-                            if user.username == user_round.user.username:
-                                type = round.type
+                            if user_round.user is not None:
+                                if user.username == user_round.user.username:
+                                    type = round.type
                                 # print("###-----", type, ":", user_round.user.username)
                     res_data.append({
                         "type" : type,
