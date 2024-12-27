@@ -749,7 +749,8 @@ async def validatePlayer(self, data, rooms, user_channels):
 							'selfScore': [room['players'][0]['self_scored'], room['players'][1]['self_scored']],
 							'hit': [room['players'][0]['hit'], room['players'][1]['hit']],
 							'accuracy': [player1_accuracy, player2_accuracy],
-							'rating': [player1_rating, player2_rating]
+							'rating': [player1_rating, player2_rating],
+							'status': [room['players'][0]['status'], room['players'][1]['status']]
 						}
 					}))
 					return
@@ -845,7 +846,8 @@ async def validatePlayer(self, data, rooms, user_channels):
 						'selfScore': [match_statistics.team1_player1_score, match_statistics.team2_player1_score],
 						'hit': [match_statistics.team1_player1_hit, match_statistics.team2_player1_hit],
 						'accuracy': [player1_accuracy, player2_accuracy],
-						'rating': [player1_rating, player2_rating]
+						'rating': [player1_rating, player2_rating],
+						'status': [match_played.team1_status, match_played.team2_status]
 					}
 				}))
 				users.append({
