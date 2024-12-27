@@ -14,7 +14,7 @@ const OneVsOneStats = (props) => {
 
     return (
         <div className='onevsone' style={{ position: 'relative', marginBottom: props.mode === 'offline' ? '100px' : '' }} >
-            {(props.mode === 'online') ? ((props.gameFinished && props.user === props.userName1) ? ((props.playersInfos[0].totalScore > props.playersInfos[1].totalScore) ? (
+            {(props.mode === 'online') ? ((props.gameFinished && props.user === props.userName1) ? ((props.playersInfos[0].status === 'winner') ? (
                 <>
                     <div className='winner_cup' >
                         <img src={Icons.winnerCup} alt="winner cup" />
@@ -23,7 +23,7 @@ const OneVsOneStats = (props) => {
                 </>
             ) : (
                 <p className='loser_support' >BETTER LUCK NEXT TIME!</p>
-            )) : (props.gameFinished && props.user === props.userName2) ? ((props.playersInfos[1].totalScore > props.playersInfos[0].totalScore) ? (
+            )) : (props.gameFinished && props.user === props.userName2) ? ((props.playersInfos[1].status === 'winner') ? (
                 <>
                     <div className='winner_cup' >
                         <img src={Icons.winnerCup} alt="winner cup" />
@@ -36,10 +36,6 @@ const OneVsOneStats = (props) => {
                 <p className='loser_support' >GAME ABORTED!</p>
             )) : (
                 <>
-                    {/* <div className='match-ended' ></div> */}
-                    {/* <div className='winner_cup' >
-                        <img src={Icons.winnerCup} alt="winner cup" />
-                    </div> */}
                     <p className='loser_support' >
                         Great game! {(props.playersInfos[0].totalScore > props.playersInfos[1].totalScore) ? props.userName1 : props.userName2} 🎮🔥 👑🎉
                     </p>

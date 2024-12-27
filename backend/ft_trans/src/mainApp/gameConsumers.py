@@ -913,7 +913,8 @@ async def gameFinished(self, room):
 				'selfScore': [room['players'][0]['self_scored'], room['players'][1]['self_scored']],
 				'hit': [room['players'][0]['hit'], room['players'][1]['hit']],
 				'accuracy': [player1_accuracy, player2_accuracy],
-				'rating': [player1_rating, player2_rating]
+				'rating': [player1_rating, player2_rating],
+				'status': [room['players'][0]['status'], room['players'][1]['status']]
 			}
 		}
 )

@@ -167,18 +167,20 @@ const OneVsOnePlayMatch = () => {
             hit: 0,
             accuracy: 0,
             rating: 0,
+            status: 'winner'
         },
         {
             totalScore: 0,
             score: 0,
             hit: 0,
             accuracy: 0,
-            rating: 0
+            rating: 0,
+            status: 'winner'
         },
         {
             time: 0,
         }
-        ])
+    ])
 
     // const radius = Math.random() + 0.8
 
@@ -554,6 +556,8 @@ const OneVsOnePlayMatch = () => {
                     allPlayersStats[0].rating = message.rating[0]
                     allPlayersStats[1].rating = message.rating[1]
                     allPlayersStats[2].time = message.time
+                    allPlayersStats[0].status = message.status[0]
+                    allPlayersStats[1].status = message.status[1]
                     setPlayersInfos(allPlayersStats)
                     console.log("playerNo when it is finished : ", playerNo)
                 } else if (type === "abortedGame") {

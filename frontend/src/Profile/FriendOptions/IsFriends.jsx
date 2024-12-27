@@ -11,9 +11,9 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Loading from '../../Game/Loading';
 import FriendsParam from './FriendsParam';
 
-const addfriendsPrm = ["chat", "challenge"];
-const acceptPrm = ["chat", "challenge", "remove"];
-const pendingPrm = ["chat", "challenge", "cancel"];
+const addfriendsPrm = ["challenge"];
+const acceptPrm = ["challenge", "remove"];
+const pendingPrm = ["challenge", "cancel"];
 const friendPrm = ["chat", "challenge", "delete", "block"];
 
 function IsFriends(){

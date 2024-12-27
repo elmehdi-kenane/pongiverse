@@ -749,7 +749,8 @@ async def gameFinished(self, room):
 				'selfScore': [room['players'][0]['self_scored'], room['players'][1]['self_scored'], room['players'][2]['self_scored'], room['players'][3]['self_scored']],
 				'hit': [room['players'][0]['total_hit'], room['players'][1]['total_hit'], room['players'][2]['total_hit'], room['players'][3]['total_hit']],
 				'accuracy': [player1_accuracy, player2_accuracy, player3_accuracy, player4_accuracy],
-				'rating': [player1_rating, player2_rating, player3_rating, player4_rating]
+				'rating': [player1_rating, player2_rating, player3_rating, player4_rating],
+				'status': [room['players'][0]['status'], room['players'][1]['status'], room['players'][2]['status'], room['players'][3]['status']]
 			}
 		}
 	)
@@ -1676,7 +1677,7 @@ async def invite_friend_mp(self, data, rooms, user_channels):
 					for friend_channel in friend_channel_list:
 						if friend_channel:
 							#print("ENTER 10")
-							# with user1.avatar.open('rb') as f:
+							# with user1.avatar.open('rb') as f:f
 							#     image_data = base64.b64encode(f.read()).decode('utf-8')
 							await self.channel_layer.send(friend_channel, {
 								'type': 'receiveFriendGame',

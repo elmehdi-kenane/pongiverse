@@ -209,22 +209,16 @@ const TwoVsTwoFriends = () => {
 					setRoomID(message.room.id)
 					setLoadMatch(false)
 					setAllSet(true)
-					console.log("ALL SET BROTHER")
 				} else if (type === "playersReady") {
-					console.log("inside playersReady")
 					setLoadMatch(false)
 					setAllSet(true)
 				} else if (type === "playerNo") {
-					console.log("inside playerNo")
 					setPlayerNo(message.playerNo)
 					setTmpRoomID(message.id)
 					setGameStarted(true)
-					// setChosenOne('quickMatch')
-				}
-				else if (type === 'user_disconnected') {
-					console.log("user disconnected")
+					setLoadMatch(true)
+				} else if (type === 'user_disconnected') {
 					const currentAllGameFriends = allGameFriendsRef.current;
-					console.log("user disconnected : ", allGameFriends)
 					let uname = data.message.user
 					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname))
 				} else if (type === 'connected_again') {
@@ -236,31 +230,13 @@ const TwoVsTwoFriends = () => {
 						if (!userExists)
 							setAllGameFriends([...currentAllGameFriends, message.userInfos])
 					}
-				}
-				// else if (type === "noRoomFound") {
-				//     console.log("inside noRoomFound")
-				//     if (socket && socket.readyState === WebSocket.OPEN) {
-				//         console.log("inside join")
-				//         socket.send(JSON.stringify({
-				//             type: 'join',
-				//             message: {
-				//                 user: user,
-				//             }
-				//         }))
-				//         setGameStarted(true)
-				//         setLoadMatch(true)
-				//     }
-				// }
-				else if (type === 'alreadySearching') {
+				} else if (type === 'alreadySearching') {
 					console.log("inside alreadySearching")
 					setPlayerNo(message.playerNo)
 					setTmpRoomID(message.id)
 					setGameStarted(true)
 					setLoadMatch(true)
-				}
-				else if (type === 'playingStatus') {
-					// console.log(message.user)
-					// console.log(allGameFriends)
+				} else if (type === 'playingStatus') {
 					const currentAllGameFriends = allGameFriendsRef.current;
 					if (message.is_playing)
 						setAllGameFriends(currentAllGameFriends.filter(friend => friend.name !== message.user))
@@ -269,38 +245,7 @@ const TwoVsTwoFriends = () => {
 						if (!userExists)
 							setAllGameFriends([...currentAllGameFriends, message.userInfos])
 					}
-					//     for (let i = 0;i < allGameFriends.length; i++) {
-					//         console.log(allGameFriends[i].name)
-					//     }
-					// }
 				}
-				// else if (type === "removeRoom") {
-				//     console.log("inside removeRoom")
-				//     if (socket && socket.readyState === WebSocket.OPEN) {
-				//         socket.send(JSON.stringify({
-				//             type: 'OpponentIsOut',
-				//             message: {
-				//                 user: user,
-				//                 roomID: roomID
-				//             }
-				//         }))
-				//     }
-				//     setPlayerNo(0)
-				//     setAllSet(false)
-				//     setRoomID(null)
-				// }
-				// else if (type === "alreadySearching") {
-				//     setIsInSearchMode(true)
-				//     setTimeout(() => {
-				//         setIsInSearchMode(false)
-				//     }, 5000);
-				// } else if (type === "alreadyPlaying") {
-				//     console.log("in a match buddy")
-				//     setIsInPlayingMode(true)
-				//     setTimeout(() => {
-				//         setIsInPlayingMode(false)
-				//     }, 5000);
-				// }
 			}
 		}
 
@@ -354,12 +299,17 @@ const TwoVsTwoFriends = () => {
 					target: friend
 				}
 			}))
-			setSelectedFriends([...selectedFriends, friend])
-			setTimeout(() => {
-				setSelectedFriends(selectedFriends.filter(selectedFriend => selectedFriend !== friend))
-			}, 2000);
+			setSelectedFriends(prevSelectedFriends => {
+				const updatedFriends = [...prevSelectedFriends, friend];
+				setTimeout(() => {
+				  setSelectedFriends(prevSelectedFriends => 
+					prevSelectedFriends.filter(selectedFriend => selectedFriend !== friend)
+				  );
+				}, 2000);
+				return updatedFriends;
+			});
 			setGameStarted(true)
-			setLoadMatch(true)
+			// setLoadMatch(true)
 			// setGameStared(true)
 		}
 	};

@@ -92,22 +92,17 @@ const OneVsOneFriends = () => {
 					setLoadMatch(false)
 					setAllSet(true)
 				} else if (type === "playersReady") {
-					console.log("inside playersReady")
 					setLoadMatch(false)
 					setAllSet(true)
 				} else if (type === "playerNo") {
-					console.log("inside playerNo")
 					setPlayerNo(message.playerNo)
 					setTmpRoomID(message.id)
-					console.log("*******************ALL SET BROTHER 1")
 					setGameStarted(true)
 					setLoadMatch(true)
 				} else if (type === 'alreadySearching') {
-					console.log("inside alreadySearching")
 					setPlayerNo(message.playerNo)
 					setTmpRoomID(message.id)
 					setGameStarted(true)
-					console.log("*******************ALL SET BROTHER 2")
 					setLoadMatch(true)
 				} else if (type === 'playingStatus') {
 					const currentAllGameFriends = allGameFriendsRef.current;
@@ -201,13 +196,15 @@ const OneVsOneFriends = () => {
 					target: friend
 				}
 			}))
-			setSelectedFriends([...selectedFriends, friend])
-			setTimeout(() => {
-				console.log(
-					"selected friends : ", selectedFriends, "remove friend : ", friend
-				);
-				setSelectedFriends(selectedFriends.filter(selectedFriend => selectedFriend !== friend))
-			}, 2000);
+			setSelectedFriends(prevSelectedFriends => {
+				const updatedFriends = [...prevSelectedFriends, friend];
+				setTimeout(() => {
+				  setSelectedFriends(prevSelectedFriends => 
+					prevSelectedFriends.filter(selectedFriend => selectedFriend !== friend)
+				  );
+				}, 2000);
+				return updatedFriends;
+			});
 			setGameStarted(true)
 			// setAllGameNotifs([]) // SET ALL NOTIFICATIONS TO EMPTY ARRAY
 			// setGameStared(true)

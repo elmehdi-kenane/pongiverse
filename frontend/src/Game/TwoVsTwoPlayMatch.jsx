@@ -196,27 +196,31 @@ const TwoVsTwoPlayMatch = () => {
             hit: 0,
             accuracy: 0,
             rating: 0,
+            status: 'winner'
         },
         {
             totalScore: 0,
             score: 0,
             hit: 0,
             accuracy: 0,
-            rating: 0
+            rating: 0,
+            status: 'winner'
         },
         {
             totalScore: 0,
             score: 0,
             hit: 0,
             accuracy: 0,
-            rating: 0
+            rating: 0,
+            status: 'winner'
         },
         {
             totalScore: 0,
             score: 0,
             hit: 0,
             accuracy: 0,
-            rating: 0
+            rating: 0,
+            status: 'winner'
         },
         {
             time: 0,
@@ -722,6 +726,11 @@ const TwoVsTwoPlayMatch = () => {
                     allPlayersStats[1].rating = message.rating[1]
                     allPlayersStats[2].rating = message.rating[2]
                     allPlayersStats[3].rating = message.rating[3]
+                    allPlayersStats[0].status = message.status[0]
+                    allPlayersStats[1].status = message.status[1]
+                    allPlayersStats[2].status = message.status[2]
+                    allPlayersStats[3].status = message.status[3]
+                    console.log("ALL PLAYERS STATS : ", allPlayersStats)
                     setPlayersInfos(allPlayersStats)
                 } else if (type === "abortedGame") {
                     let allPlayersStats = [...playersInfos]
