@@ -159,18 +159,18 @@ async def deny_invite(self, data, notifs_user_channels):
 	tournamentInvite = await sync_to_async(GameNotifications.objects.filter(tournament_id=data['message']['tournament_id'], user=sender, target=receiver).first)()
 	if tournamentInvite is not None:
 		await sync_to_async(tournamentInvite.delete)()
-	channel_name_list = notifs_user_channels.get(receiver.id)
-	for channel_name in channel_name_list:
-		if channel_name:
-			await self.channel_layer.send(
-				channel_name,
-				{
-					'type': 'deny_tournament_invitation',
-					'message': {
-						'user': data['message']['sender']
-					}
-				}
-			)
+	# channel_name_list = notifs_user_channels.get(receiver.id)
+	# for channel_name in channel_name_list:
+	# 	if channel_name:
+	# 		await self.channel_layer.send(
+	# 			channel_name,
+	# 			{
+	# 				'type': 'deny_tournament_invitation',
+	# 				'message': {
+	# 					'user': data['message']['sender']
+	# 				}
+	# 			}
+	# 		)
 
 
 

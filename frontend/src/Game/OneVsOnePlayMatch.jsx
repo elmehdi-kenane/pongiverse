@@ -199,17 +199,17 @@ const OneVsOnePlayMatch = () => {
         // };
         // particles.push(particle);
 
-function createParticle(x, y) {
-	let particle = {
-		x,
-		y,
-		radius: Math.random() + 0.2, // Random radius between 1 and 3 ====> Math.random() * 2 + 1
-		color: `hsl(${Math.random() * 40 + 20}, 100%, 50%)`, // Random hue for fire-like colors ====> `hsl(${Math.random() * 40 + 20}, 100%, 50%)`
-		speedX: Math.random() - 0.8, // Random horizontal speed between -3 and 3
-		speedY: Math.random() - 0.8, // Random vertical speed between -3 and 3
-		life: Math.random() * 50 + 40 // Random lifetime between 50 and 100 frames
-	};
-	particles.push(particle);
+    function createParticle(x, y) {
+        let particle = {
+            x,
+            y,
+            radius: Math.random() + 0.2, // Random radius between 1 and 3 ====> Math.random() * 2 + 1
+            color: `hsl(${Math.random() * 40 + 20}, 100%, 50%)`, // Random hue for fire-like colors ====> `hsl(${Math.random() * 40 + 20}, 100%, 50%)`
+            speedX: Math.random() - 0.8, // Random horizontal speed between -3 and 3
+            speedY: Math.random() - 0.8, // Random vertical speed between -3 and 3
+            life: Math.random() * 50 + 40 // Random lifetime between 50 and 100 frames
+        };
+        particles.push(particle);
 	}
 
 	useEffect(() => {
@@ -577,7 +577,8 @@ function createParticle(x, y) {
                     allPlayersStats[1].rating = message.rating[1]
                     allPlayersStats[2].time = message.time
                     setPlayersInfos(allPlayersStats)
-                } else if (type === "playersInfos")
+                }
+                else if (type === "playersInfos")
                     setPlayersPics(message.users)
                 else if (type === 'hmed') {
 					console.log("hmed received")

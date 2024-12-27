@@ -14,7 +14,6 @@ const client = axios.create({
 
 function ForgotPassword() {
 
-
 	const [data, setData] = useState({
 		email: ''
 	});

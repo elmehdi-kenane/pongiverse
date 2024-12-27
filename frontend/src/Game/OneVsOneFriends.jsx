@@ -26,21 +26,21 @@ const OneVsOneFriends = () => {
 	let { privateCheckAuth, socket, user,
 		socketRecreated, setSocketRecreated,
 		userImg, loading, allGameFriends,
-		userImages, setAllGameFriends, notifSocket } = useContext(AuthContext)
+		userImages, setAllGameFriends, notifSocket, userLevel } = useContext(AuthContext)
 	const allGameFriendsRef = useRef(allGameFriends);
 
 	let isOut = false
 	const userRef = useRef(user)
-    const roomIdRef = useRef(tmpRoomID)
-    const socketRef = useRef(socket)
+	const roomIdRef = useRef(tmpRoomID)
+	const socketRef = useRef(socket)
 
 	// let checked = false
 
-    useEffect(() => {
-        privateCheckAuth()
-    }, [])
+	useEffect(() => {
+		privateCheckAuth()
+	}, [])
 
-    useEffect(() => {
+	useEffect(() => {
 		if (socket && socket.readyState === WebSocket.OPEN && user) {
 			console.log("CHECKING IF PLAYER IN ROOM", socket, user)
 			// checked = true
@@ -64,11 +64,11 @@ const OneVsOneFriends = () => {
 				if (type === 'roomAlreadyStarted') {
 					setAllSet(true)
 					if (message.mode === '1vs1')
-                        navigate(`../play/1vs1/${message.roomID}`)
-                    else if (message.mode === '2vs2') 
-                        navigate(`../play/2vs2/${message.roomID}`)
-                    else
-                        navigate("../game/createtournament")
+						navigate(`../play/1vs1/${message.roomID}`)
+					else if (message.mode === '2vs2')
+						navigate(`../play/2vs2/${message.roomID}`)
+					else
+						navigate("../game/createtournament")
 				} else if (type === "gameReady") {
 					console.log("inside gameReady")
 					console.log(message.avatars)
@@ -91,7 +91,6 @@ const OneVsOneFriends = () => {
 					setRoomID(message.room.id)
 					setLoadMatch(false)
 					setAllSet(true)
-					console.log("ALL SET BROTHER")
 				} else if (type === "playersReady") {
 					console.log("inside playersReady")
 					setLoadMatch(false)
@@ -100,12 +99,15 @@ const OneVsOneFriends = () => {
 					console.log("inside playerNo")
 					setPlayerNo(message.playerNo)
 					setTmpRoomID(message.id)
+					console.log("*******************ALL SET BROTHER 1")
 					setGameStarted(true)
+					setLoadMatch(true)
 				} else if (type === 'alreadySearching') {
 					console.log("inside alreadySearching")
 					setPlayerNo(message.playerNo)
 					setTmpRoomID(message.id)
 					setGameStarted(true)
+					console.log("*******************ALL SET BROTHER 2")
 					setLoadMatch(true)
 				} else if (type === 'playingStatus') {
 					const currentAllGameFriends = allGameFriendsRef.current;
@@ -118,8 +120,8 @@ const OneVsOneFriends = () => {
 					}
 				} else if (type === 'hmed') {
 					console.log("hmed received")
-                    socket.close()
-                }
+					socket.close()
+				}
 			}
 		}
 
@@ -131,7 +133,8 @@ const OneVsOneFriends = () => {
 			}, 2000);
 		}
 
-	}, [socket, allSet, roomID, tmpRoomID])
+	}, [
+		, allSet, roomID, tmpRoomID])
 
 	useEffect(() => {
 		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
@@ -141,10 +144,14 @@ const OneVsOneFriends = () => {
 				let message = data.message
 				console.log('========', type, '========')
 				if (type === 'connected_again') {
+					console.log("****IS A FRIEND:", message.is_a_friend);
 					const currentAllGameFriends = allGameFriendsRef.current;
-					const userExists = currentAllGameFriends.some(friend => friend.name === message.user)
+					console.log("*******IWA YAHAMIIIIID:", message.user)
+					if (message.is_a_friend === true) {
+						const userExists = currentAllGameFriends.some(friend => friend.name === message.user)
 						if (!userExists)
 							setAllGameFriends([...currentAllGameFriends, message.userInfos])
+					}
 				} else if (type === 'user_disconnected') {
 					const currentAllGameFriends = allGameFriendsRef.current;
 					console.log("user disconnected : ", allGameFriends)
@@ -196,6 +203,9 @@ const OneVsOneFriends = () => {
 			}))
 			setSelectedFriends([...selectedFriends, friend])
 			setTimeout(() => {
+				console.log(
+					"selected friends : ", selectedFriends, "remove friend : ", friend
+				);
 				setSelectedFriends(selectedFriends.filter(selectedFriend => selectedFriend !== friend))
 			}, 2000);
 			setGameStarted(true)
@@ -209,55 +219,55 @@ const OneVsOneFriends = () => {
 	}
 
 	useEffect(() => {
-        return () => {
-            if (isOut) {
-                const user = userRef.current
-                const socket = socketRef.current
-                const roomID = roomIdRef.current
-                console.log("USER IS GETTING OUT ", user, roomID, socket)
-                if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
-                    socket.send(JSON.stringify({
-                        type: 'quit',
-                        message: {
-                            user: user,
-                            id: roomID
-                        }
-                    }))
-                }
-            } else
-                isOut = true
-        }
-    }, [])
+		return () => {
+			if (isOut) {
+				const user = userRef.current
+				const socket = socketRef.current
+				const roomID = roomIdRef.current
+				console.log("USER IS GETTING OUT ", user, roomID, socket)
+				if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
+					socket.send(JSON.stringify({
+						type: 'quit',
+						message: {
+							user: user,
+							id: roomID
+						}
+					}))
+				}
+			} else
+				isOut = true
+		}
+	}, [])
 
 	useEffect(() => {
-        const handleBeforeUnload = (event) => {
-            const user = userRef.current
-            const socket = socketRef.current
-            const roomID = roomIdRef.current
-            console.log("INSIDE THE MATCH : ", user, roomID, socket)
-            if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
-                socket.send(JSON.stringify({
-                    type: 'quit',
-                    message: {
-                        user: user,
-                        id: roomID
-                    }
-                }))
-            }
-        }
-        window.addEventListener('beforeunload', handleBeforeUnload)
-        return () => {
-            window.removeEventListener('beforeunload', handleBeforeUnload)
-        }
-    }, [])
+		const handleBeforeUnload = (event) => {
+			const user = userRef.current
+			const socket = socketRef.current
+			const roomID = roomIdRef.current
+			console.log("INSIDE THE MATCH : ", user, roomID, socket)
+			if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
+				socket.send(JSON.stringify({
+					type: 'quit',
+					message: {
+						user: user,
+						id: roomID
+					}
+				}))
+			}
+		}
+		window.addEventListener('beforeunload', handleBeforeUnload)
+		return () => {
+			window.removeEventListener('beforeunload', handleBeforeUnload)
+		}
+	}, [])
 
 	return (
 		<div className='onevsone'>
 			<div className='onevsone-dashboard'>
 				<div className='onevsone-dashboard-opponents'>
 					<div className='onevsone-invite-friends' ref={friendsSection}>
-						<div onClick={expandFriendsList} style={{display: 'flex', flexDirection: 'row', cursor: 'pointer', position: 'relative'}}>
-							<img src={Icons.gameInvite} alt="" style={{width: '20%', paddingLeft: '5px'}} />
+						<div onClick={expandFriendsList} style={{ display: 'flex', flexDirection: 'row', cursor: 'pointer', position: 'relative' }}>
+							<img src={Icons.gameInvite} alt="" style={{ width: '20%', paddingLeft: '5px' }} />
 							<div className='invite-friends-button'>invite friend</div>
 						</div>
 					</div>
@@ -266,7 +276,7 @@ const OneVsOneFriends = () => {
 							return (<div key={user.id} className='game-friend-list'>
 								<div className='game-friend-profile'>
 									<div>
-										<img src={user.image}/>
+										<img src={user.image} />
 									</div>
 									<div>
 										<p>{user.name}</p>
@@ -275,9 +285,9 @@ const OneVsOneFriends = () => {
 								</div>
 								<div ref={inviteFriend} className={(!selectedFriends.includes(user.name)) ? 'game-friend-invite' : 'game-friend-waiting'} onClick={() => ((!selectedFriends.includes(user.name)) ? inviteNewFriend(user.name) : '')}>
 									{(!selectedFriends.includes(user.name) && (<>
-										<img src={Icons.console} alt="game"/>
+										<img src={Icons.console} alt="game" />
 										Invite
-									</>)) || (selectedFriends.includes(user.name) && (<img src={Icons.waitClock} alt="game"/>))}
+									</>)) || (selectedFriends.includes(user.name) && (<img src={Icons.waitClock} alt="game" />))}
 								</div>
 							</div>)
 						}) : (!allGameFriends.length && !loading) ? (
@@ -286,38 +296,38 @@ const OneVsOneFriends = () => {
 							</div>
 						) : (
 							<div className='game-friend-loading'>
-								<img src={Icons.loading} alt="game"/>
+								<img src={Icons.loading} alt="game" />
 							</div>
 						)}
 					</div>)}
 					<div className='onevsone-dashboard-opponent'>
 						<div>
-							<img src={userImg} alt="profile-pic" style={{borderRadius: '50%'}} />
+							<img src={userImg} alt="profile-pic" style={{ borderRadius: '50%' }} />
 						</div>
 						{/* {enemyInfos && (<div className='onevsone-opponent-infos'>
 							<p>mmaqbour</p>
 							<p>level 6.5</p>
 						</div>)} */}
 						<div className='onevsone-opponent-infos'>
-							<p>mmaqbour</p>
-							<p>level 6.5</p>
+							<p>{user}</p>
+							<p>level {userLevel}</p>
 						</div>
 					</div>
 					<div className={(!allSet && loadMatch) ? 'onevsone-dashboard-logo onevsone-dashboard-logo-loading' : 'onevsone-dashboard-logo'} >
-					{(!loadMatch && allSet) ? (<img id='versus-logo' src={Icons.versus} alt="profile-pic" />) : (loadMatch && !allSet) ? (
-						<>
-							<div id='paddle-1' ></div>
-							<div id='net' ></div>
-							<div id='ball' ></div>
-							<div id='paddle-2' ></div>
-						</>
-					) : ''}
+						{(!loadMatch && allSet) ? (<img id='versus-logo' src={Icons.versus} alt="profile-pic" />) : (loadMatch && !allSet) ? (
+							<>
+								<div id='paddle-1' ></div>
+								<div id='net' ></div>
+								<div id='ball' ></div>
+								<div id='paddle-2' ></div>
+							</>
+						) : ''}
 					</div>
 					<div className='onevsone-dashboard-opponent'>
 						{enemyInfos ? (
 							<>
 								<div>
-									<img src={enemyInfos.avatar} alt="profile-pic" style={{borderRadius: '50%'}} />
+									<img src={enemyInfos.avatar} alt="profile-pic" style={{ borderRadius: '50%' }} />
 								</div>
 								<div className='onevsone-opponent-infos'>
 									<p>{enemyInfos.name}</p>
@@ -327,7 +337,7 @@ const OneVsOneFriends = () => {
 						) : (
 							<>
 								<div>
-									<img src={randomPic} alt="profile-pic"/>
+									<img src={randomPic} alt="profile-pic" />
 									{/* <img src={Icons.profilepic} alt="profile-pic"/> */}
 								</div>
 								<div className={'onevsone-opponent-infos-none'}>

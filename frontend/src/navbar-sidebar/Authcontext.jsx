@@ -5,6 +5,8 @@ import { friends } from "../assets/navbar-sidebar";
 import * as Icons from "../assets/navbar-sidebar";
 import { useReducer } from "react";
 
+import userPc from "../Settings/assets/Group.svg";
+
 const AuthContext = createContext();
 
 export default AuthContext;
@@ -15,6 +17,7 @@ export const AuthProvider = ({ children }) => {
 	const [allGameFriends, setAllGameFriends] = useState([]);
 	const [userImages, setUserImages] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const [userLevel, setUserLevel] = useState(null)
 	// const [gameNotif, setGameNotif] = useState(false)
 	let [user, setUser] = useState("");
 	let [userImg, setUserImg] = useState("");
@@ -48,7 +51,7 @@ export const AuthProvider = ({ children }) => {
 	let [hideNavSideBar, setHideNavSideBar] = useState(false);
 	let [gameCustomize, setGameCustomize] = useState([
 		"#FFFFFF",
-		"#1C00C3",
+		"#C100BA",
 		"#5241AB",
 		false,
 	]);
@@ -62,7 +65,6 @@ export const AuthProvider = ({ children }) => {
 	const [chatNotificationCounter, setChatNotificationCounter] = useState(0);
 	const RoomsInvitationRef = useRef(null);
 	const chatNotificationRef = useRef(null);
-
 
 	useEffect(() => {
 		RoomsInvitationRef.current = chatRoomInvitationsCounter;
@@ -87,10 +89,6 @@ export const AuthProvider = ({ children }) => {
 	}, [socket])
 
 	useEffect(() => {
-	}, [allGameNotifs])
-
-
-	useEffect(() => {
 		const getAllGameFriends = async () => {
 			try {
 				let response = await fetch(
@@ -107,6 +105,7 @@ export const AuthProvider = ({ children }) => {
 					}
 				);
 				let friends = await response.json();
+				console.log("hellooo   ", friends.message)
 				if (friends.message.length) setAllGameFriends(friends.message);
 				setLoading(false);
 			} catch (e) {
@@ -249,7 +248,6 @@ export const AuthProvider = ({ children }) => {
 				if (!data.error) {
 					(data.mode === 'tournament') ? navigate('mainpage/game/createtournament') : (data.mode === '1vs1') ? navigate('/mainpage/game/solo/1vs1/random') : navigate('/mainpage/game/solo/2vs2/random')
 				}
-
 			} catch (error) {
 				console.error(
 					"There has been a problem with your fetch operation:",
@@ -515,6 +513,7 @@ export const AuthProvider = ({ children }) => {
 
 	let contextData = {
 		user: user,
+		userLevel: userLevel,
 		setUser: setUser,
 		publicCheckAuth: publicCheckAuth,
 		privateCheckAuth: privateCheckAuth,

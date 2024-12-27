@@ -9,7 +9,7 @@ from rest_framework_simplejwt.exceptions import TokenError
 import datetime
 from friends.models import Friendship
 from myapp.models import customuser
-from .models import Match, ActiveMatch, PlayerState, Tournament, TournamentMembers, Round, TournamentUserInfo, TournamentWarnNotifications, DisplayOpponent, GameNotifications
+from .models import Match, ActiveMatch, PlayerState, Tournament, TournamentMembers, Round, TournamentUserInfo, TournamentWarnNotifications, DisplayOpponent, GameNotifications, UserMatchStatics
 from asgiref.sync import sync_to_async
 from channels.layers import get_channel_layer
 from channels.generic.websocket import AsyncWebsocketConsumer
@@ -368,6 +368,7 @@ async def invite_friend(self, data):
 		if channel_name_list:
 			for channel_name in channel_name_list:
 				if channel_name:
+						usermatchstats = await sync_to_async(UserMatchStatics.objects.filter(player=sender).first)()
 						await self.channel_layer.send(
 									channel_name,
 									{
@@ -375,6 +376,7 @@ async def invite_friend(self, data):
 										'message': {
 											'tournament_id' : tournament_id,
 											'user' : sender_user,
+											'level' : usermatchstats.level,
 											'image' : f"http://{ip_address}:8000/auth{sender.avatar.url}",
 											'roomID' : '',
 											'mode' : 'TournamentInvitation'

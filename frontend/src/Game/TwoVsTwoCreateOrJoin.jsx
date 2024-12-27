@@ -34,7 +34,7 @@ const TwoVsTwoCreateOrJoin = () => {
     const navigate = useNavigate()
     let { privateCheckAuth, socket, user,
         socketRecreated, setSocketRecreated,
-        userImg, loading } = useContext(AuthContext)
+        userImg, loading, userLevel } = useContext(AuthContext)
 
     let isOut = false
     const userRef = useRef(user)
@@ -435,8 +435,8 @@ const TwoVsTwoCreateOrJoin = () => {
                         <div className='twovstwo-dashboard-player' >
                             <div><img src={userImg} alt="profile-pic" /></div>
                             <div className='twovstwo-opponent-infos'>
-                                <p>mmaqbour</p>
-                                <p>level 6.5</p>
+                                <p>{user}</p>
+                                <p>level {userLevel}</p>
                             </div>
                         </div>
                         {temmateInfos ? (

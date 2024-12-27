@@ -8,12 +8,38 @@ import { PiNumberSquareTwoFill } from "react-icons/pi";
 const OneVsOneStats = (props) => {
     const navigate = useNavigate()
 
+    const profileImgClick = (name) => name && navigate(`/mainpage/profile/${name}`)
+
     const exitOneVsOneGame = () => navigate('../game/solo/1vs1')
 
     return (
         <div className='onevsone' style={{ position: 'relative', marginBottom: props.mode === 'offline' ? '100px' : '' }} >
-            {(
+            {(props.mode === 'online') ? ((props.gameFinished && props.user === props.userName1) ? ((props.playersInfos[0].totalScore > props.playersInfos[1].totalScore) ? (
                 <>
+                    <div className='winner_cup' >
+                        <img src={Icons.winnerCup} alt="winner cup" />
+                    </div>
+                    <p className='winner_congrats' >WINNER WINNER CHICKEN DINNER!</p>
+                </>
+            ) : (
+                <p className='loser_support' >BETTER LUCK NEXT TIME!</p>
+            )) : (props.gameFinished && props.user === props.userName2) ? ((props.playersInfos[1].totalScore > props.playersInfos[0].totalScore) ? (
+                <>
+                    <div className='winner_cup' >
+                        <img src={Icons.winnerCup} alt="winner cup" />
+                    </div>
+                    <p className='winner_congrats' >WINNER WINNER CHICKEN DINNER!</p>
+                </>
+            ) : (
+                <p className='loser_support' >BETTER LUCK NEXT TIME!</p>
+            )) : (
+                <p className='loser_support' >GAME ABORTED!</p>
+            )) : (
+                <>
+                    {/* <div className='match-ended' ></div> */}
+                    {/* <div className='winner_cup' >
+                        <img src={Icons.winnerCup} alt="winner cup" />
+                    </div> */}
                     <p className='loser_support' >
                         Great game! {(props.playersInfos[0].totalScore > props.playersInfos[1].totalScore) ? props.userName1 : props.userName2} 🎮🔥 👑🎉
                     </p>
@@ -22,13 +48,13 @@ const OneVsOneStats = (props) => {
             <div className='gameStats_container' >
                 <div className='gameStats_playerInfos' >
                     <div className='gameStats_playerInfos-details' >
-                        <div >
-                            <PiNumberSquareOneFill size={60}/>
+                        <div onClick={() => { (props.mode === 'online') ? profileImgClick(props.userName1) : undefined }} >
+                            {(props.mode === 'online') ? (props.playersPics.length ? (<img src={props.playersPics[0].avatar} alt="" />) : (<img src={Icons.solidGrey} alt="" />)) : <PiNumberSquareOneFill size={60} />}
                             <p>{props.userName1}</p>
                         </div>
-                        <div>
+                        <div onClick={() => {(props.mode === 'online') ? profileImgClick(props.userName2) : undefined}} >
                             <p>{props.userName2}</p>
-                            {<PiNumberSquareTwoFill size={60}/>}
+                            {(props.mode === 'online') ? (props.playersPics.length ? (<img src={props.playersPics[1].avatar} alt="" />) : (<img src={Icons.solidGrey} alt="" />)) : <PiNumberSquareTwoFill size={60} />}
                         </div>
                     </div>
                 </div>
@@ -56,13 +82,13 @@ const OneVsOneStats = (props) => {
                 <div className='gameStats_details' >
                     <div>
                         {(props.playersInfos[0].hit) ?
-                            (<p>{Math.floor((props.playersInfos[0].score / props.playersInfos[0].hit) * 100)}%</p>) :
-                            (<p>0%</p>)
+                        (<p>{Math.floor((props.playersInfos[0].score / props.playersInfos[0].hit ) * 100)}%</p>) :
+                        (<p>0%</p>)
                         }
                         <p>Accuracy</p>
                         {(props.playersInfos[1].hit) ?
-                            (<p>{Math.floor((props.playersInfos[1].score / props.playersInfos[1].hit) * 100)}%</p>) :
-                            (<p>0%</p>)
+                        (<p>{Math.floor((props.playersInfos[1].score / props.playersInfos[1].hit ) * 100)}%</p>) :
+                        (<p>0%</p>)
                         }
                     </div>
                 </div>

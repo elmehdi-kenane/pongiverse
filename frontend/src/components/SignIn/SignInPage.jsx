@@ -16,7 +16,6 @@ function SignInPage() {
 	const navigate = useNavigate();
 	const { publicCheckAuth } = useContext(AuthContext)
 
-
 	useEffect(() => {
 		publicCheckAuth()
 	}, [])

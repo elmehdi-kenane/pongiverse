@@ -110,7 +110,9 @@ const ChatRoomConversation = ({
             import.meta.env.VITE_IPADDRESS
           }:8000/chatAPI/chatRoom/messages/${
             selectedChatRoom.id
-          }?page=${currentChatRoomMessagesPage}`
+          }?page=${currentChatRoomMessagesPage}`, {
+            credentials: "include",
+          }
         );
         if (response.ok) {
           const { next, results } = await response.json();

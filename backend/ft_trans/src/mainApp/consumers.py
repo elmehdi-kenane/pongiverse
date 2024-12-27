@@ -71,7 +71,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		elif data['type'] == 'playerMovedOutMp': await gameMultiplayerConsumers.moved_out_mp(self, data, rooms)    #### 2V2
 		elif data['type'] == 'userExitedMp': await gameMultiplayerConsumers.user_exited_mp(self, data, rooms)    #### 2V2
 		elif data['type'] == 'inviteFriendGameMp': await gameMultiplayerConsumers.invite_friend_mp(self, data, rooms, user_channels)
-		elif data['type'] == 'acceptInvitationMp': await gameMultiplayerConsumers.accept_game_invite_mp(self, data, rooms, user_channels)
+		# elif data['type'] == 'acceptInvitationMp': await gameMultiplayerConsumers.accept_game_invite_mp(self, data, rooms, user_channels)
 		elif data['type'] == 'createRoomMp': await gameMultiplayerConsumers.create_new_room_mp(self, data, rooms, user_channels)
 		elif data['type'] == 'checkingRoomCodeMp': await gameMultiplayerConsumers.join_new_room_mp(self, data, rooms, user_channels)
 		elif data['type'] == 'createTournament': await tournament_consumers.create_tournament(self, data, user_channels)

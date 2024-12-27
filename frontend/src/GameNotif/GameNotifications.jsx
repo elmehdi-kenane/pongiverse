@@ -55,7 +55,9 @@ const GameNotifications = (props) => {
   //     } else console.log("unknown notif type");
   //   }
   // }, [dataSocket?.message.to_user, dataSocket?.type]);
-
+  useEffect(()=> {
+    console.log("****: ", allGameNotifs)
+  },[allGameNotifs])
 
   const notify = () => {
     setNewReceivedFriendReqNotif(false);
@@ -90,11 +92,12 @@ const GameNotifications = (props) => {
     let notifSelected = allGameNotifs.filter(
       (user) => user.user === creator.user
     );
-    setAllGameNotifs(
-      allGameNotifs.filter((user) => user.user !== creator.user)
+    // console.log("****AL GAME NOTT: ", allGameNotifs.filter((user) => ((user?.tournament_id && user.tournament_id !== creator.tournament_id) || (user.roomID !== creator.roomID))))
+    setAllGameNotifs((prevAllGameNotifs) => 
+      prevAllGameNotifs.filter((user) => ((user?.tournament_id && user.tournament_id !== creator.tournament_id) || (user.roomID !== creator.roomID)))
     );
     if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
-      if (creator.mode === "1vs1") {
+      if (creator.mode === "1vs1" || creator.mode === "2vs2") {
         notifSocket.send(
           JSON.stringify({
             type: "refuseInvitation",
@@ -123,8 +126,7 @@ const GameNotifications = (props) => {
   useEffect(() => {
     const getTournamentWarning = async () => {
       const response = await fetch(
-        `http://${
-          import.meta.env.VITE_IPADDRESS
+        `http://${import.meta.env.VITE_IPADDRESS
         }:8000/api/get-tournament-warning`,
         {
           method: "POST",
@@ -170,6 +172,9 @@ const GameNotifications = (props) => {
     let notifSelected = allGameNotifs.filter(
       (user) => user.user === sender.user
     );
+    setAllGameNotifs((prevAllGameNotifs) =>
+      prevAllGameNotifs.filter((user) => ((user?.tournament_id && user.tournament_id !== sender.tournament_id) || (user.roomID !== sender.roomID)))
+    );
     if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
       if (sender.mode === "1vs1") {
         console.log("YES!");
@@ -183,11 +188,20 @@ const GameNotifications = (props) => {
             },
           })
         );
+      } else if (sender.mode === "2vs2") {
+        notifSocket.send(
+          JSON.stringify({
+            type: "acceptInvitationMp",
+            message: {
+              user: notifSelected[0].user,
+              target: user,
+              roomID: notifSelected[0].roomID,
+            },
+          })
+        );
       } else if (sender.mode === "TournamentInvitation") {
-        console.log("YES1!");
         const response = await fetch(
-          `http://${
-            import.meta.env.VITE_IPADDRESS
+          `http://${import.meta.env.VITE_IPADDRESS
           }:8000/api/get-tournament-size`,
           {
             method: "POST",
@@ -205,7 +219,6 @@ const GameNotifications = (props) => {
           const data = await response.json();
           console.log("******Case", data.Case);
           if (data.Case === "Tournament_does_not_exist") {
-            removeNotification(sender.tournament_id, user);
             notifyError("Tournament does not exist");
           } else if (data.Case === "User_is_in_tournament")
             navigate("/mainpage/game/createtournament");
@@ -244,7 +257,7 @@ const GameNotifications = (props) => {
     }
   };
 
-  const removeNotification = (tournament_id, user) => {
+  const removeNotification = (tournament_id, user, mode) => {
     setAllGameNotifs((prevGameNotif) =>
       prevGameNotif.filter(
         (notif) => notif.tournament_id === tournament_id && notif.user === user
@@ -256,11 +269,15 @@ const GameNotifications = (props) => {
     if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
       notifSocket.onmessage = (event) => {
         let data = JSON.parse(event.data);
-        console.log("DATA", data);
-        // setDataSocket(data);
         let type = data.type;
         let message = data.message;
-        console.log("MESSAGE TYPE", type);
+        const friendsData =
+        {
+          message: message,
+          type: type,
+        };
+        if (props.setData)
+          props.setData(friendsData)
         if (type === "goToGamingPage") {
           // console.log("navigating now")
           // navigate(`/mainpage/game/solo/1vs1/friends`)
@@ -320,11 +337,7 @@ const GameNotifications = (props) => {
             if (!isDuplicate) return [...prevGameNotif, message];
             return prevGameNotif;
           });
-        } else if (type === "deny_tournament_invitation") {
-          setAllGameNotifs(
-            allGameNotifs.filter((user) => user.user !== message.user)
-          );
-        } else if (type === "remove_tournament_notif") {
+        }else if (type === "remove_tournament_notif") {
           removeNotification(message.tournament_id, message.user);
         } else if (type === "connected_again") {
           const userConnected = data.message.user;
@@ -337,6 +350,7 @@ const GameNotifications = (props) => {
             props.setUserIsOnline(false);
           }
         } else if (type === "receive-friend-request") {
+          console.log("**************GAME NOTIFFF")
           setNewReceivedFriendReqNotif(true);
           setRemoveFriendReqNotif(false);
           setFriendReq(message);
@@ -383,12 +397,25 @@ const GameNotifications = (props) => {
                   <img src={user.image} alt="profile-pic" />
                   <div className="user-infos">
                     <span>{user.user}</span>
-                    <span>level 2.5</span>
+                    <span>{user.level}</span>
                   </div>
                   <div className="invitation-mode">
-                    <span>1</span>
-                    <span>vs</span>
-                    <span>1</span>
+                    {
+                      (user.mode === '1vs1') ?
+                        <>
+                          <span>1</span>
+                          <span>vs</span>
+                          <span>1</span>
+                        </>
+                        : (user.mode === '2vs2') ?
+                          <>
+                            <span>2</span>
+                            <span>vs</span>
+                            <span>2</span>
+                          </> : <>
+                            <span>Cup</span>
+                          </>
+                    }
                   </div>
                   <div className="accept-refuse">
                     <div onClick={() => acceptInvitation(user)}>

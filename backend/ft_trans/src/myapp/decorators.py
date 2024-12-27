@@ -18,7 +18,6 @@ def authentication_required(view_func):
 		try:
 			refresh_token = request.COOKIES.get('refresh_token')
 			if not refresh_token:
-				print("************HNA 1")
 				response = JsonResponse({"Case": "Invalid token"}, status=401)
 				response.delete_cookie('access_token')
 				response.delete_cookie('refresh_token')
@@ -27,7 +26,6 @@ def authentication_required(view_func):
 			data = decoded_token.payload
 			user_id = data['user_id']
 		except TokenError:
-			print("************HNA 2")
 			response = JsonResponse({"Case": "Invalid token"}, status=401)
 			response.delete_cookie('access_token')
 			response.delete_cookie('refresh_token')
@@ -46,7 +44,6 @@ def authentication_required(view_func):
 					response = view_func(request, *args, **kwargs)
 					response.set_cookie('access_token', tokens['access'], httponly=True)
 					return response
-			print("************HNA 3")
 			response = JsonResponse({"Case": "Invalid token"}, status=401)
 			response.delete_cookie('access_token')
 			response.delete_cookie('refresh_token')

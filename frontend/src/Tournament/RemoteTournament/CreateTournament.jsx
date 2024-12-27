@@ -274,6 +274,7 @@ function CreateTournament() {
 						setAllGameFriends(currentAllGameFriends.filter(user => user.name !== data.message.user))
 					}
 				} else if (type === 'playingStatus') {
+					console.log("*****WAS HEEEEEREE")
 					if (data.message.is_playing === false) {
 						const currentAllGameFriends = allGameFriendsRef.current;
 						const userExists = currentAllGameFriends.some(friend => friend.name === message.userInfos.name)
@@ -312,6 +313,7 @@ function CreateTournament() {
 				} else if (type === 'connected_again') {
                     console.log("****IS A FRIEND:", message.is_a_friend);
 					const currentAllGameFriends = allGameFriendsRef.current;
+					console.log("*******IWA YAHAMIIIIID:", message.user)
                     if (message.is_a_friend === true) {
                         const userExists = currentAllGameFriends.some(friend => friend.name === message.user)
                         if (!userExists)
@@ -425,7 +427,6 @@ function CreateTournament() {
 			</div>
 		);
 	}
-
 	return (
 		<>
 			<div className={styles["tournament-page"]}>

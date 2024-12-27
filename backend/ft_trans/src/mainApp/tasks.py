@@ -137,16 +137,27 @@ async def save_tournament_to_db(tournament_id):
 					await sync_to_async(tournamentuserinfo.save)()
 		tournaments.pop(tournament_id)
 
+async def discard_channels_from_tournament_group(self, player, tournament_id):
+	group_name = f'tournament_{tournament_id}'
+	channel_name = user_channels.get(player.id)
+	channel_name_notif_list = notifs_user_channels.get(player.id)
+	if channel_name:
+		await self.channel_layer.group_discard(group_name, channel_name)
+	if channel_name_notif_list:
+		for channel_name in channel_name_notif_list:
+			await self.channel_layer.group_discard(group_name, channel_name)
+
 
 async def send_user_eliminated_after_delay(self, tournament_id, actual_round):
 	ip_address = os.getenv("IP_ADDRESS")
 	rounds = ['QUARTERFINAL', 'SEMIFINAL', 'FINAL', 'WINNER']
 	next_round = ''
 	if actual_round == 'WINNER':
+		await save_tournament_to_db(tournament_id)
 		for member in tournaments[tournament_id]['rounds'][actual_round]:
 			if member['username'] != 'anounymous':
-				await save_tournament_to_db(tournament_id)
 				my_user = await sync_to_async(customuser.objects.get)(username=member['username'])
+				await discard_channels_from_tournament_group(self, my_user, tournament_id)
 				channel_name_list = notifs_user_channels.get(my_user.id)
 				if channel_name_list:
 					for channel_name in channel_name_list:
@@ -213,7 +224,6 @@ async def send_user_eliminated_after_delay(self, tournament_id, actual_round):
 								}
 							)
 				await send_playing_status_to_friends(self,user, False, user_channels )
-	
 	await asyncio.sleep(2)
 	if next_round:
 		for i in range(0, len(members), 2):
@@ -257,6 +267,8 @@ async def send_user_eliminated_after_delay(self, tournament_id, actual_round):
 						# tournamentuserinfo = TournamentUserInfo(round=round, user=None, position=(player_position + 1)/2)
 						tournaments[tournament_id]['rounds'][next_round].append({'username': 'anounymous', 'position': (player_position + 1) / 2})
 					# await sync_to_async(tournamentuserinfo.save)()
+					await discard_channels_from_tournament_group(self, player1, tournament_id)
+					await discard_channels_from_tournament_group(self, player2, tournament_id)
 					await send_player_winner(self, tournament_id, 'anounymous', next_round, player_position)
 				elif is_eliminated1 == True:
 					player_position = get_player_position(tournament_id, member_user2, actual_round)
@@ -267,6 +279,7 @@ async def send_user_eliminated_after_delay(self, tournament_id, actual_round):
 						# tournamentuserinfo = TournamentUserInfo(round=round, user=member_user2, position=(player_position + 1)/2)
 						tournaments[tournament_id]['rounds'][next_round].append({'username': member_user2, 'position': (player_position + 1) / 2})
 					# await sync_to_async(tournamentuserinfo.save)()
+					await discard_channels_from_tournament_group(self, player1, tournament_id)
 					await send_player_winner(self, tournament_id, member_user2, next_round, player_position)
 				elif is_eliminated2 == True:
 					player_position = get_player_position(tournament_id, member_user1, actual_round)
@@ -277,6 +290,7 @@ async def send_user_eliminated_after_delay(self, tournament_id, actual_round):
 						# tournamentuserinfo = TournamentUserInfo(round=round, user=member_user1, position=(player_position + 1)/2)
 						tournaments[tournament_id]['rounds'][next_round].append({'username': member_user1, 'position': (player_position + 1) / 2})
 					# await sync_to_async(tournamentuserinfo.save)()
+					await discard_channels_from_tournament_group(self, player2, tournament_id)
 					await send_player_winner(self, tournament_id, member_user1, next_round, player_position)
 				elif is_eliminated1 == False and is_eliminated2 == False:
 					displayoponent = DisplayOpponent(user1=member_user1, user2=member_user2)
