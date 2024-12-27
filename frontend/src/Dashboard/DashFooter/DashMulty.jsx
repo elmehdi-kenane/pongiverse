@@ -45,7 +45,6 @@ function DashMulty() {
           );
           const res = await response.json();
           if (response.ok) {
-            console.log("##### data", res.userMatches);
             setMatches([...matches, ...res.userMatches]);
             !res.hasMoreMatches && setLimit(index);
           } else 
@@ -80,7 +79,6 @@ function DashMulty() {
     const MatchesResults = () => {
       const { setMultyId } = useContext(DashboardContext);
       const showMatchResult = (matchId) => {
-        // console.log("##### ", matchId);
         setMultyId(matchId)
         setIsGameStats(true);
       }

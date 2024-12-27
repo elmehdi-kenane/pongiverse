@@ -971,24 +971,20 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 							player3_rating = 0
 							player4_rating = 0
 					await sync_to_async(MatchStatistics.objects.create)(
-							match=match,
-							team1_player1_score=room['players'][0]['self_scored'],
-							team1_player2_score=room['players'][1]['self_scored'],
-							team2_player1_score=room['players'][2]['self_scored'],
-							team2_player2_score=room['players'][3]['self_scored'],
-							team1_player1_hit=room['players'][0]['total_hit'],
-							team1_player2_hit=room['players'][1]['total_hit'],
-							team2_player1_hit=room['players'][2]['total_hit'],
-							team2_player2_hit=room['players'][3]['total_hit'],
-							team1_player1_rating=player1_rating,
-							team1_player2_rating=player2_rating,
-							team2_player1_rating=player3_rating,
-							team2_player2_rating=player4_rating,
-							team1_player1_level=player1.level,
-							team1_player2_level=player2.level,
-							team2_player1_level=player3.level,
-							team2_player2_level=player4.level,
-					)
+						match=match,
+						team1_player1_score=room['players'][0]['self_scored'],
+						team1_player2_score=room['players'][1]['self_scored'],
+						team2_player1_score=room['players'][2]['self_scored'],
+						team2_player2_score=room['players'][3]['self_scored'],
+						team1_player1_hit=room['players'][0]['total_hit'],
+						team1_player2_hit=room['players'][1]['total_hit'],
+						team2_player1_hit=room['players'][2]['total_hit'],
+						team2_player2_hit=room['players'][3]['total_hit'],
+						team1_player1_rating=player1_rating,
+						team1_player2_rating=player2_rating,
+						team2_player1_rating=player3_rating,
+						team2_player2_rating=player4_rating,
+                    )
 					if room['status'] == 'finished':
 						player1_match_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=player1).first)()
 						player2_match_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=player2).first)()
@@ -1221,23 +1217,19 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 								player3_rating = (room['players'][2]['self_scored'] * 20) + (room['players'][2]['self_scored'] * 0.5)
 								player4_rating = (room['players'][3]['self_scored'] * 20) + (room['players'][3]['self_scored'] * 0.5)
 						await sync_to_async(MatchStatistics.objects.create)(
-								match=match,
-								team1_player1_score=room['players'][0]['self_scored'],
-								team1_player2_score=room['players'][1]['self_scored'],
-								team2_player1_score=room['players'][2]['self_scored'],
-								team2_player2_score=room['players'][3]['self_scored'],
-								team1_player1_hit=room['players'][0]['total_hit'],
-								team1_player2_hit=room['players'][1]['total_hit'],
-								team2_player1_hit=room['players'][2]['total_hit'],
-								team2_player2_hit=room['players'][3]['total_hit'],
-								team1_player1_rating=player1_rating,
-								team1_player2_rating=player2_rating,
-								team2_player1_rating=player3_rating,
-								team2_player2_rating=player4_rating,
-								team1_player1_level=player1.level,
-								team1_player2_level=player2.level,
-								team2_player1_level=player3.level,
-								team2_player2_level=player4.level,
+							match=match,
+							team1_player1_score=room['players'][0]['self_scored'],
+							team1_player2_score=room['players'][1]['self_scored'],
+							team2_player1_score=room['players'][2]['self_scored'],
+							team2_player2_score=room['players'][3]['self_scored'],
+							team1_player1_hit=room['players'][0]['total_hit'],
+							team1_player2_hit=room['players'][1]['total_hit'],
+							team2_player1_hit=room['players'][2]['total_hit'],
+							team2_player2_hit=room['players'][3]['total_hit'],
+							team1_player1_rating=player1_rating,
+							team1_player2_rating=player2_rating,
+							team2_player1_rating=player3_rating,
+							team2_player2_rating=player4_rating,
 						)
 						player1_match_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=player1).first)()
 						player2_match_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=player2).first)()
@@ -1413,10 +1405,6 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 							team1_player2_rating=player2_rating,
 							team2_player1_rating=player3_rating,
 							team2_player2_rating=player4_rating,
-							team1_player1_level=player1.level,
-							team1_player2_level=player2.level,
-							team2_player1_level=player3.level,
-							team2_player2_level=player4.level,
 						)
 						player1_match_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=player1).first)()
 						player2_match_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=player2).first)()

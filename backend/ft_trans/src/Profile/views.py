@@ -459,9 +459,6 @@ def get_multiplayer_matches(request, username, page):
 def get_multy_match_dtl(request, match_id):
     match = Match.objects.filter(room_id=match_id).first()
     match_stq = MatchStatistics.objects.filter(match=match).first()
-    if not match_stq:
-        print("##### ", match.id)
-
 
     if match and match_stq:
         res_data = {
@@ -617,7 +614,7 @@ def disable_user_tfq(request):
     return Response(data={'error': 'Error disabling user TFQ'}, status=status.HTTP_400_BAD_REQUEST)
 
 #**------- Check OTP for SignIN -------**#
-@authentication_required
+
 @api_view(["POST"])
 def check_user_tfq(request):
     username = request.data.get('user')
