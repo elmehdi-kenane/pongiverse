@@ -9,7 +9,6 @@ import {
 } from "./chatConversationItem";
 import ChatSideBar from "./chatPageSidebar";
 import ChatWindow from "./chatPageWindow";
-import { chat } from "../assets/navbar-sidebar";
 import GameNotifications from '../GameNotif/GameNotifications'
 const Chat = () => {
   const {
@@ -17,8 +16,10 @@ const Chat = () => {
     selectedChatRoomRef,
     selectedDirect,
     selectedChatRoom,
-    socketData,
-    setSelectedDirect
+    setSelectedDirect,
+    setSelectedChatRoom,
+    chatRooms,
+    setChatRooms,
   } = useContext(ChatContext);
 
   const { chatSocket, user } = useContext(AuthContext);
@@ -27,7 +28,7 @@ const Chat = () => {
   const [hasMoreDirects, setHasMoreDirects] = useState(true);
   const [currentDirectPage, setCurrentDirectPage] = useState(1);
   const [directs, setDirects] = useState([]);
-  const [chatRooms, setChatRooms] = useState([]);
+  // const [chatRooms, setChatRooms] = useState([]);
   const [currentChatRoomPage, setCurrentChatRoomPage] = useState(1);
   const [hasMoreChatRooms, setHasMoreChatRooms] = useState(true);
   const chatRoomsListInnerRef = useRef(null);
@@ -140,6 +141,14 @@ const Chat = () => {
         (room) => room.id !== roomId
       );
       setChatRooms(updatedChatRooms);
+      setSelectedChatRoom({
+        id: "",
+        name: "",
+        membersCount: "",
+        icon: "",
+        cover: "",
+        topic: "",
+      });
     };
 
     if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
@@ -188,7 +197,7 @@ const Chat = () => {
         );
         const { next, results } = await response.json();
         if (response.ok) {
-          console.log("RESPONSE: ", response)
+          // console.log("RESPONSE: ", response)
           setDirects((prevConversations) => {
             let allDirects = [...prevConversations, ...results];
             if (Object.values(selectedDirect).every((value) => value !== "")) {
@@ -308,7 +317,7 @@ const Chat = () => {
   return (
     <div className="chat-page">
       <Toaster />
-      <GameNotifications />
+      <GameNotifications setDirects={setDirects} directs={directs}/>
       <div className="chat-container">
         <ChatSideBar
           directs={directs}

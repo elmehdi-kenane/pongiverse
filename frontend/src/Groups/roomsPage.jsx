@@ -21,6 +21,9 @@ const Rooms = () => {
     socketData,
     chatRoomInvitationsRef,
     chatRoomInvitations,
+    setChatRooms,
+    chatRooms,
+    setSelectedChatRoom,
   } = useContext(ChatContext);
   const [myChatRooms, setMyChatRooms] = useState([]);
   const [hasMoreRooms, setHasMoreRooms] = useState(true);
@@ -113,6 +116,20 @@ const Rooms = () => {
     const allMyChatRooms = myChatRooms;
     const updatedRooms = allMyChatRooms.filter((room) => room.id !== roomId);
     setMyChatRooms(updatedRooms);
+    // remmove the chatRooms
+    const currentChatRooms = chatRooms;
+    const updatedChatRooms = currentChatRooms.filter(
+      (room) => room.id !== roomId
+    );
+    setChatRooms(updatedChatRooms);
+    setSelectedChatRoom({
+      id: "",
+      name: "",
+      membersCount: "",
+      icon: "",
+      cover: "",
+      topic: "",
+    });
   };
 
   useEffect(() => {

@@ -13,12 +13,15 @@ export const ChatProvider = ({ child }) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const chatRoomInvitationsRef = useRef(chatRoomInvitations);
   const suggestedChatRoomsRef = useRef(suggestedChatRooms);
+  // const [directs, setDirects] = useState([]);
+  const [chatRooms, setChatRooms] = useState([]);
+
   const [selectedChatRoom, setSelectedChatRoom] = useState({
+    id: "",
     name: "",
     membersCount: "",
     icon: "",
     cover: "",
-    id: "",
     topic: "",
   });
   const [selectedDirect, setSelectedDirect] = useState({
@@ -125,6 +128,8 @@ export const ChatProvider = ({ child }) => {
     setSelectedItem: setSelectedItem,
     suggestedChatRoomsRef: suggestedChatRoomsRef,
     selectedChatRoomRef: selectedChatRoomRef,
+    chatRooms: chatRooms,
+    setChatRooms: setChatRooms,
   };
   return (
     <ChatContext.Provider value={contextData}>{child}</ChatContext.Provider>

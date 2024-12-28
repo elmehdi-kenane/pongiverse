@@ -10,6 +10,8 @@ import toastDrari, { Toaster } from "react-hot-toast";
 import { toast, Bounce } from "react-toastify";
 import NotificationPopupCard from "../navbar-sidebar/NotificationPopupCard";
 import { ImWarning } from "react-icons/im";
+import ChatContext from "../Context/ChatContext";
+
 const GameNotifications = (props) => {
   const [roomID, setRoomID] = useState(null);
   let {
@@ -360,7 +362,12 @@ const GameNotifications = (props) => {
         ) {
           console.log("ROOM INVITATION: ", data);
           setChatRoomInvitationsCounter((prev) => prev + 1);
-        } else console.log("unknown notif type");
+        } else if (data.type === "blocked-friend" && location.pathname === "/mainpage/chat") {
+          const blockedFriend = data.message.second_username;
+          props.setDirects((prev) => prev.filter((direct) => direct.name !== blockedFriend));
+
+        }
+        else console.log("unknown notif type");
       };
     }
   }, [notifSocket, location.pathname]);

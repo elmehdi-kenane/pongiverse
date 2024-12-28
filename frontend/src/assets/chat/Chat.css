@@ -270,6 +270,16 @@ img.empty-chat-icon {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.conversation-avatar:hover {
+  cursor: pointer;
+  opacity: 0.7;
+}
+.conversation-name:hover {
+  text-decoration: underline;
+  cursor: pointer;
+
+  /* transform: scale(1.1); */
+}
 .conversation-info {
   font-size: 12px;
   font-weight: 100;
@@ -368,10 +378,13 @@ img.empty-chat-icon {
   align-items: flex-start;
 }
 .my-message-row-sender-name {
+  cursor: pointer;
   color: #ccc;
   font-size: 13px;
 }
-
+.my-message-row-sender-name:hover {
+  text-decoration: underline;
+}
 .message-content {
   white-space: pre-wrap;
   padding: 10px 15px;
@@ -394,11 +407,16 @@ img.empty-chat-icon {
 }
 .my-message-avatar,
 .other-message-avatar {
+  cursor: pointer;
   width: 32px;
   height: 32px;
   border-radius: 30px;
 }
-
+.my-message-avatar:hover,
+.other-message-avatar:hover {
+  /* opacity: 0.7; */
+  transform: scale(1.1);
+}
 .conversation-controls-container {
   position: relative;
   display: flex;

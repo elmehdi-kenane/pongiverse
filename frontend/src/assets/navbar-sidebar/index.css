@@ -3652,6 +3652,14 @@ body {
     font-size: 10px;
   }
 
+  /*added by abdellah*/
+  .sidebar-notifications {
+    top: 25px;
+    right: 8vw;
+    width: 15px;
+    height: 15px;
+  }
+
   /* .onevsone-pm-infos-stats > div:first-child > p {
         font-size: 2px;
     } */
