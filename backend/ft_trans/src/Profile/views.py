@@ -632,3 +632,17 @@ def check_user_tfq(request):
                 response.data = {"Case" : "Login successfully"}
                 return response
             return Response(data={'Case': 'Wrong otp'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+# @authentication_required
+@api_view(["POST"])
+def report_user(request):
+    reporterUsername = request.data.get("reporterUsername")
+    reportedUsername = request.data.get("reportedUsername")
+    reportMessage = request.data.get("reportMessage")
+    reporter = customuser.objects.filter(username=reporterUsername).first()
+    reported = customuser.objects.filter(username=reportedUsername).first()
+    if reporter and reported:
+        return Response(data={'case': "Valid"}, status=status.HTTP_200_OK)
+    return Response(error={'case': "Not Valid"}, status=status.HTTP_404_NOT_FOUND)
+    

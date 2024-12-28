@@ -23,6 +23,7 @@ urlpatterns = [
     path('CheckFriendship/<str:username>/<str:username2>', views.check_friendship),
     path('getUserDiagram/<str:username>', views.get_user_diagram),
     path('getUserMatches1vs1/<str:username>/<int:page>', views.get_user_games),
+    path('reportUser', views.report_user),
     
     #------ Dashboard ------
     path('getUsersRank/<str:username>', views.get_users_rank),

@@ -340,3 +340,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			'type' : 'you_and_your_user',
 			'message' : event['message']
 		}))
+	async def blocked_friend(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'blocked-friend',
+			'message': event['message']
+		}))
+	
+	async def remove_friendship(self, event):
+		await self.send(text_data=json.dumps({
+			'type': 'remove-friendship',
+			'message': event['message']
+		}))

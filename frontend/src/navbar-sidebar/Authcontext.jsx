@@ -65,8 +65,8 @@ export const AuthProvider = ({ children }) => {
 	const [chatNotificationCounter, setChatNotificationCounter] = useState(0);
 	const RoomsInvitationRef = useRef(null);
 	const chatNotificationRef = useRef(null);
-	const [notifications, setNotifications] = useState([]);
-	const [isNotificationsRead, setIsNotificationsRead] = useState();
+  const [notifications, setNotifications] = useState([]);
+  const [isNotificationsRead, setIsNotificationsRead] = useState();
 
 	useEffect(() => {
 		RoomsInvitationRef.current = chatRoomInvitationsCounter;
@@ -499,18 +499,14 @@ export const AuthProvider = ({ children }) => {
 				}
 			);
 			console.log("DATA: ", response);
-			if (response.ok) {
-				response = await response.json();
-				console.log("RESPONSE: ", response);
-				if (response.Case !== "Invalid token") {
-					setUser(response.data.username);
-				} else {
-					console.log("FAILD TO LOGIN SUCCESSFULY");
-					setUser("");
-					navigate("/signin");
-				}
+			response = await response.json();
+			console.log("RESPONSE: ", response);
+			if (response.Case !== "Invalid token") {
+				setUser(response.data.username);
 			} else {
 				console.log("FAILD TO LOGIN SUCCESSFULY");
+				setUser("");
+				navigate("/signin");
 			}
 		} catch (e) {
 			console.log("something wrong with fetch: ", e);
@@ -535,10 +531,10 @@ export const AuthProvider = ({ children }) => {
 		loading: loading,
 		userImages: userImages,
 		setAllGameNotifs: setAllGameNotifs,
-		notifications: notifications,
-		isNotificationsRead: isNotificationsRead,
-		setNotifications: setNotifications,
-		setIsNotificationsRead: setIsNotificationsRead,
+    notifications: notifications,
+    isNotificationsRead: isNotificationsRead,
+    setNotifications: setNotifications,
+    setIsNotificationsRead: setIsNotificationsRead,
 		allGameNotifs: allGameNotifs,
 		notifsImgs: notifsImgs,
 		gameCustomize: gameCustomize,

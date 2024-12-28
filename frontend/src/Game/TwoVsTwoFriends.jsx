@@ -61,6 +61,7 @@ const TwoVsTwoFriends = () => {
 			socket.onmessage = (event) => {
 				let data = JSON.parse(event.data)
 				let type = data.type
+				console.log("TYYYYPE:", type);
 				let message = data.message
 				if (type === 'roomAlreadyStarted') {
 					console.log("inside roomAlreadyStarted")
@@ -245,6 +246,10 @@ const TwoVsTwoFriends = () => {
 						if (!userExists)
 							setAllGameFriends([...currentAllGameFriends, message.userInfos])
 					}
+				} else if (type === 'blocked-friend' || type === 'remove-friendship') {
+					const currentAllGameFriends = allGameFriendsRef.current;
+					let username = message.second_username
+					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== username))
 				}
 			}
 		}

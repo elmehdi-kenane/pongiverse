@@ -60,6 +60,7 @@ const OneVsOneFriends = () => {
 			socket.onmessage = (event) => {
 				let data = JSON.parse(event.data)
 				let type = data.type
+				console.log("inside onmessage", type);
 				let message = data.message
 				if (type === 'roomAlreadyStarted') {
 					setAllSet(true)
@@ -118,6 +119,10 @@ const OneVsOneFriends = () => {
 				} else if (type === 'hmed') {
 					console.log("hmed received")
 					socket.close()
+				} else if (type === 'blocked-friend' || type === 'remove-friendship') {
+					const currentAllGameFriends = allGameFriendsRef.current;
+					let username = message.second_username
+					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== username))
 				}
 			}
 		}
@@ -201,9 +206,9 @@ const OneVsOneFriends = () => {
 			setSelectedFriends(prevSelectedFriends => {
 				const updatedFriends = [...prevSelectedFriends, friend];
 				setTimeout(() => {
-				  setSelectedFriends(prevSelectedFriends => 
-					prevSelectedFriends.filter(selectedFriend => selectedFriend !== friend)
-				  );
+					setSelectedFriends(prevSelectedFriends =>
+						prevSelectedFriends.filter(selectedFriend => selectedFriend !== friend)
+					);
 				}, 2000);
 				return updatedFriends;
 			});
