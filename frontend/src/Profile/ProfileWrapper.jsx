@@ -28,6 +28,28 @@ export const ProfileWrapper = ({ child }) => {
     const [isFriend, setIsFriend] = useState('false');
     const [isLoading, setIsLoading] = useState(false);
     const [reportValue, setReportValue] = useState(null);
+    const [friendsData, setFriendsData] = useState([])
+
+    const getUserFriends = async () => {
+        try {
+          const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserFriends/${userId}`, {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          });
+          const res = await response.json()
+          if (response.ok) {
+            // console.log("Response data : ", res.data);
+            setFriendsData(res.data)
+          }
+          else 
+            console.log("Error : ", res.error);
+        } catch (error) {
+          console.log("Error: ", error);
+        }
+      }
 
     useEffect(() => {
         const checkFriendship = async () => {
@@ -118,12 +140,16 @@ export const ProfileWrapper = ({ child }) => {
         userCountry: userCountry,
         setUserCountry: setUserCountry,
 
-        isFriend:isFriend,
-        setIsFriend:setIsFriend,
+        isFriend: isFriend,
+        setIsFriend: setIsFriend,
         isLoading: isLoading, 
         setIsLoading: setIsLoading,
         reportValue: reportValue,
         setReportValue: setReportValue,
+        friendsData: friendsData,
+        setFriendsData: setFriendsData,
+
+        getUserFriends: getUserFriends,
     };
     return (
         <ProfileContext.Provider value={userInfoData}> {child} </ProfileContext.Provider>
