@@ -11,6 +11,7 @@ from datetime import datetime
 import requests
 from django.utils import timezone
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError, AccessToken
+from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth import authenticate
 from django.conf import settings
 from django.middleware import csrf
@@ -216,46 +217,56 @@ class CheckUsernameView(APIView):
 class VerifyTokenView(APIView):
 	def get(self, request, format=None):
 		response = Response()
-		user_id = -1
+
 		try:
+			# Check for refresh token in cookies
 			refresh_token = request.COOKIES.get('refresh_token')
 			if not refresh_token:
-				response.data = {"Case" : "Invalid token"}
-				return response
-			decoded_token = RefreshToken(refresh_token)
-			data = decoded_token.payload
-			user_id = data['user_id']
-		except TokenError as e:
-			response.data = {"Case" : "Invalid token"}
-			return response
-		try:
-			token = request.COOKIES.get('access_token')
-			decoded_token = AccessToken(token)
-			data = decoded_token.payload
-			if not data.get('user_id'):
-				response.data = {"Case" : "Invalid token"}
-				return response
-			user = customuser.objects.filter(id=data['user_id']).first()
-			if user is not None:
-				serializer = MyModelSerializer(user)
-				response.data = {"Case" : "valid token", "data" : serializer.data}
-				return response
-			else:
-				response.data = {"Case" : "Invalid token"}
-				return response
+				raise AuthenticationFailed("Invalid token")
+
+			# Decode refresh token
+			decoded_refresh_token = RefreshToken(refresh_token)
+			user_id = decoded_refresh_token['user_id']
+
 		except TokenError:
-			if user_id != -1:
-				user = customuser.objects.filter(id=user_id).first()
-				if user is not None:
-					tokens = get_tokens_for_user(user)
-					response.set_cookie('access_token', tokens['access'], httponly=True)
-					return response
-				else :
-					response.data = {"Case" : "Invalid token"}
-					return response
-			else:
-				response.data = {"Case" : "Invalid token"}
+			response.data = {"Case": "Invalid token"}
+			response.status_code = 401
+			return response
+
+		try:
+			# Check for access token in cookies
+			access_token = request.COOKIES.get('access_token')
+			if not access_token:
+				raise AuthenticationFailed("Invalid token")
+
+			# Decode access token
+			decoded_access_token = AccessToken(access_token)
+			user_id = decoded_access_token['user_id']
+
+			# Fetch user and validate existence
+			user = customuser.objects.filter(id=user_id).first()
+			if not user:
+				raise AuthenticationFailed("Invalid token")
+
+			# Serialize user data
+			serializer = MyModelSerializer(user)
+			response.data = {"Case": "valid token", "data": serializer.data}
+			return response
+
+		except TokenError:
+			# Handle expired or invalid access token
+			user = customuser.objects.filter(id=user_id).first()
+			if user:
+				serializer = MyModelSerializer(user)
+				tokens = get_tokens_for_user(user)
+				response.set_cookie('access_token', tokens['access'], httponly=True)
+				response.data = {"Case": "Token refreshed", "data": serializer.data}
 				return response
+
+		# Default response for invalid cases
+		response.data = {"Case": "Invalid token"}
+		response.status_code = 401
+		return response
 
 
 os.environ['SSL_CERT_FILE'] = certifi.where()

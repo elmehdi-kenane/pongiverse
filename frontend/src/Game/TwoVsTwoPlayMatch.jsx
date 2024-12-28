@@ -706,6 +706,7 @@ const TwoVsTwoPlayMatch = () => {
                     setGameFinished(true)
                     // gamefinishedAborted(message)
                     setTime(message.time)
+                    console.log("***************** ALL PLAYERS STATS : ", allPlayersStats)
                     allPlayersStats[0].totalScore = message.score[0]
                     allPlayersStats[1].totalScore = message.score[1]
                     allPlayersStats[2].totalScore = message.score[2]
@@ -730,7 +731,6 @@ const TwoVsTwoPlayMatch = () => {
                     allPlayersStats[1].status = message.status[1]
                     allPlayersStats[2].status = message.status[2]
                     allPlayersStats[3].status = message.status[3]
-                    console.log("ALL PLAYERS STATS : ", allPlayersStats)
                     setPlayersInfos(allPlayersStats)
                 } else if (type === "abortedGame") {
                     let allPlayersStats = [...playersInfos]

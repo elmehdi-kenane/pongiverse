@@ -653,6 +653,21 @@ async def validate_player_mp(self, data, rooms, user_channels):
 					}
 				}))
 			elif match_played.match_status == 'finished':
+				if match_played.team1_score > match_played.team2_score:
+					player1_rating = (match_statistics.team1_player1_score * 20) + (match_statistics.team1_player1_score * 0.5)
+					player2_rating = (match_statistics.team1_player2_score * 20) + (match_statistics.team1_player2_score * 0.5)
+					player3_rating = (match_statistics.team2_player1_score * 20) + (match_statistics.team2_player1_score * -0.5)
+					player4_rating = (match_statistics.team2_player2_score * 20) + (match_statistics.team2_player2_score * -0.5)
+				else:
+					player1_rating = (match_statistics.team1_player1_score * 20) + (match_statistics.team1_player1_score * -0.5)
+					player2_rating = (match_statistics.team1_player2_score * 20) + (match_statistics.team1_player2_score * -0.5)
+					player3_rating = (match_statistics.team2_player1_score * 20) + (match_statistics.team2_player1_score * 0.5)
+					player4_rating = (match_statistics.team2_player2_score * 20) + (match_statistics.team2_player2_score * 0.5)
+				player1_accuracy = (match_statistics.team1_player1_score * match_statistics.team1_player1_hit) / 100
+				player2_accuracy = (match_statistics.team1_player2_score * match_statistics.team1_player2_hit) / 100
+				player3_accuracy = (match_statistics.team2_player1_score * match_statistics.team2_player1_hit) / 100
+				player4_accuracy = (match_statistics.team2_player2_score * match_statistics.team2_player2_hit) / 100
+				print("****************************, ", {match_played.team1_status}, {match_played.team2_status})
 				await self.send(text_data=json.dumps({
 					'type': 'finishedGame',
 					'message': {
@@ -665,10 +680,13 @@ async def validate_player_mp(self, data, rooms, user_channels):
 						'playerScore3' : match_played.team2_score,
 						'playerScore4' : match_played.team2_score,
 						'time': match_played.duration,
-						'playersScore': [match_statistics.team1_player1_score, match_statistics.team1_player2_score, match_statistics.team2_player1_score, match_statistics.team2_player2_score],
-						'playersHit': [match_statistics.team1_player1_hit, match_statistics.team1_player2_hit, match_statistics.team2_player1_hit, match_statistics.team2_player2_hit],
-						'playersRating': [match_statistics.team1_player1_rating, match_statistics.team1_player2_rating, match_statistics.team2_player1_rating, match_statistics.team2_player2_rating],
-						'status': [match_played.team1_status, match_played.team1_status, match_played.team2_status, match_played.team2_status]
+						'score': [match_played.team1_score, match_played.team1_score, match_played.team2_score, match_played.team2_score],
+						'selfScore': [match_statistics.team1_player1_score, match_statistics.team1_player2_score, match_statistics.team2_player1_score, match_statistics.team2_player2_score],
+						# 'playersScore': [match_statistics.team1_player1_score, match_statistics.team1_player2_score, match_statistics.team2_player1_score, match_statistics.team2_player2_score],
+						'hit': [match_statistics.team1_player1_hit, match_statistics.team1_player2_hit, match_statistics.team2_player1_hit, match_statistics.team2_player2_hit],
+						'accuracy': [player1_accuracy, player2_accuracy, player3_accuracy, player4_accuracy],
+						'rating': [player1_rating, player2_rating, player3_rating, player4_rating],
+						'status': [match_played.team1_status, match_played.team1_status, match_played.team2_status, match_played.team2_status],
 					}
 				}))
 				users.append({
