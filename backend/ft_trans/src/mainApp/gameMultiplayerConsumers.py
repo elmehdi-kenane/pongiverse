@@ -579,7 +579,8 @@ async def validate_player_mp(self, data, rooms, user_channels):
 							'selfScore': [room['players'][0]['self_scored'], room['players'][1]['self_scored'], room['players'][2]['self_scored'], room['players'][3]['self_scored']],
 							'hit': [room['players'][0]['hit'], room['players'][1]['hit'], room['players'][2]['hit'], room['players'][3]['hit']],
 							'accuracy': [player1_accuracy, player2_accuracy, player3_accuracy, player4_accuracy],
-							'rating': [player1_rating, player2_rating, player3_rating, player4_rating]
+							'rating': [player1_rating, player2_rating, player3_rating, player4_rating],
+							'status': [room['players'][0]['status'], room['players'][1]['status'], room['players'][2]['status'], room['players'][3]['status']]
 						}
 					}))
 					return
@@ -666,7 +667,8 @@ async def validate_player_mp(self, data, rooms, user_channels):
 						'time': match_played.duration,
 						'playersScore': [match_statistics.team1_player1_score, match_statistics.team1_player2_score, match_statistics.team2_player1_score, match_statistics.team2_player2_score],
 						'playersHit': [match_statistics.team1_player1_hit, match_statistics.team1_player2_hit, match_statistics.team2_player1_hit, match_statistics.team2_player2_hit],
-						'playersRating': [match_statistics.team1_player1_rating, match_statistics.team1_player2_rating, match_statistics.team2_player1_rating, match_statistics.team2_player2_rating]
+						'playersRating': [match_statistics.team1_player1_rating, match_statistics.team1_player2_rating, match_statistics.team2_player1_rating, match_statistics.team2_player2_rating],
+						'status': [match_played.team1_status, match_played.team1_status, match_played.team2_status, match_played.team2_status]
 					}
 				}))
 				users.append({

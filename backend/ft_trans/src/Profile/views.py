@@ -32,10 +32,9 @@ def getUserData(request, username):
     if user is not None:
         user_states = UserMatchStatics.objects.filter(player=user).first()
         if user_states is not None:
-            # print("---------------", f"http://localhost:8000/auth{user.avatar.url}", "-----------------")
-            # print("-----------------user :", user.username, "is online:", user.is_online)
             user_data = {'pic': f"http://localhost:8000/auth{user.avatar.url}",
                         'bg': f"http://localhost:8000/auth{user.background_pic.url}",
+                        'id': user.id,
                         'bio': user.bio,
                         'email' : user.email,
                         'online' : user.is_online,

@@ -40,6 +40,7 @@ async def isPlayerInAnyRoom(self, data, rooms, user_channels):
 	#print("====================================")
 	#print(userRoom)
 	#print("====================================")
+	print(f"*********************** USER ROOM IS : {userRoom}")
 	if userRoom:
 		value = list(userRoom.values())[0]
 		await self.channel_layer.group_add(str(value['id']), self.channel_name)
@@ -155,6 +156,7 @@ async def isPlayerInAnyRoom(self, data, rooms, user_channels):
 							creator = True
 						else:
 							creator = False
+					print(f"----*-*-*-*-******** ACTIVE MATCH 1 : {active_match}")
 					await self.send(text_data=json.dumps({
 						'type': 'alreadySearching',
 						'message': {

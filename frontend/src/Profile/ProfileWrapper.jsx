@@ -15,6 +15,7 @@ export const ProfileWrapper = ({ child }) => {
     const navigate = useNavigate();
 
     const { userId } = useParams();
+    const [chatUserId, setChatUserId] = useState(null);
     const [userPic, setUserPic] = useState(mavPic);
     const [userBg, setUserBg] = useState(bg);
     const [userEmail, setUserEmail] = useState('');
@@ -28,6 +29,27 @@ export const ProfileWrapper = ({ child }) => {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
+        const checkFriendship = async () => {
+            try {
+                const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/CheckFriendship/${user}/${userId}`, {
+                    method: "GET",
+                    credentials: "include",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                const res = await response.json()
+                if (response.ok) {
+                    if(res.data === "blocked")
+                        navigate("/Error404")
+                    setIsFriend(res.data);
+                }
+                else
+                console.log(res.error);
+            } catch (error) {
+                console.log("Error: ", error);
+            }
+        }
         const getUserData = async () => {
             try {
                 const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserData/${userId}`, {
@@ -47,27 +69,7 @@ export const ProfileWrapper = ({ child }) => {
                 console.log("Error:  ", error);
             }
         }
-        const checkFriendship = async () => {
-            try {
-                const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/CheckFriendship/${user}/${userId}`, {
-                    method: "GET",
-                    credentials: "include",
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                });
-                const res = await response.json()
-                if (response.ok) {
-                    if(res.data === "blocked")
-                        navigate("/Error404")
-                    setIsFriend(res.data);
-                }
-                else
-                    console.log(res.error);
-            } catch (error) {
-                console.log("Error: ", error);
-            }
-        }
+
         if (userId && notifSocket && notifSocket.readyState === WebSocket.OPEN){
             getUserData();
             if (user && (user != userId))
@@ -78,6 +80,7 @@ export const ProfileWrapper = ({ child }) => {
     useEffect(() => {
         if (userData) {
             setUserPic(userData.pic)
+            setChatUserId(userData.id)
             setUserBg(userData.bg)
             setUserBio(userData.bio)
             setUserEmail(userData.email)
@@ -96,6 +99,7 @@ export const ProfileWrapper = ({ child }) => {
 
     let userInfoData = {
         userId: userId,
+        chatUserId:chatUserId,
         userPic: userPic,
         setUserPic: setUserPic,
         userBg: userBg,

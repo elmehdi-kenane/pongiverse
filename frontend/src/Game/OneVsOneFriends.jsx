@@ -42,7 +42,7 @@ const OneVsOneFriends = () => {
 
 	useEffect(() => {
 		if (socket && socket.readyState === WebSocket.OPEN && user) {
-			console.log("CHECKING IF PLAYER IN ROOM", socket, user)
+			console.log("*********************CHECKING IF PLAYER IN ROOM", socket, user)
 			// checked = true
 			socket.send(JSON.stringify({
 				type: 'isPlayerInAnyRoom',
@@ -95,11 +95,13 @@ const OneVsOneFriends = () => {
 					setLoadMatch(false)
 					setAllSet(true)
 				} else if (type === "playerNo") {
+					console.log("******** playerNo is received");
 					setPlayerNo(message.playerNo)
 					setTmpRoomID(message.id)
 					setGameStarted(true)
 					setLoadMatch(true)
 				} else if (type === 'alreadySearching') {
+					console.log("******** alreadySearching is received");
 					setPlayerNo(message.playerNo)
 					setTmpRoomID(message.id)
 					setGameStarted(true)

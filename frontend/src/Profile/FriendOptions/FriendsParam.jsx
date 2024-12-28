@@ -16,7 +16,7 @@ import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 function FriendsParam(props) {
     const friendsPrm = props.Prm;
     const { user, isBlock, setIsBlock, notifSocket } = useContext(AuthContext);
-    const { setIsFriend, userId, userPic, setIsLoading } = useContext(ProfileContext);
+    const { chatUserId, setIsFriend, userId, userPic, setIsLoading } = useContext(ProfileContext);
     const navigate = useNavigate();
     const { setSelectedDirect } = useContext(ChatContext);
 
@@ -31,7 +31,7 @@ function FriendsParam(props) {
                     target: userId
                 }
             }))
-            navigate('/mainpage/game/solo/1vs1/friends');
+            // navigate('/mainpage/game/solo/1vs1/friends');
         }
         else
             console.log("Socket ga3ma me7lola")
@@ -59,6 +59,7 @@ function FriendsParam(props) {
     const chatNavigate = () => {
         const userImage = userPic ? userPic : AvatarSvg
         setSelectedDirect({
+            id: chatUserId,
           name : userId,
           status: true,
           avatar: userImage,
