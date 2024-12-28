@@ -402,6 +402,12 @@ const GameNotifications = (props) => {
           message.second_username === props.userId
         ) {
           props.setIsFriend("true");
+          props.getUserFriends()
+        } else if (
+          type === "confirm-friend-request" &&
+          message.second_username === props.userId
+        ) {
+          props.getUserFriends()
         }
         else if (
           type === "cancel-friend-request" &&
@@ -414,6 +420,7 @@ const GameNotifications = (props) => {
           message.second_username === props.userId
         ) {
           props.setIsFriend("false");
+          props.getUserFriends()
         }
         else if (type === "blocked-friend" && message.second_username === props.userId) {
           navigate("/mainpage/dashboard");

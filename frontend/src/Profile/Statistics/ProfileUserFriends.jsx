@@ -10,31 +10,11 @@ import ChatContext from '../../Context/ChatContext'
 const ProfileUserFriends = () => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
-  const { userId } = useContext(ProfileContext);
-  const [friendsData, setFriendsData] = useState([])
+  const { userId, getUserFriends, friendsData, setFriendsData } = useContext(ProfileContext);
+  // const [friendsData, setFriendsData] = useState([])
   const { setSelectedDirect } = useContext(ChatContext);
 
   useEffect(() => {
-    const getUserFriends = async () => {
-      try {
-        const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserFriends/${userId}`, {
-          method: "GET",
-          credentials: "include",
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        });
-        const res = await response.json()
-        if (response.ok) {
-          // console.log("Response data : ", res.data);
-          setFriendsData(res.data)
-        }
-        else 
-          console.log("Error : ", res.error);
-      } catch (error) {
-        console.log("Error: ", error);
-      }
-    }
     if (userId)
       getUserFriends()
   }, [userId])
