@@ -56,7 +56,7 @@ const App = () => {
   return (
     // <div className="page" style={{ backgroundImage: `url(${bg1})` }}>
     // <div className="page" style={{ backgroundImage: `url(${bg1})` }}>
-    <div className="page" style={{ backgroundColor: '#250939' }}>
+    <div className="page" style={{ backgroundColor: "#250939" }}>
       <Router>
         <AuthProvider>
           <Routes>
@@ -68,11 +68,17 @@ const App = () => {
             <Route path="/ForgotPassword" element={<ForgotPassword />} />
             <Route path="/ChangePassword" element={<ChangePassword />} />
             <Route path="/Error404" element={<ErrorPage />} />
-            <Route path="/localtournamentbracket" element={<LocalTournamentBracket />} />
-            <Route path="/localtournamentfillmembers" element={<LocalTournamentFillMembers />} />
+            <Route
+              path="/localtournamentbracket"
+              element={<LocalTournamentBracket />}
+            />
+            <Route
+              path="/localtournamentfillmembers"
+              element={<LocalTournamentFillMembers />}
+            />
             <Route path="/localmodes" element={<LocalModes />} />
             <Route path="/1vs1/offline" element={<OneVsOneOffline />} />
-            <Route path="/mainpage" element={<NavbarSidebar />}>
+            <Route path="/mainpage" element={<ChatProvider child={<NavbarSidebar />} />}>
               <Route
                 path="dashboard"
                 element={<DashboardWrapper child={<Dashboard />} />}
@@ -147,7 +153,10 @@ const App = () => {
                 path="game/tournamentbracket"
                 element={<TournamentBracket />}
               />
-              <Route path="game/tournamentcel" element={<TournamentCelebration />} />
+              <Route
+                path="game/tournamentcel"
+                element={<TournamentCelebration />}
+              />
               <Route
                 path="game/1vs1tournament"
                 element={<OneVsOnePlayTournamentMatch />}

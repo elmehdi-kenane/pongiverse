@@ -116,50 +116,58 @@ export const SearchBarMobile = ({ handleSearchBar }) => {
               <p className="searchEmpty">Loading...</p>
             ) : (
               <div className="searchResultWrapperNoFilterBar">
-                {searchFilter === "all" &&
-                  (searchResult.length === 0 ? (
-                    <p className="searchEmpty">{termNotFoundText}</p>
-                  ) : (
-                    searchResult.map((item, index) => {
-                      return (
-                        <SearchResultCard
-                          key={index}
-                              resultText={item.username}
-                          avatar={item.avatar}
-                          result_type={item.result_type}
-                          is_friend={item.is_friend}
-                          is_joined={item.is_joined}
-                          searchResult={searchResult}
-                          setSearchResult={setSearchResult}
-                          searchTerm={inputValue}
-                              setIsSearchBarOpen={setIsSearchBarOpen}
-                              setInputValue={setInputValue}
-                        ></SearchResultCard>
-                      );
-                    })
-                  ))}
-                {searchFilter === "people" &&
-                  (searchUsersResult.length === 0 ? (
-                    <p className="searchEmpty">{termNotFoundText}</p>
-                  ) : (
-                    searchUsersResult.map((item, index) => {
-                      return (
-                        <SearchResultCard
-                          key={index}
-                              resultText={item.username}
-                          avatar={item.avatar}
-                          result_type={item.result_type}
-                          is_friend={item.is_friend}
-                          is_joined={item.is_joined}
-                          searchResult={searchResult}
-                          setSearchResult={setSearchResult}
-                          searchTerm={inputValue}
-                              setIsSearchBarOpen={setIsSearchBarOpen}
-                              setInputValue={setInputValue}
-                        ></SearchResultCard>
-                      );
-                    })
-                  ))}
+                {
+                  searchFilter === "all" &&
+                    (searchResult.length === 0 ? (
+                      <p className="searchEmpty">{termNotFoundText}</p>
+                    ) : (
+                      searchResult.map((item, index) => {
+                        return (
+                          <SearchResultCard
+                            key={item.id}
+                            id={item.id}
+                            members_count={item.members_count}
+                            resultText={item.username}
+                            avatar={item.avatar}
+                            result_type={item.result_type}
+                            is_friend={item.is_friend}
+                            is_joined={item.is_joined}
+                            searchResult={searchResult}
+                            setSearchResult={setSearchResult}
+                            searchTerm={inputValue}
+                            handleSearchBar={handleSearchBar}
+                            setInputValue={setInputValue}
+                          ></SearchResultCard>
+                        );
+                      })
+                    ))
+                }
+                {
+                  searchFilter === "people" &&
+                    (searchUsersResult.length === 0 ? (
+                      <p className="searchEmpty">{termNotFoundText}</p>
+                    ) : (
+                      searchUsersResult.map((item, index) => {
+                        return (
+                          <SearchResultCard
+                            key={item.id}
+                            id={item.id}
+                            members_count={item.members_count}
+                            resultText={item.username}
+                            avatar={item.avatar}
+                            result_type={item.result_type}
+                            is_friend={item.is_friend}
+                            is_joined={item.is_joined}
+                            searchResult={searchResult}
+                            setSearchResult={setSearchResult}
+                            searchTerm={inputValue}
+                            handleSearchBar={handleSearchBar}
+                            setInputValue={setInputValue}
+                          ></SearchResultCard>
+                        );
+                      })
+                    ))
+                }
                 {searchFilter === "rooms" &&
                   (searchRoomsResult.length === 0 ? (
                     <p className="searchEmpty">{termNotFoundText}</p>
@@ -167,8 +175,10 @@ export const SearchBarMobile = ({ handleSearchBar }) => {
                     searchRoomsResult.map((item, index) => {
                       return (
                         <SearchResultCard
-                          key={index}
-                              resultText={item.username}
+                          key={item.id}
+                          id={item.id}
+                          members_count={item.members_count}
+                          resultText={item.username}
                           avatar={item.avatar}
                           result_type={item.result_type}
                           is_friend={item.is_friend}
@@ -176,8 +186,8 @@ export const SearchBarMobile = ({ handleSearchBar }) => {
                           searchResult={searchResult}
                           setSearchResult={setSearchResult}
                           searchTerm={inputValue}
-                              setIsSearchBarOpen={setIsSearchBarOpen}
-                              setInputValue={setInputValue}
+                          handleSearchBar={handleSearchBar}
+                          setInputValue={setInputValue}
                         ></SearchResultCard>
                       );
                     })
