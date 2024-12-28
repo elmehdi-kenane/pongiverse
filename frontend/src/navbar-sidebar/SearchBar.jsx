@@ -9,7 +9,6 @@ export const SearchBar = () => {
   const searchBarRef = useRef(null);
   const searchInputRef = useRef(null);
   const [inputValue, setInputValue] = useState("");
-
   const [searchFilter, setSearchFilter] = useState("all");
   const [searchResult, setSearchResult] = useState([]);
   const [searchUsersResult, setSearchUsersResult] = useState([]);
@@ -81,8 +80,6 @@ export const SearchBar = () => {
       searchInputRef.current.blur();
     }
   };
-
-  const navigateToProfile = () => {};
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);

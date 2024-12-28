@@ -187,6 +187,8 @@ const TwoVsTwoPlayMatch = () => {
     const roomIdRef = useRef(roomID)
     const socketRef = useRef(socket)
 
+    let particles = [];
+
     const [playersInfos, setPlayersInfos] = useState([
         {
             totalScore: 0,
@@ -194,32 +196,53 @@ const TwoVsTwoPlayMatch = () => {
             hit: 0,
             accuracy: 0,
             rating: 0,
+            status: 'winner'
         },
         {
             totalScore: 0,
             score: 0,
             hit: 0,
             accuracy: 0,
-            rating: 0
+            rating: 0,
+            status: 'winner'
         },
         {
             totalScore: 0,
             score: 0,
             hit: 0,
             accuracy: 0,
-            rating: 0
+            rating: 0,
+            status: 'winner'
         },
         {
             totalScore: 0,
             score: 0,
             hit: 0,
             accuracy: 0,
-            rating: 0
+            rating: 0,
+            status: 'winner'
         },
         {
             time: 0,
         }
     ])
+
+    function createParticle(x, y) {
+            let particle = {
+                x,
+                y,
+                radius: Math.random() + 0.2, // Random radius between 1 and 3 ====> Math.random() * 2 + 1
+                color: `hsl(${Math.random() * 40 + 20}, 100%, 50%)`, // Random hue for fire-like colors ====> `hsl(${Math.random() * 40 + 20}, 100%, 50%)`
+                speedX: Math.random() - 0.8, // Random horizontal speed between -3 and 3
+                speedY: Math.random() - 0.8, // Random vertical speed between -3 and 3
+                life: Math.random() * 50 + 40 // Random lifetime between 50 and 100 frames
+            };
+            particles.push(particle);
+        }
+    
+    useEffect(() => {
+        privateCheckAuth()
+    }, [])
 
     const draw = () => {
         const ctx = canvasContextRef.current
@@ -247,6 +270,34 @@ const TwoVsTwoPlayMatch = () => {
                 player3.current.draw(ctx)
                 player4.current.draw(ctx)
             }
+            if (isGameStarted && gameCustom[3]) {
+				particles.forEach((particle, index) => {
+					// Decrease life`
+					particle.life--;
+
+					// Remove dead particles
+					if (particle.life <= 0) {
+						particles.splice(index, 1);
+						return;
+					}
+
+					// Update position
+					particle.x += particle.speedX;
+					particle.y += particle.speedY;
+
+					// Draw particle
+					ctx.beginPath();
+					ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+					ctx.fillStyle = particle.color;
+					ctx.fill();
+					ctx.closePath();
+				});
+				createParticle(ball.current.x, ball.current.y);
+				createParticle(ball.current.x + 0.5, ball.current.y + 0.5);
+				createParticle(ball.current.x + 0.5, ball.current.y + 0.5);
+				createParticle(ball.current.x + 0.3, ball.current.y + 0.3);
+				createParticle(ball.current.x + 0.3, ball.current.y + 0.3);
+			}
             ball.current.draw(ctx)
         }
     }
@@ -384,10 +435,6 @@ const TwoVsTwoPlayMatch = () => {
             setCanvasDrawing(true)
         }
 	}, [canvasRef, canvasDrawing, socket]);
-
-    useEffect(() => {
-        privateCheckAuth()
-    }, [])
 
     const update = () => {
         if (!isGameStarted)
@@ -659,6 +706,7 @@ const TwoVsTwoPlayMatch = () => {
                     setGameFinished(true)
                     // gamefinishedAborted(message)
                     setTime(message.time)
+                    console.log("***************** ALL PLAYERS STATS : ", allPlayersStats)
                     allPlayersStats[0].totalScore = message.score[0]
                     allPlayersStats[1].totalScore = message.score[1]
                     allPlayersStats[2].totalScore = message.score[2]
@@ -679,6 +727,10 @@ const TwoVsTwoPlayMatch = () => {
                     allPlayersStats[1].rating = message.rating[1]
                     allPlayersStats[2].rating = message.rating[2]
                     allPlayersStats[3].rating = message.rating[3]
+                    allPlayersStats[0].status = message.status[0]
+                    allPlayersStats[1].status = message.status[1]
+                    allPlayersStats[2].status = message.status[2]
+                    allPlayersStats[3].status = message.status[3]
                     setPlayersInfos(allPlayersStats)
                 } else if (type === "abortedGame") {
                     let allPlayersStats = [...playersInfos]

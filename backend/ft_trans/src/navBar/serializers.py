@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from myapp.models import customuser
+from .models import Notification
 
 class customUserSerializer(serializers.ModelSerializer):
     username = serializers.CharField()
@@ -23,3 +24,10 @@ class customUserSerializer(serializers.ModelSerializer):
             else:
                 return f"http://localhost:8000/auth{avatar_url}"
         return None
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = ['notification_text', 'url_redirection', 'send_at', 'avatar']
+        # Optionally, exclude 'user' if you don't want to expose it:
+        # exclude = ['user']

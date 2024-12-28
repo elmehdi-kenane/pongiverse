@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2';
 import logo from '../../assets/SignUp/logo.svg'
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
@@ -14,10 +14,10 @@ const client = axios.create({
 
 function ForgotPassword() {
 
-
 	const [data, setData] = useState({
 		email: ''
 	});
+	const location = useLocation();
 	const [errors, setErrors] = useState({})
 	let attempts = 0;
 	const [code, setCode] = useState(-12);
@@ -141,9 +141,12 @@ function ForgotPassword() {
 
 	return (
 		<div className={styles["full_page"]}>
-			<div className={styles['forgot-password-navbar']}>
-				<img src={logo} alt="" onClick = { navigating }/>
-			</div>
+			{
+				location.pathname === "/ForgotPassword" &&
+				<div className={styles['forgot-password-navbar']}>
+					<img src={logo} alt="" onClick={navigating} />
+				</div>
+			}
 			<div className={styles["mainPage"]}>
 				<div className={styles["signUpContainer"]}>
 					<h1 className={styles["title"]}>Forgot your password?</h1>

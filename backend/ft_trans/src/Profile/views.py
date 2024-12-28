@@ -32,10 +32,9 @@ def getUserData(request, username):
     if user is not None:
         user_states = UserMatchStatics.objects.filter(player=user).first()
         if user_states is not None:
-            # print("---------------", f"http://localhost:8000/auth{user.avatar.url}", "-----------------")
-            # print("-----------------user :", user.username, "is online:", user.is_online)
             user_data = {'pic': f"http://localhost:8000/auth{user.avatar.url}",
                         'bg': f"http://localhost:8000/auth{user.background_pic.url}",
+                        'id': user.id,
                         'bio': user.bio,
                         'email' : user.email,
                         'online' : user.is_online,
@@ -515,8 +514,9 @@ def get_tourn_matches(request, username, page, items):
                     for round in rounds:
                         all_users = TournamentUserInfo.objects.filter(round=round).all() #Get all users inside each round
                         for user_round in all_users:
-                            if user.username == user_round.user.username:
-                                type = round.type
+                            if user_round.user is not None:
+                                if user.username == user_round.user.username:
+                                    type = round.type
                                 # print("###-----", type, ":", user_round.user.username)
                     res_data.append({
                         "type" : type,
@@ -613,7 +613,7 @@ def disable_user_tfq(request):
     return Response(data={'error': 'Error disabling user TFQ'}, status=status.HTTP_400_BAD_REQUEST)
 
 #**------- Check OTP for SignIN -------**#
-@authentication_required
+
 @api_view(["POST"])
 def check_user_tfq(request):
     username = request.data.get('user')
@@ -632,3 +632,17 @@ def check_user_tfq(request):
                 response.data = {"Case" : "Login successfully"}
                 return response
             return Response(data={'Case': 'Wrong otp'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+# @authentication_required
+@api_view(["POST"])
+def report_user(request):
+    reporterUsername = request.data.get("reporterUsername")
+    reportedUsername = request.data.get("reportedUsername")
+    reportMessage = request.data.get("reportMessage")
+    reporter = customuser.objects.filter(username=reporterUsername).first()
+    reported = customuser.objects.filter(username=reportedUsername).first()
+    if reporter and reported:
+        return Response(data={'case': "Valid"}, status=status.HTTP_200_OK)
+    return Response(error={'case': "Not Valid"}, status=status.HTTP_404_NOT_FOUND)
+    

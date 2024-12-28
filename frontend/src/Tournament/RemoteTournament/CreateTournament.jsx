@@ -231,14 +231,14 @@ function CreateTournament() {
 						if (!userExists)
 							setAllGameFriends([...currentAllGameFriends, message.userInfos])
 					}
-						
+
 					if (kicked === user) {
 						navigate("/mainpage/game")
 					}
 				} else if (type === 'user_leave_tournament') {
 					const currentAllGameFriends = allGameFriendsRef.current;
 					let is_a_friend = data.message.is_a_friend
-					if (is_a_friend === true){
+					if (is_a_friend === true) {
 						const userExists = currentAllGameFriends.some(friend => friend.name === message.userInfos.name)
 						if (!userExists)
 							setAllGameFriends([...currentAllGameFriends, message.userInfos])
@@ -274,6 +274,7 @@ function CreateTournament() {
 						setAllGameFriends(currentAllGameFriends.filter(user => user.name !== data.message.user))
 					}
 				} else if (type === 'playingStatus') {
+					console.log("*****WAS HEEEEEREE")
 					if (data.message.is_playing === false) {
 						const currentAllGameFriends = allGameFriendsRef.current;
 						const userExists = currentAllGameFriends.some(friend => friend.name === message.userInfos.name)
@@ -286,8 +287,11 @@ function CreateTournament() {
 						setAllGameFriends(currentAllGameFriends.filter(user => user.name !== username))
 					}
 				} else if (type === 'hmed') {
-					console.log("WWWWWWWWWAAAAA HMEEEEEEEED")
 					socket.close()
+				} else if (type === 'blocked-friend' || type === 'remove-friendship') {
+					const currentAllGameFriends = allGameFriendsRef.current;
+					let username = message.second_username
+					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== username))
 				}
 			}
 		}
@@ -310,13 +314,14 @@ function CreateTournament() {
 					console.log("ENTER TO USER CONNECTED AGAIN TOUR")
 					setTournamentMembers(prevMembers => prevMembers.map(member => member.name === message.user ? { ...member, 'is_online': true } : member));
 				} else if (type === 'connected_again') {
-                    console.log("****IS A FRIEND:", message.is_a_friend);
+					console.log("****IS A FRIEND:", message.is_a_friend);
 					const currentAllGameFriends = allGameFriendsRef.current;
-                    if (message.is_a_friend === true) {
-                        const userExists = currentAllGameFriends.some(friend => friend.name === message.user)
-                        if (!userExists)
-                            setAllGameFriends([...currentAllGameFriends, message.userInfos])
-                    }
+					console.log("*******IWA YAHAMIIIIID:", message.user)
+					if (message.is_a_friend === true) {
+						const userExists = currentAllGameFriends.some(friend => friend.name === message.user)
+						if (!userExists)
+							setAllGameFriends([...currentAllGameFriends, message.userInfos])
+					}
 				} else if (type === 'tournament_destroyed') {
 					navigate("/mainpage/game")
 				} else if (type === 'user_join_tournament') {
@@ -425,7 +430,6 @@ function CreateTournament() {
 			</div>
 		);
 	}
-
 	return (
 		<>
 			<div className={styles["tournament-page"]}>

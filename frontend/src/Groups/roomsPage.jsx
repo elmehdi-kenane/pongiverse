@@ -10,6 +10,7 @@ import NotificationAddIcon from "@mui/icons-material/NotificationAdd";
 import { Toaster } from "react-hot-toast";
 import RoomsNotifications from "./RoomComponents/roomsNotifications";
 import AddIcon from "@mui/icons-material/Add";
+import GameNotifications from "../GameNotif/GameNotifications"
 
 const Rooms = () => {
   const [createRoom, setCreateRoom] = useState(false);
@@ -158,7 +159,7 @@ const Rooms = () => {
     const fetchChatRooms = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/chatAPI/myChatRooms/${user}?page=${currentMyRoomsPage}`, 
+          `http://localhost:8000/chatAPI/myChatRooms/${user}?page=${currentMyRoomsPage}`,
           {
             credentials: "include",
           }
@@ -209,175 +210,178 @@ const Rooms = () => {
     }
   };
   return (
-    <div className="rooms-page">
-      <Toaster
-        containerStyle={{ marginTop: "51px" }}
-        toastOptions={{
-          className: "",
-          style: {
-            color: "#713200",
-            textAlign: "center",
-            fontSize: "14px",
-          },
-        }}
-      />
-      {createRoom && (
-        <CreateRoom
-          setCreateRoom={setCreateRoom}
-          setIsBlur={setIsBlur}
-          myChatRooms={myChatRooms}
-          setMyChatRooms={setMyChatRooms}
+    <>
+      <GameNotifications />
+      <div className="rooms-page">
+        <Toaster
+          containerStyle={{ marginTop: "51px" }}
+          toastOptions={{
+            className: "",
+            style: {
+              color: "#713200",
+              textAlign: "center",
+              fontSize: "14px",
+            },
+          }}
         />
-      )}
-      {showRoomNotifications && (
-        <RoomsNotifications
-          setShowRoomNotifications={setShowRoomNotifications}
-          setIsBlur={setIsBlur}
-          myChatRooms={myChatRooms}
-          setMyChatRooms={setMyChatRooms}
-        />
-      )}
-      <div className={isBlur ? "rooms-wrapper blur" : "rooms-wrapper"}>
-        <div className="rooms-header-wrapper">
-          <div className="rooms-header">Your Rooms</div>
+        {createRoom && (
+          <CreateRoom
+            setCreateRoom={setCreateRoom}
+            setIsBlur={setIsBlur}
+            myChatRooms={myChatRooms}
+            setMyChatRooms={setMyChatRooms}
+          />
+        )}
+        {showRoomNotifications && (
+          <RoomsNotifications
+            setShowRoomNotifications={setShowRoomNotifications}
+            setIsBlur={setIsBlur}
+            myChatRooms={myChatRooms}
+            setMyChatRooms={setMyChatRooms}
+          />
+        )}
+        <div className={isBlur ? "rooms-wrapper blur" : "rooms-wrapper"}>
+          <div className="rooms-header-wrapper">
+            <div className="rooms-header">Your Rooms</div>
 
-          <div className="create-room-side-buttons-wrapper">
-            <div
-              className="create-room-button"
-              onClick={() => {
-                setCreateRoom(true);
-                setIsBlur(true);
-              }}
-            >
-              <img
-                src={ChatIcons.CreateChannel}
-                alt=""
-                className="create-room-icon"
-              />
-              <div className="create-room-text">Create a Room</div>
-            </div>
-            <AddIcon
-              className="create-room-button-icon"
-              onClick={() => {
-                setCreateRoom(true);
-                setIsBlur(true);
-              }}
-            />
-            <div className="room-notifications-icon-conatiner">
-              <NotificationAddIcon
-                className="rooms-notifications-icon"
+            <div className="create-room-side-buttons-wrapper">
+              <div
+                className="create-room-button"
                 onClick={() => {
-                  setShowRoomNotifications(true);
+                  setCreateRoom(true);
                   setIsBlur(true);
-                  updateStatusOfInvitations();
-                  setPendingInvitationsCount(0);
+                }}
+              >
+                <img
+                  src={ChatIcons.CreateChannel}
+                  alt=""
+                  className="create-room-icon"
+                />
+                <div className="create-room-text">Create a Room</div>
+              </div>
+              <AddIcon
+                className="create-room-button-icon"
+                onClick={() => {
+                  setCreateRoom(true);
+                  setIsBlur(true);
                 }}
               />
-              {pendingInvitationsCount > 0 ? (
-                <div className="room-notifications-counter">
-                  {pendingInvitationsCount}
+              <div className="room-notifications-icon-conatiner">
+                <NotificationAddIcon
+                  className="rooms-notifications-icon"
+                  onClick={() => {
+                    setShowRoomNotifications(true);
+                    setIsBlur(true);
+                    updateStatusOfInvitations();
+                    setPendingInvitationsCount(0);
+                  }}
+                />
+                {pendingInvitationsCount > 0 ? (
+                  <div className="room-notifications-counter">
+                    {pendingInvitationsCount}
+                  </div>
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="my-rooms-row">
+            {/* {myChatRooms.length > 4 ? ( */}
+            {itemsPerScreen < myChatRooms.length ? (
+              <>
+                <img
+                  src={ChatIcons.leftHand}
+                  className="hande left-hande"
+                  onClick={() => onClickScroller("left", myChatRooms.length)}
+                />
+                <img
+                  src={ChatIcons.rightHand}
+                  className="hande right-hande"
+                  onClick={() => {
+                    onClickScroller("right", myChatRooms.length);
+                    if (hasMoreRooms) setCurrentMyRoomsPage((prev) => prev + 1);
+                  }}
+                />
+              </>
+            ) : (
+              ""
+            )}
+            <div className="rooms-slider-container">
+              {myChatRooms && myChatRooms.length ? (
+                <div className="rooms-slider">
+                  {myChatRooms.map((room, index) => (
+                    <MyRoom
+                      key={index}
+                      roomId={room.id}
+                      name={room.name}
+                      icon={room.icon}
+                      cover={room.cover}
+                      role={room.role}
+                      topic={room.topic}
+                      membersCount={room.membersCount}
+                      myChatRooms={myChatRooms}
+                      setMyChatRooms={setMyChatRooms}
+                    />
+                  ))}
                 </div>
               ) : (
-                ""
+                <div className="rooms-slider empty-rooms-slider">
+                  No chat room was found.
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="rooms-header">Suggested Public Rooms</div>
+          <div className="suggested-room-row">
+            {itemsPerScreen < suggestedChatRooms.length ? (
+              <>
+                <img
+                  src={ChatIcons.leftHand}
+                  className="hande left-hande"
+                  onClick={() =>
+                    onClickScrollerSuggested("left", suggestedChatRooms.length)
+                  }
+                />
+                <img
+                  src={ChatIcons.rightHand}
+                  className="hande right-hande"
+                  onClick={() =>
+                    onClickScrollerSuggested("right", suggestedChatRooms.length)
+                  }
+                />
+              </>
+            ) : (
+              ""
+            )}
+            <div className="rooms-slider-container">
+              {suggestedChatRooms && suggestedChatRooms.length ? (
+                <div className="suggested-rooms-slider">
+                  {suggestedChatRooms.map((room, index) => (
+                    <SuggestedRoom
+                      key={index}
+                      roomId={room.id}
+                      name={room.name}
+                      icon={room.icon}
+                      cover={room.cover}
+                      role={room.role}
+                      topic={room.topic}
+                      membersCount={room.membersCount}
+                      myChatRooms={myChatRooms}
+                      setMyChatRooms={setMyChatRooms}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="suggested-rooms-slider empty-rooms-slider">
+                  No suggested chat room was found
+                </div>
               )}
             </div>
           </div>
         </div>
-        <div className="my-rooms-row">
-          {/* {myChatRooms.length > 4 ? ( */}
-          {itemsPerScreen < myChatRooms.length ? (
-            <>
-              <img
-                src={ChatIcons.leftHand}
-                className="hande left-hande"
-                onClick={() => onClickScroller("left", myChatRooms.length)}
-              />
-              <img
-                src={ChatIcons.rightHand}
-                className="hande right-hande"
-                onClick={() => {
-                  onClickScroller("right", myChatRooms.length);
-                  if (hasMoreRooms) setCurrentMyRoomsPage((prev) => prev + 1);
-                }}
-              />
-            </>
-          ) : (
-            ""
-          )}
-          <div className="rooms-slider-container">
-            {myChatRooms && myChatRooms.length ? (
-              <div className="rooms-slider">
-                {myChatRooms.map((room, index) => (
-                  <MyRoom
-                    key={index}
-                    roomId={room.id}
-                    name={room.name}
-                    icon={room.icon}
-                    cover={room.cover}
-                    role={room.role}
-                    topic={room.topic}
-                    membersCount={room.membersCount}
-                    myChatRooms={myChatRooms}
-                    setMyChatRooms={setMyChatRooms}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="rooms-slider empty-rooms-slider">
-                No chat room was found.
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="rooms-header">Suggested Public Rooms</div>
-        <div className="suggested-room-row">
-          {itemsPerScreen < suggestedChatRooms.length ? (
-            <>
-              <img
-                src={ChatIcons.leftHand}
-                className="hande left-hande"
-                onClick={() =>
-                  onClickScrollerSuggested("left", suggestedChatRooms.length)
-                }
-              />
-              <img
-                src={ChatIcons.rightHand}
-                className="hande right-hande"
-                onClick={() =>
-                  onClickScrollerSuggested("right", suggestedChatRooms.length)
-                }
-              />
-            </>
-          ) : (
-            ""
-          )}
-          <div className="rooms-slider-container">
-            {suggestedChatRooms && suggestedChatRooms.length ? (
-              <div className="suggested-rooms-slider">
-                {suggestedChatRooms.map((room, index) => (
-                  <SuggestedRoom
-                    key={index}
-                    roomId={room.id}
-                    name={room.name}
-                    icon={room.icon}
-                    cover={room.cover}
-                    role={room.role}
-                    topic={room.topic}
-                    membersCount={room.membersCount}
-                    myChatRooms={myChatRooms}
-                    setMyChatRooms={setMyChatRooms}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="suggested-rooms-slider empty-rooms-slider">
-                No suggested chat room was found
-              </div>
-            )}
-          </div>
-        </div>
       </div>
-    </div>
+    </>
   );
 };
 

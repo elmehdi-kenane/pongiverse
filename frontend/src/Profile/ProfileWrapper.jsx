@@ -15,6 +15,7 @@ export const ProfileWrapper = ({ child }) => {
     const navigate = useNavigate();
 
     const { userId } = useParams();
+    const [chatUserId, setChatUserId] = useState(null);
     const [userPic, setUserPic] = useState(mavPic);
     const [userBg, setUserBg] = useState(bg);
     const [userEmail, setUserEmail] = useState('');
@@ -26,8 +27,52 @@ export const ProfileWrapper = ({ child }) => {
 
     const [isFriend, setIsFriend] = useState('false');
     const [isLoading, setIsLoading] = useState(false);
+    const [reportValue, setReportValue] = useState(null);
+    const [friendsData, setFriendsData] = useState([])
+
+    const getUserFriends = async () => {
+        try {
+          const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserFriends/${userId}`, {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          });
+          const res = await response.json()
+          if (response.ok) {
+            // console.log("Response data : ", res.data);
+            setFriendsData(res.data)
+          }
+          else 
+            console.log("Error : ", res.error);
+        } catch (error) {
+          console.log("Error: ", error);
+        }
+      }
 
     useEffect(() => {
+        const checkFriendship = async () => {
+            try {
+                const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/CheckFriendship/${user}/${userId}`, {
+                    method: "GET",
+                    credentials: "include",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                const res = await response.json()
+                if (response.ok) {
+                    if(res.data === "blocked")
+                        navigate("/Error404")
+                    setIsFriend(res.data);
+                }
+                else
+                    console.error(res.error);
+            } catch (error) {
+                console.error("Error: ", error);
+            }
+        }
         const getUserData = async () => {
             try {
                 const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserData/${userId}`, {
@@ -47,27 +92,7 @@ export const ProfileWrapper = ({ child }) => {
                 console.log("Error:  ", error);
             }
         }
-        const checkFriendship = async () => {
-            try {
-                const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/CheckFriendship/${user}/${userId}`, {
-                    method: "GET",
-                    credentials: "include",
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                });
-                const res = await response.json()
-                if (response.ok) {
-                    if(res.data === "blocked")
-                        navigate("/Error404")
-                    setIsFriend(res.data);
-                }
-                else
-                    console.log(res.error);
-            } catch (error) {
-                console.log("Error: ", error);
-            }
-        }
+
         if (userId && notifSocket && notifSocket.readyState === WebSocket.OPEN){
             getUserData();
             if (user && (user != userId))
@@ -78,6 +103,7 @@ export const ProfileWrapper = ({ child }) => {
     useEffect(() => {
         if (userData) {
             setUserPic(userData.pic)
+            setChatUserId(userData.id)
             setUserBg(userData.bg)
             setUserBio(userData.bio)
             setUserEmail(userData.email)
@@ -96,6 +122,7 @@ export const ProfileWrapper = ({ child }) => {
 
     let userInfoData = {
         userId: userId,
+        chatUserId:chatUserId,
         userPic: userPic,
         setUserPic: setUserPic,
         userBg: userBg,
@@ -113,10 +140,16 @@ export const ProfileWrapper = ({ child }) => {
         userCountry: userCountry,
         setUserCountry: setUserCountry,
 
-        isFriend:isFriend,
-        setIsFriend:setIsFriend,
+        isFriend: isFriend,
+        setIsFriend: setIsFriend,
         isLoading: isLoading, 
         setIsLoading: setIsLoading,
+        reportValue: reportValue,
+        setReportValue: setReportValue,
+        friendsData: friendsData,
+        setFriendsData: setFriendsData,
+
+        getUserFriends: getUserFriends,
     };
     return (
         <ProfileContext.Provider value={userInfoData}> {child} </ProfileContext.Provider>

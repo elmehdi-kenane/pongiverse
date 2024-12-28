@@ -15,6 +15,7 @@ from .serializers import friendRequestSerializer
 from .serializers import friendSerializer
 from .serializers import customuserSerializer
 from myapp.decorators import authentication_required
+from mainApp.common import user_channels
 
 @authentication_required
 @api_view(['GET'])
@@ -66,8 +67,6 @@ def get_friend_suggestions(request, username):
     exclude_ids.update([req['second_username'] for req in received_reqs_ser.data])
 
     suggestion_list = [user for user in user_ser_list.data if user['second_username'] not in exclude_ids]
-    print("suggestion_list")
-    print(suggestion_list)
     return Response(suggestion_list)
 
 @authentication_required
@@ -272,6 +271,18 @@ def remove_friendship(request):
             }
         }
     )
+    to_user_channel_name = user_channels.get(to_user_id)
+    print("to_user_channel_name", to_user_channel_name)
+    if to_user_channel_name:
+        async_to_sync(channel_layer.send)(
+            to_user_channel_name,
+            {
+                'type': 'remove_friendship',
+                'message': {
+                    'second_username': from_username,
+                }
+            }
+        )
     return Response({"success": "Friendship removed successfully."})
 
 @authentication_required
@@ -315,6 +326,17 @@ def block_friend(request):
             }
         }
     )
+    blocked_channel_name = user_channels.get(to_user.id)
+    if blocked_channel_name:
+        async_to_sync(channel_layer.send)(
+            blocked_channel_name,
+            {
+                'type': 'blocked_friend',
+                'message': {
+                    'second_username': from_username
+                }
+            }
+        )
     return Response({"success": "friend blocked successfully."})
 
 @authentication_required

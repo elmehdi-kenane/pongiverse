@@ -11,7 +11,7 @@ import Dashboard from "./Dashboard/Dashboard";
 import Profile from "./Profile/Profile";
 import { ProfileWrapper } from "./Profile/ProfileWrapper";
 import { SettingsWrapper } from "./Settings/SettingsWrapper";
-import Friends from "./Friends/FriendsPage";
+import FriendshipPage from "./Friends/FriendsPage";
 import WaysSecondStep from "./components/SignUp/WaysSecondStep";
 import ForgotPassword from "./components/SignIn/ForgotPassword";
 import ChangePassword from "./components/SignIn/ChangePassword";
@@ -37,7 +37,7 @@ import OneVsOneOffline from "./Game/OneVsOneOffline"
 import TwoVsTwoFriends from "./Game/TwoVsTwoFriends";
 import TwoVsTwoCreateOrJoin from "./Game/TwoVsTwoCreateOrJoin";
 import GameSettings from "./Game/GameSettings";
-import Bot from "./Game/Bot";
+import AiOpponent from "./Game/AiOpponent";
 import { ToastContainer, Bounce } from "react-toastify";
 import LocalTournamentFillMembers from "./Tournament/LocalTournament/LocalTournamentFillMembers";
 import ErrorPage from "./ErrorPage/ErrorPage";
@@ -99,8 +99,8 @@ const App = () => {
               />
               <Route path="chat" element={<ChatProvider child={<Chat />} />} />
               <Route
-                path="friends"
-                element={<ChatProvider child={<Friends />} />}
+                path="Friendship"
+                element={<ChatProvider child={<FriendshipPage />} />}
               />
               <Route
                 path="groups"
@@ -109,7 +109,7 @@ const App = () => {
               <Route path="game" element={<Modes />} />
               <Route path="game/board" element={<GameSettings />} />
               <Route path="game/solo" element={<Solo />} />
-              <Route path="game/solo/computer" element={<Bot />} />
+              <Route path="game/solo/computer" element={<AiOpponent />} />
               <Route path="game/solo/1vs1" element={<OneVersusOne />} />
               <Route
                 path="game/solo/1vs1/random"

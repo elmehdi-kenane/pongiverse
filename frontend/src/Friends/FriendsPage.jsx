@@ -7,8 +7,9 @@ import "../assets/Friends/FriendsPage.css";
 import { DesktopFriendsWrapper } from "./DesktopFriendsWrapper.jsx";
 import { MobileFriendsWrapper } from "./MobileFriendsWrapper.jsx";
 import { SuggestionsWrapper } from "./SuggestionsWrapper.jsx";
+import GameNotifications from "../GameNotif/GameNotifications.jsx";
 
-const Friends = () => {
+const FriendshipPage = () => {
   const { user, socket } = useContext(AuthContext);
   const [friends, setFriends] = useState([]);
   const [blockedFriends, setBlockedFriends] = useState([]);
@@ -16,30 +17,29 @@ const Friends = () => {
   const [receivedRequests, setReceivedRequests] = useState([]);
   const [friendSuggestions, setFriendSuggestions] = useState([]);
 
-    const { notifSocket } = useContext(AuthContext);
-    const [data, setData] = useState({ message: 'messageStart', type: 'typeStart' });
-    useEffect(() => {
-        if (notifSocket) {
-            // console.log(".............. NEW MESSAGE FROM BACKEND ..............");
-            notifSocket.onmessage = (e) => {
-                const parsedData = JSON.parse(e.data);
-                const data =
-                {
-                    message: parsedData.message,
-                    type: parsedData.type,
-                };
-                setData(data)
-            }
-        }
-        else
-            console.log("notifSocket doesn't exist");
-    }, [notifSocket]);
+  const { notifSocket } = useContext(AuthContext);
+  const [data, setData] = useState({ message: 'messageStart', type: 'typeStart' });
+  // useEffect(() => {
+  //   if (notifSocket) {
+  //     // console.log(".............. NEW MESSAGE FROM BACKEND ..............");
+  //     notifSocket.onmessage = (e) => {
+  //       const parsedData = JSON.parse(e.data);
+  //       const data =
+  //       {
+  //         message: parsedData.message,
+  //         type: parsedData.type,
+  //       };
+  //       setData(data)
+  //     }
+  //   }
+  //   else
+  //     console.log("notifSocket doesn't exist");
+  // }, [notifSocket]);
 
   useEffect(() => {
     const getFriendSuggestions = async () => {
       const response = await fetch(
-        `http://${
-          import.meta.env.VITE_IPADDRESS
+        `http://${import.meta.env.VITE_IPADDRESS
         }:8000/friends/get_friend_suggestions/${user}`,
         {
           method: "GET",
@@ -56,8 +56,7 @@ const Friends = () => {
   useEffect(() => {
     const getFriends = async () => {
       const response = await fetch(
-        `http://${
-          import.meta.env.VITE_IPADDRESS
+        `http://${import.meta.env.VITE_IPADDRESS
         }:8000/friends/get_friend_list/${user}`,
         {
           method: "GET",
@@ -180,6 +179,7 @@ const Friends = () => {
         });
       }, 1000);
     } else if (data.type === "receive-friend-request") {
+      console.log("**************GAME NOTIFFF frieded")
       setReceivedRequests((prevReceivedRequests) => {
         const updatedReceivedRequests = [data.message, ...prevReceivedRequests];
         return updatedReceivedRequests;
@@ -196,8 +196,7 @@ const Friends = () => {
   useEffect(() => {
     const getSentRequests = async () => {
       const response = await fetch(
-        `http://${
-          import.meta.env.VITE_IPADDRESS
+        `http://${import.meta.env.VITE_IPADDRESS
         }:8000/friends/get_sent_requests/${user}`,
         {
           method: "GET",
@@ -214,8 +213,7 @@ const Friends = () => {
   useEffect(() => {
     const getReceivedRequests = async () => {
       const response = await fetch(
-        `http://${
-          import.meta.env.VITE_IPADDRESS
+        `http://${import.meta.env.VITE_IPADDRESS
         }:8000/friends/get_received_requests/${user}`,
         {
           method: "GET",
@@ -232,8 +230,7 @@ const Friends = () => {
   useEffect(() => {
     const getBlockedList = async () => {
       const response = await fetch(
-        `http://${
-          import.meta.env.VITE_IPADDRESS
+        `http://${import.meta.env.VITE_IPADDRESS
         }:8000/friends/get_blocked_list/${user}`,
         {
           method: "GET",
@@ -246,28 +243,31 @@ const Friends = () => {
     };
     if (user) getBlockedList();
   }, [user]);
-//   console.log("friends", friends);
-//   console.log("receivedRequests", receivedRequests);
-//   console.log("sentRequests", sentRequests);
+  //   console.log("friends", friends);
+  //   console.log("receivedRequests", receivedRequests);
+  //   console.log("sentRequests", sentRequests);
   return (
-    <div className="FriendPage">
-      <SuggestionsWrapper
-        friendSuggestions={friendSuggestions}
-      ></SuggestionsWrapper>
-      <DesktopFriendsWrapper
-        friends={friends}
-        receivedRequests={receivedRequests}
-        sentRequests={sentRequests}
-        blockedFriends={blockedFriends}
-      ></DesktopFriendsWrapper>
-      <MobileFriendsWrapper
-        friends={friends}
-        receivedRequests={receivedRequests}
-        sentRequests={sentRequests}
-        blockedFriends={blockedFriends}
-      ></MobileFriendsWrapper>
-    </div>
+    <>
+      <GameNotifications setData={setData}/>
+      <div className="FriendPage">
+        <SuggestionsWrapper
+          friendSuggestions={friendSuggestions}
+        ></SuggestionsWrapper>
+        <DesktopFriendsWrapper
+          friends={friends}
+          receivedRequests={receivedRequests}
+          sentRequests={sentRequests}
+          blockedFriends={blockedFriends}
+        ></DesktopFriendsWrapper>
+        <MobileFriendsWrapper
+          friends={friends}
+          receivedRequests={receivedRequests}
+          sentRequests={sentRequests}
+          blockedFriends={blockedFriends}
+        ></MobileFriendsWrapper>
+      </div>
+    </>
   );
 };
 
-export default Friends;
+export default FriendshipPage;

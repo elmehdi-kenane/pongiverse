@@ -247,8 +247,10 @@ class VerifyTokenView(APIView):
 			if user_id != -1:
 				user = customuser.objects.filter(id=user_id).first()
 				if user is not None:
+					serializer = MyModelSerializer(user)
 					tokens = get_tokens_for_user(user)
 					response.set_cookie('access_token', tokens['access'], httponly=True)
+					response.data = {"Case": "Token refreshed", "data": serializer.data}
 					return response
 				else :
 					response.data = {"Case" : "Invalid token"}
@@ -257,44 +259,6 @@ class VerifyTokenView(APIView):
 				response.data = {"Case" : "Invalid token"}
 				return response
 
-# class VerifyTokenView(APIView):
-#     def post(self, request, format=None):
-#         refresh_token = request.COOKIES.get('refresh_token')
-#         if not refresh_token:
-#             return Response(data={"Case": "Invalid token"}, status=401)
-
-#         try:
-#             decoded_token = RefreshToken(refresh_token)
-#             user_id = decoded_token.payload['user_id']
-#         except TokenError:
-#             return Response(data={"Case": "Invalid token"}, status=401)
-
-#         token = request.COOKIES.get('access_token')
-#         if token:
-#             try:
-#                 decoded_token = AccessToken(token)
-#                 if not decoded_token.payload.get('user_id'):
-#                     return Response(data={"Case": "Invalid token"}, status=401)
-
-#                 user = customuser.objects.filter(id=decoded_token.payload['user_id']).first()
-#                 if user:
-#                     serializer = MyModelSerializer(user)
-#                     return Response(data={"Case": "valid token", "data": serializer.data}, status=200)
-#                 else:
-#                     return Response(data={"Case": "Invalid token"}, status=401)
-
-#             except TokenError:
-#                 # Handle the case where access token is invalid
-#                 user = customuser.objects.filter(id=user_id).first()
-#                 if user:
-#                     tokens = get_tokens_for_user(user)
-#                     response = Response(data={"Case": "New tokens issued."}, status=200)
-#                     response.set_cookie('access_token', tokens['access'], httponly=True)
-#                     return response
-#                 else:
-#                     return Response(data={"Case": "Invalid token"}, status=401)
-#         else:
-#             return Response(data={"Case": "No access token provided."}, status=401)
 
 os.environ['SSL_CERT_FILE'] = certifi.where()
 class ForgetPasswordView(APIView):

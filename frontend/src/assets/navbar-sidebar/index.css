@@ -61,13 +61,12 @@ body {
 
 .search-bar {
   width: 50%;
-  max-width: 800px;
+  margin-left: -40px;
   display: flex;
   flex-direction: column;
-  /* position: fixed; */
   align-items: center;
+  /* background-color: green; */
   height: max-content;
-  margin: 0 auto;
 }
 
 .SearchFilterBar {
@@ -208,11 +207,12 @@ body {
 
 .search-bar input {
   width: 100%;
-  min-height: 50px;
+  height: 42px;
   box-sizing: border-box;
   border: 2px solid rgb(255, 255, 255);
   border-radius: 30px;
   background-color: transparent;
+  /* background-color: red; */
   background-image: url("./search.svg");
   background-repeat: no-repeat;
   background-position: 20px center;
@@ -312,6 +312,43 @@ body {
   text-indent: 50px;
 }
 
+.search-bar-mobile {
+  width: 100%;
+  margin: 0 auto;
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.search-bar-mobile input {
+  width: 98%;
+  height: 40px;
+  border: 2px solid #4d4ea6;
+  border-radius: 10px;
+  background-size: 15px;
+  text-indent: 15px;
+  color: black;
+  font-size: 15px;
+  outline: none;
+}
+
+.search-bar-mobile input::placeholder {
+  color: black;
+  opacity: 0.5;
+  text-indent: 15px;
+}
+
+.search-bar-mobile input:focus {
+  outline: none;
+  border-color: #913dce;
+  color: black;
+  text-indent: 15px;
+}
+
 .profile-notifications {
   display: flex;
   flex-direction: row;
@@ -333,10 +370,6 @@ body {
   width: 35px;
   height: 35px;
   border-radius: 50%;
-}
-
-.profile-notifications #notifications-icon img {
-  width: 30px;
 }
 
 .sidebarWrapper {
@@ -546,11 +579,12 @@ body {
 .no-notifications-dropdown {
   position: absolute;
   background-color: #d9d9d9;
-  width: 320px;
+  width: 350px;
   left: -285px;
-  top: 40px;
+  top: 45px;
   border-radius: 20px;
   display: flex;
+  z-index: 200;
 }
 
 #notifications-icon .no-notifications-dropdown {
@@ -594,42 +628,142 @@ body {
 .notifications-container {
   position: absolute;
   background-color: #d9d9d9;
-  width: 320px;
+  width: 350px;
   left: -285px;
-  top: 40px;
-  border-radius: 20px;
+  top: 45px;
+  border-radius: 15px;
   display: flex;
-  flex-direction: column;
-}
-
-.notifications-dropdown .notifications-pic-text {
-  display: flex;
-  flex-direction: row;
   align-items: center;
-  padding: 10px 0 10px 15px;
+  flex-direction: column;
+  padding: 10px 0;
+  z-index: 200;
 }
 
-.notifications-dropdown .notifications-pic-text #notifications-text {
-  padding-left: 10px;
-  overflow: auto;
-  line-break: auto;
+.notifications-items {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 7px;
+    max-height: 278px;
+    overflow: auto;
+    scrollbar-gutter: stable; /* scroll bar take space and layout shift so this attr prevent this behavior :) */
 }
 
-.notifications-dropdown .notifications-pic-text #notifications-text a {
-  text-decoration: none;
-  color: black;
-  font-size: 15px;
+.notifications-items::-webkit-scrollbar {
+  width: 5px;
+}
+
+.notifications-items::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.notifications-items::-webkit-scrollbar-thumb {
+  background: #913dce;
+}
+
+.notifications-items::-webkit-scrollbar-thumb:hover {
+  background: #913dce;
+}
+
+.notifications-unread {
+    width: 13px;
+    height: 13px;
+    border-radius: 100%;
+    background-color: #913dce;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.notification-item:hover {
+    background-color: white;
+}
+
+.notification-item .profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    border: 2px solid #250939;
+
+}
+.notification-item {
+    background-color: transparent;
+    border-radius: 15px;
+    width: 95%;
+    display: flex;
+    justify-content: space-between;
+    height: 50px;
+    padding: 10px;
+    align-items: center;
+    border: none;
+    text-decoration: none;
+}
+.notification-item p {
+    color: #1E0934;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.notification-item .notification-text {
+    font-weight: 600;
+    margin-right: auto;
+    margin-left: 5px;
+}
+
+.notification-item .SentFriendReqCardSendAt {
+    opacity: 50%;
+    font-size: 10px;    
+}
+
+.manageNotificationsBtns {
+    display: flex;
+    width: 95%;
+    justify-content: space-between;
+    padding: 0px 10px;
+}
+
+.manageNotificationsBtns button {
+    padding: 7px;
+    background-color: white;
+    border: none;
+    border-radius: 5px;
+    color: #1E0934;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#notifications-icon hr {
+    height: 1px;
+    width: 65%;
+    margin: 15px 0;
+    background-color: #1E0934;
+    border: none;
+}
+
+.manageNotificationsBtns button:enabled:hover {
+    background-color: #913dce;
+    color: white;
+    
+}
+.manageNotificationsBtns button:disabled:hover {
+    cursor: not-allowed;
+}
+.manageNotificationsBtns button:disabled {
+    background-color: light-dark(rgba(239, 239, 239, 0.3), rgba(19, 1, 1, 0.3));
+    color: light-dark(rgba(16, 16, 16, 0.3), rgba(255, 255, 255, 0.3));
+    border-color: light-dark(rgba(118, 118, 118, 0.3), rgba(195, 195, 195, 0.3));
 }
 
 @media screen and (max-width: 768px) {
-  .navbar {
-    margin-top: 2px;
-  }
-
-  .sidebarWrapper {
-    flex-direction: column;
-  }
-
+    .navbar {
+        margin-top: 2px;
+    }
+    
+    .sidebarWrapper {
+        flex-direction: column;
+    }
+    
   .sidebar {
     width: 100%;
     max-height: 30px;
@@ -638,7 +772,7 @@ body {
     flex-direction: row;
     background-color: transparent;
     border-radius: 0;
-    /* overflow: hidden; */
+    overflow: hidden;
     margin: 0 0;
     box-shadow:none;
     border: none;
@@ -678,11 +812,6 @@ body {
   .profile-notifications #profile-icon img {
     width: 32px;
   }
-
-  .profile-notifications #notifications-icon img {
-    width: 27px;
-  }
-
   .no-notifications-dropdown {
     width: 230px;
     left: -180px;
@@ -697,11 +826,6 @@ body {
 
   #notifications-icon .no-notifications-dropdown #dropdown-notifications-body {
     font-size: 9px;
-  }
-
-  .notifications-container {
-    width: 150px;
-    left: -110px;
   }
 
   .sidebar #channels {
@@ -1543,16 +1667,24 @@ body {
 .cancel-game-invite-request {
   /* margin: 30px 0 100px 0; */
   position: absolute;
-  top: 5%;
+  width: 100%;
+  max-width: 400px;
+  top: 60px;
   left: 50%;
   z-index: 100;
   transform: translate(-50%);
 }
 
+@media screen and (max-width: 768px) {
+  .cancel-game-invite-request {
+    top: 115px;
+  }
+}
+
 /* GAME INVITATION DESIGN */
 
 .game-invitations {
-  width: 400px;
+  width: 100%;
   margin: 0 0 30px 100%;
   transform: translate(-100%);
   max-height: 130px;
@@ -2583,6 +2715,11 @@ body {
     margin-top: 80px;
   }
 
+  .notifications-container {
+    /* position: absolute;
+    width: 100%; */
+  }
+
   .twovstwo-dashboard-opponents {
     width: 90%;
     padding: 120px 0;
@@ -2813,6 +2950,11 @@ body {
 }
 
 @media (max-width: 768px) {
+  .slider-container {
+    overflow-x: unset !important;
+    /* overflow-y: auto !important; */
+  }
+
   .swiper-button-next {
     right: 8% !important;
   }
@@ -3245,11 +3387,12 @@ body {
   width: 80%;
   height: 40px;
   min-height: 40px;
-  margin: 100px auto 100px;
+  margin: 50px auto 100px;
   justify-content: space-between;
 }
 
-.gameCustom-selects button:first-child {
+.gameCustom-selects button:first-child,
+.gameCustom-selects div button:first-child {
   width: 138px;
   height: 100%;
   border-radius: 5px;
@@ -3259,7 +3402,12 @@ body {
   cursor: pointer;
 }
 
-.gameCustom-selects button:last-child {
+.gameCustom-selects div {
+  display: flex;
+  gap: 5px;
+}
+
+.gameCustom-selects div button:last-child {
   width: 138px;
   height: 100%;
   border-radius: 5px;
@@ -3269,7 +3417,7 @@ body {
   cursor: pointer;
 }
 
-.gameCustom-selects button:last-child:hover {
+.gameCustom-selects div button:last-child:hover {
   background-color: #ae3dff;
 }
 
@@ -3281,7 +3429,7 @@ body {
   background-color: #913dce;
 }
 
-@media (max-width: 450px) {
+@media (max-width: 530px) {
   .gameCustom-components {
     gap: 8px;
   }
@@ -3292,7 +3440,7 @@ body {
     height: 90px;
     min-height: 80px;
     gap: 10px;
-    margin: 60px auto 100px;
+    margin: 0 auto 150px;
     /* background-color: #775C9E; */
   }
 
@@ -3301,6 +3449,12 @@ body {
     min-width: 100%;
     height: 40px;
     min-height: 40px;
+  }
+
+  .gameCustom-selects div {
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 50px;
   }
 }
 
@@ -3317,7 +3471,7 @@ body {
   .gameCustom-selects {
     height: 90px;
     min-height: 80px;
-    margin: 40px auto 100px;
+    margin: 0 auto 150px;
   }
 }
 

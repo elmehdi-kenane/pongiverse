@@ -122,7 +122,6 @@ height: 170px;
 .disableEmblaBtns {
     display: none;
 }
-
 .FriendPage {
     display: flex;
     flex-direction: column;
@@ -176,6 +175,7 @@ height: 170px;
     /* margin: 20px 0; */
     font-weight: bold;
     min-width: max-content;
+    border-radius: 15px;
     font-size: x-large;
 }
 

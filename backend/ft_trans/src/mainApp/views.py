@@ -138,7 +138,6 @@ def is_user_in_any_tournament(username):
 					return True, tournament_id, [m['username'] for m in tournament_data['members']]
 	return False, 0, []
 
-
 def get_users_data(usernames):
 	allMembers = []
 	ip_address = os.getenv("IP_ADDRESS")
@@ -234,10 +233,11 @@ def notifs_friends(request):
 	allNotifs = []
 	ip_address = os.getenv("IP_ADDRESS")
 	for gameNotif in GameNotifications.objects.filter(target=target):
+		usermatchstats = UserMatchStatics.objects.filter(player=gameNotif.user).first()
 		if gameNotif.active_match is not None:
-			allNotifs.append({'tournament_id' : '', 'user': gameNotif.user.username, 'avatar': f"http://{ip_address}:8000/auth{gameNotif.user.avatar.url}", 'roomID': gameNotif.active_match.room_id, 'mode': gameNotif.mode})
+			allNotifs.append({'tournament_id' : '', 'user': gameNotif.user.username, 'level' : usermatchstats.level , 'image': f"http://{ip_address}:8000/auth{gameNotif.user.avatar.url}", 'roomID': gameNotif.active_match.room_id, 'mode': gameNotif.mode})
 		elif gameNotif.tournament_id != 0:
-			allNotifs.append({'tournament_id' : gameNotif.tournament_id, 'user': gameNotif.user.username, 'avatar': f"http://{ip_address}:8000/auth{gameNotif.user.avatar.url}", 'roomID': '', 'mode': gameNotif.mode})
+			allNotifs.append({'tournament_id' : gameNotif.tournament_id, 'user': gameNotif.user.username, 'level' : usermatchstats.level, 'image': f"http://{ip_address}:8000/auth{gameNotif.user.avatar.url}", 'roomID': '', 'mode': gameNotif.mode})
 
 	return Response({'message': allNotifs})
 
@@ -332,6 +332,10 @@ def get_tournament_size(request):
 	response = Response()
 	tournament_id = request.data.get('tournament_id')
 	user = request.data.get('user')
+	target = customuser.objects.filter(username=user).first()
+	tournament_invitation = GameNotifications.objects.filter(tournament_id=tournament_id, target=target).first()
+	if tournament_invitation:
+		tournament_invitation.delete()
 	if tournament_id  not in tournaments:
 		response.data = {'Case' : 'Tournament_does_not_exist'}
 		return response
@@ -349,7 +353,8 @@ def get_tournament_size(request):
 
 
 
-
+@authentication_required
+@api_view(['POST'])
 def customize_game(request):
 	paddle_color = request.data['paddle']
 	ball_color = request.data['ball']
@@ -408,7 +413,6 @@ def set_is_inside(request):
 			if member['username'] == username:
 				if not tournament_data['is_started'] or (tournament_data['is_started'] and not tournament_data['is_finished'] and not member['is_eliminated']):
 					member['is_inside'] = is_inside
-					print(f"\n\nMember is Inside: {member['is_inside']}\n\n")
 					response.data = {'Case': 'yes'}
 					return response
 

@@ -18,7 +18,7 @@ const OneVsOneRandom = () => {
     let randomPics
     let { privateCheckAuth, socket, user,
         socketRecreated, setSocketRecreated,
-        userImg, loading } = useContext(AuthContext)
+        userImg, loading, userLevel } = useContext(AuthContext)
 
     let isOut = false
     const userRef = useRef(user)
@@ -201,8 +201,8 @@ const OneVsOneRandom = () => {
                 <div className='onevsone-dashboard-opponent'>
                     <div><img src={userImg} alt="profile-pic" style={{borderRadius: '50%'}} /></div>
                     <div className='onevsone-opponent-infos'>
-                        <p>mmaqbour</p>
-                        <p>level 6.5</p>
+                        <p>{user}</p>
+                        <p>level {userLevel}</p>
                     </div>
                 </div>
                 <div className={(!allSet && loadMatch) ? 'onevsone-dashboard-logo onevsone-dashboard-logo-loading' : 'onevsone-dashboard-logo'} >

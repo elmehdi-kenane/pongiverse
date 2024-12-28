@@ -89,14 +89,6 @@ TEMPLATES = [
 # WSGI_APPLICATION = 'ft_transcandence.wsgi.application'
 ASGI_APPLICATION = 'ft_transcandence.asgi.application'
 
-# CHANNEL_LAYERS = {
-# 	"default": {
-# 		"BACKEND": "channels.layers.InMemoryChannelLayer",
-#     "CONFIG": {
-#           "capacity": 5000,
-#       },
-# 	}
-# }
 
 AUTHENTICATION_BACKENDS = [
 	'myapp.authentication.CustomUserModelBackend',

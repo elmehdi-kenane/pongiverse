@@ -568,9 +568,11 @@ def reset_unread_messages(request):
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
         try:
+            print("***********:", request.data.get("receiver"))
             receiver = customuser.objects.get(id=request.data.get("receiver"))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
+        print("inside reset_unread_messages")
         unread = Directs.objects.filter(sender=receiver, receiver=user, is_read=False)
         if unread:
             unread.update(is_read=True)

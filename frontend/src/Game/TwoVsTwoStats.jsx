@@ -12,7 +12,7 @@ const TwoVsTwoStats = (props) => {
 
     return (
         <div className='twovstwo' style={{position: 'relative'}} >
-                {(props.gameFinished && (props.user === props.userName1 || props.user === props.userName2)) ? ((props.playersInfos[0].totalScore > props.playersInfos[2].totalScore) ? (
+                {(props.gameFinished && (props.user === props.userName1 || props.user === props.userName2)) ? ((props.playersInfos[0].status === 'winner' || props.playersInfos[1].status === 'winner') ? (
                     <>
                         <div className='winner_cup' >
                             <img src={Icons.winnerCup} alt="winner cup" />
@@ -21,7 +21,7 @@ const TwoVsTwoStats = (props) => {
                     </>
                 ) : (
                     <p className='loser_support' >BETTER LUCK NEXT TIME!</p>
-                )) : (props.gameFinished && (props.user === props.userName3 || props.user === props.userName4)) ? ((props.playersInfos[2].totalScore > props.playersInfos[0].totalScore) ? (
+                )) : (props.gameFinished && (props.user === props.userName3 || props.user === props.userName4)) ? ((props.playersInfos[2].status === 'winner' || props.playersInfos[3].status === 'winner') ? (
                     <>
                         <div className='winner_cup' >
                             <img src={Icons.winnerCup} alt="winner cup" />

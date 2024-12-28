@@ -25,8 +25,8 @@ function SidebarLaptop({ Icons }) {
     {
       id: 2,
       icon: Icons.friends,
-      route: "friends",
-      text: "Friends",
+      route: "friendship",
+      text: "Friendship",
     },
     {
       id: 3,

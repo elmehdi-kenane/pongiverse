@@ -14,6 +14,8 @@ directories=(
     "/goinfre/ekenane/ft_transcendence/backend/ft_trans/src/Notifications/migrations"
     "/goinfre/ekenane/ft_transcendence/backend/ft_trans/src/myapp/__pycache__"
     "/goinfre/ekenane/ft_transcendence/backend/ft_trans/src/myapp/migrations"
+    "/goinfre/ekenane/ft_transcendence/backend/ft_trans/src/navBar/__pycache__"
+    "/goinfre/ekenane/ft_transcendence/backend/ft_trans/src/navBar/migrations"
 )
 
 for dir in "${directories[@]}"; do
