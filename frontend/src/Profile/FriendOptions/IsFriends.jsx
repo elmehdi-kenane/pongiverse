@@ -19,8 +19,7 @@ const friendPrm = ["chat", "challenge", "delete", "block"];
 function IsFriends(){
     const [isParam, setIsParam] = useState(false);
     const { user } = useContext(AuthContext);
-    const {userId, isFriend, setIsFriend, isLoading, setIsLoading} = useContext(ProfileContext);
-    const [gjw9, setgjw9] = useState(false);
+    const { userId, isFriend, setIsFriend, isLoading, setIsLoading } = useContext(ProfileContext);
       
     const handleFriendParam = () => {
         setIsParam(!isParam);
@@ -28,7 +27,7 @@ function IsFriends(){
     const HandleAddFriend = () => {
       setIsLoading(true);
       setTimeout(() => {
-        handleAddFriendReq(user, userId, setgjw9)
+        handleAddFriendReq(user, userId)
         setIsLoading(false);
         setIsFriend('pending');
       }, 1200);
@@ -42,22 +41,6 @@ function IsFriends(){
       }, 1200);
     }
 
-    // useEffect (() => {
-    //   const handleClickOutside = (event)=> {
-    //     // if (!event.composedPath().includes(paramRef.current)) {
-    //     //   setIsParam(false);
-    //     //   // console.log("click outside Param");
-    //     //   // console.log(event.composedPath());
-    //     // }
-    //     if (!event.composedPath().includes(blockRef.current) 
-    //       && !event.composedPath().includes(blockContentRef.current))
-    //         setIsBlock(false);
-    //   }
-    //   document.body.addEventListener('click', handleClickOutside)
-    //   return () => {
-    //     document.body.removeEventListener('click', handleClickOutside)
-    //   }
-    // }, [])
     
     document.addEventListener('click', (e) => {
       if (!e.target.closest('#param-click') && isParam){  

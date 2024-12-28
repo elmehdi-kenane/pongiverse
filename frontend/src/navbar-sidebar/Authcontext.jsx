@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
 	const [isGameStats, setIsGameStats] = useState(false);
 	const [isChatBlur, setIsChartBlur] = useState(false);
 
-	const [reportValue, setReportValue] = useState(null);
+	// const [reportValue, setReportValue] = useState(null);
 	const reportContentRef = useRef(null);
 	const blockRef = useRef(null);
 	const blockContentRef = useRef(null);
@@ -545,8 +545,8 @@ export const AuthProvider = ({ children }) => {
 		isReport: isReport,
 		setIsReport: setIsReport,
 		reportContentRef: reportContentRef,
-		reportValue: reportValue,
-		setReportValue: setReportValue,
+		// reportValue: reportValue,
+		// setReportValue: setReportValue,
 		isBlock: isBlock,
 		setIsBlock: setIsBlock,
 		isGameStats: isGameStats,

@@ -27,6 +27,7 @@ export const ProfileWrapper = ({ child }) => {
 
     const [isFriend, setIsFriend] = useState('false');
     const [isLoading, setIsLoading] = useState(false);
+    const [reportValue, setReportValue] = useState(null);
 
     useEffect(() => {
         const checkFriendship = async () => {
@@ -45,9 +46,9 @@ export const ProfileWrapper = ({ child }) => {
                     setIsFriend(res.data);
                 }
                 else
-                console.log(res.error);
+                    console.error(res.error);
             } catch (error) {
-                console.log("Error: ", error);
+                console.error("Error: ", error);
             }
         }
         const getUserData = async () => {
@@ -121,6 +122,8 @@ export const ProfileWrapper = ({ child }) => {
         setIsFriend:setIsFriend,
         isLoading: isLoading, 
         setIsLoading: setIsLoading,
+        reportValue: reportValue,
+        setReportValue: setReportValue,
     };
     return (
         <ProfileContext.Provider value={userInfoData}> {child} </ProfileContext.Provider>
