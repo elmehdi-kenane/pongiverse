@@ -116,10 +116,9 @@ const OneVsOneFriends = () => {
 						if (!userExists)
 							setAllGameFriends([...currentAllGameFriends, message.userInfos])
 					}
-				} else if (type === 'hmed') {
-					console.log("hmed received")
+				} else if (type === 'hmed')
 					socket.close()
-				} else if (type === 'blocked-friend' || type === 'remove-friendship') {
+				else if (type === 'blocked-friend' || type === 'remove-friendship') {
 					const currentAllGameFriends = allGameFriendsRef.current;
 					let username = message.second_username
 					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== username))

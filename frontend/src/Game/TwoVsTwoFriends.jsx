@@ -250,7 +250,8 @@ const TwoVsTwoFriends = () => {
 					const currentAllGameFriends = allGameFriendsRef.current;
 					let username = message.second_username
 					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== username))
-				}
+				} else if (type === 'hmed')
+                    socket.close()
 			}
 		}
 

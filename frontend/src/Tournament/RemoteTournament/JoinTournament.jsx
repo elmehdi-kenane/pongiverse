@@ -143,7 +143,6 @@ function JoinTournament() {
 						)
 					);
 				} else if (type === 'hmed') {
-					console.log("WWWWWWWWWAAAAA HMEEEEEEEED")
 					socket.close()
 				} else if (type == 'accepted_invitation') {
 					const socketRefer = socketRef.current
@@ -192,33 +191,6 @@ function JoinTournament() {
 		}
 	}, [notifSocket])
 
-	const check_is_in_game = async () => {
-		try {
-			let response = await fetch(
-				`http://${import.meta.env.VITE_IPADDRESS}:8000/api/check_is_in_game`,
-				{
-					method: "POST",
-					credentials: "include",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({
-						user: user,
-					}),
-				}
-			);
-			let data = await response.json();
-			if (!data.error) {
-				(data.mode === 'tournament') ? navigate('../game/createtournament') : (data.mode === '1vs1') ? navigate('../game/solo/1vs1/random') : navigate('../game/solo/2vs2/random')
-			}
-
-		} catch (error) {
-			console.error(
-				"There has been a problem with your fetch operation:",
-				error
-			);
-		}
-	}
 
 	useEffect(() => {
 		const get_members = async () => {

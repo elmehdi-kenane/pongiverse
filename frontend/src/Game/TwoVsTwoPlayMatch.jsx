@@ -774,7 +774,8 @@ const TwoVsTwoPlayMatch = () => {
                         setUserOut([...userGotOut, message.userNo])
                         // playerGotOut(message)
                     }
-                }
+                } else if (type === 'hmed')
+                    socket.close()
             }
         }
     }, [socket, user])

@@ -251,7 +251,8 @@ const TwoVsTwoRandom = () => {
                     randomPics = setInterval(() => {
                         setRandomPic(picsList[Math.floor(Math.random() * picsList.length)])
                     }, 500);
-                }
+                } else if (type === 'hmed')
+                    socket.close()
             }
         }
 

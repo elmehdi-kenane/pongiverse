@@ -252,16 +252,15 @@ const TwoVsTwoCreateOrJoin = () => {
                         setMatchJoined(true)
                     } else
                         setCodeToShare(message.id)
-                }
-                else if (type === 'invalidCode') {
+                } else if (type === 'invalidCode') {
                     inputRoomId.current.value = ''
                     setRoomIdIncorrect(true)
                     setCheckingCode(false)
-                }
-                else if (type === 'creatorOut') {
+                } else if (type === 'creatorOut') {
                     console.log("creator got out")
                     navigate(`../game/solo/2vs2`)
-                }
+                } else if (type === 'hmed')
+                    socket.close()
             }
         }
 

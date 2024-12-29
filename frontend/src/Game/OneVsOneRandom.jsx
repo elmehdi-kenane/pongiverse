@@ -114,10 +114,8 @@ const OneVsOneRandom = () => {
                     randomPics = setInterval(() => {
                         setRandomPic(picsList[Math.floor(Math.random() * picsList.length)])
                     }, 1000);
-                } else if (type === 'hmed') {
-					console.log("hmed received")
+                } else if (type === 'hmed')
                     socket.close()
-                }
             }
         }
 
