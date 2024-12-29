@@ -89,11 +89,7 @@ const App = () => {
               />
               <Route
                 path="profile/:userId"
-                element={
-                  <ChatProvider
-                    child={<ProfileWrapper child={<Profile />} />}
-                  />
-                }
+                element={<ProfileWrapper child={<Profile />} />}
               />
               <Route
                 path="settings"
@@ -107,15 +103,9 @@ const App = () => {
                 path="settings/security/forgotpassword"
                 element={<ForgotPassword />}
               />
-              <Route path="chat" element={<ChatProvider child={<Chat />} />} />
-              <Route
-                path="Friendship"
-                element={<ChatProvider child={<FriendshipPage />} />}
-              />
-              <Route
-                path="groups"
-                element={<ChatProvider child={<Rooms />} />}
-              />
+              <Route path="chat" element={<Chat />} />
+              <Route path="Friendship" element={<FriendshipPage />} />
+              <Route path="groups" element={<Rooms />} />
               <Route path="game" element={<Modes />} />
               <Route path="game/board" element={<GameSettings />} />
               <Route path="game/solo" element={<Solo />} />

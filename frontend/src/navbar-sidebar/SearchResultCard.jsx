@@ -1,8 +1,8 @@
 import { handleAddFriendReq } from "../Friends/utils";
 import { useState } from "react";
 import AuthContext from "./Authcontext";
-import { useContext } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
 import ChatContext from "../Context/ChatContext";
 
@@ -27,9 +27,12 @@ const SearchResultCard = ({
     suggestedChatRoomsRef,
     setSelectedChatRoom,
     setIsHome,
+    setMyChatRooms,
+    myChatRooms,
+    myChatRoomsRef,
   } = useContext(ChatContext);
+  console.log("get myChatRoomsRef.current", myChatRoomsRef.current);
   const navigate = useNavigate();
-
   const joinChatRoomSubmitter = async () => {
     // const toastId = toast.loading("Joining the chat room...");
     try {
@@ -46,21 +49,17 @@ const SearchResultCard = ({
         }
       );
       const data = await response.json();
+      console.log("data", data);
       if (response.ok) {
-        // setTimeout(() => {
-        // toast.success("Successfully joined the chat room!");
-        // toast.dismiss(toastId); // Dismiss the loading toast
         let suggestedChatRooms = suggestedChatRoomsRef.current;
         let updatedSuggestedRooms = suggestedChatRooms.filter(
           (room) => room.id !== id
         );
         setSuggestedChatRooms(updatedSuggestedRooms);
-        const currentChatRooms = props.myChatRooms;
-        //   props.setMyChatRooms([...currentChatRooms, data.room]); fix by abdelah
-        // }, 2000); // Adjust the delay time (in milliseconds) as needed
+        const currentChatRooms = myChatRoomsRef.current;
+        setMyChatRooms([...currentChatRooms, data.room])
       } else {
         setTimeout(() => {
-          //   toast.dismiss(toastId); // Dismiss the loading toast
           toast.error(data.error);
         }, 500);
       }
@@ -110,8 +109,8 @@ const SearchResultCard = ({
   const resultTextArr = HighlightSearchTerm();
 
   const handleClickItem = () => {
-      setInputValue("");
-      handleSearchBar();
+    setInputValue("");
+    handleSearchBar();
     if (result_type === "user") {
       navigate(`/mainpage/profile/${resultText}`);
     } else if (result_type === "room" && is_joined === true) {
@@ -125,10 +124,9 @@ const SearchResultCard = ({
       });
       setIsHome(false);
       navigate(`/mainpage/chat/`);
-    } else
-    {
-        console.log("show toast ===============================");
-        toast.error("Please join the room to access its content.");
+    } else {
+      console.log("show toast ===============================");
+      toast.error("Please join the room to access its content.");
     }
   };
   return (

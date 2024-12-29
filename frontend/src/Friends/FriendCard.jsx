@@ -100,6 +100,7 @@ const FriendCard = ({
   };
 
   const navigateToChat = () => {
+    console.log("friendId", friendId);
     setSelectedDirect({
       id: friendId,
       name: secondUsername,

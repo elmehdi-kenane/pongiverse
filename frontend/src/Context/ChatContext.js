@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState, useContext, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import AuthContext from "../navbar-sidebar/Authcontext";
+import { use } from "react";
 const ChatContext = createContext();
 export default ChatContext;
 
@@ -13,12 +14,29 @@ export const ChatProvider = ({ child }) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const chatRoomInvitationsRef = useRef(chatRoomInvitations);
   const suggestedChatRoomsRef = useRef(suggestedChatRooms);
+  const [allFriends, setAllFriends] = useState([]);
+  const allFriendsRef = useRef(allFriends);
+  const [allChatRoomMembers, setAllChatRoomMembers] = useState([]);
+  // const [directs, setDirects] = useState([]);
+  const [myChatRooms, setMyChatRooms] = useState([]);
+  const myChatRoomsRef = useRef(myChatRooms);
+  useEffect(() => {
+    console.log("inside the chat context", location.pathname);
+    myChatRoomsRef.current = myChatRooms;
+    console.log("chat Context myChatRoomsRef.current", myChatRoomsRef.current);
+  }, [myChatRooms]);
+  const [chatRooms, setChatRooms] = useState([]);
+
+  useEffect(() => {
+    allFriendsRef.current = allFriends;
+  }, [allFriends]);
+
   const [selectedChatRoom, setSelectedChatRoom] = useState({
+    id: "",
     name: "",
     membersCount: "",
     icon: "",
     cover: "",
-    id: "",
     topic: "",
   });
   const [selectedDirect, setSelectedDirect] = useState({
@@ -29,7 +47,6 @@ export const ChatProvider = ({ child }) => {
   });
   const selectedDirectRef = useRef(selectedDirect);
   const selectedChatRoomRef = useRef(selectedChatRoom);
-
 
   useEffect(() => {
     suggestedChatRoomsRef.current = suggestedChatRooms;
@@ -42,7 +59,6 @@ export const ChatProvider = ({ child }) => {
   useEffect(() => {
     selectedChatRoomRef.current = selectedChatRoom;
   }, [selectedChatRoom]);
-
 
   useEffect(() => {
     chatRoomInvitationsRef.current = chatRoomInvitations;
@@ -71,9 +87,11 @@ export const ChatProvider = ({ child }) => {
     const fetchChatRoomInvitations = async () => {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS
-          }:8000/chatAPI/chatRoomInvitations/${user}`,{
-            credentials: "include"
+          `http://${
+            import.meta.env.VITE_IPADDRESS
+          }:8000/chatAPI/chatRoomInvitations/${user}`,
+          {
+            credentials: "include",
           }
         );
         let data = await response.json();
@@ -87,7 +105,8 @@ export const ChatProvider = ({ child }) => {
     const fetchSuggestedChatRooms = async () => {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS
+          `http://${
+            import.meta.env.VITE_IPADDRESS
           }:8000/chatAPI/suggestedChatRooms/${user}`,
           {
             credentials: "include",
@@ -104,6 +123,7 @@ export const ChatProvider = ({ child }) => {
     if (user && location.pathname === "/mainpage/groups") {
       fetchChatRoomInvitations();
       fetchSuggestedChatRooms();
+      // fetchAllFriends();
     } else if (user && location.pathname === "/mainpage/chat") {
     }
   }, [location.pathname, user]);
@@ -125,6 +145,15 @@ export const ChatProvider = ({ child }) => {
     setSelectedItem: setSelectedItem,
     suggestedChatRoomsRef: suggestedChatRoomsRef,
     selectedChatRoomRef: selectedChatRoomRef,
+    chatRooms: chatRooms,
+    setChatRooms: setChatRooms,
+    allFriends: allFriends,
+    setAllFriends: setAllFriends,
+    allFriendsRef: allFriendsRef,
+    allChatRoomMembers: allChatRoomMembers,
+    myChatRooms: myChatRooms,
+    setMyChatRooms: setMyChatRooms,
+    myChatRoomsRef: myChatRoomsRef,
   };
   return (
     <ChatContext.Provider value={contextData}>{child}</ChatContext.Provider>

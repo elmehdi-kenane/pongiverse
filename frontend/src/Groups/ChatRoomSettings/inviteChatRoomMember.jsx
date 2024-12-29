@@ -1,12 +1,14 @@
 import { useContext, useEffect, useState } from "react";
 import ChatRoomInvitee from "./chatRoomInvitee";
 import AuthContext from "../../navbar-sidebar/Authcontext";
+import ChatContext from "../../Context/ChatContext";
 import { toast } from "react-toastify";
 
 
 const InviteChatRoomMember = (props) => {
-const [allFriends, setAllFriends] = useState([]);
+// const [allFriends, setAllFriends] = useState([]);
 const { user } = useContext(AuthContext);
+const { allFriends, setAllFriends} = useContext(ChatContext);
 
   useEffect(() => {
     const fetchAllFriends = async () => {

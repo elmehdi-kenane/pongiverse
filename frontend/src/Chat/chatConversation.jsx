@@ -180,11 +180,18 @@ const ChatConversation = ({
 
   useEffect(() => {
     if (messageEndRef && messageEndRef.current) {
-      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+      messageEndRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        top: messageEndRef.current.offsetTop - 50,
+      });
+      messageEndRef.current.scrollTop = messageEndRef.current.scrollHeight;
       updateLastMessage();
       setFirstScroll(false);
     }
   }, [messages, lastMessage]);
+  
+
 
   const handelScroll = (e) => {
     if (messageBodyRef.current) {
