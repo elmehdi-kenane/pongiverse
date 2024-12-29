@@ -103,9 +103,13 @@ const GameNotifications = (props) => {
 
   useEffect(() => {
     {
-      newReceivedFriendReqNotif &&
-        location.pathname !== "/mainpage/friends" &&
+      if (
+        newReceivedFriendReqNotif &&
+        location.pathname !== "/mainpage/friendship"
+      ) {
+        console.log("pathname notify", location.pathname);
         notify();
+      }
     }
   }, [newReceivedFriendReqNotif]);
 
