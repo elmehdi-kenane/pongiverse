@@ -21,7 +21,8 @@ function CreateTournament() {
 	const navigate = useNavigate()
 	const location = useLocation()
 	const [isAnyUserOffline, setIsAnyUserOffline] = useState(false)
-	const { user, userImages, allGameFriends, socket, notifSocket, setAllGameFriends } = useContext(AuthContext)
+	const { user, userImages, allGameFriends, socket, notifSocket, setAllGameFriends, setChatNotificationCounter, addNotificationToList, notifications,
+		setNotifications, } = useContext(AuthContext)
 	const allGameFriendsRef = useRef(allGameFriends);
 	const divRef = useRef(null);
 	const divRef2 = useRef(null);
@@ -328,6 +329,17 @@ function CreateTournament() {
 					console.log("ENTER TO USER JOIN TOURNAMENT")
 					const currentAllGameFriends = allGameFriendsRef.current;
 					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== message.user))
+				} else if (type === "chatNotificationCounter") {
+					setChatNotificationCounter(data.count);
+				} else if (type === "receive-friend-request") {
+					addNotificationToList({
+						notificationText: `${message.second_username} sent you a friend request`,
+						urlRedirection: "friendship",
+						avatar: message.avatar,
+						notifications: notifications,
+						setNotifications: setNotifications,
+						user: user,
+					});
 				}
 			}
 		}

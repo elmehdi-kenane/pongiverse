@@ -20,11 +20,6 @@ function SignUpPage() {
 
 	const handleSignUpSwitch = () => {
 	}
-	const { publicCheckAuth } = useContext(AuthContext)
-
-	useEffect(() => {
-		publicCheckAuth()
-	}, [])
 
 
 	return (

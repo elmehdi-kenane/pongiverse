@@ -12,9 +12,9 @@ const Game = () => {
     const [start, setStart] = useState(false)
     const navigate = useNavigate();
 
-    useEffect(() => {
-        privateCheckAuth()
-    }, [])
+    // useEffect(() => {
+    //     privateCheckAuth()
+    // }, [])
 
     useEffect(() => {
         if (socket) {

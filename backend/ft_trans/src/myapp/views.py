@@ -227,6 +227,8 @@ class VerifyTokenView(APIView):
 			user_id = data['user_id']
 		except TokenError as e:
 			response.data = {"Case" : "Invalid token"}
+			response.delete_cookie('access_token')
+			response.delete_cookie('refresh_token')
 			return response
 		try:
 			token = request.COOKIES.get('access_token')
@@ -234,6 +236,8 @@ class VerifyTokenView(APIView):
 			data = decoded_token.payload
 			if not data.get('user_id'):
 				response.data = {"Case" : "Invalid token"}
+				response.delete_cookie('access_token')
+				response.delete_cookie('refresh_token')
 				return response
 			user = customuser.objects.filter(id=data['user_id']).first()
 			if user is not None:
@@ -242,6 +246,8 @@ class VerifyTokenView(APIView):
 				return response
 			else:
 				response.data = {"Case" : "Invalid token"}
+				response.delete_cookie('access_token')
+				response.delete_cookie('refresh_token')
 				return response
 		except TokenError:
 			if user_id != -1:
@@ -254,9 +260,13 @@ class VerifyTokenView(APIView):
 					return response
 				else :
 					response.data = {"Case" : "Invalid token"}
+					response.delete_cookie('access_token')
+					response.delete_cookie('refresh_token')
 					return response
 			else:
 				response.data = {"Case" : "Invalid token"}
+				response.delete_cookie('access_token')
+				response.delete_cookie('refresh_token')
 				return response
 
 

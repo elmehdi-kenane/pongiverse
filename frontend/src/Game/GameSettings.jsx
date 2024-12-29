@@ -46,9 +46,9 @@ const GameSettings = () => {
   const [isChecked, setIsChecked] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    privateCheckAuth();
-  }, []);
+  // useEffect(() => {
+  //   privateCheckAuth();
+  // }, []);
 
   // useEffect(() => {
   //   ballSelectionRef.current = ballSelection

@@ -26,7 +26,8 @@ const OneVsOneFriends = () => {
 	let { privateCheckAuth, socket, user,
 		socketRecreated, setSocketRecreated,
 		userImg, loading, allGameFriends,
-		userImages, setAllGameFriends, notifSocket, userLevel } = useContext(AuthContext)
+		userImages, setAllGameFriends, notifSocket, userLevel, setChatNotificationCounter, addNotificationToList, notifications,
+		setNotifications } = useContext(AuthContext)
 	const allGameFriendsRef = useRef(allGameFriends);
 
 	let isOut = false
@@ -36,9 +37,9 @@ const OneVsOneFriends = () => {
 
 	// let checked = false
 
-	useEffect(() => {
-		privateCheckAuth()
-	}, [])
+	// useEffect(() => {
+	// 	privateCheckAuth()
+	// }, [])
 
 	useEffect(() => {
 		if (socket && socket.readyState === WebSocket.OPEN && user) {
@@ -158,6 +159,17 @@ const OneVsOneFriends = () => {
 					console.log("user disconnected : ", allGameFriends)
 					let uname = data.message.user
 					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname))
+				} else if (type === "chatNotificationCounter") {
+					setChatNotificationCounter(data.count);
+				} else if (type === "receive-friend-request") {
+					addNotificationToList({
+						notificationText: `${message.second_username} sent you a friend request`,
+						urlRedirection: "friendship",
+						avatar: message.avatar,
+						notifications: notifications,
+						setNotifications: setNotifications,
+						user: user,
+					});
 				}
 			}
 		}

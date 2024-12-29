@@ -3,7 +3,6 @@ import { Toaster } from "react-hot-toast";
 import SettingsLeft from "./SettingsLeft";
 import "./Settings.css";
 
-import UpdateNkName from './Update/UpdateNkName';
 import UpdateBio from './Update/UpdateBio';
 import UpdateCountry from './Update/UpdateCountry';
 import UpdateBg from './Update/UpdateBg';
@@ -26,7 +25,6 @@ function PersonalInfo() {
           {!isUpdate && 
             <>
               <UpdatePictures setIsUpdate={setIsUpdate}/>
-              <UpdateNkName />
               <UpdateBio />
               <UpdateCountry />
             </>

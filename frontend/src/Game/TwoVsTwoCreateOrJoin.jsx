@@ -34,16 +34,17 @@ const TwoVsTwoCreateOrJoin = () => {
     const navigate = useNavigate()
     let { privateCheckAuth, socket, user,
         socketRecreated, setSocketRecreated,
-        userImg, loading, userLevel } = useContext(AuthContext)
+        userImg, loading, userLevel, notifSocket, setChatNotificationCounter, addNotificationToList, notifications,
+        setNotifications } = useContext(AuthContext)
 
     let isOut = false
     const userRef = useRef(user)
     const roomIdRef = useRef(tmpRoomID)
     const socketRef = useRef(socket)
 
-    useEffect(() => {
-        privateCheckAuth()
-    }, [])
+    // useEffect(() => {
+    //     privateCheckAuth()
+    // }, [])
 
     useEffect(() => {
         if (socket && socket.readyState === WebSocket.OPEN && user) {
@@ -59,6 +60,30 @@ const TwoVsTwoCreateOrJoin = () => {
         }
     }, [socket, user])
 
+
+    useEffect(() => {
+        if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+            notifSocket.onmessage = (event) => {
+                let data = JSON.parse(event.data)
+                let type = data.type
+                let message = data.message
+                if (type === "chatNotificationCounter") {
+                    setChatNotificationCounter(data.count);
+                } else if (type === "receive-friend-request") {
+                    addNotificationToList({
+                        notificationText: `${message.second_username} sent you a friend request`,
+                        urlRedirection: "friendship",
+                        avatar: message.avatar,
+                        notifications: notifications,
+                        setNotifications: setNotifications,
+                        user: user,
+                    });
+                }
+            }
+        }
+    }, [notifSocket])
+
+
     useEffect(() => {
         if (socket && socket.readyState === WebSocket.OPEN) {
             socket.onmessage = (event) => {
@@ -70,7 +95,7 @@ const TwoVsTwoCreateOrJoin = () => {
                     setAllSet(true)
                     if (message.mode === '1vs1')
                         navigate(`../play/1vs1/${message.roomID}`)
-                    else if(message.mode === '2vs2')
+                    else if (message.mode === '2vs2')
                         navigate(`../play/2vs2/${message.roomID}`)
                     else
                         navigate("../game/createtournament")
@@ -276,8 +301,8 @@ const TwoVsTwoCreateOrJoin = () => {
     useEffect(() => {
         playerNoRef.current = playerNo;
         userRef.current = user;
-		roomIdRef.current = tmpRoomID;
-		socketRef.current = socket;
+        roomIdRef.current = tmpRoomID;
+        socketRef.current = socket;
     }, [playerNo, user, tmpRoomID, socket]);
 
     const cancelTheGame = () => {
@@ -294,6 +319,8 @@ const TwoVsTwoCreateOrJoin = () => {
         } else
             console.log('socket is null or not open, refresh')
     }
+
+
 
     const expandCreateRoom = () => {
         setExpandCreate(!expandCreate)
@@ -340,16 +367,16 @@ const TwoVsTwoCreateOrJoin = () => {
         if (!checkingCode) {
             if (regex.test(inputRoomId.current.value)) {
                 if (socket && socket.readyState === WebSocket.OPEN) {
-                inputRoomId.current.value = ''
-                setRoomIdIncorrect(false)
-                setCheckingCode(true)
-                socket.send(JSON.stringify({
-                    type: 'checkingRoomCodeMp',
-                    message: {
-                        user: user,
-                        roomCode: value
-                    }
-                }))
+                    inputRoomId.current.value = ''
+                    setRoomIdIncorrect(false)
+                    setCheckingCode(true)
+                    socket.send(JSON.stringify({
+                        type: 'checkingRoomCodeMp',
+                        message: {
+                            user: user,
+                            roomCode: value
+                        }
+                    }))
                 }
             } else {
                 setRoomIdIncorrect(true)
@@ -405,30 +432,30 @@ const TwoVsTwoCreateOrJoin = () => {
             <div className='twovstwo-dashboard'>
                 <div className='twovstwo-dashboard-opponents'>
                     {!matchJoined && (<div className='twovstwo-create-room' ref={expandCreateRef}>
-                        <div onClick={expandCreateRoom} style={{display: 'flex', flexDirection: 'row', cursor: 'pointer', position: 'relative', width: '100%', alignItems: 'center', justifyContent: 'center', gap: '6px'}}>
-                            <img src={Icons.gameInvite} alt="" style={{paddingLeft: '5px'}} />
+                        <div onClick={expandCreateRoom} style={{ display: 'flex', flexDirection: 'row', cursor: 'pointer', position: 'relative', width: '100%', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                            <img src={Icons.gameInvite} alt="" style={{ paddingLeft: '5px' }} />
                             <div className='invite-friends-button'>create match</div>
                         </div>
                     </div>)}
-                    {expandCreate && (<div className='expand-create-room' style={{display: 'flex', justifyContent: 'center', gap: '10px', fontSize: '12px', fontWeight: '500'}} >
-                        {!matchCreated ? (<p style={{margin: '0 8px'}} >press Generate and share the code with others to play together</p>) : (<p style={{margin: '0 8px'}} >Now you can share the code with others to play together</p>)}
-                        {!matchCreated && (<div style={{margin: '0 8px', textAlign: 'center', backgroundColor: '#913DCE', padding: '6px', borderRadius: '5px'}} onClick={createNewMatch} ref={generateCodeRef} >Generate</div>)}
-                        <div style={{margin: '0 8px', display: 'flex', alignItems: 'center', backgroundColor: '#EAD3D6', color: 'black', padding: '6px', borderRadius: '5px'}}>
-                            <span style={{display: 'block', textAlign: 'left', width: '100%', marginLeft: '0', color: 'black'}} ref={textCopied}>{codeToShare}</span>
-                            <img style={{marginRight: '0', width: '18px'}} src={image} alt="copy" onClick={changeIfTextCopied} />
+                    {expandCreate && (<div className='expand-create-room' style={{ display: 'flex', justifyContent: 'center', gap: '10px', fontSize: '12px', fontWeight: '500' }} >
+                        {!matchCreated ? (<p style={{ margin: '0 8px' }} >press Generate and share the code with others to play together</p>) : (<p style={{ margin: '0 8px' }} >Now you can share the code with others to play together</p>)}
+                        {!matchCreated && (<div style={{ margin: '0 8px', textAlign: 'center', backgroundColor: '#913DCE', padding: '6px', borderRadius: '5px' }} onClick={createNewMatch} ref={generateCodeRef} >Generate</div>)}
+                        <div style={{ margin: '0 8px', display: 'flex', alignItems: 'center', backgroundColor: '#EAD3D6', color: 'black', padding: '6px', borderRadius: '5px' }}>
+                            <span style={{ display: 'block', textAlign: 'left', width: '100%', marginLeft: '0', color: 'black' }} ref={textCopied}>{codeToShare}</span>
+                            <img style={{ marginRight: '0', width: '18px' }} src={image} alt="copy" onClick={changeIfTextCopied} />
                         </div>
                     </div>)}
                     {!matchCreated && (<div className='twovstwo-join-room' ref={expandJoinRef}>
-                        <div onClick={expandJoinRoom} style={{display: 'flex', flexDirection: 'row', cursor: 'pointer', position: 'relative', width: '100%', alignItems: 'center', justifyContent: 'center', gap: '6px'}}>
-                            <img src={Icons.gameInvite} alt="" style={{paddingLeft: '5px'}} />
+                        <div onClick={expandJoinRoom} style={{ display: 'flex', flexDirection: 'row', cursor: 'pointer', position: 'relative', width: '100%', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                            <img src={Icons.gameInvite} alt="" style={{ paddingLeft: '5px' }} />
                             <div className='invite-friends-button'>join match</div>
                         </div>
                     </div>)}
-                    {expandJoin && !matchCreated && (<div className='expand-join-room' style={{display: 'flex', justifyContent: 'center', gap: '10px', fontSize: '12px', fontWeight: '500'}} >
-                        <p style={{margin: '0 8px'}} >Enter the code below to join the match</p>
-                        <input style={{margin: '0 8px', outline: 'none', border: '1px solid #EAD3D6', backgroundColor: 'transparent', padding: '6px', borderRadius: '5px', textIndent: '8px', color: 'white'}} ref={inputRoomId} type="text" placeholder='enter the code' required />
-                        {roomIdIncorrect && (<span style={{margin: '0 8px', fontSize: '11px', display: 'block'}} id='incorrect-id'>Invalid code. Please try again.</span>)}
-                        <div style={{margin: '0 8px', textAlign: 'center', backgroundColor: '#913DCE', padding: '6px', borderRadius: '5px'}} onClick={joinToNewMatch}>Confirm</div>
+                    {expandJoin && !matchCreated && (<div className='expand-join-room' style={{ display: 'flex', justifyContent: 'center', gap: '10px', fontSize: '12px', fontWeight: '500' }} >
+                        <p style={{ margin: '0 8px' }} >Enter the code below to join the match</p>
+                        <input style={{ margin: '0 8px', outline: 'none', border: '1px solid #EAD3D6', backgroundColor: 'transparent', padding: '6px', borderRadius: '5px', textIndent: '8px', color: 'white' }} ref={inputRoomId} type="text" placeholder='enter the code' required />
+                        {roomIdIncorrect && (<span style={{ margin: '0 8px', fontSize: '11px', display: 'block' }} id='incorrect-id'>Invalid code. Please try again.</span>)}
+                        <div style={{ margin: '0 8px', textAlign: 'center', backgroundColor: '#913DCE', padding: '6px', borderRadius: '5px' }} onClick={joinToNewMatch}>Confirm</div>
                     </div>)}
                     <div className='twovstwo-dashboard-opponent'>
                         <div className='twovstwo-dashboard-player' >
@@ -454,16 +481,16 @@ const TwoVsTwoCreateOrJoin = () => {
                         )}
                     </div>
                     <div className={(!allSet && loadMatch) ? 'twovstwo-dashboard-logo twovstwo-dashboard-logo-loading' : 'twovstwo-dashboard-logo'} >
-                    {(!loadMatch && allSet) ? (
-                        <img id='versus-logo' src={Icons.versus} alt="profile-pic" />
-                    ) : (loadMatch && !allSet) ? (
-                        <>
-                            <div id='paddle-1' ></div>
-                            <div id='net' ></div>
-                            <div id='ball' ></div>
-                            <div id='paddle-2' ></div>
-                        </>
-                    ) : ''}
+                        {(!loadMatch && allSet) ? (
+                            <img id='versus-logo' src={Icons.versus} alt="profile-pic" />
+                        ) : (loadMatch && !allSet) ? (
+                            <>
+                                <div id='paddle-1' ></div>
+                                <div id='net' ></div>
+                                <div id='ball' ></div>
+                                <div id='paddle-2' ></div>
+                            </>
+                        ) : ''}
                     </div>
                     <div className='twovstwo-dashboard-opponent'>
                         {enemy1Infos ? (

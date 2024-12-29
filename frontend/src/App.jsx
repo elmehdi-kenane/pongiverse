@@ -41,21 +41,14 @@ import AiOpponent from "./Game/AiOpponent";
 import { ToastContainer, Bounce } from "react-toastify";
 import LocalTournamentFillMembers from "./Tournament/LocalTournament/LocalTournamentFillMembers";
 import ErrorPage from "./ErrorPage/ErrorPage";
-import ProtectedRoute from "./components/ProtectedRoute";
 import { DashboardWrapper } from './Dashboard/DashboardWrapper';
 import LocalModes from './Game/LocalModes';
-
-import bg1 from "./assets/Body/2.png"
 import PersonalInfo from './Settings/PersonalInfo';
 import Security from './Settings/Security';
-
 import TournamentCelebration from "./Tournament/RemoteTournament/TournamentCelebration";
-import AuthMiddleware from "./navbar-sidebar/AuthMiddleware";
 
 const App = () => {
   return (
-    // <div className="page" style={{ backgroundImage: `url(${bg1})` }}>
-    // <div className="page" style={{ backgroundImage: `url(${bg1})` }}>
     <div className="page" style={{ backgroundColor: '#250939' }}>
       <Router>
         <AuthProvider>

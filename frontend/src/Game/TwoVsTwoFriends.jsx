@@ -30,7 +30,8 @@ const TwoVsTwoFriends = () => {
 	let { privateCheckAuth, socket, user,
 		socketRecreated, setSocketRecreated,
 		userImg, loading, allGameFriends,
-		userImages, setAllGameFriends, userLevel } = useContext(AuthContext)
+		userImages, setAllGameFriends, userLevel, notifSocket, setChatNotificationCounter, addNotificationToList, notifications,
+		setNotifications } = useContext(AuthContext)
 	const allGameFriendsRef = useRef(allGameFriends);
 
 	let isOut = false
@@ -38,9 +39,9 @@ const TwoVsTwoFriends = () => {
 	const roomIdRef = useRef(tmpRoomID)
 	const socketRef = useRef(socket)
 
-	useEffect(() => {
-		privateCheckAuth()
-	}, [])
+	// useEffect(() => {
+	// 	privateCheckAuth()
+	// }, [])
 
 	useEffect(() => {
 		if (socket && socket.readyState === WebSocket.OPEN && user) {
@@ -55,6 +56,45 @@ const TwoVsTwoFriends = () => {
 			}))
 		}
 	}, [socket, user])
+
+
+	useEffect(() => {
+		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+			notifSocket.onmessage = (event) => {
+				let data = JSON.parse(event.data)
+				let type = data.type
+				let message = data.message
+				console.log('========', type, '========')
+				if (type === 'connected_again') {
+					console.log("****IS A FRIEND:", message.is_a_friend);
+					const currentAllGameFriends = allGameFriendsRef.current;
+					console.log("*******IWA YAHAMIIIIID:", message.user)
+					if (message.is_a_friend === true) {
+						const userExists = currentAllGameFriends.some(friend => friend.name === message.user)
+						if (!userExists)
+							setAllGameFriends([...currentAllGameFriends, message.userInfos])
+					}
+				} else if (type === 'user_disconnected') {
+					const currentAllGameFriends = allGameFriendsRef.current;
+					console.log("user disconnected : ", allGameFriends)
+					let uname = data.message.user
+					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname))
+				} else if (type === "chatNotificationCounter") {
+					setChatNotificationCounter(data.count);
+				} else if (type === "receive-friend-request") {
+					addNotificationToList({
+						notificationText: `${message.second_username} sent you a friend request`,
+						urlRedirection: "friendship",
+						avatar: message.avatar,
+						notifications: notifications,
+						setNotifications: setNotifications,
+						user: user,
+					});
+				}
+			}
+		}
+	}, [notifSocket])
+
 
 	useEffect(() => {
 		if (socket && socket.readyState === WebSocket.OPEN) {
@@ -251,7 +291,7 @@ const TwoVsTwoFriends = () => {
 					let username = message.second_username
 					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== username))
 				} else if (type === 'hmed')
-                    socket.close()
+					socket.close()
 			}
 		}
 
@@ -308,9 +348,9 @@ const TwoVsTwoFriends = () => {
 			setSelectedFriends(prevSelectedFriends => {
 				const updatedFriends = [...prevSelectedFriends, friend];
 				setTimeout(() => {
-				  setSelectedFriends(prevSelectedFriends => 
-					prevSelectedFriends.filter(selectedFriend => selectedFriend !== friend)
-				  );
+					setSelectedFriends(prevSelectedFriends =>
+						prevSelectedFriends.filter(selectedFriend => selectedFriend !== friend)
+					);
 				}, 2000);
 				return updatedFriends;
 			});

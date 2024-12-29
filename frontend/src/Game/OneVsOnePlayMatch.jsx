@@ -214,9 +214,9 @@ const OneVsOnePlayMatch = () => {
         particles.push(particle);
 	}
 
-	useEffect(() => {
-		privateCheckAuth()
-	}, [])
+	// useEffect(() => {
+	// 	privateCheckAuth()
+	// }, [])
 
 	const draw = () => {
 		const ctx = canvasContextRef.current

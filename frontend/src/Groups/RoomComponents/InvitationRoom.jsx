@@ -9,9 +9,9 @@ const InvitationRoom = (props) => {
   const {chatRoomInvitationsRef, setChatRoomInvitations,  } = useContext(ChatContext);
   const {privateCheckAuth} = useContext(AuthContext);
 
-  useEffect(() => {
-    privateCheckAuth()
-  }, [])
+  // useEffect(() => {
+  //   privateCheckAuth()
+  // }, [])
 
   const onClickAcceptInvitaion = async () => {
     const toastId = toast.loading("Processing invitation...");

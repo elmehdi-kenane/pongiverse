@@ -18,16 +18,17 @@ const OneVsOneRandom = () => {
     let randomPics
     let { privateCheckAuth, socket, user,
         socketRecreated, setSocketRecreated,
-        userImg, loading, userLevel } = useContext(AuthContext)
+        userImg, loading, userLevel, notifSocket, setChatNotificationCounter, addNotificationToList, notifications,
+		setNotifications } = useContext(AuthContext)
 
     let isOut = false
     const userRef = useRef(user)
     const roomIdRef = useRef(roomID)
     const socketRef = useRef(socket)
 
-    useEffect(() => {
-        privateCheckAuth()
-    }, [])
+    // useEffect(() => {
+    //     privateCheckAuth()
+    // }, [])
 
     useEffect(() => {
         if (socket && socket.readyState === WebSocket.OPEN && user) {
@@ -41,7 +42,31 @@ const OneVsOneRandom = () => {
                 }
             }))
         }
-	}, [socket, user])
+    }, [socket, user])
+
+    useEffect(() => {
+        if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+            notifSocket.onmessage = (event) => {
+                console.log("inside notifSocket")
+                let data = JSON.parse(event.data)
+                let message = data.message
+                let type = data.type
+                if (type === "chatNotificationCounter") {
+                    setChatNotificationCounter(data.count);
+                } else if (type === "receive-friend-request") {
+					addNotificationToList({
+						notificationText: `${message.second_username} sent you a friend request`,
+						urlRedirection: "friendship",
+						avatar: message.avatar,
+						notifications: notifications,
+						setNotifications: setNotifications,
+						user: user,
+					});
+				}
+            }
+        }
+    }, [notifSocket])
+
 
     useEffect(() => {
         if (socket && socket.readyState === WebSocket.OPEN) {
@@ -53,7 +78,7 @@ const OneVsOneRandom = () => {
                     setAllSet(true)
                     if (message.mode === '1vs1')
                         navigate(`../play/1vs1/${message.roomID}`)
-                    else if (message.mode === '2vs2') 
+                    else if (message.mode === '2vs2')
                         navigate(`../play/2vs2/${message.roomID}`)
                     else
                         navigate("../game/createtournament")
@@ -130,10 +155,10 @@ const OneVsOneRandom = () => {
     }, [socket, user, allSet, roomID, alreadyChecked])
 
     useEffect(() => {
-		userRef.current = user;
-		roomIdRef.current = roomID;
-		socketRef.current = socket;
-	}, [user, roomID, socket]);
+        userRef.current = user;
+        roomIdRef.current = roomID;
+        socketRef.current = socket;
+    }, [user, roomID, socket]);
 
     const cancelTheGame = () => {
         if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
@@ -193,46 +218,46 @@ const OneVsOneRandom = () => {
     }, [])
 
     return (
-    <div className='onevsone'>
-        <div className='onevsone-dashboard' >
-            <div className='onevsone-dashboard-opponents' style={{position: "relative"}}>
-                <div className='onevsone-dashboard-opponent'>
-                    <div><img src={userImg} alt="profile-pic" style={{borderRadius: '50%'}} /></div>
-                    <div className='onevsone-opponent-infos'>
-                        <p>{user}</p>
-                        <p>level {userLevel}</p>
+        <div className='onevsone'>
+            <div className='onevsone-dashboard' >
+                <div className='onevsone-dashboard-opponents' style={{ position: "relative" }}>
+                    <div className='onevsone-dashboard-opponent'>
+                        <div><img src={userImg} alt="profile-pic" style={{ borderRadius: '50%' }} /></div>
+                        <div className='onevsone-opponent-infos'>
+                            <p>{user}</p>
+                            <p>level {userLevel}</p>
+                        </div>
+                    </div>
+                    <div className={(!allSet && loadMatch) ? 'onevsone-dashboard-logo onevsone-dashboard-logo-loading' : 'onevsone-dashboard-logo'} >
+                        {(!loadMatch && allSet) ? (<img id='versus-logo' src={Icons.versus} alt="profile-pic" />) : (loadMatch && !allSet) ? (
+                            <>
+                                <div id='paddle-1' ></div>
+                                <div id='net' ></div>
+                                <div id='ball' ></div>
+                                <div id='paddle-2' ></div>
+                            </>
+                        ) : ''}
+                    </div>
+                    <div className='onevsone-dashboard-opponent'>
+                        {enemyInfos ? (
+                            <>
+                                <div><img src={enemyInfos.avatar} alt="profile-pic" style={{ borderRadius: '50%' }} /></div>
+                                <div className='onevsone-opponent-infos'>
+                                    <p>{enemyInfos.name}</p>
+                                    <p>level {enemyInfos.level}</p>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <div><img src={randomPic} alt="profile-pic" /></div>
+                                <div className='onevsone-opponent-infos-none' ></div>
+                            </>
+                        )}
                     </div>
                 </div>
-                <div className={(!allSet && loadMatch) ? 'onevsone-dashboard-logo onevsone-dashboard-logo-loading' : 'onevsone-dashboard-logo'} >
-                {(!loadMatch && allSet) ? (<img id='versus-logo' src={Icons.versus} alt="profile-pic" />) : (loadMatch && !allSet) ? (
-                    <>
-                        <div id='paddle-1' ></div>
-                        <div id='net' ></div>
-                        <div id='ball' ></div>
-                        <div id='paddle-2' ></div>
-                    </>
-                ) : ''}
-                </div>
-                <div className='onevsone-dashboard-opponent'>
-                    {enemyInfos ? (
-                        <>
-                            <div><img src={enemyInfos.avatar} alt="profile-pic" style={{borderRadius: '50%'}} /></div>
-                            <div className='onevsone-opponent-infos'>
-                                <p>{enemyInfos.name}</p>
-                                <p>level {enemyInfos.level}</p>
-                            </div>
-                        </>
-                    ) : (
-                        <>
-                            <div><img src={randomPic} alt="profile-pic" /></div>
-                            <div className='onevsone-opponent-infos-none' ></div>
-                        </>
-                    )}
-                </div>
             </div>
+            {gameStarted && (<div className='onevsone-cancel' ><div className='onevsone-cancel-game' onClick={cancelTheGame} >cancel</div></div>)}
         </div>
-        {gameStarted && (<div className='onevsone-cancel' ><div className='onevsone-cancel-game' onClick={cancelTheGame} >cancel</div></div>)}
-    </div>
     )
 }
 

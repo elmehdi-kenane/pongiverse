@@ -14,11 +14,6 @@ import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../navbar-sidebar/Authcontext';
 function SignInPage() {
 	const navigate = useNavigate();
-	const { publicCheckAuth } = useContext(AuthContext)
-
-	useEffect(() => {
-		publicCheckAuth()
-	}, [])
 
 	const navigating = () => {
 		navigate('/')
