@@ -26,6 +26,8 @@
 
 .Toastify__close-button {
     margin: 3px;
+    color: white;
+    opacity: 100;
 }
 
 @media (max-width: 425px) {

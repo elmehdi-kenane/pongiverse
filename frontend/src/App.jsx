@@ -58,25 +58,30 @@ const App = () => {
             <Route path="/signin" element={<SignInPage />} />
             <Route path="/SecondStep" element={<SecondStep />} />
             <Route path="/WaysSecondStep" element={<WaysSecondStep />} />
-            <Route path="/ForgotPassword" element={<ForgotPassword />} />
+            <Route path="/ForgotPassword" element={<ForgotPassword />} caseSensitive/>
             <Route path="/ChangePassword" element={<ChangePassword />} />
             <Route path="/Error404" element={<ErrorPage />} />
-            <Route path="/localtournamentbracket" element={<LocalTournamentBracket />} />
-            <Route path="/localtournamentfillmembers" element={<LocalTournamentFillMembers />} />
+            <Route
+              path="/localtournamentbracket"
+              element={<LocalTournamentBracket />}
+            />
+            <Route
+              path="/localtournamentfillmembers"
+              element={<LocalTournamentFillMembers />}
+            />
             <Route path="/localmodes" element={<LocalModes />} />
             <Route path="/1vs1/offline" element={<OneVsOneOffline />} />
-            <Route path="/mainpage" element={<NavbarSidebar />}>
+            <Route
+              path="/mainpage"
+              element={<ChatProvider child={<NavbarSidebar />} />}
+            >
               <Route
                 path="dashboard"
                 element={<DashboardWrapper child={<Dashboard />} />}
               />
               <Route
                 path="profile/:userId"
-                element={
-                  <ChatProvider
-                    child={<ProfileWrapper child={<Profile />} />}
-                  />
-                }
+                element={<ProfileWrapper child={<Profile />} />}
               />
               <Route
                 path="settings"
@@ -90,15 +95,9 @@ const App = () => {
                 path="settings/security/forgotpassword"
                 element={<ForgotPassword />}
               />
-              <Route path="chat" element={<ChatProvider child={<Chat />} />} />
-              <Route
-                path="Friendship"
-                element={<ChatProvider child={<FriendshipPage />} />}
-              />
-              <Route
-                path="groups"
-                element={<ChatProvider child={<Rooms />} />}
-              />
+              <Route path="chat" element={<Chat />} />
+              <Route path="Friendship" element={<FriendshipPage />} />
+              <Route path="groups" element={<Rooms />} />
               <Route path="game" element={<Modes />} />
               <Route path="game/board" element={<GameSettings />} />
               <Route path="game/solo" element={<Solo />} />
@@ -140,7 +139,10 @@ const App = () => {
                 path="game/tournamentbracket"
                 element={<TournamentBracket />}
               />
-              <Route path="game/tournamentcel" element={<TournamentCelebration />} />
+              <Route
+                path="game/tournamentcel"
+                element={<TournamentCelebration />}
+              />
               <Route
                 path="game/1vs1tournament"
                 element={<OneVsOnePlayTournamentMatch />}

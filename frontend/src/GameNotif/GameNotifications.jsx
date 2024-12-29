@@ -10,6 +10,8 @@ import toastDrari, { Toaster } from "react-hot-toast";
 import { toast, Bounce } from "react-toastify";
 import NotificationPopupCard from "../navbar-sidebar/NotificationPopupCard";
 import { ImWarning } from "react-icons/im";
+import ChatContext from "../Context/ChatContext";
+
 const GameNotifications = (props) => {
   const [roomID, setRoomID] = useState(null);
   let {
@@ -47,7 +49,8 @@ const GameNotifications = (props) => {
   }) => {
     const addNewNotification = async () => {
       const response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS
+        `http://${
+          import.meta.env.VITE_IPADDRESS
         }:8000/navBar/add_notification/`,
         {
           method: "POST",
@@ -79,7 +82,6 @@ const GameNotifications = (props) => {
     }
   };
 
-
   const notify = () => {
     setNewReceivedFriendReqNotif(false);
     toast(
@@ -103,9 +105,13 @@ const GameNotifications = (props) => {
 
   useEffect(() => {
     {
-      newReceivedFriendReqNotif &&
-        location.pathname !== "/mainpage/friends" &&
+      if (
+        newReceivedFriendReqNotif &&
+        location.pathname !== "/mainpage/friendship"
+      ) {
+        console.log("pathname notify", location.pathname);
         notify();
+      }
     }
   }, [newReceivedFriendReqNotif]);
 
@@ -115,7 +121,12 @@ const GameNotifications = (props) => {
     );
     // console.log("****AL GAME NOTT: ", allGameNotifs.filter((user) => ((user?.tournament_id && user.tournament_id !== creator.tournament_id) || (user.roomID !== creator.roomID))))
     setAllGameNotifs((prevAllGameNotifs) =>
-      prevAllGameNotifs.filter((user) => ((user?.tournament_id && user.tournament_id !== creator.tournament_id) || (user.roomID !== creator.roomID)))
+      prevAllGameNotifs.filter(
+        (user) =>
+          (user?.tournament_id &&
+            user.tournament_id !== creator.tournament_id) ||
+          user.roomID !== creator.roomID
+      )
     );
     if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
       if (creator.mode === "1vs1" || creator.mode === "2vs2") {
@@ -147,7 +158,8 @@ const GameNotifications = (props) => {
   useEffect(() => {
     const getTournamentWarning = async () => {
       const response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS
+        `http://${
+          import.meta.env.VITE_IPADDRESS
         }:8000/api/get-tournament-warning`,
         {
           method: "POST",
@@ -194,7 +206,12 @@ const GameNotifications = (props) => {
       (user) => user.user === sender.user
     );
     setAllGameNotifs((prevAllGameNotifs) =>
-      prevAllGameNotifs.filter((user) => ((user?.tournament_id && user.tournament_id !== sender.tournament_id) || (user.roomID !== sender.roomID)))
+      prevAllGameNotifs.filter(
+        (user) =>
+          (user?.tournament_id &&
+            user.tournament_id !== sender.tournament_id) ||
+          user.roomID !== sender.roomID
+      )
     );
     if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
       if (sender.mode === "1vs1") {
@@ -222,7 +239,8 @@ const GameNotifications = (props) => {
         );
       } else if (sender.mode === "TournamentInvitation") {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS
+          `http://${
+            import.meta.env.VITE_IPADDRESS
           }:8000/api/get-tournament-size`,
           {
             method: "POST",
@@ -292,15 +310,13 @@ const GameNotifications = (props) => {
         let data = JSON.parse(event.data);
         let type = data.type;
         let message = data.message;
-        const friendsData =
-        {
+        const friendsData = {
           message: message,
           type: type,
         };
         console.log("type", type);
         console.log("message", message);
-        if (props.setData)
-          props.setData(friendsData)
+        if (props.setData) props.setData(friendsData);
         if (type === "goToGamingPage") {
           // console.log("navigating now")
           // navigate(`/mainpage/game/solo/1vs1/friends`)
@@ -402,29 +418,31 @@ const GameNotifications = (props) => {
           message.second_username === props.userId
         ) {
           props.setIsFriend("true");
-          props.getUserFriends()
+          props.getUserFriends();
         } else if (
           type === "confirm-friend-request" &&
           message.second_username === props.userId
         ) {
           props.getUserFriends()
+          props.setIsFriend("true");
         }
         else if (
           type === "cancel-friend-request" &&
           message.second_username === props.userId
         ) {
           props.setIsFriend("false");
-        }
-        else if (
+        } else if (
           type === "remove-friendship" &&
           message.second_username === props.userId
         ) {
           props.setIsFriend("false");
-          props.getUserFriends()
-        }
-        else if (type === "blocked-friend" && message.second_username === props.userId) {
+          props.getUserFriends();
+        } else if (
+          type === "blocked-friend" &&
+          message.second_username === props.userId
+        ) {
           navigate("/mainpage/dashboard");
-        }else if (
+        } else if (
           data.type === "chatNotificationCounter" &&
           location.pathname !== "/mainpage/chat"
         ) {
@@ -433,9 +451,31 @@ const GameNotifications = (props) => {
           data.type === "roomInvitation" &&
           location.pathname !== "/mainpage/groups"
         ) {
-          console.log("ROOM INVITATION: ", data);
           setChatRoomInvitationsCounter((prev) => prev + 1);
-        } else console.log("unknown notif type");
+        } else if (
+          location.pathname === "/mainpage/groups" &&
+          (type === "remove-friendship" || type === "blocked-friend")
+        ) {
+          props.setAllFriends((prev) =>
+            prev.filter((friend) => friend.name !== message.second_username)
+          );
+          props.setAllChatRoomMembers ((prev) =>
+            prev.filter((member) => member.name !== message.second_username)
+          );
+        } else if (
+          location.pathname === "/mainpage/chat" &&
+          (type === "remove-friendship" || type === "blocked-friend")
+        ) {
+          props.setDirects((prev) =>
+            prev.filter((direct) => direct.name !== message.second_username)
+          );
+          props.setSelectedDirect({
+            id: "",
+            name: "",
+            status: "",
+            avatar: "",
+          });
+        }
       };
     }
   }, [notifSocket, location.pathname]);
@@ -460,22 +500,23 @@ const GameNotifications = (props) => {
                     <span>{user.level}</span>
                   </div>
                   <div className="invitation-mode">
-                    {
-                      (user.mode === '1vs1') ?
-                        <>
-                          <span>1</span>
-                          <span>vs</span>
-                          <span>1</span>
-                        </>
-                        : (user.mode === '2vs2') ?
-                          <>
-                            <span>2</span>
-                            <span>vs</span>
-                            <span>2</span>
-                          </> : <>
-                            <span>Cup</span>
-                          </>
-                    }
+                    {user.mode === "1vs1" ? (
+                      <>
+                        <span>1</span>
+                        <span>vs</span>
+                        <span>1</span>
+                      </>
+                    ) : user.mode === "2vs2" ? (
+                      <>
+                        <span>2</span>
+                        <span>vs</span>
+                        <span>2</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Cup</span>
+                      </>
+                    )}
                   </div>
                   <div className="accept-refuse">
                     <div onClick={() => acceptInvitation(user)}>

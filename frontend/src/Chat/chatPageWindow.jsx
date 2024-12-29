@@ -19,7 +19,6 @@ const ChatWindow = ({
   setSearchValue,
   directsSearch,
   setDirectsSearch,
-  chatRoomsSearch,
   setChatRoomsSearch,
 }) => {
   const { selectedChatRoom, selectedDirect, isHome ,setSelectedDirect, setSelectedItem} = useContext(ChatContext);
@@ -76,7 +75,6 @@ const ChatWindow = ({
               className="empty-chat-icon"
             />
             <p className="chat-window-empty-message">
-              {" "}
               Begin a conversation with a friend to see it show up here!
             </p>
           </div>

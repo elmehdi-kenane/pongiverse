@@ -39,9 +39,10 @@ const ChatConversationHeader = (props) => {
             src={props.selectedDirect.avatar}
             alt="Avatar"
             className="conversation-avatar"
+            onClick={()=>navigate(`/mainpage/profile/${props.selectedDirect.name}`)}
           />
           <div className="conversation-details">
-            <div className="conversation-name">{props.selectedDirect.name}</div>
+            <div className="conversation-name" onClick={()=>navigate(`/mainpage/profile/${props.selectedDirect.name}`)}>{props.selectedDirect.name}</div>
             <div className="conversation-info">
               {props.selectedDirect.status ? "online" : "offline"}
             </div>

@@ -14,7 +14,7 @@ const InvitationRoom = (props) => {
   // }, [])
 
   const onClickAcceptInvitaion = async () => {
-    const toastId = toast.loading("Processing invitation...");
+    // const toastId = toast.loading("Processing invitation...");
     try { 
       const response = await fetch (`http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/accpetChatRoomInvite`, {
         method: 'POST',
@@ -25,28 +25,28 @@ const InvitationRoom = (props) => {
           user: user,
         })
       })
-      const data = await response.json()
-      if (response.ok) {
-        setTimeout(()=>{
-          toast.success(data.success)
-          toast.dismiss(toastId);
-          let roomInvitations = chatRoomInvitationsRef.current
-          let updatedRooms = roomInvitations.filter(
-            (room) => room.id !== props.id
-          );
-          setChatRoomInvitations(updatedRooms)
-          const currentChatRooms = props.myChatRooms;
-          props.setMyChatRooms([...currentChatRooms, data.room]);
-        }, 500)
-      } else {
-        toast.dismiss(toastId); 
-        toast.error(data.error)
-      }
+      // const data = await response.json()
+      // if (response.ok) {
+      //   setTimeout(()=>{
+      //     toast.success(data.success)
+      //     toast.dismiss(toastId);
+      //     let roomInvitations = chatRoomInvitationsRef.current
+      //     let updatedRooms = roomInvitations.filter(
+      //       (room) => room.id !== props.id
+      //     );
+      //     setChatRoomInvitations(updatedRooms)
+      //     const currentChatRooms = props.myChatRooms;
+      //     props.setMyChatRooms([...currentChatRooms, data.room]);
+      //   }, 500)
+      // } else {
+      //   toast.dismiss(toastId); 
+      //   toast.error(data.error)
+      // }
 
     } catch (error) {
       console.log(error)
       toast.error("An error occurred while processing the invitation.");
-      toast.dismiss(toastId);
+      // toast.dismiss(toastId);
     }
   };
 

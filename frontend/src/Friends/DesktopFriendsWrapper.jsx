@@ -19,7 +19,7 @@ export const DesktopFriendsWrapper = ({ friends, receivedRequests, sentRequests,
                   secondUsername={request.second_username}
                   avatar={request.avatar}
                   isOnline={request.is_online}
-                  friendId={request.friend}
+                  friendId={request.friend_id}
                 ></FriendCard>
               ))}
               {friends.slice(-2).map((request, index) => (
@@ -29,7 +29,7 @@ export const DesktopFriendsWrapper = ({ friends, receivedRequests, sentRequests,
                   secondUsername={request.second_username}
                   avatar={request.avatar}
                   isOnline={request.is_online}
-                  friendId={request.friend}
+                  friendId={request.friend_id}
                 ></FriendCard>
               ))}
               <div className="spaceLeft"></div>

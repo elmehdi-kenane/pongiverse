@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import * as ChatIcons from "../../assets/chat/media";
 import ChangeChatRoomName from "../ChatRoomSettings/changeChatRoomName";
 import ChangeChatRoomIcon from "../ChatRoomSettings/changeChatRoomIcon";
@@ -8,6 +8,9 @@ import DeleteChatRoom from "../ChatRoomSettings/deleteChatRoom";
 import LeaveChatRoom from "../ChatRoomSettings/leaveChatRoom";
 import ChatRoomSettings from "../ChatRoomSettings/chatRoomSettings";
 import MyRoomContent from "./myRoomContent";
+import Chat from "../../Chat/chatPage";
+import ChatContext from "../../Context/ChatContext";
+
 
 const MyRoom = (props) => {
   const [showSettings, setShowSettings] = useState(false);
@@ -17,6 +20,7 @@ const MyRoom = (props) => {
   const [deleteRoom, setDeletRoom] = useState(false);
   const [addRoomAdmin, setAddRoomAdmin] = useState(false);
   const [inviteMember, setInviteMember] = useState(false);
+  
 
   return (
     <div className="my-room-container">
