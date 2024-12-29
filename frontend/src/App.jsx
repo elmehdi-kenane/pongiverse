@@ -44,6 +44,7 @@ import ErrorPage from "./ErrorPage/ErrorPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { DashboardWrapper } from './Dashboard/DashboardWrapper';
 import LocalModes from './Game/LocalModes';
+import { Toaster } from 'react-hot-toast';
 
 import bg1 from "./assets/Body/2.png"
 import PersonalInfo from './Settings/PersonalInfo';
@@ -78,7 +79,10 @@ const App = () => {
             />
             <Route path="/localmodes" element={<LocalModes />} />
             <Route path="/1vs1/offline" element={<OneVsOneOffline />} />
-            <Route path="/mainpage" element={<ChatProvider child={<NavbarSidebar />} />}>
+            <Route
+              path="/mainpage"
+              element={<ChatProvider child={<NavbarSidebar />} />}
+            >
               <Route
                 path="dashboard"
                 element={<DashboardWrapper child={<Dashboard />} />}

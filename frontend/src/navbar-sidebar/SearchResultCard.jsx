@@ -133,7 +133,6 @@ const SearchResultCard = ({
   };
   return (
     <div className="searchResultItem" onClick={handleClickItem}>
-      <Toaster />
       <img src={avatar} alt={avatar} />
       <p>
         {resultTextArr[0]}
