@@ -123,10 +123,10 @@ export const SearchBar = () => {
                       (searchResult.length === 0 ? (
                         <p className="searchEmpty">{termNotFoundText}</p>
                       ) : (
-                        searchResult.map((item) => {
+                        searchResult.map((item, index) => {
                           return (
                             <SearchResultCard
-                              key={item.id}
+                              key={index}
                               members_count={item.members_count}
                               id={item.id}
                               resultText={item.username}
@@ -149,10 +149,10 @@ export const SearchBar = () => {
                       (searchUsersResult.length === 0 ? (
                         <p className="searchEmpty">{termNotFoundText}</p>
                       ) : (
-                        searchUsersResult.map((item) => {
+                        searchUsersResult.map((item, index) => {
                           return (
                             <SearchResultCard
-                              key={item.id}
+                              key={index}
                               id={item.id}
                               members_count={item.members_count}
                               resultText={item.username}
@@ -177,7 +177,7 @@ export const SearchBar = () => {
                       searchRoomsResult.map((item, index) => {
                         return (
                           <SearchResultCard
-                            key={item.id}
+                            key={index}
                             members_count={item.members_count}
                             id={item.id}
                             resultText={item.username}

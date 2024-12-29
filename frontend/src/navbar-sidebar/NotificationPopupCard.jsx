@@ -31,9 +31,9 @@ const NotificationPopupCard = ({ secondUsername, avatar}) => {
                     <CheckCircleIcon sx={{ fontSize: 25 }} className='CheckCircleIcon'></CheckCircleIcon>
                     Accept
                 </button>
-                <button onClick={handleCancelFriendReq}>
+                {/* <button onClick={handleCancelFriendReq}>
                     <CancelOutlinedIcon sx={{ fontSize: 25 }} className='CancelOutlinedIcon'></CancelOutlinedIcon>
-                </button>
+                </button> */}
             </div>
         </div>
     )

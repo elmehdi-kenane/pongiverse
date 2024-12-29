@@ -3,7 +3,7 @@ import { useState } from "react";
 import AuthContext from "./Authcontext";
 import { useContext } from "react";
 import { useNavigate } from 'react-router-dom';
-import { toast } from "react-hot-toast";
+import { toast, Toaster } from "react-hot-toast";
 import ChatContext from "../Context/ChatContext";
 
 const SearchResultCard = ({
@@ -77,31 +77,29 @@ const SearchResultCard = ({
     if (successText === "Request sent") {
       setAddFriendBtn(successText);
       setTimeout(() => {
-        console.log("setTimeout 2000");
         setAddFriendBtn(null);
       }, 2000);
       handleAddFriendReq(currentUsername, secondUsername);
       const user = searchResult.find(
-        (user) => user.username === secondUsername
+        (user) => user.username === secondUsername && user.id === id
       );
       user.is_friend = true;
     } else if (successText === "Joined") {
-      const room = searchResult.find((room) => room.id === id);
+      const room = searchResult.find(
+        (room) => room.username === secondUsername && room.id === id
+      );
       room.is_joined = true;
       joinChatRoomSubmitter();
       setJoinRoomBtn(successText);
       setTimeout(() => {
-        console.log("setTimeout 2000");
         setJoinRoomBtn(null);
       }, 2000);
     }
   };
 
   const HighlightSearchTerm = () => {
-    console.log(resultText, searchTerm);
     resultText = resultText.toLowerCase();
     searchTerm = searchTerm.toLowerCase();
-    console.log("resultText", resultText);
     const index = resultText.indexOf(searchTerm);
     return [
       resultText.slice(0, index),
@@ -112,11 +110,11 @@ const SearchResultCard = ({
   const resultTextArr = HighlightSearchTerm();
 
   const handleClickItem = () => {
-    handleSearchBar();
-    setInputValue("");
-    if (result_type === "user") navigate(`/mainpage/profile/${resultText}`);
-    else if (result_type === "room") {
-      console.log("handleClickItem room");
+      setInputValue("");
+      handleSearchBar();
+    if (result_type === "user") {
+      navigate(`/mainpage/profile/${resultText}`);
+    } else if (result_type === "room" && is_joined === true) {
       setSelectedChatRoom({
         id: id,
         name: resultText,
@@ -127,10 +125,15 @@ const SearchResultCard = ({
       });
       setIsHome(false);
       navigate(`/mainpage/chat/`);
+    } else
+    {
+        console.log("show toast ===============================");
+        toast.error("Please join the room to access its content.");
     }
   };
   return (
     <div className="searchResultItem" onClick={handleClickItem}>
+      <Toaster />
       <img src={avatar} alt={avatar} />
       <p>
         {resultTextArr[0]}

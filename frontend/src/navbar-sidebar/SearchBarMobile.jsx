@@ -124,7 +124,8 @@ export const SearchBarMobile = ({ handleSearchBar }) => {
                       searchResult.map((item, index) => {
                         return (
                           <SearchResultCard
-                            key={item.id}
+                            key={index}
+index={index}
                             id={item.id}
                             members_count={item.members_count}
                             resultText={item.username}
@@ -150,7 +151,8 @@ export const SearchBarMobile = ({ handleSearchBar }) => {
                       searchUsersResult.map((item, index) => {
                         return (
                           <SearchResultCard
-                            key={item.id}
+                            key={index}
+                            index={index}
                             id={item.id}
                             members_count={item.members_count}
                             resultText={item.username}
@@ -175,7 +177,8 @@ export const SearchBarMobile = ({ handleSearchBar }) => {
                     searchRoomsResult.map((item, index) => {
                       return (
                         <SearchResultCard
-                          key={item.id}
+                          key={index}
+                          index={index}
                           id={item.id}
                           members_count={item.members_count}
                           resultText={item.username}
