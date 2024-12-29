@@ -340,9 +340,8 @@ def report_user(request):
             report_message = report_message,
         )
         if report_obj:
-            return Response(data={'case': "Report Succesfully"}, status=status.HTTP_200_OK)
-    return Response(error={'error': "Report Not Valid"}, status=status.HTTP_404_NOT_FOUND)
-
+            return Response(data={'case': "Report submitted successfully"}, status=status.HTTP_201_CREATED)
+    return Response(error={'error': "Report not submitted"}, status=status.HTTP_404_NOT_FOUND)
 
 #**--------------------- GetUser Statistics {Profile-Dashboard} ---------------------**#
 @authentication_required
