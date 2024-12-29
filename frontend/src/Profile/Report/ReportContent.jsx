@@ -9,7 +9,7 @@ import ProfileContext from '../ProfileWrapper';
 function ReportContent() {
   
   const {setIsReport, reportContentRef} = useContext(AuthContext);
-  const { userId, reportValue, setReportValue} = useContext(ProfileContext);
+  const { userId } = useContext(ProfileContext);
 
 
   const handleClose = () => {
