@@ -380,7 +380,7 @@ def list_all_friends(request):
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
         try:
-            friends = Friendship.objects.filter(user=user)
+            friends = Friendship.objects.filter(user=user, block_status = Friendship.BLOCK_NONE)
         except Friendship.DoesNotExist:
             return Response({"error": "Opps! Something went wrong"}, status=400)
         try:
@@ -506,18 +506,28 @@ def accept_chat_room_invite(request):
         user_channels_name = user_channels.get(user.id)
         for channel in user_channels_name:
             async_to_sync(channel_layer.group_add(f"chat_room_{room.id}", channel))
+            async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type': 'roomInvitationAccepted', "room": {
+                        "id": room.id,
+                        "role": "member",
+                        "name": room.name,
+                        "topic": room.topic,
+                        "icon": f"{protocol}://{ip_address}:8000/chatAPI{room.icon.url}",
+                        "cover": f"{protocol}://{ip_address}:8000/chatAPI{room.cover.url}",
+                        "membersCount": room.members_count,
+                    },}})
+            # async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type' : 'chatRoomLeft',"roomId": roomId}})
         return Response(
             {
                 "success": f"You have joined {room.name} chat room",
-                "room": {
-                    "id": room.id,
-                    "role": "member",
-                    "name": room.name,
-                    "topic": room.topic,
-                    "icon": f"{protocol}://{ip_address}:8000/chatAPI{room.icon.url}",
-                    "cover": f"{protocol}://{ip_address}:8000/chatAPI{room.cover.url}",
-                    "membersCount": room.members_count,
-                },
+                # "room": {
+                #     "id": room.id,
+                #     "role": "member",
+                #     "name": room.name,
+                #     "topic": room.topic,
+                #     "icon": f"{protocol}://{ip_address}:8000/chatAPI{room.icon.url}",
+                #     "cover": f"{protocol}://{ip_address}:8000/chatAPI{room.cover.url}",
+                #     "membersCount": room.members_count,
+                # },
             }
         )
 

@@ -48,7 +48,7 @@ async def invite_member_chat_room(self, data, user_channels):
         room
         and not await sync_to_async(
             RoomInvitation.objects.filter(user=user, room=room).exists
-        )()
+        )() and not await sync_to_async(Membership.objects.filter(user=user, room=room).exists)()
     ):
         invitaion = await sync_to_async(RoomInvitation.objects.create)(user=user, room=room)
         user_channels = user_channels.get(user.id)

@@ -28,7 +28,6 @@ const Chat = () => {
   const [hasMoreDirects, setHasMoreDirects] = useState(true);
   const [currentDirectPage, setCurrentDirectPage] = useState(1);
   const [directs, setDirects] = useState([]);
-  // const [chatRooms, setChatRooms] = useState([]);
   const [currentChatRoomPage, setCurrentChatRoomPage] = useState(1);
   const [hasMoreChatRooms, setHasMoreChatRooms] = useState(true);
   const chatRoomsListInnerRef = useRef(null);
@@ -140,6 +139,7 @@ const Chat = () => {
       const updatedChatRooms = currentChatRooms.filter(
         (room) => room.id !== roomId
       );
+      console.log("UPDATED CHAT ROOMS: ", updatedChatRooms);
       setChatRooms(updatedChatRooms);
       setSelectedChatRoom({
         id: "",
@@ -154,6 +154,7 @@ const Chat = () => {
     if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
       chatSocket.onmessage = (event) => {
         const data = JSON.parse(event.data);
+        console.log("DATA: ", data.type);
         if (data.type === "newDirect") {
           handleNewDirectMessage(data.data);
           moveDirectToTop(data.data.senderId, data.data.receiverId);
@@ -235,7 +236,7 @@ const Chat = () => {
       }
     };
     if (user) fetchDirectsWithMessage();
-  }, [currentDirectPage, user]);
+  }, [currentDirectPage, user, selectedDirect]);
 
   useEffect(() => {
     const fetchChatRooms = async () => {
@@ -317,7 +318,7 @@ const Chat = () => {
   return (
     <div className="chat-page">
       <Toaster />
-      <GameNotifications setDirects={setDirects} directs={directs}/>
+      <GameNotifications setDirects={setDirects} directs={directs} setSelectedDirect={setSelectedDirect}/>
       <div className="chat-container">
         <ChatSideBar
           directs={directs}

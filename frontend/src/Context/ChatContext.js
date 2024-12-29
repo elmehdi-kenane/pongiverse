@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState, useContext, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import AuthContext from "../navbar-sidebar/Authcontext";
+import { use } from "react";
 const ChatContext = createContext();
 export default ChatContext;
 
@@ -13,8 +14,15 @@ export const ChatProvider = ({ child }) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const chatRoomInvitationsRef = useRef(chatRoomInvitations);
   const suggestedChatRoomsRef = useRef(suggestedChatRooms);
+  const [allFriends, setAllFriends] = useState([]);
+  const allFriendsRef = useRef(allFriends);
+  const [allChatRoomMembers, setAllChatRoomMembers] = useState([]);
   // const [directs, setDirects] = useState([]);
   const [chatRooms, setChatRooms] = useState([]);
+
+  useEffect(() => {
+    allFriendsRef.current = allFriends;
+  }, [allFriends]);
 
   const [selectedChatRoom, setSelectedChatRoom] = useState({
     id: "",
@@ -107,6 +115,7 @@ export const ChatProvider = ({ child }) => {
     if (user && location.pathname === "/mainpage/groups") {
       fetchChatRoomInvitations();
       fetchSuggestedChatRooms();
+      // fetchAllFriends();
     } else if (user && location.pathname === "/mainpage/chat") {
     }
   }, [location.pathname, user]);
@@ -130,6 +139,10 @@ export const ChatProvider = ({ child }) => {
     selectedChatRoomRef: selectedChatRoomRef,
     chatRooms: chatRooms,
     setChatRooms: setChatRooms,
+    allFriends: allFriends,
+    setAllFriends: setAllFriends,
+    allFriendsRef: allFriendsRef,
+    allChatRoomMembers: allChatRoomMembers,
   };
   return (
     <ChatContext.Provider value={contextData}>{child}</ChatContext.Provider>

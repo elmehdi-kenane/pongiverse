@@ -54,6 +54,12 @@ const SendMessage = (props) => {
     }
   });
 
+  const handelMessageToSend = (e) => {
+    if (props.messageToSend.length < 1024) {
+      props.setMessageToSend(e.target.value);
+    }
+  }
+
   return (
     <div className="conversation-controls-container">
       <img
@@ -86,7 +92,7 @@ const SendMessage = (props) => {
           className="conversation-input"
           placeholder="Enter your message"
           value={props.messageToSend}
-          onChange={(e) => props.setMessageToSend(e.target.value)}
+          onChange={handelMessageToSend}
         />
       </div>
       <img

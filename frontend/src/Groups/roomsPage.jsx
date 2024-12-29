@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import MyRoom from "./RoomComponents/myRoom";
 import SuggestedRoom from "./RoomComponents/suggestedRoom";
@@ -19,18 +19,28 @@ const Rooms = () => {
   const {
     setChatRoomInvitations,
     suggestedChatRooms,
-    socketData,
     chatRoomInvitationsRef,
     chatRoomInvitations,
     setChatRooms,
     chatRooms,
     setSelectedChatRoom,
+    suggestedChatRoomsRef,
+    setSuggestedChatRooms,
+    setAllFriends,
+    allFriendsRef,
+    setAllChatRoomMembers,
   } = useContext(ChatContext);
   const [myChatRooms, setMyChatRooms] = useState([]);
   const [hasMoreRooms, setHasMoreRooms] = useState(true);
   const [currentMyRoomsPage, setCurrentMyRoomsPage] = useState(1);
   const [itemsPerScreen, setItemsPerScreen] = useState(4);
   const [pendingInvitationsCount, setPendingInvitationsCount] = useState(0);
+  const myChatRoomsRef = useRef(myChatRooms);
+
+  useEffect(() => {
+    myChatRoomsRef.current = myChatRooms;
+  }, [myChatRooms]);
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -85,7 +95,7 @@ const Rooms = () => {
   // ######################################### Chat Room backend Handlers ###################################################################
 
   const chatRoomAdminAdded = (data) => {
-    const allMyChatRooms = myChatRooms;
+    const allMyChatRooms = myChatRoomsRef.current;
     const updatedRooms = allMyChatRooms.map((room) => {
       if (room.name === data.name) return { ...room, role: "admin" };
       return room;
@@ -94,28 +104,25 @@ const Rooms = () => {
   };
 
   const roomInvitationsAcceptedUpdater = (data) => {
-    const allMyChatRooms = myChatRooms;
+    const allMyChatRooms = myChatRoomsRef.current;
     const allRoomInvites = chatRoomInvitationsRef.current;
-    console.log("data recive if the invite accepted", data);
-    if (user === data.user) {
-      setMyChatRooms([...allMyChatRooms, data.room]);
-      const updatedRoomsInvits = allRoomInvites.filter(
-        (room) => room.name !== data.room.name
-      );
-      setChatRoomInvitations(updatedRoomsInvits);
-    } else {
-      const updatedRooms = allMyChatRooms.map((room) => {
-        if (room.name === data.room.name)
-          return { ...room, membersCount: data.room.membersCount };
-        return room;
-      });
-      setMyChatRooms(updatedRooms);
-    }
+    const allSuggestions = suggestedChatRoomsRef.current;
+    setMyChatRooms([...allMyChatRooms, data]);
+    const updatedRoomsInvits = allRoomInvites.filter(
+        (room) => room.id !== data.id
+    );
+    const updatedSuggestedRooms = allSuggestions.filter((room) => room.id !== data.id);
+    setSuggestedChatRooms(updatedSuggestedRooms);
+    setChatRoomInvitations(updatedRoomsInvits);
+    // setMyChatRooms(updatedRooms);
   };
 
   const chatRoomDeleted = (roomId) => {
-    const allMyChatRooms = myChatRooms;
+    const allMyChatRooms = myChatRoomsRef.current;
+    console.log("allMyChatRooms", allMyChatRooms);
+    console.log("roomId", roomId);
     const updatedRooms = allMyChatRooms.filter((room) => room.id !== roomId);
+    console.log("updatedRooms", updatedRooms);
     setMyChatRooms(updatedRooms);
     // remmove the chatRooms
     const currentChatRooms = chatRooms;
@@ -137,17 +144,19 @@ const Rooms = () => {
     if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
       chatSocket.onmessage = (event) => {
         const data = JSON.parse(event.data);
+        console.log("data recive from chat socket", data);
         if (data.type === "chatRoomAdminAdded")
           chatRoomAdminAdded(data.message);
         else if (data.type === "roomInvitation") {
           const allInvitaions = chatRoomInvitationsRef.current;
           setChatRoomInvitations([...allInvitaions, data.room]);
         } else if (data.type === "roomInvitationAccepted")
-          roomInvitationsAcceptedUpdater(data.data);
+          roomInvitationsAcceptedUpdater(data.room);
         else if (
           data.type === "chatRoomLeft" ||
           data.type === "chatRoomDeleted"
         ) {
+
           chatRoomDeleted(data.roomId);
         }
       };
@@ -211,7 +220,7 @@ const Rooms = () => {
   };
   return (
     <>
-      <GameNotifications />
+      <GameNotifications allFriendsRef={allFriendsRef} setAllFriends={setAllFriends} setAllChatRoomMembers={setAllChatRoomMembers}/>
       <div className="rooms-page">
         <Toaster
           containerStyle={{ marginTop: "51px" }}
