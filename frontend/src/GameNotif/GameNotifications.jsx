@@ -408,6 +408,7 @@ const GameNotifications = (props) => {
           message.second_username === props.userId
         ) {
           props.getUserFriends()
+          props.setIsFriend("true");
         }
         else if (
           type === "cancel-friend-request" &&

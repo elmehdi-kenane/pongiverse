@@ -19,8 +19,8 @@ const FriendCard = ({
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user } = useContext(AuthContext);
-  const { setSelectedDirect, setSelectedItem } = useContext(ChatContext);
+  const { user, notifSocket } = useContext(AuthContext);
+  const { setSelectedDirect, setSelectedItem, setIsHome } = useContext(ChatContext);
   const navigate = useNavigate();
 
   const handleBlockFriend = () => {
@@ -65,6 +65,22 @@ const FriendCard = ({
       });
   };
 
+    const handelChallengeRequest = () => {
+      if (notifSocket && notifSocket.readyState === WebSocket.OPEN && user) {
+        console.log("inside join");
+        notifSocket.send(
+          JSON.stringify({
+            type: "inviteFriendGame",
+            message: {
+              user: user,
+              target: secondUsername,
+            },
+          })
+        );
+        // navigate('/mainpage/game/solo/1vs1/friends');
+      } else console.log("Socket ga3ma me7lola");
+    };
+
   const handleClickOutside = (event) => {
     if (menuRef && menuRef.current && !menuRef.current.contains(event.target)) {
       setIsMenuOpen(false); // Close the sidebar if the click is outside
@@ -85,7 +101,7 @@ const FriendCard = ({
 
   const navigateToChat = () => {
     setSelectedDirect({
-      id: id,
+      id: friendId,
       name: secondUsername,
       status: true,
       avatar: avatar,
@@ -127,7 +143,7 @@ const FriendCard = ({
             <button 
             onClick={(e) => {
                 e.stopPropagation();
-                // handle invite friend to play
+                handelChallengeRequest();
                 setIsMenuOpen(false);
             }}
             >
