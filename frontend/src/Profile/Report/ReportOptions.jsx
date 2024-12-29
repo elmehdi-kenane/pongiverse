@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import ReportSlt from './ReportSlt';
-import AuthContext from '../../navbar-sidebar/Authcontext';
+import ProfileContext from '../ProfileWrapper';
 
 const abuse = [
   {
@@ -42,11 +42,9 @@ const other = [
 
 function ReportOptions() {
   
-  // const {reportValue} = useContext(AuthContext);
-  const {setReportValue} = useContext(AuthContext);
+  const { setReportValue } = useContext(ProfileContext);
   
   const onChangeValue = (event) => {
-    // console.log(event.target.value);
     setReportValue(event.target.value);
   }
 

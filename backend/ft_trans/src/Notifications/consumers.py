@@ -114,7 +114,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 		if data['type'] == 'acceptInvitation': await game_notifs_consumers.accept_game_invite(self, data, notifs_user_channels)
 		elif data['type'] == 'acceptInvitationMp': await game_notifs_consumers.accept_game_invite_mp(self, data, notifs_user_channels)
 		elif data['type'] == 'refuseInvitation': await game_notifs_consumers.refuse_game_invite(self, data, notifs_user_channels)
-		# elif data['type'] == 'inviteFriendGame': await game_notifs_consumers.invite_friend(self, data, notifs_user_channels)
+		elif data['type'] == 'inviteFriendGame': await game_notifs_consumers.invite_friend(self, data, notifs_user_channels)
 		elif data['type'] == 'accept-tournament-invitation': await tournament_notifs_consumers.accept_invite(self, data)
 		# elif data['type'] == 'invite-friend': await tournament_notifs_consumers.invite_friend(self, data, notifs_user_channels)
 		elif data['type'] == 'deny-tournament-invitation': await tournament_notifs_consumers.deny_invite(self, data, notifs_user_channels)

@@ -19,139 +19,143 @@ def generate_unique_room_id(self):
 		if not ActiveMatch.objects.filter(room_id=room_id).exists() and not Match.objects.filter(id=room_id).exists():
 			return room_id
 
-# async def invite_friend(self, data, notifs_user_channels):
-# 	ip_address = os.getenv("IP_ADDRESS")
-# 	user1 = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
-# 	user2 = await sync_to_async(customuser.objects.filter(username=data['message']['target']).first)()
-# 	if not user1 or not user2 or user1.is_playing or user2.is_playing:
-# 		return
-# 	active_matches = await sync_to_async(list)(ActiveMatch.objects.all())
-# 	for active_match in active_matches:
-# 		sender = await sync_to_async(PlayerState.objects.filter(active_match=active_match, player=user1).first)()
-# 		if sender:
-# 			user2 = await sync_to_async(customuser.objects.filter(username=data['message']['target']).first)()
-# 			receiver = await sync_to_async(NotifPlayer.objects.filter(active_match=active_match, player=user2).first)()
-# 			if not receiver:
-# 				await sync_to_async(NotifPlayer.objects.create)(
-# 					active_match = active_match,
-# 					player = user2,
-# 				)
-# 				await sync_to_async(GameNotifications.objects.create)(
-# 					active_match = active_match,
-# 					user = user1,
-# 					target = user2,
-# 					mode="1vs1"
-# 				)
-# 				friend_channel_list = notifs_user_channels.get(user2.id)
-# 				if friend_channel:
-# 					for friend_channel in friend_channel_list:
-# 						usermatchstats = await sync_to_async(UserMatchStatics.objects.filter(player=user1).first)()
-# 						await self.channel_layer.send(friend_channel, {
-# 							'type': 'receiveFriendGame',
-# 							'message': {
-# 								'user': data['message']['user'],
-# 								'level': usermatchstats.level,
-# 								'avatar': f"http://{ip_address}:8000/auth{user1.avatar.url}" ,
-# 								'roomID': active_match.room_id,
-# 								'mode': '1vs1'
-# 							}
-# 						})
-# 			return
-# 	room_id = await generate_unique_room_id(self)
-# 	user1 = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
-# 	user2 = await sync_to_async(customuser.objects.filter(username=data['message']['target']).first)()
-# 	active_match = await sync_to_async(ActiveMatch.objects.create)(
-# 		mode = '1vs1',
-# 		room_type = 'friends',
-# 		room_id = room_id,
-# 		status = 'notStarted',
-# 		ballX = 355,
-# 		ballY = 200
-# 	)
-# 	user1.is_playing = True
-# 	await sync_to_async(user1.save)()
-# 	await sync_to_async(PlayerState.objects.create)(
-# 		active_match = active_match,
-# 		player = user1,
-# 		state = 'inactive',
-# 		playerNo = 1,
-# 		paddleX = 15,
-# 		paddleY = 165,
-# 		score = 0
-# 	)
-# 	# #print("ENTER 3")
-# 	# await self.send(text_data=json.dumps({
-# 	#     'type': 'playerNo',
-# 	#     'message': {
-# 	#         'playerNo': 1,
-# 	#         'id': room_id
-# 	#     }
-# 	# }))
-# 	user_channel_list = notifs_user_channels.get(user1.id)
-# 	if user_channel_list:
-# 		for channel_name in user_channel_list:
-# 			# await self.channel_layer.group_add(str(room['id']), channel_name)
-# 			if channel_name == self.channel_name:
-# 				await self.channel_layer.send(channel_name, {
-# 					'type': 'goToGamingPage',
-# 					'message': {
-# 						'mode': '1vs1'
-# 					}
-# 				})
-# 				break
-# 	print("************ WAS HEEERE BACKK2")
-# 	friends = await sync_to_async(list)(Friendship.objects.filter(user=user1))
-# 	for friend in friends:
-# 		friend_id = await sync_to_async(lambda: friend.friend.id)()
-# 		print("************ WAS HEEERE BACKK")
-# 		friend_channel = user_channels.get(friend_id)
-# 		if friend_channel:
-# 			await self.channel_layer.send(friend_channel, {
-# 				'type': 'playingStatus',
-# 				'message': {
-# 					'user': user1.username,
-# 					'is_playing': True
-# 				}
-# 			})
-# 	receiver = await sync_to_async(NotifPlayer.objects.filter(active_match=active_match, player=user2).first)()
-# 	# #print("ENTER 4")
-# 	if not receiver:
-# 		await sync_to_async(NotifPlayer.objects.create)(
-# 			active_match = active_match,
-# 			player = user2,
-# 		)
-# 		await sync_to_async(GameNotifications.objects.create)(
-# 			active_match = active_match,
-# 			user = user1,
-# 			target = user2,
-# 			mode="1vs1"
-# 		)
-# 		# #print("ENTER 5")
-# 		# if receiver and receiver.is_online and not receiver.is_playing:
-# 		# #print("ENTER 6")
-# 		friend_channel_list = notifs_user_channels.get(user2.id)
-# 		if friend_channel_list:
-# 			# #print("ENTER 7")
-# 			# with user1.avatar.open('rb') as f:
-# 			#     image_data = base64.b64encode(f.read()).decode('utf-8')
-# 			for friend_channel in friend_channel_list:
-# 				usermatchstats = await sync_to_async(UserMatchStatics.objects.filter(player=user1).first)()
-# 				await self.channel_layer.send(friend_channel, {
-# 					'type': 'receiveFriendGame',
-# 					'message': {
-# 						'user': data['message']['user'],
-# 						'level': usermatchstats.level,
-# 						'avatar': f"http://{ip_address}:8000/auth{user1.avatar.url}",
-# 						'roomID': active_match.room_id,
-# 						'mode': '1vs1'
-# 					}
-# 				})
-# 	waited_invites = await sync_to_async(list)(NotifPlayer.objects.filter(player=user1))
-# 	for waited_invite in waited_invites:
-# 		await sync_to_async(waited_invite.delete)()
-# 	player_notifs = await sync_to_async(list)(GameNotifications.objects.filter(target=user1))
-# 	for player_notif in player_notifs:
-# 		await sync_to_async(player_notif.delete)()
+async def invite_friend(self, data, notifs_user_channels):
+	ip_address = os.getenv("IP_ADDRESS")
+	user1 = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
+	user2 = await sync_to_async(customuser.objects.filter(username=data['message']['target']).first)()
+	if not user1 or not user2 or user1.is_playing or user2.is_playing:
+		return
+	active_matches = await sync_to_async(list)(ActiveMatch.objects.all())
+	for active_match in active_matches:
+		sender = await sync_to_async(PlayerState.objects.filter(active_match=active_match, player=user1).first)()
+		if sender:
+			user2 = await sync_to_async(customuser.objects.filter(username=data['message']['target']).first)()
+			receiver = await sync_to_async(NotifPlayer.objects.filter(active_match=active_match, player=user2).first)()
+			if not receiver:
+				await sync_to_async(NotifPlayer.objects.create)(
+					active_match = active_match,
+					player = user2,
+				)
+				await sync_to_async(GameNotifications.objects.create)(
+					active_match = active_match,
+					user = user1,
+					target = user2,
+					mode="1vs1"
+				)
+				friend_channel_list = notifs_user_channels.get(user2.id)
+				if friend_channel_list:
+					for friend_channel in friend_channel_list:
+						usermatchstats = await sync_to_async(UserMatchStatics.objects.filter(player=user1).first)()
+						await self.channel_layer.send(friend_channel, {
+							'type': 'receiveFriendGame',
+							'message': {
+								'user': data['message']['user'],
+								'level': usermatchstats.level,
+								'image': f"http://{ip_address}:8000/auth{user1.avatar.url}" ,
+								'roomID': active_match.room_id,
+								'mode': '1vs1'
+							}
+						})
+			return
+	room_id = await generate_unique_room_id(self)
+	user1 = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
+	user2 = await sync_to_async(customuser.objects.filter(username=data['message']['target']).first)()
+	active_match = await sync_to_async(ActiveMatch.objects.create)(
+		mode = '1vs1',
+		room_type = 'friends',
+		room_id = room_id,
+		status = 'notStarted',
+		ballX = 355,
+		ballY = 200
+	)
+	user1.is_playing = True
+	await sync_to_async(user1.save)()
+	await sync_to_async(PlayerState.objects.create)(
+		active_match = active_match,
+		player = user1,
+		state = 'inactive',
+		playerNo = 1,
+		paddleX = 15,
+		paddleY = 165,
+		score = 0
+	)
+	# #print("ENTER 3")
+	# await self.send(text_data=json.dumps({
+	#     'type': 'playerNo',
+	#     'message': {
+	#         'playerNo': 1,
+	#         'id': room_id
+	#     }
+	# }))
+	user_channel_list = notifs_user_channels.get(user1.id)
+	print("************ WAS HEEERE BACKK: ", user_channel_list)
+	if user_channel_list:
+		print("****************************************** HERE I AM")
+		for channel_name in user_channel_list:
+			# await self.channel_layer.group_add(str(room['id']), channel_name)
+			print("****************************************** HERE I AM2")
+			if channel_name == self.channel_name:
+				print("****************************************** HERE I AM3")
+				await self.channel_layer.send(channel_name, {
+					'type': 'goToGamingPage',
+					'message': {
+						'mode': '1vs1'
+					}
+				})
+				break
+	print("************ WAS HEEERE BACKK2")
+	friends = await sync_to_async(list)(Friendship.objects.filter(user=user1))
+	for friend in friends:
+		friend_id = await sync_to_async(lambda: friend.friend.id)()
+		print("************ WAS HEEERE BACKK")
+		friend_channel = user_channels.get(friend_id)
+		if friend_channel:
+			await self.channel_layer.send(friend_channel, {
+				'type': 'playingStatus',
+				'message': {
+					'user': user1.username,
+					'is_playing': True
+				}
+			})
+	receiver = await sync_to_async(NotifPlayer.objects.filter(active_match=active_match, player=user2).first)()
+	# #print("ENTER 4")
+	if not receiver:
+		await sync_to_async(NotifPlayer.objects.create)(
+			active_match = active_match,
+			player = user2,
+		)
+		await sync_to_async(GameNotifications.objects.create)(
+			active_match = active_match,
+			user = user1,
+			target = user2,
+			mode="1vs1"
+		)
+		# #print("ENTER 5")
+		# if receiver and receiver.is_online and not receiver.is_playing:
+		# #print("ENTER 6")
+		friend_channel_list = notifs_user_channels.get(user2.id)
+		if friend_channel_list:
+			# #print("ENTER 7")
+			# with user1.avatar.open('rb') as f:
+			#     image_data = base64.b64encode(f.read()).decode('utf-8')
+			for friend_channel in friend_channel_list:
+				usermatchstats = await sync_to_async(UserMatchStatics.objects.filter(player=user1).first)()
+				await self.channel_layer.send(friend_channel, {
+					'type': 'receiveFriendGame',
+					'message': {
+						'user': data['message']['user'],
+						'level': usermatchstats.level,
+						'image': f"http://{ip_address}:8000/auth{user1.avatar.url}",
+						'roomID': active_match.room_id,
+						'mode': '1vs1'
+					}
+				})
+	waited_invites = await sync_to_async(list)(NotifPlayer.objects.filter(player=user1))
+	for waited_invite in waited_invites:
+		await sync_to_async(waited_invite.delete)()
+	player_notifs = await sync_to_async(list)(GameNotifications.objects.filter(target=user1))
+	for player_notif in player_notifs:
+		await sync_to_async(player_notif.delete)()
 
 async def accept_game_invite(self, data, notifs_user_channels):
 	creator = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()

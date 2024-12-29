@@ -42,7 +42,7 @@ const OneVsOneFriends = () => {
 
 	useEffect(() => {
 		if (socket && socket.readyState === WebSocket.OPEN && user) {
-			console.log("CHECKING IF PLAYER IN ROOM", socket, user)
+			console.log("*********************CHECKING IF PLAYER IN ROOM", socket, user)
 			// checked = true
 			socket.send(JSON.stringify({
 				type: 'isPlayerInAnyRoom',
@@ -60,6 +60,7 @@ const OneVsOneFriends = () => {
 			socket.onmessage = (event) => {
 				let data = JSON.parse(event.data)
 				let type = data.type
+				console.log("inside onmessage", type);
 				let message = data.message
 				if (type === 'roomAlreadyStarted') {
 					setAllSet(true)
@@ -95,11 +96,13 @@ const OneVsOneFriends = () => {
 					setLoadMatch(false)
 					setAllSet(true)
 				} else if (type === "playerNo") {
+					console.log("******** playerNo is received");
 					setPlayerNo(message.playerNo)
 					setTmpRoomID(message.id)
 					setGameStarted(true)
 					setLoadMatch(true)
 				} else if (type === 'alreadySearching') {
+					console.log("******** alreadySearching is received");
 					setPlayerNo(message.playerNo)
 					setTmpRoomID(message.id)
 					setGameStarted(true)
@@ -116,6 +119,10 @@ const OneVsOneFriends = () => {
 				} else if (type === 'hmed') {
 					console.log("hmed received")
 					socket.close()
+				} else if (type === 'blocked-friend' || type === 'remove-friendship') {
+					const currentAllGameFriends = allGameFriendsRef.current;
+					let username = message.second_username
+					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== username))
 				}
 			}
 		}
@@ -199,9 +206,9 @@ const OneVsOneFriends = () => {
 			setSelectedFriends(prevSelectedFriends => {
 				const updatedFriends = [...prevSelectedFriends, friend];
 				setTimeout(() => {
-				  setSelectedFriends(prevSelectedFriends => 
-					prevSelectedFriends.filter(selectedFriend => selectedFriend !== friend)
-				  );
+					setSelectedFriends(prevSelectedFriends =>
+						prevSelectedFriends.filter(selectedFriend => selectedFriend !== friend)
+					);
 				}, 2000);
 				return updatedFriends;
 			});

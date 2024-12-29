@@ -7,9 +7,9 @@ import { useNavigate } from 'react-router-dom';
 
 function ReportFooter() {
 
-  const { user, reportValue, setIsReport } = useContext(AuthContext);
+  const { user, setIsReport } = useContext(AuthContext);
   const [isBlock, setIsBlock] = useState(false);
-  const { userId, isFriend } = useContext(ProfileContext);
+  const { userId, isFriend, reportValue } = useContext(ProfileContext);
   const navigate = useNavigate();
 
   const handleBlockClick = () => {
@@ -18,12 +18,37 @@ function ReportFooter() {
   const  HandleCancelReport = () => {
     setIsReport(false);
   }
-  const  handleReportSubmit = () => {
-      if (isBlock && isFriend === 'true'){
-        handleBlockFriend(user, userId)
-        navigate('/mainpage/dashboard');
+  const  handleReportSubmit = async () => {
+    try {
+      const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/reportUser`, {
+          method: "POST",
+          credentials: "include",
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            reporterUsername: user,
+            reportedUsername: userId,
+            reportMessage: reportValue,
+          }),
+      });
+
+      const res = await response.json()
+      if (response.ok) {
+        // console.log(res.case);
       }
-      setIsReport(false);
+      else
+        console.error(res.error);
+    } catch (error) {
+        console.error("Error: ", error);
+    }
+
+    if (isBlock && isFriend === 'true'){
+      handleBlockFriend(user, userId)
+      navigate('/mainpage/dashboard');
+    }
+    console.log("Report Value :", reportValue);
+    setIsReport(false);
   }
 
   return (

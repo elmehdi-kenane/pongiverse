@@ -247,8 +247,10 @@ class VerifyTokenView(APIView):
 			if user_id != -1:
 				user = customuser.objects.filter(id=user_id).first()
 				if user is not None:
+					serializer = MyModelSerializer(user)
 					tokens = get_tokens_for_user(user)
 					response.set_cookie('access_token', tokens['access'], httponly=True)
+					response.data = {"Case": "Token refreshed", "data": serializer.data}
 					return response
 				else :
 					response.data = {"Case" : "Invalid token"}

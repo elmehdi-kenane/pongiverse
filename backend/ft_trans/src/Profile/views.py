@@ -17,7 +17,7 @@ from django.db.models import Q
 from datetime import datetime, date, timedelta
 from myapp.views import get_tokens_for_user
 from django.core.files import File
-from .models import UserTFQ
+from .models import UserTFQ, UserReports
 import pyotp
 import qrcode
 import os
@@ -32,10 +32,9 @@ def getUserData(request, username):
     if user is not None:
         user_states = UserMatchStatics.objects.filter(player=user).first()
         if user_states is not None:
-            # print("---------------", f"http://localhost:8000/auth{user.avatar.url}", "-----------------")
-            # print("-----------------user :", user.username, "is online:", user.is_online)
             user_data = {'pic': f"http://localhost:8000/auth{user.avatar.url}",
                         'bg': f"http://localhost:8000/auth{user.background_pic.url}",
+                        'id': user.id,
                         'bio': user.bio,
                         'email' : user.email,
                         'online' : user.is_online,
@@ -323,6 +322,26 @@ def get_user_games(request, username, page):
 
         return Response(data={"data": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
     return Response(data={'error': 'Error Getting UserGames!'}, status=status.HTTP_400_BAD_REQUEST)
+
+#**--------------------- Report User - {ProfileInfo}---------------------**#
+
+@authentication_required
+@api_view(["POST"])
+def report_user(request):
+    reporterUsername = request.data.get("reporterUsername")
+    reportedUsername = request.data.get("reportedUsername")
+    report_message = request.data.get("reportMessage")
+    reporter = customuser.objects.filter(username=reporterUsername).first()
+    reported = customuser.objects.filter(username=reportedUsername).first()
+    if reporter and reported:
+        report_obj = UserReports.objects.create(
+            reporter = reporter,
+            reported = reported,
+            report_message = report_message,
+        )
+        if report_obj:
+            return Response(data={'case': "Report submitted successfully"}, status=status.HTTP_201_CREATED)
+    return Response(error={'error': "Report not submitted"}, status=status.HTTP_404_NOT_FOUND)
 
 #**--------------------- GetUser Statistics {Profile-Dashboard} ---------------------**#
 @authentication_required
@@ -633,3 +652,5 @@ def check_user_tfq(request):
                 response.data = {"Case" : "Login successfully"}
                 return response
             return Response(data={'Case': 'Wrong otp'}, status=status.HTTP_400_BAD_REQUEST)
+
+    

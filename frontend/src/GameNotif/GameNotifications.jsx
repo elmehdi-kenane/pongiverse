@@ -297,6 +297,8 @@ const GameNotifications = (props) => {
           message: message,
           type: type,
         };
+        console.log("type", type);
+        console.log("message", message);
         if (props.setData)
           props.setData(friendsData)
         if (type === "goToGamingPage") {
@@ -371,6 +373,8 @@ const GameNotifications = (props) => {
             props.setUserIsOnline(false);
           }
         } else if (type === "receive-friend-request") {
+          if (message.second_username === props.userId)
+            props.setIsFriend("accept");
           setNewReceivedFriendReqNotif(true);
           setRemoveFriendReqNotif(false);
           setFriendReq(message);
@@ -394,6 +398,33 @@ const GameNotifications = (props) => {
         ) {
           setRemoveFriendReqNotif(true);
         } else if (
+          type === "friend-request-accepted" &&
+          message.second_username === props.userId
+        ) {
+          props.setIsFriend("true");
+          props.getUserFriends()
+        } else if (
+          type === "confirm-friend-request" &&
+          message.second_username === props.userId
+        ) {
+          props.getUserFriends()
+        }
+        else if (
+          type === "cancel-friend-request" &&
+          message.second_username === props.userId
+        ) {
+          props.setIsFriend("false");
+        }
+        else if (
+          type === "remove-friendship" &&
+          message.second_username === props.userId
+        ) {
+          props.setIsFriend("false");
+          props.getUserFriends()
+        }
+        else if (type === "blocked-friend" && message.second_username === props.userId) {
+          navigate("/mainpage/dashboard");
+        }else if (
           data.type === "chatNotificationCounter" &&
           location.pathname !== "/mainpage/chat"
         ) {

@@ -2,15 +2,14 @@ import React, { useState, useEffect, useRef, useContext } from 'react'
 
 import ReportIcon from '@mui/icons-material/Report';
 import AuthContext from '../../navbar-sidebar/Authcontext';
+import ProfileContext from '../ProfileWrapper';
 
 function Report() {
 
-  const {isReport} = useContext(AuthContext);
-  const {setIsReport} = useContext(AuthContext);
-  const {setReportValue} = useContext(AuthContext);
+  const {isReport, setIsReport, reportContentRef} = useContext(AuthContext);
+  const {setReportValue} = useContext(ProfileContext);
 
   const reportRef = useRef(null);
-  const {reportContentRef} = useContext(AuthContext);
 
   const handleReportClick = () => {
     setIsReport(!isReport)
