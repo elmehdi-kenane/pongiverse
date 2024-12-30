@@ -6,7 +6,6 @@ import ChatConversationHeader from "./chatConversationHeader";
 import ChatConversationBody from "./chatConversationBody";
 import { resetUnreadMessages } from "./chatConversationItem";
 
-
 export let useClickOutSide = (handler) => {
   let domNode = useRef();
   useEffect(() => {
@@ -29,7 +28,6 @@ const ChatConversation = ({
   setDirects,
   searchValue,
   setSearchValue,
-  directsSearch,
   setDirectsSearch,
 }) => {
   const [showDirectOptions, setShowDirectOptions] = useState(false);
@@ -93,7 +91,7 @@ const ChatConversation = ({
           const selectedDirectIndex = updatedDirects.findIndex(
             (friend) => friend.name === selectedDirect.name
           );
-          const  splitedDirects = updatedDirects.splice(selectedDirectIndex, 1);
+          const splitedDirects = updatedDirects.splice(selectedDirectIndex, 1);
           setDirects([splitedDirects[0], ...updatedDirects]);
           resetUnreadMessages(user, selectedDirect.id);
         }
@@ -115,7 +113,7 @@ const ChatConversation = ({
         }:8000/chatAPI/Directs/messages?page=${currentMessagePage}`,
         {
           method: "POST",
-          credentials: 'include',
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },
@@ -178,21 +176,6 @@ const ChatConversation = ({
     });
   };
 
-  useEffect(() => {
-    if (messageEndRef && messageEndRef.current) {
-      messageEndRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-        top: messageEndRef.current.offsetTop - 50,
-      });
-      messageEndRef.current.scrollTop = messageEndRef.current.scrollHeight;
-      updateLastMessage();
-      setFirstScroll(false);
-    }
-  }, [messages, lastMessage]);
-  
-
-
   const handelScroll = (e) => {
     if (messageBodyRef.current) {
       const { scrollTop } = messageBodyRef.current;
@@ -202,6 +185,33 @@ const ChatConversation = ({
       }
     }
   };
+
+  // useEffect(() => {
+  //   if (messageEndRef && messageEndRef.current) {
+  //     messageEndRef.current.scrollIntoView({
+  //       behavior: "smooth",
+  //       block: "nearest",
+  //       inline: "start",
+  //     });
+  //     updateLastMessage();
+  //     setFirstScroll(false);
+  //   }
+  // }, [messages, lastMessage]);
+
+  useEffect(() => {
+    if (messageEndRef && messageEndRef.current && messageBodyRef && messageBodyRef.current) {
+      // Calculate the scroll offset relative to the container
+      const messageEndOffset = messageEndRef.current.offsetTop;
+      const containerHeight = messageBodyRef.current.clientHeight;
+  
+      // Adjust scroll position to ensure the last message is visible
+      messageBodyRef.current.scrollTop = messageEndOffset - containerHeight + messageEndRef.current.clientHeight;
+  
+      updateLastMessage();
+      setFirstScroll(false);
+    }
+  }, [messages, lastMessage]);
+  
 
   return (
     <>
