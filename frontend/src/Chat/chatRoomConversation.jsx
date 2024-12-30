@@ -186,7 +186,11 @@ const ChatRoomConversation = ({
       const messageEndOffset = messageEndRef.current.offsetTop;
       const containerHeight = messageBodyRef.current.clientHeight;
 
-      messageBodyRef.current.scrollTop = messageEndOffset - containerHeight + messageEndRef.current.clientHeight;
+      // messageBodyRef.current.scrollTop = messageEndOffset - containerHeight + messageEndRef.current.clientHeight;
+      messageBodyRef.current.scrollTop ({
+        top: messageEndOffset - containerHeight + messageEndRef.current.clientHeight,
+        behavior: "smooth"
+      })
       updateLastMessage();
       setFirstScroll(false);
     }

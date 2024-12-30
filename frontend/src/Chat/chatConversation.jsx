@@ -186,13 +186,16 @@ const ChatConversation = ({
     }
   };
 
+
   // useEffect(() => {
-  //   if (messageEndRef && messageEndRef.current) {
-  //     messageEndRef.current.scrollIntoView({
-  //       behavior: "smooth",
-  //       block: "nearest",
-  //       inline: "start",
-  //     });
+  //   if (messageEndRef && messageEndRef.current && messageBodyRef && messageBodyRef.current) {
+  //     // Calculate the scroll offset relative to the container
+  //     const messageEndOffset = messageEndRef.current.offsetTop;
+  //     const containerHeight = messageBodyRef.current.clientHeight;
+  
+  //     // Adjust scroll position to ensure the last message is visible
+  //     messageBodyRef.current.scrollTop = messageEndOffset - containerHeight + messageEndRef.current.clientHeight;
+  
   //     updateLastMessage();
   //     setFirstScroll(false);
   //   }
@@ -204,13 +207,17 @@ const ChatConversation = ({
       const messageEndOffset = messageEndRef.current.offsetTop;
       const containerHeight = messageBodyRef.current.clientHeight;
   
-      // Adjust scroll position to ensure the last message is visible
-      messageBodyRef.current.scrollTop = messageEndOffset - containerHeight + messageEndRef.current.clientHeight;
+      // Smooth scroll to the calculated position
+      messageBodyRef.current.scrollTo({
+        top: messageEndOffset - containerHeight + messageEndRef.current.clientHeight,
+        behavior: "smooth", // Enable smooth scrolling
+      });
   
       updateLastMessage();
       setFirstScroll(false);
     }
   }, [messages, lastMessage]);
+  
   
 
   return (
