@@ -146,8 +146,6 @@ const Chat = () => {
         name: "",
         membersCount: "",
         icon: "",
-        cover: "",
-        topic: "",
       });
     };
 

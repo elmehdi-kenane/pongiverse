@@ -29,8 +29,6 @@ export const ChatProvider = ({ child }) => {
     name: "",
     membersCount: "",
     icon: "",
-    cover: "",
-    topic: "",
   });
   const [selectedDirect, setSelectedDirect] = useState({
     id: "",

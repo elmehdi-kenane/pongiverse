@@ -75,8 +75,6 @@ const ChatConversationItem = (props) => {
         name: props.name,
         membersCount: props.membersCount,
         icon: props.icon,
-        cover: props.cover,
-        topic: props.topic,
       });
       let allChatRooms = props.chatRooms;
       const updatedRooms = allChatRooms.map((room) => {

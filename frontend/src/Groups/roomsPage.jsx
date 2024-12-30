@@ -135,8 +135,6 @@ const Rooms = () => {
       name: "",
       membersCount: "",
       icon: "",
-      cover: "",
-      topic: "",
     });
   };
 
