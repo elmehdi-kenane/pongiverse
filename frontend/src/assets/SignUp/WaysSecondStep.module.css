@@ -8,8 +8,7 @@
 }
 
 
-.body_page
-{
+.body_page {
 	display: flex;
 	justify-content: center;
 	width: 100%;
@@ -25,40 +24,35 @@
 	margin-top: 20px;
 }
 
-.mainPage
-{
+.mainPage {
 	display: flex;
 	width: 80%;
 	flex-direction: column;
 	height: 100vh;
 }
 
-.navBar
-{
+.navBar {
 	background-color: #250939;
 	display: flex;
 	justify-content: space-between;
 }
 
-.homeLogo , .logo
-{
+.homeLogo,
+.logo {
 	background: transparent;
 	border: none;
 	cursor: pointer;
 }
 
-.homeLogo
-{
+.homeLogo {
 	margin-top: 15px;
 }
 
-.logo
-{
+.logo {
 	margin-top: 3px;
 }
 
-.bodyPage
-{
+.bodyPage {
 	display: flex;
 	height: 100vh;
 	flex-direction: column;
@@ -66,8 +60,7 @@
 	justify-content: center;
 }
 
-.signUpContainer
-{
+.signUpContainer {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -78,17 +71,15 @@
 }
 
 
-.signUpForm
-{
-	display:flex;
+.signUpForm {
+	display: flex;
 	flex-direction: column;
 	align-items: center;
 	width: 100%;
 	gap: 10px;
 }
 
-.signUpContainer .firstInput
-{
+.signUpContainer .firstInput {
 	width: 85%;
 	height: 50px;
 	padding-top: 10px;
@@ -100,8 +91,23 @@
 	text-indent: 10px;
 }
 
+.unchangable-username-warning {
+	width: 100%;
+	max-width: 450px;
+	margin-bottom: 5px;
+	display: flex;
+	align-items: center;
+	gap: 2px;
+}
+
+.unchangable-username-warning p {
+	color: #cccccc66;
+	font-size: 13px;
+}
+
 .inputs {
-	width: 90%;
+	width: 100%;
+	max-width: 450px;
 	height: 60px;
 	display: flex;
 	justify-content: center;
@@ -129,7 +135,8 @@
 }
 
 .submitButton {
-	width: 90%;
+	width: 100%;
+	max-width: 450px;
 	height: 60px;
 	border: none;
 	font-size: 20px;
@@ -143,14 +150,13 @@
 	background-color: black;
 }
 
-span
-{
+span {
 	color: red;
 	font-size: 14px;
 }
 
-@media (max-width: 500px)
-{
+@media (max-width: 500px) {
+
 	/* body
 	{
 		background-color: #250939;
@@ -162,22 +168,22 @@ span
 		min-width: 200px;
 		height: 100vh;
 	} */
-	.signUpContainer
-	{
+	.signUpContainer {
 		width: 100%;
 	}
 }
 
 
-@media (max-width: 240px){
-	.bodyPage{
+@media (max-width: 240px) {
+	.bodyPage {
 		justify-content: initial;
 	}
 
-	.signUpContainer{
+	.signUpContainer {
 		margin-top: 40px;
 		margin-bottom: 10px;
 	}
+
 	.ways-second-step-navbar {
 		width: 100%;
 		height: 50px;
@@ -185,6 +191,3 @@ span
 		margin-top: 10px;
 	}
 }
-
-
-

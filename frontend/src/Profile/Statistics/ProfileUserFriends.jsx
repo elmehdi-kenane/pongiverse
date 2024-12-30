@@ -11,7 +11,7 @@ const ProfileUserFriends = () => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const { userId, getUserFriends, friendsData, chatUserId } = useContext(ProfileContext);
-  const { setSelectedDirect } = useContext(ChatContext);
+  const { setSelectedDirect, setIsHome, setSelectedItem } = useContext(ChatContext);
 
   useEffect(() => {
     if (userId)
@@ -31,6 +31,8 @@ const ProfileUserFriends = () => {
       status: true,
       avatar: userImage,
     })
+    setIsHome(true)
+    setSelectedItem(username)
     navigate('/mainpage/chat');
   }
 

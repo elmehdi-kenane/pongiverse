@@ -475,6 +475,15 @@ const GameNotifications = (props) => {
             status: "",
             avatar: "",
           });
+        } else if (type === 'user_join_tournament') {
+          let tournament_id = message.tournament_id
+					props.setTournamentSuggestions(prevSuggestions =>
+						prevSuggestions.map(tournament =>
+							tournament.tournament_id == tournament_id
+								? { ...tournament, size: tournament.size + 1 }
+								: tournament
+						)
+					);
         }
       };
     }
