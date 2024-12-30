@@ -18,6 +18,13 @@ export const ChatProvider = ({ child }) => {
   const allFriendsRef = useRef(allFriends);
   const [allChatRoomMembers, setAllChatRoomMembers] = useState([]);
   // const [directs, setDirects] = useState([]);
+  const [myChatRooms, setMyChatRooms] = useState([]);
+  const myChatRoomsRef = useRef(myChatRooms);
+  useEffect(() => {
+    console.log("inside the chat context", location.pathname);
+    myChatRoomsRef.current = myChatRooms;
+    console.log("chat Context myChatRoomsRef.current", myChatRoomsRef.current);
+  }, [myChatRooms]);
   const [chatRooms, setChatRooms] = useState([]);
 
   useEffect(() => {
@@ -39,7 +46,6 @@ export const ChatProvider = ({ child }) => {
   const selectedDirectRef = useRef(selectedDirect);
   const selectedChatRoomRef = useRef(selectedChatRoom);
 
-
   useEffect(() => {
     suggestedChatRoomsRef.current = suggestedChatRooms;
   }, [suggestedChatRooms]);
@@ -51,7 +57,6 @@ export const ChatProvider = ({ child }) => {
   useEffect(() => {
     selectedChatRoomRef.current = selectedChatRoom;
   }, [selectedChatRoom]);
-
 
   useEffect(() => {
     chatRoomInvitationsRef.current = chatRoomInvitations;
@@ -80,9 +85,11 @@ export const ChatProvider = ({ child }) => {
     const fetchChatRoomInvitations = async () => {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS
-          }:8000/chatAPI/chatRoomInvitations/${user}`,{
-            credentials: "include"
+          `http://${
+            import.meta.env.VITE_IPADDRESS
+          }:8000/chatAPI/chatRoomInvitations/${user}`,
+          {
+            credentials: "include",
           }
         );
         let data = await response.json();
@@ -96,7 +103,8 @@ export const ChatProvider = ({ child }) => {
     const fetchSuggestedChatRooms = async () => {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS
+          `http://${
+            import.meta.env.VITE_IPADDRESS
           }:8000/chatAPI/suggestedChatRooms/${user}`,
           {
             credentials: "include",
@@ -141,6 +149,9 @@ export const ChatProvider = ({ child }) => {
     setAllFriends: setAllFriends,
     allFriendsRef: allFriendsRef,
     allChatRoomMembers: allChatRoomMembers,
+    myChatRooms: myChatRooms,
+    setMyChatRooms: setMyChatRooms,
+    myChatRoomsRef: myChatRoomsRef,
   };
   return (
     <ChatContext.Provider value={contextData}>{child}</ChatContext.Provider>

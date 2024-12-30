@@ -15,9 +15,9 @@ function NavbarSidebar() {
     let { user, socket, privateCheckAuth, setUser, hideNavSideBar } = useContext(AuthContext)
 	let navigate = useNavigate()
 
-  useEffect(() => {
-    privateCheckAuth();
-  }, []);
+  // useEffect(() => {
+  //   privateCheckAuth();
+  // }, []);
   window.addEventListener("resize", () => {
     if (window.innerWidth > 768) {
       setSidebarIsOpen(false);

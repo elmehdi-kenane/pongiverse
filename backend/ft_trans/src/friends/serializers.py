@@ -31,6 +31,7 @@ class friendRequestSerializer(serializers.ModelSerializer):
         return user_stat.level if user_stat else None
 
 class friendSerializer(serializers.ModelSerializer):
+    friend_id = serializers.IntegerField(source='friend.id')
     second_username = serializers.CharField(source='friend.username')
     is_online = serializers.BooleanField(source='friend.is_online')
     avatar = serializers.SerializerMethodField()
@@ -38,7 +39,7 @@ class friendSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Friendship
-        fields = ['second_username', 'avatar', 'is_online', 'level']
+        fields = ['friend_id', 'second_username', 'avatar', 'is_online', 'level']
 
     def get_avatar(self, obj):
         request = self.context.get('request')

@@ -240,9 +240,9 @@ const TwoVsTwoPlayMatch = () => {
             particles.push(particle);
         }
     
-    useEffect(() => {
-        privateCheckAuth()
-    }, [])
+    // useEffect(() => {
+    //     privateCheckAuth()
+    // }, [])
 
     const draw = () => {
         const ctx = canvasContextRef.current
@@ -774,7 +774,8 @@ const TwoVsTwoPlayMatch = () => {
                         setUserOut([...userGotOut, message.userNo])
                         // playerGotOut(message)
                     }
-                }
+                } else if (type === 'hmed')
+                    socket.close()
             }
         }
     }, [socket, user])

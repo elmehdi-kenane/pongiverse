@@ -29,16 +29,17 @@ const OneVsOneCreateOrJoin = () => {
     const generateCodeRef = useRef(null)
     const navigate = useNavigate()
     let { privateCheckAuth, socket, user,
-        userImg, setAllGameNotifs, userLevel } = useContext(AuthContext)
+        userImg, setAllGameNotifs, userLevel, notifSocket, setChatNotificationCounter, addNotificationToList, notifications,
+        setNotifications } = useContext(AuthContext)
 
     let isOut = false
     const userRef = useRef(user)
     const roomIdRef = useRef(tmpRoomID)
     const socketRef = useRef(socket)
 
-    useEffect(() => {
-        privateCheckAuth()
-    }, [])
+    // useEffect(() => {
+    //     privateCheckAuth()
+    // }, [])
 
     useEffect(() => {
         if (socket && socket.readyState === WebSocket.OPEN && user) {
@@ -54,6 +55,29 @@ const OneVsOneCreateOrJoin = () => {
         }
     }, [socket, user])
 
+
+    useEffect(() => {
+        if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+            notifSocket.onmessage = (event) => {
+                let data = JSON.parse(event.data)
+                let type = data.type
+                let message = data.message
+                if (type === "chatNotificationCounter") {
+                    setChatNotificationCounter(data.count);
+                } else if (type === "receive-friend-request") {
+                    addNotificationToList({
+                        notificationText: `${message.second_username} sent you a friend request`,
+                        urlRedirection: "friendship",
+                        avatar: message.avatar,
+                        notifications: notifications,
+                        setNotifications: setNotifications,
+                        user: user,
+                    });
+                }
+            }
+        }
+    }, [notifSocket])
+
     useEffect(() => {
         if (socket && socket.readyState === WebSocket.OPEN) {
             socket.onmessage = (event) => {
@@ -64,7 +88,7 @@ const OneVsOneCreateOrJoin = () => {
                     setAllSet(true)
                     if (message.mode === '1vs1')
                         navigate(`../play/1vs1/${message.roomID}`)
-                    else if (message.mode === '2vs2') 
+                    else if (message.mode === '2vs2')
                         navigate(`../play/2vs2/${message.roomID}`)
                     else
                         navigate("../game/createtournament")
@@ -130,13 +154,11 @@ const OneVsOneCreateOrJoin = () => {
                     } else
                         setCodeToShare(message.id)
                 } else if (type === 'invalidCode') {
-                inputRoomId.current.value = ''
-                setRoomIdIncorrect(true)
-                setCheckingCode(false)
-                } else if (type === 'hmed') {
-					console.log("hmed received")
+                    inputRoomId.current.value = ''
+                    setRoomIdIncorrect(true)
+                    setCheckingCode(false)
+                } else if (type === 'hmed')
                     socket.close()
-                }
             }
         }
 
@@ -210,16 +232,16 @@ const OneVsOneCreateOrJoin = () => {
         if (!checkingCode) {
             if (regex.test(inputRoomId.current.value)) {
                 if (socket && socket.readyState === WebSocket.OPEN) {
-                inputRoomId.current.value = ''
-                setRoomIdIncorrect(false)
-                setCheckingCode(true)
-                socket.send(JSON.stringify({
-                    type: 'checkingRoomCode',
-                    message: {
-                        user: user,
-                        roomCode: value
-                    }
-                }))
+                    inputRoomId.current.value = ''
+                    setRoomIdIncorrect(false)
+                    setCheckingCode(true)
+                    socket.send(JSON.stringify({
+                        type: 'checkingRoomCode',
+                        message: {
+                            user: user,
+                            roomCode: value
+                        }
+                    }))
                 }
             } else {
                 setRoomIdIncorrect(true)
@@ -281,34 +303,34 @@ const OneVsOneCreateOrJoin = () => {
             <div className='onevsone-dashboard'>
                 <div className='onevsone-dashboard-opponents'>
                     {!matchJoined && (<div className='onevsone-create-room' ref={expandCreateRef}>
-                        <div onClick={expandCreateRoom} style={{display: 'flex', flexDirection: 'row', cursor: 'pointer', position: 'relative', width: '100%', alignItems: 'center', justifyContent: 'center', gap: '6px'}}>
-                            <img src={Icons.gameInvite} alt="" style={{paddingLeft: '5px'}} />
+                        <div onClick={expandCreateRoom} style={{ display: 'flex', flexDirection: 'row', cursor: 'pointer', position: 'relative', width: '100%', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                            <img src={Icons.gameInvite} alt="" style={{ paddingLeft: '5px' }} />
                             <div className='invite-friends-button'>create match</div>
                         </div>
                     </div>)}
-                    {expandCreate && (<div className='expand-create-room' style={{display: 'flex', justifyContent: 'center', gap: '10px', fontSize: '12px', fontWeight: '500'}} >
-                        {!matchCreated ? (<p style={{margin: '0 8px'}} >press Generate and share the code with others to play together</p>) : (<p style={{margin: '0 8px'}} >Now you can share the code with others to play together</p>)}
-                        {!matchCreated && (<div style={{margin: '0 8px', textAlign: 'center', backgroundColor: '#913DCE', padding: '6px', borderRadius: '5px'}} onClick={createNewMatch} ref={generateCodeRef} >Generate</div>)}
-                        <div style={{margin: '0 8px', display: 'flex', alignItems: 'center', backgroundColor: '#EAD3D6', color: 'black', padding: '6px', borderRadius: '5px'}}>
-                            <span style={{display: 'block', textAlign: 'left', width: '100%', marginLeft: '0', color: 'black'}} ref={textCopied}>{codeToShare}</span>
-                            <img style={{marginRight: '0', width: '18px'}} src={image} alt="copy" onClick={changeIfTextCopied} />
+                    {expandCreate && (<div className='expand-create-room' style={{ display: 'flex', justifyContent: 'center', gap: '10px', fontSize: '12px', fontWeight: '500' }} >
+                        {!matchCreated ? (<p style={{ margin: '0 8px' }} >press Generate and share the code with others to play together</p>) : (<p style={{ margin: '0 8px' }} >Now you can share the code with others to play together</p>)}
+                        {!matchCreated && (<div style={{ margin: '0 8px', textAlign: 'center', backgroundColor: '#913DCE', padding: '6px', borderRadius: '5px' }} onClick={createNewMatch} ref={generateCodeRef} >Generate</div>)}
+                        <div style={{ margin: '0 8px', display: 'flex', alignItems: 'center', backgroundColor: '#EAD3D6', color: 'black', padding: '6px', borderRadius: '5px' }}>
+                            <span style={{ display: 'block', textAlign: 'left', width: '100%', marginLeft: '0', color: 'black' }} ref={textCopied}>{codeToShare}</span>
+                            <img style={{ marginRight: '0', width: '18px' }} src={image} alt="copy" onClick={changeIfTextCopied} />
                         </div>
                     </div>)}
                     {!matchCreated && (<div className='onevsone-join-room' ref={expandJoinRef}>
-                        <div onClick={expandJoinRoom} style={{display: 'flex', flexDirection: 'row', cursor: 'pointer', position: 'relative', width: '100%', alignItems: 'center', justifyContent: 'center', gap: '6px'}}>
-                            <img src={Icons.gameInvite} alt="" style={{paddingLeft: '5px'}} />
+                        <div onClick={expandJoinRoom} style={{ display: 'flex', flexDirection: 'row', cursor: 'pointer', position: 'relative', width: '100%', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                            <img src={Icons.gameInvite} alt="" style={{ paddingLeft: '5px' }} />
                             <div className='invite-friends-button'>join match</div>
                         </div>
                     </div>)}
-                    {expandJoin && !matchCreated && (<div className='expand-join-room' style={{display: 'flex', justifyContent: 'center', gap: '10px', fontSize: '12px', fontWeight: '500'}} >
-                        <p style={{margin: '0 8px'}} >Enter the code below to join the match</p>
-                        <input style={{margin: '0 8px', outline: 'none', border: '1px solid #EAD3D6', backgroundColor: 'transparent', padding: '6px', borderRadius: '5px', textIndent: '8px', color: 'white'}} ref={inputRoomId} type="text" placeholder='enter the code' required />
-                        {roomIdIncorrect && (<span style={{margin: '0 8px', fontSize: '11px', display: 'block'}} id='incorrect-id'>Invalid code. Please try again.</span>)}
-                        <div style={{margin: '0 8px', textAlign: 'center', backgroundColor: '#913DCE', padding: '6px', borderRadius: '5px'}} onClick={joinToNewMatch}>Confirm</div>
+                    {expandJoin && !matchCreated && (<div className='expand-join-room' style={{ display: 'flex', justifyContent: 'center', gap: '10px', fontSize: '12px', fontWeight: '500' }} >
+                        <p style={{ margin: '0 8px' }} >Enter the code below to join the match</p>
+                        <input style={{ margin: '0 8px', outline: 'none', border: '1px solid #EAD3D6', backgroundColor: 'transparent', padding: '6px', borderRadius: '5px', textIndent: '8px', color: 'white' }} ref={inputRoomId} type="text" placeholder='enter the code' required />
+                        {roomIdIncorrect && (<span style={{ margin: '0 8px', fontSize: '11px', display: 'block' }} id='incorrect-id'>Invalid code. Please try again.</span>)}
+                        <div style={{ margin: '0 8px', textAlign: 'center', backgroundColor: '#913DCE', padding: '6px', borderRadius: '5px' }} onClick={joinToNewMatch}>Confirm</div>
                     </div>)}
                     <div className='onevsone-dashboard-opponent'>
                         <div>
-                            <img src={userImg} alt="profile-pic" style={{borderRadius: '50%'}} />
+                            <img src={userImg} alt="profile-pic" style={{ borderRadius: '50%' }} />
                         </div>
                         {/* {enemyInfos && (<div className='onevsone-opponent-infos'>
                             <p>mmaqbour</p>
@@ -320,19 +342,19 @@ const OneVsOneCreateOrJoin = () => {
                         </div>
                     </div>
                     <div className={(!allSet && loadMatch) ? 'onevsone-dashboard-logo onevsone-dashboard-logo-loading' : 'onevsone-dashboard-logo'} >
-                    {(!loadMatch && allSet) ? (<img id='versus-logo' src={Icons.versus} alt="profile-pic" />) : (loadMatch && !allSet) ? (
-                        <>
-                            <div id='paddle-1' ></div>
-                            <div id='net' ></div>
-                            <div id='ball' ></div>
-                            <div id='paddle-2' ></div>
-                        </>
-                    ) : ''}
+                        {(!loadMatch && allSet) ? (<img id='versus-logo' src={Icons.versus} alt="profile-pic" />) : (loadMatch && !allSet) ? (
+                            <>
+                                <div id='paddle-1' ></div>
+                                <div id='net' ></div>
+                                <div id='ball' ></div>
+                                <div id='paddle-2' ></div>
+                            </>
+                        ) : ''}
                     </div>
                     <div className='onevsone-dashboard-opponent'>
                         {enemyInfos ? (
                             <>
-                                <div><img src={enemyInfos.avatar} alt="profile-pic" style={{borderRadius: '50%'}} /></div>
+                                <div><img src={enemyInfos.avatar} alt="profile-pic" style={{ borderRadius: '50%' }} /></div>
                                 <div className='onevsone-opponent-infos'>
                                     <p>{enemyInfos.name}</p>
                                     <p>level {enemyInfos.level}</p>

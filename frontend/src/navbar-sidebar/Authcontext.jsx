@@ -4,6 +4,7 @@ import { Navigate } from "react-router-dom";
 import { friends } from "../assets/navbar-sidebar";
 import * as Icons from "../assets/navbar-sidebar";
 import { useReducer } from "react";
+import { trimStringWithEllipsis } from "../GameNotif/GameNotifications";
 
 import userPc from "../Settings/assets/Group.svg";
 
@@ -41,7 +42,6 @@ export const AuthProvider = ({ children }) => {
 	const [isGameStats, setIsGameStats] = useState(false);
 	const [isChatBlur, setIsChartBlur] = useState(false);
 
-	const [reportValue, setReportValue] = useState(null);
 	const reportContentRef = useRef(null);
 	const blockRef = useRef(null);
 	const blockContentRef = useRef(null);
@@ -58,6 +58,7 @@ export const AuthProvider = ({ children }) => {
 	const oneVsOneIdRegex = /^\/mainpage\/play\/1vs1\/\d+$/;
 	const twoVsTwoIdRegex = /^\/mainpage\/play\/2vs2\/\d+$/;
 	const gamePlayRegex = /^\/mainpage\/(game|play)(\/[\w\d-]*)*$/;
+	const checkPrivateAuthRegex = /^\/mainpage(?:\/.*|$)/;
 
 	// Chat Notification and Chat Room Invitation States --------------------------------------------
 	const [chatRoomInvitationsCounter, setChatRoomInvitationsCounter] =
@@ -65,8 +66,8 @@ export const AuthProvider = ({ children }) => {
 	const [chatNotificationCounter, setChatNotificationCounter] = useState(0);
 	const RoomsInvitationRef = useRef(null);
 	const chatNotificationRef = useRef(null);
-  const [notifications, setNotifications] = useState([]);
-  const [isNotificationsRead, setIsNotificationsRead] = useState();
+	const [notifications, setNotifications] = useState([]);
+	const [isNotificationsRead, setIsNotificationsRead] = useState();
 
 	useEffect(() => {
 		RoomsInvitationRef.current = chatRoomInvitationsCounter;
@@ -89,6 +90,22 @@ export const AuthProvider = ({ children }) => {
 	useEffect(() => {
 		socketRef.current = socket
 	}, [socket])
+
+	useEffect(() => {
+		console.log("s")
+		if (checkPrivateAuthRegex.test(location.pathname))
+			privateCheckAuth();
+		else if (
+			location.pathname === "/signup" ||
+			location.pathname === "/signin" ||
+			location.pathname === "/SecondStep" ||
+			location.pathname === "/WaysSecondStep" ||
+			location.pathname === "/ForgotPassword" ||
+			location.pathname === "/ChangePassword"
+		)
+			publicCheckAuth();
+
+	}, [location.pathname])
 
 	useEffect(() => {
 		const getAllGameFriends = async () => {
@@ -260,6 +277,48 @@ export const AuthProvider = ({ children }) => {
 		if (user && (location.pathname === '/mainpage/game/solo' || location.pathname === '/mainpage/game/solo/1vs1' || location.pathname === '/mainpage/game/solo/2vs2' || location.pathname === '/mainpage/game/jointournament' || location.pathname === '/mainpage/game'))
 			check_is_in_game()
 	}, [location.pathname, user])
+
+	const addNotificationToList = ({
+		avatar,
+		notificationText,
+		urlRedirection,
+		notifications,
+		setNotifications,
+		user,
+	}) => {
+		const addNewNotification = async () => {
+			const response = await fetch(
+				`http://${import.meta.env.VITE_IPADDRESS
+				}:8000/navBar/add_notification/`,
+				{
+					method: "POST",
+					credentials: "include",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						notification_text: notificationText,
+						url_redirection: urlRedirection,
+						username: user,
+						avatar: avatar,
+					}),
+				}
+			);
+			const res = await response.json();
+			//   if (res) setFriendSuggestions(res);
+		};
+		if (user) {
+			addNewNotification();
+			const newNotification = {
+				notification_text: trimStringWithEllipsis(notificationText),
+				url_redirection: urlRedirection,
+				send_at: new Date().toISOString(),
+				avatar: avatar,
+			};
+			setNotifications([newNotification, ...notifications]);
+			setIsNotificationsRead(false);
+		}
+	};
 
 	useEffect(() => {
 		const addUser = (newUser, currentAllGameFriends) => {
@@ -531,6 +590,7 @@ export const AuthProvider = ({ children }) => {
 		loading: loading,
 		userImages: userImages,
 		setAllGameNotifs: setAllGameNotifs,
+		addNotificationToList: addNotificationToList,
 		notifications: notifications,
 		isNotificationsRead: isNotificationsRead,
 		setNotifications: setNotifications,
@@ -545,8 +605,6 @@ export const AuthProvider = ({ children }) => {
 		isReport: isReport,
 		setIsReport: setIsReport,
 		reportContentRef: reportContentRef,
-		reportValue: reportValue,
-		setReportValue: setReportValue,
 		isBlock: isBlock,
 		setIsBlock: setIsBlock,
 		isGameStats: isGameStats,

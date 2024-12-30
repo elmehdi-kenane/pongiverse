@@ -1,25 +1,72 @@
 import { handleAddFriendReq } from "../Friends/utils";
 import { useState } from "react";
 import AuthContext from "./Authcontext";
-import { useContext } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast, Toaster } from "react-hot-toast";
+import ChatContext from "../Context/ChatContext";
 
 const SearchResultCard = ({
-    resultText,
-    avatar,
-    result_type,
-    is_friend,
-    is_joined,
-    searchResult,
-    searchTerm,
-    setIsSearchBarOpen,
-    setInputValue
+  id,
+  resultText,
+  members_count,
+  avatar,
+  result_type,
+  is_friend,
+  is_joined,
+  searchResult,
+  searchTerm,
+  handleSearchBar,
+  setInputValue,
 }) => {
   const [addFriendBtn, setAddFriendBtn] = useState("Add friend");
   const [joinRoomBtn, setJoinRoomBtn] = useState("Join room");
   const { user } = useContext(AuthContext);
-    const navigate = useNavigate();
-  const copiedResult = [...searchResult];
+  const {
+    setSuggestedChatRooms,
+    suggestedChatRoomsRef,
+    setSelectedChatRoom,
+    setIsHome,
+    setMyChatRooms,
+    myChatRooms,
+    myChatRoomsRef,
+  } = useContext(ChatContext);
+  console.log("get myChatRoomsRef.current", myChatRoomsRef.current);
+  const navigate = useNavigate();
+  const joinChatRoomSubmitter = async () => {
+    // const toastId = toast.loading("Joining the chat room...");
+    try {
+      const response = await fetch(
+        `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/joinChatRoom`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-type": "application/json" },
+          body: JSON.stringify({
+            user: user,
+            roomId: id,
+          }),
+        }
+      );
+      const data = await response.json();
+      console.log("data", data);
+      if (response.ok) {
+        let suggestedChatRooms = suggestedChatRoomsRef.current;
+        let updatedSuggestedRooms = suggestedChatRooms.filter(
+          (room) => room.id !== id
+        );
+        setSuggestedChatRooms(updatedSuggestedRooms);
+        const currentChatRooms = myChatRoomsRef.current;
+        setMyChatRooms([...currentChatRooms, data.room])
+      } else {
+        setTimeout(() => {
+          toast.error(data.error);
+        }, 500);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleSearchItemBtn = (
     currentUsername,
@@ -29,28 +76,29 @@ const SearchResultCard = ({
     if (successText === "Request sent") {
       setAddFriendBtn(successText);
       setTimeout(() => {
-        console.log("setTimeout 2000");
         setAddFriendBtn(null);
       }, 2000);
       handleAddFriendReq(currentUsername, secondUsername);
       const user = searchResult.find(
-        (user) => user.username === secondUsername
+        (user) => user.username === secondUsername && user.id === id
       );
       user.is_friend = true;
     } else if (successText === "Joined") {
+      const room = searchResult.find(
+        (room) => room.username === secondUsername && room.id === id
+      );
+      room.is_joined = true;
+      joinChatRoomSubmitter();
       setJoinRoomBtn(successText);
       setTimeout(() => {
-        console.log("setTimeout 2000");
         setJoinRoomBtn(null);
       }, 2000);
     }
   };
 
-    const HighlightSearchTerm = () => {
-        console.log(resultText, searchTerm);
+  const HighlightSearchTerm = () => {
     resultText = resultText.toLowerCase();
     searchTerm = searchTerm.toLowerCase();
-    console.log("resultText", resultText);
     const index = resultText.indexOf(searchTerm);
     return [
       resultText.slice(0, index),
@@ -58,33 +106,47 @@ const SearchResultCard = ({
       resultText.slice(index + searchTerm.length),
     ];
   };
-    const resultTextArr = HighlightSearchTerm();
+  // const resultTextArr = HighlightSearchTerm();
+  const resultTextArr = resultText;
 
-    const handleClickItem = () => {
-        setIsSearchBarOpen(false);
-        setInputValue("");
-        if (result_type === "user")
-            navigate(`/mainpage/profile/${resultText}`)
-        else if (result_type === "room")
-            console.log("tinkywinky");
+  const handleClickItem = () => {
+    setInputValue("");
+    handleSearchBar();
+    if (result_type === "user") {
+      navigate(`/mainpage/profile/${resultText}`);
+    } else if (result_type === "room" && is_joined === true) {
+      setSelectedChatRoom({
+        id: id,
+        name: resultText,
+        membersCount: members_count,
+        icon: avatar,
+        cover: null,
+        topic: "",
+      });
+      setIsHome(false);
+      navigate(`/mainpage/chat/`);
+    } else {
+      console.log("show toast ===============================");
+      toast.error("Please join the room to access its content.");
     }
+  };
   return (
-      <div className="searchResultItem" onClick={handleClickItem}>
+    <div className="searchResultItem" onClick={handleClickItem}>
       <img src={avatar} alt={avatar} />
       <p>
-        {resultTextArr[0]}
+        {resultTextArr}
+        {/* {resultTextArr[0]}
         <span>{resultTextArr[1]}</span>
-        {resultTextArr[2]}
+        {resultTextArr[2]} */}
       </p>
       {result_type === "user" &&
         is_friend === false &&
         addFriendBtn !== null && (
           <button
-                  onClick={(e) => {
-                      e.stopPropagation();
-                      handleSearchItemBtn(user, resultText, "Request sent");
-                  }
-                  }
+            onClick={(e) => {
+              e.stopPropagation();
+              handleSearchItemBtn(user, resultText, "Request sent");
+            }}
           >
             {addFriendBtn}
           </button>
@@ -92,12 +154,12 @@ const SearchResultCard = ({
       {result_type === "room" &&
         is_joined === false &&
         joinRoomBtn !== null && (
-              <button onClick={(e) => {
-                  e.stopPropagation();
-                  handleSearchItemBtn(user, resultText, "Joined");
-              }
-              }
-              >
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleSearchItemBtn(user, resultText, "Joined");
+            }}
+          >
             {joinRoomBtn}
           </button>
         )}

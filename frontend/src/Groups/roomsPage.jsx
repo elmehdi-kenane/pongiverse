@@ -29,19 +29,22 @@ const Rooms = () => {
     setAllFriends,
     allFriendsRef,
     setAllChatRoomMembers,
+    myChatRooms,
+    setMyChatRooms,
+    myChatRoomsRef,
   } = useContext(ChatContext);
-  const [myChatRooms, setMyChatRooms] = useState([]);
+//   const [myChatRooms, setMyChatRooms] = useState([]);
   const [hasMoreRooms, setHasMoreRooms] = useState(true);
   const [currentMyRoomsPage, setCurrentMyRoomsPage] = useState(1);
   const [itemsPerScreen, setItemsPerScreen] = useState(4);
   const [pendingInvitationsCount, setPendingInvitationsCount] = useState(0);
-  const myChatRoomsRef = useRef(myChatRooms);
+//   const myChatRoomsRef = useRef(myChatRooms);
 
-  useEffect(() => {
-    myChatRoomsRef.current = myChatRooms;
-  }, [myChatRooms]);
+//   useEffect(() => {
+//     myChatRoomsRef.current = myChatRooms;
+//   }, [myChatRooms]);
 
-
+  console.log("your ouside myChatRoomsRef.current", myChatRoomsRef.current);
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) setItemsPerScreen(1);

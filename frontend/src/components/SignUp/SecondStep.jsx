@@ -9,6 +9,8 @@ import imagePlaceholder from "../../assets/SignUp/imagePlaceholder.svg";
 import Resizer from "react-image-file-resizer";
 import toast, { Toaster } from "react-hot-toast";
 import AvatarEditor from "react-avatar-editor";
+import { TiWarning } from "react-icons/ti";
+
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 import { ImCross } from "react-icons/im";
@@ -225,7 +227,7 @@ function SecondStep() {
 								image={image}
 								width={editorSize.width}
 								height={editorSize.height}
-								border={20}
+								border={10}
 								color={[255, 255, 255, 0.2]} // RGBA color for border
 								scale={scale}
 								rotate={0}
@@ -262,6 +264,10 @@ function SecondStep() {
 					</div>
 				}
 				<div className={styles["second-step-form"]}>
+					<div className={styles['unchangable-username-warning']}>
+						<TiWarning color="#cccccc66" size={17}/>
+						<p>Username is Unchangeable</p>
+					</div>
 					<div className={styles["second-step-form-inputs"]}>
 						<div className={styles["second-step-form-inputs-input-div"]}>
 							<input

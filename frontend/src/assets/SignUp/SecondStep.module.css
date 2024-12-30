@@ -90,6 +90,19 @@
 }
 
 
+.unchangable-username-warning {
+	width: 100%;
+	margin-bottom: 7px;
+	display: flex;
+	align-items: center;
+	gap: 2px;
+}
+
+.unchangable-username-warning p {
+	color: #cccccc66;
+	font-size: 13px;
+}
+
 
 
 .second-step-form-display-image {
@@ -232,7 +245,6 @@
 		justify-content: center;
 		top: 250px;
 		margin: 0 auto;
-		background-color: rgb(193, 193, 193);
 		border-radius: 10px;
 		gap: 10px;
 	}

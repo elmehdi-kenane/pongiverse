@@ -35,12 +35,12 @@ function ReportFooter() {
 
       const res = await response.json()
       if (response.ok) {
-        console.log(res.case);
+        // console.log(res.case);
       }
       else
         console.error(res.error);
     } catch (error) {
-        console.log("Error: ", error);
+        console.error("Error: ", error);
     }
 
     if (isBlock && isFriend === 'true'){

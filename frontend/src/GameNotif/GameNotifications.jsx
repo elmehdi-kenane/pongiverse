@@ -105,9 +105,13 @@ const GameNotifications = (props) => {
 
   useEffect(() => {
     {
-      newReceivedFriendReqNotif &&
-        location.pathname !== "/mainpage/friends" &&
+      if (
+        newReceivedFriendReqNotif &&
+        location.pathname !== "/mainpage/friendship"
+      ) {
+        console.log("pathname notify", location.pathname);
         notify();
+      }
     }
   }, [newReceivedFriendReqNotif]);
 
@@ -419,8 +423,10 @@ const GameNotifications = (props) => {
           type === "confirm-friend-request" &&
           message.second_username === props.userId
         ) {
-          props.getUserFriends();
-        } else if (
+          props.getUserFriends()
+          props.setIsFriend("true");
+        }
+        else if (
           type === "cancel-friend-request" &&
           message.second_username === props.userId
         ) {

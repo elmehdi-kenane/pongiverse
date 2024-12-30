@@ -27,15 +27,16 @@ const TwoVsTwoRandom = () => {
     // const [chosenOne, setChosenOne] = useState('')
     let { privateCheckAuth, socket, user,
         socketRecreated, setSocketRecreated,
-        userImg, loading, userLevel } = useContext(AuthContext)
-    
+        userImg, loading, userLevel, notifSocket, setChatNotificationCounter, addNotificationToList, notifications,
+        setNotifications } = useContext(AuthContext)
+
     let isOut = false
     const userRef = useRef(user)
     const roomIdRef = useRef(roomID)
     const socketRef = useRef(socket)
-    useEffect(() => {
-        privateCheckAuth()
-    }, [])
+    // useEffect(() => {
+    //     privateCheckAuth()
+    // }, [])
 
     useEffect(() => {
         // console.log(socket, socket.readyState, user)
@@ -51,14 +52,37 @@ const TwoVsTwoRandom = () => {
                 }
             }))
         }
-	}, [socket, user])
+    }, [socket, user])
 
     useEffect(() => {
-		playerNoRef.current = playerNo;
-		userRef.current = user;
-		roomIdRef.current = roomID;
-		socketRef.current = socket;
-	}, [playerNo, user, roomID, socket]);
+        if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
+            notifSocket.onmessage = (event) => {
+                let data = JSON.parse(event.data)
+                let type = data.type
+                let message = data.message
+                if (type === "chatNotificationCounter") {
+                    setChatNotificationCounter(data.count);
+                } else if (type === "receive-friend-request") {
+                    addNotificationToList({
+                        notificationText: `${message.second_username} sent you a friend request`,
+                        urlRedirection: "friendship",
+                        avatar: message.avatar,
+                        notifications: notifications,
+                        setNotifications: setNotifications,
+                        user: user,
+                    });
+                }
+            }
+        }
+    }, [notifSocket])
+
+
+    useEffect(() => {
+        playerNoRef.current = playerNo;
+        userRef.current = user;
+        roomIdRef.current = roomID;
+        socketRef.current = socket;
+    }, [playerNo, user, roomID, socket]);
 
     useEffect(() => {
         if (socket && socket.readyState === WebSocket.OPEN) {
@@ -71,7 +95,7 @@ const TwoVsTwoRandom = () => {
                     setAllSet(true)
                     if (message.mode === '1vs1')
                         navigate(`../play/1vs1/${message.roomID}`)
-                    else if(message.mode === '2vs2')
+                    else if (message.mode === '2vs2')
                         navigate(`../play/2vs2/${message.roomID}`)
                     else
                         navigate("../game/createtournament")
@@ -251,7 +275,8 @@ const TwoVsTwoRandom = () => {
                     randomPics = setInterval(() => {
                         setRandomPic(picsList[Math.floor(Math.random() * picsList.length)])
                     }, 500);
-                }
+                } else if (type === 'hmed')
+                    socket.close()
             }
         }
 
@@ -327,76 +352,76 @@ const TwoVsTwoRandom = () => {
     }, [])
 
     return (
-    <div className='twovstwo' >
-        <div className='twovstwo-dashboard' >
-            <div className='twovstwo-dashboard-opponents' >
-                <div className='twovstwo-dashboard-opponent' >
-                    <div className='twovstwo-dashboard-player' >
-                        <div><img src={userImg} alt="profile-pic" /></div>
-                        <div className='twovstwo-opponent-infos'>
-                            <p>{user}</p>
-                            <p>level {userLevel}</p>
+        <div className='twovstwo' >
+            <div className='twovstwo-dashboard' >
+                <div className='twovstwo-dashboard-opponents' >
+                    <div className='twovstwo-dashboard-opponent' >
+                        <div className='twovstwo-dashboard-player' >
+                            <div><img src={userImg} alt="profile-pic" /></div>
+                            <div className='twovstwo-opponent-infos'>
+                                <p>{user}</p>
+                                <p>level {userLevel}</p>
+                            </div>
                         </div>
+                        {temmateInfos ? (
+                            <div className='twovstwo-dashboard-player' >
+                                <div><img src={temmateInfos.avatar} alt="profile-pic" /></div>
+                                <div className='twovstwo-opponent-infos' >
+                                    <p>{temmateInfos.name}</p>
+                                    <p>level {temmateInfos.level}</p>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className='twovstwo-dashboard-player' >
+                                <div><img src={randomPic} alt="profile-pic" /></div>
+                                <div className='twovstwo-opponent-infos-none' ></div>
+                            </div>
+                        )}
                     </div>
-                    {temmateInfos ? (
-                        <div className='twovstwo-dashboard-player' >
-                            <div><img src={temmateInfos.avatar} alt="profile-pic" /></div>
-                            <div className='twovstwo-opponent-infos' >
-                                <p>{temmateInfos.name}</p>
-                                <p>level {temmateInfos.level}</p>
+                    <div className={(!allSet && loadMatch) ? 'twovstwo-dashboard-logo twovstwo-dashboard-logo-loading' : 'twovstwo-dashboard-logo'} >
+                        {(!loadMatch && allSet) ? (
+                            <img id='versus-logo' src={Icons.versus} alt="profile-pic" />
+                        ) : (loadMatch && !allSet) ? (
+                            <>
+                                <div id='paddle-1' ></div>
+                                <div id='net' ></div>
+                                <div id='ball' ></div>
+                                <div id='paddle-2' ></div>
+                            </>
+                        ) : ''}
+                    </div>
+                    <div className='twovstwo-dashboard-opponent' >
+                        {enemy1Infos ? (
+                            <div className='twovstwo-dashboard-player' >
+                                <div><img src={enemy1Infos.avatar} alt="profile-pic" /></div>
+                                <div className='twovstwo-opponent-infos' >
+                                    <p>{enemy1Infos.name}</p>
+                                    <p>level {enemy1Infos.level}</p>
+                                </div>
                             </div>
-                        </div>
-                    ) : (
-                        <div className='twovstwo-dashboard-player' >
-                            <div><img src={randomPic} alt="profile-pic" /></div>
-                            <div className='twovstwo-opponent-infos-none' ></div>
-                        </div>
-                    )}
-                </div>
-                <div className={(!allSet && loadMatch) ? 'twovstwo-dashboard-logo twovstwo-dashboard-logo-loading' : 'twovstwo-dashboard-logo'} >
-                {(!loadMatch && allSet) ? (
-                    <img id='versus-logo' src={Icons.versus} alt="profile-pic" />
-                ) : (loadMatch && !allSet) ? (
-                    <>
-                        <div id='paddle-1' ></div>
-                        <div id='net' ></div>
-                        <div id='ball' ></div>
-                        <div id='paddle-2' ></div>
-                    </>
-                ) : ''}
-                </div>
-                <div className='twovstwo-dashboard-opponent' >
-                    {enemy1Infos ? (
-                        <div className='twovstwo-dashboard-player' >
-                            <div><img src={enemy1Infos.avatar} alt="profile-pic" /></div>
-                            <div className='twovstwo-opponent-infos' >
-                                <p>{enemy1Infos.name}</p>
-                                <p>level {enemy1Infos.level}</p>
+                        ) : (
+                            <div className='twovstwo-dashboard-player' >
+                                <div><img src={randomPic} alt="profile-pic" /></div>
+                                <div className='twovstwo-opponent-infos-none' ></div>
                             </div>
-                        </div>
-                    ) : (
-                        <div className='twovstwo-dashboard-player' >
-                            <div><img src={randomPic} alt="profile-pic" /></div>
-                            <div className='twovstwo-opponent-infos-none' ></div>
-                        </div>
-                    )}
-                    {enemy2Infos ? (<div className='twovstwo-dashboard-player' >
-                        <div><img src={enemy2Infos.avatar} alt="profile-pic" /></div>
-                        <div className='twovstwo-opponent-infos' >
-                            <p>{enemy2Infos.name}</p>
-                            <p>level {enemy2Infos.level}</p>
-                        </div>
-                    </div>) : (
-                        <div className='twovstwo-dashboard-player' >
-                            <div><img src={randomPic} alt="profile-pic" /></div>
-                            <div className='twovstwo-opponent-infos-none' ></div>
-                        </div>
-                    )}
+                        )}
+                        {enemy2Infos ? (<div className='twovstwo-dashboard-player' >
+                            <div><img src={enemy2Infos.avatar} alt="profile-pic" /></div>
+                            <div className='twovstwo-opponent-infos' >
+                                <p>{enemy2Infos.name}</p>
+                                <p>level {enemy2Infos.level}</p>
+                            </div>
+                        </div>) : (
+                            <div className='twovstwo-dashboard-player' >
+                                <div><img src={randomPic} alt="profile-pic" /></div>
+                                <div className='twovstwo-opponent-infos-none' ></div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
+            {gameStarted && (<div className='twovstwo-cancel' ><div className='twovstwo-cancel-game' onClick={cancelTheGame} >cancel</div></div>)}
         </div>
-        {gameStarted && (<div className='twovstwo-cancel' ><div className='twovstwo-cancel-game' onClick={cancelTheGame} >cancel</div></div>)}
-    </div>
     )
 }
 

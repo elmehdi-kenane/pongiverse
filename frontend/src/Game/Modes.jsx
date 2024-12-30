@@ -91,13 +91,10 @@ const Modes = () => {
 				let data = JSON.parse(event.data)
 				let type = data.type
 				let message = data.message
-				if (type === 'tournament_created') {
+				if (type === 'tournament_created')
 					navigate("createtournament")
-				} else if (type === 'hmed') {
+				else if (type === 'hmed')
 					socket.close()
-					console.log(socket)
-					// setSocket(null)
-				}
 			}
 		}
 	}, [socket])

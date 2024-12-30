@@ -19,8 +19,8 @@ const FriendCard = ({
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user } = useContext(AuthContext);
-  const { setSelectedDirect } = useContext(ChatContext);
+  const { user, notifSocket } = useContext(AuthContext);
+  const { setSelectedDirect, setSelectedItem, setIsHome } = useContext(ChatContext);
   const navigate = useNavigate();
 
   const handleBlockFriend = () => {
@@ -43,15 +43,7 @@ const FriendCard = ({
         console.error("Error:", error);
       });
   };
-  const handleMessageFriend = () => {
-    setSelectedDirect({
-      id: friendId,
-      name: secondUsername,
-      avatar: avatar,
-      status: "true",
-    });
-    navigate("/mainpage/chat");
-  };
+
   const handleRemoveFriendship = () => {
     fetch("http://localhost:8000/friends/remove_friendship/", {
       method: "POST",
@@ -73,6 +65,22 @@ const FriendCard = ({
       });
   };
 
+    const handelChallengeRequest = () => {
+      if (notifSocket && notifSocket.readyState === WebSocket.OPEN && user) {
+        console.log("inside join");
+        notifSocket.send(
+          JSON.stringify({
+            type: "inviteFriendGame",
+            message: {
+              user: user,
+              target: secondUsername,
+            },
+          })
+        );
+        // navigate('/mainpage/game/solo/1vs1/friends');
+      } else console.log("Socket ga3ma me7lola");
+    };
+
   const handleClickOutside = (event) => {
     if (menuRef && menuRef.current && !menuRef.current.contains(event.target)) {
       setIsMenuOpen(false); // Close the sidebar if the click is outside
@@ -92,8 +100,9 @@ const FriendCard = ({
   };
 
   const navigateToChat = () => {
+    console.log("friendId", friendId);
     setSelectedDirect({
-      id: id,
+      id: friendId,
       name: secondUsername,
       status: true,
       avatar: avatar,
@@ -125,7 +134,7 @@ const FriendCard = ({
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                handleMessageFriend();
+                navigateToChat();
                 setIsMenuOpen(false);
               }}
             >
@@ -135,7 +144,7 @@ const FriendCard = ({
             <button 
             onClick={(e) => {
                 e.stopPropagation();
-                // handle invite friend to play
+                handelChallengeRequest();
                 setIsMenuOpen(false);
             }}
             >

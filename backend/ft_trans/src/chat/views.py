@@ -610,8 +610,9 @@ def join_chat_room(request):
         ip_address = os.getenv("IP_ADDRESS")
         channel_layer = get_channel_layer()
         user_channels_name = user_channels.get(user.id)
-        for channel in user_channels_name:
-            async_to_sync(channel_layer.group_add(f"chat_room_{room.id}", channel))
+        if user_channels_name:
+            for channel in user_channels_name:
+                async_to_sync(channel_layer.group_add(f"chat_room_{room.id}", channel))
         return Response(
             {
                 "success": f"You have joined {room.name} chat room",

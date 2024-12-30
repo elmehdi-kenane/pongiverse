@@ -214,9 +214,9 @@ const OneVsOnePlayMatch = () => {
         particles.push(particle);
 	}
 
-	useEffect(() => {
-		privateCheckAuth()
-	}, [])
+	// useEffect(() => {
+	// 	privateCheckAuth()
+	// }, [])
 
 	const draw = () => {
 		const ctx = canvasContextRef.current
@@ -584,10 +584,8 @@ const OneVsOnePlayMatch = () => {
                 }
                 else if (type === "playersInfos")
                     setPlayersPics(message.users)
-                else if (type === 'hmed') {
-					console.log("hmed received")
+                else if (type === 'hmed')
 					socket.close()
-				}
 			}
 		}
 	}, [socket, user])

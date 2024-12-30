@@ -105,7 +105,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 				else:
 					self.socket.close()
 			except TokenError:
-				pass
+				self.socket.close()
 
 	async def receive(self, text_data=None):
 		data = json.loads(text_data)

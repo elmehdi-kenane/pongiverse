@@ -3,10 +3,12 @@ from django.db.models import Value, BooleanField, CharField
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from myapp.models import customuser
+from chat.models import Room, Membership
 from friends.models import Friendship
 from .models import Notification
 from friends.models import FriendRequest
 from .serializers import customUserSerializer
+from .serializers import room_serializer
 from .serializers import NotificationSerializer
 from myapp.decorators import authentication_required
 from django.db.models import Q
@@ -22,7 +24,6 @@ def search_view(request):
 
 
     users_objs = customuser.objects.filter(username__icontains=search_term).annotate(is_friend=Value(False, output_field=BooleanField()), result_type=Value("", output_field=CharField()))
-    # rooms_objs = rooms.objects.filter()
     search_result = []
     for user_obj in users_objs:
         result_type = "user"
@@ -36,6 +37,7 @@ def search_view(request):
         or user_ser.data['username'] == username):
             print(user_ser.data['username'], " is friend or friend-request")
             search_result.append({
+            'id': user_ser.data['id'],
             'username': user_ser.data['username'],
             'avatar': user_ser.data['avatar'],
             'is_friend': True,
@@ -43,22 +45,37 @@ def search_view(request):
         })
         else:
             search_result.append({
+            'id': user_ser.data['id'],
             'username': user_ser.data['username'],
             'avatar': user_ser.data['avatar'],
             'is_friend': False,
             'result_type': result_type
         })
 
-    # users_list = list(users_objs)
-    # rooms_list = list(rooms_objs)
-
-    # merged_list = users_list + rooms_list
-    # sorted_merged_list = sorted(merged_list, key=lambda user: user.username)
-
-    # Use a generic serializer or create a custom serializer that can handle objects from both models.
-    # lists_ser = customUserSerializer(sorted_merged_list, many=True)
-
-    # users_ser = customUserSerializer(users_objs, many=True)
+    rooms_objs = Room.objects.filter(name__icontains=search_term)
+    for room_obj in rooms_objs:
+        result_type = "room"
+        room_ser = room_serializer(room_obj)
+        print(room_ser.data)
+        if (Membership.objects.filter(room_id=room_obj.id, user_id=user.id).exists()):
+            search_result.append({
+                'id': room_ser.data['id'],
+                'username': room_ser.data['name'],
+                'avatar': room_ser.data['icon'],
+                'members_count': room_ser.data['members_count'],
+                'is_joined': True,
+                'result_type': result_type
+            })
+        else:
+            search_result.append({
+                'id': room_ser.data['id'],
+                'username': room_ser.data['name'],
+                'avatar': room_ser.data['icon'],
+                'members_count': room_ser.data['members_count'],
+                'is_joined': False,
+                'result_type': result_type
+            })
+    print("search_result", search_result)
     return Response(search_result)
 
 @authentication_required
