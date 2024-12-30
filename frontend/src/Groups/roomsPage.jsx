@@ -32,9 +32,11 @@ const Rooms = () => {
     myChatRooms,
     setMyChatRooms,
     myChatRoomsRef,
+    hasMoreRooms,
+    setHasMoreRooms,
   } = useContext(ChatContext);
 //   const [myChatRooms, setMyChatRooms] = useState([]);
-  const [hasMoreRooms, setHasMoreRooms] = useState(true);
+  // const [hasMoreRooms, setHasMoreRooms] = useState(true);
   const [currentMyRoomsPage, setCurrentMyRoomsPage] = useState(1);
   const [itemsPerScreen, setItemsPerScreen] = useState(4);
   const [pendingInvitationsCount, setPendingInvitationsCount] = useState(0);
@@ -43,6 +45,8 @@ const Rooms = () => {
 //   useEffect(() => {
 //     myChatRoomsRef.current = myChatRooms;
 //   }, [myChatRooms]);
+
+  console.log("HAS MORE ROOMS", hasMoreRooms);
 
   console.log("your ouside myChatRoomsRef.current", myChatRoomsRef.current);
   useEffect(() => {
@@ -185,7 +189,7 @@ const Rooms = () => {
         console.log(error);
       }
     };
-    if (user) fetchChatRooms();
+    if (user && hasMoreRooms) fetchChatRooms();
   }, [currentMyRoomsPage, user]);
 
   useEffect(() => {

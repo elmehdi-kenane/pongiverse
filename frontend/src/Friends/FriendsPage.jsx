@@ -190,7 +190,7 @@ const FriendshipPage = () => {
         );
         return updatedFriendSuggestions;
       });
-    } else console.log("unknown data.type");
+    } 
   }, [data.message, data.type, socket]);
 
   useEffect(() => {
