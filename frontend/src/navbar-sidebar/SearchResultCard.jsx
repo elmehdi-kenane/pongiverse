@@ -96,17 +96,6 @@ const SearchResultCard = ({
     }
   };
 
-  const HighlightSearchTerm = () => {
-    resultText = resultText.toLowerCase();
-    searchTerm = searchTerm.toLowerCase();
-    const index = resultText.indexOf(searchTerm);
-    return [
-      resultText.slice(0, index),
-      searchTerm,
-      resultText.slice(index + searchTerm.length),
-    ];
-  };
-  // const resultTextArr = HighlightSearchTerm();
   const resultTextArr = resultText;
 
   const handleClickItem = () => {
