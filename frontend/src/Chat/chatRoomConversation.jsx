@@ -9,7 +9,8 @@ import SendMessage from "./sendMessage";
 import LeaveChatRoomPopUp from "./chatRoomOptions/leaveChatRoomPopUp";
 import ChatRoomMembersList from "./chatRoomOptions/chatRoomMembersList";
 import ChatRoomInfos from "./chatRoomOptions/chatRoomInfos";
-import { resetChatRoomUnreadMessages  } from "./chatConversationItem"
+import { resetChatRoomUnreadMessages } from "./chatConversationItem"
+import { useNavigate } from "react-router-dom";
 
 const ChatRoomConversation = ({
   chatRoomMessages,
@@ -24,7 +25,7 @@ const ChatRoomConversation = ({
   const [showChatRoomMembers, setShowChatRoomMembers] = useState(false);
   const [showLeaveRoomPopUp, setShowLeaveRoomPopUp] = useState(false);
   const [showChatRoomOptions, setShowChatRoomOptions] = useState(false);
-
+  const navigate = useNavigate();
   const [currentChatRoomMessagesPage, setCurrentChatRoomMessagesPage] =
     useState(1);
   const [hasMoreChatRoomMessages, setHasMoreChatRoomMessages] = useState(true);
@@ -56,9 +57,9 @@ const ChatRoomConversation = ({
           },
         })
       );
-      if(searchValue !== "") {
+      if (searchValue !== "") {
         const isExist = chatRooms.some((room) => room.id === selectedChatRoom.id);
-        if(!isExist) {
+        if (!isExist) {
           const newChatRoomConversation = {
             id: selectedChatRoom.id,
             name: selectedChatRoom.name,
@@ -66,30 +67,30 @@ const ChatRoomConversation = ({
             lastMessage: messageToSend,
             unreadCount: 0,
           };
-          setChatRooms([newChatRoomConversation,...chatRooms]);
-        
-      } else {
-        setChatRooms((prev) => {
-          const updatedChatRooms = prev.map((room) => {
-            if (room.id === selectedChatRoom.id) {
-              return { ...room, lastMessage: messageToSend };
+          setChatRooms([newChatRoomConversation, ...chatRooms]);
+
+        } else {
+          setChatRooms((prev) => {
+            const updatedChatRooms = prev.map((room) => {
+              if (room.id === selectedChatRoom.id) {
+                return { ...room, lastMessage: messageToSend };
+              }
+              return room;
             }
-            return room;
-          }
+            );
+            return updatedChatRooms;
+          });
+          // move the selected chat room to the top
+          const selectedChatRoomIndex = chatRooms.findIndex(
+            (room) => room.id === selectedChatRoom.id
           );
-          return updatedChatRooms;
-        });
-        // move the selected chat room to the top
-        const selectedChatRoomIndex = chatRooms.findIndex(
-          (room) => room.id === selectedChatRoom.id
-        );
-        const splitedChatRooms = chatRooms.splice(selectedChatRoomIndex, 1);
-        setChatRooms([splitedChatRooms[0], ...chatRooms]);
-        resetChatRoomUnreadMessages(user, selectedChatRoom.id);
-      } 
+          const splitedChatRooms = chatRooms.splice(selectedChatRoomIndex, 1);
+          setChatRooms([splitedChatRooms[0], ...chatRooms]);
+          resetChatRoomUnreadMessages(user, selectedChatRoom.id, navigate);
+        }
       }
       setSearchValue("");
-      setChatRoomsSearch("");        
+      setChatRoomsSearch("");
       setMessageToSend("");
     }
   };
@@ -106,19 +107,19 @@ const ChatRoomConversation = ({
     const fetchMessages = async () => {
       try {
         const response = await fetch(
-          `http://${
-            import.meta.env.VITE_IPADDRESS
-          }:8000/chatAPI/chatRoom/messages/${
-            selectedChatRoom.id
+          `http://${import.meta.env.VITE_IPADDRESS
+          }:8000/chatAPI/chatRoom/messages/${selectedChatRoom.id
           }?page=${currentChatRoomMessagesPage}`, {
-            credentials: "include",
-          }
+          credentials: "include",
+        }
         );
         if (response.ok) {
           const { next, results } = await response.json();
           setChatRoomMessages([...results, ...chatRoomMessages]);
           if (!next) setHasMoreChatRoomMessages(false);
-        } else {
+        } else if (response.status === 401)
+          navigate("/signin");
+        else {
           console.log("Error fetching messages");
         }
       } catch (error) {

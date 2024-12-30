@@ -2,6 +2,7 @@ import React, { useEffect, useContext, useState } from 'react'
 import DashboardContext from "../DashboardWrapper";
 import SvgComponent from '../../Tournament/RemoteTournament/SvgComponent';
 import SvgVerticalComponent from '../../Tournament/RemoteTournament/SvgVerticalComponent';
+import { useNavigate } from 'react-router-dom';
 
 function DashRsltTourn() {
 	const { tournId } = useContext(DashboardContext);
@@ -11,6 +12,7 @@ function DashRsltTourn() {
 	const [roundQuarterFinalMembers, setroundQuarterFinalMembers] = useState([])
 	const grind = window.innerWidth <= 768 ? "vertical" : "horizontal"
 	const [layout, setLayout] = useState(grind)
+	const navigate = useNavigate();
 
 	window.addEventListener("resize", () => {
 		if (window.innerWidth <= 768)
@@ -38,7 +40,7 @@ function DashRsltTourn() {
 				setFinalMembers(data.roundfinal)
 				setwinnerMember(data.winner)
 			} else
-				console.error('Failed to fetch data');
+				navigate('/signin')
 		}
 
 		gameMembersRounds()
@@ -48,11 +50,11 @@ function DashRsltTourn() {
 		<>
 			<h1> Tournament Match Results </h1>
 			<div className='tournament__svg'>
-			{layout === "horizontal" ? 
-				<SvgComponent roundquartermembers={roundQuarterFinalMembers} roundsemifinalmembers={roundSemiFinalMembers} roundfinalmembers={finalMembers} roundwinner={winnerMember} />
-				: 
-				<SvgVerticalComponent roundquartermembers={roundQuarterFinalMembers} roundsemifinalmembers={roundSemiFinalMembers} roundfinalmembers={finalMembers} roundwinner={winnerMember} />
-			}
+				{layout === "horizontal" ?
+					<SvgComponent roundquartermembers={roundQuarterFinalMembers} roundsemifinalmembers={roundSemiFinalMembers} roundfinalmembers={finalMembers} roundwinner={winnerMember} />
+					:
+					<SvgVerticalComponent roundquartermembers={roundQuarterFinalMembers} roundsemifinalmembers={roundSemiFinalMembers} roundfinalmembers={finalMembers} roundwinner={winnerMember} />
+				}
 			</div>
 		</>
 	)

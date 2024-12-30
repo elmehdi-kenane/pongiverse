@@ -3,11 +3,12 @@ import AvatarEditor from "react-avatar-editor";
 import AuthContext from "../../navbar-sidebar/Authcontext";
 import SettingsContext from "../SettingsWrapper";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { useNavigate } from "react-router-dom";
 
 function UpdateAvatar(props) {
   const { user, setUserImg } = useContext(AuthContext);
   const { userPic, setUserPic, notifySuc, notifyErr } = useContext(SettingsContext);
-
+  const navigate = useNavigate();
   const [avatar, setAvatar] = useState(null);
   const [isClicked, setIsClicked] = useState(false)
   const [scale, setScale] = useState(1.2); // Initial zoom level
@@ -37,7 +38,10 @@ function UpdateAvatar(props) {
         notifySuc(res.case);
         setUserPic(updatedPic);
         setUserImg(updatedPic);
-      } else {
+      } else if (response.status === 401) {
+        navigate("/signin");
+      } 
+      else {
         notifyErr(res.error);
       }
     } catch (error) {

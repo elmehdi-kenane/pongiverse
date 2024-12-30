@@ -58,7 +58,9 @@ const SearchResultCard = ({
         setSuggestedChatRooms(updatedSuggestedRooms);
         const currentChatRooms = myChatRoomsRef.current;
         setMyChatRooms([...currentChatRooms, data.room])
-      } else {
+      } else if (response.status === 401)
+        navigate('/signin')
+      else {
         setTimeout(() => {
           toast.error(data.error);
         }, 500);

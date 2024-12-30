@@ -4,6 +4,7 @@ import SearchFilterBar from "./SearchFilterBar";
 import AuthContext from "./Authcontext";
 import { useContext } from "react";
 import SearchResultCard from "./SearchResultCard";
+import { useNavigate } from "react-router-dom";
 
 export const SearchBarMobile = ({ handleSearchBar }) => {
   const searchBarRef = useRef(null);
@@ -15,7 +16,7 @@ export const SearchBarMobile = ({ handleSearchBar }) => {
   const [searchUsersResult, setSearchUsersResult] = useState([]);
   const [searchRoomsResult, setSearchRoomsResult] = useState([]);
   const { user } = useContext(AuthContext);
-
+  const navigate = useNavigate();
   let termNotFoundText;
   if (searchFilter === "all")
     termNotFoundText = `No results found for '${inputValue}'`;
@@ -34,6 +35,8 @@ export const SearchBarMobile = ({ handleSearchBar }) => {
           credentials: "include",
         }
       );
+      if (response.status === 401)
+        navigate('/signin')
       const res = await response.json();
       if (res) {
         setSearchResult(res);
@@ -80,7 +83,7 @@ export const SearchBarMobile = ({ handleSearchBar }) => {
     }
   };
 
-  const navigateToProfile = () => {};
+  const navigateToProfile = () => { };
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -118,57 +121,57 @@ export const SearchBarMobile = ({ handleSearchBar }) => {
               <div className="searchResultWrapperNoFilterBar">
                 {
                   searchFilter === "all" &&
-                    (searchResult.length === 0 ? (
-                      <p className="searchEmpty">{termNotFoundText}</p>
-                    ) : (
-                      searchResult.map((item, index) => {
-                        return (
-                          <SearchResultCard
-                            key={index}
-index={index}
-                            id={item.id}
-                            members_count={item.members_count}
-                            resultText={item.username}
-                            avatar={item.avatar}
-                            result_type={item.result_type}
-                            is_friend={item.is_friend}
-                            is_joined={item.is_joined}
-                            searchResult={searchResult}
-                            setSearchResult={setSearchResult}
-                            searchTerm={inputValue}
-                            handleSearchBar={handleSearchBar}
-                            setInputValue={setInputValue}
-                          ></SearchResultCard>
-                        );
-                      })
-                    ))
+                  (searchResult.length === 0 ? (
+                    <p className="searchEmpty">{termNotFoundText}</p>
+                  ) : (
+                    searchResult.map((item, index) => {
+                      return (
+                        <SearchResultCard
+                          key={index}
+                          index={index}
+                          id={item.id}
+                          members_count={item.members_count}
+                          resultText={item.username}
+                          avatar={item.avatar}
+                          result_type={item.result_type}
+                          is_friend={item.is_friend}
+                          is_joined={item.is_joined}
+                          searchResult={searchResult}
+                          setSearchResult={setSearchResult}
+                          searchTerm={inputValue}
+                          handleSearchBar={handleSearchBar}
+                          setInputValue={setInputValue}
+                        ></SearchResultCard>
+                      );
+                    })
+                  ))
                 }
                 {
                   searchFilter === "people" &&
-                    (searchUsersResult.length === 0 ? (
-                      <p className="searchEmpty">{termNotFoundText}</p>
-                    ) : (
-                      searchUsersResult.map((item, index) => {
-                        return (
-                          <SearchResultCard
-                            key={index}
-                            index={index}
-                            id={item.id}
-                            members_count={item.members_count}
-                            resultText={item.username}
-                            avatar={item.avatar}
-                            result_type={item.result_type}
-                            is_friend={item.is_friend}
-                            is_joined={item.is_joined}
-                            searchResult={searchResult}
-                            setSearchResult={setSearchResult}
-                            searchTerm={inputValue}
-                            handleSearchBar={handleSearchBar}
-                            setInputValue={setInputValue}
-                          ></SearchResultCard>
-                        );
-                      })
-                    ))
+                  (searchUsersResult.length === 0 ? (
+                    <p className="searchEmpty">{termNotFoundText}</p>
+                  ) : (
+                    searchUsersResult.map((item, index) => {
+                      return (
+                        <SearchResultCard
+                          key={index}
+                          index={index}
+                          id={item.id}
+                          members_count={item.members_count}
+                          resultText={item.username}
+                          avatar={item.avatar}
+                          result_type={item.result_type}
+                          is_friend={item.is_friend}
+                          is_joined={item.is_joined}
+                          searchResult={searchResult}
+                          setSearchResult={setSearchResult}
+                          searchTerm={inputValue}
+                          handleSearchBar={handleSearchBar}
+                          setInputValue={setInputValue}
+                        ></SearchResultCard>
+                      );
+                    })
+                  ))
                 }
                 {searchFilter === "rooms" &&
                   (searchRoomsResult.length === 0 ? (

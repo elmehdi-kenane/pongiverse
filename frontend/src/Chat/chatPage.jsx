@@ -10,6 +10,7 @@ import {
 import ChatSideBar from "./chatPageSidebar";
 import ChatWindow from "./chatPageWindow";
 import GameNotifications from '../GameNotif/GameNotifications'
+import { useNavigate } from "react-router-dom";
 const Chat = () => {
   const {
     selectedDirectRef,
@@ -35,6 +36,7 @@ const Chat = () => {
   const [searchValue, setSearchValue] = useState("");
   const [directsSearch, setDirectsSearch] = useState([]);
   const [chatRoomsSearch, setChatRoomsSearch] = useState([]);
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -52,7 +54,7 @@ const Chat = () => {
               : friend
           )
         );
-        resetUnreadMessages(user, currentDirect.id);
+        resetUnreadMessages(user, currentDirect.id, navigate);
       } else {
         setDirects((prevConversations) => {
           const conversationExists = prevConversations.some(
@@ -95,7 +97,7 @@ const Chat = () => {
           )
         );
         if (data.sender !== user) {
-          resetChatRoomUnreadMessages(user, data.roomId);
+          resetChatRoomUnreadMessages(user, data.roomId, navigate);
         }
       } else {
         setChatRooms((prevConversations) =>
@@ -216,7 +218,7 @@ const Chat = () => {
                 };
                 allDirects = [newConversation, ...allDirects];
               } else {
-                resetUnreadMessages(user, selectedDirect.id);
+                resetUnreadMessages(user, selectedDirect.id, navigate);
               }
             }
             // check if thiere is duplicates
@@ -230,6 +232,9 @@ const Chat = () => {
           });
 
           if (!next) setHasMoreDirects(false);
+          else if (response.status === 401) {
+            navigate("/signin");
+          }
         } else console.error("opps!, something went wrong");
       } catch (error) {
         console.log(error);
@@ -244,7 +249,7 @@ const Chat = () => {
         const response = await fetch(
           `http://${import.meta.env.VITE_IPADDRESS
           }:8000/chatAPI/chatRooms/${user}?page=${currentChatRoomPage}`, {
-            credentials: 'include'
+          credentials: 'include'
         }
         );
         const { next, results } = await response.json();
@@ -271,7 +276,7 @@ const Chat = () => {
                 };
                 allChatRooms = [newConversation, ...allChatRooms];
               } else {
-                resetChatRoomUnreadMessages(user, selectedChatRoom.id);
+                resetChatRoomUnreadMessages(user, selectedChatRoom.id, navigate);
               }
             }
             // check if thiere is duplicates
@@ -284,7 +289,11 @@ const Chat = () => {
             return filteredChatRooms;
           });
           if (!next) setHasMoreChatRooms(false);
-        } else console.error("opps!, something went wrong");
+        }
+        else if (response.status === 401) {
+          navigate("/signin");
+        }
+        else console.error("opps!, something went wrong");
       } catch (error) {
         console.log(error);
       }
@@ -318,7 +327,7 @@ const Chat = () => {
   return (
     <div className="chat-page">
       <Toaster />
-      <GameNotifications setDirects={setDirects} directs={directs} setSelectedDirect={setSelectedDirect}/>
+      <GameNotifications setDirects={setDirects} directs={directs} setSelectedDirect={setSelectedDirect} />
       <div className="chat-container">
         <ChatSideBar
           directs={directs}

@@ -4,7 +4,8 @@ import SettingsContext from '../SettingsWrapper';
 import SettingsLoading from '../SettingsLoading';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { use } from 'react';
 
 function UpdatePwd(props) {
 
@@ -15,13 +16,13 @@ function UpdatePwd(props) {
 
   const { user } = useContext(AuthContext);
   const { notifySuc, notifyErr, isLoading, setIsLoading } = useContext(SettingsContext);
-
+  const navigate = useNavigate();
   const checkPwd = (oldPwd, newPwd, cfmPwd) => {
     if (!oldPwd || !newPwd || !cfmPwd)
       return (notifyErr('You need to fill all the password!'), false);
     if (oldPwd.length < 8)
       return (notifyErr('Wrong Current Password!'), false);
-    if (newPwd !== cfmPwd) 
+    if (newPwd !== cfmPwd)
       return (notifyErr('New Passwords Do Not Match!'), false);
     if (newPwd.length < 8 || cfmPwd.length < 8)
       return (notifyErr('New Passwords Needs To Be At Least 8 Characters Long!'), false);
@@ -53,8 +54,8 @@ function UpdatePwd(props) {
         const res = await response.json()
         if (response.ok) {
           notifySuc(res.case);
-          // console.log(res.case);
-        }
+        } else if (response.status === 401)
+          navigate('/signin');
         else
           notifyErr(res.error);
       } catch (error) {

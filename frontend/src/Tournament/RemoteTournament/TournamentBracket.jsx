@@ -47,7 +47,7 @@ function TournamentBracket() {
 				else
 					navigate("../game")
 			} else {
-				console.error('Failed to fetch data');
+				navigate("/signin")
 			}
 		}
 		const gameMembersRounds = async () => {
@@ -69,7 +69,7 @@ function TournamentBracket() {
 				setFinalMembers(data.roundfinal)
 				setwinnerMember(data.winner)
 			} else {
-				console.error('Failed to fetch data');
+				navigate("/signin")
 			}
 		}
 
@@ -93,7 +93,7 @@ function TournamentBracket() {
 					setCreatedAt(new Date(data.time))
 				}
 			} else {
-				console.error('Failed to fetch data');
+				navigate("/signin")
 			}
 		}
 

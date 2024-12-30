@@ -38,7 +38,7 @@ const Modes = () => {
 				if (data.Case === 'yes')
 					navigate("createtournament")
 			} else {
-				console.error('Failed to fetch data');
+				navigate("/signin")
 			}
 		}
 		const check_is_started_and_not_finished = async () => {
@@ -59,7 +59,7 @@ const Modes = () => {
 				else
 					check_is_join()
 			} else {
-				console.error('Failed to fetch data');
+				navigate("/signin")
 			}
 		}
 		if (user)

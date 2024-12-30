@@ -3,6 +3,7 @@ import ChatContext from "../Context/ChatContext";
 import ChatConversationItem from "./chatConversationItem";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import ChatConversationSearchItem from "./chatConversationSearchItem";
+import { useNavigate } from "react-router-dom";
 
 const ChatSideBar = ({
   directs,
@@ -34,7 +35,7 @@ const ChatSideBar = ({
   } = useContext(ChatContext);
 
   const { user } = useContext(AuthContext);
-
+  const navigate = useNavigate();
   const handleSelectItem = (itemName) => {
     setSelectedItem(itemName);
   };
@@ -42,17 +43,18 @@ const ChatSideBar = ({
     if (isHome) {
       try {
         const response = await fetch(
-          `http://${
-            import.meta.env.VITE_IPADDRESS
+          `http://${import.meta.env.VITE_IPADDRESS
           }:8000/chatAPI/directsSreach?searchUsername=${searchValue}&user=${user}`, {
-            credentials: 'include'
-          }
+          credentials: 'include'
+        }
         );
         const data = await response.json();
         if (response.ok) {
           console.log(data);
           setDirectsSearch(data);
-        } else {
+        } else if (response.status === 401)
+          navigate("/signin");
+        else {
           console.log("opps! something went wrong");
         }
       } catch (error) {
@@ -61,17 +63,18 @@ const ChatSideBar = ({
     } else {
       try {
         const response = await fetch(
-          `http://${
-            import.meta.env.VITE_IPADDRESS
+          `http://${import.meta.env.VITE_IPADDRESS
           }:8000/chatAPI/chatRoomsSreach?searchRoomName=${searchValue}&user=${user}`, {
-            credentials: "include"
-          }
+          credentials: "include"
+        }
         );
         const data = await response.json();
         if (response.ok) {
           console.log(data);
           setChatRoomsSearch(data);
-        } else {
+        } else if (response.status === 401)
+          navigate("/signin");
+        else {
           console.log("opps! something went wrong");
         }
       } catch (error) {
@@ -92,7 +95,7 @@ const ChatSideBar = ({
     <div
       className={
         Object.values(selectedDirect).every((value) => value !== "") ||
-        Object.values(selectedChatRoom).every((value) => value !== "")
+          Object.values(selectedChatRoom).every((value) => value !== "")
           ? "chat-sidebar-hidden"
           : "chat-sidebar"
       }
@@ -171,8 +174,8 @@ const ChatSideBar = ({
                   setDirects={setDirects}
                   directs={directs}
                 />
-              )): <div className="chat-conversation-list-no-results"> 
-              You haven't started any conversations yet. Start one by using the search above.
+              )) : <div className="chat-conversation-list-no-results">
+                You haven't started any conversations yet. Start one by using the search above.
               </div>}
             </div>
           )}
@@ -180,30 +183,30 @@ const ChatSideBar = ({
           {/* Render search results if there are search results or search value is not empty */}
           {(directsSearch.length !== 0 || searchValue !== "") && (
             <>
-                  <div className="chat-rooms-conversation-search-header">
-                  Results:
-                </div>
-            <div className="chat-conversation-search-list">
-              { directsSearch.length > 0 ? directsSearch.map((friend, index) => (
-                <ChatConversationSearchItem
-                  key={index}
-                  friendId={friend.id}
-                  name={friend.name}
-                  avatar={friend.avatar}
-                  status={friend.is_online}
-                  lastMessage={friend.lastMessage}
-                  unreadCount={friend.unreadCount}
-                  isDirect={isHome}
-                  setSelectedDirect={setSelectedDirect}
-                  isSelected={selectedItem === friend.name}
-                  setSelectedItem={handleSelectItem}
-                  setDirects={setDirects}
-                  directs={directs}
-                />
-              )): <div className="chat-conversation-search-list-no-results">
-                No results found
+              <div className="chat-rooms-conversation-search-header">
+                Results:
+              </div>
+              <div className="chat-conversation-search-list">
+                {directsSearch.length > 0 ? directsSearch.map((friend, index) => (
+                  <ChatConversationSearchItem
+                    key={index}
+                    friendId={friend.id}
+                    name={friend.name}
+                    avatar={friend.avatar}
+                    status={friend.is_online}
+                    lastMessage={friend.lastMessage}
+                    unreadCount={friend.unreadCount}
+                    isDirect={isHome}
+                    setSelectedDirect={setSelectedDirect}
+                    isSelected={selectedItem === friend.name}
+                    setSelectedItem={handleSelectItem}
+                    setDirects={setDirects}
+                    directs={directs}
+                  />
+                )) : <div className="chat-conversation-search-list-no-results">
+                  No results found
                 </div>}
-            </div>
+              </div>
             </>
           )}
         </>
@@ -218,8 +221,8 @@ const ChatSideBar = ({
               ref={chatRoomsListInnerRef}
             >
               {chatRoomsSearch.length === 0 &&
-              searchValue === "" &&
-              chatRooms.length > 0 ? (
+                searchValue === "" &&
+                chatRooms.length > 0 ? (
                 chatRooms.map((chatRoom, index) => (
                   <ChatConversationItem
                     key={index}

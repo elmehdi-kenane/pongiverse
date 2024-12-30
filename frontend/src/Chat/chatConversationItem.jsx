@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import ChatContext from "../Context/ChatContext";
-
-export const resetUnreadMessages = async (user, friendId) => {
+import { useNavigate } from "react-router-dom";
+export const resetUnreadMessages = async (user, friendId, navigate) => {
   try {
-    await fetch(
+    const response = await fetch(
       `http://${
         import.meta.env.VITE_IPADDRESS
       }:8000/chatAPI/resetUndreadMessages`,
@@ -20,14 +20,17 @@ export const resetUnreadMessages = async (user, friendId) => {
         }),
       }
     );
+    console.log(response);
+    if (response.status === 401)
+      navigate("/signin")
   } catch (error) {
     console.log(error);
   }
 };
 
-export const resetChatRoomUnreadMessages = async (user, roomId) => {
+export const resetChatRoomUnreadMessages = async (user, roomId, navigate) => {
   try {
-    await fetch(
+    const response = await fetch(
       `http://${
         import.meta.env.VITE_IPADDRESS
       }:8000/chatAPI/resetChatRoomUndreadMessages`,
@@ -43,6 +46,8 @@ export const resetChatRoomUnreadMessages = async (user, roomId) => {
         }),
       }
     );
+    if (response.status === 401)
+      navigate("/signin")
   } catch (error) {
     console.log(error);
   }
@@ -50,7 +55,7 @@ export const resetChatRoomUnreadMessages = async (user, roomId) => {
 
 const ChatConversationItem = (props) => {
   const { user } = useContext(AuthContext);
-  
+  const navigate = useNavigate();
   const handleClick = () => {
     if (props.isDirect && props.name) {
       props.setSelectedDirect({
@@ -68,7 +73,7 @@ const ChatConversationItem = (props) => {
       });
       props.setDirects(updatedDirects);
       if (parseInt(props.unreadCount) > 0)
-        resetUnreadMessages(user, props.friendId);
+        resetUnreadMessages(user, props.friendId, navigate);
     } else if (!props.isDirect && props.name) {
       props.setSelectedChatRoom({
         id: props.roomId,
@@ -87,7 +92,7 @@ const ChatConversationItem = (props) => {
       });
       props.setChatRooms(updatedRooms);
       if (parseInt(props.unreadCount) > 0)
-        resetChatRoomUnreadMessages(user, props.roomId);
+        resetChatRoomUnreadMessages(user, props.roomId, navigate);
     }
     props.setSelectedItem(props.name);
   };

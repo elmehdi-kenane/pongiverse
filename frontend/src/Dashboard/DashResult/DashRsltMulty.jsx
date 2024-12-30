@@ -15,7 +15,6 @@ function DashRsltMulty() {
   useEffect(() => {
     const getDateFormat = (dateStr) => {
       const date = new Date(dateStr);
-
       // Extract date components
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
@@ -48,7 +47,8 @@ function DashRsltMulty() {
           // console.log("data :", res.data);
           setMatchDtls(res.data);
           getDateFormat(res.data.date);
-        }
+        } else if (response.status === 401)
+          navigate('/signin')
         else
           console.log("Error : ", res.error);
       } catch (error) {
@@ -56,8 +56,8 @@ function DashRsltMulty() {
       }
     };
 
-      if (multyId)
-        getMatchDtls();
+    if (multyId)
+      getMatchDtls();
   }, [multyId]);
 
   const profileNavigate = (user) => {
@@ -71,16 +71,16 @@ function DashRsltMulty() {
       <h1> Multiplayer Match Results </h1>
       <div className="result__field-mtp">
         <div className="field__img">
-          <img src={matchDtls.pic1} onClick={()=>profileNavigate(matchDtls.user1)}/>
-          <img src={matchDtls.pic2} onClick={()=>profileNavigate(matchDtls.user2)}/>
+          <img src={matchDtls.pic1} onClick={() => profileNavigate(matchDtls.user1)} />
+          <img src={matchDtls.pic2} onClick={() => profileNavigate(matchDtls.user2)} />
         </div>
         <div className="field__date">
-          <p> { matchTime } </p>
-          <p> { matchDate } </p>
+          <p> {matchTime} </p>
+          <p> {matchDate} </p>
         </div>
         <div className="field__img">
-          <img src={matchDtls.pic3} onClick={()=>profileNavigate(matchDtls.user3)}/>
-          <img src={matchDtls.pic4} onClick={()=>profileNavigate(matchDtls.user4)}/>
+          <img src={matchDtls.pic3} onClick={() => profileNavigate(matchDtls.user3)} />
+          <img src={matchDtls.pic4} onClick={() => profileNavigate(matchDtls.user4)} />
         </div>
       </div>
       <div className="result__field-mtp">

@@ -72,7 +72,7 @@ function JoinTournament() {
 				if (data.Case === 'yes')
 					navigate("../game/createtournament")
 			} else {
-				console.error('Failed to fetch data');
+				navigate('/signin')
 			}
 		}
 		const check_is_started_and_not_finished = async () => {
@@ -93,7 +93,7 @@ function JoinTournament() {
 				else
 					check_is_join()
 			} else {
-				console.error('Failed to fetch data');
+				navigate('/signin')
 			}
 		}
 		if (user)
@@ -113,7 +113,7 @@ function JoinTournament() {
 				const response_data = await response.json();
 				setTournamentSuggestions(response_data.tournaments)
 			} else {
-				console.error('Failed to fetch data');
+				navigate('/signin')
 			}
 		}
 		if (user)

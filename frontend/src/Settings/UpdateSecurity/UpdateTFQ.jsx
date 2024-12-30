@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import AuthContext from "../../navbar-sidebar/Authcontext";
 import SettingsContext from "../SettingsWrapper";
+import { useNavigate } from "react-router-dom";
 // import SettingsLoading from "../SettingsLoading";
 
 function UpdateTFQ(props) {
@@ -9,7 +10,7 @@ function UpdateTFQ(props) {
   const [tfqImg, setTfqImg] = useState(null);
   const [key, setKey] = useState(null);
   const [step, setStep] = useState('notice');
-
+  const navigate = useNavigate();
   const step1 = "Open the authenticator app you installed. To add\
   your account to the authenticator, scan the QR code below from the Scan a QR code menu."
   const step2 = "If you successfully added an account, enter the 6-digit authentication code that has been generated\
@@ -20,11 +21,11 @@ function UpdateTFQ(props) {
     "Google Authenticator",
     "Microsoft Authenticator",
   ];
-  
+
   const cancelTFQ = () => {
     props.cancelTFQ('security')
   }
-  
+
   const Notice = () => {
 
     const EnableTFQ = async () => {
@@ -51,8 +52,10 @@ function UpdateTFQ(props) {
           setKey(res.data.key);
           setTfqImg(res.data.img);
           setStep('submit');
-        } else
-            console.log("Error : ", res.error);
+        } else if (response.status === 401)
+          navigate('/signin')
+        else
+          console.log("Error : ", res.error);
       } catch (error) {
         console.log("Error: ", error);
       }
@@ -63,9 +66,9 @@ function UpdateTFQ(props) {
       <div className="tfq">
         <h1> Two-Factor Authenticator App Notice </h1>
         <p> You must install an authenticator app on your mobile
-            phone to sign up for the two-factor authentication
-            service. You cannot install an authenticator app on
-            a non-smartphone or Windows phone. </p>
+          phone to sign up for the two-factor authentication
+          service. You cannot install an authenticator app on
+          a non-smartphone or Windows phone. </p>
         <div className="tfq__applist">
           <ul>
             {authenticators.map((authenticator, index) => (
@@ -74,7 +77,7 @@ function UpdateTFQ(props) {
           </ul>
         </div>
         <p> If you already have the app installed, click Continue
-            to proceed with authenticator registration. </p>
+          to proceed with authenticator registration. </p>
         <div className="tfq__submit">
           <button className="submit submit__cancel" onClick={cancelTFQ}> Cancel </button>
           <button className="submit submit__continue" onClick={EnableTFQ}> Continue </button>
@@ -90,13 +93,13 @@ function UpdateTFQ(props) {
       const regex = /^\d{6}$/; // Matches exactly 6 digits
       if (regex.test(otpStr))
         return true;
-      else 
+      else
         notifyErr("Wrong One-Time-Password")
     }
-  
+
     const ValidateTFQ = async () => {
       const otp = inputRef.current.value
-      if (checkOtp(otp)){
+      if (checkOtp(otp)) {
         try {
           const response = await fetch(
             `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/ValidateTFQ`,
@@ -118,7 +121,9 @@ function UpdateTFQ(props) {
             setUserTfq(true);
             cancelTFQ();
             // setStep('valid')
-          } else {
+          } else if (response.status === 401)
+            navigate('/signin')
+          else {
             notifyErr("Wrong One-Time-Password")
           }
         } catch (error) {
@@ -141,7 +146,7 @@ function UpdateTFQ(props) {
           {step1}
         </p>
         <div className="tfq__keycode">
-          <img src={tfqImg} className="keycode__QR no--select"/>
+          <img src={tfqImg} className="keycode__QR no--select" />
           <div className="keycode__key">
             <h4> Security Key </h4>
             <h6 > {key} </h6>
@@ -152,11 +157,11 @@ function UpdateTFQ(props) {
           {step2}
         </p>
         <input type="text"
-                className="tfq__input"
-                placeholder='Authentication Code (6 digits)'
-                maxLength={6}
-                onKeyDown={handleEnterClick}
-                ref={inputRef} />
+          className="tfq__input"
+          placeholder='Authentication Code (6 digits)'
+          maxLength={6}
+          onKeyDown={handleEnterClick}
+          ref={inputRef} />
         <div className="tfq__submit">
           <button className="submit submit__cancel" onClick={cancelTFQ}> Cancel </button>
           <button className="submit submit__continue" onClick={ValidateTFQ}> Continue </button>
@@ -178,9 +183,9 @@ function UpdateTFQ(props) {
 
   return (
     <>
-        {step === 'notice' && <Notice />}
-        {step === 'submit' && <SubmitTFQ />}
-        {/* {step === 'valid'  && <ValidTFQ />} */}
+      {step === 'notice' && <Notice />}
+      {step === 'submit' && <SubmitTFQ />}
+      {/* {step === 'valid'  && <ValidTFQ />} */}
     </>
   )
 }

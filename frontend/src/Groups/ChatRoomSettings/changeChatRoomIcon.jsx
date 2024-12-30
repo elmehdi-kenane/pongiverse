@@ -1,10 +1,11 @@
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ChangeChatRoomIcon = (props) => {
   const [newRoomIcon, setnewRoomIcon] = useState(null);
-  
-  const fileInputRef = useRef(null);
 
+  const fileInputRef = useRef(null);
+  const navigate = useNavigate();
   const handleImageClick = () => {
     fileInputRef.current.click();
   };
@@ -23,6 +24,8 @@ const ChangeChatRoomIcon = (props) => {
       );
       const data = await response.json();
       if (response.ok) console.log(data);
+      else if (response.status === 401)
+        navigate('/signin')
       else toast.error(data.error);
     } catch (error) {
       toast.error(data.error);

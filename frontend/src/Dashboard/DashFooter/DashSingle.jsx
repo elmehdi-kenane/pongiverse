@@ -6,7 +6,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import AuthContext from "../../navbar-sidebar/Authcontext";
 import DashboardContext from "../DashboardWrapper";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const NoResult = () => {
   return (
@@ -21,13 +21,14 @@ const NoResult = () => {
 }
 
 function DashSingle() {
-  const { user, setIsGameStats} = useContext(AuthContext);
+  const { user, setIsGameStats } = useContext(AuthContext);
   const [page, setPage] = useState(1);
   const [index, setIndex] = useState(1);
   const [loading, setLoading] = useState(false);
   const [limit, setLimit] = useState(-1);
   const [matches, setMatches] = useState([]);
   const itemsPerPage = 3;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getSingleMatches = async () => {
@@ -47,8 +48,10 @@ function DashSingle() {
         if (response.ok) {
           setMatches([...matches, ...res.userMatches]);
           !res.hasMoreMatches && setLimit(index);
-        } else
-            console.error("Error : ", res.error);
+        } else if (response.status === 401)
+          navigate('/signin')
+        else
+          console.error("Error : ", res.error);
       } catch (error) {
         console.error("Error: ", error);
       }
@@ -58,7 +61,7 @@ function DashSingle() {
       getSingleMatches();
   }, [user, page]);
 
-  
+
   const Pagination = () => {
     const expandMore = () => {
       setIndex(index + 1);
@@ -81,7 +84,7 @@ function DashSingle() {
     const showMatchResult = (matchId) => {
       setSingleId(matchId)
       setIsGameStats(true);
-    }  
+    }
     return (
       <>
         {matches.slice((index - 1) * itemsPerPage, index * itemsPerPage)
@@ -97,12 +100,12 @@ function DashSingle() {
       </>
     )
   }
-  
+
   return (
     <div className="footer__single-match purple--glass">
       <h1 className="footer__titles"> Single Match </h1>
-      {loading ? 
-        <CircularProgress color="secondary" style={{marginTop:"80px"}}/>
+      {loading ?
+        <CircularProgress color="secondary" style={{ marginTop: "80px" }} />
         :
         <> {matches.length ? <MatchesResults /> : <NoResult />} </>
       }
