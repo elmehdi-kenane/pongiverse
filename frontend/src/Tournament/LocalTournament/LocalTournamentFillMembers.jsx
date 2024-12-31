@@ -39,6 +39,11 @@ function LocalTournamentFillMembers() {
 		setIndex(-1);
 	}
 
+	const handleCancelButton = () => {
+		localStorage.clear();
+		navigate("/")
+	}
+
 	async function generateHash(value) {
 		const encoder = new TextEncoder();
 		const data = encoder.encode(value);
@@ -113,25 +118,25 @@ function LocalTournamentFillMembers() {
 
 
 	useEffect(() => {
-			const item = localStorage.getItem('QuarterFinalPlayers');
-			if (item !== null) {
-				setPlayers(JSON.parse(item));
-			}
-			else {
-				console.log("ITEM DOES NOT EXIST")
-				const QuarterFinalPlayers = Array.from({ length: 8 }, (_, index) => `Player_${index + 1}`);
-				const SemiFinalPlayers = Array.from({ length: 4 }, () => null);
-				const FinalPlayers = Array.from({ length: 2 }, () => null);
-				setSecureItem('QuarterFinalPlayers', QuarterFinalPlayers);
-				setSecureItem('SemiFinalPlayers', SemiFinalPlayers);
-				setSecureItem('FinalPlayers', FinalPlayers);
-				setSecureItem('Winner', null);
-				setPlayers(QuarterFinalPlayers)
-				setSecureItem('is_started', 'false');
-				setSecureItem('matches_played', 0);
-				setSecureItem('is_game_finished', 'false');
-			}
-			checkAndNavigate();
+		const item = localStorage.getItem('QuarterFinalPlayers');
+		if (item !== null) {
+			setPlayers(JSON.parse(item));
+		}
+		else {
+			console.log("ITEM DOES NOT EXIST")
+			const QuarterFinalPlayers = Array.from({ length: 8 }, (_, index) => `Player_${index + 1}`);
+			const SemiFinalPlayers = Array.from({ length: 4 }, () => null);
+			const FinalPlayers = Array.from({ length: 2 }, () => null);
+			setSecureItem('QuarterFinalPlayers', QuarterFinalPlayers);
+			setSecureItem('SemiFinalPlayers', SemiFinalPlayers);
+			setSecureItem('FinalPlayers', FinalPlayers);
+			setSecureItem('Winner', null);
+			setPlayers(QuarterFinalPlayers)
+			setSecureItem('is_started', 'false');
+			setSecureItem('matches_played', 0);
+			setSecureItem('is_game_finished', 'false');
+		}
+		checkAndNavigate();
 	}, [])
 
 	useEffect(() => {
@@ -211,10 +216,15 @@ function LocalTournamentFillMembers() {
 			<Toaster />
 			<div className={styles["tournament-page-content"]}>
 				<div className={styles["title-and-destroy"]}>
-					<h1 className={styles["tournament-title"]}>Tournament Creation</h1>
-					<button className={styles["destroy-button"]} onClick={handleStart}>
-						Start
-					</button>
+					<div className={styles["title-and-destroy-div"]}>
+
+						<button className={styles["destroy-button"]} onClick={handleCancelButton}>
+							Cancel
+						</button>
+						<button className={styles["destroy-button"]} onClick={handleStart}>
+							Start
+						</button>
+					</div>
 				</div>
 				<div className={styles["tournament-members"]}>
 					{open && <Component />}
@@ -235,7 +245,7 @@ function LocalTournamentFillMembers() {
 								}}
 							>
 								<div className={styles["user-avatar"]}>
-									<Icon className={styles["avatar"]} color='white'/>
+									<Icon className={styles["avatar"]} color='white' />
 								</div>
 								<div className={styles["line-and-user-info"]}>
 									<div className={styles["user-info"]}>

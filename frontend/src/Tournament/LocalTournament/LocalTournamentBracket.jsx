@@ -16,6 +16,7 @@ import AuthContext from '../../navbar-sidebar/Authcontext'
 import { useNavigate, useParams } from 'react-router-dom'
 import * as Icons from '../../assets/navbar-sidebar'
 import '../../assets/navbar-sidebar/index.css';
+import toast from 'react-hot-toast';
 
 
 
@@ -112,12 +113,37 @@ function LocalTournamentBracket() {
 		PiNumberSquareSevenFill,
 		PiNumberSquareEightFill
 	];
+
+
+	const safeParseJSON = (key, defaultValue) => {
+		try {
+			const item = localStorage.getItem(key);
+			return item ? JSON.parse(item) : defaultValue; // Parse if item exists
+		} catch (error) {
+			return "there was an error"; 
+		}
+	};
+
+
 	const [matches_played, setMatchesPlayed] = useState(0);
-	const quarterFinalPlayers = JSON.parse(localStorage.getItem('QuarterFinalPlayers')) || [];
-	const semiFinalPlayers = JSON.parse(localStorage.getItem('SemiFinalPlayers')) || [];
-	const finalPlayers = JSON.parse(localStorage.getItem('FinalPlayers')) || [];
-	const winner = JSON.parse(localStorage.getItem('Winner')) || null;
-	let matchess_played = JSON.parse(localStorage.getItem('matches_played'));
+	const quarterFinalPlayers = safeParseJSON('QuarterFinalPlayers', []);
+	const semiFinalPlayers = safeParseJSON('SemiFinalPlayers', []);
+	const finalPlayers = safeParseJSON('FinalPlayers', []);
+	const winner = safeParseJSON('Winner', null);
+	let matchess_played = safeParseJSON('matches_played', 0);
+	useEffect(() => {
+		if (
+			quarterFinalPlayers === 'there was an error' ||
+			semiFinalPlayers === 'there was an error' ||
+			finalPlayers === 'there was an error' ||
+			winner === 'there was an error' ||
+			matchess_played === 'there was an error'
+		) {
+			localStorage.clear();
+			navigate('/localtournamentfillmembers');
+		}
+	}, [])
+
 	const [PlayerOne, setPlayerOne] = useState(null)
 	const [PlayerTwo, setPlayerTwo] = useState(null)
 	const [playerOneName, setPlayerOneName] = useState('')
@@ -881,7 +907,7 @@ function LocalTournamentBracket() {
 	return (
 		<>
 			{
-				!players.Winner && ((!alreadyStarted || gameFinished)) &&  (
+				!players.Winner && ((!alreadyStarted || gameFinished)) && (
 
 					<div className={styles['display-components-div']}>
 						<div className={styles['display-components-div-players-data']}>
@@ -911,10 +937,6 @@ function LocalTournamentBracket() {
 								<div className='onevsone-pm-infos-stats' >
 									<div>
 										<p>Goal: 5</p>
-										{/* <div onClick={(!gameFinished && !gameAborted) ? exitTheGame : undefined} >
-										<img src={Icons.logout} alt="" />
-										<p>Exit</p>
-									</div> */}
 									</div>
 									<div>{formatTime(time)}</div>
 								</div>
@@ -922,7 +944,7 @@ function LocalTournamentBracket() {
 							</div>
 							<div>
 								{playerTwoName && <div style={{ textAlign: "center" }} ><p>{playerTwoName}</p></div>}
-								{PlayerTwo && (<PlayerTwo size={60}  color='white' />)}
+								{PlayerTwo && (<PlayerTwo size={60} color='white' />)}
 								{/* <img src={versus} alt="" style={{ height: '100%' }} /> */}
 							</div>
 						</div>

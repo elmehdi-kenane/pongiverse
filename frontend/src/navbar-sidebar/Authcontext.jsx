@@ -92,6 +92,7 @@ export const AuthProvider = ({ children }) => {
 	}, [socket])
 
 	useEffect(() => {
+		console.log("pathname: ", location.pathname);
 		if (checkPrivateAuthRegex.test(location.pathname))
 			privateCheckAuth();
 		else if (
@@ -103,6 +104,11 @@ export const AuthProvider = ({ children }) => {
 			location.pathname === "/ChangePassword"
 		)
 			publicCheckAuth();
+		else if (/^\/$/.test(location.pathname) || location.pathname === '/localtournamentbracket' 
+		|| location.pathname === '/localtournamentfillmembers' || location.pathname === '/localmodes' 
+		|| location.pathname === '/1vs1/offline') {}
+		else
+			navigate("/Error404");
 
 	}, [location.pathname])
 

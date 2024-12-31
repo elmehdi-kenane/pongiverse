@@ -115,6 +115,14 @@ def get_is_eliminated(tournament_id, username):
 				return member['is_eliminated']
 	return False
 
+def get_round_reached(tournament_id, username):
+	counter = 1
+	for round in tournaments[tournament_id]['rounds']:
+		for player in tournaments[tournament_id]['rounds'][round]:
+			if player['username'] == username:
+				counter += 1
+	return counter
+
 
 async def save_tournament_to_db(tournament_id):
 	if tournament_id in tournaments:
@@ -124,6 +132,19 @@ async def save_tournament_to_db(tournament_id):
 			user = await sync_to_async(customuser.objects.filter(username=member['username']).first)()
 			tournament_member = TournamentMembers(user=user, tournament=tournament, is_owner=member['is_owner'], is_eliminated=member['is_eliminated'], is_inside=member['is_inside'])
 			await sync_to_async(tournament_member.save)()
+			usermatchstats = await sync_to_async(UserMatchStatics.objects.filter(player=user).first)()
+			counter = get_round_reached(tournament_id, member['username'])
+			xp_to_add = 0
+			if counter == 2: #semifinal
+				xp_to_add = 150
+			elif counter == 3: #final
+				xp_to_add = 200
+			elif counter == 4: #winner
+				xp_to_add = 300
+			playerTotalXp = usermatchstats.total_xp + xp_to_add
+			usermatchstats.level += (playerTotalXp / 1000)
+			usermatchstats.total_xp = (playerTotalXp % 1000)
+			await sync_to_async(usermatchstats.save)()
 		for round_name in tournaments[tournament_id]['rounds']:
 			round = Round(tournament=tournament, type=round_name)
 			await sync_to_async(round.save)()
@@ -135,6 +156,7 @@ async def save_tournament_to_db(tournament_id):
 				else:
 					tournamentuserinfo = TournamentUserInfo(round=round, user=None, position=player['position'])
 					await sync_to_async(tournamentuserinfo.save)()
+		
 
 async def discard_channels_from_tournament_group(self, player, tournament_id):
 	group_name = f'tournament_{tournament_id}'

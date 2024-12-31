@@ -1,14 +1,15 @@
 import { Divider } from "@mui/material";
 import { SearchBar } from "./SearchBar";
 import { SearchBarMobile } from "./SearchBarMobile";
+import { Link } from "react-router-dom";
 
 function NavbarIconSearch({ Icons, handleSearchBar, isSearchBarMobileOpen }) {
   return (
     <div className="searchBarsWrapperWithLogo">
       <div className="logo">
-        <a href="#">
+        <Link to='/'>
           <img src={Icons.pingpong} alt="ping pong" />
-        </a>
+        </Link>
       </div>
       <div className="searchBarsWrapper">
         <SearchBar></SearchBar>

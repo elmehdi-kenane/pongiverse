@@ -10,7 +10,7 @@ import ChatContext from '../../Context/ChatContext'
 const ProfileUserFriends = () => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
-  const { userId, getUserFriends, friendsData, chatUserId } = useContext(ProfileContext);
+  const { userId, userIsOnline, getUserFriends, friendsData, chatUserId } = useContext(ProfileContext);
   const { setSelectedDirect, setIsHome, setSelectedItem } = useContext(ChatContext);
 
   useEffect(() => {
@@ -28,11 +28,11 @@ const ProfileUserFriends = () => {
     setSelectedDirect({
       id: chatUserId,
       name : username,
-      status: true,
+      status: userIsOnline,
       avatar: userImage,
     })
-    setIsHome(true)
-    setSelectedItem(username)
+    // setIsHome(true)
+    // setSelectedItem(username)
     navigate('/mainpage/chat');
   }
 

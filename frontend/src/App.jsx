@@ -52,47 +52,48 @@ const App = () => {
     <div className="page" style={{ backgroundColor: '#250939' }}>
       <Router>
         <AuthProvider>
-          <Routes>
+          <Routes >
             <Route path="/" element={<LandingPage />} exact />
-            <Route path="/signup" element={<SignUpPage />} caseSensitive={true}/>
-            <Route path="/signin" element={<SignInPage />} caseSensitive={true} />
-            <Route path="/SecondStep" element={<SecondStep />} caseSensitive={true}/>
-            <Route path="/WaysSecondStep" element={<WaysSecondStep />} caseSensitive={true}/>
-            <Route path="/ForgotPassword" element={<ForgotPassword />} caseSensitive={true}/>
-            <Route path="/ChangePassword" element={<ChangePassword />} caseSensitive={true}/>
+            <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/signin" element={<SignInPage />}  />
+            <Route path="/SecondStep" element={<SecondStep />} />
+            <Route path="/WaysSecondStep" element={<WaysSecondStep />} />
+            <Route path="/ForgotPassword" element={<ForgotPassword />} />
+            <Route path="/ChangePassword" element={<ChangePassword />} />
             <Route path="/Error404" element={<ErrorPage />} />
-            <Route path="/localtournamentbracket" element={<LocalTournamentBracket />} caseSensitive={true}/>
-            <Route path="/localtournamentfillmembers" element={<LocalTournamentFillMembers />} caseSensitive={true}/>
-            <Route path="/localmodes" element={<LocalModes />} caseSensitive={true}/>
-            <Route path="/1vs1/offline" element={<OneVsOneOffline />} caseSensitive={true}/>
+            <Route path="/localtournamentbracket" element={<LocalTournamentBracket />} />
+            <Route path="/localtournamentfillmembers" element={<LocalTournamentFillMembers />} />
+            <Route path="/localmodes" element={<LocalModes />} />
+            <Route path="/1vs1/offline" element={<OneVsOneOffline />} />
             <Route path="/mainpage" element={<ChatProvider child={<NavbarSidebar />} />} >
-              <Route path="dashboard" element={<DashboardWrapper child={<Dashboard />} />} caseSensitive={true}/>
-              <Route path="profile/:userId" element={<ProfileWrapper child={<Profile />} />} caseSensitive={true}/>
-              <Route path="settings" element={<SettingsWrapper child={<PersonalInfo />} />} caseSensitive={true}/>
-              <Route path="settings/security" element={<SettingsWrapper child={<Security />} />} caseSensitive={true}/>
-              <Route path="settings/security/forgotpassword" element={<ForgotPassword />} caseSensitive={true}/>
-              <Route path="chat" element={<Chat />} caseSensitive={true}/>
-              <Route path="Friendship" element={<FriendshipPage />} caseSensitive={true}/>
-              <Route path="groups" element={<Rooms />} caseSensitive={true}/>
-              <Route path="game" element={<Modes />} caseSensitive={true}/>
-              <Route path="game/board" element={<GameSettings />} caseSensitive={true}/>
-              <Route path="game/solo" element={<Solo />} caseSensitive={true}/>
-              <Route path="game/solo/computer" element={<AiOpponent />} caseSensitive={true}/>
-              <Route path="game/solo/1vs1" element={<OneVersusOne />} caseSensitive={true}/>
-              <Route path="game/solo/1vs1/random" element={<OneVsOneRandom />} caseSensitive={true}/>
-              <Route path="game/solo/1vs1/friends" element={<OneVsOneFriends />} caseSensitive={true}/>
-              <Route path="game/solo/1vs1/create-or-join" element={<OneVsOneCreateOrJoin />} caseSensitive={true}/>
-              <Route path="game/solo/2vs2" element={<TwoVersusTwo />} caseSensitive={true}/>
-              <Route path="game/solo/2vs2/random" element={<TwoVsTwoRandom />} caseSensitive={true}/>
-              <Route path="game/solo/2vs2/friends" element={<TwoVsTwoFriends />} caseSensitive={true}/>
-              <Route path="game/solo/2vs2/create-or-join" element={<TwoVsTwoCreateOrJoin />} caseSensitive={true}/>
-              <Route path="play/1vs1/:roomID" element={<OneVsOnePlayMatch />} caseSensitive={true}/>
-              <Route path="play/2vs2/:roomID" element={<TwoVsTwoPlayMatch />} caseSensitive={true}/>
-              <Route path="game/createtournament" element={<CreateTournament />} caseSensitive={true}/>
-              <Route path="game/jointournament" element={<JoinTournament />} caseSensitive={true}/>
-              <Route path="game/tournamentbracket" element={<TournamentBracket />} caseSensitive={true}/> 
-              <Route path="game/tournamentcel" element={<TournamentCelebration />} caseSensitive={true}/>
-              <Route path="game/1vs1tournament" element={<OneVsOnePlayTournamentMatch />} caseSensitive={true}/>
+              <Route element={<DashboardWrapper child={<Dashboard />} />} index  />
+              <Route path="dashboard" element={<DashboardWrapper child={<Dashboard />} />} />
+              <Route path="profile/:userId" element={<ProfileWrapper child={<Profile />} />} />
+              <Route path="settings" element={<SettingsWrapper child={<PersonalInfo />} />} />
+              <Route path="settings/security" element={<SettingsWrapper child={<Security />} />} />
+              <Route path="settings/security/forgotpassword" element={<ForgotPassword />} />
+              <Route path="chat" element={<Chat />} />
+              <Route path="Friendship" element={<FriendshipPage />} />
+              <Route path="groups" element={<Rooms />} />
+              <Route path="game" element={<Modes />} />
+              <Route path="game/board" element={<GameSettings />} />
+              <Route path="game/solo" element={<Solo />} />
+              <Route path="game/solo/computer" element={<AiOpponent />} />
+              <Route path="game/solo/1vs1" element={<OneVersusOne />} />
+              <Route path="game/solo/1vs1/random" element={<OneVsOneRandom />} />
+              <Route path="game/solo/1vs1/friends" element={<OneVsOneFriends />} />
+              <Route path="game/solo/1vs1/create-or-join" element={<OneVsOneCreateOrJoin />} />
+              <Route path="game/solo/2vs2" element={<TwoVersusTwo />} />
+              <Route path="game/solo/2vs2/random" element={<TwoVsTwoRandom />} />
+              <Route path="game/solo/2vs2/friends" element={<TwoVsTwoFriends />} />
+              <Route path="game/solo/2vs2/create-or-join" element={<TwoVsTwoCreateOrJoin />} />
+              <Route path="play/1vs1/:roomID" element={<OneVsOnePlayMatch />} />
+              <Route path="play/2vs2/:roomID" element={<TwoVsTwoPlayMatch />} />
+              <Route path="game/createtournament" element={<CreateTournament />} />
+              <Route path="game/jointournament" element={<JoinTournament />} />
+              <Route path="game/tournamentbracket" element={<TournamentBracket />} /> 
+              <Route path="game/tournamentcel" element={<TournamentCelebration />} />
+              <Route path="game/1vs1tournament" element={<OneVsOnePlayTournamentMatch />} />
             </Route>
             <Route path="*" element={<Navigate to="/Error404" />} />
           </Routes>

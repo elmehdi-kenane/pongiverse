@@ -143,9 +143,12 @@
 .tournament_warnings {
 	position: absolute;
 	display: flex;
+	left: 50%;
+	transform: translateX(-50%);
 	gap: 2px;
 	width: 250px;
 	height: 50px;
+	border: 2px solid red;
 	background: rgba(68, 45, 106, 1);
 	justify-content: center;
 	align-items: center;

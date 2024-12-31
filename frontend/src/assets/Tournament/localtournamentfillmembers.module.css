@@ -21,8 +21,15 @@
 
 .title-and-destroy {
   display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.title-and-destroy-div {
+  display: flex;
+  width: 90%;
   justify-content: space-between;
-  margin-right: 8%;
   align-items: center;
 }
 
