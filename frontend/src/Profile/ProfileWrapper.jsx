@@ -32,24 +32,24 @@ export const ProfileWrapper = ({ child }) => {
 
     const getUserFriends = async () => {
         try {
-          const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserFriends/${userId}`, {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              'Content-Type': 'application/json',
+            const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserFriends/${userId}`, {
+                method: "GET",
+                credentials: "include",
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            const res = await response.json()
+            if (response.ok) {
+                // console.log("Response data : ", res.data);
+                setFriendsData(res.data)
             }
-          });
-          const res = await response.json()
-          if (response.ok) {
-            // console.log("Response data : ", res.data);
-            setFriendsData(res.data)
-          }
-          else 
-            console.log("Error : ", res.error);
+            else
+                navigate('/signin')
         } catch (error) {
-          console.log("Error: ", error);
+            console.log("Error: ", error);
         }
-      }
+    }
 
     useEffect(() => {
         const checkFriendship = async () => {
@@ -63,12 +63,12 @@ export const ProfileWrapper = ({ child }) => {
                 });
                 const res = await response.json()
                 if (response.ok) {
-                    if(res.data === "blocked")
+                    if (res.data === "blocked")
                         navigate("/Error404")
                     setIsFriend(res.data);
                 }
-                else
-                    console.error(res.error);
+                else if (response.status === 401)
+                    navigate("/signin")
             } catch (error) {
                 console.error("Error: ", error);
             }
@@ -83,17 +83,18 @@ export const ProfileWrapper = ({ child }) => {
                     }
                 });
                 const res = await response.json()
-                if (response.ok){
+                if (response.ok) {
                     setUserData(res.userData);
-                }
-                else 
+                } else if (response.status === 401)
+                    navigate("/signin")
+                else
                     navigate("/Error404")
             } catch (error) {
                 console.log("Error:  ", error);
             }
         }
 
-        if (userId && notifSocket && notifSocket.readyState === WebSocket.OPEN){
+        if (userId && notifSocket && notifSocket.readyState === WebSocket.OPEN) {
             getUserData();
             if (user && (user != userId))
                 checkFriendship();
@@ -115,34 +116,34 @@ export const ProfileWrapper = ({ child }) => {
     }, [userData])
 
     useEffect(() => {
-        if (document.querySelector(".profile-page")){
+        if (document.querySelector(".profile-page")) {
             document.querySelector(".profile-page").scrollTop = 0;
         }
-      }, [userId]);
+    }, [userId]);
 
     let userInfoData = {
         userId: userId,
-        chatUserId:chatUserId,
+        chatUserId: chatUserId,
         userPic: userPic,
         setUserPic: setUserPic,
         userBg: userBg,
         setUserBg: setUserBg,
         userEmail: userEmail,
         setUserEmail: setUserEmail,
-        userIsOnline: userIsOnline, 
+        userIsOnline: userIsOnline,
         setUserIsOnline: setUserIsOnline,
         userBio: userBio,
         setUserBio: setUserBio,
         userLevel: userLevel,
         setUserLevel: setUserLevel,
-        userXp: userXp, 
+        userXp: userXp,
         setUserXp: setUserXp,
         userCountry: userCountry,
         setUserCountry: setUserCountry,
 
         isFriend: isFriend,
         setIsFriend: setIsFriend,
-        isLoading: isLoading, 
+        isLoading: isLoading,
         setIsLoading: setIsLoading,
         reportValue: reportValue,
         setReportValue: setReportValue,

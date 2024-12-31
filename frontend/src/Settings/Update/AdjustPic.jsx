@@ -29,6 +29,8 @@ function AdjustPic(props) {
         notifySuc(res.case);
         setUserPic(preview); // SettingsContext
         setUserImg(preview); // AuthContext
+      } else if (response.status === 401) {
+        navigate("/signin");
       }
       else
         notifyErr(res.error);

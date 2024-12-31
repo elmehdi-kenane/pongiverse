@@ -6,6 +6,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import logo from '../../assets/SignUp/logo.svg'
 import { useNavigate } from "react-router-dom";
+
+import { TiWarning } from "react-icons/ti";
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 const client = axios.create({
@@ -25,12 +27,12 @@ function WaysSecondStep() {
 	const [errors, setErrors] = useState({});
 	const location = useLocation();
 	const data = location.state || {};
-	
-	useEffect(() =>{
+
+	useEffect(() => {
 		if (!data.email || !data.avatar) {
 			navigate("/signup");
 		}
-	},[data])
+	}, [data])
 
 	const handleInputChange = (e) => {
 		e.preventDefault();
@@ -127,6 +129,10 @@ function WaysSecondStep() {
 							onSubmit={handleSubmit}
 							noValidate
 						>
+							<div className={styles['unchangable-username-warning']}>
+								<TiWarning color="#cccccc66" size={17} />
+								<p>Username is Unchangeable</p>
+							</div>
 							<input
 								className={styles["inputs"]}
 								type="text"

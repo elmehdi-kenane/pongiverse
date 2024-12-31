@@ -2,11 +2,12 @@ import { useEffect, useState, useContext } from "react";
 import styles from '../../assets/Tournament/TournamentWarning.module.css';
 import cross from '../../assets/Tournament/cross.svg';
 import AuthContext from "../../navbar-sidebar/Authcontext";
+import { useNavigate } from "react-router-dom";
 function TournamentWarning() {
     const { user, notifSocket } = useContext(AuthContext);
     const [createdAt, setCreatedAt] = useState(null)
     const [timeDiff, setTimeDiff] = useState(null);
-
+    const navigate = useNavigate()
     useEffect(() => {
         if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
             notifSocket.onmessage = (event) => {
@@ -36,7 +37,8 @@ function TournamentWarning() {
                 console.log("AAGOU:", data)
                 if (data.Case === 'yes')
                     setCreatedAt(new Date(data.time))
-            }
+            } else 
+                navigate("/signin")
         }
         if (user)
             getTournamentWarning()

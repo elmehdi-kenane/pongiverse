@@ -5,7 +5,8 @@ import AuthContext from "../../navbar-sidebar/Authcontext";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 import CircularProgress from '@mui/material/CircularProgress';
 import DashboardContext from "../DashboardWrapper";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { use } from "react";
 
 const NoResult = () => {
   return (
@@ -27,7 +28,7 @@ function DashTourn(props) {
   const [limit, setLimit] = useState(-1);
   const [matches, setMatches] = useState([]);
   const itemsPerPage = props.items;
-
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getTournMatches = async () => {
@@ -47,7 +48,8 @@ function DashTourn(props) {
           setMatches([...matches, ...res.data]);
           !res.hasMoreMatches && setLimit(index);
           // console.log("Tournament Data: ", res.data);
-        }
+        } else if (response.status === 401)
+          navigate('/signin')
         else
           console.error("Tournament Error: ", res.error);
       } catch (error) {
@@ -55,7 +57,7 @@ function DashTourn(props) {
       }
     }
 
-    if (user){
+    if (user) {
       getTournMatches()
     }
   }, [user, page])
@@ -81,7 +83,7 @@ function DashTourn(props) {
 
   const MatchesResults = () => {
 
-    const {setTournId} = useContext(DashboardContext);
+    const { setTournId } = useContext(DashboardContext);
     const showMatchResult = (matchId) => {
       setTournId(matchId);
       setIsGameStats(true);
@@ -90,9 +92,9 @@ function DashTourn(props) {
     return (
       <>
         {matches.slice((index - 1) * itemsPerPage, index * itemsPerPage)
-          .map((match, key)=>{
+          .map((match, key) => {
             return (
-              <div className="tournament-match__result footer__result" key={key} onClick={()=>showMatchResult(match.tourId)} id="match-click">
+              <div className="tournament-match__result footer__result" key={key} onClick={() => showMatchResult(match.tourId)} id="match-click">
                 <img src={match.pic} alt="Player" />
                 <p> {match.type} </p>
               </div>
@@ -106,8 +108,8 @@ function DashTourn(props) {
   return (
     <div className={`${props.class} purple--glass`}>
       <h1 className="footer__titles"> Tournament Match </h1>
-      {loading ? 
-        <CircularProgress color="secondary" style={{marginTop:"80px"}}/>
+      {loading ?
+        <CircularProgress color="secondary" style={{ marginTop: "80px" }} />
         :
         <> {matches.length ? <MatchesResults /> : <NoResult />} </>
       }

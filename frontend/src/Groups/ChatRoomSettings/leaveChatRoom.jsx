@@ -1,10 +1,11 @@
 import toast from "react-hot-toast";
 import AuthContext from "../../navbar-sidebar/Authcontext";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const LeaveChatRoomSubmitter = async (user, rooms, setRooms, roomId) => {
   const toastId = toast.loading("Leaving room is being processed...");
-
+  const navigate = useNavigate();
   setTimeout(async () => {
     try {
       const response = await fetch(
@@ -29,7 +30,9 @@ export const LeaveChatRoomSubmitter = async (user, rooms, setRooms, roomId) => {
         //   );
         //   setRooms(updatedRooms);
         // }
-      } else {
+      } else if (response.status === 401)
+        navigate('/signin')
+      else {
         toast.error(data.error);
       }
     } catch (error) {

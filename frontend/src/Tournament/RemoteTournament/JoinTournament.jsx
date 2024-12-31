@@ -3,7 +3,7 @@ import styles from '../../assets/Tournament/jointournament.module.css'
 import SearchIcon from '@mui/icons-material/Search';
 import AuthContext from '../../navbar-sidebar/Authcontext'
 import { useNavigate, useLocation } from "react-router-dom";
-
+import GameNotifications from '../../GameNotif/GameNotifications';
 function JoinTournament() {
 	const navigate = useNavigate()
 	const [data, setData] = useState('')
@@ -72,7 +72,7 @@ function JoinTournament() {
 				if (data.Case === 'yes')
 					navigate("../game/createtournament")
 			} else {
-				console.error('Failed to fetch data');
+				navigate('/signin')
 			}
 		}
 		const check_is_started_and_not_finished = async () => {
@@ -93,7 +93,7 @@ function JoinTournament() {
 				else
 					check_is_join()
 			} else {
-				console.error('Failed to fetch data');
+				navigate('/signin')
 			}
 		}
 		if (user)
@@ -113,7 +113,7 @@ function JoinTournament() {
 				const response_data = await response.json();
 				setTournamentSuggestions(response_data.tournaments)
 			} else {
-				console.error('Failed to fetch data');
+				navigate('/signin')
 			}
 		}
 		if (user)
@@ -160,36 +160,6 @@ function JoinTournament() {
 		}
 	}, [socket])
 
-	useEffect(() => {
-		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
-			notifSocket.onmessage = (event) => {
-				let data = JSON.parse(event.data)
-				let type = data.type
-				if (type == 'accepted_invitation') {
-					const socketRefer = socketRef.current
-					if (socketRefer.readyState !== WebSocket.OPEN) {
-						console.log("SOCKET IS CLOSED, SHOULD OPENED")
-						const newSocket = new WebSocket(`ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/socket-server`)
-						newSocket.onopen = () => {
-							setSocket(newSocket)
-							navigate("/mainpage/game/createtournament");
-						}
-					} else {
-						navigate("/mainpage/game/createtournament");
-					}
-				} else if (type === 'user_join_tournament') {
-					let tournament_id = data.message.tournament_id
-					setTournamentSuggestions(prevSuggestions =>
-						prevSuggestions.map(tournament =>
-							tournament.tournament_id == tournament_id
-								? { ...tournament, size: tournament.size + 1 }
-								: tournament
-						)
-					);
-				}
-			}
-		}
-	}, [notifSocket])
 
 
 	useEffect(() => {
@@ -228,44 +198,47 @@ function JoinTournament() {
 	}, [data])
 
 	return (
-		<div className={styles['joinTournament']}>
-			<div className={styles['search']}>
-				<div className={styles['input-and-icon']}>
-					<SearchIcon className={styles['search-icon']} />
-					<input className={styles['search-input']} type="text" name='data' value={data} onChange={handleInputChange} placeholder='Search' />
+		<>
+			<GameNotifications setTournamentSuggestions={setTournamentSuggestions}/>
+			<div className={styles['joinTournament']}>
+				<div className={styles['search']}>
+					<div className={styles['input-and-icon']}>
+						<SearchIcon className={styles['search-icon']} />
+						<input className={styles['search-input']} type="text" name='data' value={data} onChange={handleInputChange} placeholder='Search' />
+					</div>
+					<div>
+						{
+							TournamentInfo.size > 0 && TournamentInfo.size < 16 &&
+							<button className={styles['join-button-search']} onClick={handleAccept}>Join</button>
+						}
+					</div>
 				</div>
-				<div>
+				<div className={styles['tournament-suggestions']}>
+					<div className={styles['table-th']}>
+						<h3 className={styles['h3-titles']}>Id</h3>
+						<h3 className={styles['h3-titles']}>Owner</h3>
+						<h3 className={styles['h3-titles']}>Players</h3>
+						<h3 className={styles['h3-titles']}></h3>
+					</div>
+					<div className={styles['table-line']}>
+					</div>
 					{
-						TournamentInfo.size > 0 && TournamentInfo.size < 16 &&
-						<button className={styles['join-button-search']} onClick={handleAccept}>Join</button>
+						tournamentSuggestions.length > 0 && tournamentSuggestions.map((tournament) => {
+							return (
+								<div className={styles['table-th']} key={tournament.tournament_id}>
+									<h4 className={styles['h4-titles']}>{tournament.tournament_id}</h4>
+									<h4 className={styles['h4-titles']}>{tournament.owner}</h4>
+									<h4 className={styles['h4-titles']}>{tournament.size}/8</h4>
+									<div className={styles['join']}>
+										<button className={styles['join-button']} onClick={() => handleJoin(tournament.tournament_id)}>Join</button>
+									</div>
+								</div>
+							)
+						})
 					}
 				</div>
 			</div>
-			<div className={styles['tournament-suggestions']}>
-				<div className={styles['table-th']}>
-					<h3 className={styles['h3-titles']}>Id</h3>
-					<h3 className={styles['h3-titles']}>Owner</h3>
-					<h3 className={styles['h3-titles']}>Players</h3>
-					<h3 className={styles['h3-titles']}></h3>
-				</div>
-				<div className={styles['table-line']}>
-				</div>
-				{
-					tournamentSuggestions.length > 0 && tournamentSuggestions.map((tournament) => {
-						return (
-							<div className={styles['table-th']} key={tournament.tournament_id}>
-								<h4 className={styles['h4-titles']}>{tournament.tournament_id}</h4>
-								<h4 className={styles['h4-titles']}>{tournament.owner}</h4>
-								<h4 className={styles['h4-titles']}>{tournament.size}/8</h4>
-								<div className={styles['join']}>
-									<button className={styles['join-button']} onClick={() => handleJoin(tournament.tournament_id)}>Join</button>
-								</div>
-							</div>
-						)
-					})
-				}
-			</div>
-		</div>
+		</>
 	);
 }
 

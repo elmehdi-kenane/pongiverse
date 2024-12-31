@@ -8,6 +8,7 @@ import { DesktopFriendsWrapper } from "./DesktopFriendsWrapper.jsx";
 import { MobileFriendsWrapper } from "./MobileFriendsWrapper.jsx";
 import { SuggestionsWrapper } from "./SuggestionsWrapper.jsx";
 import GameNotifications from "../GameNotif/GameNotifications.jsx";
+import { useNavigate } from "react-router-dom";
 
 const FriendshipPage = () => {
   const { user, socket } = useContext(AuthContext);
@@ -16,7 +17,7 @@ const FriendshipPage = () => {
   const [sentRequests, setSentRequests] = useState([]);
   const [receivedRequests, setReceivedRequests] = useState([]);
   const [friendSuggestions, setFriendSuggestions] = useState([]);
-
+  const navigate = useNavigate();
   const { notifSocket } = useContext(AuthContext);
   const [data, setData] = useState({ message: 'messageStart', type: 'typeStart' });
   // useEffect(() => {
@@ -47,6 +48,8 @@ const FriendshipPage = () => {
           headers: {},
         }
       );
+      if (response.status === 401)
+        navigate('/signin')
       const res = await response.json();
       if (res) setFriendSuggestions(res);
     };
@@ -64,6 +67,8 @@ const FriendshipPage = () => {
           headers: {},
         }
       );
+      if (response.status === 401)
+        navigate('/signin')
       const res = await response.json();
       if (res) {
         // console.log("FRIENDS:  ", res);
@@ -204,6 +209,8 @@ const FriendshipPage = () => {
           headers: {},
         }
       );
+      if (response.status === 401)
+        navigate('/signin')
       const res = await response.json();
       if (res) setSentRequests(res);
     };
@@ -221,6 +228,8 @@ const FriendshipPage = () => {
           headers: {},
         }
       );
+      if (response.status === 401)
+        navigate('/signin')
       const res = await response.json();
       if (res) setReceivedRequests(res);
     };
@@ -238,6 +247,8 @@ const FriendshipPage = () => {
           headers: {},
         }
       );
+      if (response.status === 401)
+        navigate('/signin')
       const res = await response.json();
       if (res) setBlockedFriends(res);
     };
@@ -248,7 +259,7 @@ const FriendshipPage = () => {
   //   console.log("sentRequests", sentRequests);
   return (
     <>
-      <GameNotifications setData={setData}/>
+      <GameNotifications setData={setData} />
       <div className="FriendPage">
         <SuggestionsWrapper
           friendSuggestions={friendSuggestions}

@@ -2,12 +2,13 @@ import React, { useContext, useState } from "react";
 import ReactFlagsSelect from "react-flags-select";
 import AuthContext from "../../navbar-sidebar/Authcontext";
 import SettingsContext from "../SettingsWrapper";
+import { useNavigate } from "react-router-dom";
 
 function UpdateCountry() {
    
   const { user } = useContext(AuthContext);
   const { userCountry, setUserCountry, notifySuc, notifyErr } = useContext(SettingsContext);
-
+  const navigate = useNavigate();
   const updateCountry = async (country) => {
     try {
       const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/updateUserCountry`, {
@@ -25,6 +26,8 @@ function UpdateCountry() {
       if (response.ok) {
         notifySuc(res.case)
         setUserCountry(country);
+      } else if (response.status === 401) {
+        navigate('/signin')
       }
       else
         notifyErr(res.error)

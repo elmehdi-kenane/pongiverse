@@ -1,10 +1,10 @@
 
 import React from "react";
 import CloseIcon from "@mui/icons-material/Close";
-
+import { useNavigate } from "react-router-dom";
 
 const BlockPopUp = ({ setShowBlockPopup, setDirects, selectedDirect, user, setSelectedDirect, setSelectedItem}) => {
-
+    const navigate = useNavigate()
     const blockUser = async () => {
         setShowBlockPopup(false);
         try{
@@ -31,7 +31,8 @@ const BlockPopUp = ({ setShowBlockPopup, setDirects, selectedDirect, user, setSe
                     status: "",
                 });
                 setSelectedItem("");
-            }
+            } else
+                navigate('/signin')
         }
         catch(err){
             console.log(err);

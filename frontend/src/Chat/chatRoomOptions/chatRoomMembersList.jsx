@@ -4,10 +4,11 @@ import toast from "react-hot-toast";
 import '../../Profile/Profile.css'
 import AccountBoxRoundedIcon from '@mui/icons-material/AccountBoxRounded';
 import ChatContext from "../../Context/ChatContext";
+import { useNavigate } from "react-router-dom";
 const ChatRoomMembersList = (props) => {
   const [chatRoomMembers, setChatRoomMembers] = useState([]);
-  const {selectedChatRoom} = useContext(ChatContext)
-  
+  const { selectedChatRoom } = useContext(ChatContext)
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchAllChatRoomMembers = async () => {
       console.log(selectedChatRoom)
@@ -29,7 +30,9 @@ const ChatRoomMembersList = (props) => {
         if (response.ok) {
           console.log(data);
           setChatRoomMembers(data);
-        } else toast(data.error);
+        } else if (response.status === 401)
+          navigate("/signin");
+        else toast(data.error);
       } catch (error) {
         console.log(error);
         toast(error.error);
@@ -55,7 +58,7 @@ const ChatRoomMembersList = (props) => {
             return (
               <div className="chat-room-member" key={key}>
                 <div className="chat-room-member-name">
-                  <img src={member.avatar} alt="playerImg"  className="chat-room-member-avatar"/>
+                  <img src={member.avatar} alt="playerImg" className="chat-room-member-avatar" />
                   <p> {member.username} </p>
                 </div>
                 <div className="chat-room-member-message-button">

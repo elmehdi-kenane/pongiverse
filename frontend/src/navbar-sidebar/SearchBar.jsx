@@ -4,6 +4,7 @@ import SearchFilterBar from "./SearchFilterBar";
 import AuthContext from "./Authcontext";
 import { useContext } from "react";
 import SearchResultCard from "./SearchResultCard";
+import { useNavigate } from "react-router-dom";
 
 export const SearchBar = () => {
   const searchBarRef = useRef(null);
@@ -15,7 +16,7 @@ export const SearchBar = () => {
   const [searchRoomsResult, setSearchRoomsResult] = useState([]);
   const [isSearchBarOpen, setIsSearchBarOpen] = useState(false);
   const { user } = useContext(AuthContext);
-
+  const navigate = useNavigate();
   let termNotFoundText;
   if (searchFilter === "all")
     termNotFoundText = `No results found for '${inputValue}'`;
@@ -34,6 +35,8 @@ export const SearchBar = () => {
           credentials: "include",
         }
       );
+      if (response.status === 401)
+        navigate('/signin')
       const res = await response.json();
       if (res) {
         setSearchResult(res);
@@ -120,55 +123,55 @@ export const SearchBar = () => {
                 <div className="searchResultWrapperNoFilterBar">
                   {
                     searchFilter === "all" &&
-                      (searchResult.length === 0 ? (
-                        <p className="searchEmpty">{termNotFoundText}</p>
-                      ) : (
-                        searchResult.map((item, index) => {
-                          return (
-                            <SearchResultCard
-                              key={index}
-                              members_count={item.members_count}
-                              id={item.id}
-                              resultText={item.username}
-                              avatar={item.avatar}
-                              result_type={item.result_type}
-                              is_friend={item.is_friend}
-                              is_joined={item.is_joined}
-                              searchResult={searchResult}
-                              setSearchResult={setSearchResult}
-                              searchTerm={inputValue}
-                              handleSearchBar={handleSearchBar}
-                              setInputValue={setInputValue}
-                            ></SearchResultCard>
-                          );
-                        })
-                      ))
+                    (searchResult.length === 0 ? (
+                      <p className="searchEmpty">{termNotFoundText}</p>
+                    ) : (
+                      searchResult.map((item, index) => {
+                        return (
+                          <SearchResultCard
+                            key={index}
+                            members_count={item.members_count}
+                            id={item.id}
+                            resultText={item.username}
+                            avatar={item.avatar}
+                            result_type={item.result_type}
+                            is_friend={item.is_friend}
+                            is_joined={item.is_joined}
+                            searchResult={searchResult}
+                            setSearchResult={setSearchResult}
+                            searchTerm={inputValue}
+                            handleSearchBar={handleSearchBar}
+                            setInputValue={setInputValue}
+                          ></SearchResultCard>
+                        );
+                      })
+                    ))
                   }
                   {
                     searchFilter === "people" &&
-                      (searchUsersResult.length === 0 ? (
-                        <p className="searchEmpty">{termNotFoundText}</p>
-                      ) : (
-                        searchUsersResult.map((item, index) => {
-                          return (
-                            <SearchResultCard
-                              key={index}
-                              id={item.id}
-                              members_count={item.members_count}
-                              resultText={item.username}
-                              avatar={item.avatar}
-                              result_type={item.result_type}
-                              is_friend={item.is_friend}
-                              is_joined={item.is_joined}
-                              searchResult={searchResult}
-                              setSearchResult={setSearchResult}
-                              searchTerm={inputValue}
-                              handleSearchBar={handleSearchBar}
-                              setInputValue={setInputValue}
-                            ></SearchResultCard>
-                          );
-                        })
-                      ))
+                    (searchUsersResult.length === 0 ? (
+                      <p className="searchEmpty">{termNotFoundText}</p>
+                    ) : (
+                      searchUsersResult.map((item, index) => {
+                        return (
+                          <SearchResultCard
+                            key={index}
+                            id={item.id}
+                            members_count={item.members_count}
+                            resultText={item.username}
+                            avatar={item.avatar}
+                            result_type={item.result_type}
+                            is_friend={item.is_friend}
+                            is_joined={item.is_joined}
+                            searchResult={searchResult}
+                            setSearchResult={setSearchResult}
+                            searchTerm={inputValue}
+                            handleSearchBar={handleSearchBar}
+                            setInputValue={setInputValue}
+                          ></SearchResultCard>
+                        );
+                      })
+                    ))
                   }
                   {searchFilter === "rooms" &&
                     (searchRoomsResult.length === 0 ? (

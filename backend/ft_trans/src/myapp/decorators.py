@@ -37,6 +37,7 @@ def authentication_required(view_func):
 			# Proceed with the view if the access token is valid
 			return view_func(request, *args, **kwargs)
 		except TokenError:
+			print("***********washerer")
 			if user_id != -1:
 				user = customuser.objects.filter(id=user_id).first()
 				if user is not None:

@@ -5,6 +5,7 @@ import SendMessage from "./sendMessage";
 import ChatConversationHeader from "./chatConversationHeader";
 import ChatConversationBody from "./chatConversationBody";
 import { resetUnreadMessages } from "./chatConversationItem";
+import { useNavigate } from "react-router-dom";
 
 
 export let useClickOutSide = (handler) => {
@@ -35,7 +36,7 @@ const ChatConversation = ({
   const [showDirectOptions, setShowDirectOptions] = useState(false);
   const { selectedDirect, setSelectedDirect } = useContext(ChatContext);
   const { user, chatSocket, userImg } = useContext(AuthContext);
-
+  const navigate = useNavigate();
   const [currentMessagePage, setCurrentMessagePage] = useState(1);
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const [userChanged, setUserChanged] = useState(false);
@@ -93,9 +94,9 @@ const ChatConversation = ({
           const selectedDirectIndex = updatedDirects.findIndex(
             (friend) => friend.name === selectedDirect.name
           );
-          const  splitedDirects = updatedDirects.splice(selectedDirectIndex, 1);
+          const splitedDirects = updatedDirects.splice(selectedDirectIndex, 1);
           setDirects([splitedDirects[0], ...updatedDirects]);
-          resetUnreadMessages(user, selectedDirect.id);
+          resetUnreadMessages(user, selectedDirect.id, navigate);
         }
       }
       setSearchValue("");
@@ -110,8 +111,7 @@ const ChatConversation = ({
   const fetchMessages = async () => {
     try {
       const response = await fetch(
-        `http://${
-          import.meta.env.VITE_IPADDRESS
+        `http://${import.meta.env.VITE_IPADDRESS
         }:8000/chatAPI/Directs/messages?page=${currentMessagePage}`,
         {
           method: "POST",
@@ -129,7 +129,9 @@ const ChatConversation = ({
       if (response.ok) {
         setMessages([...results, ...messages]);
         if (!next) setHasMoreMessages(false);
-      } else console.log("opps! something went wrong");
+      } else if (response.status === 401)
+        navigate("/signin");
+      else console.log("opps! something went wrong");
     } catch (error) {
       console.log(error);
     }
@@ -190,7 +192,7 @@ const ChatConversation = ({
       setFirstScroll(false);
     }
   }, [messages, lastMessage]);
-  
+
 
 
   const handelScroll = (e) => {

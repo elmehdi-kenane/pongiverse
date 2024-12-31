@@ -11,6 +11,8 @@ import { Toaster } from "react-hot-toast";
 import RoomsNotifications from "./RoomComponents/roomsNotifications";
 import AddIcon from "@mui/icons-material/Add";
 import GameNotifications from "../GameNotif/GameNotifications"
+import { use } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Rooms = () => {
   const [createRoom, setCreateRoom] = useState(false);
@@ -33,16 +35,18 @@ const Rooms = () => {
     setMyChatRooms,
     myChatRoomsRef,
   } = useContext(ChatContext);
-//   const [myChatRooms, setMyChatRooms] = useState([]);
+
+  const navigate = useNavigate()
+  //   const [myChatRooms, setMyChatRooms] = useState([]);
   const [hasMoreRooms, setHasMoreRooms] = useState(true);
   const [currentMyRoomsPage, setCurrentMyRoomsPage] = useState(1);
   const [itemsPerScreen, setItemsPerScreen] = useState(4);
   const [pendingInvitationsCount, setPendingInvitationsCount] = useState(0);
-//   const myChatRoomsRef = useRef(myChatRooms);
+  //   const myChatRoomsRef = useRef(myChatRooms);
 
-//   useEffect(() => {
-//     myChatRoomsRef.current = myChatRooms;
-//   }, [myChatRooms]);
+  //   useEffect(() => {
+  //     myChatRoomsRef.current = myChatRooms;
+  //   }, [myChatRooms]);
 
   console.log("your ouside myChatRoomsRef.current", myChatRoomsRef.current);
   useEffect(() => {
@@ -112,7 +116,7 @@ const Rooms = () => {
     const allSuggestions = suggestedChatRoomsRef.current;
     setMyChatRooms([...allMyChatRooms, data]);
     const updatedRoomsInvits = allRoomInvites.filter(
-        (room) => room.id !== data.id
+      (room) => room.id !== data.id
     );
     const updatedSuggestedRooms = allSuggestions.filter((room) => room.id !== data.id);
     setSuggestedChatRooms(updatedSuggestedRooms);
@@ -180,7 +184,9 @@ const Rooms = () => {
         if (response.ok) {
           setMyChatRooms([...myChatRooms, ...results]);
           if (!next) setHasMoreRooms(false);
-        } else {
+        } else if (response.status === 401)
+          navigate('/signin')
+        else {
           console.error("Failed to fetch chat rooms");
         }
       } catch (error) {
@@ -214,7 +220,10 @@ const Rooms = () => {
       );
       if (response.ok) {
         // console.log("updateStatusOfInvitations", response);
-      } else {
+      }
+      else if (response.status === 401)
+        navigate('/signin')
+      else {
         console.error("Failed to updateStatusOfInvitations");
       }
     } catch (error) {
@@ -223,7 +232,7 @@ const Rooms = () => {
   };
   return (
     <>
-      <GameNotifications allFriendsRef={allFriendsRef} setAllFriends={setAllFriends} setAllChatRoomMembers={setAllChatRoomMembers}/>
+      <GameNotifications allFriendsRef={allFriendsRef} setAllFriends={setAllFriends} setAllChatRoomMembers={setAllChatRoomMembers} />
       <div className="rooms-page">
         <Toaster
           containerStyle={{ marginTop: "51px" }}

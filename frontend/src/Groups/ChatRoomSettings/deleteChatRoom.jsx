@@ -1,11 +1,13 @@
 import toast from "react-hot-toast";
 import ChatContext from "../../Context/ChatContext";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 const DeleteChatRoom = (props) => {
 
   const chatRoomDeletedUpdater = (data) => {
     console.log("data: ", data);
+    const navigate = useNavigate();
     const allMyChatRooms = props.myChatRooms;
     const updatedRooms = allMyChatRooms.filter(
       (room) => room.id !== data.roomId
@@ -25,9 +27,9 @@ const DeleteChatRoom = (props) => {
           credentials: "include",
         }
       );
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
         setTimeout(() => {
           toast.success(data.success);
@@ -35,7 +37,9 @@ const DeleteChatRoom = (props) => {
           chatRoomDeletedUpdater(data.data);
         }, 2000);
         console.log(data.success);
-      } else {
+      } else if (response.status === 401)
+        navigate('/signin')
+      else {
         setTimeout(() => {
           toast.dismiss(toastId);
           toast.error("Failed to delete chat room");
@@ -46,7 +50,7 @@ const DeleteChatRoom = (props) => {
       toast.error("An error occurred. Please try again later.");
     }
   };
-  
+
 
   return (
     <div className="room-delete-wrapper">
