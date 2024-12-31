@@ -24,7 +24,7 @@ const FriendCard = ({
   const navigate = useNavigate();
 
   const handleBlockFriend = () => {
-    fetch("http://localhost:8000/friends/block_friend/", {
+    fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/block_friend/`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -45,7 +45,7 @@ const FriendCard = ({
   };
 
   const handleRemoveFriendship = () => {
-    fetch("http://localhost:8000/friends/remove_friendship/", {
+    fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/remove_friendship/`, {
       method: "POST",
       credentials: "include",
       headers: {

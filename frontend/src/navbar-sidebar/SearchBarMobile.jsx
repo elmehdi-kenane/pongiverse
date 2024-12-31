@@ -29,7 +29,7 @@ export const SearchBarMobile = ({ handleSearchBar }) => {
       console.log("fetch search result with term:", searchTerm);
 
       const response = await fetch(
-        `http://localhost:8000/navBar/search_view/?searchTerm=${searchTerm}&username=${username}`,
+        `http://${import.meta.env.VITE_IPADDRESS}:8000/navBar/search_view/?searchTerm=${searchTerm}&username=${username}`,
         {
           method: "GET",
           credentials: "include",

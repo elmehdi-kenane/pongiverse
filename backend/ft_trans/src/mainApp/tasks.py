@@ -116,7 +116,7 @@ def get_is_eliminated(tournament_id, username):
 	return False
 
 def get_round_reached(tournament_id, username):
-	counter = 1
+	counter = 0
 	for round in tournaments[tournament_id]['rounds']:
 		for player in tournaments[tournament_id]['rounds'][round]:
 			if player['username'] == username:

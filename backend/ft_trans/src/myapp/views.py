@@ -215,6 +215,7 @@ class CheckUsernameView(APIView):
 
 class VerifyTokenView(APIView):
 	def get(self, request, format=None):
+		print("************VerifyTokenView")
 		response = Response()
 		user_id = -1
 		try:

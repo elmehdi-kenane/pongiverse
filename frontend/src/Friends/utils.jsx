@@ -3,7 +3,7 @@ export const cancelFriendRequest = (
   secondUsername,
   eventType
 ) => {
-  fetch("http://localhost:8000/friends/cancel_friend_request/", {
+  fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/cancel_friend_request/`, {
     method: "POST",
     credentials: 'include',
     headers: {
@@ -25,7 +25,7 @@ export const cancelFriendRequest = (
 };
 
 export const confirmFriendRequest = (currentUsername, secondUsername) => {
-  fetch("http://localhost:8000/friends/confirm_friend_request/", {
+  fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/confirm_friend_request/`, {
     method: "POST",
     credentials: "include",
     headers: {
@@ -69,7 +69,7 @@ export const handleAddFriendReq = (currentUsername, secondUsername) => {
 
 // Added by Imad ---
 export const handleRemoveFriendship = (user, secondUsername) => {
-  fetch("http://localhost:8000/friends/remove_friendship/", {
+  fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/remove_friendship/`, {
     method: "POST",
     credentials: "include",
     headers: {

@@ -8,6 +8,8 @@ import createTournamentImage from '../assets/Game/createTournamentMode.svg'
 import joinTournamentImage from '../assets/Game/joinTournamentMode.svg'
 import toast, { Toaster } from 'react-hot-toast';
 import GameNotifications from '../GameNotif/GameNotifications'
+import { IoSettingsOutline } from "react-icons/io5";
+
 const Modes = () => {
 	const navigate = useNavigate()
 	const location = useLocation()
@@ -118,6 +120,10 @@ const Modes = () => {
 		setEnableButton(true)
 	}
 
+	const navigateToBoard = () => {
+		navigate('/mainpage/game/board')
+	}
+
 	const handleButtonClick = () => {
 		if (soloModeSelected)
 			goToSoloPage()
@@ -133,6 +139,9 @@ const Modes = () => {
 			<div className={styles['game-modes-page']}>
 				<Toaster />
 				<div className={styles['game-modes-div']}>
+					<div className={styles['customize-game-options']}>
+						<button onClick={navigateToBoard}><IoSettingsOutline color='#4D4EA6' size={20} />Customize Game</button>
+					</div>
 					<div className={`${styles['play-solo-mode']} ${soloModeSelected ? styles['mode-selected'] : ''}`} onClick={() => handleSelect('play_solo')}>
 						<div className={styles['play-solo-mode-image']}>
 							<img src={playSoloImage} alt="" />

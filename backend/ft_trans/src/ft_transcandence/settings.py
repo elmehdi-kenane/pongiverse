@@ -31,7 +31,7 @@ DEBUG = True
 
 MEDIA_URL = '/media/'
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', '10.11.7.11']
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', '10.11.7.11', '10.13.5.8', '10.13.2.3']
 
 # Application definition
 
@@ -209,6 +209,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "http://10.13.5.8:3000",
+    "http://10.13.2.3:3000",
     "http://10.12.2.12:3000",
     "http://10.12.3.11:3000",
     "http://127.0.0.1:3000",
@@ -221,6 +223,9 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ORIGIN_WHITELIST = [
 'http://localhost:3000',
 'http://10.11.7.11:3000',
+'http://10.13.5.8:3000',
+'http://10.13.2.3:3000',
+
 ]
 
 # CORS_ALLOW_ALL_ORIGINS: True

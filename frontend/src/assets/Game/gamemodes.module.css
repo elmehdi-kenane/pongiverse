@@ -37,6 +37,30 @@
 	gap: 50px;
 }
 
+.customize-game-options {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	width: 100%;
+}
+
+.customize-game-options button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 5px;
+	width: 180px;
+	height: 45px;
+	color: #4D4EA6;
+	font-size: 18px;
+	background-color: #D9D9D9;
+	text-align: center;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
 .play-solo-mode-image {
 	margin-left: 20px;
 	display: flex;
@@ -117,6 +141,7 @@
 	width: 60%;
 }
 
+
 .game-modes-page-button {
 	display: flex;
 	justify-content: flex-end;
@@ -183,6 +208,11 @@
 		width: 45%;
 		min-width: 1000px;
 	}
+
+	.customize-game-options {
+		width: 45%;
+		min-width: 1000px;
+	}
 }
 
 @media (max-width: 1439px) {
@@ -196,6 +226,11 @@
 	.game-modes-page-button {
 		width: 70%;
 	}
+
+	.customize-game-options {
+		width: 70%;
+	}
+
 
 	.play-solo-mode-description,
 	.join-tournament-mode-description {
@@ -281,6 +316,14 @@
 		align-items: center;
 		width: 70%;
 		margin-top: 10px;
+		height: 40px;
+	}
+
+	.customize-game-options {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		width: 95%;
 		height: 40px;
 	}
 

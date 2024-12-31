@@ -175,7 +175,7 @@ const Rooms = () => {
     const fetchChatRooms = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/chatAPI/myChatRooms/${user}?page=${currentMyRoomsPage}`,
+          `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/myChatRooms/${user}?page=${currentMyRoomsPage}`,
           {
             credentials: "include",
           }
@@ -208,7 +208,7 @@ const Rooms = () => {
   const updateStatusOfInvitations = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/chatAPI/updateStatusOfInvitations`,
+        `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/updateStatusOfInvitations`,
         {
           method: "POST",
           credentials: "include",

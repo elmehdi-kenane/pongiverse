@@ -586,7 +586,6 @@ export const AuthProvider = ({ children }) => {
 					credentials: "include",
 				}
 			);
-			console.log("DATA: ", response);
 			response = await response.json();
 			console.log("RESPONSE: ", response);
 			if (response.Case !== "Invalid token") {

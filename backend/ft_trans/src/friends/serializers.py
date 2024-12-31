@@ -3,7 +3,7 @@ from .models import FriendRequest
 from mainApp.models import UserMatchStatics
 from .models import Friendship
 from myapp.models import customuser
-
+import os
 class friendRequestSerializer(serializers.ModelSerializer):
     second_username = serializers.CharField(source='to_user.username')
     avatar = serializers.SerializerMethodField()
@@ -23,7 +23,7 @@ class friendRequestSerializer(serializers.ModelSerializer):
             if request:
                 return request.build_absolute_uri(avatar_url)
             else:
-                return f"http://localhost:8000/auth{avatar_url}"
+                return f"http://{os.getenv('IP_ADDRESS')}:8000/auth{avatar_url}"
         return None
 
     def get_level(self, obj):
@@ -31,6 +31,7 @@ class friendRequestSerializer(serializers.ModelSerializer):
         return user_stat.level if user_stat else None
 
 class friendSerializer(serializers.ModelSerializer):
+    
     friend_id = serializers.IntegerField(source='friend.id')
     second_username = serializers.CharField(source='friend.username')
     is_online = serializers.BooleanField(source='friend.is_online')
@@ -48,7 +49,7 @@ class friendSerializer(serializers.ModelSerializer):
             if request:
                 return request.build_absolute_uri(avatar_url)
             else:
-                return f"http://localhost:8000/auth{avatar_url}"
+                return f"http://{os.getenv('IP_ADDRESS')}:8000/auth{avatar_url}"
         return None
 
     def get_level(self, obj):
@@ -72,7 +73,7 @@ class customuserSerializer(serializers.ModelSerializer):
             if request:
                 return request.build_absolute_uri(avatar_url)
             else:
-                return f"http://localhost:8000/auth{avatar_url}"
+                return f"http://{os.getenv('IP_ADDRESS')}:8000/auth{avatar_url}"
         return None
 
     def get_level(self, obj):

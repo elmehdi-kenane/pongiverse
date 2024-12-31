@@ -12,6 +12,7 @@ from .serializers import room_serializer
 from .serializers import NotificationSerializer
 from myapp.decorators import authentication_required
 from django.db.models import Q
+import os
 
 @authentication_required
 @api_view(['GET'])
@@ -83,7 +84,7 @@ def search_view(request):
 def add_notification(request):
     user = customuser.objects.get(username=request.data['username'])
     print(request.data['avatar'])
-    Notification.objects.create(user=user, notification_text=request.data['notification_text'], url_redirection=request.data['url_redirection'], avatar=request.data['avatar'] or 'http://localhost:8000/auth/media/uploads_default/defaultNotificationIcon.png')
+    Notification.objects.create(user=user, notification_text=request.data['notification_text'], url_redirection=request.data['url_redirection'], avatar=request.data['avatar'] or f"http://{os.getenv('IP_ADDRESS')}:8000/auth/media/uploads_default/defaultNotificationIcon.png")
     return Response("success :)")
 
 @authentication_required
