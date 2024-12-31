@@ -124,8 +124,8 @@ else
     cp config/grafana/datasources.yaml tools/grafana/conf/provisioning/datasources/datasources.yaml
 fi
 
-GRAFANA_DATA_DIRECTORY="/goinfre/ekenane/xd/backend/monitoring_system/grafana_data"
-DEFAULTS_GRAFANA_INI="/Users/ekenane/goinfre/xd/backend/monitoring_system/tools/grafana/conf/defaults.ini"
+GRAFANA_DATA_DIRECTORY="/goinfre/ekenane/ft_transcendence/backend/monitoring_system/grafana_data"
+DEFAULTS_GRAFANA_INI="/Users/ekenane/goinfre/ft_transcendence/backend/monitoring_system/tools/grafana/conf/defaults.ini"
 
 sed -i '' "s|^http_port *= *3000|http_port = 3030|" $DEFAULTS_GRAFANA_INI
 echo "Grafana port changed from 3000 to 3030" > logs/grafana_logs

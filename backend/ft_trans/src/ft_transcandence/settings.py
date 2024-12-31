@@ -70,7 +70,7 @@ MIDDLEWARE = [
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 	'ft_transcandence.prometheus_middleware.latency_middleware',
-	'ft_transcandence.prometheus_middleware.chat_middleware',
+	'ft_transcandence.prometheus_middleware.room_counter_middleware',
 	'ft_transcandence.prometheus_middleware.database_query_time_middleware',
 	'ft_transcandence.prometheus_middleware.user_registrations_counter_middleware',
 	# 'ft_transcandence.prometheus_middleware.active_user_middleware',

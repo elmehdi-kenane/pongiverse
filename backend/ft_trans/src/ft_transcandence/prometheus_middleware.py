@@ -2,6 +2,11 @@ import time
 from django.db import connection
 from prometheus_client import Histogram, Counter, Gauge
 import uuid
+from asgiref.sync import iscoroutinefunction
+from channels.middleware import BaseMiddleware
+import json
+from asgiref.sync import sync_to_async
+from chat.models import Room
 
 REQUEST_LATENCY = Histogram('http_request_latency_seconds', 'HTTP request latency', ['method', 'endpoint'])
 
@@ -9,19 +14,52 @@ DATABASE_QUERY_TIME = Histogram('database_query_time_seconds', 'Time spent on da
 
 USER_REGISTRATIONS = Counter('user_registrations', 'total of user registrations')
 
+DIRECT_MESSAGE_COUNTER = Counter('direct_message_counter', 'total of direct messages')
+
+ROOM_MESSAGE_COUNTER = Counter('room_message_counter', 'total of direct messages', ['room_name'])
+
 ACTIVE_USERS = Gauge('active_users', 'Current number of active users')
 
 ROOM_COUNTER = Gauge('room_counter', 'chat room counter')
 
-def chat_middleware(get_response):
-    
+
+class ChatMiddleware(BaseMiddleware):
+    def __init__(self, inner):
+        super().__init__(inner)
+
+    async def __call__(self, scope, receive, send):
+        print(f"ChatMiddleware called with scope: {scope}")
+        
+        async def custom_receive():
+            event = await receive()
+            print(f"Received WebSocket event: {event}")
+            return event
+        
+        async def custom_send(message):
+            text = message.get('text')
+            if (text != None):
+                parsed_text = json.loads(text)
+                print("parsed_text", parsed_text)
+                # print("parsed_text['type']", parsed_text['type'])
+                if parsed_text['type'] == "newDirect":
+                    DIRECT_MESSAGE_COUNTER.inc()
+                if parsed_text['type'] == "newMessage":
+                    room = await sync_to_async(Room.objects.get)(id=parsed_text['data']['roomId'])
+                    ROOM_MESSAGE_COUNTER.labels(room_name=room.name).inc()
+            await send(message)
+        await super().__call__(scope, custom_receive, custom_send)
+
+def room_counter_middleware(get_response):
+
     def middleware(request):
         start_time = time.time()
         response = get_response(request)
         view_name = request.resolver_match.view_name if request.resolver_match else 'unknown'
-        print("view_name", view_name)
-        if (view_name == "create-chat-room"):
-            print("response", response)
+        if (view_name == "create-chat-room" and response.status_code == 200):
+            ROOM_COUNTER.inc()
+        if (view_name == "delete-chat-room" and response.status_code == 200):
+            ROOM_COUNTER.dec()
+            
         return response
     
     return middleware
