@@ -20,3 +20,7 @@ Network Persistent State
 notes.txt
 SharedStorage
 TransportSecurity
+
+# monitoring-system
+backend/monitoring_system/archive
+backend/monitoring_system/tools
