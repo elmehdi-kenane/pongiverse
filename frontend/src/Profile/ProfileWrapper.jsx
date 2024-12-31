@@ -32,7 +32,7 @@ export const ProfileWrapper = ({ child }) => {
 
     const getUserFriends = async () => {
         try {
-            const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserFriends/${userId}`, {
+            const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserFriends/${user}/${userId}`, {
                 method: "GET",
                 credentials: "include",
                 headers: {
@@ -44,10 +44,10 @@ export const ProfileWrapper = ({ child }) => {
                 // console.log("Response data : ", res.data);
                 setFriendsData(res.data)
             }
-            else
+            else if (response.status === 401)
                 navigate('/signin')
         } catch (error) {
-            console.log("Error: ", error);
+            console.error("Error: ", error);
         }
     }
 
@@ -90,7 +90,7 @@ export const ProfileWrapper = ({ child }) => {
                 else
                     navigate("/Error404")
             } catch (error) {
-                console.log("Error:  ", error);
+                console.error("Error:  ", error);
             }
         }
 

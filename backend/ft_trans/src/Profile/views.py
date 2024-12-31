@@ -147,17 +147,24 @@ def update_user_password(request):
 #**--------------------- GetFriends User ---------------------** 
 @authentication_required
 @api_view(["GET"])
-def get_user_friends(request, username):
+def get_user_friends(request, mainusername, username):
 	user = customuser.objects.filter(username=username).first()
-	friendships = Friendship.objects.filter(user=user, block_status='none').all()
-	friends = []
-	if friendships:
-		for friendship in friendships:
-			friends.append({
-				'username': friendship.friend.username,
-				'pic': f"http://localhost:8000/auth{friendship.friend.avatar.url}"
-			})
-	return Response(data={"data": friends}, status=status.HTTP_200_OK)
+	main_user = customuser.objects.filter(username=mainusername).first()
+	if user and main_user:
+		friendships = Friendship.objects.filter(user=user, block_status='none').all()
+		friends = []
+		if friendships:
+			for friendship in friendships:
+				if not Friendship.objects.filter(Q(block_status='blocked') | Q(block_status='blocker'), user=main_user, friend=friendship.friend).exists():
+					friends.append({
+						'userId': friendship.friend.id,
+						'username': friendship.friend.username,
+						'userIsOnline': friendship.friend.is_online,
+						'userIsFriend': Friendship.objects.filter(user=main_user, friend=friendship.friend).exists(),
+						'pic': f"http://localhost:8000/auth{friendship.friend.avatar.url}"
+					})
+		return Response(data={"data": friends}, status=status.HTTP_200_OK)
+	return Response(data={'error': 'Error getting user friends!'}, status=status.HTTP_400_BAD_REQUEST)
 
 #**--------------------- Check User Friendship ---------------------** 
 @authentication_required
