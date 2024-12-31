@@ -5,10 +5,11 @@ fix json in local tournament
 
 BLOCK a friends (profile and chat) -- [DONE]
 invite a member to a channel, it should not be blocked [DONE]
-search for a room and join
+search for a room and join [DONE]
+duplicate friedn in hcat when comming from profile (imad and abdellah) [DONE]
 
-username warning in signupways second step
-
+username warning in signupways second step [DONE]
 
 rooms duplication [DONE]
-can't send message when select a chat room from search
+fix json in local tournament [DONE]
+
