@@ -51,7 +51,7 @@ async def invite_friend(self, data, notifs_user_channels):
 							'message': {
 								'user': data['message']['user'],
 								'level': usermatchstats.level,
-								'image': f"http://{ip_address}:8000/auth{user1.avatar.url}" ,
+								'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user1.avatar.url}" ,
 								'roomID': active_match.room_id,
 								'mode': '1vs1'
 							}
@@ -145,7 +145,7 @@ async def invite_friend(self, data, notifs_user_channels):
 					'message': {
 						'user': data['message']['user'],
 						'level': usermatchstats.level,
-						'image': f"http://{ip_address}:8000/auth{user1.avatar.url}",
+						'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user1.avatar.url}",
 						'roomID': active_match.room_id,
 						'mode': '1vs1'
 					}

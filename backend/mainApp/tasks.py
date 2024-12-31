@@ -54,7 +54,7 @@ async def send_player_winner(self, tournament_id, username, next_round, position
 				"id" : user.id,
 				"name": user.username,
 				"level" : match_statistics.level,
-				"image" : f"http://{ip_address}:8000/auth{user.avatar.url}",
+				"image" : f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user.avatar.url}",
 				"round_reached": next_round,
 				"position": position // 2 if position % 2 == 0 else (position + 1) // 2,
 				"tournament_id": tournament_id
@@ -89,7 +89,7 @@ async def send_playing_status_to_friends(self, user, status, user_channels):
 						'id': user.id,
 						'name': user.username,
 						'level': 2,
-						'image': f"http://{ip_address}:8000/auth{user.avatar.url}"
+						'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user.avatar.url}"
 					}
 				}
 			})
@@ -240,7 +240,7 @@ async def send_user_eliminated_after_delay(self, tournament_id, actual_round):
 											'id': user.id,
 											'name': member['username'],
 											'level': usermatchstats.level,
-											'image': f"http://{ip_address}:8000/auth{user.avatar.url}" ,
+											'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user.avatar.url}" ,
 											'is_playing' : user.is_playing
 										}
 									}

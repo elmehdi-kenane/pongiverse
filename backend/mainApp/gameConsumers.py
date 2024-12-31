@@ -97,12 +97,12 @@ async def isPlayerInAnyRoom(self, data, rooms, user_channels):
 			player2_match_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=user2).first)()
 			users.append({
 				'name': user1.username,
-				'image': f"http://{ip_address}:8000/auth{user1.avatar.url}",
+				'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user1.avatar.url}",
 				'level': player1_match_statistics.level
 			})
 			users.append({
 				'name': user2.username,
-				'image': f"http://{ip_address}:8000/auth{user2.avatar.url}",
+				'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user2.avatar.url}",
 				'level': player2_match_statistics.level
 			})
 			if len(value['players']) == 4:
@@ -110,12 +110,12 @@ async def isPlayerInAnyRoom(self, data, rooms, user_channels):
 				player4_match_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=user4).first)()
 				users.append({
 					'name': user3.username,
-					'image': f"http://{ip_address}:8000/auth{user3.avatar.url}",
+					'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user3.avatar.url}",
 					'level': player3_match_statistics.level
 				})
 				users.append({
 					'name': user4.username,
-					'image': f"http://{ip_address}:8000/auth{user4.avatar.url}",
+					'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user4.avatar.url}",
 					'level': player4_match_statistics.level
 				})
 			# #print(f"ALL USERS ARE : {len(users)}")
@@ -173,7 +173,7 @@ async def isPlayerInAnyRoom(self, data, rooms, user_channels):
 							player_match_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=player).first)()
 							users.append({
 								'name': player.username,
-								'image': f"http://{ip_address}:8000/auth{player.avatar.url}",
+								'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{player.avatar.url}",
 								'level': player_match_statistics.level
 							})
 						asyncio.create_task(waited_game(self, active_match.room_id, users))
@@ -199,7 +199,7 @@ async def isPlayerInAnyRoom(self, data, rooms, user_channels):
 											'id': player.id,
 											'name': player.username,
 											'level': 2,
-											'image': f"http://{ip_address}:8000/auth{player.avatar.url}"
+											'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{player.avatar.url}"
 											# {'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path}
 										}
 									}
@@ -235,7 +235,7 @@ async def isPlayerInAnyRoom(self, data, rooms, user_channels):
 								player_match_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=player).first)()
 								users.append({
 									'name': player.username,
-									'image': f"http://{ip_address}:8000/auth{player.avatar.url}",
+									'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{player.avatar.url}",
 									'level': player_match_statistics.level
 								})
 							asyncio.create_task(waited_game(self, active_match.room_id, users))
@@ -257,7 +257,7 @@ async def isPlayerInAnyRoom(self, data, rooms, user_channels):
 											'id': player.id,
 											'name': player.username,
 											'level': 2,
-											'image': f"http://{ip_address}:8000/auth{player.avatar.url}"
+											'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{player.avatar.url}"
 											# {'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path}
 										}
 									}
@@ -376,7 +376,7 @@ async def joinRoom(self, data, rooms, user_channels):
 					'tmp_scored': 0 ####### added
 				})
 				users.append({
-					'image': f"http://{ip_address}:8000/auth{player.avatar.url}",
+					'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{player.avatar.url}",
 					'level': player_match_statistics.level
 				})
 			room = {
@@ -517,7 +517,7 @@ async def quitRoom(self, data, rooms, user_channels):
 									'id': user.id,
 									'name': user.username,
 									'level': 2,
-									'image': f"http://{ip_address}:8000/auth{user.avatar.url}"
+									'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user.avatar.url}"
 									# {'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path}
 								}
 							}
@@ -641,7 +641,7 @@ async def validatePlayer(self, data, rooms, user_channels):
 						if (player):
 							users.append({
 								'name': player.username,
-								'avatar': f"http://{ip_address}:8000/auth{player.avatar.url}",
+								'avatar': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{player.avatar.url}",
 								'level': player_match_statistics.level
 							})
 					await self.send(text_data=json.dumps({
@@ -674,7 +674,7 @@ async def validatePlayer(self, data, rooms, user_channels):
 						if (player):
 							users.append({
 								'name': player.username,
-								'avatar': f"http://{ip_address}:8000/auth{player.avatar.url}",
+								'avatar': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{player.avatar.url}",
 								'level': player_match_statistics.level
 							})
 					await self.send(text_data=json.dumps({
@@ -813,12 +813,12 @@ async def validatePlayer(self, data, rooms, user_channels):
 				}))
 				users.append({
 					'name': player1_username,
-					'avatar': f"http://{ip_address}:8000/auth{player1.avatar.url}",
+					'avatar': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{player1.avatar.url}",
 					'level': player1_match_statistics.level
 				})
 				users.append({
 					'name': player2_username,
-					'avatar': f"http://{ip_address}:8000/auth{player2.avatar.url}",
+					'avatar': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{player2.avatar.url}",
 					'level': player2_match_statistics.level
 				})
 				await self.send(text_data=json.dumps({
@@ -854,12 +854,12 @@ async def validatePlayer(self, data, rooms, user_channels):
 				}))
 				users.append({
 					'name': player1_username,
-					'avatar': f"http://{ip_address}:8000/auth{player1.avatar.url}",
+					'avatar': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{player1.avatar.url}",
 					'level': player1_match_statistics.level
 				})
 				users.append({
 					'name': player2_username,
-					'avatar': f"http://{ip_address}:8000/auth{player2.avatar.url}",
+					'avatar': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{player2.avatar.url}",
 					'level': player2_match_statistics.level
 				})
 				await self.send(text_data=json.dumps({
@@ -1005,7 +1005,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 								'id': player1.id,
 								'name': player1.username,
 								'level': 2,
-								'image':  f"http://{ip_address}:8000/auth{player1.avatar.url}"
+								'image':  f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{player1.avatar.url}"
 								# {'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path}
 							}
 						}
@@ -1027,7 +1027,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 								'id': player2.id,
 								'name': player2.username,
 								'level': 2,
-								'image': f"http://{ip_address}:8000/auth{player2.avatar.url}"
+								'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{player2.avatar.url}"
 								# {'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path}
 							}
 						}
@@ -1249,7 +1249,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 									'id': player1.id,
 									'name': player1.username,
 									'level': 2,
-									'image': f"http://{ip_address}:8000/auth{player1.avatar.url}"
+									'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{player1.avatar.url}"
 									# {'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path}
 								}
 							}
@@ -1271,7 +1271,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 									'id': player2.id,
 									'name': player2.username,
 									'level': 2,
-									'image': f"http://{ip_address}:8000/auth{player2.avatar.url}"
+									'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{player2.avatar.url}"
 									# {'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path}
 								}
 							}
@@ -1438,7 +1438,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 									'id': player1.id,
 									'name': player1.username,
 									'level': 2,
-									'image': f"http://{ip_address}:8000/auth{player1.avatar.url}"
+									'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{player1.avatar.url}"
 									# {'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path}
 								}
 							}
@@ -1460,7 +1460,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 									'id': player2.id,
 									'name': player2.username,
 									'level': 2,
-									'image': f"http://{ip_address}:8000/auth{player2.avatar.url}"
+									'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{player2.avatar.url}"
 									# {'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': image_path}
 								}
 							}
@@ -1766,7 +1766,7 @@ async def invite_friend(self, data, rooms, user_channels):
 							'message': {
 								'user': data['message']['user'],
 								'level': usermatchstats.level,
-								'image': f"http://{ip_address}:8000/auth{user1.avatar.url}",
+								'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user1.avatar.url}",
 								'roomID': active_match.room_id,
 								'mode': '1vs1'
 							}
@@ -1843,7 +1843,7 @@ async def invite_friend(self, data, rooms, user_channels):
 					'message': {
 						'user': data['message']['user'],
 						'level': usermatchstats.level,
-						'image': f"http://{ip_address}:8000/auth{user1.avatar.url}",
+						'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user1.avatar.url}",
 						'roomID': active_match.room_id,
 						'mode': '1vs1'
 					}
@@ -2079,7 +2079,7 @@ async def join_new_room(self, data, rooms, user_channels):
 				'tmp_scored': 0 ####### added
 			})
 			users.append({
-				'image': f"http://{ip_address}:8000/auth{player_state.avatar.url}",
+				'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{player_state.avatar.url}",
 				'level': player_match_statistics.level
 			})
 		room = {

@@ -84,7 +84,7 @@ def search_view(request):
 def add_notification(request):
     user = customuser.objects.get(username=request.data['username'])
     print(request.data['avatar'])
-    Notification.objects.create(user=user, notification_text=request.data['notification_text'], url_redirection=request.data['url_redirection'], avatar=request.data['avatar'] or f"http://{os.getenv('IP_ADDRESS')}:8000/auth/media/uploads_default/defaultNotificationIcon.png")
+    Notification.objects.create(user=user, notification_text=request.data['notification_text'], url_redirection=request.data['url_redirection'], avatar=request.data['avatar'] or f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth/media/uploads_default/defaultNotificationIcon.png")
     return Response("success :)")
 
 @authentication_required

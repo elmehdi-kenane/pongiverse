@@ -397,7 +397,7 @@ def list_all_friends(request):
             if not my_friend:
                 friend_data = {
                     "name": friend_object.username,
-                    "avatar": f"http://{os.getenv('IP_ADDRESS')}:8000/auth{friend_object.avatar.url}",
+                    "avatar": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth{friend_object.avatar.url}",
                 }
                 all_friend.append(friend_data)
         return Response(all_friend)

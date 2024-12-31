@@ -33,8 +33,8 @@ def getUserData(request, username):
 	if user is not None:
 		user_states = UserMatchStatics.objects.filter(player=user).first()
 		if user_states is not None:
-			user_data = {'pic': f"http://{os.getenv('IP_ADDRESS')}:8000/auth{user.avatar.url}",
-						'bg': f"http://{os.getenv('IP_ADDRESS')}:8000/auth{user.background_pic.url}",
+			user_data = {'pic': f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth{user.avatar.url}",
+						'bg': f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth{user.background_pic.url}",
 						'id': user.id,
 						'bio': user.bio,
 						'email' : user.email,
@@ -161,7 +161,7 @@ def get_user_friends(request, mainusername, username):
 						'username': friendship.friend.username,
 						'userIsOnline': friendship.friend.is_online,
 						'userIsFriend': Friendship.objects.filter(user=main_user, friend=friendship.friend).exists(),
-						'pic': f"http://{os.getenv('IP_ADDRESS')}:8000/auth{friendship.friend.avatar.url}"
+						'pic': f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth{friendship.friend.avatar.url}"
 					})
 		return Response(data={"data": friends}, status=status.HTTP_200_OK)
 	return Response(data={'error': 'Error getting user friends!'}, status=status.HTTP_400_BAD_REQUEST)
@@ -201,7 +201,7 @@ def get_users_rank(request, username):
 		for user in users_data:
 			res_data.append({
 				'username': user.player.username,
-				'pic': f"http://{os.getenv('IP_ADDRESS')}:8000/auth{user.player.avatar.url}",
+				'pic': f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth{user.player.avatar.url}",
 				'wins': user.wins,
 				'lost': user.losts,
 				'level': user.level,
@@ -290,8 +290,8 @@ def get_user_games(request, username, page):
 					"time": time,
 					"user1": match.team1_player1.username,
 					"user2": match.team2_player1.username,
-					"pic1": f"http://{os.getenv('IP_ADDRESS')}:8000/auth{match.team1_player1.avatar.url}",
-					"pic2": f"http://{os.getenv('IP_ADDRESS')}:8000/auth{match.team2_player1.avatar.url}",
+					"pic1": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth{match.team1_player1.avatar.url}",
+					"pic2": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth{match.team2_player1.avatar.url}",
 					"score" : f"{match.team1_score} - {match.team2_score}",
 					"hit1": match_stq.team1_player1_hit,
 					"hit2": match_stq.team2_player1_hit,
@@ -384,9 +384,9 @@ def get_single_matches(request, username, page):
 
 		for user_match in user_matches:
 			res_data.append({
-				"pic1": f"http://{os.getenv('IP_ADDRESS')}:8000/auth{user_match.team1_player1.avatar.url}",
+				"pic1": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth{user_match.team1_player1.avatar.url}",
 				"score" : f"{user_match.team1_score} - {user_match.team2_score}",
-				"pic2": f"http://{os.getenv('IP_ADDRESS')}:8000/auth{user_match.team2_player1.avatar.url}",
+				"pic2": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth{user_match.team2_player1.avatar.url}",
 				"id": user_match.room_id,
 			})
 		return Response(data={"userMatches": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
@@ -402,8 +402,8 @@ def get_single_match_dtl(request, match_id):
 	if match and match_stq:
 		res_data = {
 			"date": match.date_ended,
-			"pic1": f"http://{os.getenv('IP_ADDRESS')}:8000/auth{match.team1_player1.avatar.url}",
-			"pic2": f"http://{os.getenv('IP_ADDRESS')}:8000/auth{match.team2_player1.avatar.url}",
+			"pic1": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth{match.team1_player1.avatar.url}",
+			"pic2": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth{match.team2_player1.avatar.url}",
 			"user1": match.team1_player1.username,
 			"user2": match.team2_player1.username,
 			"score1": match.team1_score,
@@ -443,11 +443,11 @@ def get_multiplayer_matches(request, username, page):
 
 		for user_match in user_matches:
 			res_data.append({
-				"p1Pic1": f"http://{os.getenv('IP_ADDRESS')}:8000/auth{user_match.team1_player1.avatar.url}",
-				"p1Pic2": f"http://{os.getenv('IP_ADDRESS')}:8000/auth{user_match.team1_player2.avatar.url}",
+				"p1Pic1": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth{user_match.team1_player1.avatar.url}",
+				"p1Pic2": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth{user_match.team1_player2.avatar.url}",
 				"score" : f"{user_match.team1_score} - {user_match.team2_score}",
-				"p2Pic1": f"http://{os.getenv('IP_ADDRESS')}:8000/auth{user_match.team2_player1.avatar.url}",
-				"p2Pic2": f"http://{os.getenv('IP_ADDRESS')}:8000/auth{user_match.team2_player2.avatar.url}",
+				"p2Pic1": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth{user_match.team2_player1.avatar.url}",
+				"p2Pic2": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth{user_match.team2_player2.avatar.url}",
 				"id": user_match.room_id,
 			})
 		return Response(data={"userMatches": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
@@ -463,10 +463,10 @@ def get_multy_match_dtl(request, match_id):
 	if match and match_stq:
 		res_data = {
 			"date": match.date_ended,
-			"pic1": f"http://{os.getenv('IP_ADDRESS')}:8000/auth{match.team1_player1.avatar.url}",
-			"pic2": f"http://{os.getenv('IP_ADDRESS')}:8000/auth{match.team1_player2.avatar.url}",
-			"pic3": f"http://{os.getenv('IP_ADDRESS')}:8000/auth{match.team2_player1.avatar.url}",
-			"pic4": f"http://{os.getenv('IP_ADDRESS')}:8000/auth{match.team2_player2.avatar.url}",
+			"pic1": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth{match.team1_player1.avatar.url}",
+			"pic2": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth{match.team1_player2.avatar.url}",
+			"pic3": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth{match.team2_player1.avatar.url}",
+			"pic4": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth{match.team2_player2.avatar.url}",
 			"user1": match.team1_player1.username,
 			"user2": match.team1_player2.username,
 			"user3": match.team2_player1.username,
@@ -522,7 +522,7 @@ def get_tourn_matches(request, username, page, items):
 					res_data.append({
 						"type" : type,
 						"tourId" : tournament.tournament_id,
-						"pic": f"http://{os.getenv('IP_ADDRESS')}:8000/auth{user.avatar.url}",
+						"pic": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth{user.avatar.url}",
 					})
 		return Response(data={"data": res_data, "hasMoreMatches": has_more_matches}, status=status.HTTP_200_OK)
 	return Response(data={'error': 'User not found!'}, status=status.HTTP_404_NOT_FOUND)
@@ -567,7 +567,7 @@ def enable_user_tfq(request):
 			os.remove(qr_path)
 		res = {
 			"key": user_tfq.key,
-			"img": f"http://{os.getenv('IP_ADDRESS')}:8000/auth{user_tfq.qr_code.url}"
+			"img": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth{user_tfq.qr_code.url}"
 		}
 		return Response(data={"data": res}, status=status.HTTP_200_OK)
 	return Response(data={'error': 'Error Generating QrCode'}, status=status.HTTP_400_BAD_REQUEST)

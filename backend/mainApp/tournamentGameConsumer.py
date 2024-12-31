@@ -176,7 +176,7 @@ async def send_playing_status_to_friends(self, user, status, user_channels):
 						'id': user.id,
 						'name': user.username,
 						'level': 2,
-						'image': f"http://{ip_address}:8000/auth{user.avatar.url}"
+						'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user.avatar.url}"
 					}
 				}
 			})
@@ -201,7 +201,7 @@ async def send_winner_data(self, user, round_reached, tournament_id):
 			"id" : user.id,
 			"name": user.username,
 			"level" : match_statistics.level,
-			"image" : f"http://{ip_address}:8000/auth{user.avatar.url}",
+			"image" : f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user.avatar.url}",
 			"round_reached": round_reached['round_reached'],
 			"position": round_reached['position'],
 			"tournament_id": tournament_id
@@ -776,7 +776,7 @@ async def validatePlayerTournamentGame(self, data, tournament_rooms, user_channe
 							if (player):
 								users.append({
 									'name': player.username,
-									'avatar': f"http://{ip_address}:8000/auth{player.avatar.url}",
+									'avatar': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{player.avatar.url}",
 									'level': 2.4
 								})
 						await self.send(text_data=json.dumps({
@@ -808,7 +808,7 @@ async def validatePlayerTournamentGame(self, data, tournament_rooms, user_channe
 							if (player):
 								users.append({
 									'name': player.username,
-									'avatar': f"http://{ip_address}:8000/auth{player.avatar.url}",
+									'avatar': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{player.avatar.url}",
 									'level': 2.4
 								})
 						await self.send(text_data=json.dumps({
