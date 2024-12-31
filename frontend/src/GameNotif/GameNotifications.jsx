@@ -49,8 +49,7 @@ const GameNotifications = (props) => {
   }) => {
     const addNewNotification = async () => {
       const response = await fetch(
-        `http://${
-          import.meta.env.VITE_IPADDRESS
+        `http://${import.meta.env.VITE_IPADDRESS
         }:8000/navBar/add_notification/`,
         {
           method: "POST",
@@ -66,6 +65,9 @@ const GameNotifications = (props) => {
           }),
         }
       );
+      if (response.status === 401) {
+        navigate("/signin");
+      }
       const res = await response.json();
       //   if (res) setFriendSuggestions(res);
     };
@@ -107,7 +109,7 @@ const GameNotifications = (props) => {
     {
       if (
         newReceivedFriendReqNotif &&
-        location.pathname !== "/mainpage/friendship"
+        location.pathname !== "/mainpage/Friendship"
       ) {
         console.log("pathname notify", location.pathname);
         notify();
@@ -158,8 +160,7 @@ const GameNotifications = (props) => {
   useEffect(() => {
     const getTournamentWarning = async () => {
       const response = await fetch(
-        `http://${
-          import.meta.env.VITE_IPADDRESS
+        `http://${import.meta.env.VITE_IPADDRESS
         }:8000/api/get-tournament-warning`,
         {
           method: "POST",
@@ -175,7 +176,8 @@ const GameNotifications = (props) => {
       if (response.ok) {
         const data = await response.json();
         if (data.Case === "yes") setCreatedAt(new Date(data.time));
-      }
+      } else if (response.status === 401)
+        navigate('/signin')
     };
     if (user) getTournamentWarning();
   }, [user]);
@@ -239,8 +241,7 @@ const GameNotifications = (props) => {
         );
       } else if (sender.mode === "TournamentInvitation") {
         const response = await fetch(
-          `http://${
-            import.meta.env.VITE_IPADDRESS
+          `http://${import.meta.env.VITE_IPADDRESS
           }:8000/api/get-tournament-size`,
           {
             method: "POST",
@@ -289,9 +290,8 @@ const GameNotifications = (props) => {
               })
             );
           }
-        } else {
-          console.error("Failed to fetch data");
-        }
+        } else if (response.status === 401)
+          navigate('/signin')
       }
     }
   };
@@ -459,7 +459,7 @@ const GameNotifications = (props) => {
           props.setAllFriends((prev) =>
             prev.filter((friend) => friend.name !== message.second_username)
           );
-          props.setAllChatRoomMembers ((prev) =>
+          props.setAllChatRoomMembers((prev) =>
             prev.filter((member) => member.name !== message.second_username)
           );
         } else if (
@@ -475,6 +475,15 @@ const GameNotifications = (props) => {
             status: "",
             avatar: "",
           });
+        } else if (type === 'user_join_tournament') {
+          let tournament_id = message.tournament_id
+					props.setTournamentSuggestions(prevSuggestions =>
+						prevSuggestions.map(tournament =>
+							tournament.tournament_id == tournament_id
+								? { ...tournament, size: tournament.size + 1 }
+								: tournament
+						)
+					);
         }
       };
     }

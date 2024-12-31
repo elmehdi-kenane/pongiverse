@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useContext, useEffect, useRef } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import { formatDistanceToNowStrict } from "date-fns";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useScrollTrigger } from "@mui/material";
 import { trimStringWithEllipsis } from "../GameNotif/GameNotifications";
 
@@ -21,7 +21,7 @@ const NotificationsIcon = ({
   const [isShowMore, setIsShowMore] = useState(false);
   const notificationDropDownRef = useRef(null);
   const notificationIconRef = useRef(null);
-
+  const navigate = useNavigate();
   const handleClickOutside = (event) => {
     if (
       notificationDropDownRef &&
@@ -43,14 +43,15 @@ const NotificationsIcon = ({
     const getNotifications = async () => {
       try {
         const response = await fetch(
-          `http://${
-            import.meta.env.VITE_IPADDRESS
+          `http://${import.meta.env.VITE_IPADDRESS
           }:8000/navBar/get_notifications/${user}`,
           {
             method: "GET",
             credentials: "include",
           }
         );
+        if (response.status === 401)
+          navigate('/signin')
         const res = await response.json();
         if (res) {
           console.log("notifications", res);
@@ -78,8 +79,7 @@ const NotificationsIcon = ({
 
   const handleClearAllNotifications = () => {
     fetch(
-      `http://${
-        import.meta.env.VITE_IPADDRESS
+      `http://${import.meta.env.VITE_IPADDRESS
       }:8000/navBar/clear_all_notifications/`,
       {
         method: "POST",
@@ -116,63 +116,63 @@ const NotificationsIcon = ({
             <div className="notifications-items">
               {isShowMore === true
                 ? notifications.map((notification, index) => {
-                    return (
-                      <Link
-                        key={index}
-                        className="notification-item"
-                        to={notification.url_redirection}
-                        onClick={() => {
-                          setNotificationsDropDownisOpen(false);
-                        }}
-                      >
-                        <img
-                          src={notification.avatar}
-                          alt="profile-pic"
-                          className="profile-pic"
-                        />
-                        <p className="notification-text">
-                          {notification.notification_text}
-                        </p>
-                        <p className="SentFriendReqCardSendAt">
-                          {formatDistanceToNowStrict(
-                            new Date(notification.send_at),
-                            {
-                              addSuffix: true,
-                            }
-                          )}
-                        </p>
-                      </Link>
-                    );
-                  })
+                  return (
+                    <Link
+                      key={index}
+                      className="notification-item"
+                      to={notification.url_redirection}
+                      onClick={() => {
+                        setNotificationsDropDownisOpen(false);
+                      }}
+                    >
+                      <img
+                        src={notification.avatar}
+                        alt="profile-pic"
+                        className="profile-pic"
+                      />
+                      <p className="notification-text">
+                        {notification.notification_text}
+                      </p>
+                      <p className="SentFriendReqCardSendAt">
+                        {formatDistanceToNowStrict(
+                          new Date(notification.send_at),
+                          {
+                            addSuffix: true,
+                          }
+                        )}
+                      </p>
+                    </Link>
+                  );
+                })
                 : notifications.slice(0, 5).map((notification, index) => {
-                    return (
-                      <Link
-                        key={index}
-                        className="notification-item"
-                        to={notification.url_redirection}
-                        onClick={() => {
-                          setNotificationsDropDownisOpen(false);
-                        }}
-                      >
-                        <img
-                          src={notification.avatar}
-                          alt="profile-pic"
-                          className="profile-pic"
-                        />
-                        <p className="notification-text">
-                          {notification.notification_text}
-                        </p>
-                        <p className="SentFriendReqCardSendAt">
-                          {formatDistanceToNowStrict(
-                            new Date(notification.send_at),
-                            {
-                              addSuffix: true,
-                            }
-                          )}
-                        </p>
-                      </Link>
-                    );
-                  })}
+                  return (
+                    <Link
+                      key={index}
+                      className="notification-item"
+                      to={notification.url_redirection}
+                      onClick={() => {
+                        setNotificationsDropDownisOpen(false);
+                      }}
+                    >
+                      <img
+                        src={notification.avatar}
+                        alt="profile-pic"
+                        className="profile-pic"
+                      />
+                      <p className="notification-text">
+                        {notification.notification_text}
+                      </p>
+                      <p className="SentFriendReqCardSendAt">
+                        {formatDistanceToNowStrict(
+                          new Date(notification.send_at),
+                          {
+                            addSuffix: true,
+                          }
+                        )}
+                      </p>
+                    </Link>
+                  );
+                })}
             </div>
             <hr></hr>
             <div className="manageNotificationsBtns">

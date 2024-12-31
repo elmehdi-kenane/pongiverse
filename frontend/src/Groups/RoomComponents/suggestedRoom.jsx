@@ -2,25 +2,26 @@ import { useContext } from "react";
 import AuthContext from "../../navbar-sidebar/Authcontext";
 import toast from "react-hot-toast";
 import ChatContext from "../../Context/ChatContext";
+import { useNavigate } from "react-router-dom";
 
 const SuggestedRoom = (props) => {
-  const {user} = useContext(AuthContext)
-  const {suggestedChatRoomsRef , setSuggestedChatRooms} = useContext(ChatContext)
-
+  const { user } = useContext(AuthContext)
+  const { suggestedChatRoomsRef, setSuggestedChatRooms } = useContext(ChatContext)
+  const navigate = useNavigate();
   const joinChatRoomSubmitter = async () => {
     const toastId = toast.loading("Joining the chat room...");
-    try  {
+    try {
       const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/joinChatRoom`, {
         method: 'POST',
         credentials: "include",
-        headers: {'Content-type': 'application/json'},
+        headers: { 'Content-type': 'application/json' },
         body: JSON.stringify({
-          user : user,
+          user: user,
           roomId: props.roomId
         })
       })
       const data = await response.json()
-      if(response.ok) { 
+      if (response.ok) {
         setTimeout(() => {
           toast.success("Successfully joined the chat room!");
           toast.dismiss(toastId); // Dismiss the loading toast
@@ -32,7 +33,9 @@ const SuggestedRoom = (props) => {
           const currentChatRooms = props.myChatRooms;
           props.setMyChatRooms([...currentChatRooms, data.room]);
         }, 2000); // Adjust the delay time (in milliseconds) as needed
-      } else {
+      } else if (response.status === 401)
+        navigate('/signin');
+      else {
         setTimeout(() => {
           toast.dismiss(toastId); // Dismiss the loading toast
           toast.error(data.error)

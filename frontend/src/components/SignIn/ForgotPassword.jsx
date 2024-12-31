@@ -142,7 +142,7 @@ function ForgotPassword() {
 	return (
 		<div className={styles["full_page"]}>
 			{
-				location.pathname === "/forgotpassword" &&
+				location.pathname === "/ForgotPassword" &&
 				<div className={styles['forgot-password-navbar']}>
 					<img src={logo} alt="" onClick={navigating} />
 				</div>

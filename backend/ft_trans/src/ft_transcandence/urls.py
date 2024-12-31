@@ -26,6 +26,7 @@ urlpatterns = [
     path('profile/', include('Profile.urls')),
     path('navBar/', include('navBar.urls')),
     path('friends/',include('friends.urls')),
+    path('', include('django_prometheus.urls')),
     # path('users/', include('Profile.urls')),
     # path('profile/', include('Profile.urls')),
     # path('admin/', admin.site.urls),

@@ -3,6 +3,7 @@ import AuthContext from "../navbar-sidebar/Authcontext";
 import mavPic from "../assets/Profile/Group.svg"
 import bg from "../assets/Profile/bg1.jpg"
 import toast from 'react-hot-toast';
+import { useNavigate } from "react-router-dom";
 
 const SettingsContext = createContext();
 
@@ -14,7 +15,7 @@ export const SettingsWrapper = ({ child }) => {
     const [isInfo, setIsInfo] = useState(true);
     const [userData, setUserData] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
-
+    const navigate = useNavigate();
     const [userPic, setUserPic] = useState(mavPic);
     const [userBg, setUserBg] = useState(bg);
     const [userEmail, setUserEmail] = useState('');
@@ -22,22 +23,22 @@ export const SettingsWrapper = ({ child }) => {
     const [userLevel, setUserLevel] = useState(null);
     const [userCountry, setUserCountry] = useState(null);
     const [userTfq, setUserTfq] = useState(false);
-    
+
 
     const notifySuc = (suc) => toast.success(suc);
     const notifyErr = (err) => toast.error(err);
 
-    useEffect(()=>{
+    useEffect(() => {
         const url = window.location.href;
         const checkUrlEnd = () => {
             if (url.endsWith('/') || url.endsWith('/settings'))
                 setIsInfo(true)
             else if (url.endsWith('/security'))
                 setIsInfo(false)
-            };
-            if (url)
-                checkUrlEnd();
-    },[window.location.href])
+        };
+        if (url)
+            checkUrlEnd();
+    }, [window.location.href])
 
     useEffect(() => {
         const getUserData = async () => {
@@ -53,6 +54,9 @@ export const SettingsWrapper = ({ child }) => {
                 if (response.ok) {
                     // console.log("Response userData : ", res.userData);
                     setUserData(res.userData);
+                }
+                else if (response.status === 401) {
+                    navigate("/signin")
                 }
                 else
                     console.log("Error : ", res.error);
@@ -109,11 +113,11 @@ export const SettingsWrapper = ({ child }) => {
 
         isInfo: isInfo,
         setIsInfo: setIsInfo,
-        isLoading:isLoading,
-        setIsLoading:setIsLoading,
+        isLoading: isLoading,
+        setIsLoading: setIsLoading,
 
-        notifySuc:notifySuc,
-        notifyErr:notifyErr
+        notifySuc: notifySuc,
+        notifyErr: notifyErr
 
     };
     return (

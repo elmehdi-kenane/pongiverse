@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState, useContext, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import AuthContext from "../navbar-sidebar/Authcontext";
 import { use } from "react";
 const ChatContext = createContext();
@@ -7,6 +7,7 @@ export default ChatContext;
 
 export const ChatProvider = ({ child }) => {
   let location = useLocation();
+  const navigate = useNavigate();
   const { user, chatSocket } = useContext(AuthContext);
   const [isHome, setIsHome] = useState(true);
   const [chatRoomInvitations, setChatRoomInvitations] = useState([]);
@@ -84,8 +85,7 @@ export const ChatProvider = ({ child }) => {
     const fetchChatRoomInvitations = async () => {
       try {
         const response = await fetch(
-          `http://${
-            import.meta.env.VITE_IPADDRESS
+          `http://${import.meta.env.VITE_IPADDRESS
           }:8000/chatAPI/chatRoomInvitations/${user}`,
           {
             credentials: "include",
@@ -94,6 +94,8 @@ export const ChatProvider = ({ child }) => {
         let data = await response.json();
         if (response.ok) {
           setChatRoomInvitations(data);
+        } else if (response.status === 401) {
+          navigate('/signin')
         }
       } catch (error) {
         console.log(error);
@@ -102,8 +104,7 @@ export const ChatProvider = ({ child }) => {
     const fetchSuggestedChatRooms = async () => {
       try {
         const response = await fetch(
-          `http://${
-            import.meta.env.VITE_IPADDRESS
+          `http://${import.meta.env.VITE_IPADDRESS
           }:8000/chatAPI/suggestedChatRooms/${user}`,
           {
             credentials: "include",
@@ -112,7 +113,9 @@ export const ChatProvider = ({ child }) => {
         let data = await response.json();
         if (response.ok) {
           setSuggestedChatRooms(data);
-        } else console.log("opps!, something went wrong");
+        } else if (response.status === 401)
+          navigate('/signin')
+        else console.log("opps!, something went wrong");
       } catch (error) {
         console.log(error);
       }

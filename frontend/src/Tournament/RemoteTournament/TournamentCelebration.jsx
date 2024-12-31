@@ -50,7 +50,7 @@ function TournamentCelebration() {
 				setFinalMembers(data.roundfinal)
 				setwinnerMember(data.winner)
 			} else {
-				console.error('Failed to fetch data');
+				navigate("/signin")
 			}
 		}
 

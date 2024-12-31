@@ -15,35 +15,36 @@ function ReportFooter() {
   const handleBlockClick = () => {
     setIsBlock(!isBlock);
   }
-  const  HandleCancelReport = () => {
+  const HandleCancelReport = () => {
     setIsReport(false);
   }
-  const  handleReportSubmit = async () => {
+  const handleReportSubmit = async () => {
     try {
       const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/reportUser`, {
-          method: "POST",
-          credentials: "include",
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            reporterUsername: user,
-            reportedUsername: userId,
-            reportMessage: reportValue,
-          }),
+        method: "POST",
+        credentials: "include",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          reporterUsername: user,
+          reportedUsername: userId,
+          reportMessage: reportValue,
+        }),
       });
 
       const res = await response.json()
       if (response.ok) {
-        // console.log(res.case);
       }
-      else
+      else if (response.status === 401) {
+        navigate('/signin');
+      } else
         console.error(res.error);
     } catch (error) {
-        console.error("Error: ", error);
+      console.error("Error: ", error);
     }
 
-    if (isBlock && isFriend === 'true'){
+    if (isBlock && isFriend === 'true') {
       handleBlockFriend(user, userId)
       navigate('/mainpage/dashboard');
     }
@@ -54,14 +55,14 @@ function ReportFooter() {
   return (
     <div className='report__footer'>
       <button className="block-user" onClick={handleBlockClick}>
-        <DoneIcon className={!isBlock ? 'block-icon' : 'block-icon valid-bg'}/>
+        <DoneIcon className={!isBlock ? 'block-icon' : 'block-icon valid-bg'} />
         <p> Block {userId} ? </p>
       </button>
       <div className="report-submit">
         <button className='submit-button submit__cancel' onClick={HandleCancelReport}> Cancel </button>
-        <button 
-          className={(reportValue != null) ?'submit-button submit__report' : 'submit-button need-report'}
-          onClick={reportValue && handleReportSubmit} 
+        <button
+          className={(reportValue != null) ? 'submit-button submit__report' : 'submit-button need-report'}
+          onClick={reportValue && handleReportSubmit}
         > Report </button>
       </div>
     </div>

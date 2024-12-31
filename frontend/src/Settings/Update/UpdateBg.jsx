@@ -3,12 +3,13 @@ import AvatarEditor from "react-avatar-editor";
 import AuthContext from '../../navbar-sidebar/Authcontext';
 import SettingsContext from '../SettingsWrapper';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { useNavigate } from 'react-router-dom';
 
 
 function UpdateBg(props) {
   const { user } = useContext(AuthContext);
   const { setUserBg, notifySuc, notifyErr } = useContext(SettingsContext);
-
+  const navigate = useNavigate();
   const [bgrd, setBg] = useState(null);
   const [scale, setScale] = useState(1.2);
   const editorRef = useRef(null);
@@ -37,7 +38,10 @@ function UpdateBg(props) {
       if (response.ok) {
         notifySuc(res.case);
         setUserBg(updatedPic);
-      } else {
+      } else if (response.status === 401) {
+        navigate('/signin');
+      }
+       else {
         notifyErr(res.error);
       }
     } catch (error) {

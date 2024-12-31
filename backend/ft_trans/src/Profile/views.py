@@ -141,7 +141,7 @@ def update_user_password(request):
 		success_res = Response(data={'case':'New password updated successfully'}, status=status.HTTP_200_OK)
 		return success_res
 	else:
-		err_res = Response(data={'error': 'Wrong current password!'}, status=status.HTTP_401_UNAUTHORIZED)
+		err_res = Response(data={'error': 'Wrong current password!'}, status=status.HTTP_400_BAD_REQUEST)
 		return err_res
 
 #**--------------------- GetFriends User ---------------------** 

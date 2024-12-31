@@ -55,10 +55,13 @@ INSTALLED_APPS = [
     "corsheaders",
     'Profile',
     'rest_framework_simplejwt.token_blacklist',
+    # 'django_prometheus',
 ]
 
 MIDDLEWARE = [
-	'django.middleware.security.SecurityMiddleware',
+    # 'django_prometheus.middleware.PrometheusBeforeMiddleware',
+	
+    'django.middleware.security.SecurityMiddleware',
 	"corsheaders.middleware.CorsMiddleware",
 	'django.contrib.sessions.middleware.SessionMiddleware',
 	'django.middleware.common.CommonMiddleware',
@@ -66,6 +69,13 @@ MIDDLEWARE = [
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'ft_transcandence.prometheus_middleware.latency_middleware',
+	'ft_transcandence.prometheus_middleware.chat_middleware',
+	'ft_transcandence.prometheus_middleware.database_query_time_middleware',
+	'ft_transcandence.prometheus_middleware.user_registrations_counter_middleware',
+	# 'ft_transcandence.prometheus_middleware.active_user_middleware',
+    
+    # 'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
 ROOT_URLCONF = 'ft_transcandence.urls'

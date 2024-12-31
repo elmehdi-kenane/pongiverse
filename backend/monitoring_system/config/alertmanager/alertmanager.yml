@@ -1,0 +1,15 @@
+route:
+  group_by: ["alertname"]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 1h
+  receiver: "default_receiver_email"
+receivers:
+  - name: "default_receiver_email"
+    email_configs:
+    - to: "elmehdi.kenane@gmail.com"
+      from: "my-email@example.com"
+      smarthost: "smtp.gmail.com:587"
+      auth_username: "elmehdi.kenane@gmail.com"
+      auth_identity: "elmehdi.kenane@gmail.com"
+      auth_password: "okojxmjmpqjdmytw"

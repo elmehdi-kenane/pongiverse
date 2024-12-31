@@ -19,13 +19,13 @@ function SignInWays() {
 
   const notifyError = (message) => {
     const toastId = toast.error(message, {
-        position: "top-center",
-        duration: 1500,
+      position: "top-center",
+      duration: 1500,
     });
     setTimeout(() => {
-        toast.dismiss(toastId);
+      toast.dismiss(toastId);
     }, 1500);
-};
+  };
 
 
 
@@ -135,7 +135,7 @@ function SignInWays() {
         setOpenTfq(true);
       }
     } else {
-      console.error('Failed to fetch data');
+      navigate('/signin')
     }
   }
 
@@ -154,7 +154,7 @@ function SignInWays() {
         const response_data = await response.json();
         verify_email(response_data.email)
       } else {
-        console.error('Failed to fetch data');
+        navigate('/signin')
       }
     }
     if (googleCode) {
@@ -179,7 +179,7 @@ function SignInWays() {
         const response_data = await response.json();
         verify_email(response_data.email)
       } else {
-        console.error('Failed to fetch data');
+        navigate('/signin')
       }
     }
     if (intraCode) {
@@ -209,7 +209,7 @@ function SignInWays() {
         const data = await response.json();
         setGoogleAuthUrl(data.code);
       } else {
-        console.error('Failed to fetch data');
+        navigate('/signin')
       }
     }
     getGoogleUrl()
@@ -226,7 +226,7 @@ function SignInWays() {
         const data = await response.json();
         setIntraAuthUrl(data.code);
       } else {
-        console.error('Failed to fetch data');
+        navigate('/signin')
       }
     }
     getIntraUrl()

@@ -51,7 +51,7 @@ function SignUpWays() {
 				navigate('/WaysSecondStep', { state: userData });
 			}
 		} else {
-			console.error('Failed to fetch data');
+			navigate('/signin')
 		}
 	}
 
@@ -70,7 +70,7 @@ function SignUpWays() {
 				const response_data = await response.json();
 				verify_email(response_data.email, response_data.picture)
 			} else {
-				console.error('Failed to fetch data');
+				navigate('/signin')
 			}
 		}
 		if (googleCode) {
@@ -95,7 +95,7 @@ function SignUpWays() {
 				const response_data = await response.json();
 				verify_email(response_data.email, response_data.picture)
 			} else {
-				console.error('Failed to fetch data');
+				navigate('/signin')
 			}
 		}
 		if (intraCode) {
@@ -125,7 +125,7 @@ function SignUpWays() {
 				const data = await response.json();
 				setGoogleAuthUrl(data.code);
 			} else {
-				console.error('Failed to fetch data');
+				navigate('/signin')
 			}
 		}
 		getGoogleUrl()
@@ -142,7 +142,7 @@ function SignUpWays() {
 				const data = await response.json();
 				setIntraAuthUrl(data.code);
 			} else {
-				console.error('Failed to fetch data');
+				navigate('/signin')
 			}
 		}
 		getIntraUrl()

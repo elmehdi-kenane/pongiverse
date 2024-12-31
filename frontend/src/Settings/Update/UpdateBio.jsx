@@ -2,13 +2,14 @@ import React, { useRef, useState, useEffect, useContext } from 'react'
 import AuthContext from '../../navbar-sidebar/Authcontext';
 import EditIcon from '@mui/icons-material/Edit';
 import SettingsContext from '../SettingsWrapper';
+import { useNavigate } from 'react-router-dom';
 
 function UpdateBio() {
   const [isUpdate, setIsUpdate] = useState(false);
   const submit = !isUpdate ? "Update" : "Confirm";
   const inputRef = useRef(null);
   const iconRef = useRef(null);
-
+  const navigate = useNavigate();
   const { user } = useContext(AuthContext)
   const { userBio, setUserBio, notifySuc, notifyErr } = useContext(SettingsContext)
 
@@ -50,6 +51,8 @@ function UpdateBio() {
       if (response.ok) {
         notifySuc(res.case)
         setUserBio(bio)
+      } else if (response.status === 401) {
+        navigate('/signin')
       }
       else
         notifyErr(res.error)

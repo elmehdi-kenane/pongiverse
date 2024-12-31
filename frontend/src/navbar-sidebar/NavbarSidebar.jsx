@@ -9,11 +9,11 @@ import AuthContext from "./Authcontext";
 import { Outlet } from "react-router-dom";
 
 function NavbarSidebar() {
-	const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
-    const location = useLocation()
-	const [isSearchBarMobileOpen, setIsSearchBarMobileOpen] = useState(false);
-    let { user, socket, privateCheckAuth, setUser, hideNavSideBar } = useContext(AuthContext)
-	let navigate = useNavigate()
+  const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
+  const location = useLocation()
+  const [isSearchBarMobileOpen, setIsSearchBarMobileOpen] = useState(false);
+  let { user, socket, privateCheckAuth, setUser, hideNavSideBar } = useContext(AuthContext)
+  let navigate = useNavigate()
 
   // useEffect(() => {
   //   privateCheckAuth();
@@ -41,6 +41,8 @@ function NavbarSidebar() {
           },
         }
       );
+      if (response.status === 401)
+        navigate('/signin')
       let content = await response.json();
       if (content.message) {
         setUser("");

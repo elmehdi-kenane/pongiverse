@@ -25,18 +25,18 @@ const Friends = () => {
       getUsers()
   }, [user])
 
-  const addFriend = async (myuser) => {
-    const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/users/add/${user}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        user : myuser,
-      })
-    })
-    const res = await response.json()
-  }
+  // const addFriend = async (myuser) => {
+  //   const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/users/add/${user}`, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify({
+  //       user : myuser,
+  //     })
+  //   })
+  //   const res = await response.json()
+  // }
 
   useEffect(() => {
     const getUsers = async () => {

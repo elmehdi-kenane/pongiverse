@@ -92,7 +92,6 @@ export const AuthProvider = ({ children }) => {
 	}, [socket])
 
 	useEffect(() => {
-		console.log("s")
 		if (checkPrivateAuthRegex.test(location.pathname))
 			privateCheckAuth();
 		else if (
@@ -123,6 +122,8 @@ export const AuthProvider = ({ children }) => {
 						}),
 					}
 				);
+				if (response.status === 401)
+					navigate('/signin')
 				let friends = await response.json();
 				console.log("hellooo   ", friends.message)
 				if (friends.message.length) setAllGameFriends(friends.message);
@@ -148,6 +149,8 @@ export const AuthProvider = ({ children }) => {
 						}),
 					}
 				);
+				if (response.status === 401)
+					navigate('/signin')
 				let friends = await response.json();
 				console.log("*****Friends: ", friends)
 				setAllGameNotifs(friends.message);
@@ -171,6 +174,8 @@ export const AuthProvider = ({ children }) => {
 						}),
 					}
 				);
+				if (response.status === 401)
+					navigate('/signin')
 				let data = await response.json()
 				setUserImg(data.image);
 			} catch (e) {
@@ -186,6 +191,8 @@ export const AuthProvider = ({ children }) => {
 						credentials: "include",
 					}
 				);
+				if (response.status === 401)
+					navigate('/signin')
 				const res = await response.json();
 				console.log(res);
 				if (res.data) setGameCustomize(res.data);
@@ -263,6 +270,8 @@ export const AuthProvider = ({ children }) => {
 						}),
 					}
 				);
+				if (response.status === 401)
+					navigate('/signin')
 				let data = await response.json();
 				if (!data.error) {
 					(data.mode === 'tournament') ? navigate('mainpage/game/createtournament') : (data.mode === '1vs1') ? navigate('/mainpage/game/solo/1vs1/random') : navigate('/mainpage/game/solo/2vs2/random')
@@ -304,6 +313,8 @@ export const AuthProvider = ({ children }) => {
 					}),
 				}
 			);
+			if (response.status === 401)
+				navigate('/signin')
 			const res = await response.json();
 			//   if (res) setFriendSuggestions(res);
 		};
@@ -342,6 +353,8 @@ export const AuthProvider = ({ children }) => {
 						}),
 					}
 				);
+				if (response.status === 401)
+					navigate('/signin')
 				let data = await response.json();
 				const newUser = {
 					id: data.id,
@@ -459,6 +472,9 @@ export const AuthProvider = ({ children }) => {
 					is_inside: flag
 				})
 			})
+			if (response.status === 401) {
+				navigate('/signin')
+			}
 		}
 		if (user) {
 			if (location.pathname !== "/mainpage/game/createtournament" && location.pathname !== "/mainpage/game/tournamentbracket")
@@ -482,7 +498,9 @@ export const AuthProvider = ({ children }) => {
 				const data = await response.json();
 				if (response.ok) {
 					setChatRoomInvitationsCounter(data.count);
-				} else {
+				} else if (response.status === 401)
+					navigate('/signin')
+				else {
 					console.log("Error in getting unrecieved room invitee");
 				}
 			} catch (error) {
@@ -500,10 +518,13 @@ export const AuthProvider = ({ children }) => {
 					credentials: "include",
 				}
 				);
+				if (response.status === 401)
+					navigate('/signin')
 				const data = await response.json();
 				if (response.ok) {
 					setChatNotificationCounter(data.count);
-				} else {
+				}
+				else {
 					console.log("Error in getting unread conversations");
 				}
 			} catch (error) {
@@ -534,6 +555,8 @@ export const AuthProvider = ({ children }) => {
 					credentials: "include",
 				}
 			);
+			if (response.status === 401)
+				navigate('/signin')
 			response = await response.json();
 			if (response.Case !== "Invalid token") {
 				setUser(response.data.username);
@@ -558,9 +581,9 @@ export const AuthProvider = ({ children }) => {
 					credentials: "include",
 				}
 			);
-			console.log("DATA: ", response);
+			// console.log("DATA: ", response);
 			response = await response.json();
-			console.log("RESPONSE: ", response);
+			// console.log("RESPONSE: ", response);
 			if (response.Case !== "Invalid token") {
 				setUser(response.data.username);
 			} else {

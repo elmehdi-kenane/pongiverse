@@ -25,7 +25,8 @@ const ProfileIcon = ({ Icons, profileHandleDropDown, profileDropDownisOpen }) =>
                 setUser("");
                 setUserImg(null)
                 navigate("/signin");
-            }
+            } else if (response.status === 401)
+                navigate("/signin");
         } catch (e) {
             console.log("Error in network or URL");
         }

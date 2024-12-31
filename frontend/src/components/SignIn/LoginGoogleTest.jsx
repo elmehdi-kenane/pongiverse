@@ -49,7 +49,7 @@ function LoginGoogleTest() {
 				alert("there is no account")
 			}
 		} else {
-			console.error('Failed to fetch data');
+			navigate('/signin')
 		}
 	}
 

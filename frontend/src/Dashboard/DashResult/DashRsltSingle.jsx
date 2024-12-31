@@ -30,7 +30,7 @@ function DashRsltSingle() {
       setMatchDate(formattedDate);
       setMatchTime(formattedTime)
     }
-    
+
     const getMatchDtls = async () => {
       try {
         const response = await fetch(
@@ -44,13 +44,15 @@ function DashRsltSingle() {
           }
         );
         const res = await response.json();
-        if (response.ok){
-            // console.log("data :", res.data);
-            setMatchDtls(res.data)
-            getDateFormat(res.data.date)
+        if (response.ok) {
+          // console.log("data :", res.data);
+          setMatchDtls(res.data)
+          getDateFormat(res.data.date)
         }
-        else 
-            console.log("Error : ", res.error);
+        else if (response.status === 401)
+          navigate('/signin')
+        else
+          console.log("Error : ", res.error);
       } catch (error) {
         console.log("Error: ", error);
       }
@@ -60,7 +62,7 @@ function DashRsltSingle() {
       getMatchDtls();
   }, [singleId]);
 
-  
+
   const profileNavigate = (user) => {
     setIsGameStats(false);
     setSingleId(null);
@@ -72,14 +74,14 @@ function DashRsltSingle() {
       <h1> Single Match Results </h1>
       <div className="result__field-sgl">
         <div className="field__img-name" >
-          <img src={matchDtls.pic1} onClick={()=>profileNavigate(matchDtls.user1)}/>
+          <img src={matchDtls.pic1} onClick={() => profileNavigate(matchDtls.user1)} />
         </div>
         <div className="field__date">
           <p>{matchTime}</p>
           <p>{matchDate}</p>
         </div>
         <div className="field__img-name">
-          <img src={matchDtls.pic2} onClick={()=>profileNavigate(matchDtls.user2)}/>
+          <img src={matchDtls.pic2} onClick={() => profileNavigate(matchDtls.user2)} />
         </div>
       </div>
       <div className="result__field-sgl">

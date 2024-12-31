@@ -322,7 +322,7 @@ function createParticle(x, y) {
 				if (data.Case === 'not joining a tournament')
 					navigate("../game")
 			} else {
-				console.error('Failed to fetch data');
+				navigate("/signin")
 			}
 		}
 		if (user)

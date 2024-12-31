@@ -119,23 +119,10 @@ function CreateTournament() {
 				setTournamentId(data.tournament_id)
 				setTournamentMembers(allMembers)
 			} else {
-				console.error('Failed to fetch data');
+				navigate("/signin")
 			}
 		}
 
-		const set_is_inside = async () => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/set-is-inside`, {
-				method: 'POST',
-				credentials: "include",
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-					user: user,
-					is_inside: true
-				})
-			})
-		}
 
 		const check_is_join = async () => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/is-joining-tournament`, {
@@ -155,7 +142,7 @@ function CreateTournament() {
 				else
 					navigate("../game")
 			} else {
-				console.error('Failed to fetch data');
+				navigate("/signin")
 			}
 		}
 		const check_is_started_and_not_finished = async () => {
@@ -176,12 +163,11 @@ function CreateTournament() {
 				else
 					check_is_join()
 			} else {
-				console.error('Failed to fetch data');
+				navigate("/signin")
 			}
 		}
 		if (user) {
 			check_is_started_and_not_finished()
-			set_is_inside()
 		}
 	}, [user])
 
@@ -209,7 +195,7 @@ function CreateTournament() {
 					return prevTournamentMembers;
 				});
 			} else {
-				console.error('Failed to fetch data');
+				navigate("/signin")
 			}
 		}
 		if (socket && socket.readyState === WebSocket.OPEN) {

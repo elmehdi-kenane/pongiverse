@@ -8,11 +8,13 @@ import ChatContext from "../../Context/ChatContext";
 import { toast } from "react-hot-toast";
 
 import "../../assets/chat/Groups.css";
+import { useNavigate } from "react-router-dom";
 
-const CreateRoom = ({setCreateRoom, setIsBlur, myChatRooms, setMyChatRooms}) => {
+const CreateRoom = ({ setCreateRoom, setIsBlur, myChatRooms, setMyChatRooms }) => {
   let errorsContainer = {};
   const { user, chatSocket } = useContext(AuthContext);
   const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     topic: "A friendly space to connect, share ideas, and enjoy meaningful conversations",
@@ -64,7 +66,7 @@ const CreateRoom = ({setCreateRoom, setIsBlur, myChatRooms, setMyChatRooms}) => 
       const chatRoomCreation = async () => {
         // Show the loading toast and handle the promise
         const toastId = toast.loading("Room is being created...");
-        
+
         try {
           // Perform the fetch request
           const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/createChatRoom`, {
@@ -72,24 +74,26 @@ const CreateRoom = ({setCreateRoom, setIsBlur, myChatRooms, setMyChatRooms}) => 
             credentials: "include",
             body: data,
           });
-          
+
           // Handle the response
           const responseData = await response.json();
-          
+
           // Simulate delay before showing the success toast
-          if(response.ok) {
+          if (response.ok) {
             setTimeout(() => {
               toast.success("Room created successfully!");
               toast.dismiss(toastId); // Dismiss the loading toast
               const currentChatRooms = myChatRooms;
               setMyChatRooms([...currentChatRooms, responseData.room]);
             }, 2000); // Adjust the delay time (in milliseconds) as needed
-          } else {
+          } else if (response.status === 401)
+            navigate('/signin');
+          else {
             setTimeout(() => {
               toast.dismiss(toastId); // Dismiss the loading toast
               toast.error(responseData.error)
             }, 500);
-          } 
+          }
         } catch (error) {
           // Handle error case
           toast.error("Failed to create room.");

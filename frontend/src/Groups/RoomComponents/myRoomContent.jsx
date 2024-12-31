@@ -11,7 +11,7 @@ const MyRoomContent = (props) => {
   let chatRoomCoverRef = useRef(chatRoomCover)
 
   const navigateToChatRoom = () => {
-    console.log("Room ID: ",props.roomId)
+    console.log("Room ID: ", props.roomId)
     setSelectedChatRoom({
       id: props.roomId,
       name: props.name,
@@ -55,18 +55,20 @@ const MyRoomContent = (props) => {
           });
           props.setMyChatRooms(updatedRooms);
         }, 2000); // Adjust the delay time (in milliseconds) as needed
-      } else toast.error(data.error);
+      } else if (response.status === 401)
+        navigate('/signin');
+      else toast.error(data.error);
     } catch (error) {
       toast.error(error);
       toast.dismiss(toastId);
     }
   };
 
-  useEffect(()=> {
-      chatRoomCoverRef.current = chatRoomCover
-      if(chatRoomCover) {
-        udpateChatRoomCover();
-      }
+  useEffect(() => {
+    chatRoomCoverRef.current = chatRoomCover
+    if (chatRoomCover) {
+      udpateChatRoomCover();
+    }
   }, [chatRoomCover])
 
   const onChangeIcon = (event) => {

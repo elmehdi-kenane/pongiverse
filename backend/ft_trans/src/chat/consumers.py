@@ -35,7 +35,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 	async def receive(self, text_data):
 		data = json.loads(text_data)
-		print("recived: ", data)
 		if data['type'] == 'addUserChannelGroup': await chat_consumers.add_user_channel_group(self, data)
 		elif data['type'] == 'message': await chat_consumers.message(self, data)
 		elif data['type'] == 'directMessage': await chat_consumers.direct_message(self, data, user_channels)

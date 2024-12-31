@@ -1,13 +1,14 @@
 import ChatContext from "../../Context/ChatContext";
 import { useContext, useState } from "react";
 import { toast } from "react-hot-toast";
-
+import { useNavigate } from "react-router-dom";
 const ChangeChatRoomName = (props) => {
   const [newRoomName, setNewRoomName] = useState("");
-  
+  const navigate = useNavigate();
   //update the chat room name in the chatRoomConversatios array
   const chatRoomNameChangedUpdater = (data) => {
     const allMyChatRooms = props.myChatRooms;
+
     const updatedRooms = allMyChatRooms.map((room) => {
       if (room.id === data.id) {
         return { ...room, name: data.newName };
@@ -33,6 +34,8 @@ const ChangeChatRoomName = (props) => {
             body: JSON.stringify({ name: newRoomName }),
           }
         );
+        if (response.status === 401)
+          navigate('/signin')
         const data = await response.json();
         chatRoomNameChangedUpdater(data.data);
       } catch (error) {

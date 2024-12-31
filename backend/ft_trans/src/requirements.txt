@@ -37,3 +37,4 @@ requests
 python-dotenv
 pyotp
 qrcode
+django_prometheus

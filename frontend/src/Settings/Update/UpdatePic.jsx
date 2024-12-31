@@ -40,7 +40,8 @@ function UpdatePic(props) {
         if (response.ok){
           notifySuc(res.case);
           setUserBg(base64Bg);
-        }
+        } else if (response.status === 401)
+          navigate('/signin');
         else
           notifyErr(res.error);
       } catch (error) {
