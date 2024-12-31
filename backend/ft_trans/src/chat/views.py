@@ -573,7 +573,6 @@ def reset_chat_room_unread_messages(request):
 @api_view(["POST"])
 def reset_unread_messages(request):
     if request.method == "POST":
-        print("************* hhhh")
         try:
             user = customuser.objects.get(username=request.data.get("user"))
         except customuser.DoesNotExist:

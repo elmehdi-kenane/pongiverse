@@ -23,8 +23,6 @@ const ChatConversationSearchItem = (props) => {
         name: props.name,
         membersCount: props.membersCount,
         icon: props.icon,
-        cover: props.cover,
-        topic: props.topic,
       });
       let allChatRooms = props.chatRooms;
       const updatedChatRooms = allChatRooms.map((room) => {

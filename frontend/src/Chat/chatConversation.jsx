@@ -7,7 +7,6 @@ import ChatConversationBody from "./chatConversationBody";
 import { resetUnreadMessages } from "./chatConversationItem";
 import { useNavigate } from "react-router-dom";
 
-
 export let useClickOutSide = (handler) => {
   let domNode = useRef();
   useEffect(() => {
@@ -30,7 +29,6 @@ const ChatConversation = ({
   setDirects,
   searchValue,
   setSearchValue,
-  directsSearch,
   setDirectsSearch,
 }) => {
   const [showDirectOptions, setShowDirectOptions] = useState(false);
@@ -115,7 +113,7 @@ const ChatConversation = ({
         }:8000/chatAPI/Directs/messages?page=${currentMessagePage}`,
         {
           method: "POST",
-          credentials: 'include',
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },
@@ -180,21 +178,6 @@ const ChatConversation = ({
     });
   };
 
-  useEffect(() => {
-    if (messageEndRef && messageEndRef.current) {
-      messageEndRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-        top: messageEndRef.current.offsetTop - 50,
-      });
-      messageEndRef.current.scrollTop = messageEndRef.current.scrollHeight;
-      updateLastMessage();
-      setFirstScroll(false);
-    }
-  }, [messages, lastMessage]);
-
-
-
   const handelScroll = (e) => {
     if (messageBodyRef.current) {
       const { scrollTop } = messageBodyRef.current;
@@ -204,6 +187,40 @@ const ChatConversation = ({
       }
     }
   };
+
+
+  // useEffect(() => {
+  //   if (messageEndRef && messageEndRef.current && messageBodyRef && messageBodyRef.current) {
+  //     // Calculate the scroll offset relative to the container
+  //     const messageEndOffset = messageEndRef.current.offsetTop;
+  //     const containerHeight = messageBodyRef.current.clientHeight;
+  
+  //     // Adjust scroll position to ensure the last message is visible
+  //     messageBodyRef.current.scrollTop = messageEndOffset - containerHeight + messageEndRef.current.clientHeight;
+  
+  //     updateLastMessage();
+  //     setFirstScroll(false);
+  //   }
+  // }, [messages, lastMessage]);
+
+  useEffect(() => {
+    if (messageEndRef && messageEndRef.current && messageBodyRef && messageBodyRef.current) {
+      // Calculate the scroll offset relative to the container
+      const messageEndOffset = messageEndRef.current.offsetTop;
+      const containerHeight = messageBodyRef.current.clientHeight;
+  
+      // Smooth scroll to the calculated position
+      messageBodyRef.current.scrollTo({
+        top: messageEndOffset - containerHeight + messageEndRef.current.clientHeight,
+        behavior: "smooth", // Enable smooth scrolling
+      });
+  
+      updateLastMessage();
+      setFirstScroll(false);
+    }
+  }, [messages, lastMessage]);
+  
+  
 
   return (
     <>

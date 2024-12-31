@@ -156,9 +156,42 @@ const ChatRoomConversation = ({
     });
   };
 
+  // useEffect(() => {
+  //   if (messageEndRef && messageEndRef.current) {
+  //     messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+  //     updateLastMessage();
+  //     setFirstScroll(false);
+  //   }
+  // }, [chatRoomMessages, lastMessage]);
+  // const isSmallScreen = window.innerWidth <= 768;
+
+  // useEffect(() => {
+  //   if (messageEndRef && messageEndRef.current) {
+  //     // if (isSmallScreen) {
+  //       messageEndRef.current.scrollIntoView({
+  //         behavior: "smooth",
+  //         block: "nearest",
+  //         inline: "start",
+  //       });
+  //     // } else {
+  //     //   messageEndRef.current.scrollTop = messageEndRef.current.scrollHeight;
+  //     // }
+  //     updateLastMessage();
+  //     setFirstScroll(false);
+  //   }
+  // }, [chatRoomMessages, lastMessage]);
+
+
   useEffect(() => {
-    if (messageEndRef && messageEndRef.current) {
-      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    if (messageEndRef && messageEndRef.current && messageBodyRef && messageBodyRef.current) {
+      const messageEndOffset = messageEndRef.current.offsetTop;
+      const containerHeight = messageBodyRef.current.clientHeight;
+
+      // messageBodyRef.current.scrollTop = messageEndOffset - containerHeight + messageEndRef.current.clientHeight;
+      messageBodyRef.current.scrollTop ({
+        top: messageEndOffset - containerHeight + messageEndRef.current.clientHeight,
+        behavior: "smooth"
+      })
       updateLastMessage();
       setFirstScroll(false);
     }

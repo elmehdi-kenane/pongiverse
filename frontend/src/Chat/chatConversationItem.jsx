@@ -20,7 +20,7 @@ export const resetUnreadMessages = async (user, friendId, navigate) => {
         }),
       }
     );
-    console.log(response);
+    // console.log(response);
     if (response.status === 401)
       navigate("/signin")
   } catch (error) {
@@ -80,8 +80,6 @@ const ChatConversationItem = (props) => {
         name: props.name,
         membersCount: props.membersCount,
         icon: props.icon,
-        cover: props.cover,
-        topic: props.topic,
       });
       let allChatRooms = props.chatRooms;
       const updatedRooms = allChatRooms.map((room) => {

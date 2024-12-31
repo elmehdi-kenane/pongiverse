@@ -148,8 +148,6 @@ const Chat = () => {
         name: "",
         membersCount: "",
         icon: "",
-        cover: "",
-        topic: "",
       });
     };
 
@@ -200,7 +198,6 @@ const Chat = () => {
         );
         const { next, results } = await response.json();
         if (response.ok) {
-          // console.log("RESPONSE: ", response)
           setDirects((prevConversations) => {
             let allDirects = [...prevConversations, ...results];
             if (Object.values(selectedDirect).every((value) => value !== "")) {

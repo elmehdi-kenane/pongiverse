@@ -21,10 +21,9 @@ export const ChatProvider = ({ child }) => {
   // const [directs, setDirects] = useState([]);
   const [myChatRooms, setMyChatRooms] = useState([]);
   const myChatRoomsRef = useRef(myChatRooms);
+  const [hasMoreRooms, setHasMoreRooms] = useState(true);
   useEffect(() => {
-    console.log("inside the chat context", location.pathname);
     myChatRoomsRef.current = myChatRooms;
-    console.log("chat Context myChatRoomsRef.current", myChatRoomsRef.current);
   }, [myChatRooms]);
   const [chatRooms, setChatRooms] = useState([]);
 
@@ -37,8 +36,6 @@ export const ChatProvider = ({ child }) => {
     name: "",
     membersCount: "",
     icon: "",
-    cover: "",
-    topic: "",
   });
   const [selectedDirect, setSelectedDirect] = useState({
     id: "",
@@ -157,6 +154,8 @@ export const ChatProvider = ({ child }) => {
     myChatRooms: myChatRooms,
     setMyChatRooms: setMyChatRooms,
     myChatRoomsRef: myChatRoomsRef,
+    hasMoreRooms: hasMoreRooms,
+    setHasMoreRooms: setHasMoreRooms,
   };
   return (
     <ChatContext.Provider value={contextData}>{child}</ChatContext.Provider>

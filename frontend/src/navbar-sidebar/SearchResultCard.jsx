@@ -30,11 +30,10 @@ const SearchResultCard = ({
     setMyChatRooms,
     myChatRooms,
     myChatRoomsRef,
+    setSelectedItem
   } = useContext(ChatContext);
-  console.log("get myChatRoomsRef.current", myChatRoomsRef.current);
   const navigate = useNavigate();
   const joinChatRoomSubmitter = async () => {
-    // const toastId = toast.loading("Joining the chat room...");
     try {
       const response = await fetch(
         `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/joinChatRoom`,
@@ -111,11 +110,10 @@ const SearchResultCard = ({
         name: resultText,
         membersCount: members_count,
         icon: avatar,
-        cover: null,
-        topic: "",
       });
+      setSelectedItem(resultText);
       setIsHome(false);
-      navigate(`/mainpage/chat/`);
+      navigate(`/mainpage/chat`);
     } else {
       console.log("show toast ===============================");
       toast.error("Please join the room to access its content.");

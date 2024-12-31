@@ -445,6 +445,7 @@ export const AuthProvider = ({ children }) => {
 				`ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/chat_socket`
 			);
 			newChatSocket.onopen = () => {
+				console.log("CHAT SOCKET OPENED SUCCESSFULLY");
 				setChatSocket(newChatSocket);
 			};
 			newChatSocket.onmessage = (event) => {
@@ -455,11 +456,12 @@ export const AuthProvider = ({ children }) => {
 			location.pathname !== "/mainpage/groups"
 		) {
 			if (chatSocket) {
-				console.log("chat Socket Closed");
+				console.log("CHAT SOCKET CLOSED SUCCEFULLY");
 				chatSocket.close();
 				setChatSocket(null);
 			}
 		}
+		console.log("LOCATION PATHNAME: ", location.pathname);
 	}, [location.pathname, user]);
 
 
@@ -526,7 +528,6 @@ export const AuthProvider = ({ children }) => {
 					navigate('/signin')
 				const data = await response.json();
 				if (response.ok) {
-					console.log("DATA COUNT CONVERSATIONS: ", data.count);
 					setChatNotificationCounter(data.count);
 				}
 				else {
@@ -587,7 +588,7 @@ export const AuthProvider = ({ children }) => {
 				}
 			);
 			response = await response.json();
-			console.log("RESPONSE: ", response);
+			// console.log("RESPONSE: ", response);
 			if (response.Case !== "Invalid token") {
 				setUser(response.data.username);
 			} else {
