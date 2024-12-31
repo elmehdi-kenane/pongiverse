@@ -1,0 +1,10 @@
+groups:
+  - name: application_availability
+    rules:
+      - alert: ApplicationDown
+        expr: up{job="application_availability"} == 0
+        for: 1m
+        labels:
+        annotations:
+          summary: "Application is down"
+          description: "The application is not reachable."

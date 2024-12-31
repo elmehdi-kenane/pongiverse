@@ -65,14 +65,16 @@ function SignUpForm() {
 	}
 	return (
 		<>
-			<input type='email' className={styles['authentication-signup-input']} name='email' value={data.email} onChange={handleChange} placeholder='Enter your email' />
-			{errors.email && <span className={styles['span-messages']}>{errors.email}</span>}
-			{exist && <span className={styles['span-messages']}>Email Already exist</span>}
-			<input type='password' className={styles['authentication-signup-input']} value={data.password} name='password' onChange={handleChange}  placeholder='Enter a password' />
-			{errors.password && <span className={styles['span-messages']}>{errors.password}</span>}
-			<input type='password' className={styles['authentication-signup-input']} name='confirmPassword' onChange={handleChange} placeholder='Confirm your password' />
-			{errors.confirmPassword && <span className={styles['span-messages']}>{errors.confirmPassword}</span>}
-			<button className={styles['authentication-signup-button']} onClick={handleNextClick} >Next</button>
+			<form noValidate className={styles['signup-form-form']} onSubmit={handleNextClick}>
+				<input type='email' className={styles['authentication-signup-input']} name='email' value={data.email} onChange={handleChange} placeholder='Enter your email' />
+				{errors.email && <span className={styles['span-messages']}>{errors.email}</span>}
+				{exist && <span className={styles['span-messages']}>Email Already exist</span>}
+				<input type='password' className={styles['authentication-signup-input']} value={data.password} name='password' autoComplete="off" onChange={handleChange} placeholder='Enter a password' />
+				{errors.password && <span className={styles['span-messages']}>{errors.password}</span>}
+				<input type='password' className={styles['authentication-signup-input']} name='confirmPassword' onChange={handleChange} autoComplete="off" placeholder='Confirm your password' />
+				{errors.confirmPassword && <span className={styles['span-messages']}>{errors.confirmPassword}</span>}
+				<button className={styles['authentication-signup-button']} type='submit' >Next</button>
+			</form>
 		</>
 	);
 }

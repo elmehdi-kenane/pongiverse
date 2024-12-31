@@ -81,7 +81,7 @@ function SecondStep() {
 	}, [image, scale]);
 
 	const handleSave = () => {
-		if (editorRef.current) {
+		if (editorRef.current && image) {
 			editorRef.current.getImageScaledToCanvas().toBlob((blob) => {
 				if (blob) {
 					const file = new File([blob], "avatar.jpg", { type: "image/jpeg" });
@@ -109,6 +109,7 @@ function SecondStep() {
 			reader.readAsDataURL(file);
 		});
 	};
+
 
 	const handleInputChange = async (e) => {
 		e.preventDefault();
@@ -202,9 +203,10 @@ function SecondStep() {
 				});
 		}
 	};
-	const getAvatarUrl = (file) => {
-		return file ? URL.createObjectURL(file) : null;
-	};
+
+	useEffect(() => {
+		console.log("IMAGE:", image)
+	},[image])
 
 	return (
 		<div className={styles["second-step-page"]}>
@@ -215,7 +217,7 @@ function SecondStep() {
 				{
 					displayEditImage &&
 					<div className={styles["second-step-edit-image"]} ref={containerRef}>
-						<ImCross color="white" className={styles["cros-inside-edit-image"]} onClick={() => { setDisplayEditImage(false) }} />
+						<ImCross color="white" className={styles["cros-inside-edit-image"]} onClick={() => { setDisplayEditImage(false); setImage(null); setImagePreview(null) }} />
 						<div className={styles["second-step-image-preview"]}>
 							{
 								imagePreview && <img src={imagePreview} alt="" />

@@ -72,28 +72,28 @@
 }
 
 .authentication-signin {
-	display: flex;
-	flex-direction: column;
-	width: 40%;
-	height: 700px;
-	justify-content: center;
-	align-items: center;
-	/* background-color: #250939; */
-	border-radius: 0 10px 10px 0;
-	
-	
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+  height: 700px;
+  justify-content: center;
+  align-items: center;
+  /* background-color: #250939; */
+  border-radius: 0 10px 10px 0;
+
+
 }
 
 /* OTP CSS */
 
-.otp-input-div{
-	position: absolute;
+.otp-input-div {
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-	width: 90%;
-	height: 90%;
-	background-color: red;
+  width: 90%;
+  height: 90%;
+  background-color: red;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -136,30 +136,31 @@
   outline: none;
 }
 
-.tfq-input::placeholder{
+.tfq-input::placeholder {
   font-size: 17px;
 }
+
 /* end OTP CSS */
 
 .authentication-signin-form {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	width: 90%;
-	height: 550px;
-	/* background-color: #250939; */
-	gap: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  height: 550px;
+  /* background-color: #250939; */
+  gap: 10px;
 
-	
-	/* Done By IMAD */
-	background: linear-gradient(to bottom, rgb(68, 45, 106, 0.6), rgba(74, 37, 139, 0.3));
-	box-shadow: 0 0px 20px 0 #ccc ;
-	box-shadow: 0 0.5px 5px 0 #ccc;
-	backdrop-filter: blur( 4px );
-	-webkit-backdrop-filter: blur( 4px );
-	border-radius: 5px;
-	border: 1px solid rgba( 255, 255, 255, 0.18 );
+
+  /* Done By IMAD */
+  background: linear-gradient(to bottom, rgb(68, 45, 106, 0.6), rgba(74, 37, 139, 0.3));
+  box-shadow: 0 0px 20px 0 #ccc;
+  box-shadow: 0 0.5px 5px 0 #ccc;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .authentication-signin-form-tag {
@@ -314,23 +315,33 @@
 /* ---- SIGN UP CSS */
 
 .authentication-signup-form {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	width: 90%;
-	height: 550px;
-	gap: 10px;
-	/* background-color: #250939; */
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  gap: 10px;
+  /* background-color: #250939; */
 
-	/* Done By IMAD */
-	background: linear-gradient(to bottom, rgb(68, 45, 106, 0.6), rgba(74, 37, 139, 0.3));
-    box-shadow: 0 0px 20px 0 #ccc ;
-    box-shadow: 0 0.5px 5px 0 #ccc;
-    backdrop-filter: blur( 4px );
-    -webkit-backdrop-filter: blur( 4px );
-    border-radius: 5px;
-    border: 1px solid rgba( 255, 255, 255, 0.18 );
+
+  /* Done By IMAD */
+  background: linear-gradient(to bottom, rgb(68, 45, 106, 0.6), rgba(74, 37, 139, 0.3));
+  box-shadow: 0 0px 20px 0 #ccc;
+  box-shadow: 0 0.5px 5px 0 #ccc;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.signup-form-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px; 
+
 }
 
 .authentication-signup-title-div {
