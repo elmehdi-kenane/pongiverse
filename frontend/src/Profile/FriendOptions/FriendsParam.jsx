@@ -16,7 +16,7 @@ import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 function FriendsParam(props) {
 	const friendsPrm = props.Prm;
 	const { user, isBlock, setIsBlock, notifSocket } = useContext(AuthContext);
-	const { chatUserId, setIsFriend, userId, userPic, setIsLoading } = useContext(ProfileContext);
+	const { chatUserId, setIsFriend, userId, userPic, setIsLoading, userIsOnline } = useContext(ProfileContext);
 	const navigate = useNavigate();
 	const { setSelectedDirect } = useContext(ChatContext);
 
@@ -61,7 +61,7 @@ function FriendsParam(props) {
 		setSelectedDirect({
 			id: chatUserId,
 			name: userId,
-			status: true,
+			status: userIsOnline,
 			avatar: userImage,
 		})
 		navigate('/mainpage/chat');

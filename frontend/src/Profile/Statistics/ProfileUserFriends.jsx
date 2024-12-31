@@ -23,16 +23,16 @@ const ProfileUserFriends = () => {
     // window.location.reload();
   };
   
-  const chatNavigate = (username, pic) => {
-    const userImage = pic ? pic : AvatarSvg
+  const chatNavigate = (player) => {
+    const userImage = player.pic ? player.pic : AvatarSvg
     setSelectedDirect({
-      id: chatUserId,
-      name : username,
-      status: true,
+      id: player.userId,
+      name : player.username,
+      status: player.userIsOnline,
       avatar: userImage,
     })
     setIsHome(true)
-    setSelectedItem(username)
+    setSelectedItem(player.username)
     navigate('/mainpage/chat');
   }
 
@@ -47,8 +47,9 @@ const ProfileUserFriends = () => {
                 <img src={player.pic ? player.pic : AvatarSvg} alt='playerImg' />
                 <p> {player.username} </p>
               </div>
-              {(user !== player.username) && 
-                <div className='chat__button no-select' to='/mainpage/chat' onClick={() => chatNavigate(player.username, player.pic)}>
+              {/* {(user !== player.username) &&  */}
+              {player.userIsFriend && 
+                <div className='chat__button no-select' to='/mainpage/chat' onClick={() => chatNavigate(player)}>
                   <img src={chatSvg} alt='chatIcon' />
                   <p style={{ cursor: 'pointer' }}> message </p>
                 </div>

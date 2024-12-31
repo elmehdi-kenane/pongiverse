@@ -18,7 +18,7 @@ urlpatterns = [
     path('CheckUserTFQ', views.check_user_tfq),
 
     #------ Profile ------
-    path('getUserFriends/<str:username>', views.get_user_friends),
+    path('getUserFriends/<str:mainusername>/<str:username>', views.get_user_friends),
     path('CheckFriendship/<str:username>/<str:username2>', views.check_friendship),
     path('getUserDiagram/<str:username>', views.get_user_diagram),
     path('getUserMatches1vs1/<str:username>/<int:page>', views.get_user_games),

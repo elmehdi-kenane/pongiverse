@@ -18,7 +18,7 @@ function UpdateAvatar(props) {
 
   const UpdatePic = async () => {
     const canvas = editorRef.current.getImage();
-    const updatedPic = canvas.toDataURL(); // Get the cropped image data URL
+    const updatedPic = canvas.toDataURL();
     
     setIsClicked(true);
     try {
