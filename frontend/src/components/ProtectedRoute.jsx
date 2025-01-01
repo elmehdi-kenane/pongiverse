@@ -10,7 +10,7 @@ const ProtectedRoute = ({ children }) => {
 		async function CheckAuth() {
 			try {
 				let response = await fetch(
-					`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/verifytoken/`,
+					`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/auth/verifytoken/`,
 					{
 						method: "POST",
 						headers: {

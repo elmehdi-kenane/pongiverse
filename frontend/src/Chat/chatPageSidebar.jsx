@@ -43,8 +43,8 @@ const ChatSideBar = ({
     if (isHome) {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS
-          }:8000/chatAPI/directsSreach?searchUsername=${searchValue}&user=${user}`, {
+          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
+          }:${import.meta.env.VITE_PORT}/chatAPI/directsSreach?searchUsername=${searchValue}&user=${user}`, {
           credentials: 'include'
         }
         );
@@ -63,8 +63,8 @@ const ChatSideBar = ({
     } else {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS
-          }:8000/chatAPI/chatRoomsSreach?searchRoomName=${searchValue}&user=${user}`, {
+          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
+          }:${import.meta.env.VITE_PORT}/chatAPI/chatRoomsSreach?searchRoomName=${searchValue}&user=${user}`, {
           credentials: "include"
         }
         );

@@ -14,7 +14,7 @@ const ProfileIcon = ({ Icons, profileHandleDropDown, profileDropDownisOpen }) =>
     const logout = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/logout/`, {
+            const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/auth/logout/`, {
                 method: "POST",
                 credentials: "include",
                 headers: {

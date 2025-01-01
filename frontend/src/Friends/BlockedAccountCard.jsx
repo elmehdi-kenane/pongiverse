@@ -4,7 +4,7 @@ import AuthContext from '../navbar-sidebar/Authcontext'
 const BlockedAccountCard = ({ secondUsername, avatar}) => {
     const { user } = useContext(AuthContext)
     const handleUnblockFriend = () => {
-        fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/unblock_friend/`, {
+        fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/friends/unblock_friend/`, {
             method: 'POST',
             credentials: "include",
             headers: {

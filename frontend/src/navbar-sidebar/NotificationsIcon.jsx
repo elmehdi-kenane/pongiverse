@@ -43,16 +43,18 @@ const NotificationsIcon = ({
     const getNotifications = async () => {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS
-          }:8000/navBar/get_notifications/${user}`,
+          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
+          }:${import.meta.env.VITE_PORT}/navBar/get_notifications/${user}`,
           {
             method: "GET",
             credentials: "include",
           }
         );
+        console.log("response", response);
         if (response.status === 401)
           navigate('/signin')
         const res = await response.json();
+        console.log("res", res);
         if (res) {
           console.log("notifications", res);
 
@@ -79,8 +81,8 @@ const NotificationsIcon = ({
 
   const handleClearAllNotifications = () => {
     fetch(
-      `http://${import.meta.env.VITE_IPADDRESS
-      }:8000/navBar/clear_all_notifications/`,
+      `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
+      }:${import.meta.env.VITE_PORT}/navBar/clear_all_notifications/`,
       {
         method: "POST",
         credentials: "include",

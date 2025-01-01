@@ -70,7 +70,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 																'id': user.id,
 																'name': user.username,
 																'level': user_statistics.level,
-																'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user.avatar.url}",
+																'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user.avatar.url}",
 															}
 														}
 												}
@@ -94,7 +94,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 													'id': user.id,
 													'name': user.username,
 													'level': 2,
-													'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user.avatar.url}",
+													'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user.avatar.url}",
 												}
 											}
 										}

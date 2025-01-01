@@ -109,8 +109,8 @@ const ChatConversation = ({
   const fetchMessages = async () => {
     try {
       const response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS
-        }:8000/chatAPI/Directs/messages?page=${currentMessagePage}`,
+        `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
+        }:${import.meta.env.VITE_PORT}/chatAPI/Directs/messages?page=${currentMessagePage}`,
         {
           method: "POST",
           credentials: "include",

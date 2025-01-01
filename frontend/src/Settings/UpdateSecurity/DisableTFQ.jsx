@@ -42,7 +42,7 @@ function DisableTFQ(props) {
       if (user && checkOtp(otp)) {
         try {
           const response = await fetch(
-            `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/DisableTFQ`,
+            `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/DisableTFQ`,
             {
               method: "POST",
               credentials: "include",

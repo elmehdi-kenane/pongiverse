@@ -107,8 +107,8 @@ const ChatRoomConversation = ({
     const fetchMessages = async () => {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS
-          }:8000/chatAPI/chatRoom/messages/${selectedChatRoom.id
+          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
+          }:${import.meta.env.VITE_PORT}/chatAPI/chatRoom/messages/${selectedChatRoom.id
           }?page=${currentChatRoomMessagesPage}`, {
           credentials: "include",
         }

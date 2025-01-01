@@ -39,7 +39,7 @@ class friends_with_directs_serializer(serializers.ModelSerializer):
     def get_avatar(self, obj):
         protocol = os.getenv("PROTOCOL")
         ip_address = os.getenv("IP_ADDRESS")
-        return f"{protocol}://{ip_address}:8000/chatAPI{obj.friend.avatar.url}"
+        return f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{obj.friend.avatar.url}"
 
     def get_lastMessage(self, obj):
         username = self.context.get('username')
@@ -85,12 +85,12 @@ class room_serializer(serializers.ModelSerializer):
     def get_icon(self, obj):
         protocol = os.getenv("PROTOCOL")
         ip_address = os.getenv("IP_ADDRESS")
-        return f"{protocol}://{ip_address}:8000/chatAPI{obj.room.icon.url}"
+        return f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{obj.room.icon.url}"
 
     def get_cover(self, obj):
         protocol = os.getenv("PROTOCOL")
         ip_address = os.getenv("IP_ADDRESS")
-        return f"{protocol}://{ip_address}:8000/chatAPI{obj.room.cover.url}"
+        return f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{obj.room.cover.url}"
 
     def get_membersCount(self, obj):
         return obj.room.members.count()

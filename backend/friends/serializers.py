@@ -23,7 +23,7 @@ class friendRequestSerializer(serializers.ModelSerializer):
             if request:
                 return request.build_absolute_uri(avatar_url)
             else:
-                return f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth{avatar_url}"
+                return f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:{os.getenv('PORT')}/auth{avatar_url}"
         return None
 
     def get_level(self, obj):
@@ -49,7 +49,7 @@ class friendSerializer(serializers.ModelSerializer):
             if request:
                 return request.build_absolute_uri(avatar_url)
             else:
-                return f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth{avatar_url}"
+                return f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:{os.getenv('PORT')}/auth{avatar_url}"
         return None
 
     def get_level(self, obj):
@@ -73,7 +73,7 @@ class customuserSerializer(serializers.ModelSerializer):
             if request:
                 return request.build_absolute_uri(avatar_url)
             else:
-                return f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth{avatar_url}"
+                return f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:{os.getenv('PORT')}/auth{avatar_url}"
         return None
 
     def get_level(self, obj):

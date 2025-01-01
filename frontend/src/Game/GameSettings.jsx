@@ -103,7 +103,7 @@ const GameSettings = () => {
     if (user) {
       try {
         let response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/api/customizeGame`,
+          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/customizeGame`,
           {
             method: "POST",
             credentials: "include",

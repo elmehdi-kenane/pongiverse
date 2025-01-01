@@ -36,7 +36,7 @@ function UpdateBio() {
 
   const UpdateUserBio = async (bio) => {
     try {
-      const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/updateUserBio`, {
+      const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/updateUserBio`, {
         method: "POST",
         credentials: "include",
         headers: {

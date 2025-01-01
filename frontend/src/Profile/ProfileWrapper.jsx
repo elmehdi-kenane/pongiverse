@@ -32,7 +32,7 @@ export const ProfileWrapper = ({ child }) => {
 
     const getUserFriends = async () => {
         try {
-            const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserFriends/${user}/${userId}`, {
+            const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getUserFriends/${user}/${userId}`, {
                 method: "GET",
                 credentials: "include",
                 headers: {
@@ -54,7 +54,7 @@ export const ProfileWrapper = ({ child }) => {
     useEffect(() => {
         const checkFriendship = async () => {
             try {
-                const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/CheckFriendship/${user}/${userId}`, {
+                const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/CheckFriendship/${user}/${userId}`, {
                     method: "GET",
                     credentials: "include",
                     headers: {
@@ -75,7 +75,7 @@ export const ProfileWrapper = ({ child }) => {
         }
         const getUserData = async () => {
             try {
-                const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserData/${userId}`, {
+                const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getUserData/${userId}`, {
                     method: "GET",
                     credentials: "include",
                     headers: {

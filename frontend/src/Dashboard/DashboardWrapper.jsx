@@ -43,7 +43,7 @@ export const DashboardWrapper = ({ child }) => {
     const fetchUserGames = async () => {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserGames/${user}`,
+          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getUserGames/${user}`,
           {
             method: "GET",
             credentials: "include",

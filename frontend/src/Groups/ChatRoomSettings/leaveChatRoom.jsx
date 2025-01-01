@@ -9,7 +9,7 @@ export const LeaveChatRoomSubmitter = async (user, rooms, setRooms, roomId) => {
   setTimeout(async () => {
     try {
       const response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/leaveChatRoom`,
+        `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/chatAPI/leaveChatRoom`,
         {
           method: "POST",
           credentials: "include",

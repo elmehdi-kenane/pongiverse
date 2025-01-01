@@ -43,7 +43,7 @@ export const SettingsWrapper = ({ child }) => {
     useEffect(() => {
         const getUserData = async () => {
             try {
-                const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserData/${user}`, {
+                const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getUserData/${user}`, {
                     method: "GET",
                     credentials: "include",
                     headers: {
@@ -71,7 +71,7 @@ export const SettingsWrapper = ({ child }) => {
     useEffect(() => {
         // const getUserPic = async (picPath, fnc) => {
         //     try {
-        //         const response = await fetch(`http://localhost:8000/api/getImage`, {
+        //         const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://localhost:${import.meta.env.VITE_PORT}/api/getImage`, {
         //             method: "POST",
         //             headers: { 'Content-Type': 'application/json', },
         //             body: JSON.stringify({

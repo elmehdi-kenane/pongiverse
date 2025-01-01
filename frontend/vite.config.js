@@ -32,4 +32,3 @@ export default defineConfig({
     open: true,
   }
 });
-import basicSsl from '@vitejs/plugin-basic-ssl'

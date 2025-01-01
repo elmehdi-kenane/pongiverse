@@ -26,7 +26,7 @@ function UpdatePic(props) {
       const newBg = event.target.files[0];
       const base64Bg = await convertToBase64(newBg);
       try {
-        const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/updateUserBg`, {
+        const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/updateUserBg`, {
           method: "POST",
           headers: {
             'Content-Type': 'application/json',

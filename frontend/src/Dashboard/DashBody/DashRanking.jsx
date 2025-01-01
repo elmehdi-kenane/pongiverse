@@ -15,7 +15,7 @@ function DashRanking() {
     const getUsersRank = async () => {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUsersRank/${user}`,
+          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getUsersRank/${user}`,
           {
             method: "GET",
             credentials: "include",

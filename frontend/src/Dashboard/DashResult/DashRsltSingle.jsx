@@ -34,7 +34,7 @@ function DashRsltSingle() {
     const getMatchDtls = async () => {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getSingleMatchDtl/${singleId}`,
+          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getSingleMatchDtl/${singleId}`,
           {
             method: "GET",
             credentials: "include",

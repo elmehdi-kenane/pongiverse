@@ -11,7 +11,7 @@ function UpdateCountry() {
   const navigate = useNavigate();
   const updateCountry = async (country) => {
     try {
-      const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/updateUserCountry`, {
+      const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/updateUserCountry`, {
         method: "POST",
         credentials: "include",
         headers: {

@@ -94,7 +94,7 @@ def online_friends(request):
 	allFriends = []
 	for user_id in Friendship.objects.filter(user=user):
 		if user_id.friend.is_online and not user_id.friend.is_playing: ####################  and user_id.friend.is_playing
-			allFriends.append({'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user_id.friend.avatar.url}"})
+			allFriends.append({'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user_id.friend.avatar.url}"})
 		# print(f'friends are {friends}')
 	return Response({'message': allFriends})
 
@@ -114,7 +114,7 @@ def get_user(request):
 	user = customuser.objects.filter(username=username).first()
 	if user is not None:
 		response = Response()
-		response.data = {'id' : user.id, 'name' : user.username, 'level' : 2, 'image' : f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user.avatar.url}" }
+		response.data = {'id' : user.id, 'name' : user.username, 'level' : 2, 'image' : f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user.avatar.url}" }
 		return response
 
 @authentication_required
@@ -126,7 +126,7 @@ def user_image(request):
 		return Response({'message': 'no username is here'})
 	user = customuser.objects.filter(username=username).first()
 	if user:
-		return Response({'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user.avatar.url}"})
+		return Response({'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user.avatar.url}"})
 	else:
 		return Response({'message': 'user not exit in the database'})
 
@@ -152,8 +152,8 @@ def get_users_data(usernames):
 					'id': user.id,
 					'name': user.username,
 					'level': user_states.level,
-					'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{image_path}",
-					'background_image' : f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{background_image_path}",
+					'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{image_path}",
+					'background_image' : f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{background_image_path}",
 					'is_online' : user.is_online
 				})
 	return allMembers
@@ -200,7 +200,7 @@ def started_tournament_members(request):
 			'id': member.user.id,
 			'name': member.user.username,
 			'level': 2,  # Assuming level is static for now
-			'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{member.user.avatar.url}",
+			'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{member.user.avatar.url}",
 			'is_online' : member.user.is_online
 		})
 	response = Response()
@@ -221,7 +221,7 @@ def get_tournament_member(request):
 	if user is not None:
 		user_states = UserMatchStatics.objects.filter(player=user).first()
 		response = Response()
-		response.data = {'id' : user.id, 'name' : user.username, 'level' : user_states.level, 'image' : f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user.avatar.url}", 'background_image' : f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user.background_pic.url}", 'is_online' : user.is_online}
+		response.data = {'id' : user.id, 'name' : user.username, 'level' : user_states.level, 'image' : f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user.avatar.url}", 'background_image' : f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user.background_pic.url}", 'is_online' : user.is_online}
 		return response
 
 @authentication_required
@@ -235,9 +235,9 @@ def notifs_friends(request):
 	for gameNotif in GameNotifications.objects.filter(target=target):
 		usermatchstats = UserMatchStatics.objects.filter(player=gameNotif.user).first()
 		if gameNotif.active_match is not None:
-			allNotifs.append({'tournament_id' : '', 'user': gameNotif.user.username, 'level' : usermatchstats.level , 'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{gameNotif.user.avatar.url}", 'roomID': gameNotif.active_match.room_id, 'mode': gameNotif.mode})
+			allNotifs.append({'tournament_id' : '', 'user': gameNotif.user.username, 'level' : usermatchstats.level , 'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{gameNotif.user.avatar.url}", 'roomID': gameNotif.active_match.room_id, 'mode': gameNotif.mode})
 		elif gameNotif.tournament_id != 0:
-			allNotifs.append({'tournament_id' : gameNotif.tournament_id, 'user': gameNotif.user.username, 'level' : usermatchstats.level, 'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{gameNotif.user.avatar.url}", 'roomID': '', 'mode': gameNotif.mode})
+			allNotifs.append({'tournament_id' : gameNotif.tournament_id, 'user': gameNotif.user.username, 'level' : usermatchstats.level, 'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{gameNotif.user.avatar.url}", 'roomID': '', 'mode': gameNotif.mode})
 
 	return Response({'message': allNotifs})
 
@@ -446,7 +446,7 @@ def get_game_members_round(request):
 									'id' : user.id,
 									'name' : quartermember['username'],
 									'level': user_states.level,
-									'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user.avatar.url}",
+									'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user.avatar.url}",
 									'position': quartermember['position'],
 								})
 							else:
@@ -466,7 +466,7 @@ def get_game_members_round(request):
 									'id' : user.id,
 									'name' : semimember['username'],
 									'level': user_states.level,
-									'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user.avatar.url}",
+									'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user.avatar.url}",
 									'position': semimember['position']
 								})
 							else:
@@ -487,7 +487,7 @@ def get_game_members_round(request):
 									'id' : user.id,
 									'name' : finalmember['username'],
 									'level': user_states.level,
-									'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user.avatar.url}",
+									'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user.avatar.url}",
 									'position': finalmember['position']
 								})
 							else:
@@ -507,7 +507,7 @@ def get_game_members_round(request):
 									'id' : user.id,
 									'name': winner['username'],
 									'level' : user_states.level,
-									'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user.avatar.url}",
+									'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user.avatar.url}",
 									'position': winner['position']
 								})
 							else:
@@ -630,7 +630,7 @@ def get_tournament_members_rounds(request):
 					'id' : quartermember.user.id,
 					'name' : quartermember.user.username,
 					'level': user_states.level,
-					'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{quartermember.user.avatar.url}",
+					'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{quartermember.user.avatar.url}",
 					'position': quartermember.position
 				})
 			else:
@@ -649,7 +649,7 @@ def get_tournament_members_rounds(request):
 					'id' : semimember.user.id,
 					'name' : semimember.user.username,
 					'level': user_states.level,
-					'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{semimember.user.avatar.url}",
+					'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{semimember.user.avatar.url}",
 					'position': semimember.position
 				})
 			else :
@@ -668,7 +668,7 @@ def get_tournament_members_rounds(request):
 					'id' : finalmember.user.id,
 					'name' : finalmember.user.username,
 					'level': user_states.level,
-					'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{finalmember.user.avatar.url}",
+					'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{finalmember.user.avatar.url}",
 					'position': finalmember.position
 				})
 			else:
@@ -683,7 +683,7 @@ def get_tournament_members_rounds(request):
 	winnermember = TournamentUserInfo.objects.filter(round=winner).first()
 	if winnermember is not None:
 		if winnermember.user is not None:
-			winnerdict.update({'id': winnermember.user.id, 'name' : winnermember.user.username, 'level' : 2, 'image' : f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{winnermember.user.avatar.url}", 'position' : winnermember.position})
+			winnerdict.update({'id': winnermember.user.id, 'name' : winnermember.user.username, 'level' : 2, 'image' : f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{winnermember.user.avatar.url}", 'position' : winnermember.position})
 		else:
 			winnerdict.update({'id': -1, 'name' : '', 'level' : -1, 'image' : '', 'position' : winnermember.position})
 	response.data = {'roundquarter' : quartermembers, 'roundsemi' : semimembers, 'roundfinal' : finalmembers , 'winner' : winnerdict}

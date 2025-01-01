@@ -36,7 +36,7 @@ function SignInForm() {
       try {
         if (user) {
           const response = await fetch(
-            `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/CheckUserTFQ`,
+            `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/CheckUserTFQ`,
             {
               method: "POST",
               headers: {
@@ -84,7 +84,7 @@ function SignInForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/login/`, {
+    fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/auth/login/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

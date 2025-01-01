@@ -8,7 +8,7 @@ const BlockPopUp = ({ setShowBlockPopup, setDirects, selectedDirect, user, setSe
     const blockUser = async () => {
         setShowBlockPopup(false);
         try{
-            const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/block_friend/`, {
+            const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/friends/block_friend/`, {
                 method: "POST",
                 credentials: "include",
                 headers: {

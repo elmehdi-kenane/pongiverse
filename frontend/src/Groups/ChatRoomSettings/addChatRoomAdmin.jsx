@@ -10,7 +10,7 @@ const AddChatRoomAdmin = (props) => {
     const fetchAllChatRoomMembers = async () => {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/allRoomMembers/${props.name}`
+          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/chatAPI/allRoomMembers/${props.name}`
         );
         if (response.status === 401)
           navigate('/signin')

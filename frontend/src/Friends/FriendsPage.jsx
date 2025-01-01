@@ -40,8 +40,8 @@ const FriendshipPage = () => {
   useEffect(() => {
     const getFriendSuggestions = async () => {
       const response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS
-        }:8000/friends/get_friend_suggestions/${user}`,
+        `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
+        }:${import.meta.env.VITE_PORT}/friends/get_friend_suggestions/${user}`,
         {
           method: "GET",
           credentials: "include",
@@ -59,8 +59,8 @@ const FriendshipPage = () => {
   useEffect(() => {
     const getFriends = async () => {
       const response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS
-        }:8000/friends/get_friend_list/${user}`,
+        `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
+        }:${import.meta.env.VITE_PORT}/friends/get_friend_list/${user}`,
         {
           method: "GET",
           credentials: "include",
@@ -201,8 +201,8 @@ const FriendshipPage = () => {
   useEffect(() => {
     const getSentRequests = async () => {
       const response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS
-        }:8000/friends/get_sent_requests/${user}`,
+        `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
+        }:${import.meta.env.VITE_PORT}/friends/get_sent_requests/${user}`,
         {
           method: "GET",
           credentials: "include",
@@ -220,8 +220,8 @@ const FriendshipPage = () => {
   useEffect(() => {
     const getReceivedRequests = async () => {
       const response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS
-        }:8000/friends/get_received_requests/${user}`,
+        `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
+        }:${import.meta.env.VITE_PORT}/friends/get_received_requests/${user}`,
         {
           method: "GET",
           credentials: "include",
@@ -239,8 +239,8 @@ const FriendshipPage = () => {
   useEffect(() => {
     const getBlockedList = async () => {
       const response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS
-        }:8000/friends/get_blocked_list/${user}`,
+        `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
+        }:${import.meta.env.VITE_PORT}/friends/get_blocked_list/${user}`,
         {
           method: "GET",
           credentials: "include",

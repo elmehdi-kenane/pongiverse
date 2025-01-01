@@ -3,7 +3,7 @@
  'raw_path': b'/ws/chat_socket',
  'root_path': '',
  'headers': [(b'host',
-b'localhost:8000'),
+b'localhost:${import.meta.env.VITE_PORT}'),
  (b'connection',
  b'Upgrade'),
  (b'pragma',

@@ -236,7 +236,7 @@ def chat_room_update_cover(request):
         return Response(
             {
                 "success": "chat room cover changed successfully",
-                "data": {"id": room.id, "cover": f"{protocol}://{ip_address}:8000/chatAPI{room.cover.url}"},
+                "data": {"id": room.id, "cover": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{room.cover.url}"},
             },
             status=200,
         )
@@ -311,8 +311,8 @@ def create_chat_room(request):
                     "name": new_room.name,
                     "topic": new_room.topic,
                     "role": "admin",
-                    "icon": f"{protocol}://{ip_address}:8000/chatAPI{new_room.icon.url}",
-                    "cover": f"{protocol}://{ip_address}:8000/chatAPI{new_room.cover.url}",
+                    "icon": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{new_room.icon.url}",
+                    "cover": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{new_room.cover.url}",
                     "membersCount": new_room.members_count,
                 },
             },
@@ -397,7 +397,7 @@ def list_all_friends(request):
             if not my_friend:
                 friend_data = {
                     "name": friend_object.username,
-                    "avatar": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/auth{friend_object.avatar.url}",
+                    "avatar": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:{os.getenv('PORT')}/auth{friend_object.avatar.url}",
                 }
                 all_friend.append(friend_data)
         return Response(all_friend)
@@ -418,7 +418,7 @@ def rooms_invitations(request, username):
                 'id' : room.id,
                 "name": room.name,
                 "topic": room.topic,
-                "icon": f"{protocol}://{ip_address}:8000/chatAPI{room.icon.url}",
+                "icon": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{room.icon.url}",
                 'status': invitaion.status,
                 "membersCount": room.members_count,
             }
@@ -447,8 +447,8 @@ def suggested_chat_rooms(request, username):
                     "role": membership.role,
                     "name": membership.room.name,
                     "topic": membership.room.topic,
-                    "icon": f"{protocol}://{ip_address}:8000/chatAPI{membership.room.icon.url}",
-                    "cover": f"{protocol}://{ip_address}:8000/chatAPI{membership.room.cover.url}",
+                    "icon": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{membership.room.icon.url}",
+                    "cover": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{membership.room.cover.url}",
                     "membersCount": membership.room.members_count,
                 }
                 rooms.append(room_data)
@@ -470,7 +470,7 @@ def chat_room_members_list(request):
         for member in memberships:
             member_data = {
                 "username": member.user.username,
-                "avatar": f"{protocol}://{ip_address}:8000/chatAPI{member.user.avatar.url}",
+                "avatar": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{member.user.avatar.url}",
             }
             data.append(member_data)
         return Response(data, status=200)
@@ -511,8 +511,8 @@ def accept_chat_room_invite(request):
                         "role": "member",
                         "name": room.name,
                         "topic": room.topic,
-                        "icon": f"{protocol}://{ip_address}:8000/chatAPI{room.icon.url}",
-                        "cover": f"{protocol}://{ip_address}:8000/chatAPI{room.cover.url}",
+                        "icon": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{room.icon.url}",
+                        "cover": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{room.cover.url}",
                         "membersCount": room.members_count,
                     },}})
             # async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type' : 'chatRoomLeft',"roomId": roomId}})
@@ -524,8 +524,8 @@ def accept_chat_room_invite(request):
                 #     "role": "member",
                 #     "name": room.name,
                 #     "topic": room.topic,
-                #     "icon": f"{protocol}://{ip_address}:8000/chatAPI{room.icon.url}",
-                #     "cover": f"{protocol}://{ip_address}:8000/chatAPI{room.cover.url}",
+                #     "icon": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{room.icon.url}",
+                #     "cover": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{room.cover.url}",
                 #     "membersCount": room.members_count,
                 # },
             }
@@ -621,8 +621,8 @@ def join_chat_room(request):
                     "role": "member",
                     "name": room.name,
                     "topic": room.topic,
-                    "icon": f"{protocol}://{ip_address}:8000/chatAPI{room.icon.url}",
-                    "cover": f"{protocol}://{ip_address}:8000/chatAPI{room.cover.url}",
+                    "icon": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{room.icon.url}",
+                    "cover": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{room.cover.url}",
                     "membersCount": room.members_count,
                 },
             }

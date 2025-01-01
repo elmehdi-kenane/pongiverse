@@ -33,7 +33,7 @@ function DashRsltMulty() {
     const getMatchDtls = async () => {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getMultyMatchDtl/${multyId}`,
+          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getMultyMatchDtl/${multyId}`,
           {
             method: "GET",
             credentials: "include",

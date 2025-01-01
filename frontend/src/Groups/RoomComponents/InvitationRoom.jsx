@@ -17,7 +17,7 @@ const InvitationRoom = (props) => {
   const onClickAcceptInvitaion = async () => {
     // const toastId = toast.loading("Processing invitation...");
     try {
-      const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/accpetChatRoomInvite`, {
+      const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/chatAPI/accpetChatRoomInvite`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-type': 'application/json' },
@@ -55,7 +55,7 @@ const InvitationRoom = (props) => {
 
   const onClickCanelRoomInvitation = async () => {
     try {
-      const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/cancelChatRoomInvite`, {
+      const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/chatAPI/cancelChatRoomInvite`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-type': 'application/json' },

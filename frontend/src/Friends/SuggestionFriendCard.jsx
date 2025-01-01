@@ -9,9 +9,9 @@ const SuggestionFriendCard = ({ username, avatar, level, total_xp }) => {
   const navigate = useNavigate();
   const handleAddFriendReq = () => {
     fetch(
-      `http://${
+      `${import.meta.env.VITE_PROTOCOL}://${
         import.meta.env.VITE_IPADDRESS
-      }:8000/friends/add_friend_request/`,
+      }:${import.meta.env.VITE_PORT}/friends/add_friend_request/`,
       {
         method: "POST",
         credentials: "include",

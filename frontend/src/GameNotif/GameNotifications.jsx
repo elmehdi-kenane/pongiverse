@@ -49,8 +49,8 @@ const GameNotifications = (props) => {
   }) => {
     const addNewNotification = async () => {
       const response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS
-        }:8000/navBar/add_notification/`,
+        `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
+        }:${import.meta.env.VITE_PORT}/navBar/add_notification/`,
         {
           method: "POST",
           credentials: "include",
@@ -160,8 +160,8 @@ const GameNotifications = (props) => {
   useEffect(() => {
     const getTournamentWarning = async () => {
       const response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS
-        }:8000/api/get-tournament-warning`,
+        `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
+        }:${import.meta.env.VITE_PORT}/api/get-tournament-warning`,
         {
           method: "POST",
           credentials: "include",
@@ -241,8 +241,8 @@ const GameNotifications = (props) => {
         );
       } else if (sender.mode === "TournamentInvitation") {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS
-          }:8000/api/get-tournament-size`,
+          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
+          }:${import.meta.env.VITE_PORT}/api/get-tournament-size`,
           {
             method: "POST",
             credentials: "include",
@@ -325,7 +325,7 @@ const GameNotifications = (props) => {
           if (socketRefer?.readyState !== WebSocket.OPEN) {
             console.log("SOCKET IS CLOSED, SHOULD OPENED");
             const newSocket = new WebSocket(
-              `ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/socket-server`
+              `${import.meta.env.VITE_SOCKET}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/ws/socket-server`
             );
             newSocket.onopen = () => {
               console.log("+++++++++++=======+++++++++");
@@ -354,7 +354,7 @@ const GameNotifications = (props) => {
           if (socketRefer?.readyState !== WebSocket.OPEN) {
             console.log("SOCKET IS CLOSED, SHOULD OPENED");
             const newSocket = new WebSocket(
-              `ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/socket-server`
+              `${import.meta.env.VITE_SOCKET}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/ws/socket-server`
             );
             newSocket.onopen = () => {
               setSocket(newSocket);

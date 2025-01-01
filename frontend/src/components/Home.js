@@ -5,7 +5,7 @@ import { useNavigate} from 'react-router-dom';
 // axios.defaults.xsrfCookieName = "csrftoken";
 // axios.defaults.xsrfHeaderName = "X-CSRFToken";
 // const client = axios.create({
-//   baseURL: "http://127.0.0.1:8000",
+//   baseURL: "http://127.0.0.1:${import.meta.env.VITE_PORT}",
 // });
 
 function Home() {

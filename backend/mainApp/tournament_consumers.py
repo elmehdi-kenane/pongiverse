@@ -41,7 +41,7 @@ async def send_playing_status_to_friends(self, user, status, user_channels):
 						'id': user.id,
 						'name': user.username,
 						'level': 2,
-						'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user.avatar.url}"
+						'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user.avatar.url}"
 					}
 				}
 			})
@@ -70,7 +70,7 @@ async def create_tournament(self, data, user_channels):
 										'id': user.id,
 										'name': user.username,
 										'level': 2,
-										'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user.avatar.url}",
+										'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user.avatar.url}",
 									}
 						}
 					}
@@ -207,7 +207,7 @@ async def leave_tournament(self, data, user_channels):
 						'id': kicked_user.id,
 						'name': kicked_user.username,
 						'level': 2,
-						'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{kicked_user.avatar.url}" ,
+						'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{kicked_user.avatar.url}" ,
 						'is_playing' : kicked_user.is_playing
 					}
 				}
@@ -235,7 +235,7 @@ async def leave_tournament(self, data, user_channels):
 						'id': kicked_user.id,
 						'name': kicked_user.username,
 						'level': 2,
-						'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{kicked_user.avatar.url}" ,
+						'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{kicked_user.avatar.url}" ,
 						'is_playing' : kicked_user.is_playing
 					}
 				}
@@ -285,7 +285,7 @@ async def destroy_tournament(self, data, user_channels):
 							'id': user.id,
 							'name': user.username,
 							'level': 2,
-							'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user.avatar.url}" ,
+							'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user.avatar.url}" ,
 						}
 					}
 				}
@@ -377,7 +377,7 @@ async def invite_friend(self, data):
 											'tournament_id' : tournament_id,
 											'user' : sender_user,
 											'level' : usermatchstats.level,
-											'image' : f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{sender.avatar.url}",
+											'image' : f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{sender.avatar.url}",
 											'roomID' : '',
 											'mode' : 'TournamentInvitation'
 										}

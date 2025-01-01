@@ -305,7 +305,7 @@ function createParticle(x, y) {
 
 	useEffect(() => {
 		const check_player_situation = async () => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/player-situation`, {
+			const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/player-situation`, {
 				method: "POST",
 				credentials: 'include',
 				headers: {

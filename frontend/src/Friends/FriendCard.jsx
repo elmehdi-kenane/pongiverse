@@ -24,7 +24,7 @@ const FriendCard = ({
   const navigate = useNavigate();
 
   const handleBlockFriend = () => {
-    fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/block_friend/`, {
+    fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/friends/block_friend/`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -45,7 +45,7 @@ const FriendCard = ({
   };
 
   const handleRemoveFriendship = () => {
-    fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/friends/remove_friendship/`, {
+    fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/friends/remove_friendship/`, {
       method: "POST",
       credentials: "include",
       headers: {

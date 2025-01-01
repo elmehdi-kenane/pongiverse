@@ -22,7 +22,7 @@ function UpdateAvatar(props) {
     
     setIsClicked(true);
     try {
-      const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/updateUserPic`, {
+      const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/updateUserPic`, {
         method: "POST",
         credentials: "include",
         headers: {

@@ -37,7 +37,7 @@ const Sidebar = () => {
 	async function check_auth() {
 		try {
 			let response = await fetch(
-				`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/verifytoken/`,
+				`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/auth/verifytoken/`,
 				{
 					method: "GET",
 					headers: {

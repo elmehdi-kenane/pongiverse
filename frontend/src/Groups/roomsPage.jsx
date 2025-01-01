@@ -175,7 +175,7 @@ const Rooms = () => {
     const fetchChatRooms = async () => {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/myChatRooms/${user}?page=${currentMyRoomsPage}`,
+          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/chatAPI/myChatRooms/${user}?page=${currentMyRoomsPage}`,
           {
             credentials: "include",
           }
@@ -208,7 +208,7 @@ const Rooms = () => {
   const updateStatusOfInvitations = async () => {
     try {
       const response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS}:8000/chatAPI/updateStatusOfInvitations`,
+        `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/chatAPI/updateStatusOfInvitations`,
         {
           method: "POST",
           credentials: "include",

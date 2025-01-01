@@ -57,7 +57,7 @@ function JoinTournament() {
 
 	useEffect(() => {
 		const check_is_join = async () => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/is-joining-tournament`, {
+			const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/is-joining-tournament`, {
 				method: "POST",
 				credentials: "include",
 				headers: {
@@ -76,7 +76,7 @@ function JoinTournament() {
 			}
 		}
 		const check_is_started_and_not_finished = async () => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/is-started-and-not-finshed`, {
+			const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/is-started-and-not-finshed`, {
 				method: "POST",
 				credentials: "include",
 				headers: {
@@ -102,7 +102,7 @@ function JoinTournament() {
 
 	useEffect(() => {
 		const getTournamentSuggestions = async () => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-tournament-suggestions`, {
+			const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/get-tournament-suggestions`, {
 				method: "GET",
 				credentials: "include",
 				headers: {
@@ -147,7 +147,7 @@ function JoinTournament() {
 				} else if (type == 'accepted_invitation') {
 					const socketRefer = socketRef.current
 					if (socketRefer?.readyState !== WebSocket.OPEN) {
-						const newSocket = new WebSocket(`ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/socket-server`)
+						const newSocket = new WebSocket(`${import.meta.env.VITE_SOCKET}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/ws/socket-server`)
 						newSocket.onopen = () => {
 							setSocket(newSocket)
 							navigate("/mainpage/game/createtournament");
@@ -164,7 +164,7 @@ function JoinTournament() {
 
 	useEffect(() => {
 		const get_members = async () => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-tournament-data`, {
+			const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/get-tournament-data`, {
 				method: "POST",
 				credentials: "include",
 				headers: {

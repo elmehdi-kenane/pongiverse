@@ -34,7 +34,7 @@ function UpdateTFQ(props) {
       // setIsLoading(true)
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/EnableTFQ`,
+          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/EnableTFQ`,
           {
             method: "POST",
             credentials: "include",
@@ -102,7 +102,7 @@ function UpdateTFQ(props) {
       if (checkOtp(otp)) {
         try {
           const response = await fetch(
-            `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/ValidateTFQ`,
+            `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/ValidateTFQ`,
             {
               method: "POST",
               credentials: "include",

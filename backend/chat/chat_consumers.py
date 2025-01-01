@@ -64,7 +64,7 @@ async def invite_member_chat_room(self, data, user_channels):
                             'id': room.id,
                             "name": room.name,
                             'topic': room.topic,
-                            "icon": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:8000/chatAPI{room.icon.url}",
+                            "icon": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:{os.getenv('PORT')}/chatAPI{room.icon.url}",
                             'status': invitaion.status,
                             "membersCount": room.members_count,
                         },
@@ -158,7 +158,7 @@ async def direct_message(self, data, user_channels):
                 {
                     "type": "send_direct",
                     "data": {
-                        'senderAvatar': f"{protocol}://{ip_address}:8000/chatAPI{sender.avatar.url}",
+                        'senderAvatar': f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{sender.avatar.url}",
                         "sender": sender.username,
                         "receiver": receiver.username,
                         "message": message.message,
@@ -175,7 +175,7 @@ async def direct_message(self, data, user_channels):
                 {
                     "type": "send_direct",
                     "data": {
-                        'senderAvatar': f"{protocol}://{ip_address}:8000/chatAPI{sender.avatar.url}",
+                        'senderAvatar': f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{sender.avatar.url}",
                         "sender": sender.username,
                         "receiver": sender.username,
                         "message": message.message,

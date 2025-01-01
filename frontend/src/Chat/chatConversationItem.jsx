@@ -5,9 +5,9 @@ import { useNavigate } from "react-router-dom";
 export const resetUnreadMessages = async (user, friendId, navigate) => {
   try {
     const response = await fetch(
-      `http://${
+      `${import.meta.env.VITE_PROTOCOL}://${
         import.meta.env.VITE_IPADDRESS
-      }:8000/chatAPI/resetUndreadMessages`,
+      }:${import.meta.env.VITE_PORT}/chatAPI/resetUndreadMessages`,
       {
         method: "POST",
         credentials: "include",
@@ -31,9 +31,9 @@ export const resetUnreadMessages = async (user, friendId, navigate) => {
 export const resetChatRoomUnreadMessages = async (user, roomId, navigate) => {
   try {
     const response = await fetch(
-      `http://${
+      `${import.meta.env.VITE_PROTOCOL}://${
         import.meta.env.VITE_IPADDRESS
-      }:8000/chatAPI/resetChatRoomUndreadMessages`,
+      }:${import.meta.env.VITE_PORT}/chatAPI/resetChatRoomUndreadMessages`,
       {
         method: "POST",
         credentials: "include",

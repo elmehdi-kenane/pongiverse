@@ -22,7 +22,7 @@ function TournamentWarning() {
 
     useEffect(() => {
         const getTournamentWarning = async () => {
-            const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-tournament-warning`, {
+            const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/get-tournament-warning`, {
                 method: "POST",
                 credentials: "include",
                 headers: {

@@ -46,7 +46,7 @@ async def send_playing_status_to_friends(self, user, status, user_channels):
 						'id': user.id,
 						'name': user.username,
 						'level': 2,
-						'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user.avatar.url}"
+						'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user.avatar.url}"
 					}
 				}
 			})
@@ -146,7 +146,7 @@ async def accept_invite(self, data):
 										'message': {
 											'tournament_id' : tournament_id,
 											'user' : sender_user,
-											'image' : f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{sender.avatar.url}",
+											'image' : f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{sender.avatar.url}",
 											'roomID' : '',
 											'mode' : 'TournamentInvitation'
 										}

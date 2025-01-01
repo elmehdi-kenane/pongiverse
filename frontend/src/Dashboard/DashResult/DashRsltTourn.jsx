@@ -23,7 +23,7 @@ function DashRsltTourn() {
 
 	useEffect(() => {
 		const gameMembersRounds = async () => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-tournament-members-rounds`, {
+			const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/get-tournament-members-rounds`, {
 				method: 'POST',
 				credentials: "include",
 				headers: {

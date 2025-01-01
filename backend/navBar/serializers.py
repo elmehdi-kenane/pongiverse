@@ -27,7 +27,7 @@ class customUserSerializer(serializers.ModelSerializer):
             else:
                 protocol = os.getenv("PROTOCOL")
                 ip_address = os.getenv("IP_ADDRESS")
-                return f"{protocol}://{ip_address}:8000/auth{avatar_url}"
+                return f"{protocol}://{ip_address}:{os.getenv('PORT')}/auth{avatar_url}"
         return None
 
 class NotificationSerializer(serializers.ModelSerializer):
@@ -50,4 +50,4 @@ class room_serializer(serializers.ModelSerializer):
     def get_icon(self, obj):
         protocol = os.getenv("PROTOCOL")
         ip_address = os.getenv("IP_ADDRESS")
-        return f"{protocol}://{ip_address}:8000/chatAPI{obj.icon.url}"
+        return f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{obj.icon.url}"

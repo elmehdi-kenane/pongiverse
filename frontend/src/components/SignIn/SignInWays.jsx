@@ -41,7 +41,7 @@ function SignInWays() {
       try {
         if (user) {
           const response = await fetch(
-            `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/CheckUserTFQ`,
+            `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/CheckUserTFQ`,
             {
               method: "POST",
               headers: {
@@ -109,7 +109,7 @@ function SignInWays() {
 
   const verify_email = async (email) => {
     const signature = encodeEmail(email);
-    const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/googleLogin/`, {
+    const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/auth/googleLogin/`, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
@@ -141,7 +141,7 @@ function SignInWays() {
 
   useEffect(() => {
     const google_get_data = async () => {
-      const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/google-login-get-token/`, {
+      const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/auth/google-login-get-token/`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
@@ -166,7 +166,7 @@ function SignInWays() {
 
   useEffect(() => {
     const intra_get_data = async () => {
-      const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/intra-login-get-token/`, {
+      const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/auth/intra-login-get-token/`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
@@ -199,7 +199,7 @@ function SignInWays() {
 
   const handleGoogleClick = () => {
     const getGoogleUrl = async () => {
-      const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/google-get-url`, {
+      const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/auth/google-get-url`, {
         method: "GET",
         headers: {
           'Content-Type': 'application/json',
@@ -216,7 +216,7 @@ function SignInWays() {
   }
   const handleIntraClick = () => {
     const getIntraUrl = async () => {
-      const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/intra-get-url`, {
+      const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/auth/intra-get-url`, {
         method: "GET",
         headers: {
           'Content-Type': 'application/json',

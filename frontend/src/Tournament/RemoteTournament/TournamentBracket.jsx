@@ -30,7 +30,7 @@ function TournamentBracket() {
 
 	useEffect(() => {
 		const check_is_join = async () => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/is-started-and-not-finshed`, {
+			const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/is-started-and-not-finshed`, {
 				method: "POST",
 				credentials: "include",
 				headers: {
@@ -51,7 +51,7 @@ function TournamentBracket() {
 			}
 		}
 		const gameMembersRounds = async () => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-game-members-round`, {
+			const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/get-game-members-round`, {
 				method: 'POST',
 				credentials: "include",
 				headers: {
@@ -74,7 +74,7 @@ function TournamentBracket() {
 		}
 
 		const get_oponent = async () => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-opponent`, {
+			const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/get-opponent`, {
 				method: 'POST',
 				credentials: "include",
 				headers: {

@@ -12,7 +12,7 @@ const Friends = () => {
   
   useEffect(() => {
     const getUsers = async () => {
-        const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/profile/${user}`, {
+        const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/profile/${user}`, {
           method: 'GET'
         })
         const res = await response.json()
@@ -26,7 +26,7 @@ const Friends = () => {
   }, [user])
 
   // const addFriend = async (myuser) => {
-  //   const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/users/add/${user}`, {
+  //   const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/users/add/${user}`, {
   //     method: 'POST',
   //     headers: {
   //       'Content-Type': 'application/json'
@@ -41,7 +41,7 @@ const Friends = () => {
   useEffect(() => {
     const getUsers = async () => {
       const response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS}:8000/profile/friends/${user}`,
+        `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/friends/${user}`,
         {
           method: "GET",
         }

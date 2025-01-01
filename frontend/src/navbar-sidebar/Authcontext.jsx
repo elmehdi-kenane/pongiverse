@@ -116,7 +116,7 @@ export const AuthProvider = ({ children }) => {
 		const getAllGameFriends = async () => {
 			try {
 				let response = await fetch(
-					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/onlineFriends`,
+					`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/onlineFriends`,
 					{
 						method: "POST",
 						credentials: "include",
@@ -143,7 +143,7 @@ export const AuthProvider = ({ children }) => {
 		const getAllNotifsFriends = async () => {
 			try {
 				let response = await fetch(
-					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/notifsFriends`,
+					`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/notifsFriends`,
 					{
 						method: "POST",
 						credentials: "include",
@@ -168,7 +168,7 @@ export const AuthProvider = ({ children }) => {
 		const getUserImage = async () => {
 			try {
 				let response = await fetch(
-					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getUserImage`,
+					`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/getUserImage`,
 					{
 						method: "POST",
 						credentials: "include",
@@ -192,7 +192,7 @@ export const AuthProvider = ({ children }) => {
 		const getGameCustomize = async () => {
 			try {
 				let response = await fetch(
-					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/getCustomizeGame`,
+					`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/getCustomizeGame`,
 					{
 						credentials: "include",
 					}
@@ -264,7 +264,7 @@ export const AuthProvider = ({ children }) => {
 		const check_is_in_game = async () => {
 			try {
 				let response = await fetch(
-					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/check_is_in_game`,
+					`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/check_is_in_game`,
 					{
 						method: "POST",
 						credentials: "include",
@@ -303,8 +303,8 @@ export const AuthProvider = ({ children }) => {
 	}) => {
 		const addNewNotification = async () => {
 			const response = await fetch(
-				`http://${import.meta.env.VITE_IPADDRESS
-				}:8000/navBar/add_notification/`,
+				`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
+				}:${import.meta.env.VITE_PORT}/navBar/add_notification/`,
 				{
 					method: "POST",
 					credentials: "include",
@@ -347,7 +347,7 @@ export const AuthProvider = ({ children }) => {
 		async function sendUserData(uname, currentAllGameFriends) {
 			try {
 				let response = await fetch(
-					`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get_user`,
+					`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/get_user`,
 					{
 						method: "POST",
 						credentials: "include",
@@ -388,7 +388,7 @@ export const AuthProvider = ({ children }) => {
 			user
 		) {
 			const newNotifSocket = new WebSocket(
-				`ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/notif-socket`
+				`${import.meta.env.VITE_SOCKET}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/ws/notif-socket`
 			);
 			newNotifSocket.onopen = () => {
 				setNotifSocket(newNotifSocket);
@@ -416,7 +416,7 @@ export const AuthProvider = ({ children }) => {
 		}
 		if (gamePlayRegex.test(location.pathname) && !socket && user) {
 			const newSocket = new WebSocket(
-				`ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/socket-server`
+				`${import.meta.env.VITE_SOCKET}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/ws/socket-server`
 			);
 			newSocket.onopen = () => {
 				setSocket(newSocket);
@@ -442,7 +442,7 @@ export const AuthProvider = ({ children }) => {
 			user
 		) {
 			const newChatSocket = new WebSocket(
-				`ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/chat_socket`
+				`${import.meta.env.VITE_SOCKET}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/ws/chat_socket`
 			);
 			newChatSocket.onopen = () => {
 				console.log("CHAT SOCKET OPENED SUCCESSFULLY");
@@ -467,7 +467,7 @@ export const AuthProvider = ({ children }) => {
 
 	useEffect(() => {
 		const set_is_inside = async (flag) => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/set-is-inside`, {
+			const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/set-is-inside`, {
 				method: 'POST',
 				credentials: "include",
 				headers: {
@@ -495,8 +495,8 @@ export const AuthProvider = ({ children }) => {
 		const getUnrecievedRoomInvitee = async () => {
 			try {
 				const response = await fetch(
-					`http://${import.meta.env.VITE_IPADDRESS
-					}:8000/chatAPI/unrecievedRoomInvitee/${user}`,
+					`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
+					}:${import.meta.env.VITE_PORT}/chatAPI/unrecievedRoomInvitee/${user}`,
 					{
 						credentials: "include",
 					}
@@ -519,8 +519,8 @@ export const AuthProvider = ({ children }) => {
 		const getUnreadConversations = async () => {
 			try {
 				const response = await fetch(
-					`http://${import.meta.env.VITE_IPADDRESS
-					}:8000/chatAPI/unreadConversations/${user}`, {
+					`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
+					}:${import.meta.env.VITE_PORT}/chatAPI/unreadConversations/${user}`, {
 					credentials: "include",
 				}
 				);
@@ -552,7 +552,7 @@ export const AuthProvider = ({ children }) => {
 	async function publicCheckAuth() {
 		try {
 			let response = await fetch(
-				`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/verifytoken/`,
+				`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/auth/verifytoken/`,
 				{
 					method: "GET",
 					headers: {
@@ -578,7 +578,7 @@ export const AuthProvider = ({ children }) => {
 	async function privateCheckAuth() {
 		try {
 			let response = await fetch(
-				`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/verifytoken/`,
+				`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/auth/verifytoken/`,
 				{
 					method: "GET",
 					headers: {

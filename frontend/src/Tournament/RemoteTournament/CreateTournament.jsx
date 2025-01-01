@@ -100,7 +100,7 @@ function CreateTournament() {
 	useEffect(() => {
 
 		const get_members = async () => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/tournament-members`, {
+			const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/tournament-members`, {
 				method: "POST",
 				credentials: "include",
 				headers: {
@@ -125,7 +125,7 @@ function CreateTournament() {
 
 
 		const check_is_join = async () => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/is-joining-tournament`, {
+			const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/is-joining-tournament`, {
 				method: "POST",
 				credentials: "include",
 				headers: {
@@ -146,7 +146,7 @@ function CreateTournament() {
 			}
 		}
 		const check_is_started_and_not_finished = async () => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/is-started-and-not-finshed`, {
+			const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/is-started-and-not-finshed`, {
 				method: "POST",
 				credentials: "include",
 				headers: {
@@ -173,7 +173,7 @@ function CreateTournament() {
 
 	useEffect(() => {
 		const get_member = async (username) => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-tournament-member`, {
+			const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/get-tournament-member`, {
 				method: "POST",
 				credentials: "include",
 				headers: {

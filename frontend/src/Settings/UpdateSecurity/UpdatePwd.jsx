@@ -39,7 +39,7 @@ function UpdatePwd(props) {
     if (checkPwd(oldPwd, newPwd, cfmPwd)) {
       setIsLoading(true);
       try {
-        const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/updatePassword`, {
+        const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/updatePassword`, {
           method: "POST",
           credentials: "include",
           headers: {

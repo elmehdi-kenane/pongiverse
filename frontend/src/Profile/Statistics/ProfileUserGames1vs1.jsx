@@ -20,7 +20,7 @@ function ProfileUserGames1vs1() {
   const getUserMatches = async (page, index) => {
     setLoading(true)
     try {
-      const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/profile/getUserMatches1vs1/${userId}/${page}`, {
+      const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getUserMatches1vs1/${userId}/${page}`, {
         method: "GET",
         credentials: "include",
         headers: {

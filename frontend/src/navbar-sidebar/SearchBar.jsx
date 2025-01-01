@@ -29,7 +29,7 @@ export const SearchBar = () => {
       console.log("fetch search result with term:", searchTerm);
 
       const response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS}:8000/navBar/search_view/?searchTerm=${searchTerm}&username=${username}`,
+        `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/navBar/search_view/?searchTerm=${searchTerm}&username=${username}`,
         {
           method: "GET",
           credentials: "include",

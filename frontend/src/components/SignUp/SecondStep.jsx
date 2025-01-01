@@ -15,7 +15,7 @@ axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 import { ImCross } from "react-icons/im";
 const client = axios.create({
-	baseURL: `http://${import.meta.env.VITE_IPADDRESS}:8000`,
+	baseURL: `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}`,
 });
 
 function SecondStep() {

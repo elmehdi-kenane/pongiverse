@@ -32,7 +32,7 @@ function NavbarSidebar() {
     e.preventDefault();
     try {
       let response = await fetch(
-        `http://${import.meta.env.VITE_IPADDRESS}:8000/api/logout`,
+        `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/logout`,
         {
           method: "POST",
           credentials: "include",

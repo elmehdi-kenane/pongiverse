@@ -25,7 +25,7 @@ const Modes = () => {
 
 	useEffect(() => {
 		const check_is_join = async () => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/is-joining-tournament`, {
+			const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/is-joining-tournament`, {
 				method: "POST",
 				credentials: "include",
 				headers: {
@@ -44,7 +44,7 @@ const Modes = () => {
 			}
 		}
 		const check_is_started_and_not_finished = async () => {
-			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/is-started-and-not-finshed`, {
+			const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/is-started-and-not-finshed`, {
 				method: "POST",
 				credentials: "include",
 				headers: {

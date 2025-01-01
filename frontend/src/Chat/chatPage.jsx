@@ -191,8 +191,8 @@ const Chat = () => {
     const fetchDirectsWithMessage = async () => {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS
-          }:8000/chatAPI/firendwithdirects/${user}?page=${currentDirectPage}`, {
+          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
+          }:${import.meta.env.VITE_PORT}/chatAPI/firendwithdirects/${user}?page=${currentDirectPage}`, {
           credentials: 'include'
         }
         );
@@ -244,8 +244,8 @@ const Chat = () => {
     const fetchChatRooms = async () => {
       try {
         const response = await fetch(
-          `http://${import.meta.env.VITE_IPADDRESS
-          }:8000/chatAPI/chatRooms/${user}?page=${currentChatRoomPage}`, {
+          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
+          }:${import.meta.env.VITE_PORT}/chatAPI/chatRooms/${user}?page=${currentChatRoomPage}`, {
           credentials: 'include'
         }
         );
