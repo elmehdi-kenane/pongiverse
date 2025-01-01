@@ -55,12 +55,14 @@ services:
     build: backend
     hostname: backend
     container_name: backend
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/admin"]
-      interval: 5s
-      timeout: 5s
-      retries: 30
-      start_period: 20s
+    ports:
+      - "8000:8000"
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:8000/admin/login/?next=/admin/"]
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 30
+    #   start_period: 20s
     depends_on:
       redis:
         condition: service_healthy

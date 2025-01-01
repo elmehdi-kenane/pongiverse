@@ -12,7 +12,7 @@ python3 -m pip install --upgrade pip
 
 pip3 install -r requirements.txt
 
-python3 ./manage.py createsuperuser --noinput
+python3 manage.py createsuperuser --username admin --email admin@example.com --noinput && echo "from myapp.models import customuser; customuser.objects.filter(username='admin').update(password='admin')" | python manage.py shell
 
 python3 ./manage.py makemigrations mainApp myapp Profile Notifications chat friends navBar
 

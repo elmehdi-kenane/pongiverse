@@ -28,7 +28,11 @@ export default defineConfig({
     },
   },
   server : {
-    port : 3000,
     open: true,
+    port : 3000,
+    hmr: {
+      protocol: 'wss', // Use WebSocket Secure
+      host: 'localhost', // Replace with your domain
+    },
   }
 });
