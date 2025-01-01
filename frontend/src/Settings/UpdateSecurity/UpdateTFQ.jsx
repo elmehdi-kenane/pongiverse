@@ -48,16 +48,16 @@ function UpdateTFQ(props) {
         );
         const res = await response.json();
         if (response.ok) {
-          // console.log("Response : ", res.data);
+          //console.log("Response : ", res.data);
           setKey(res.data.key);
           setTfqImg(res.data.img);
           setStep('submit');
         } else if (response.status === 401)
           navigate('/signin')
         else
-          console.log("Error : ", res.error);
+         console.log("Error : ", res.error);
       } catch (error) {
-        console.log("Error: ", error);
+       console.log("Error: ", error);
       }
       // setIsLoading(false)
     };
@@ -127,7 +127,7 @@ function UpdateTFQ(props) {
             notifyErr("Wrong One-Time-Password")
           }
         } catch (error) {
-          console.log("Error: ", error);
+         console.log("Error: ", error);
         }
       }
     }

@@ -65,7 +65,7 @@ const InvitationRoom = (props) => {
         })
       })
       const data = await response.json()
-      console.log("Data:", data)
+     console.log("Data:", data)
       if (response.ok) {
         let roomInvitations = chatRoomInvitationsRef.current
         let updatedRooms = roomInvitations.filter(
@@ -75,7 +75,7 @@ const InvitationRoom = (props) => {
       } else if (response.status === 401)
         navigate('/signin')
       else
-        console.log("Error cancelling room invitation")
+       console.log("Error cancelling room invitation")
     } catch (error) {
       console.log(error)
     }

@@ -58,7 +58,7 @@ const GameSettings = () => {
     if (preventSlideChange.current) return;
     const currentIndex = swiper.realIndex;
     setActiveSlideIndex(currentIndex);
-    console.log("REAL INDEX : ", swiper.realIndex);
+   console.log("REAL INDEX : ", swiper.realIndex);
     if (typeChosen === 1) {
       setSelectedItems([swiper.realIndex, selectedItems[1], selectedItems[2]]);
       setPaddleClr(paddleBallColor[swiper.realIndex]);
@@ -99,7 +99,7 @@ const GameSettings = () => {
 
   const savingSettings = async () => {
     // const ballSlt = ballSelectionRef.current
-    console.log("ball selcted : ", isChecked);
+   console.log("ball selcted : ", isChecked);
     if (user) {
       try {
         let response = await fetch(
@@ -129,11 +129,11 @@ const GameSettings = () => {
           duration: 2000,
         });
       } catch (e) {
-        console.log("something wrong with fetch");
+       console.log("something wrong with fetch");
         setonSavingParams(false);
       }
     } else {
-      console.log("user variable is empty");
+     console.log("user variable is empty");
       setonSavingParams(false);
     }
   };

@@ -30,13 +30,13 @@ def search_view(request):
         result_type = "user"
         user_ser = customUserSerializer(user_obj)
         if (Friendship.objects.filter(Q(block_status=Friendship.BLOCKED) | Q(block_status=Friendship.BLOCKER), user=user, friend=user_obj).exists()):
-            print("blocked friend")
+            #print"blocked friend")
             continue
         # [user_ser.data['username'] == username] means the current-user so doesn't make sense to show add friend to itself
         elif (FriendRequest.objects.filter(from_user=user, to_user=user_obj).exists()
         or Friendship.objects.filter(user=user, friend=user_obj).exists()
         or user_ser.data['username'] == username):
-            print(user_ser.data['username'], " is friend or friend-request")
+            #printuser_ser.data['username'], " is friend or friend-request")
             search_result.append({
             'id': user_ser.data['id'],
             'username': user_ser.data['username'],
@@ -57,7 +57,7 @@ def search_view(request):
     for room_obj in rooms_objs:
         result_type = "room"
         room_ser = room_serializer(room_obj)
-        print(room_ser.data)
+        #printroom_ser.data)
         if (Membership.objects.filter(room_id=room_obj.id, user_id=user.id).exists()):
             search_result.append({
                 'id': room_ser.data['id'],
@@ -76,7 +76,7 @@ def search_view(request):
                 'is_joined': False,
                 'result_type': result_type
             })
-    print("search_result", search_result)
+    #print"search_result", search_result)
     return Response(search_result)
 
 @authentication_required

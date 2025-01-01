@@ -20,7 +20,7 @@ from asgiref.sync import sync_to_async
 #         'type': 'add-friend-request',
 #         'to_username' : to_username
 #     }
-#     #print(f"++++++++++++++ Friend request sent ++++++++++++++")
+#     ##printf"++++++++++++++ Friend request sent ++++++++++++++")
 #     await self.send(text_data=json.dumps(data))
 
 # async def cancel_friend_request(self, data):
@@ -34,10 +34,10 @@ from asgiref.sync import sync_to_async
 #         friend_request = await sync_to_async(FriendRequest.objects.get)(from_user=to_user, to_user=from_user, status="recieved")
 #         await sync_to_async(friend_request.delete)()
 #     except FriendRequest.DoesNotExist:
-#         #print(f"++++++++++++++ Friend request doesn't exist. ++++++++++++++")
+#         ##printf"++++++++++++++ Friend request doesn't exist. ++++++++++++++")
 #     data = {
 #         'type': 'cancel-friend-request',
 #         'to_username' : to_username
 #     }
-#     #print(f"++++++++++++++ Friend request deleted successfully. ++++++++++++++")
+#     ##printf"++++++++++++++ Friend request deleted successfully. ++++++++++++++")
 #     await self.send(text_data=json.dumps(data))

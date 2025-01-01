@@ -26,7 +26,7 @@ const SuggestionFriendCard = ({ username, avatar, level, total_xp }) => {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log("Success:", data);
+       console.log("Success:", data);
       })
       .catch((error) => {
         console.error("Error:", error);

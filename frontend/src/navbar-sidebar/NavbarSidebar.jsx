@@ -49,7 +49,7 @@ function NavbarSidebar() {
         navigate("/signin");
       }
     } catch (e) {
-      console.log("Error in network or URL");
+     console.log("Error in network or URL");
     }
   };
   return (

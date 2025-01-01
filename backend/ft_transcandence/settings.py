@@ -151,33 +151,28 @@ REST_FRAMEWORK = {
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DB_NAME = "ft_transcendance"
+DB_NAME = "ft_transcendence"
 DB_USER = "aagouzou"
 DB_PASSWORD = "123456789"
 DATABASES = {
-	'default': {
-		'ENGINE': 'django.db.backends.sqlite3',
-		'NAME': BASE_DIR / 'db.sqlite3',
-	}
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': DB_NAME,
+        'USER': DB_USER,
+        'PASSWORD': DB_PASSWORD,
+        'HOST': "postgres",
+        'PORT': '5432',
+    }
 }
 
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels_redis.core.RedisChannelLayer",
-#         "CONFIG": {
-#             "hosts": [("redis", 6379)],
-#             "capacity": 1000
-#         },
-#     },
-# }
-
 CHANNEL_LAYERS = {
-	"default": {
-		"BACKEND": "channels.layers.InMemoryChannelLayer",
-    "CONFIG": {
-          "capacity": 5000,
-      },
-	}
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379)],
+            "capacity": 1000
+        },
+    },
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -216,8 +211,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://127.0.0.1:3001",
     "http://localhost:3001",
-    "https://lh3.googleusercontent.com"
+    "https://lh3.googleusercontent.com",
+    'http://localhost:8000'
 ]
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000']
 
 
 CORS_ORIGIN_WHITELIST = [
@@ -225,6 +222,7 @@ CORS_ORIGIN_WHITELIST = [
 'http://10.11.7.11:3000',
 'http://10.13.5.8:3000',
 'http://10.13.2.3:3000',
+'http://localhost:8000'
 
 ]
 

@@ -141,7 +141,7 @@ const AiOpponent = () => {
         // the ball going to the opposite side or the ball position is between 0 and 3/4 of the canvasWidth
         bot.movement = 0;
         context.putImageData(botPaddle, bot.x, bot.topOfPaddle);
-        // console.log("the ball will not hit the bot-side");
+        //console.log("the ball will not hit the bot-side");
       } else {
         // handle the cornerHit cases
         if (predictedY < 0) predictedY = -predictedY;
@@ -156,7 +156,7 @@ const AiOpponent = () => {
           // bot is able to hit the ball with its current y so just keep the bot paddle in its current place
           // the condition means that the y-predicted is between the head of the bot-paddle and the middle of the bot-paddle
           // I added/subtracted the 20 value to make sure the ball will hit the bot-paddle
-          //   console.log("the bot is able to hit the ball with its current position");
+          //  console.log("the bot is able to hit the ball with its current position");
           context.putImageData(botPaddle, bot.x, bot.topOfPaddle);
         } else {
           // the current-y of the bot-paddle is still incapable to hit the ball
@@ -295,22 +295,22 @@ const AiOpponent = () => {
           bot.topOfPaddle <= nextBallPositionY - ballRadius &&
           bot.topOfPaddle + paddleHeight >= nextBallPositionY + ballRadius
         ) {
-          //   console.log("============ ======== ============");
-          //   console.log("============ BOT SIDE ============");
+          //  console.log("============ ======== ============");
+          //  console.log("============ BOT SIDE ============");
           //   console.log(ballVelocityRef.current.y > 0 ? "from up" : "from down");
-          //   console.log("top", bot.topOfPaddle);
-          //   console.log("ball.y + ballRadius", nextBallPositionY + ballRadius);
+          //  console.log("top", bot.topOfPaddle);
+          //  console.log("ball.y + ballRadius", nextBallPositionY + ballRadius);
           //   console.log(
           //     "Math.floor(nextBallPositionX + ballRadius)",
           //     Math.floor(nextBallPositionX + ballRadius),
           //     "bot.x",
           //     bot.x
           //   );
-          //   console.log("bottom", bot.topOfPaddle + paddleHeight);
+          //  console.log("bottom", bot.topOfPaddle + paddleHeight);
           changeBallXDirection();
         } else if (Math.floor(nextBallPositionX + ballRadius) >= canvasWidth) {
-          //   console.log("============ ======== ============");
-          //   console.log("============ BOT SIDE ============");
+          //  console.log("============ ======== ============");
+          //  console.log("============ BOT SIDE ============");
           //   console.log(
           //     "+++++++ new goal +++++++",
           //     "Math.floor(nextBallPositionX + ballRadius)",
@@ -337,8 +337,8 @@ const AiOpponent = () => {
           userObj.topOfPaddle <= nextBallPositionY &&
           userObj.topOfPaddle + paddleHeight >= nextBallPositionY
         ) {
-          //   console.log("============ ======== ============");
-          //   console.log("============ USER SIDE ===========");
+          //  console.log("============ ======== ============");
+          //  console.log("============ USER SIDE ===========");
           //   console.log(
           //     "the user paddle hit the ball nextBallPositionX",
           //     nextBallPositionX,
@@ -346,7 +346,7 @@ const AiOpponent = () => {
           //     userObj.x
           //   );
           //   console.log(ballVelocityRef.current.y > 0 ? "from up" : "from down");
-          //   console.log("top", userObj.topOfPaddle);
+          //  console.log("top", userObj.topOfPaddle);
           //   console.log(
           //     "ball.y",
           //     nextBallPositionY
@@ -357,12 +357,12 @@ const AiOpponent = () => {
           //     "userObj.x",
           //     userObj.x
           //   );
-          //   console.log("bottom", userObj.topOfPaddle + paddleHeight);
+          //  console.log("bottom", userObj.topOfPaddle + paddleHeight);
           changeBallXDirection();
         }
         if (Math.floor(nextBallPositionX - ballRadius) <= 0) {
-          // console.log("============ ======== ============");
-          // console.log("============ USER SIDE ===========");
+          //console.log("============ ======== ============");
+          //console.log("============ USER SIDE ===========");
           // console.log(
           //   "+++++++ new goal +++++++",
           //   "Math.floor(nextBallPositionX + ballRadius)",

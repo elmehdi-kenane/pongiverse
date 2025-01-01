@@ -134,7 +134,7 @@ async def accept_invite(self, data):
 		TournamentGameNotify = await sync_to_async(GameNotifications.objects.filter(tournament_id=tournament_id, user=sender, target=receiver).first)()
 		if TournamentGameNotify is None:
 			channel_name_list = notifs_user_channels.get(receiver.id)
-			print(f"\n\n CHANNEL NAME LIST : {channel_name_list} \n\n")
+			#printf"\n\n CHANNEL NAME LIST : {channel_name_list} \n\n")
 			tournamentInv = GameNotifications(tournament_id=tournament_id, user=sender, target=receiver, mode='TournamentInvitation')
 			await sync_to_async(tournamentInv.save)()
 			for channel_name in channel_name_list:
@@ -190,9 +190,9 @@ def is_user_owner_in_tournament(user_to_check, tournament_id):
 async def quarterFinal_timer(self, data):
 	tournament_id = data['message']['tournament_id']
 	username = data['message']['user']
-	print(f"\n USERname: {username}, is_owner: {is_user_owner_in_tournament(username, tournament_id)}\n")
+	#printf"\n USERname: {username}, is_owner: {is_user_owner_in_tournament(username, tournament_id)}\n")
 	if is_user_owner_in_tournament(username, tournament_id) == True:
-		asyncio.create_task(manage_tournament(self, tournament_id))
+		asyncio.create_task(manage_tournament(tournament_id))
 
 
 async def get_right_room(tournament_id, tournament_rooms, username):

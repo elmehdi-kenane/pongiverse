@@ -41,7 +41,7 @@ const HomeSection = () => {
 				setIsAuthenticated(false)
 			}
 		} catch (e) {
-			console.log("something wrong with fetch");
+			////console.log("something wrong with fetch");
 		}
 	}
 

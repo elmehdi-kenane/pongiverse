@@ -48,7 +48,7 @@ const TwoVsTwoCreateOrJoin = () => {
 
     useEffect(() => {
         if (socket && socket.readyState === WebSocket.OPEN && user) {
-            console.log("CHECKING IF PLAYER IN ROOM")
+           console.log("CHECKING IF PLAYER IN ROOM")
             socket.send(JSON.stringify({
                 type: 'isPlayerInAnyRoom',
                 message: {
@@ -91,7 +91,7 @@ const TwoVsTwoCreateOrJoin = () => {
                 let type = data.type
                 let message = data.message
                 if (type === 'roomAlreadyStarted') {
-                    console.log("inside roomAlreadyStarted")
+                   console.log("inside roomAlreadyStarted")
                     setAllSet(true)
                     if (message.mode === '1vs1')
                         navigate(`../play/1vs1/${message.roomID}`)
@@ -168,7 +168,7 @@ const TwoVsTwoCreateOrJoin = () => {
                         })
                     }
                 } else if (type === "gameReady") {
-                    console.log("inside gameReady")
+                   console.log("inside gameReady")
                     const playerNbr = playerNoRef.current;
                     console.log(message)
                     if (playerNbr === 1 || playerNbr === 2) {
@@ -241,18 +241,18 @@ const TwoVsTwoCreateOrJoin = () => {
                     setMatchCreated(true)
                     setMatchJoined(true)
                     setAllSet(true)
-                    console.log("ALL SET BROTHER")
+                   console.log("ALL SET BROTHER")
                 } else if (type === "playersReady") {
-                    console.log("inside playersReady")
+                   console.log("inside playersReady")
                     setLoadMatch(false)
                     setAllSet(true)
                 } else if (type === "playerNo") {
-                    console.log("inside playerNo")
+                   console.log("inside playerNo")
                     setPlayerNo(message.playerNo)
                     setTmpRoomID(message.id)
                     setGameStarted(true)
                 } else if (type === "playerInfos") {
-                    console.log("inside playerInfos")
+                   console.log("inside playerInfos")
                     setPlayerNo(message.playerNo)
                     setTmpRoomID(message.id)
                     setExpandJoin(false)
@@ -265,7 +265,7 @@ const TwoVsTwoCreateOrJoin = () => {
                     } else
                         setCodeToShare(message.id)
                 } else if (type === 'alreadySearching') {
-                    console.log("inside alreadySearching")
+                   console.log("inside alreadySearching")
                     setPlayerNo(message.playerNo)
                     setTmpRoomID(message.id)
                     setExpandJoin(false)
@@ -282,7 +282,7 @@ const TwoVsTwoCreateOrJoin = () => {
                     setRoomIdIncorrect(true)
                     setCheckingCode(false)
                 } else if (type === 'creatorOut') {
-                    console.log("creator got out")
+                   console.log("creator got out")
                     navigate(`../game/solo/2vs2`)
                 } else if (type === 'hmed')
                     socket.close()
@@ -290,7 +290,7 @@ const TwoVsTwoCreateOrJoin = () => {
         }
 
         if (allSet && roomID) {
-            console.log("inside allSet and roomID")
+           console.log("inside allSet and roomID")
             setTimeout(() => {
                 navigate(`../play/2vs2/${roomID}`)
             }, 2000);
@@ -307,7 +307,7 @@ const TwoVsTwoCreateOrJoin = () => {
 
     const cancelTheGame = () => {
         if (socket && socket.readyState === WebSocket.OPEN) {
-            console.log("inside quit")
+           console.log("inside quit")
             socket.send(JSON.stringify({
                 type: 'quitMp',
                 message: {
@@ -390,7 +390,7 @@ const TwoVsTwoCreateOrJoin = () => {
                 const user = userRef.current
                 const socket = socketRef.current
                 const roomID = roomIdRef.current
-                console.log("USER IS GETTING OUT ", user, roomID, socket)
+               console.log("USER IS GETTING OUT ", user, roomID, socket)
                 if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
                     socket.send(JSON.stringify({
                         type: 'quitMp',
@@ -410,7 +410,7 @@ const TwoVsTwoCreateOrJoin = () => {
             const user = userRef.current
             const socket = socketRef.current
             const roomID = roomIdRef.current
-            console.log("INSIDE THE MATCH : ", user, roomID, socket)
+           console.log("INSIDE THE MATCH : ", user, roomID, socket)
             if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
                 socket.send(JSON.stringify({
                     type: 'quitMp',

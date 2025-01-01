@@ -123,7 +123,7 @@ function LocalTournamentFillMembers() {
 			setPlayers(JSON.parse(item));
 		}
 		else {
-			console.log("ITEM DOES NOT EXIST")
+			////console.log("ITEM DOES NOT EXIST")
 			const QuarterFinalPlayers = Array.from({ length: 8 }, (_, index) => `Player_${index + 1}`);
 			const SemiFinalPlayers = Array.from({ length: 4 }, () => null);
 			const FinalPlayers = Array.from({ length: 2 }, () => null);
@@ -141,7 +141,7 @@ function LocalTournamentFillMembers() {
 
 	useEffect(() => {
 		if (players.length > 0) {
-			console.log("PLAYER YSEE")
+			////console.log("PLAYER YSEE")
 			setSecureItem('QuarterFinalPlayers', players);
 		}
 	}, [players])

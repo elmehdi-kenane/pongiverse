@@ -23,7 +23,7 @@ def get_friend_list(request, username):
     user = customuser.objects.filter(username=username).first()
     friend_objs = Friendship.objects.filter(user=user, block_status=Friendship.BLOCK_NONE)
     friends_ser = friendSerializer(friend_objs, many=True)
-    print(friends_ser.data)
+    #printfriends_ser.data)
     return Response(friends_ser.data)
 
 @authentication_required
@@ -41,8 +41,8 @@ def get_friend_suggestions(request, username):
     
     user_objs = customuser.objects.exclude(username=user.username)
     user_ser_list = customuserSerializer(user_objs, many=True)
-    #print("user_ser_list.data")
-    #print(user_ser_list.data)
+    ##print"user_ser_list.data")
+    ##printuser_ser_list.data)
     
     friend_objs = Friendship.objects.filter(user=user)
     friends_ser = friendSerializer(friend_objs, many=True)
@@ -52,13 +52,13 @@ def get_friend_suggestions(request, username):
 
     sent_requests_objs = FriendRequest.objects.filter(from_user=user, status="sent")
     sent_reqs_ser = friendRequestSerializer(sent_requests_objs, many=True)
-    #print("sent_reqs_ser.data")
-    #print(sent_reqs_ser.data)
+    ##print"sent_reqs_ser.data")
+    ##printsent_reqs_ser.data)
 
     received_requests_objs = FriendRequest.objects.filter(from_user=user, status="received")
     received_reqs_ser = friendRequestSerializer(received_requests_objs, many=True)
-    #print("received_reqs_ser.data")
-    #print(received_reqs_ser.data)
+    ##print"received_reqs_ser.data")
+    ##printreceived_reqs_ser.data)
 
     exclude_ids = set()
     exclude_ids.update([friend_obj['second_username'] for friend_obj in friends_ser.data])
@@ -75,7 +75,7 @@ def get_sent_requests(request, username):
     user = customuser.objects.get(username=username)
     sent_requests_objs = FriendRequest.objects.filter(from_user=user, status="sent")
     request_list_ser = friendRequestSerializer(sent_requests_objs, many=True)
-    # #print(request_list_ser.data)
+    # ##printrequest_list_ser.data)
     return Response(request_list_ser.data)
 
 @authentication_required
@@ -129,7 +129,7 @@ def add_friend_request(request):
             }
         }
     )
-    #print(f"++++++++++++++ Friend request sent ++++++++++++++")
+    ##printf"++++++++++++++ Friend request sent ++++++++++++++")
     return Response({"success": "Friend request added successfully."})
 
 @authentication_required
@@ -180,7 +180,7 @@ def cancel_friend_request(request):
 @authentication_required
 @api_view(['POST'])
 def confirm_friend_request(request):
-    print("request.data", request.data)
+    #print"request.data", request.data)
     from_username = request.data['from_username']
     to_username = request.data['to_username']
     from_user = customuser.objects.get(username=from_username)
@@ -272,7 +272,7 @@ def remove_friendship(request):
         }
     )
     to_user_channel_name = user_channels.get(to_user_id)
-    print("to_user_channel_name", to_user_channel_name)
+    #print"to_user_channel_name", to_user_channel_name)
     if to_user_channel_name:
         async_to_sync(channel_layer.send)(
             to_user_channel_name,
@@ -349,11 +349,11 @@ def unblock_friend(request):
     try:
         friendship_obj = Friendship.objects.get(user=from_user, friend=to_user)
         friend_ser_from = friendSerializer(friendship_obj)
-        # print("friend_ser_from", friend_ser_from.data)
+        # #print"friend_ser_from", friend_ser_from.data)
         friendship_obj.delete()
         friendship_obj = Friendship.objects.get(user=to_user, friend=from_user)
         friend_ser_to = friendSerializer(friendship_obj)
-        # print("friend_ser_to", friend_ser_to.data)
+        # #print"friend_ser_to", friend_ser_to.data)
         friendship_obj.delete()
     except Friendship.DoesNotExist:
         return Response({"success": "Friendship obj does not exist."})

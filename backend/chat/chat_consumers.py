@@ -187,7 +187,7 @@ async def direct_message(self, data, user_channels):
             )
     user_notification_channels = notifs_user_channels.get(receiver.id)
     count = await sync_to_async(Directs.objects.filter(receiver=receiver, is_read=False).values('sender').distinct().count)() + await sync_to_async(Room.objects.filter(membership__user=receiver, membership__unreadCount__gt=0).count)()
-    print("THE COUNT INSIDE DIRECT MESSAGE", count)
+    #print"THE COUNT INSIDE DIRECT MESSAGE", count)
     if user_notification_channels is not None:
         for user_channel in user_notification_channels:
             await self.channel_layer.send(

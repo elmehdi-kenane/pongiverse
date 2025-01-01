@@ -29,7 +29,7 @@ function DashStatistics() {
                 else if (response.status === 401)
                     navigate('/signin')
             } catch (error) {
-                console.log("Error: ", error);
+               console.log("Error: ", error);
             }
         }
         if (user)

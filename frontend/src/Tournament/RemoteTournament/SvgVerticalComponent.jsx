@@ -4,11 +4,11 @@ import nullplayer from './nullplayer.png'
 import { useNavigate } from "react-router-dom";
 import AuthContext from '../../navbar-sidebar/Authcontext';
 const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roundfinalmembers, roundwinner }) => {
-	console.log("roundquartermembers", roundquartermembers)
-	console.log("roundsemifinalmembers", roundsemifinalmembers)
-	console.log("roundfinalmembers", roundfinalmembers)
+	////console.log("roundquartermembers", roundquartermembers)
+	////console.log("roundsemifinalmembers", roundsemifinalmembers)
+	////console.log("roundfinalmembers", roundfinalmembers)
 	const {setIsGameStats} = useContext(AuthContext)
-	console.log("roundwinner", roundwinner)
+	////console.log("roundwinner", roundwinner)
 	const navigate = useNavigate()
 	const findMemberByPosition = (roundmembers, position) => {
 		const member = roundmembers.find(member => member.position === position);
@@ -20,7 +20,8 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 
 
 	const navigate_to_profile = (username) => {
-		if (username !== 'anounymous') {
+		console.log("*****username", username)	
+		if (username !== 'anounymous' && username !== '') {
 			setIsGameStats(false)
 			navigate(`/mainpage/profile/${username}`)
 		}
@@ -32,7 +33,7 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 		}
 	}, [roundquartermembers])
 
-	console.log("winner lenght", roundwinner)
+	////console.log("winner lenght", roundwinner)
 	return (
 
 

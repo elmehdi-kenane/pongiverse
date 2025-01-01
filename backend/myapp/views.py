@@ -36,7 +36,11 @@ from mainApp.models import UserMatchStatics
 import hmac
 import hashlib
 import base64
+from django.http import JsonResponse
 
+# i will use curl -f http://localhost:8000/auth/healthcheck/ to check if the server is running
+def healthcheck(request):
+    return JsonResponse({"status": "ok"}, status=200)
 
 
 class SignUpView(APIView):
@@ -78,7 +82,7 @@ class SignUpView(APIView):
 			response.data = {"Case": "Sign up successfully", "data": data}
 			return response
 		else:
-			print(f"Serializer errors: {serializer.errors}")
+			#printf"Serializer errors: {serializer.errors}")
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -215,7 +219,7 @@ class CheckUsernameView(APIView):
 
 class VerifyTokenView(APIView):
 	def get(self, request, format=None):
-		print("************VerifyTokenView")
+		#print"************VerifyTokenView")
 		response = Response()
 		user_id = -1
 		try:

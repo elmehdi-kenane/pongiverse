@@ -413,7 +413,7 @@ const TwoVsTwoPlayMatch = () => {
 
 	useEffect(() => {
         if (canvasRef && !canvasDrawing && gameCustomize.length && socket) {
-            console.log("testing : ", canvasRef, canvasDrawing)
+           console.log("testing : ", canvasRef, canvasDrawing)
             const canvas = canvasRef.current;
             const context = canvas.getContext('2d')
             player1.current = new Player(15, 65, 10, 70, gameCustomize[0], 0)
@@ -431,7 +431,7 @@ const TwoVsTwoPlayMatch = () => {
             window.addEventListener("keyup", handleKeyUp)
             canvas.addEventListener("mousemove", handleMouseMove)
             window.addEventListener('resize', resizeCanvas);
-            console.log("DRAWING THE SHAPES")
+           console.log("DRAWING THE SHAPES")
             setCanvasDrawing(true)
         }
 	}, [canvasRef, canvasDrawing, socket]);
@@ -644,7 +644,7 @@ const TwoVsTwoPlayMatch = () => {
                 let type = data.type
                 let message = data.message
                 if (type === "setupGame") {
-                    console.log("INSIDE SETUPGAME")
+                   console.log("INSIDE SETUPGAME")
                     playerNo = message.playerNo
                     isGameStarted = true
                     setUserName1(message.user1)
@@ -653,7 +653,7 @@ const TwoVsTwoPlayMatch = () => {
                     setUserName4(message.user4)
                     setTime(message.time)
                     startTimer()
-                    console.log("USER OUT IS : ", message.userOut)
+                   console.log("USER OUT IS : ", message.userOut)
                     if (message.hasOwnProperty('userOut') && message.userOut.length) {
                         setUserOut(message.userOut)
                     }
@@ -661,7 +661,7 @@ const TwoVsTwoPlayMatch = () => {
                     if (player1.current && player2.current && ball) {
                         const canvas = canvasRef.current;
                         if (canvas) {
-                            // console.log("updating the front now")
+                            //console.log("updating the front now")
                             const widthScalingFactor = canvas.width / 710;
                             const heightScalingFactor = canvas.height / 400;
                             player1.current.y = message.playerY1 * heightScalingFactor;
@@ -687,8 +687,8 @@ const TwoVsTwoPlayMatch = () => {
                         }
                     }
                 } else if (type === "notAuthorized") {
-                    console.log("INSIDE LEAVEGAME")
-                    console.log("navigating from the playing page")
+                   console.log("INSIDE LEAVEGAME")
+                   console.log("navigating from the playing page")
                     navigate("../game/solo/2vs2")
                 } else if (type === "roomNotExist") {
                     navigate("../game/solo/2vs2")
@@ -706,7 +706,7 @@ const TwoVsTwoPlayMatch = () => {
                     setGameFinished(true)
                     // gamefinishedAborted(message)
                     setTime(message.time)
-                    console.log("***************** ALL PLAYERS STATS : ", allPlayersStats)
+                   console.log("***************** ALL PLAYERS STATS : ", allPlayersStats)
                     allPlayersStats[0].totalScore = message.score[0]
                     allPlayersStats[1].totalScore = message.score[1]
                     allPlayersStats[2].totalScore = message.score[2]
@@ -784,7 +784,7 @@ const TwoVsTwoPlayMatch = () => {
     useEffect(() => {
         if (canvasDrawing && !socketRecreated && user) {
             if (socket && socket.readyState === WebSocket.OPEN && user) {
-                console.log("CHECKING IF PLAYER IN ROOM")
+               console.log("CHECKING IF PLAYER IN ROOM")
                 socket.send(JSON.stringify({
                     type: 'isPlayerInRoomMp',
                     message: {
@@ -808,14 +808,14 @@ const TwoVsTwoPlayMatch = () => {
                 }))
                 navigate('../game/solo/2vs2')
             } else {
-                console.log("socket is closed, refresh the page")
+               console.log("socket is closed, refresh the page")
             }
         }
     }
     
     const startTimer = () => {
             timer = setInterval(() => {
-                // console.log("TIME IS ", isGameStarted)
+                //console.log("TIME IS ", isGameStarted)
                 if (isGameStarted)
                     setTime(prevTime => prevTime + 1);
                 else
@@ -844,7 +844,7 @@ const TwoVsTwoPlayMatch = () => {
             const user = userRef.current
             const socket = socketRef.current
             const roomID = roomIdRef.current
-            console.log("INSIDE THE MATCH : ", user, roomID, socket)
+           console.log("INSIDE THE MATCH : ", user, roomID, socket)
             if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
                 socket.send(JSON.stringify({
                     type: 'playerChangedPageMp',
@@ -867,7 +867,7 @@ const TwoVsTwoPlayMatch = () => {
                 const user = userRef.current
                 const socket = socketRef.current
                 const roomID = roomIdRef.current
-                console.log("USER IS GETTING OUT ", user, roomID, socket)
+               console.log("USER IS GETTING OUT ", user, roomID, socket)
                 if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
                     socket.send(JSON.stringify({
                         type: 'playerChangedPageMp',

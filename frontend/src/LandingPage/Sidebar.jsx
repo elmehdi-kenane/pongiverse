@@ -27,7 +27,7 @@ const Sidebar = () => {
 	};
 
 	const navigateToLogin = () => {
-		console.log("*****HEMDDMDMD")
+		////console.log("*****HEMDDMDMD")
 		if (isAuthenticated)
 			navigate("/mainpage/dashboard");
 		else
@@ -53,7 +53,7 @@ const Sidebar = () => {
 				setIsAuthenticated(false)
 			}
 		} catch (e) {
-			console.log("something wrong with fetch");
+			////console.log("something wrong with fetch");
 		}
 	}
 

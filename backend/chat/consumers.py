@@ -79,7 +79,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	
 	async def newRoomJoin(self, event):
 		data = event['data']
-		print(data)
+		#printdata)
 		message  = {
 			'type':'newRoomJoin',
 			'room' : data

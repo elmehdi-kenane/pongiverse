@@ -12,14 +12,14 @@ const GameSettingsOptions = ({ handleSlideChange, activeSlideIndex, typeChosen, 
   // const swiperRef = useRef(null);
 
   // useEffect(() => {
-  //   console.log("INITIAL VALUE IS : ", initialValue)
+  //  console.log("INITIAL VALUE IS : ", initialValue)
   //   if (swiperRef.current && swiperRef.current.swiper) {
   //     swiperRef.current.swiper.slideToLoop(initialValue, 0, false);
   //   }
   // }, [initialValue]);
 
   // useEffect(() => {
-  //   console.log("INITIAL VALUE IS:", initialValue);
+  //  console.log("INITIAL VALUE IS:", initialValue);
   //   if (swiperRef.current && swiperRef.current.swiper) {
   //     swiperRef.current.swiper.slideToLoop(initialValue, 0, false);
   //   }

@@ -28,9 +28,9 @@ function ProfileUserStatistics() {
         else if (response.status === 401) {
           navigate("/signin");
         } else
-          console.log("Error : ", res.error);
+         console.log("Error : ", res.error);
       } catch (error) {
-        console.log("Error: ", error);
+       console.log("Error: ", error);
       }
     }
     if (userId)

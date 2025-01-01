@@ -5,10 +5,10 @@ import { useNavigate } from "react-router-dom";
 
 const SvgComponent = ({ roundquartermembers, roundsemifinalmembers, roundfinalmembers, roundwinner }) => {
 	const navigate = useNavigate()
-	console.log("quarter : ", roundquartermembers)
-	console.log("semi : ", roundsemifinalmembers)
-	console.log("final : ", roundfinalmembers)
-	console.log("winner : ", roundwinner)
+	////console.log("quarter : ", roundquartermembers)
+	////console.log("semi : ", roundsemifinalmembers)
+	////console.log("final : ", roundfinalmembers)
+	////console.log("winner : ", roundwinner)
 	useEffect(() => {
 
 		if (!roundquartermembers) {

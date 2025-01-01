@@ -10,9 +10,9 @@ export const MobileFriendsWrapper = ({ friends, receivedRequests, sentRequests, 
     const handlesSelectedButton = (selectedButton) => {
         setSelectedButton(selectedButton);
     }
-    // console.log("receivedRequests", receivedRequests);
-    // console.log("sentRequests", sentRequests);
-    // console.log("blockedFriends", blockedFriends);
+    //console.log("receivedRequests", receivedRequests);
+    //console.log("sentRequests", sentRequests);
+    //console.log("blockedFriends", blockedFriends);
     return (
       <div className="optionBar">
         <div className="optionBtns">

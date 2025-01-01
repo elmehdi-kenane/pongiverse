@@ -57,7 +57,7 @@ const CreateRoom = ({ setCreateRoom, setIsBlur, myChatRooms, setMyChatRooms }) =
       data.append("user", user);
       data.append("name", formData.name);
       data.append("topic", formData.topic);
-      console.log("the Icon: ", formData.icon);
+     console.log("the Icon: ", formData.icon);
       data.append("icon", formData.icon);
       data.append(
         "visibility",

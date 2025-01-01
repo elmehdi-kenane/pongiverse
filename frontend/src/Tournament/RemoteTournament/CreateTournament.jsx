@@ -186,7 +186,7 @@ function CreateTournament() {
 			if (response.ok) {
 				const data = await response.json();
 				const newUser = { 'id': data.id, 'name': data.name, 'level': data.level, 'image': data.image, 'background_image': data.background_image, 'is_online': data.is_online }
-				console.log("NEW USERRR:", newUser)
+				////console.log("NEW USERRR:", newUser)
 				setTournamentMembers((prevTournamentMembers) => [...prevTournamentMembers, newUser]);
 				setTournamentMembers((prevTournamentMembers) => {
 					if (!prevTournamentMembers.some(member => member.name === newUser.name)) {
@@ -261,7 +261,7 @@ function CreateTournament() {
 						setAllGameFriends(currentAllGameFriends.filter(user => user.name !== data.message.user))
 					}
 				} else if (type === 'playingStatus') {
-					console.log("*****WAS HEEEEEREE")
+					////console.log("*****WAS HEEEEEREE")
 					if (data.message.is_playing === false) {
 						const currentAllGameFriends = allGameFriendsRef.current;
 						const userExists = currentAllGameFriends.some(friend => friend.name === message.userInfos.name)
@@ -298,12 +298,12 @@ function CreateTournament() {
 					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname))
 					setTournamentMembers(prevMembers => prevMembers.map(member => member.name === uname ? { ...member, 'is_online': false } : member));
 				} else if (type === 'connected_again_tourn') {
-					console.log("ENTER TO USER CONNECTED AGAIN TOUR")
+					////console.log("ENTER TO USER CONNECTED AGAIN TOUR")
 					setTournamentMembers(prevMembers => prevMembers.map(member => member.name === message.user ? { ...member, 'is_online': true } : member));
 				} else if (type === 'connected_again') {
-					console.log("****IS A FRIEND:", message.is_a_friend);
+					////console.log("****IS A FRIEND:", message.is_a_friend);
 					const currentAllGameFriends = allGameFriendsRef.current;
-					console.log("*******IWA YAHAMIIIIID:", message.user)
+					////console.log("*******IWA YAHAMIIIIID:", message.user)
 					if (message.is_a_friend === true) {
 						const userExists = currentAllGameFriends.some(friend => friend.name === message.user)
 						if (!userExists)
@@ -312,7 +312,7 @@ function CreateTournament() {
 				} else if (type === 'tournament_destroyed') {
 					navigate("/mainpage/game")
 				} else if (type === 'user_join_tournament') {
-					console.log("ENTER TO USER JOIN TOURNAMENT")
+					////console.log("ENTER TO USER JOIN TOURNAMENT")
 					const currentAllGameFriends = allGameFriendsRef.current;
 					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== message.user))
 				} else if (type === "chatNotificationCounter") {

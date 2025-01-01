@@ -50,7 +50,7 @@ function SecondStep() {
 	const updateEditorSize = () => {
 		if (containerRef.current) {
 			const containerWidth = containerRef.current.offsetWidth;
-			console.log("containerWidth :", containerWidth);
+			////console.log("containerWidth :", containerWidth);
 			setEditorSize({
 				width: Math.min(containerWidth * 0.8, 400), // 80% of the container width
 				height: Math.min(containerWidth * 0.8, 400), // Keep it square
@@ -167,7 +167,7 @@ function SecondStep() {
 		e.preventDefault();
 		const validationErrors = {};
 		const checkusername = await check_username(nextdata)
-		console.log("CHECK USERNAME:", checkusername)
+		////console.log("CHECK USERNAME:", checkusername)
 		const regex = /^(?!\d)[a-zA-Z0-9_]{4,8}$/;
 		const containsSingleUnderscore = (nextdata.username.match(/_/g) || []).length <= 1;
 		if (!nextdata.username.trim())
@@ -179,7 +179,7 @@ function SecondStep() {
 		else if (checkusername === true)
 			validationErrors.username = "Username already used";
 		setErrors(validationErrors);
-		console.log("validate error lenght :", Object.keys(validationErrors).length)
+		////console.log("validate error lenght :", Object.keys(validationErrors).length)
 		if (Object.keys(validationErrors).length === 0) {
 			const formData = new FormData();
 			formData.append("username", nextdata.username);
@@ -205,7 +205,7 @@ function SecondStep() {
 	};
 
 	useEffect(() => {
-		console.log("IMAGE:", image)
+		////console.log("IMAGE:", image)
 	},[image])
 
 	return (

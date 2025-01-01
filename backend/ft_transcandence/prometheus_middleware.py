@@ -28,19 +28,17 @@ class ChatMiddleware(BaseMiddleware):
         super().__init__(inner)
 
     async def __call__(self, scope, receive, send):
-        print(f"ChatMiddleware called with scope: {scope}")
+        #printf"ChatMiddleware called with scope: {scope}")
         
         async def custom_receive():
             event = await receive()
-            print(f"Received WebSocket event: {event}")
+            #printf"Received WebSocket event: {event}")
             return event
         
         async def custom_send(message):
             text = message.get('text')
             if (text != None):
                 parsed_text = json.loads(text)
-                print("parsed_text", parsed_text)
-                # print("parsed_text['type']", parsed_text['type'])
                 if parsed_text['type'] == "newDirect":
                     DIRECT_MESSAGE_COUNTER.inc()
                 if parsed_text['type'] == "newMessage":
@@ -79,11 +77,11 @@ def database_query_time_middleware(get_response):
 
     def middleware(request):
         response = get_response(request)
-        # print("========= 1 =========")
+        # #print"========= 1 =========")
         # if connection.queries:
         #     for query in connection.queries:
-        #         print(query)
-        # print("========= 2 =========")
+        #         #printquery)
+        # #print"========= 2 =========")
         query_time = sum(float(query['time']) for query in connection.queries) if connection.queries else 0.0
 
         view_name = request.resolver_match.view_name if request.resolver_match else 'unknown'
@@ -109,17 +107,17 @@ user_activity = {}
 def active_user_middleware(get_response):
     def middleware(request):
         request_id = str(uuid.uuid4())[:8]
-        print(f"========== Request ID: {request_id} START ==========")
-        print("request", request)
+        #printf"========== Request ID: {request_id} START ==========")
+        #print"request", request)
         view_name = request.resolver_match.view_name if request.resolver_match else 'unknown'
-        print("view_name", view_name)
+        #print"view_name", view_name)
         user = request.user
-        print("user", user)
+        #print"user", user)
         if user.is_authenticated:
             user_activity[user.id] = time.time()
         cleanup_inactive_users()
         response = get_response(request)
-        print(f"========== Request ID: {request_id} END ==========")
+        #printf"========== Request ID: {request_id} END ==========")
         return response
     
     return middleware

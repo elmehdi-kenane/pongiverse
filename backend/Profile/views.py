@@ -67,7 +67,7 @@ def update_user_pic(request):
 	username= request.data.get('user')
 	image_url = request.data.get('image')
 	image_file = save_base64_image(image_url)
-	# print('image url --------------:' , image_file, '-----------------------')
+	# #print'image url --------------:' , image_file, '-----------------------')
 	user = customuser.objects.filter(username=username).first()
 	if user is not None:    
 		user.avatar = image_file
@@ -518,7 +518,7 @@ def get_tourn_matches(request, username, page, items):
 							if user_round.user is not None:
 								if user.username == user_round.user.username:
 									type = round.type
-								# print("###-----", type, ":", user_round.user.username)
+								# #print"###-----", type, ":", user_round.user.username)
 					res_data.append({
 						"type" : type,
 						"tourId" : tournament.tournament_id,

@@ -11,11 +11,11 @@ function TournamentCelebration() {
 	const navigate = useNavigate()
 	const location = useLocation()
 	const tournamentId = location.state?.tournament_id;
-	// useEffect(() => {
-	// 	if (!tournamentId) {
-	// 		navigate('../game');
-	// 	}
-	// }, [tournamentId, navigate]);
+	useEffect(() => {
+		if (!tournamentId) {
+			navigate('../game');
+		}
+	}, [tournamentId, navigate]);
 	const [roundQuarterFinalMembers, setroundQuarterFinalMembers] = useState([])
 	const [roundSemiFinalMembers, setroundSemiFinalMembers] = useState([])
 	const [finalMembers, setFinalMembers] = useState([])
@@ -44,7 +44,7 @@ function TournamentCelebration() {
 			});
 			if (response.ok) {
 				const data = await response.json();
-				console.log("----mohamed data : ", data)
+				////console.log("----mohamed data : ", data)
 				setroundQuarterFinalMembers(data.roundquarter)
 				setroundSemiFinalMembers(data.roundsemi)
 				setFinalMembers(data.roundfinal)

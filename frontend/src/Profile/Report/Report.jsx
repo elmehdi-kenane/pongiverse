@@ -22,7 +22,7 @@ function Report() {
       && !event.composedPath().includes(reportContentRef.current) ) {
         setIsReport(false);
         setReportValue(null);
-        // console.log("Click Outside the Report");
+        //console.log("Click Outside the Report");
       }
     }
     document.body.addEventListener('click', handleOutsideClick)

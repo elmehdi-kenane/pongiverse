@@ -240,28 +240,28 @@ function LocalTournamentBracket() {
 		if (matches_played >= 0 && matches_played <= 3) {
 			player1 = quarterFinalPlayers.findIndex(player => player === quarterFinalPlayers[matches_played * 2])
 			player2 = quarterFinalPlayers.findIndex(player => player === quarterFinalPlayers[matches_played * 2 + 1])
-			console.log("1Matches Played:", matches_played)
-			console.log("Player 1:", player1, "Player 2:", player2)
+			////console.log("1Matches Played:", matches_played)
+			////console.log("Player 1:", player1, "Player 2:", player2)
 		}
 		else if (matches_played == 4 || matches_played == 5) {
 			if (matches_played == 4) {
 				player1 = quarterFinalPlayers.findIndex(player => player === players.SemiFinalPlayers[0])
 				player2 = quarterFinalPlayers.findIndex(player => player === players.SemiFinalPlayers[1])
-				console.log("2Matches Played:", matches_played)
-				console.log("Player 1:", player1, "Player 2:", player2)
+				////console.log("2Matches Played:", matches_played)
+				////console.log("Player 1:", player1, "Player 2:", player2)
 			}
 			else {
 				player1 = quarterFinalPlayers.findIndex(player => player === players.SemiFinalPlayers[2])
 				player2 = quarterFinalPlayers.findIndex(player => player === players.SemiFinalPlayers[3])
-				console.log("3Matches Played:", matches_played)
-				console.log("Player 1:", player1, "Player 2:", player2)
+				////console.log("3Matches Played:", matches_played)
+				////console.log("Player 1:", player1, "Player 2:", player2)
 			}
 		}
 		else if (matches_played == 6) {
 			player1 = quarterFinalPlayers.findIndex(player => player === players.FinalPlayers[0])
 			player2 = quarterFinalPlayers.findIndex(player => player === players.FinalPlayers[1])
-			console.log("4Matches Played:", matches_played)
-			console.log("FINAAAAAAALPlayer :", finalPlayers)
+			////console.log("4Matches Played:", matches_played)
+			////console.log("FINAAAAAAALPlayer :", finalPlayers)
 		}
 		setPlayerOne(() => iconArray[player1])
 		setPlayerTwo(() => iconArray[player2])
@@ -511,7 +511,7 @@ function LocalTournamentBracket() {
 			const widthScalingFactor = canvas.width / 710
 
 			if (keys.player1['KeyW'] || keys.player2['ArrowUp']) {
-				// console.log("ARROW UP")
+				//console.log("ARROW UP")
 				if (keys.player1['KeyW']) {
 					if (!((player1.current.y - (8 * heightScalingFactor)) <= edges.current.height)) {
 						player1.current.y -= (8 * heightScalingFactor);
@@ -531,7 +531,7 @@ function LocalTournamentBracket() {
 					}
 				}
 			} else if (keys.player1['KeyS'] || keys.player2['ArrowDown']) {
-				// console.log("ARROW DOWN")
+				//console.log("ARROW DOWN")
 				if (keys.player1['KeyS']) {
 					if (!(((player1.current.y + player1.current.height) + (8 * heightScalingFactor)) >= (canvas.height - edges.current.height))) {
 						player1.current.y += (8 * heightScalingFactor)
@@ -628,7 +628,7 @@ function LocalTournamentBracket() {
 							setMatchesPlayed(matches_played + 1)
 						} else {
 							const p2 = quarterFinalPlayers.findIndex(player => player === semiFinalPlayers[3])
-							console.log("HEEEEEEEEEEE:", p2)
+							////console.log("HEEEEEEEEEEE:", p2)
 							finalPlayers[1] = quarterFinalPlayers[p2];
 							setSecureItem('FinalPlayers', finalPlayers);
 							setPlayers(prevState => ({
@@ -685,7 +685,7 @@ function LocalTournamentBracket() {
 							setMatchesPlayed(matches_played + 1)
 						} else {
 							const p2 = quarterFinalPlayers.findIndex(player => player === semiFinalPlayers[2])
-							console.log("HEEEEEEEEEEE:", p2)
+							////console.log("HEEEEEEEEEEE:", p2)
 							finalPlayers[1] = quarterFinalPlayers[p2];
 							setSecureItem('FinalPlayers', finalPlayers);
 							setPlayers(prevState => ({
@@ -719,7 +719,7 @@ function LocalTournamentBracket() {
 	}
 
 	useEffect(() => {
-		console.log("DFGDFGDFGDG:", gameAlreadyCheck)
+		////console.log("DFGDFGDFGDG:", gameAlreadyCheck)
 		if (gameAlreadyCheck) {
 			let fiendGameStatusJson = localStorage.getItem('fiendGameStatus')
 			if (fiendGameStatusJson) {
@@ -779,7 +779,7 @@ function LocalTournamentBracket() {
 			window.addEventListener("keydown", handleKeyDown)
 			window.addEventListener("keyup", handleKeyUp)
 			window.addEventListener('resize', resizeCanvas)
-			// console.log("DRAWING THE SHAPES")
+			//console.log("DRAWING THE SHAPES")
 			isGameStarted = true
 			// alreadyStartedVar = alreadyStarted
 			setStartGame(true)
@@ -788,7 +788,7 @@ function LocalTournamentBracket() {
 	}, [canvasRef, alreadyStarted])
 
 	const handleKeyDown = (e) => {
-		// console.log("key down", )
+		//console.log("key down", )
 		const gameStarted = startGameRef.current
 		if (gameStarted && (e.code === 'ArrowUp' || e.code === 'ArrowDown' || e.code === 'KeyW' || e.code === 'KeyS')) {
 			if (e.code === 'KeyW' || e.code === 'KeyS')
@@ -799,7 +799,7 @@ function LocalTournamentBracket() {
 	}
 
 	const handleKeyUp = (e) => {
-		// console.log("key up")
+		//console.log("key up")
 		const gameStarted = startGameRef.current
 		if (gameStarted && (e.code === 'ArrowUp' || e.code === 'ArrowDown' || e.code === 'KeyW' || e.code === 'KeyS')) {
 			if (e.code === 'KeyW' || e.code === 'KeyS')

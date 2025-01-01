@@ -234,7 +234,7 @@ const Chat = () => {
           }
         } else console.error("opps!, something went wrong");
       } catch (error) {
-        console.log(error);
+         console.log(error);
       }
     };
     if (user) fetchDirectsWithMessage();
@@ -292,7 +292,7 @@ const Chat = () => {
         }
         else console.error("opps!, something went wrong");
       } catch (error) {
-        console.log(error);
+         console.log(error);
       }
     };
     if (user) {
