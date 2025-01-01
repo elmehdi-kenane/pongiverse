@@ -20,7 +20,7 @@ from .models import UserMatchStatics
 # @api_view(['POST'])
 # def signup(request):
 #     serializer = UserSerializer(data=request.data)
-#     #print(serializer)
+#     ##printserializer)
 #     serializer.is_valid(raise_exception=True)
 #     serializer.save()
 #     return Response(serializer.data)
@@ -35,7 +35,7 @@ from .models import UserMatchStatics
 #     if not user.check_password(password):
 #         raise AuthenticationFailed('Incorrect password')
 #     token = request.COOKIES.get('jwt')
-#     #print(token)
+#     ##printtoken)
 #     if token:
 #         response = Response()
 #         response.data = {
@@ -89,13 +89,13 @@ from mimetypes import guess_type
 def online_friends(request):
 	ip_address = os.getenv("IP_ADDRESS")
 	username = request.data['user']
-	# #print(f'user is {username}')
+	# ##printf'user is {username}')
 	user = customuser.objects.get(username=username)
 	allFriends = []
 	for user_id in Friendship.objects.filter(user=user):
 		if user_id.friend.is_online and not user_id.friend.is_playing: ####################  and user_id.friend.is_playing
 			allFriends.append({'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': f"{os.getenv('PROTOCOL')}://{ip_address}:8000/auth{user_id.friend.avatar.url}"})
-		# print(f'friends are {friends}')
+		# #printf'friends are {friends}')
 	return Response({'message': allFriends})
 
 @authentication_required
@@ -228,7 +228,7 @@ def get_tournament_member(request):
 @api_view(['POST'])
 def notifs_friends(request):
 	username = request.data['user']
-	# print(f'user is {username}')
+	# #printf'user is {username}')
 	target = customuser.objects.get(username=username)
 	allNotifs = []
 	ip_address = os.getenv("IP_ADDRESS")
@@ -363,7 +363,7 @@ def customize_game(request):
 	username = request.data['username']
 	user = customuser.objects.filter(username=username).first()
 	if user:
-		#print(request.data)
+		##printrequest.data)
 		game_customize = GameCustomisation.objects.filter(user=user).first()
 		if game_customize:
 			game_customize.paddle_color = paddle_color
@@ -604,7 +604,7 @@ def player_situation(request):
 	if flag == 0:
 		case = 'not joining a tournament'
 	response.data = {'Case': case}
-	print(f"\n\n Case is {case} \n\n")
+	#printf"\n\n Case is {case} \n\n")
 	return response
 
 @authentication_required

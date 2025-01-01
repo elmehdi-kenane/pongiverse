@@ -62,7 +62,7 @@ function SignInWays() {
           }
         }
       } catch (error) {
-        console.log("Error: ", error);
+       console.log("Error: ", error);
       }
     }
   };
@@ -90,10 +90,10 @@ function SignInWays() {
     const fullUrl = window.location.href;
     if (extracted_code && fullUrl && fullUrl.includes("email")) {
       setGoogleCode(extracted_code)
-      console.log("ewahaaa")
+     console.log("ewahaaa")
     }
     else if (extracted_code) {
-      console.log("ewahaaa intra")
+     console.log("ewahaaa intra")
       setIntraCode(extracted_code)
     }
   }, [])
@@ -122,9 +122,9 @@ function SignInWays() {
     });
     if (response.ok) {
       const data = await response.json();
-      console.log("ftft : ")
+     console.log("ftft : ")
       if (data.Case === "Login successfully") {
-        console.log("CASE OF LOGIN SUCCESS")
+       console.log("CASE OF LOGIN SUCCESS")
         navigate('/mainpage');
       } else if (data.Case === "Invalid username or password!!") {
         notifyError("There is no account");

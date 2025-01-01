@@ -43,7 +43,7 @@ const OneVsOneFriends = () => {
 
 	useEffect(() => {
 		if (socket && socket.readyState === WebSocket.OPEN && user) {
-			console.log("*********************CHECKING IF PLAYER IN ROOM", socket, user)
+			////console.log("*********************CHECKING IF PLAYER IN ROOM", socket, user)
 			// checked = true
 			socket.send(JSON.stringify({
 				type: 'isPlayerInAnyRoom',
@@ -61,7 +61,7 @@ const OneVsOneFriends = () => {
 			socket.onmessage = (event) => {
 				let data = JSON.parse(event.data)
 				let type = data.type
-				console.log("inside onmessage", type);
+				////console.log("inside onmessage", type);
 				let message = data.message
 				if (type === 'roomAlreadyStarted') {
 					setAllSet(true)
@@ -72,7 +72,7 @@ const OneVsOneFriends = () => {
 					else
 						navigate("../game/createtournament")
 				} else if (type === "gameReady") {
-					console.log("inside gameReady")
+					////console.log("inside gameReady")
 					console.log(message.avatars)
 					if (playerNo === 1) {
 						setEnemyInfos({
@@ -97,13 +97,13 @@ const OneVsOneFriends = () => {
 					setLoadMatch(false)
 					setAllSet(true)
 				} else if (type === "playerNo") {
-					console.log("******** playerNo is received");
+					////console.log("******** playerNo is received");
 					setPlayerNo(message.playerNo)
 					setTmpRoomID(message.id)
 					setGameStarted(true)
 					setLoadMatch(true)
 				} else if (type === 'alreadySearching') {
-					console.log("******** alreadySearching is received");
+					////console.log("******** alreadySearching is received");
 					setPlayerNo(message.playerNo)
 					setTmpRoomID(message.id)
 					setGameStarted(true)
@@ -128,7 +128,7 @@ const OneVsOneFriends = () => {
 		}
 
 		if (allSet && roomID) {
-			console.log("inside allSet and roomID")
+			////console.log("inside allSet and roomID")
 			clearInterval(randomPics)
 			setTimeout(() => {
 				navigate(`../play/1vs1/${roomID}`)
@@ -146,9 +146,9 @@ const OneVsOneFriends = () => {
 				let message = data.message
 				console.log('========', type, '========')
 				if (type === 'connected_again') {
-					console.log("****IS A FRIEND:", message.is_a_friend);
+					////console.log("****IS A FRIEND:", message.is_a_friend);
 					const currentAllGameFriends = allGameFriendsRef.current;
-					console.log("*******IWA YAHAMIIIIID:", message.user)
+					////console.log("*******IWA YAHAMIIIIID:", message.user)
 					if (message.is_a_friend === true) {
 						const userExists = currentAllGameFriends.some(friend => friend.name === message.user)
 						if (!userExists)
@@ -156,7 +156,7 @@ const OneVsOneFriends = () => {
 					}
 				} else if (type === 'user_disconnected') {
 					const currentAllGameFriends = allGameFriendsRef.current;
-					console.log("user disconnected : ", allGameFriends)
+					////console.log("user disconnected : ", allGameFriends)
 					let uname = data.message.user
 					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname))
 				} else if (type === "chatNotificationCounter") {
@@ -189,7 +189,7 @@ const OneVsOneFriends = () => {
 	const cancelTheGame = () => {
 		// setSelectedFriends([])
 		if (socket && socket.readyState === WebSocket.OPEN && user) {
-			console.log("inside quit")
+			////console.log("inside quit")
 			socket.send(JSON.stringify({
 				type: 'quit',
 				message: {
@@ -206,7 +206,7 @@ const OneVsOneFriends = () => {
 
 	const inviteNewFriend = (friend) => {
 		if (socket && socket.readyState === WebSocket.OPEN && user) {
-			console.log("inside join")
+			////console.log("inside join")
 			socket.send(JSON.stringify({
 				type: 'inviteFriendGame',
 				message: {
@@ -239,7 +239,7 @@ const OneVsOneFriends = () => {
 				const user = userRef.current
 				const socket = socketRef.current
 				const roomID = roomIdRef.current
-				console.log("USER IS GETTING OUT ", user, roomID, socket)
+				////console.log("USER IS GETTING OUT ", user, roomID, socket)
 				if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
 					socket.send(JSON.stringify({
 						type: 'quit',
@@ -259,7 +259,7 @@ const OneVsOneFriends = () => {
 			const user = userRef.current
 			const socket = socketRef.current
 			const roomID = roomIdRef.current
-			console.log("INSIDE THE MATCH : ", user, roomID, socket)
+			////console.log("INSIDE THE MATCH : ", user, roomID, socket)
 			if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
 				socket.send(JSON.stringify({
 					type: 'quit',

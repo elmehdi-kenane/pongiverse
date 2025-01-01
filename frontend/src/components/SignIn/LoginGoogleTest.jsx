@@ -20,16 +20,16 @@ function LoginGoogleTest() {
 		const fullUrl = window.location.href;
 		if (extracted_code && fullUrl && fullUrl.includes("email")) {
 			setGoogleCode(extracted_code)
-			console.log("ewahaaa")
+			////console.log("ewahaaa")
 		}
 		else if (extracted_code) {
-			console.log("ewahaaa intra")
+			////console.log("ewahaaa intra")
 			setIntraCode(extracted_code)
 		}
 	}, [])
 
 	const verify_email = async (email) => {
-		console.log("the dta : ", email)
+		////console.log("the dta : ", email)
 		const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/auth/googleLogin/`, {
 			method: "POST",
 			headers: {
@@ -42,7 +42,7 @@ function LoginGoogleTest() {
 		});
 		if (response.ok) {
 			const data = await response.json();
-			console.log("ftft : ")
+			////console.log("ftft : ")
 			if (data.Case === "Login successfully") {
 				navigate('/mainpage');
 			} else if (data.Case === "Invalid username or password!!") {
@@ -91,7 +91,7 @@ function LoginGoogleTest() {
 			});
 			if (response.ok) {
 				const response_data = await response.json();
-				console.log("mohamed  :", response_data.email)
+				////console.log("mohamed  :", response_data.email)
 				verify_email(response_data.email)
 			} else {
 				console.error('Failed to fetch data');

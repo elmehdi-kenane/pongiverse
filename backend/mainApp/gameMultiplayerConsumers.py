@@ -67,7 +67,7 @@ async def join_room_mp(self, data, rooms, user_channels):
 	active_matches = await sync_to_async(list)(ActiveMatch.objects.all())
 	for active_match in active_matches:
 		if active_match.mode == '2vs2' and active_match.room_type == 'random':
-			#print("FOUND AN ACTIVE MATCH")
+			##print"FOUND AN ACTIVE MATCH")
 			player_state_count = await sync_to_async(PlayerState.objects.filter(active_match=active_match).count)()
 			# player_state = await sync_to_async(PlayerState.objects.filter(active_match=active_match).first)()
 			# player_username = await sync_to_async(lambda: player_state.player.username)()
@@ -85,7 +85,7 @@ async def join_room_mp(self, data, rooms, user_channels):
 			for friend in friends:
 				friend_id = await sync_to_async(lambda: friend.friend.id)()
 				friend_channel = user_channels.get(friend_id)
-				#print(friend_channel)
+				##printfriend_channel)
 				if friend_channel:
 					await self.channel_layer.send(friend_channel, {
 						'type': 'playingStatus',
@@ -214,7 +214,7 @@ async def join_room_mp(self, data, rooms, user_channels):
 				await sync_to_async(player_notif.delete)()
 	if isEmpty:
 		for key, value in rooms.items():
-			#print(f"values in the rooms are : {value}")
+			##printf"values in the rooms are : {value}")
 			if value['players'][0]['user'] == data['message']['user'] or value['players'][1]['user'] == data['message']['user']:
 				await self.send(text_data=json.dumps({
 					'type': 'alreadyPlaying',
@@ -222,7 +222,7 @@ async def join_room_mp(self, data, rooms, user_channels):
 				}))
 				return
 		room_id = await generate_unique_room_id(self)
-		#print("ACTIVE MATCH CREATED")
+		##print"ACTIVE MATCH CREATED")
 		active_match = await sync_to_async(ActiveMatch.objects.create)(
 			mode = '2vs2',
 			room_type = 'random',
@@ -238,7 +238,7 @@ async def join_room_mp(self, data, rooms, user_channels):
 		for friend in friends:
 			friend_id = await sync_to_async(lambda: friend.friend.id)()
 			friend_channel = user_channels.get(friend_id)
-			#print(friend_channel)
+			##printfriend_channel)
 			if friend_channel:
 				await self.channel_layer.send(friend_channel, {
 					'type': 'playingStatus',
@@ -272,7 +272,7 @@ async def join_room_mp(self, data, rooms, user_channels):
 			await sync_to_async(player_notif.delete)()
 
 async def quit_room_mp(self, data, rooms, user_channels):
-	#print(f"INSIDE THE QUIT THE RANDOM GAME : {data['message']}")
+	##printf"INSIDE THE QUIT THE RANDOM GAME : {data['message']}")
 	room = await sync_to_async(ActiveMatch.objects.filter(room_id=data['message']['id']).first)()
 	ip_address = os.getenv("IP_ADDRESS")
 	if room:
@@ -298,7 +298,7 @@ async def quit_room_mp(self, data, rooms, user_channels):
 							for player_state in player_states:
 								player_state_name = await sync_to_async(lambda: player_state.player.username)()
 								# player_state_channel = user_channels[player_state_name]
-								# #print(player_state_name)
+								# ##printplayer_state_name)
 								# await self.channel_layer.send(player_state_channel, {
 								#     'type': 'creatorOut',
 								#     'message': 'creatorOut'
@@ -336,7 +336,7 @@ async def quit_room_mp(self, data, rooms, user_channels):
 								if player_state.playerNo > player_no:
 									player_state_name = await sync_to_async(lambda: player_state.player.id)()
 									player_state_channel = user_channels[player_state_name]
-									#print(f"INFOS : {player_state_name} --- {player_state.playerNo - 1} --- {room.room_id}")
+									##printf"INFOS : {player_state_name} --- {player_state.playerNo - 1} --- {room.room_id}")
 									await self.channel_layer.send(player_state_channel, {
 										'type': 'sendPlayerNo',
 										'message': {
@@ -380,8 +380,8 @@ async def quit_room_mp(self, data, rooms, user_channels):
 						user_channel = user_channels.get(user.id)
 						self.channel_layer.group_discard(str(room.room_id), user_channel)
 						await sync_to_async(room.delete)()
-					#print(f"INSIDE QUIT ROOM : {data['message']['id']}")
-					#print("SETTING THE PLAYER TO IS NOT PLAYING")
+					##printf"INSIDE QUIT ROOM : {data['message']['id']}")
+					##print"SETTING THE PLAYER TO IS NOT PLAYING")
 					user.is_playing = False
 					await sync_to_async(user.save)()
 					friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
@@ -418,7 +418,7 @@ async def starttimer(self, room):
 async def validate_player_mp(self, data, rooms, user_channels):
 	message = data['message']
 	room = rooms.get(str(message['roomID']))
-	# #print(f"ROOM ID TO SEARCH IS : {rooms}")
+	# ##printf"ROOM ID TO SEARCH IS : {rooms}")
 	ip_address = os.getenv("IP_ADDRESS")
 	playersReady = 0
 	playerIsIn = False
@@ -433,7 +433,7 @@ async def validate_player_mp(self, data, rooms, user_channels):
 					rooms[str(room['id'])]['status'] = 'started'
 					# users = []
 					# for player in room['players']:
-					#     #print(f"PLAYER NAME : {player['user']}")
+					#     ##printf"PLAYER NAME : {player['user']}")
 					#     player = await sync_to_async(customuser.objects.filter(username=player['user']).first)()
 					#     if (player):
 					#         with player.avatar.open('rb') as f:
@@ -483,7 +483,7 @@ async def validate_player_mp(self, data, rooms, user_channels):
 				elif room['status'] == 'started':
 					if player['state'] == 'inactive':
 						player['state'] = 'playing'
-					# #print(room)
+					# ##printroom)
 					playersOut = []
 					for eachPlayer in room['players']:
 						if eachPlayer['inside'] == False:
@@ -527,7 +527,7 @@ async def validate_player_mp(self, data, rooms, user_channels):
 					player2_accuracy = (room['players'][1]['self_scored'] * room['players'][1]['hit']) / 100
 					player3_accuracy = (room['players'][2]['self_scored'] * room['players'][2]['hit']) / 100
 					player4_accuracy = (room['players'][3]['self_scored'] * room['players'][3]['hit']) / 100
-					#print("GAME IS ALREADY ABORTED")
+					##print"GAME IS ALREADY ABORTED")
 					await self.send(text_data=json.dumps({
 						'type': 'abortedGame',
 						'message': {
@@ -667,7 +667,7 @@ async def validate_player_mp(self, data, rooms, user_channels):
 				player2_accuracy = (match_statistics.team1_player2_score * match_statistics.team1_player2_hit) / 100
 				player3_accuracy = (match_statistics.team2_player1_score * match_statistics.team2_player1_hit) / 100
 				player4_accuracy = (match_statistics.team2_player2_score * match_statistics.team2_player2_hit) / 100
-				print("****************************, ", {match_played.team1_status}, {match_played.team2_status})
+				#print"****************************, ", {match_played.team1_status}, {match_played.team2_status})
 				await self.send(text_data=json.dumps({
 					'type': 'finishedGame',
 					'message': {
@@ -860,7 +860,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 					else:
 							await gameAborted(self, room)
 					del rooms[str(room['id'])]
-					#print(f"GAME OVER AND THE UPDATED ROOMS ARE : {rooms}")
+					##printf"GAME OVER AND THE UPDATED ROOMS ARE : {rooms}")
 					player1 = await sync_to_async(customuser.objects.get)(username=room['players'][0]['user'])
 					player2 = await sync_to_async(customuser.objects.get)(username=room['players'][1]['user'])
 					player3 = await sync_to_async(customuser.objects.get)(username=room['players'][2]['user'])
@@ -1084,7 +1084,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 					if selected == 1:
 							hitPoint = room["ball"]["ballY"] - (player1[0]["paddleY"] + 35) #### player["height"] / 2 => 50
 					elif selected == 2:
-							#print(selected)
+							##printselected)
 							hitPoint = room["ball"]["ballY"] - (player1[1]["paddleY"] + 35) #### player["height"] / 2 => 50
 					hitPoint = hitPoint / 35 #### player["height"] / 2 => 50
 					angle = hitPoint * math.pi / 4
@@ -1569,12 +1569,12 @@ async def changed_page_mp(self, data, rooms):
 	count = 0
 	player_index = 0
 
-	#print(f"user received is : {message['user']}")
+	##printf"user received is : {message['user']}")
 	if room:
 		if room['status'] == 'started':
 			for player in room['players']:
 				if player['user'] == message['user']:
-					#print(f"room result is : {room}, user is : {message['user']}")
+					##printf"room result is : {room}, user is : {message['user']}")
 					player['state'] = 'inactive'
 					player_index = count
 				if player['state'] == 'inactive':
@@ -1664,20 +1664,20 @@ async def user_exited_mp(self, data, rooms):
 			index += 1
 
 async def invite_friend_mp(self, data, rooms, user_channels):
-	#print("ENTER 1")
+	##print"ENTER 1")
 	user1 = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
 	ip_address = os.getenv("IP_ADDRESS")
 	active_matches = await sync_to_async(list)(ActiveMatch.objects.all())
-	#print("ENTER 14")
+	##print"ENTER 14")
 	for active_match in active_matches:
 		sender = await sync_to_async(PlayerState.objects.filter(active_match=active_match, player=user1).first)()
-		#print("ENTER 13")
+		##print"ENTER 13")
 		if sender:
 			user2 = await sync_to_async(customuser.objects.filter(username=data['message']['target']).first)()
 			receiver = await sync_to_async(NotifPlayer.objects.filter(active_match=active_match, player=user2).first)()
-			#print("ENTER 12")
+			##print"ENTER 12")
 			if not receiver:
-				#print("ENTER 100")
+				##print"ENTER 100")
 				await sync_to_async(NotifPlayer.objects.create)(
 					active_match = active_match,
 					player = user2,
@@ -1688,15 +1688,15 @@ async def invite_friend_mp(self, data, rooms, user_channels):
 					target = user2,
 					mode="2vs2"
 				)
-				#print("ENTER 12")
+				##print"ENTER 12")
 				# if receiver and receiver.is_online and not receiver.is_playing:
-				#print("ENTER 11")
+				##print"ENTER 11")
 				friend_channel_list = notifs_user_channels.get(user2.id)
 				if friend_channel_list:
 					usermatchstats = await sync_to_async(UserMatchStatics.objects.filter(player=user1).first)()
 					for friend_channel in friend_channel_list:
 						if friend_channel:
-							#print("ENTER 10")
+							##print"ENTER 10")
 							# with user1.avatar.open('rb') as f:f
 							#     image_data = base64.b64encode(f.read()).decode('utf-8')
 							await self.channel_layer.send(friend_channel, {
@@ -1710,10 +1710,10 @@ async def invite_friend_mp(self, data, rooms, user_channels):
 								}
 							})
 			return
-	#print("ENTER 2")
+	##print"ENTER 2")
 	room_id = await generate_unique_room_id(self)
 	await self.channel_layer.group_add(str(room_id), self.channel_name)
-	#print(f'ROOM_ID WHEN CREATING IS : {room_id}')
+	##printf'ROOM_ID WHEN CREATING IS : {room_id}')
 	user1 = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
 	user2 = await sync_to_async(customuser.objects.filter(username=data['message']['target']).first)()
 	active_match = await sync_to_async(ActiveMatch.objects.create)(
@@ -1735,7 +1735,7 @@ async def invite_friend_mp(self, data, rooms, user_channels):
 		paddleY = 65,
 		score = 0
 	)
-	#print("ENTER 3")
+	##print"ENTER 3")
 	await self.send(text_data=json.dumps({
 		'type': 'playerNo',
 		'message': {
@@ -1747,7 +1747,7 @@ async def invite_friend_mp(self, data, rooms, user_channels):
 	for friend in friends:
 		friend_id = await sync_to_async(lambda: friend.friend.id)()
 		friend_channel = user_channels.get(friend_id)
-		#print(friend_channel)
+		##printfriend_channel)
 		if friend_channel:
 			await self.channel_layer.send(friend_channel, {
 				'type': 'playingStatus',
@@ -1757,7 +1757,7 @@ async def invite_friend_mp(self, data, rooms, user_channels):
 				}
 			})
 	receiver = await sync_to_async(NotifPlayer.objects.filter(active_match=active_match, player=user2).first)()
-	#print("ENTER 4")
+	##print"ENTER 4")
 	if not receiver:
 		await sync_to_async(NotifPlayer.objects.create)(
 			active_match = active_match,
@@ -1769,9 +1769,9 @@ async def invite_friend_mp(self, data, rooms, user_channels):
 			target = user2,
 			mode="2vs2"
 		)
-		#print("ENTER 5")
+		##print"ENTER 5")
 		# if receiver and receiver.is_online and not receiver.is_playing:
-		#print("ENTER 6")
+		##print"ENTER 6")
 		friend_channel = user_channels.get(user2.id)
 		friend_channel_list = notifs_user_channels.get(user2.id)
 		if friend_channel_list:
@@ -1797,11 +1797,11 @@ async def invite_friend_mp(self, data, rooms, user_channels):
 
 async def accept_game_invite_mp(self, data, rooms, user_channels):
 	# active_matches = await sync_to_async(list)(ActiveMatch.objects.all())
-	#print(f"ACCEPTING A MATCH FRIEND")
+	##printf"ACCEPTING A MATCH FRIEND")
 	# for active_match in active_matches:
 	#     player_state = await sync_to_async(PlayerState.objects.filter(active_match=active_match).first)()
 	#     player_username = await sync_to_async(lambda: player_state.player.username)()
-	#     #print(f"ROOM RUNNING NOW")
+	#     ##printf"ROOM RUNNING NOW")
 	#     if player_username == data['message']['user']:
 	#         await self.send(text_data=json.dumps({
 	#             'type': 'alreadyPlaying',
@@ -1828,17 +1828,17 @@ async def accept_game_invite_mp(self, data, rooms, user_channels):
 				'message': 'alreadyPlaying'
 			}))
 			return
-	#print("ACCEPT 1")
+	##print"ACCEPT 1")
 	creator = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
 	friend = await sync_to_async(customuser.objects.filter(username=data['message']['target']).first)()
 	active_match = await sync_to_async(ActiveMatch.objects.filter(room_id=data['message']['roomID']).first)()
-	# #print(f'DATA INFORMATIONS ARE : {data['message']}')
+	# ##printf'DATA INFORMATIONS ARE : {data['message']}')
 	if active_match:
-		#print("ACCEPT 2")
+		##print"ACCEPT 2")
 		is_invited = await sync_to_async(NotifPlayer.objects.filter(active_match=active_match, player=friend).first)()
 		# friend_match = await sync_to_async(FriendMatch.objects.filter(creator=creator).first)()
 		if is_invited:
-			#print("ACCEPT 3")
+			##print"ACCEPT 3")
 			player_states = await sync_to_async(PlayerState.objects.filter(active_match=active_match).count)()
 			player = await sync_to_async(customuser.objects.filter(username=data['message']['target']).first)()
 			if player_states == 3:
@@ -1892,7 +1892,7 @@ async def accept_game_invite_mp(self, data, rooms, user_channels):
 					'date_started': datetime.datetime.now().isoformat(),
 					'time': 0
 				}
-				#print(room)
+				##printroom)
 				rooms[str(room['id'])] = room
 				await self.channel_layer.group_add(str(room['id']), self.channel_name)
 				await sync_to_async(active_match.delete)()
@@ -1964,7 +1964,7 @@ async def accept_game_invite_mp(self, data, rooms, user_channels):
 						'mode': '2vs2'
 					}
 				}))
-				#print(f"USERS ARE : {users}")
+				##printf"USERS ARE : {users}")
 				asyncio.create_task(waited_game(self, active_match.room_id, users))
 				# await self.channel_layer.group_add(str(room['id']), self.channel_name)
 				# await self.channel_layer.group_add(str(room['id']), user_channels[data['message']['user']])
@@ -1972,7 +1972,7 @@ async def accept_game_invite_mp(self, data, rooms, user_channels):
 				#     'type': 'goToGamingPage',
 				#     'message': 'goToGamingPage'
 				# })
-				#print(f"TARGET NAME IS : {data['message']['target']}")
+				##printf"TARGET NAME IS : {data['message']['target']}")
 				target = await sync_to_async(customuser.objects.filter(username=data['message']['target']).first)()
 				target.is_playing = True
 				await sync_to_async(target.save)()
@@ -1997,7 +1997,7 @@ async def accept_game_invite_mp(self, data, rooms, user_channels):
 
 async def create_new_room_mp(self, data, rooms, user_channels):
 	room_id = await generate_unique_room_id(self)
-	# #print(f'ROOM_ID WHEN CREATING IS : {room_id}')
+	# ##printf'ROOM_ID WHEN CREATING IS : {room_id}')
 	user = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
 	active_match = await sync_to_async(ActiveMatch.objects.create)(
 		mode = '2vs2',
@@ -2019,7 +2019,7 @@ async def create_new_room_mp(self, data, rooms, user_channels):
 		paddleY = 65,
 		score = 0
 	)
-	# #print("ENTER 3")
+	# ##print"ENTER 3")
 	await self.channel_layer.group_add(str(room_id), self.channel_name)
 	await self.send(text_data=json.dumps({
 		'type': 'playerInfos',
@@ -2033,7 +2033,7 @@ async def create_new_room_mp(self, data, rooms, user_channels):
 	for friend in friends:
 		friend_id = await sync_to_async(lambda: friend.friend.id)()
 		friend_channel = user_channels.get(friend_id)
-		# #print(friend_channel)
+		# ##printfriend_channel)
 		if friend_channel:
 			await self.channel_layer.send(friend_channel, {
 				'type': 'playingStatus',
@@ -2107,7 +2107,7 @@ async def join_new_room_mp(self, data, rooms, user_channels):
 				'date_started': datetime.datetime.now().isoformat(),
 				'time': 0
 			}
-			#print(room)
+			##printroom)
 			rooms[str(room['id'])] = room
 			await self.channel_layer.group_add(str(room['id']), self.channel_name)
 			await sync_to_async(active_match.delete)()

@@ -361,7 +361,7 @@ async def invite_friend(self, data):
 	TournamentGameNotify = await sync_to_async(GameNotifications.objects.filter(tournament_id=tournament_id, user=sender, target=receiver).first)()
 	if TournamentGameNotify is None:
 		channel_name_list = notifs_user_channels.get(receiver.id)
-		print(f"\n\n CHANNEL NAME LIST : {channel_name_list} \n\n")
+		#printf"\n\n CHANNEL NAME LIST : {channel_name_list} \n\n")
 		tournamentInv = GameNotifications(tournament_id=tournament_id, user=sender, target=receiver, mode='TournamentInvitation')
 		# tournament_id, user, avatar, roomID, mode
 		await sync_to_async(tournamentInv.save)()
@@ -421,7 +421,7 @@ async def accept_invite(self, data, user_channels):
 							}
 						}
 					)
-		print(f"\n channel name: {self.channel_name} \n")
+		#printf"\n channel name: {self.channel_name} \n")
 		await self.channel_layer.send(
 			self.channel_name,
 			{

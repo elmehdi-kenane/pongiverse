@@ -55,7 +55,7 @@ const ChatSideBar = ({
         } else if (response.status === 401)
           navigate("/signin");
         else {
-          console.log("opps! something went wrong");
+         console.log("opps! something went wrong");
         }
       } catch (error) {
         console.log(error);
@@ -75,7 +75,7 @@ const ChatSideBar = ({
         } else if (response.status === 401)
           navigate("/signin");
         else {
-          console.log("opps! something went wrong");
+         console.log("opps! something went wrong");
         }
       } catch (error) {
         console.log;

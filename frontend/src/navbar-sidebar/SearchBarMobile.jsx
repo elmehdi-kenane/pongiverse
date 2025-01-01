@@ -26,7 +26,7 @@ export const SearchBarMobile = ({ handleSearchBar }) => {
   //   useEffect(() => {
   const getSearchResult = async (searchTerm, username) => {
     if (searchTerm !== "") {
-      console.log("fetch search result with term:", searchTerm);
+     console.log("fetch search result with term:", searchTerm);
 
       const response = await fetch(
         `http://${import.meta.env.VITE_IPADDRESS}:8000/navBar/search_view/?searchTerm=${searchTerm}&username=${username}`,
@@ -40,7 +40,7 @@ export const SearchBarMobile = ({ handleSearchBar }) => {
       const res = await response.json();
       if (res) {
         setSearchResult(res);
-        console.log("setSearchResult(res)");
+       console.log("setSearchResult(res)");
         setSearchUsersResult(
           res.filter((resultItem) => resultItem.result_type === "user")
         );
@@ -94,7 +94,7 @@ export const SearchBarMobile = ({ handleSearchBar }) => {
     };
   }, []);
 
-  console.log("searchResult", searchResult);
+ console.log("searchResult", searchResult);
   return (
     <div className="search-bar-mobile" ref={searchBarRef}>
       <input

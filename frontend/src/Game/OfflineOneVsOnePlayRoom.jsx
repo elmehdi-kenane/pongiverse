@@ -296,7 +296,7 @@ const OfflineOneVsOnePlayRoom = (props) => {
           const widthScalingFactor = canvas.width / 710
     
             if (keys.player1['KeyW'] || keys.player2['ArrowUp']) {
-                // console.log("ARROW UP")
+                //console.log("ARROW UP")
                 if (keys.player1['KeyW']) {
                     if (!((player1.current.y - (8 * heightScalingFactor)) <= edges.current.height)) {
                         player1.current.y -= (8 * heightScalingFactor);
@@ -316,7 +316,7 @@ const OfflineOneVsOnePlayRoom = (props) => {
                   }
                 }
             } else if (keys.player1['KeyS'] || keys.player2['ArrowDown']) {
-            // console.log("ARROW DOWN")
+            //console.log("ARROW DOWN")
                 if (keys.player1['KeyS']) {
                   if (!(((player1.current.y + player1.current.height) + (8 * heightScalingFactor)) >= (canvas.height - edges.current.height))) {
                       player1.current.y += (8 * heightScalingFactor)
@@ -484,7 +484,7 @@ const OfflineOneVsOnePlayRoom = (props) => {
           window.addEventListener("keydown", handleKeyDown)
           window.addEventListener("keyup", handleKeyUp)
           window.addEventListener('resize', resizeCanvas)
-          // console.log("DRAWING THE SHAPES")
+          //console.log("DRAWING THE SHAPES")
           isGameStarted = true
           // alreadyStartedVar = alreadyStarted
           props.setStartGame(true)
@@ -493,7 +493,7 @@ const OfflineOneVsOnePlayRoom = (props) => {
       }, [canvasRef, props.alreadyStarted])
     
         const handleKeyDown = (e) => {
-            // console.log("key down", )
+            //console.log("key down", )
             const gameStarted = props.startGameRef.current
             if (gameStarted && (e.code === 'ArrowUp' || e.code === 'ArrowDown' || e.code === 'KeyW' || e.code === 'KeyS')) {
                 if (e.code === 'KeyW' || e.code === 'KeyS')
@@ -504,7 +504,7 @@ const OfflineOneVsOnePlayRoom = (props) => {
         }
     
         const handleKeyUp = (e) => {
-            // console.log("key up")
+            //console.log("key up")
             const gameStarted = props.startGameRef.current
             if (gameStarted && (e.code === 'ArrowUp' || e.code === 'ArrowDown' || e.code === 'KeyW' || e.code === 'KeyS')) {
                 if (e.code === 'KeyW' || e.code === 'KeyS')

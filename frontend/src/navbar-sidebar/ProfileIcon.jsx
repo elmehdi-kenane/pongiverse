@@ -28,7 +28,7 @@ const ProfileIcon = ({ Icons, profileHandleDropDown, profileDropDownisOpen }) =>
             } else if (response.status === 401)
                 navigate("/signin");
         } catch (e) {
-            console.log("Error in network or URL");
+           console.log("Error in network or URL");
         }
     }
     return (

@@ -226,7 +226,7 @@ const Bot = () => {
     const ctx = canvasContextRef.current
     const canvas = canvasRef.current;
     const gameCustom = gameCustomizeRef.current
-    // console.log("starting drawing", `ctx : ${ctx}`, `canvas : ${canvas}`, 'others : ', player1.current, player2.current, ball.current)
+    //console.log("starting drawing", `ctx : ${ctx}`, `canvas : ${canvas}`, 'others : ', player1.current, player2.current, ball.current)
     if (ctx && canvas && player1.current && player2.current && ball.current && edges.current) {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       ctx.fillStyle = gameCustom[2]
@@ -269,7 +269,7 @@ const Bot = () => {
   }, [gameCustomize])
 
   useEffect(() => {
-    // console.log("gggg", canvasContext)
+    //console.log("gggg", canvasContext)
     canvasContextRef.current = canvasContext
     gameCustomizeRef.current = gameCustomize
     startGameRef.current = startGame
@@ -335,7 +335,7 @@ const Bot = () => {
       player2.current.changeProperties((685 * widthScalingFactor), (originalPositions.player2_y * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), '#B38EF0', player2.current.score);
       ball.current.changeProperties((originalPositions.ball_x * widthScalingFactor), (originalPositions.ball_y * heightScalingFactor), (7 * scalingFactor), gameCustom[1], ball.current.velocityX, ball.current.velocityY, ball.current.speed);
       edges.current.changeProperties((10 * scalingFactor), 'white');
-      // console.log("inside the update game properties : ", ball.current.x, ball.current.y)
+      //console.log("inside the update game properties : ", ball.current.x, ball.current.y)
     }
   }
 
@@ -411,7 +411,7 @@ const Bot = () => {
     // if (goalScored)
     //   goalScored--
     if (canvas && player1.current && player2.current && ball.current) {
-      // console.log("inside", ball.current.x, ball.current.y)
+      //console.log("inside", ball.current.x, ball.current.y)
       const originalHeight = 400 / canvas.height
       const originalWidth = 710 / canvas.width
 
@@ -420,7 +420,7 @@ const Bot = () => {
 
       // console.log(keys)
       if (keys['ArrowUp']) {
-        console.log("ARROW UP")
+       console.log("ARROW UP")
         if (!((player1.current.y - (8 * heightScalingFactor)) <= edges.current.height)) {
           player1.current.y -= (8 * heightScalingFactor);
           originalPositions.player1_y -= 8
@@ -429,7 +429,7 @@ const Bot = () => {
           originalPositions.player1_y = 10
         }
       } else if (keys['ArrowDown']) {
-        console.log("ARROW DOWN")
+       console.log("ARROW DOWN")
         if (!(((player1.current.y + player1.current.height) + (8 * heightScalingFactor)) >= (canvas.height - edges.current.height))) {
           player1.current.y += (8 * heightScalingFactor)
           originalPositions.player1_y += 8
@@ -609,7 +609,7 @@ const Bot = () => {
           originalPositions.player1_y = 165
           originalPositions.player2_x = 685
           originalPositions.player2_y = 165
-          // console.log("players infos : ", playersInfos, difficultyLevel)
+          //console.log("players infos : ", playersInfos, difficultyLevel)
           clearInterval(loop)
         } else
           gameLoop()
@@ -630,14 +630,14 @@ const Bot = () => {
       edges.current = new Edges(10, 'white')
       resizeCanvas()
       // const rectDim = canvas.getBoundingClientRect()
-      // console.log("context : ", context)
+      //console.log("context : ", context)
       setCanvasContext(context);
       // setCanvasDimensions(rectDim)
       window.addEventListener("keydown", handleKeyDown)
       window.addEventListener("keyup", handleKeyUp)
       canvas.addEventListener("mousemove", handleMouseMove)
       window.addEventListener('resize', resizeCanvas)
-      console.log("DRAWING THE SHAPES")
+     console.log("DRAWING THE SHAPES")
       isGameStarted = true
       difficultyLevelVar = difficultyLevel //
       setStartGame(true)

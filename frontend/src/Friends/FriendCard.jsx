@@ -37,7 +37,7 @@ const FriendCard = ({
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Success:", data);
+       console.log("Success:", data);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -58,7 +58,7 @@ const FriendCard = ({
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Success:", data);
+       console.log("Success:", data);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -67,7 +67,7 @@ const FriendCard = ({
 
     const handelChallengeRequest = () => {
       if (notifSocket && notifSocket.readyState === WebSocket.OPEN && user) {
-        console.log("inside join");
+       console.log("inside join");
         notifSocket.send(
           JSON.stringify({
             type: "inviteFriendGame",
@@ -100,7 +100,7 @@ const FriendCard = ({
   };
 
   const navigateToChat = () => {
-    console.log("friendId", friendId);
+   console.log("friendId", friendId);
     setSelectedDirect({
       id: friendId,
       name: secondUsername,

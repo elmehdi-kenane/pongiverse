@@ -14,11 +14,11 @@ function MyThree() {
         height: window.innerWidth > 1024 ? 500 : 250
     });
 
-    console.log("dimensions:", dimensions);
+   console.log("dimensions:", dimensions);
     useEffect(() => {
         const handleResize = () => {
-            console.log("RESIZING...");
-            console.log("window.innerWidth:",);
+           console.log("RESIZING...");
+           console.log("window.innerWidth:",);
             setDimensions({
                 width: window.innerWidth > 1024 ? 500 : 250,
                 height: window.innerWidth > 1024 ? 500 : 250

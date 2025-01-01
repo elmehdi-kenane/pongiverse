@@ -120,7 +120,7 @@ const ChatRoomConversation = ({
         } else if (response.status === 401)
           navigate("/signin");
         else {
-          console.log("Error fetching messages");
+         console.log("Error fetching messages");
         }
       } catch (error) {
         console.log(error);

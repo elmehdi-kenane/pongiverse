@@ -47,7 +47,7 @@ function DashTourn(props) {
         if (response.ok) {
           setMatches([...matches, ...res.data]);
           !res.hasMoreMatches && setLimit(index);
-          // console.log("Tournament Data: ", res.data);
+          //console.log("Tournament Data: ", res.data);
         } else if (response.status === 401)
           navigate('/signin')
         else

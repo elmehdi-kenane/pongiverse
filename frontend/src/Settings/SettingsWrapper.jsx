@@ -52,16 +52,16 @@ export const SettingsWrapper = ({ child }) => {
                 });
                 const res = await response.json()
                 if (response.ok) {
-                    // console.log("Response userData : ", res.userData);
+                    //console.log("Response userData : ", res.userData);
                     setUserData(res.userData);
                 }
                 else if (response.status === 401) {
                     navigate("/signin")
                 }
                 else
-                    console.log("Error : ", res.error);
+                   console.log("Error : ", res.error);
             } catch (error) {
-                console.log("Error: ", error);
+               console.log("Error: ", error);
             }
         }
         if (user)
@@ -81,7 +81,7 @@ export const SettingsWrapper = ({ child }) => {
         //         const blob = await response.blob();
         //         fnc(URL.createObjectURL(blob));
         //     } catch (error) {
-        //         console.log("Error : ", error)
+        //        console.log("Error : ", error)
         //     }
         // }
         if (userData) {

@@ -3,7 +3,7 @@ import * as ChatIcons from "../assets/chat/media/index";
 
 const inviteFriend = (chatSocket, user, target) => {
     if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
-      console.log("inside join");
+     console.log("inside join");
       chatSocket.send(
         JSON.stringify({
           type: "inviteFriendGame",

@@ -28,7 +28,7 @@ const LocalSvgComponent = ({players}) => {
 	const roundsemifinalmembers = players.SemiFinalPlayers;
 	const roundfinalmembers = players.FinalPlayers;
 	const winner = players.Winner;
-	console.log("Winner", winner);
+	////console.log("Winner", winner);
 
 	const getPlayerIndex = (playerName) => {
 		return roundquartermembers.findIndex(player => player === playerName);

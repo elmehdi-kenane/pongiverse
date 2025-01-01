@@ -92,7 +92,7 @@ export const AuthProvider = ({ children }) => {
 	}, [socket])
 
 	useEffect(() => {
-		console.log("pathname: ", location.pathname);
+		////console.log("pathname: ", location.pathname);
 		if (checkPrivateAuthRegex.test(location.pathname))
 			privateCheckAuth();
 		else if (
@@ -131,11 +131,11 @@ export const AuthProvider = ({ children }) => {
 				if (response.status === 401)
 					navigate('/signin')
 				let friends = await response.json();
-				console.log("hellooo   ", friends.message)
+				////console.log("hellooo   ", friends.message)
 				if (friends.message.length) setAllGameFriends(friends.message);
 				setLoading(false);
 			} catch (e) {
-				console.log("something wrong with fetch");
+				////console.log("something wrong with fetch");
 			}
 		};
 
@@ -158,10 +158,10 @@ export const AuthProvider = ({ children }) => {
 				if (response.status === 401)
 					navigate('/signin')
 				let friends = await response.json();
-				console.log("*****Friends: ", friends)
+				////console.log("*****Friends: ", friends)
 				setAllGameNotifs(friends.message);
 			} catch (e) {
-				console.log("something wrong with fetch");
+				////console.log("something wrong with fetch");
 			}
 		};
 
@@ -185,7 +185,7 @@ export const AuthProvider = ({ children }) => {
 				let data = await response.json()
 				setUserImg(data.image);
 			} catch (e) {
-				console.log("something wrong with fetch");
+				////console.log("something wrong with fetch");
 			}
 		};
 
@@ -203,7 +203,7 @@ export const AuthProvider = ({ children }) => {
 				console.log(res);
 				if (res.data) setGameCustomize(res.data);
 			} catch (e) {
-				console.log("something wrong with fetch");
+				////console.log("something wrong with fetch");
 			}
 		};
 
@@ -392,11 +392,11 @@ export const AuthProvider = ({ children }) => {
 			);
 			newNotifSocket.onopen = () => {
 				setNotifSocket(newNotifSocket);
-				console.log("NOTIF SOCKET OPENED SUCCEFULLY");
+				////console.log("NOTIF SOCKET OPENED SUCCEFULLY");
 			};
 			newNotifSocket.onmessage = (event) => {
 				let data = JSON.parse(event.data);
-				console.log("NOTIF SOCKET MESSAGE TYPE: ", data.type);
+				////console.log("NOTIF SOCKET MESSAGE TYPE: ", data.type);
 			};
 		} else if (
 			(location.pathname === "/" ||
@@ -409,7 +409,7 @@ export const AuthProvider = ({ children }) => {
 			notifSocket
 		) {
 			if (notifSocket) {
-				console.log("NOTIF SOCKET CLOSED SUCCEFULLY");
+				////console.log("NOTIF SOCKET CLOSED SUCCEFULLY");
 				notifSocket.close();
 				setNotifSocket(null);
 			}
@@ -445,7 +445,7 @@ export const AuthProvider = ({ children }) => {
 				`ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/chat_socket`
 			);
 			newChatSocket.onopen = () => {
-				console.log("CHAT SOCKET OPENED SUCCESSFULLY");
+				////console.log("CHAT SOCKET OPENED SUCCESSFULLY");
 				setChatSocket(newChatSocket);
 			};
 			newChatSocket.onmessage = (event) => {
@@ -456,12 +456,12 @@ export const AuthProvider = ({ children }) => {
 			location.pathname !== "/mainpage/groups"
 		) {
 			if (chatSocket) {
-				console.log("CHAT SOCKET CLOSED SUCCEFULLY");
+				////console.log("CHAT SOCKET CLOSED SUCCEFULLY");
 				chatSocket.close();
 				setChatSocket(null);
 			}
 		}
-		console.log("LOCATION PATHNAME: ", location.pathname);
+		////console.log("LOCATION PATHNAME: ", location.pathname);
 	}, [location.pathname, user]);
 
 
@@ -507,7 +507,7 @@ export const AuthProvider = ({ children }) => {
 				} else if (response.status === 401)
 					navigate('/signin')
 				else {
-					console.log("Error in getting unrecieved room invitee");
+					////console.log("Error in getting unrecieved room invitee");
 				}
 			} catch (error) {
 				console.error(
@@ -531,7 +531,7 @@ export const AuthProvider = ({ children }) => {
 					setChatNotificationCounter(data.count);
 				}
 				else {
-					console.log("Error in getting unread conversations");
+					////console.log("Error in getting unread conversations");
 				}
 			} catch (error) {
 				console.error(
@@ -571,7 +571,7 @@ export const AuthProvider = ({ children }) => {
 				setUser("");
 			}
 		} catch (e) {
-			console.log("something wrong with fetch");
+			////console.log("something wrong with fetch");
 		}
 	}
 
@@ -588,16 +588,16 @@ export const AuthProvider = ({ children }) => {
 				}
 			);
 			response = await response.json();
-			// console.log("RESPONSE: ", response);
+			//console.log("RESPONSE: ", response);
 			if (response.Case !== "Invalid token") {
 				setUser(response.data.username);
 			} else {
-				console.log("FAILD TO LOGIN SUCCESSFULY");
+				////console.log("FAILD TO LOGIN SUCCESSFULY");
 				setUser("");
 				navigate("/signin");
 			}
 		} catch (e) {
-			console.log("something wrong with fetch: ", e);
+			////console.log("something wrong with fetch: ", e);
 		}
 	}
 

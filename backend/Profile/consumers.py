@@ -13,7 +13,7 @@
 # 		# 		'message': 'connection established'
 # 		# 	}
 # 		if (self.scope['cookies']).get('access_token'):
-# 			# #print("TOKEEEEEEEEEEN EXISTTTTTTTT")
+# 			# ##print"TOKEEEEEEEEEEN EXISTTTTTTTT")
 # 			try:
 # 				decoded_token = AccessToken(self.scope['cookies']['token'])
 # 				data = decoded_token.payload
@@ -26,7 +26,7 @@
 # 						await sync_to_async(user.save)()
 # 						await self.channel_layer.group_add(user.username + "_friends", self.channel_name)
 # 			except TokenError as e:
-# 				#print("TOKEN ERROR")
+# 				##print"TOKEN ERROR")
 # 		# await self.send(json.dumps(message))
 	
 # 	async def receive(self, text_data):
@@ -39,7 +39,7 @@
 
 	
 # 	async def disconnect(self, code):
-# 		# #print(f"DISCONNECTED : {self.scope}")
+# 		# ##printf"DISCONNECTED : {self.scope}")
 # 		if (self.scope['cookies']).get('access_token'):
 # 			try:
 # 				decoded_token = AccessToken(self.scope['cookies']['token'])
@@ -52,5 +52,5 @@
 # 						user.is_online = False
 # 						await sync_to_async(user.save)()
 # 			except TokenError as e:
-# 				print("TOKEN ERROR")
+# 				#print"TOKEN ERROR")
 # # 

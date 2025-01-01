@@ -12,7 +12,7 @@ class testConsumer(AsyncWebsocketConsumer):
 
 	async def receive(self, text_data):
 		data = json.loads(text_data)
-		#print(data)
+		##printdata)
 	def disconnect(self, close_code, message):
 		self.send("Hellooo")
 		pass

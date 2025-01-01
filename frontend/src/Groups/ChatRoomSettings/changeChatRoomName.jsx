@@ -15,7 +15,7 @@ const ChangeChatRoomName = (props) => {
       }
       return room;
     });
-    console.log("update rooms: ", updatedRooms);
+   console.log("update rooms: ", updatedRooms);
     props.setMyChatRooms(updatedRooms);
   };
 

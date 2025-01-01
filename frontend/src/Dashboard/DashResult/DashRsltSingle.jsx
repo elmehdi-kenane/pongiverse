@@ -45,16 +45,16 @@ function DashRsltSingle() {
         );
         const res = await response.json();
         if (response.ok) {
-          // console.log("data :", res.data);
+          //console.log("data :", res.data);
           setMatchDtls(res.data)
           getDateFormat(res.data.date)
         }
         else if (response.status === 401)
           navigate('/signin')
         else
-          console.log("Error : ", res.error);
+         console.log("Error : ", res.error);
       } catch (error) {
-        console.log("Error: ", error);
+       console.log("Error: ", error);
       }
     };
 

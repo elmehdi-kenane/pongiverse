@@ -57,7 +57,7 @@ function SignInForm() {
           }
         }
       } catch (error) {
-        console.log("Error: ", error);
+       console.log("Error: ", error);
       }
     }
   };

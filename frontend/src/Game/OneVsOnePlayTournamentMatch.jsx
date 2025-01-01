@@ -292,7 +292,7 @@ function createParticle(x, y) {
 				let type = data.type
 				let message = data.message
 				if (type === 'youWinTheGame'){
-					console.log("tournament_id : ", message)
+					////console.log("tournament_id : ", message)
 					if (message.round_reached !== 'WINNER')
 						navigate("../game/tournamentbracket")
 					else{
@@ -390,7 +390,7 @@ function createParticle(x, y) {
 
 	useEffect(() => {
 		if (canvasRef && !canvasDrawing && gameCustomize.length && socket) {
-			console.log("testing : ", canvasRef, canvasDrawing)
+			////console.log("testing : ", canvasRef, canvasDrawing)
 			const canvas = canvasRef.current;
 			const context = canvas.getContext('2d')
 			player1.current = new Player(15, 165, 10, 70, gameCustomize[0], 0)
@@ -406,7 +406,7 @@ function createParticle(x, y) {
 			window.addEventListener("keyup", handleKeyUp)
 			canvas.addEventListener("mousemove", handleMouseMove)
 			window.addEventListener('resize', resizeCanvas);
-			console.log("DRAWING THE SHAPES")
+			////console.log("DRAWING THE SHAPES")
 			setCanvasDrawing(true)
 		}
 	}, [canvasRef, canvasDrawing, socket]);
@@ -549,7 +549,7 @@ function createParticle(x, y) {
 				let message = data.message
 				if (type === "setupGame") {
 					playerNo = message.playerNo
-					console.log("INSIDE SETUPGAME")
+					////console.log("INSIDE SETUPGAME")
 					isGameStarted = true
 					setUserName1(message.user1)
 					setUserName2(message.user2)
@@ -597,14 +597,14 @@ function createParticle(x, y) {
 					allPlayersStats[1].rating = message.rating[1]
 					allPlayersStats[2].time = message.time
 					setPlayersInfos(allPlayersStats)
-					console.log("playerNo when it is finished : ", playerNo)
+					////console.log("playerNo when it is finished : ", playerNo)
 				} else if (type === "playersInfos")
 					setPlayersPics(message.users)
 				else if (type === 'hmed') {
-					console.log("hmed received")
+					////console.log("hmed received")
 					socket.close()
 				} else if (type === 'youWinTheGame'){
-					console.log("tournament_id : ", message)
+					////console.log("tournament_id : ", message)
 					if (message.round_reached !== 'WINNER')
 						navigate("../game/tournamentbracket")
 					else{
@@ -623,7 +623,7 @@ function createParticle(x, y) {
 	useEffect(() => {
 		if (canvasDrawing && user) {
 			if (socket && socket.readyState === WebSocket.OPEN && user) {
-				console.log("CHECKING IF PLAYER IN ROOM")
+				////console.log("CHECKING IF PLAYER IN ROOM")
 				socket.send(JSON.stringify({
 					type: 'isPlayerInRoomTournamentGame',
 					message: {
@@ -645,7 +645,7 @@ function createParticle(x, y) {
 				}))
 				navigate('../game')
 			} else {
-				console.log("socket is closed, refresh the page")
+				////console.log("socket is closed, refresh the page")
 			}
 		}
 	}

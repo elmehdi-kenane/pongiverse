@@ -32,7 +32,7 @@ const OneVsOneRandom = () => {
 
     useEffect(() => {
         if (socket && socket.readyState === WebSocket.OPEN && user) {
-            console.log("CHECKING IF PLAYER IN ROOM 1vs1")
+           console.log("CHECKING IF PLAYER IN ROOM 1vs1")
             socket.send(JSON.stringify({
                 type: 'isPlayerInAnyRoom',
                 message: {
@@ -47,7 +47,7 @@ const OneVsOneRandom = () => {
     useEffect(() => {
         if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
             notifSocket.onmessage = (event) => {
-                console.log("inside notifSocket")
+               console.log("inside notifSocket")
                 let data = JSON.parse(event.data)
                 let message = data.message
                 let type = data.type
@@ -83,7 +83,7 @@ const OneVsOneRandom = () => {
                     else
                         navigate("../game/createtournament")
                 } else if (type === "gameReady") {
-                    console.log("inside gameReady")
+                   console.log("inside gameReady")
                     console.log(message.avatars)
                     if (playerNo === 1) {
                         setEnemyInfos({
@@ -104,19 +104,19 @@ const OneVsOneRandom = () => {
                     setRoomID(message.room.id)
                     setLoadMatch(false)
                     setAllSet(true)
-                    console.log("ALL SET BROTHER")
+                   console.log("ALL SET BROTHER")
                 } else if (type === "playersReady") {
-                    console.log("inside playersReady")
+                   console.log("inside playersReady")
                     setAllSet(true)
                 } else if (type === "playerNo") {
-                    console.log("inside playerNo")
+                   console.log("inside playerNo")
                     setPlayerNo(message.playerNo)
                     setRoomID(message.id)
                     setGameStarted(true)
                 } else if (type === "noRoomFound") {
-                    console.log("inside noRoomFound")
+                   console.log("inside noRoomFound")
                     if (socket && socket.readyState === WebSocket.OPEN) {
-                        console.log("inside join")
+                       console.log("inside join")
                         socket.send(JSON.stringify({
                             type: 'join',
                             message: {
@@ -130,7 +130,7 @@ const OneVsOneRandom = () => {
                         }, 1000);
                     }
                 } else if (type === 'alreadySearching') {
-                    console.log("inside alreadySearching")
+                   console.log("inside alreadySearching")
                     console.log(message)
                     setPlayerNo(message.playerNo)
                     setRoomID(message.id)
@@ -145,7 +145,7 @@ const OneVsOneRandom = () => {
         }
 
         if (allSet && roomID) {
-            console.log("inside allSet and roomID")
+           console.log("inside allSet and roomID")
             clearInterval(randomPics)
             setTimeout(() => {
                 navigate(`../play/1vs1/${roomID}`)
@@ -180,7 +180,7 @@ const OneVsOneRandom = () => {
                 const user = userRef.current
                 const socket = socketRef.current
                 const roomID = roomIdRef.current
-                console.log("USER IS GETTING OUT ", user, roomID, socket)
+               console.log("USER IS GETTING OUT ", user, roomID, socket)
                 if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
                     socket.send(JSON.stringify({
                         type: 'quit',
@@ -200,7 +200,7 @@ const OneVsOneRandom = () => {
             const user = userRef.current
             const socket = socketRef.current
             const roomID = roomIdRef.current
-            console.log("INSIDE THE MATCH : ", user, roomID, socket)
+           console.log("INSIDE THE MATCH : ", user, roomID, socket)
             if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
                 socket.send(JSON.stringify({
                     type: 'quit',

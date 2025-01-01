@@ -11,7 +11,7 @@ const MyRoomContent = (props) => {
   let chatRoomCoverRef = useRef(chatRoomCover)
 
   const navigateToChatRoom = () => {
-    console.log("Room ID: ", props.roomId)
+   console.log("Room ID: ", props.roomId)
     setSelectedChatRoom({
       id: props.roomId,
       name: props.name,
@@ -48,7 +48,7 @@ const MyRoomContent = (props) => {
           const allMyChatRooms = props.myChatRooms
           const updatedRooms = allMyChatRooms.map((room) => {
             if (room.id === data.data.id) {
-              console.log("Updated Room: ", data.data.cover);
+             console.log("Updated Room: ", data.data.cover);
               return { ...room, cover: data.data.cover };
             }
             return room;

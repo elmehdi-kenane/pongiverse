@@ -23,7 +23,7 @@ function FriendsParam(props) {
 
 	const handelChallengeRequest = () => {
 		if (notifSocket && notifSocket.readyState === WebSocket.OPEN && user) {
-			console.log("inside join")
+			////console.log("inside join")
 			notifSocket.send(JSON.stringify({
 				type: 'inviteFriendGame',
 				message: {

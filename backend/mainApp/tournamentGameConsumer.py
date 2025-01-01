@@ -243,7 +243,7 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 		room["ball"]["ballX"] += ballProps["velocityX"]
 		room["ball"]["ballY"] += ballProps["velocityY"]
 		if room['status'] == 'finished':
-			print("\n\nGAME IS FINISHED\n\n")
+			#print"\n\nGAME IS FINISHED\n\n")
 			await sync_to_async(DisplayOpponent.objects.all().delete)()
 			await delete_spicific_room(tournament_rooms, room, tournament_id)
 			player1 = await sync_to_async(customuser.objects.get)(username=room['players'][0]['user'])
@@ -257,7 +257,7 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 				round_reached = await get_next_round_reached(room['players'][1]['user'], tournament_id) 
 				await send_winner_data(self, player2, round_reached, tournament_id)
 				if round_reached['round_reached'] == 'WINNER':
-					print("\n\n WINN THE TOURNAENT\n\n")
+					#print"\n\n WINN THE TOURNAENT\n\n")
 					tournaments[tournament_id]['rounds']['WINNER'].append({'username': room['players'][1]['user'], 'position': 1})
 					# await save_tournament_to_db(tournament_id)
 					# tournament.is_finished = True
@@ -297,13 +297,13 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 				## PLAYER 2 LOSER ###
 				await discard_channels_from_tournament_group(self, player2, tournament_id)
 				await send_playing_status_to_friends(self, player2, False, user_channels)
-				print("******************PLAYER 2 LOSE THE GAME")
+				#print"******************PLAYER 2 LOSE THE GAME")
 				## END PLAYER 2 LOSER ###
 				## PLAYER 1 WINNER##
 				round_reached = await get_next_round_reached(room['players'][0]['user'], tournament_id)
 				await send_winner_data(self, player1, round_reached, tournament_id)
 				if round_reached['round_reached'] == 'WINNER':
-					print("\n\n WINN THE TOURNAENT\n\n")
+					#print"\n\n WINN THE TOURNAENT\n\n")
 					tournaments[tournament_id]['rounds']['WINNER'].append({'username': room['players'][0]['user'], 'position': 1})
 					# await save_tournament_to_db(tournament_id)
 					# tournament.is_finished = True
@@ -329,9 +329,9 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 					# await sync_to_async(tournamentuserinfo.save)()
 					tournaments[tournament_id]['rounds'][round_reached['round_reached']].append({'username': room['players'][0]['user'], 'position': round_reached['position']})
 					channel_name = user_channels.get(player1.id)
-					print("CHANNEL NAME : ", channel_name)
+					#print"CHANNEL NAME : ", channel_name)
 					if channel_name:
-						print("DKHEL HNA : ")
+						#print"DKHEL HNA : ")
 						await self.channel_layer.send(channel_name, {
 							'type': 'youWinTheGame',
 							'message': {
@@ -342,7 +342,7 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 				# actual_round = await get_actual_round_reached(tournament)
 				# the_round = await sync_to_async(Round.objects.filter(tournament=tournament, type=actual_round).first)()
 				# tournamentuserinfocount = await sync_to_async(TournamentUserInfo.objects.filter(round=the_round).count)()
-				# print(f"\n ROUND : {actual_round} , COUNT : {tournamentuserinfocount}\n\n")
+				# #printf"\n ROUND : {actual_round} , COUNT : {tournamentuserinfocount}\n\n")
 				# if (actual_round == 'SEMIFINAL' and tournamentuserinfocount == 4) or (actual_round == 'FINAL' and tournamentuserinfocount == 2):
 				# 	await tournament_notifs_consumers.OtherRounds(self, actual_round, tournament)
 				## END PLAYER 1 WINNER##
@@ -374,7 +374,7 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 			room["ball"]["ballY"] -= 5
 			# ballProps["velocityX"] *= -1
 		player = [room["players"][0], 0] if room["ball"]["ballX"] < 355 else [room['players'][1], 1]
-		# #print(f"speed : {ballProps['speed']}")
+		# ##printf"speed : {ballProps['speed']}")
 		if collision(self, room["ball"], player, room):
 			hitPoint = room["ball"]["ballY"] - (player[0]["paddleY"] + 35) #### player["height"] / 2 => 50
 			hitPoint = hitPoint / 35 #### player["height"] / 2 => 50
@@ -402,7 +402,7 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 			ballProps["velocityY"] = 5 if (serveY == 1) else -5
 			await asyncio.create_task(updatingGame(self, room))
 			if room['players'][0]['score'] == 5:
-				print("PLAYER 1 WIN THE GAMEEE")
+				#print"PLAYER 1 WIN THE GAMEEE")
 				await sync_to_async(DisplayOpponent.objects.all().delete)()
 				room['winner'] = 1
 				room['status'] = 'finished'
@@ -417,7 +417,7 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 				# if tournamentMember:
 				# 	tournamentMember.is_eliminated = True
 				# 	await sync_to_async(tournamentMember.save)()
-				# 	print("////////Player 2 setted eliminated")
+				# 	#print"////////Player 2 setted eliminated")
 				update_is_eliminated(tournament_id, player_username2, True)
 				player2.is_playing = False
 				await sync_to_async(player2.save)()
@@ -436,7 +436,7 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 				round_reached = await get_next_round_reached(player_username1, tournament_id)
 				await send_winner_data(self, player1, round_reached, tournament_id)
 				if round_reached['round_reached'] == 'WINNER':
-					print("\n\n WINN THE TOURNAENT\n\n")
+					#print"\n\n WINN THE TOURNAENT\n\n")
 					tournaments[tournament_id]['rounds']['WINNER'].append({'username': room['players'][0]['user'], 'position': 1})
 					# await save_tournament_to_db(tournament_id)
 					# tournament.is_finished = True
@@ -473,7 +473,7 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 				# actual_round = await get_actual_round_reached(tournament)
 				# the_round = await sync_to_async(Round.objects.filter(tournament=tournament, type=actual_round).first)()
 				# tournamentuserinfocount = await sync_to_async(TournamentUserInfo.objects.filter(round=the_round).count)()
-				# print(f"\n ROUND : {actual_round} , COUNT : {tournamentuserinfocount}\n\n")
+				# #printf"\n ROUND : {actual_round} , COUNT : {tournamentuserinfocount}\n\n")
 				# if (actual_round == 'SEMIFINAL' and tournamentuserinfocount == 4) or (actual_round == 'FINAL' and tournamentuserinfocount == 2):
 				# 	await tournament_notifs_consumers.OtherRounds(self, actual_round, tournament)
 				await delete_spicific_room(tournament_rooms, room, tournament_id)
@@ -495,7 +495,7 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 				# await sync_to_async(player2.save)()
 				return
 			elif room['players'][1]['score'] == 5:
-				print("PLAYER 2 IS WIN THE GAMEEE")
+				#print"PLAYER 2 IS WIN THE GAMEEE")
 				room['winner'] = 2
 				room['status'] = 'finished'
 				room['players'][1]['status'] = 'winner'
@@ -510,7 +510,7 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 				# if tournamentMember:
 				# 	tournamentMember.is_eliminated = True
 				# 	await sync_to_async(tournamentMember.save)()
-				print("////////Player 1 setted eliminated")
+				#print"////////Player 1 setted eliminated")
 				update_is_eliminated(tournament_id, player_username1, True)
 				player1.is_playing = False
 				await sync_to_async(player1.save)()
@@ -529,7 +529,7 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 				round_reached = await get_next_round_reached(player_username2, tournament_id)
 				await send_winner_data(self, player2, round_reached, tournament_id)
 				if round_reached['round_reached'] == 'WINNER':
-					print("\n\n WINN THE TOURNAENT\n\n")
+					#print"\n\n WINN THE TOURNAENT\n\n")
 					tournaments[tournament_id]['rounds']['WINNER'].append({'username': room['players'][1]['user'], 'position': 1})
 					# await save_tournament_to_db(tournament_id)
 					# tournament.is_finished = True
@@ -566,7 +566,7 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 				# actual_round = await get_actual_round_reached(tournament)
 				# the_round = await sync_to_async(Round.objects.filter(tournament=tournament, type=actual_round).first)()
 				# tournamentuserinfocount = await sync_to_async(TournamentUserInfo.objects.filter(round=the_round).count)()
-				# print(f"\n ROUND : {actual_round} , COUNT : {tournamentuserinfocount}\n\n")
+				# #printf"\n ROUND : {actual_round} , COUNT : {tournamentuserinfocount}\n\n")
 				# if (actual_round == 'SEMIFINAL' and tournamentuserinfocount == 4) or (actual_round == 'FINAL' and tournamentuserinfocount == 2):
 				# 	await tournament_notifs_consumers.OtherRounds(self, actual_round, tournament)
 				# NOTE: handle the game is finished and player win the game
@@ -790,7 +790,7 @@ async def validatePlayerTournamentGame(self, data, tournament_rooms, user_channe
 					elif room['status'] == 'started':
 						if player['state'] == 'inactive':
 							player['state'] = 'playing'
-						# #print(room)
+						# ##printroom)
 						await self.send(text_data=json.dumps({
 							'type': 'setupGame',
 							'message': {
@@ -822,7 +822,7 @@ async def validatePlayerTournamentGame(self, data, tournament_rooms, user_channe
 					# elif room['status'] == 'aborted':
 					# 	player1_accuracy = (room['players'][0]['self_scored'] * room['players'][0]['hit']) / 100
 					# 	player2_accuracy = (room['players'][1]['self_scored'] * room['players'][1]['hit']) / 100
-					# 	# #print("GAME IS ALREADY ABORTED")
+					# 	# ##print"GAME IS ALREADY ABORTED")
 					# 	await self.send(text_data=json.dumps({
 					# 		'type': 'abortedGame',
 					# 		'message': {
@@ -878,7 +878,7 @@ async def validatePlayerTournamentGame(self, data, tournament_rooms, user_channe
 			#         playerNo = player['playerNo']
 			#     if player['state'] == 'inactive':
 			#         playersReady += 1
-			# # #print(playerNo)
+			# # ##printplayerNo)
 			# await self.send(text_data=json.dumps({
 			#     'type': 'setupGame',
 			#     'message': {
@@ -1016,12 +1016,12 @@ async def user_exited_tournament_game(self, data, tournament_rooms):
 	message = data['message']
 	room = {}
 	tournament_id = get_tournament_id(message['user'])
-	print(f"************TournamentId : {tournament_id}")
+	#printf"************TournamentId : {tournament_id}")
 	if tournament_id != 0:
 		room = await get_right_room(tournament_id, tournament_rooms, message['user'])
-		print(f"************Room : {room}")
+		#printf"************Room : {room}")
 	if room:
-		print("\n\n************USER EXITED TOURNAMENT GAME\n\n")
+		#print"\n\n************USER EXITED TOURNAMENT GAME\n\n")
 		room['status'] = 'finished'
 		if room['players'][0]['user'] == message['user']:
 			room['players'][0]['status'] = 'loser'

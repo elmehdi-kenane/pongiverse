@@ -98,7 +98,7 @@ export const ChatProvider = ({ child }) => {
           navigate('/signin')
         }
       } catch (error) {
-        console.log(error);
+         console.log(error);
       }
     };
     const fetchSuggestedChatRooms = async () => {
@@ -117,7 +117,7 @@ export const ChatProvider = ({ child }) => {
           navigate('/signin')
         else console.log("opps!, something went wrong");
       } catch (error) {
-        console.log(error);
+         console.log(error);
       }
     };
     if (user && location.pathname === "/mainpage/groups") {

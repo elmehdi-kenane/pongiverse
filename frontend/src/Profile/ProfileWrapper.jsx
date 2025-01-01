@@ -41,7 +41,7 @@ export const ProfileWrapper = ({ child }) => {
             });
             const res = await response.json()
             if (response.ok) {
-                // console.log("Response data : ", res.data);
+                //console.log("Response data : ", res.data);
                 setFriendsData(res.data)
             }
             else if (response.status === 401)

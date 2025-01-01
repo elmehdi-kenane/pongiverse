@@ -29,6 +29,17 @@ function TournamentBracket() {
 	};
 
 	useEffect(() => {
+		if (socket && socket.readyState === WebSocket.OPEN) {
+			socket.send(JSON.stringify({
+				type: 'tournament-member-loged-again',
+				message: {
+					user: user
+				}
+			}))
+		}
+	}, [socket])
+
+	useEffect(() => {
 		const check_is_join = async () => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/is-started-and-not-finshed`, {
 				method: "POST",
@@ -63,7 +74,7 @@ function TournamentBracket() {
 			});
 			if (response.ok) {
 				const data = await response.json();
-				console.log("----mohamed data : ", data)
+				////console.log("----mohamed data : ", data)
 				setroundQuarterFinalMembers(data.roundquarter)
 				setroundSemiFinalMembers(data.roundsemi)
 				setFinalMembers(data.roundfinal)
@@ -72,6 +83,7 @@ function TournamentBracket() {
 				navigate("/signin")
 			}
 		}
+
 
 		const get_oponent = async () => {
 			const response = await fetch(`http://${import.meta.env.VITE_IPADDRESS}:8000/api/get-opponent`, {
@@ -86,7 +98,7 @@ function TournamentBracket() {
 			});
 			if (response.ok) {
 				const data = await response.json();
-				console.log("DIIIB : ", data)
+				////console.log("DIIIB : ", data)
 				if (data.Case === 'exist') {
 					setUserOneToDisplay(data.user1)
 					setUserTwoToDisplay(data.user2)
@@ -109,9 +121,9 @@ function TournamentBracket() {
 				let data = JSON.parse(event.data)
 				let type = data.type
 				let message = data.message
-				console.log("DATA RECEIVED:", data)
+				////console.log("DATA RECEIVED:", data)
 				if (type == 'you_and_your_user') {
-					console.log("YOU data : ", data)
+					////console.log("YOU data : ", data)
 					setUserOneToDisplay(message.user1)
 					setUserTwoToDisplay(message.user2)
 					setCreatedAt(new Date(message.time))
@@ -179,7 +191,7 @@ function TournamentBracket() {
 				</div>
 			}
 			<div className={styles['normalSvg']}>
-				<SvgComponent roundquartermembers={roundQuarterFinalMembers} roundsemifinalmembers={roundSemiFinalMembers} roundfinalmembers={finalMembers} roundwinner={winnerMember}/>
+				<SvgComponent roundquartermembers={roundQuarterFinalMembers} roundsemifinalmembers={roundSemiFinalMembers} roundfinalmembers={finalMembers} roundwinner={winnerMember} />
 
 			</div>
 			<div className={styles['verticalSvg']}>

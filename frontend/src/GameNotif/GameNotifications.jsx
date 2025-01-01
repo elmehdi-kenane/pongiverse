@@ -111,7 +111,7 @@ const GameNotifications = (props) => {
         newReceivedFriendReqNotif &&
         location.pathname !== "/mainpage/Friendship"
       ) {
-        console.log("pathname notify", location.pathname);
+        // console.log("pathname notify", location.pathname);
         notify();
       }
     }
@@ -121,7 +121,7 @@ const GameNotifications = (props) => {
     let notifSelected = allGameNotifs.filter(
       (user) => user.user === creator.user
     );
-    // console.log("****AL GAME NOTT: ", allGameNotifs.filter((user) => ((user?.tournament_id && user.tournament_id !== creator.tournament_id) || (user.roomID !== creator.roomID))))
+    // // console.log("****AL GAME NOTT: ", allGameNotifs.filter((user) => ((user?.tournament_id && user.tournament_id !== creator.tournament_id) || (user.roomID !== creator.roomID))))
     setAllGameNotifs((prevAllGameNotifs) =>
       prevAllGameNotifs.filter(
         (user) =>
@@ -217,7 +217,7 @@ const GameNotifications = (props) => {
     );
     if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
       if (sender.mode === "1vs1") {
-        console.log("YES!");
+        // console.log("YES!");
         notifSocket.send(
           JSON.stringify({
             type: "acceptInvitation",
@@ -257,7 +257,7 @@ const GameNotifications = (props) => {
         );
         if (response.ok) {
           const data = await response.json();
-          console.log("******Case", data.Case);
+          // console.log("******Case", data.Case);
           if (data.Case === "Tournament_does_not_exist") {
             notifyError("Tournament does not exist");
           } else if (data.Case === "User_is_in_tournament")
@@ -314,25 +314,25 @@ const GameNotifications = (props) => {
           message: message,
           type: type,
         };
-        console.log("type", type);
-        console.log("message", message);
+        // console.log("type", type);
+        // console.log("message", message);
         if (props.setData) props.setData(friendsData);
         if (type === "goToGamingPage") {
-          // console.log("navigating now")
+          // // console.log("navigating now")
           // navigate(`/mainpage/game/solo/1vs1/friends`)
           const socketRefer = socketRef.current;
-          console.log("SOCKET........", socketRefer);
+          // console.log("SOCKET........", socketRefer);
           if (socketRefer?.readyState !== WebSocket.OPEN) {
-            console.log("SOCKET IS CLOSED, SHOULD OPENED");
+            // console.log("SOCKET IS CLOSED, SHOULD OPENED");
             const newSocket = new WebSocket(
               `ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/socket-server`
             );
             newSocket.onopen = () => {
-              console.log("+++++++++++=======+++++++++");
-              console.log(
+              // console.log("+++++++++++=======+++++++++");
+               console.log(
                 "GAME SOCKET OPENED AND NOW WE WILL MOVE TO FRIEND PAGE"
               );
-              console.log("+++++++++++=======+++++++++");
+              // console.log("+++++++++++=======+++++++++");
               setSocket(newSocket);
               if (message.mode === "1vs1")
                 navigate(`/mainpage/game/solo/1vs1/friends`);
@@ -344,7 +344,7 @@ const GameNotifications = (props) => {
             else navigate(`/mainpage/game/solo/2vs2/friends`);
           }
         } else if (type === "receiveFriendGame") {
-          console.log("RECEIVED A GAME REQUEST");
+          // console.log("RECEIVED A GAME REQUEST");
           setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message]);
           setRoomID(message.roomID);
         } else if (type === "accepted_invitation") {
@@ -352,7 +352,7 @@ const GameNotifications = (props) => {
           const socketRefer = socketRef.current;
           // && gamePlayRegex.test(location.pathname)
           if (socketRefer?.readyState !== WebSocket.OPEN) {
-            console.log("SOCKET IS CLOSED, SHOULD OPENED");
+            // console.log("SOCKET IS CLOSED, SHOULD OPENED");
             const newSocket = new WebSocket(
               `ws://${import.meta.env.VITE_IPADDRESS}:8000/ws/socket-server`
             );
@@ -394,7 +394,7 @@ const GameNotifications = (props) => {
           setNewReceivedFriendReqNotif(true);
           setRemoveFriendReqNotif(false);
           setFriendReq(message);
-          console.log("avatar", message.avatar);
+          // console.log("avatar", message.avatar);
           addNotificationToList({
             notificationText: `${message.second_username} sent you a friend request`,
             urlRedirection: "friendship",
@@ -475,7 +475,7 @@ const GameNotifications = (props) => {
             status: "",
             avatar: "",
           });
-        } else if (type === 'user_join_tournament') {
+        } else if (type === 'user_join_tournament' && location.pathname === '/mainpage/game/jointournament') {
           let tournament_id = message.tournament_id
 					props.setTournamentSuggestions(prevSuggestions =>
 						prevSuggestions.map(tournament =>

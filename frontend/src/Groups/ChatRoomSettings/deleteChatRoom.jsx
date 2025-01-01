@@ -6,13 +6,13 @@ import { useNavigate } from "react-router-dom";
 const DeleteChatRoom = (props) => {
 
   const chatRoomDeletedUpdater = (data) => {
-    console.log("data: ", data);
+   console.log("data: ", data);
     const navigate = useNavigate();
     const allMyChatRooms = props.myChatRooms;
     const updatedRooms = allMyChatRooms.filter(
       (room) => room.id !== data.roomId
     );
-    console.log("update rooms: ", updatedRooms);
+   console.log("update rooms: ", updatedRooms);
     props.setMyChatRooms(updatedRooms);
     props.setDeletRoom(false);
     props.setShowSettings(false);

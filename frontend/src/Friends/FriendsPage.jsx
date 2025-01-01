@@ -22,7 +22,7 @@ const FriendshipPage = () => {
   const [data, setData] = useState({ message: 'messageStart', type: 'typeStart' });
   // useEffect(() => {
   //   if (notifSocket) {
-  //     // console.log(".............. NEW MESSAGE FROM BACKEND ..............");
+  //     //console.log(".............. NEW MESSAGE FROM BACKEND ..............");
   //     notifSocket.onmessage = (e) => {
   //       const parsedData = JSON.parse(e.data);
   //       const data =
@@ -34,7 +34,7 @@ const FriendshipPage = () => {
   //     }
   //   }
   //   else
-  //     console.log("notifSocket doesn't exist");
+  //    console.log("notifSocket doesn't exist");
   // }, [notifSocket]);
 
   useEffect(() => {
@@ -71,7 +71,7 @@ const FriendshipPage = () => {
         navigate('/signin')
       const res = await response.json();
       if (res) {
-        // console.log("FRIENDS:  ", res);
+        //console.log("FRIENDS:  ", res);
         setFriends(res);
       }
     };
@@ -79,9 +79,9 @@ const FriendshipPage = () => {
   }, [user]);
 
   useEffect(() => {
-    // console.log("============ socket-start ============");
-    // console.log("data.message:", data.message, "data.type:", data.type);
-    // console.log("============ socket-end ============");
+    //console.log("============ socket-start ============");
+    //console.log("data.message:", data.message, "data.type:", data.type);
+    //console.log("============ socket-end ============");
     if (data.type === "cancel-friend-request") {
       setSentRequests((prevSentRequests) => {
         const updatedSentRequests = prevSentRequests.filter(
@@ -184,7 +184,7 @@ const FriendshipPage = () => {
         });
       }, 1000);
     } else if (data.type === "receive-friend-request") {
-      console.log("**************GAME NOTIFFF frieded")
+     console.log("**************GAME NOTIFFF frieded")
       setReceivedRequests((prevReceivedRequests) => {
         const updatedReceivedRequests = [data.message, ...prevReceivedRequests];
         return updatedReceivedRequests;
@@ -254,9 +254,9 @@ const FriendshipPage = () => {
     };
     if (user) getBlockedList();
   }, [user]);
-  //   console.log("friends", friends);
-  //   console.log("receivedRequests", receivedRequests);
-  //   console.log("sentRequests", sentRequests);
+  //  console.log("friends", friends);
+  //  console.log("receivedRequests", receivedRequests);
+  //  console.log("sentRequests", sentRequests);
   return (
     <>
       <GameNotifications setData={setData} />

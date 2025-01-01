@@ -341,7 +341,7 @@ const OneVsOnePlayMatch = () => {
 
 	useEffect(() => {
 		if (canvasRef && !canvasDrawing && gameCustomize.length && socket) {
-			console.log("testing : ", canvasRef, canvasDrawing)
+			////console.log("testing : ", canvasRef, canvasDrawing)
 			const canvas = canvasRef.current;
 			const context = canvas.getContext('2d')
 			player1.current = new Player(15, 165, 10, 70, gameCustomize[0], 0)
@@ -357,7 +357,7 @@ const OneVsOnePlayMatch = () => {
 			window.addEventListener("keyup", handleKeyUp)
 			canvas.addEventListener("mousemove", handleMouseMove)
 			window.addEventListener('resize', resizeCanvas);
-			console.log("DRAWING THE SHAPES")
+			////console.log("DRAWING THE SHAPES")
 			setCanvasDrawing(true)
 		}
 	}, [canvasRef, canvasDrawing, socket]);
@@ -499,10 +499,10 @@ const OneVsOnePlayMatch = () => {
                 let data = JSON.parse(event.data)
                 let type = data.type
                 let message = data.message
-                // console.log("THE TYPE IS : ",type)
+                //console.log("THE TYPE IS : ",type)
                 if (type === "setupGame") {
                     playerNo = message.playerNo
-                    console.log("INSIDE SETUPGAME")
+                   console.log("INSIDE SETUPGAME")
                     isGameStarted = true
                     setUserName1(message.user1)
                     setUserName2(message.user2)
@@ -510,7 +510,7 @@ const OneVsOnePlayMatch = () => {
                     startTimer()
                     console.log(socket)
                 } else if (type === "updateGame") {
-                    // console.log("INSIDE UPDATEGAME")
+                    //console.log("INSIDE UPDATEGAME")
                     const canvas = canvasRef.current;
                     if (canvas) {
                         const widthScalingFactor = canvas.width / 710;
@@ -531,8 +531,8 @@ const OneVsOnePlayMatch = () => {
                         draw()
                     }
                 } else if (type === "notAuthorized") {
-                    console.log("INSIDE LEAVEGAME")
-                    console.log("navigating from the playing page")
+                   console.log("INSIDE LEAVEGAME")
+                   console.log("navigating from the playing page")
                     navigate("../game/solo/1vs1")
                 } else if (type === "roomNotExist") {
                     navigate("../game/solo/1vs1")
@@ -559,7 +559,7 @@ const OneVsOnePlayMatch = () => {
                     allPlayersStats[0].status = message.status[0]
                     allPlayersStats[1].status = message.status[1]
                     setPlayersInfos(allPlayersStats)
-                    console.log("playerNo when it is finished : ", playerNo)
+                   console.log("playerNo when it is finished : ", playerNo)
                 } else if (type === "abortedGame") {
                     let allPlayersStats = [...playersInfos]
                     setUserName1(message.user1)
@@ -610,7 +610,7 @@ const OneVsOnePlayMatch = () => {
 	useEffect(() => {
 		if (canvasDrawing && !socketRecreated && user) {
 			if (socket && socket.readyState === WebSocket.OPEN && user) {
-				console.log("CHECKING IF PLAYER IN ROOM")
+				////console.log("CHECKING IF PLAYER IN ROOM")
 				socket.send(JSON.stringify({
 					type: 'isPlayerInRoom',
 					message: {
@@ -634,7 +634,7 @@ const OneVsOnePlayMatch = () => {
 				}))
 				navigate('../game/solo/1vs1')
 			} else {
-				console.log("socket is closed, refresh the page")
+				////console.log("socket is closed, refresh the page")
 			}
 		}
 	}
@@ -669,7 +669,7 @@ const OneVsOnePlayMatch = () => {
             const user = userRef.current
             const socket = socketRef.current
             const roomID = roomIdRef.current
-            console.log("INSIDE THE MATCH : ", user, roomID, socket)
+           console.log("INSIDE THE MATCH : ", user, roomID, socket)
             if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
                 socket.send(JSON.stringify({
                     type: 'playerChangedPage',
@@ -692,7 +692,7 @@ const OneVsOnePlayMatch = () => {
                 const user = userRef.current
                 const socket = socketRef.current
                 const roomID = roomIdRef.current
-                console.log("USER IS GETTING OUT ", user, roomID, socket)
+               console.log("USER IS GETTING OUT ", user, roomID, socket)
                 if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
                     socket.send(JSON.stringify({
                         type: 'playerChangedPage',

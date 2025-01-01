@@ -54,7 +54,7 @@ const NotificationsIcon = ({
           navigate('/signin')
         const res = await response.json();
         if (res) {
-          console.log("notifications", res);
+         console.log("notifications", res);
 
           setNotifications(
             res.map((item) => {

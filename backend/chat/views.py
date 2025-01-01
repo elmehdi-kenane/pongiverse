@@ -32,7 +32,7 @@ class CustomMyChatRoomLimitOffsetPagination(PageNumberPagination):
 @authentication_required
 @api_view(["GET"])
 def friends_with_directs(request, username):
-    print()
+    #print)
     try:
         user = customuser.objects.get(username=username)
     except customuser.DoesNotExist:
@@ -151,7 +151,7 @@ def leave_chat_room(request):
         # cick the member from the room membership
         member_to_kick.delete()
         if member_role == "admin":
-            print("the user is an admin")
+            #print"the user is an admin")
             all_members = Membership.objects.filter(room=room).order_by("joined_at")
             admin_found = 0
             for member in all_members:
@@ -374,7 +374,7 @@ def all_chat_room_memebers(request, chat_room_name):
 @api_view(["POST"])
 def list_all_friends(request):
     if request.method == "POST":
-        print(request.data)
+        #printrequest.data)
         try:
             user = customuser.objects.get(username=(request.data).get("user"))
         except customuser.DoesNotExist:
@@ -480,7 +480,7 @@ def chat_room_members_list(request):
 @authentication_required
 @api_view(["POST"])
 def accept_chat_room_invite(request):
-    print("inside accept_chat_room_invite")
+    #print"inside accept_chat_room_invite")
     if request.method == "POST":
         try:
             user = customuser.objects.get(username=request.data.get("user"))
@@ -578,11 +578,11 @@ def reset_unread_messages(request):
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
         try:
-            print("***********:", request.data.get("receiver"))
+            #print"***********:", request.data.get("receiver"))
             receiver = customuser.objects.get(id=request.data.get("receiver"))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
-        print("inside reset_unread_messages")
+        #print"inside reset_unread_messages")
         unread = Directs.objects.filter(sender=receiver, receiver=user, is_read=False)
         if unread:
             unread.update(is_read=True)

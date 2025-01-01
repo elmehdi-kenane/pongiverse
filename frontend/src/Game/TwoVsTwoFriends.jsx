@@ -45,7 +45,7 @@ const TwoVsTwoFriends = () => {
 
 	useEffect(() => {
 		if (socket && socket.readyState === WebSocket.OPEN && user) {
-			console.log("CHECKING IF PLAYER IN ROOM")
+			////console.log("CHECKING IF PLAYER IN ROOM")
 			socket.send(JSON.stringify({
 				type: 'isPlayerInAnyRoom',
 				message: {
@@ -66,9 +66,9 @@ const TwoVsTwoFriends = () => {
 				let message = data.message
 				console.log('========', type, '========')
 				if (type === 'connected_again') {
-					console.log("****IS A FRIEND:", message.is_a_friend);
+					////console.log("****IS A FRIEND:", message.is_a_friend);
 					const currentAllGameFriends = allGameFriendsRef.current;
-					console.log("*******IWA YAHAMIIIIID:", message.user)
+					////console.log("*******IWA YAHAMIIIIID:", message.user)
 					if (message.is_a_friend === true) {
 						const userExists = currentAllGameFriends.some(friend => friend.name === message.user)
 						if (!userExists)
@@ -76,7 +76,7 @@ const TwoVsTwoFriends = () => {
 					}
 				} else if (type === 'user_disconnected') {
 					const currentAllGameFriends = allGameFriendsRef.current;
-					console.log("user disconnected : ", allGameFriends)
+					////console.log("user disconnected : ", allGameFriends)
 					let uname = data.message.user
 					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname))
 				} else if (type === "chatNotificationCounter") {
@@ -101,10 +101,10 @@ const TwoVsTwoFriends = () => {
 			socket.onmessage = (event) => {
 				let data = JSON.parse(event.data)
 				let type = data.type
-				console.log("TYYYYPE:", type);
+				////console.log("TYYYYPE:", type);
 				let message = data.message
 				if (type === 'roomAlreadyStarted') {
-					console.log("inside roomAlreadyStarted")
+					////console.log("inside roomAlreadyStarted")
 					setAllSet(true)
 					if (message.mode === '1vs1')
 						navigate(`../play/1vs1/${message.roomID}`)
@@ -179,7 +179,7 @@ const TwoVsTwoFriends = () => {
 						})
 					}
 				} else if (type === "gameReady") {
-					console.log("inside gameReady")
+					////console.log("inside gameReady")
 					const playerNbr = playerNoRef.current;
 					console.log(message)
 					if (playerNbr === 1 || playerNbr === 2) {
@@ -263,16 +263,16 @@ const TwoVsTwoFriends = () => {
 					let uname = data.message.user
 					setAllGameFriends(currentAllGameFriends.filter(user => user.name !== uname))
 				} else if (type === 'connected_again') {
-					console.log("****IS A FRIEND:", message.is_a_friend);
+					////console.log("****IS A FRIEND:", message.is_a_friend);
 					const currentAllGameFriends = allGameFriendsRef.current;
-					console.log("*******IWA YAHAMIIIIID:", message.user)
+					////console.log("*******IWA YAHAMIIIIID:", message.user)
 					if (message.is_a_friend === true) {
 						const userExists = currentAllGameFriends.some(friend => friend.name === message.user)
 						if (!userExists)
 							setAllGameFriends([...currentAllGameFriends, message.userInfos])
 					}
 				} else if (type === 'alreadySearching') {
-					console.log("inside alreadySearching")
+					////console.log("inside alreadySearching")
 					setPlayerNo(message.playerNo)
 					setTmpRoomID(message.id)
 					setGameStarted(true)
@@ -296,7 +296,7 @@ const TwoVsTwoFriends = () => {
 		}
 
 		if (allSet && roomID) {
-			console.log("inside allSet and roomID")
+			////console.log("inside allSet and roomID")
 			// clearInterval(randomPics)
 			setTimeout(() => {
 				navigate(`../play/2vs2/${roomID}`)
@@ -320,7 +320,7 @@ const TwoVsTwoFriends = () => {
 	const cancelTheGame = () => {
 		// setSelectedFriends([])
 		if (socket && socket.readyState === WebSocket.OPEN && user && tmpRoomID) {
-			console.log("inside quit")
+			////console.log("inside quit")
 			socket.send(JSON.stringify({
 				type: 'quitMp',
 				message: {
@@ -337,7 +337,7 @@ const TwoVsTwoFriends = () => {
 
 	const inviteNewFriend = (friend) => {
 		if (socket && socket.readyState === WebSocket.OPEN && user) {
-			console.log("inside join")
+			////console.log("inside join")
 			socket.send(JSON.stringify({
 				type: 'inviteFriendGameMp',
 				message: {
@@ -370,7 +370,7 @@ const TwoVsTwoFriends = () => {
 				const user = userRef.current
 				const socket = socketRef.current
 				const roomID = roomIdRef.current
-				console.log("USER IS GETTING OUT ", user, roomID, socket)
+				////console.log("USER IS GETTING OUT ", user, roomID, socket)
 				if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
 					socket.send(JSON.stringify({
 						type: 'quitMp',
@@ -390,7 +390,7 @@ const TwoVsTwoFriends = () => {
 			const user = userRef.current
 			const socket = socketRef.current
 			const roomID = roomIdRef.current
-			console.log("INSIDE THE MATCH : ", user, roomID, socket)
+			////console.log("INSIDE THE MATCH : ", user, roomID, socket)
 			if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
 				socket.send(JSON.stringify({
 					type: 'quitMp',

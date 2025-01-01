@@ -12,4 +12,5 @@ username warning in signupways second step [DONE]
 
 rooms duplication [DONE]
 fix json in local tournament [DONE]
+connected and disconnected in friends
 
