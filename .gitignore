@@ -22,5 +22,5 @@ SharedStorage
 TransportSecurity
 
 # monitoring-system
-backend/monitoring_system/archive
-backend/monitoring_system/tools
+monitoring_system/archive
+monitoring_system/tools

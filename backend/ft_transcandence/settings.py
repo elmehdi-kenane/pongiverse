@@ -72,7 +72,7 @@ MIDDLEWARE = [
 	'ft_transcandence.prometheus_middleware.latency_middleware',
 	'ft_transcandence.prometheus_middleware.room_counter_middleware',
 	'ft_transcandence.prometheus_middleware.database_query_time_middleware',
-	'ft_transcandence.prometheus_middleware.user_registrations_counter_middleware',
+	'ft_transcandence.prometheus_middleware.user_registrations_counter_middleware'
 	# 'ft_transcandence.prometheus_middleware.active_user_middleware',
     
     # 'django_prometheus.middleware.PrometheusAfterMiddleware',
@@ -174,6 +174,8 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+
 
 AUTH_PASSWORD_VALIDATORS = [
 	{

@@ -22,11 +22,11 @@ if [ ! -d "./tools" ]; then
 fi
 
 echo -e "\033[1;34m ============ Brew 🌐 ============\033[0m"
-if [ -d "/goinfre/ekenane/.brew" ]; then
+if [ -d "/goinfre/$USER/.brew" ]; then
     echo -e "\033[1;34m ============ Brew already downloaded 💯 ============\033[0m"
 else
     echo -e "\033[1;34m ============ Brew downloading ⏳... ============\033[0m"
-    bash /Users/ekenane/brew/install.sh
+    bash /Users/$USER/brew/install.sh
     echo -e "\033[1;34m ============ Brew downloaded 🔰 ============\033[0m"
 fi
 echo -e ""
@@ -124,8 +124,8 @@ else
     cp config/grafana/datasources.yaml tools/grafana/conf/provisioning/datasources/datasources.yaml
 fi
 
-GRAFANA_DATA_DIRECTORY="/goinfre/ekenane/ft_transcendence/backend/monitoring_system/grafana_data"
-DEFAULTS_GRAFANA_INI="/Users/ekenane/goinfre/ft_transcendence/backend/monitoring_system/tools/grafana/conf/defaults.ini"
+GRAFANA_DATA_DIRECTORY="/goinfre/$USER/ft_transcendence/monitoring_system/grafana_data"
+DEFAULTS_GRAFANA_INI="/goinfre/$USER/ft_transcendence/monitoring_system/tools/grafana/conf/defaults.ini"
 
 sed -i '' "s|^http_port *= *3000|http_port = 3030|" $DEFAULTS_GRAFANA_INI
 echo "Grafana port changed from 3000 to 3030" > logs/grafana_logs
