@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 
 export const LeaveChatRoomSubmitter = async (user, rooms, setRooms, roomId) => {
   const toastId = toast.loading("Leaving room is being processed...");
-  const navigate = useNavigate();
   setTimeout(async () => {
     try {
       const response = await fetch(
@@ -23,6 +22,7 @@ export const LeaveChatRoomSubmitter = async (user, rooms, setRooms, roomId) => {
       const data = await response.json();
       if (response.ok) {
         toast.success(data.success);
+        toast.dismiss(toastId);
         // const allMyChatRooms = rooms;
         // if (data && data.data.user === user) {
         //   const updatedRooms = allMyChatRooms.filter(

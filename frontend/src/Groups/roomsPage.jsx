@@ -48,9 +48,6 @@ const Rooms = () => {
   //     myChatRoomsRef.current = myChatRooms;
   //   }, [myChatRooms]);
 
- console.log("HAS MORE ROOMS", hasMoreRooms);
-
- console.log("your ouside myChatRoomsRef.current", myChatRoomsRef.current);
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) setItemsPerScreen(1);

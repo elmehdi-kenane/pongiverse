@@ -38,10 +38,6 @@ import hashlib
 import base64
 from django.http import JsonResponse
 
-# i will use curl -f http://localhost:8000/auth/healthcheck/ to check if the server is running
-def healthcheck(request):
-    return JsonResponse({"status": "ok"}, status=200)
-
 
 class SignUpView(APIView):
 	parser_classes = (MultiPartParser, FormParser)
