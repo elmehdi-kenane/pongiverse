@@ -7,7 +7,6 @@ const DeleteChatRoom = (props) => {
 
   const chatRoomDeletedUpdater = (data) => {
    console.log("data: ", data);
-    const navigate = useNavigate();
     const allMyChatRooms = props.myChatRooms;
     const updatedRooms = allMyChatRooms.filter(
       (room) => room.id !== data.roomId

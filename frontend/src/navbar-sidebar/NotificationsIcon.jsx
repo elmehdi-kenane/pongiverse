@@ -50,13 +50,10 @@ const NotificationsIcon = ({
             credentials: "include",
           }
         );
-        console.log("response", response);
         if (response.status === 401)
           navigate('/signin')
         const res = await response.json();
-        console.log("res", res);
         if (res) {
-         console.log("notifications", res);
 
           setNotifications(
             res.map((item) => {
@@ -76,7 +73,7 @@ const NotificationsIcon = ({
     };
     if (user) {
       getNotifications();
-    } else console.log("user problem", user);
+    } 
   }, [user]);
 
   const handleClearAllNotifications = () => {
