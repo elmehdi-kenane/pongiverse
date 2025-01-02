@@ -44,9 +44,9 @@ services:
       - frontend-volume:/frontend/node_modules
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
-      retries: 30
+      retries: 100
       start_period: 10s
     networks:
       - ft_transcendence
