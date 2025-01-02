@@ -53,7 +53,9 @@ export const resetChatRoomUnreadMessages = async (user, roomId, navigate) => {
   }
 };
 
+
 const ChatConversationItem = (props) => {
+  console.log("STATUS:", props.status)
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const handleClick = () => {

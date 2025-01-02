@@ -329,7 +329,7 @@ const GameNotifications = (props) => {
             );
             newSocket.onopen = () => {
               // console.log("+++++++++++=======+++++++++");
-               console.log(
+              console.log(
                 "GAME SOCKET OPENED AND NOW WE WILL MOVE TO FRIEND PAGE"
               );
               // console.log("+++++++++++=======+++++++++");
@@ -378,6 +378,34 @@ const GameNotifications = (props) => {
           });
         } else if (type === "remove_tournament_notif") {
           removeNotification(message.tournament_id, message.user);
+        } else if (type === "connected_again" && location.pathname === '/mainpage/chat') {
+          props.setSelectedDirect(prev => ({ ...prev, status: true }));
+          props.setDirects(prev => {
+            const updatedDirects = prev.map((friend) => {
+              if (friend.name === data.message.user) {
+                return {
+                  ...friend,
+                  is_online: true
+                };
+              }
+              return friend;
+            });
+            return updatedDirects;
+          })
+        } else if (type === "user_disconnected" && location.pathname === '/mainpage/chat') {
+          props.setSelectedDirect(prev => ({ ...prev, status: false }));
+          props.setDirects(prev => {
+            const updatedDirects = prev.map((friend) => {
+              if (friend.name === data.message.user) {
+                return {
+                  ...friend,
+                  is_online: false
+                };
+              }
+              return friend;
+            });
+            return updatedDirects;
+          })
         } else if (type === "connected_again") {
           const userConnected = data.message.user;
           if (userConnected === props.userId) {
@@ -477,13 +505,13 @@ const GameNotifications = (props) => {
           });
         } else if (type === 'user_join_tournament' && location.pathname === '/mainpage/game/jointournament') {
           let tournament_id = message.tournament_id
-					props.setTournamentSuggestions(prevSuggestions =>
-						prevSuggestions.map(tournament =>
-							tournament.tournament_id == tournament_id
-								? { ...tournament, size: tournament.size + 1 }
-								: tournament
-						)
-					);
+          props.setTournamentSuggestions(prevSuggestions =>
+            prevSuggestions.map(tournament =>
+              tournament.tournament_id == tournament_id
+                ? { ...tournament, size: tournament.size + 1 }
+                : tournament
+            )
+          );
         }
       };
     }

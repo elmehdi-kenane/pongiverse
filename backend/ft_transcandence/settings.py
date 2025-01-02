@@ -151,31 +151,59 @@ REST_FRAMEWORK = {
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DB_NAME = "ft_transcendence"
+# DB_NAME = "ft_transcendence"
+# DB_USER = "aagouzou"
+# DB_PASSWORD = "123456789"
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': DB_NAME,
+#         'USER': DB_USER,
+#         'PASSWORD': DB_PASSWORD,
+#         'HOST': "postgres",
+#         'PORT': '5432',
+#     }
+# }
+
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [("redis", 6379)],
+#             "capacity": 1000
+#         },
+#     },
+# }
+
+
+B_NAME = "ft_transcendance"
 DB_USER = "aagouzou"
 DB_PASSWORD = "123456789"
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': DB_NAME,
-        'USER': DB_USER,
-        'PASSWORD': DB_PASSWORD,
-        'HOST': "postgres",
-        'PORT': '5432',
-    }
+	'default': {
+		'ENGINE': 'django.db.backends.sqlite3',
+		'NAME': BASE_DIR / 'db.sqlite3',
+	}
 }
+
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [("redis", 6379)],
+#             "capacity": 1000
+#         },
+#     },
+# }
 
 CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("redis", 6379)],
-            "capacity": 1000
-        },
-    },
+	"default": {
+		"BACKEND": "channels.layers.InMemoryChannelLayer",
+    "CONFIG": {
+          "capacity": 5000,
+      },
+	}
 }
-
-
 
 AUTH_PASSWORD_VALIDATORS = [
 	{

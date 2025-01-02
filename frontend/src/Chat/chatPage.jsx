@@ -38,6 +38,7 @@ const Chat = () => {
   const [chatRoomsSearch, setChatRoomsSearch] = useState([]);
   const navigate = useNavigate();
 
+  console.log("-*****:", directs)
 
   useEffect(() => {
     const handleNewDirectMessage = (data) => {
