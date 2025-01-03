@@ -4,7 +4,7 @@ services:
   postgres:
     image: postgres:latest
     container_name: postgres
-    volumes: #why this
+    volumes:
       - postgres-volume:/var/lib/postgresql/data
     env_file:
       - .env
@@ -37,8 +37,8 @@ services:
     build: frontend
     hostname: frontend
     container_name: frontend
-    # env_file:
-    #   - .env
+    env_file:
+      - .env
     volumes:
       - ./frontend:/frontend
       - frontend-volume:/frontend/node_modules
@@ -65,8 +65,8 @@ services:
       timeout: 5s
       retries: 120
       start_period: 20s
-    # env_file:
-    #   - .env
+    env_file:
+      - .env
     depends_on:
       redis:
         condition: service_healthy
@@ -75,6 +75,21 @@ services:
     networks:
       - ft_transcendence
     restart: on-failure
+  
+  # monitoring_system
+  monitoring_system:
+    build: monitoring_system
+    container_name: monitoring_system
+    ports:
+      - "3030:3030"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - ft_transcendence
+    restart: on-failure
+    env_file:
+      - .env
   
   # nginx
   nginx:

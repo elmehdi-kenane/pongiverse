@@ -4,9 +4,11 @@
 cd /backend || { echo "Directory /backend does not exist."; exit 1; }
 
 # Create a virtual environment if it doesn't already exist
-if [ ! -d "venv" ]; then
-    python3 -m venv venv
+if [ -d "venv" ]; then
+    rm -fr venv
 fi
+
+python3 -m venv venv
 
 # Activate the virtual environment
 source ./venv/bin/activate || { echo "Failed to activate virtual environment."; exit 1; }

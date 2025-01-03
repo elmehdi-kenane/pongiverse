@@ -1,16 +1,12 @@
-# my global config
 global:
-  scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
-  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
-  # scrape_timeout is set to the global default (10s).
+  scrape_interval: 15s
+  evaluation_interval: 15s
 
-# Alertmanager configuration
 alerting:
   alertmanagers:
     - static_configs:
-        - targets: ["localhost:9093"] # Address of Alertmanager
+        - targets: ["localhost:9093"]
 
-# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
 rule_files:
   - "alert_rules.yml"
 
@@ -22,9 +18,9 @@ remote_write:
     password: "glc_eyJvIjoiMTI3MzE5NCIsIm4iOiJzdGFjay0xMDkyMDQyLWhtLXdyaXRlLWVsbWVoZGkta2VuYW5lLXRva2VueCIsImsiOiI2NUM0RTdVMWkzZWY3eEkzM1JQazNud24iLCJtIjp7InIiOiJwcm9kLXVzLWVhc3QtMCJ9fQ=="
 
 scrape_configs:
-  - job_name: "application_availability"
+  - job_name: "backend_application_availability"
     static_configs:
-      - targets: ["localhost:8000"]
+      - targets: ["backend:8000"]
     metrics_path: "/metrics"
   
   - job_name: 'node_exporter'

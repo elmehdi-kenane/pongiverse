@@ -60,11 +60,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	async def broadcast_message(self, event):
 		await self.send(text_data=json.dumps(event['data']))
 	
+	def serialize_datetime(dt):
+		"""Convert datetime objects to ISO format strings"""
+		if dt is not None:
+			return dt.isoformat()
+		return None
+
 	async def send_message(self, event):
 		data = event['message']
-		timestamp = data.timestamp.isoformat()
-		dt = datetime.fromisoformat(timestamp)
-		formatted_time = dt.strftime('%Y/%m/%d AT %I:%M %p')
+		# timestamp = data.timestamp.isoformat()
+		# dt = datetime.fromisoformat(timestamp)
+		# formatted_time = dt.strftime('%Y/%m/%d AT %I:%M %p')
 		message  = {
 			'type':'newMessage',
 			'data': {
@@ -72,7 +78,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 				'roomId' : data.room.id,
 				'content':data.content,
 				'sender' : data.sender.username,
-				'date' : formatted_time,
+				'date' : serialize_datetime(data.timestamp),
 			}
 		}
 		await self.send(text_data=json.dumps(message))
@@ -88,16 +94,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	
 	async def send_direct(self, event):
 		data = event['data']
-		timestamp = data['date'].isoformat()
-		dt = datetime.fromisoformat(timestamp)
-		formatted_time = dt.strftime('%Y/%m/%d AT %I:%M %p')
+		# timestamp = data['date'].isoformat()
+		# dt = datetime.fromisoformat(timestamp)
+		# formatted_time = dt.strftime('%Y/%m/%d AT %I:%M %p')
 		message = {
 			'type' : 'newDirect',
 			'data' : {
 				'sender': data['sender'],
 				'receiver': data['receiver'],
 				'content': data['message'],
-				'date' :  formatted_time,
+				'date' :  data['date'],
 				'senderId' : data['senderId'],
 				'receiverId' : data['receiverId'],
 				'senderAvatar' : data['senderAvatar'],

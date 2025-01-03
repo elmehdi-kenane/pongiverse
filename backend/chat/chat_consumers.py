@@ -135,7 +135,11 @@ async def message(self, data):
                         'message': count,
                     },
                 )
-
+def serialize_datetime(dt):
+    """Convert datetime objects to ISO format strings"""
+    if dt is not None:
+        return dt.isoformat()
+    return None
 
 async def direct_message(self, data, user_channels):
     sender = await sync_to_async(customuser.objects.get)(
@@ -151,49 +155,107 @@ async def direct_message(self, data, user_channels):
     protocol = os.getenv('PROTOCOL')
     channel_names = user_channels.get(receiver.id)
     mychannel_names = user_channels.get(sender.id)
+
+    # Prepare the message data with serialized timestamp
+    message_data = {
+        "type": "send_direct",
+        "data": {
+            'senderAvatar': f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{sender.avatar.url}",
+            "sender": sender.username,
+            "receiver": receiver.username,
+            "message": message.message,
+            'senderId': sender.id,
+            'receiverId': receiver.id,
+            'date': serialize_datetime(message.timestamp),
+        },
+    }
+
+    # Send to receiver's channels
     if channel_names:
         for channel in channel_names:
-            await self.channel_layer.send(
-                channel,
-                {
-                    "type": "send_direct",
-                    "data": {
-                        'senderAvatar': f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{sender.avatar.url}",
-                        "sender": sender.username,
-                        "receiver": receiver.username,
-                        "message": message.message,
-                        'senderId': sender.id,
-                        'receiverId': receiver.id,
-                        'date': message.timestamp,
-                    },
-                },
-            )
+            await self.channel_layer.send(channel, message_data)
+
+    # Send to sender's channels (note: modified to use receiver instead of sender in the username field)
+    receiver_message_data = {
+        **message_data,
+        "data": {
+            **message_data["data"],
+            "receiver": sender.username,  # Modified this line as per your original code
+        }
+    }
     if mychannel_names:
         for channel in mychannel_names:
-            await self.channel_layer.send(
-                channel,
-                {
-                    "type": "send_direct",
-                    "data": {
-                        'senderAvatar': f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{sender.avatar.url}",
-                        "sender": sender.username,
-                        "receiver": sender.username,
-                        "message": message.message,
-                        'senderId': sender.id,
-                        'receiverId': receiver.id,
-                        'date': message.timestamp,
-                    },
-                },
-            )
+            await self.channel_layer.send(channel, receiver_message_data)
+
+    # Handle notifications
     user_notification_channels = notifs_user_channels.get(receiver.id)
     count = await sync_to_async(Directs.objects.filter(receiver=receiver, is_read=False).values('sender').distinct().count)() + await sync_to_async(Room.objects.filter(membership__user=receiver, membership__unreadCount__gt=0).count)()
-    #print"THE COUNT INSIDE DIRECT MESSAGE", count)
+
     if user_notification_channels is not None:
+        notification_data = {
+            "type": "chatNotificationCounter",
+            'message': count,
+        }
         for user_channel in user_notification_channels:
-            await self.channel_layer.send(
-                user_channel,
-                {
-                    "type": "chatNotificationCounter",
-                    'message': count,
-                },
-            )
+            await self.channel_layer.send(user_channel, notification_data)
+
+# async def direct_message(self, data, user_channels):
+#     sender = await sync_to_async(customuser.objects.get)(
+#         username=data["data"]["sender"]
+#     )
+#     receiver = await sync_to_async(customuser.objects.get)(
+#         username=data["data"]["receiver"]
+#     )
+#     message = await sync_to_async(Directs.objects.create)(
+#         sender=sender, receiver=receiver, message=data["data"]["message"]
+#     )
+#     ip_address = os.getenv("IP_ADDRESS")
+#     protocol = os.getenv('PROTOCOL')
+#     channel_names = user_channels.get(receiver.id)
+#     mychannel_names = user_channels.get(sender.id)
+#     if channel_names:
+#         for channel in channel_names:
+#             await self.channel_layer.send(
+#                 channel,
+#                 {
+#                     "type": "send_direct",
+#                     "data": {
+#                         'senderAvatar': f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{sender.avatar.url}",
+#                         "sender": sender.username,
+#                         "receiver": receiver.username,
+#                         "message": message.message,
+#                         'senderId': sender.id,
+#                         'receiverId': receiver.id,
+#                         'date': message.timestamp,
+#                     },
+#                 },
+#             )
+#     if mychannel_names:
+#         for channel in mychannel_names:
+#             await self.channel_layer.send(
+#                 channel,
+#                 {
+#                     "type": "send_direct",
+#                     "data": {
+#                         'senderAvatar': f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{sender.avatar.url}",
+#                         "sender": sender.username,
+#                         "receiver": sender.username,
+#                         "message": message.message,
+#                         'senderId': sender.id,
+#                         'receiverId': receiver.id,
+#                         'date': message.timestamp,
+#                     },
+#                 },
+#             )
+#     user_notification_channels = notifs_user_channels.get(receiver.id)
+#     count = await sync_to_async(Directs.objects.filter(receiver=receiver, is_read=False).values('sender').distinct().count)() + await sync_to_async(Room.objects.filter(membership__user=receiver, membership__unreadCount__gt=0).count)()
+#     #print"THE COUNT INSIDE DIRECT MESSAGE", count)
+#     if user_notification_channels is not None:
+#         for user_channel in user_notification_channels:
+#             await self.channel_layer.send(
+#                 user_channel,
+#                 {
+#                     "type": "chatNotificationCounter",
+#                     'message': count,
+#                 },
+#             )

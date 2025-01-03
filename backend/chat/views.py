@@ -294,7 +294,7 @@ def create_chat_room(request):
                 {"error": "Chat room name is taken. Try a different one."}, status=400
             )
         Membership.objects.create(user=user, room=new_room, role="admin")
-        protocol = get_protocol(request)
+        protocol = os.getenv("PROTOCOL")
         ip_address = os.getenv("IP_ADDRESS")
 
         channel_layer = get_channel_layer()

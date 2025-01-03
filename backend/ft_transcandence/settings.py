@@ -24,7 +24,7 @@ load_dotenv()
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-1u23*0e_=$(o*%d#v$xfdkd(+dd7bo!j+p*@%(q72(w#wf*&p9'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -55,12 +55,9 @@ INSTALLED_APPS = [
     "corsheaders",
     'Profile',
     'rest_framework_simplejwt.token_blacklist',
-    # 'django_prometheus',
 ]
 
 MIDDLEWARE = [
-    # 'django_prometheus.middleware.PrometheusBeforeMiddleware',
-	
     'django.middleware.security.SecurityMiddleware',
 	"corsheaders.middleware.CorsMiddleware",
 	'django.contrib.sessions.middleware.SessionMiddleware',
@@ -72,10 +69,8 @@ MIDDLEWARE = [
 	'ft_transcandence.prometheus_middleware.latency_middleware',
 	'ft_transcandence.prometheus_middleware.room_counter_middleware',
 	'ft_transcandence.prometheus_middleware.database_query_time_middleware',
-	'ft_transcandence.prometheus_middleware.user_registrations_counter_middleware'
-	# 'ft_transcandence.prometheus_middleware.active_user_middleware',
-    
-    # 'django_prometheus.middleware.PrometheusAfterMiddleware',
+	'ft_transcandence.prometheus_middleware.user_registrations_counter_middleware',
+	'ft_transcandence.prometheus_middleware.online_user_middleware',
 ]
 
 ROOT_URLCONF = 'ft_transcandence.urls'
@@ -96,7 +91,6 @@ TEMPLATES = [
 	},
 ]
 
-# WSGI_APPLICATION = 'ft_transcandence.wsgi.application'
 ASGI_APPLICATION = 'ft_transcandence.asgi.application'
 
 
@@ -151,17 +145,14 @@ REST_FRAMEWORK = {
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DB_NAME = "ft_transcendence"
-DB_USER = "aagouzou"
-DB_PASSWORD = "123456789"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': DB_NAME,
-        'USER': DB_USER,
-        'PASSWORD': DB_PASSWORD,
-        'HOST': "postgres",
-        'PORT': '5432',
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': os.getenv('POSTGRES_HOST'),
+        'PORT': os.getenv('POSTGRES_PORT'),
     }
 }
 
@@ -169,41 +160,13 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("redis", 6379)],
+            "hosts": [(os.getenv('REDIS_HOST'), os.getenv('REDIS_PORT'))],
             "capacity": 1000
         },
     },
 }
 
 
-# B_NAME = "ft_transcendance"
-# DB_USER = "aagouzou"
-# DB_PASSWORD = "123456789"
-# DATABASES = {
-# 	'default': {
-# 		'ENGINE': 'django.db.backends.sqlite3',
-# 		'NAME': BASE_DIR / 'db.sqlite3',
-# 	}
-# }
-
-# # CHANNEL_LAYERS = {
-# #     "default": {
-# #         "BACKEND": "channels_redis.core.RedisChannelLayer",
-# #         "CONFIG": {
-# #             "hosts": [("redis", 6379)],
-# #             "capacity": 1000
-# #         },
-# #     },
-# # }
-
-# CHANNEL_LAYERS = {
-# 	"default": {
-# 		"BACKEND": "channels.layers.InMemoryChannelLayer",
-#     "CONFIG": {
-#           "capacity": 5000,
-#       },
-# 	}
-# }
 
 AUTH_PASSWORD_VALIDATORS = [
 	{
