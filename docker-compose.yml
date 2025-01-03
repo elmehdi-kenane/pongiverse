@@ -16,7 +16,7 @@ services:
     #   timeout: 5s
     #   retries: 30
     #   start_period: 15s
-    # restart: on-failure
+    restart: on-failure
 
   # redis
   redis:

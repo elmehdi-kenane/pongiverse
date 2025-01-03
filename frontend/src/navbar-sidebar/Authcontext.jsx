@@ -6,7 +6,7 @@ import * as Icons from "../assets/navbar-sidebar";
 import { useReducer } from "react";
 import { trimStringWithEllipsis } from "../GameNotif/GameNotifications";
 
-import userPc from "../Settings/assets/Group.svg";
+import userPc from "../assets/Profile/Group.svg";
 
 const AuthContext = createContext();
 
