@@ -124,7 +124,7 @@ else
 fi
 
 
-GRAFANA_DATA_DIRECTORY="grafana_data"
+GRAFANA_DATA_DIRECTORY="../../grafana_data"
 DEFAULTS_GRAFANA_INI="tools/grafana/conf/defaults.ini"
 
 sed -i "s|^http_port *= *3000|http_port = 3030|" $DEFAULTS_GRAFANA_INI
