@@ -188,7 +188,7 @@ const ChatRoomConversation = ({
       const containerHeight = messageBodyRef.current.clientHeight;
 
       // messageBodyRef.current.scrollTop = messageEndOffset - containerHeight + messageEndRef.current.clientHeight;
-      messageBodyRef.current.scrollTop ({
+      messageBodyRef.current.scrollTo({
         top: messageEndOffset - containerHeight + messageEndRef.current.clientHeight,
         behavior: "smooth"
       })

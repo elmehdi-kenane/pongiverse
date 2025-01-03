@@ -5,7 +5,7 @@ services:
     image: postgres:latest
     container_name: postgres
     volumes:
-      - /var/lib/postgresql/data:postgres_volume
+      - postgres-data:/var/lib/postgresql/data
     env_file:
       - .env
     networks:
@@ -17,6 +17,7 @@ services:
     #   retries: 30
     #   start_period: 5s
     restart: on-failure
+
   # redis
   redis:
     image: redis:latest
@@ -93,7 +94,7 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /Users/aagouzou/goinfre/PgData
+      device: /Users/idabligi/goinfre/PgData
       o: bind
   frontend-volume:
     name : frontend-volume
