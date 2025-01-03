@@ -8,5 +8,4 @@ COPY . /monitoring_system/
 EXPOSE 3030
 RUN chmod +x setup.sh
 
-CMD ["sleep", "infinity"]
-
+CMD ["bash", "setup.sh"]

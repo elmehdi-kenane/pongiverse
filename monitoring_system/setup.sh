@@ -1,18 +1,4 @@
 #!/bin/bash
-rm -rf alertmanager alertmanager.tar.gz data prometheus prometheus.tar.gz
-if lsof -ti :9090 > /dev/null; then
-  echo "Port 9090 is in use. Killing the process..."
-#   kill -9 $(lsof -ti :9090)
-fi
-if lsof -ti :9094 > /dev/null; then
-  echo "Port 9094 is in use. Killing the process..."
-#   kill -9 $(lsof -ti :9094)
-fi
-
-if lsof -ti :9100 > /dev/null; then
-  echo "Port 9100 is in use. Killing the process..."
-#   kill -9 $(lsof -ti :9100)
-fi
 
 if [ ! -d "./archive" ]; then
     mkdir archive
@@ -20,16 +6,6 @@ fi
 if [ ! -d "./tools" ]; then
     mkdir tools
 fi
-
-# echo -e "\033[1;34m ============ Brew 🌐 ============\033[0m"
-# if [ -d "/goinfre/$USER/.brew" ]; then
-#     echo -e "\033[1;34m ============ Brew already downloaded 💯 ============\033[0m"
-# else
-#     echo -e "\033[1;34m ============ Brew downloading ⏳... ============\033[0m"
-#     bash /Users/$USER/brew/install.sh
-#     echo -e "\033[1;34m ============ Brew downloaded 🔰 ============\033[0m"
-# fi
-# echo -e ""
 
 echo -e "\033[1;34m ============ Wget 🌐 ============\033[0m"
 if command -v wget >/dev/null 2>&1; then

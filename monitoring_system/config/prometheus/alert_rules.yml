@@ -1,10 +1,10 @@
 groups:
-  - name: application_availability
+  - name: backend_application_availability
     rules:
-      - alert: ApplicationDown
-        expr: up{job="application_availability"} == 0
+      - alert: backendApplicationDown
+        expr: up{job="backend_application_availability"} == 0
         for: 1m
         labels:
         annotations:
-          summary: "Application is down"
-          description: "The application is not reachable."
+          summary: "Backend application is down"
+          description: "The backend application is not reachable."
