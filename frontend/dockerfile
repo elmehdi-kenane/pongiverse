@@ -1,17 +1,16 @@
-FROM debian:latest
+FROM node:lts-bullseye
 
-RUN apt-get update && apt-get upgrade && apt-get install nodejs npm -y && apt-get install curl -y
-
-RUN npm install -g n -y && n lts -y
-
+# Set working directory
 WORKDIR /frontend
 
-COPY . /frontend/
+# Copy the rest of the application
+COPY . .
 
-COPY ./script.sh /
+# Install dependencies
+RUN npm install
 
+# Expose the port if needed (e.g., for debugging or development)
 EXPOSE 3000
 
-RUN chmod +x /script.sh
-
-CMD ["/script.sh"]
+# Start the application
+CMD ["npm", "run", "dev"]

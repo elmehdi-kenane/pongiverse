@@ -38,7 +38,6 @@ const Chat = () => {
   const [chatRoomsSearch, setChatRoomsSearch] = useState([]);
   const navigate = useNavigate();
 
-  console.log("-*****:", directs)
 
   useEffect(() => {
     const handleNewDirectMessage = (data) => {
@@ -142,7 +141,6 @@ const Chat = () => {
       const updatedChatRooms = currentChatRooms.filter(
         (room) => room.id !== roomId
       );
-      console.log("UPDATED CHAT ROOMS: ", updatedChatRooms);
       setChatRooms(updatedChatRooms);
       setSelectedChatRoom({
         id: "",
@@ -155,7 +153,6 @@ const Chat = () => {
     if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
       chatSocket.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        console.log("DATA: ", data.type);
         if (data.type === "newDirect") {
           handleNewDirectMessage(data.data);
           moveDirectToTop(data.data.senderId, data.data.receiverId);
@@ -251,7 +248,6 @@ const Chat = () => {
         }
         );
         const { next, results } = await response.json();
-        console.log("CHAT ROOMS: ", results);
         if (response.ok) {
           setChatRooms((prevConversations) => {
             let allChatRooms = [...prevConversations, ...results];

@@ -4,8 +4,8 @@ services:
   postgres:
     image: postgres:latest
     container_name: postgres
-    volumes:
-      - /var/lib/postgresql/data:postgres_volume
+    volumes: #why this
+      - postgres-volume:/var/lib/postgresql/data
     env_file:
       - .env
     networks:
@@ -15,14 +15,13 @@ services:
     #   interval: 5s
     #   timeout: 5s
     #   retries: 30
-    #   start_period: 5s
-    restart: on-failure
+    #   start_period: 15s
+    # restart: on-failure
+
   # redis
   redis:
     image: redis:latest
     container_name: redis
-    ports:
-      - "6379:6379"
     networks:
       - ft_transcendence
     healthcheck:
@@ -32,11 +31,14 @@ services:
       retries: 30
       start_period: 5s
     restart: on-failure
+
   # frontend
   frontend:
     build: frontend
     hostname: frontend
     container_name: frontend
+    # env_file:
+    #   - .env
     volumes:
       - ./frontend:/frontend
       - frontend-volume:/frontend/node_modules
@@ -49,6 +51,7 @@ services:
     networks:
       - ft_transcendence
     restart: on-failure
+  
  # backend
   backend:
     build: backend
@@ -62,6 +65,8 @@ services:
       timeout: 5s
       retries: 120
       start_period: 20s
+    # env_file:
+    #   - .env
     depends_on:
       redis:
         condition: service_healthy
@@ -70,6 +75,7 @@ services:
     networks:
       - ft_transcendence
     restart: on-failure
+  
   # nginx
   nginx:
     build: nginx
@@ -89,12 +95,9 @@ services:
     restart: on-failure
 
 volumes:
-  postgres-data:
-    driver: local
-    driver_opts:
-      type: none
-      device: /Users/aagouzou/goinfre/PgData
-      o: bind
+  postgres-volume:
+    name : postgres-volume
+  # will be removed
   frontend-volume:
     name : frontend-volume
   redis-volume:

@@ -188,21 +188,6 @@ const ChatConversation = ({
     }
   };
 
-
-  // useEffect(() => {
-  //   if (messageEndRef && messageEndRef.current && messageBodyRef && messageBodyRef.current) {
-  //     // Calculate the scroll offset relative to the container
-  //     const messageEndOffset = messageEndRef.current.offsetTop;
-  //     const containerHeight = messageBodyRef.current.clientHeight;
-  
-  //     // Adjust scroll position to ensure the last message is visible
-  //     messageBodyRef.current.scrollTop = messageEndOffset - containerHeight + messageEndRef.current.clientHeight;
-  
-  //     updateLastMessage();
-  //     setFirstScroll(false);
-  //   }
-  // }, [messages, lastMessage]);
-
   useEffect(() => {
     if (messageEndRef && messageEndRef.current && messageBodyRef && messageBodyRef.current) {
       // Calculate the scroll offset relative to the container
