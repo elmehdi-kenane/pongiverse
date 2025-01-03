@@ -5,9 +5,7 @@ services:
     image: postgres:latest
     container_name: postgres
     volumes:
-      - /var/lib/postgresql/data:/Users/aagouzou/goinfre/PgData
-    ports:
-      - "5432:5432"
+      - /var/lib/postgresql/data:postgres_volume
     env_file:
       - .env
     networks:
@@ -46,8 +44,8 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:3000"]
       interval: 10s
       timeout: 5s
-      retries: 100
-      start_period: 10s
+      retries: 120
+      start_period: 20s
     networks:
       - ft_transcendence
     restart: on-failure
@@ -63,7 +61,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 120
-      start_period: 10s
+      start_period: 20s
     depends_on:
       redis:
         condition: service_healthy
@@ -82,8 +80,8 @@ services:
     depends_on:
       frontend:
         condition: service_healthy
-      # backend:
-      #   condition: service_healthy
+      backend:
+        condition: service_healthy
     env_file:
       - .env
     networks:

@@ -30,9 +30,9 @@ export default defineConfig({
   server : {
     open: true,
     port : 3000,
-    // hmr: {
-    //   protocol: 'wss', // Use WebSocket Secure
-    //   host: 'localhost', // Replace with your domain
-    // },
+    hmr: {
+      protocol: 'wss', // Use WebSocket Secure
+      host: 'localhost', // Replace with your domain
+    },
   }
 });
