@@ -31,7 +31,7 @@ DEBUG = True
 
 MEDIA_URL = '/media/'
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', '10.11.7.11', '10.13.5.8', '10.13.2.3']
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', '10.11.7.11', '10.13.5.8', '10.13.2.3', 'backend']
 
 # Application definition
 
