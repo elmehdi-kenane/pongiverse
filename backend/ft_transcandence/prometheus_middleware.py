@@ -68,13 +68,20 @@ class WebSocketMiddleware(BaseMiddleware):
 def room_counter_middleware(get_response):
 
     def middleware(request):
-        start_time = time.time()
+        if hasattr(request, 'data'):
+            room = Room.objects.get(id=request.data.get("roomId"))
+        else:
+            room = None
+        print("room.members_count", room.members_count)
         response = get_response(request)
         view_name = request.resolver_match.view_name if request.resolver_match else 'unknown'
         if (view_name == "create-chat-room" and response.status_code == 200):
             ROOM_COUNTER.inc()
         if (view_name == "delete-chat-room" and response.status_code == 200):
             ROOM_COUNTER.dec()
+        if room != None:
+            if (view_name == "leave-chat-room" and response.status_code == 200 and room.members_count == 1):
+                ROOM_COUNTER.dec()
             
         return response
     

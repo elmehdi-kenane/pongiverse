@@ -609,6 +609,7 @@ height: 170px;
     justify-content: flex-start;
     align-items: center;
     gap: 3px;
+    cursor: pointer;
     /* border: 1px solid white; */
     border: none;
     background-color: transparent;
