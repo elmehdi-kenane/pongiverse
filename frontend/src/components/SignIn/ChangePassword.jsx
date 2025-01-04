@@ -73,9 +73,9 @@ function ChangePassword() {
 					<div className={styles["FPasswordContainer"]}>
 						<h1 className={styles["title"]}>Change Your Password</h1>
 						<form className={styles["ForgotPasswordForm"]} onSubmit={handleSubmit} noValidate>
-							<input className={styles["inputs"]} type="password" name='password' autoComplete="password" value={data.password} onChange={handleChange} placeholder="enter a password" />
+							<input className={styles["inputs"]} type="password" name='password' autoComplete="password"  value={data.password} maxLength={100} onChange={handleChange} placeholder="enter a password" />
 							{errors.password && <span>{errors.password}</span>}
-							<input className={styles["inputs"]} type="password" name='confirmPassword' autoComplete="confirmPassword" value={data.confirmPassword} onChange={handleChange} placeholder="confirm your password" />
+							<input className={styles["inputs"]} type="password" name='confirmPassword' autoComplete="confirmPassword" value={data.confirmPassword} maxLength={100} onChange={handleChange} placeholder="confirm your password" />
 							{errors.confirmPassword && <span>{errors.confirmPassword}</span>}
 							<button type="submit" className={styles["submitButton"]}>Sign Up</button>
 						</form>

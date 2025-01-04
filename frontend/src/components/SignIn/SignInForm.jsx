@@ -120,8 +120,8 @@ function SignInForm() {
     <>
       {user && openTfq && <OtfInput />}
       <form onSubmit={handleSubmit} className={styles['authentication-signin-form-tag']}>
-        <input className={styles['authentication-signin-input']} type="text" value={data.username || ''} onChange={handleChange} name='username' placeholder='Enter your username' />
-        <input className={styles['authentication-signin-input']} type="password" name='password' value={data.password || ''} onChange={handleChange} autoComplete="off" placeholder='Enter your password' />
+        <input className={styles['authentication-signin-input']} type="text" value={data.username || ''} maxLength={8} onChange={handleChange} name='username' placeholder='Enter your username' />
+        <input className={styles['authentication-signin-input']} type="password" name='password' value={data.password || ''} onChange={handleChange} autoComplete="off" maxLength={100} placeholder='Enter your password' />
         <div className={styles['authentication-signin-forget-password-div']}>
           <Link to="/signup" className={styles['authentication-signin-forget-password']} >Create Account</Link>
           <Link className={styles['authentication-signin-forget-password']} to="/ForgotPassword">Forget password?</Link>

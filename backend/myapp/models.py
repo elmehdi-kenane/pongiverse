@@ -9,8 +9,8 @@ def default_bg():
 	return 'uploads_default/bg.jpg'
 
 class customuser(AbstractUser):
-	username = models.CharField(unique=True, max_length=100)
-	email = models.EmailField(unique=True)
+	username = models.CharField(unique=True, max_length=8)
+	email = models.EmailField(unique=True, max_length=320)
 	password = models.CharField(max_length=100)
 	avatar = models.ImageField(upload_to='uploads/', default=default_image)
 	is_active = models.BooleanField(default=True)

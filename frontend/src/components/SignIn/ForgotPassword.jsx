@@ -123,6 +123,9 @@ function ForgotPassword() {
 							container: styles['blur-background'],
 							input: styles['custom-input'],
 						},
+						inputAttributes: {
+							maxlength: 6,
+						},
 					}).then((result) => {
 						if (result.isConfirmed) {
 							const inputCode = result.value;
@@ -152,7 +155,7 @@ function ForgotPassword() {
 					<h1 className={styles["title"]}>Forgot your password?</h1>
 					<h3 className={styles["h3_title"]}>Enter the email address associated with your account, and we'll send you a code to reset your password.</h3>
 					<form className={styles["signUpForm"]} onSubmit={handleNextClick} noValidate>
-						<input className={styles["inputs"]} type="email" name='email' value={data.email} onChange={handleChange} placeholder="enter your email" />
+						<input className={styles["inputs"]} type="email" name='email' value={data.email} onChange={handleChange} placeholder="enter your email" maxLength={320} />
 						{errors.email && <span>{errors.email}</span>}
 						{exist && <span>{exist}</span>}
 						<button type="submit" className={styles["submitButton"]}>Send Reset Code</button>

@@ -140,6 +140,7 @@ function WaysSecondStep() {
 								name="username"
 								onChange={handleInputChange}
 								placeholder="enter a username"
+								maxLength={10}
 							/>
 							{errors.username && <span>{errors.username}</span>}
 							<input
@@ -149,6 +150,7 @@ function WaysSecondStep() {
 								value={nextdata.password}
 								onChange={handleInputChange}
 								placeholder="enter a password"
+								maxLength={100}
 							/>
 							{errors.password && <span>{errors.password}</span>}
 							<input
@@ -157,6 +159,7 @@ function WaysSecondStep() {
 								name="confirmPassword"
 								onChange={handleInputChange}
 								placeholder="confirm your password"
+								maxLength={100}
 							/>
 							{errors.confirmPassword && <span>{errors.confirmPassword}</span>}
 							{

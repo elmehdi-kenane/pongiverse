@@ -66,12 +66,12 @@ function SignUpForm() {
 	return (
 		<>
 			<form noValidate className={styles['signup-form-form']} onSubmit={handleNextClick}>
-				<input type='email' className={styles['authentication-signup-input']} name='email' value={data.email} onChange={handleChange} placeholder='Enter your email' />
+				<input type='email' className={styles['authentication-signup-input']} name='email' value={data.email} onChange={handleChange} maxLength={320} placeholder='Enter your email' />
 				{errors.email && <span className={styles['span-messages']}>{errors.email}</span>}
 				{exist && <span className={styles['span-messages']}>Email Already exist</span>}
-				<input type='password' className={styles['authentication-signup-input']} value={data.password} name='password' autoComplete="off" onChange={handleChange} placeholder='Enter a password' />
+				<input type='password' className={styles['authentication-signup-input']} value={data.password} name='password' maxLength={100} autoComplete="off" onChange={handleChange} placeholder='Enter a password' />
 				{errors.password && <span className={styles['span-messages']}>{errors.password}</span>}
-				<input type='password' className={styles['authentication-signup-input']} name='confirmPassword' onChange={handleChange} autoComplete="off" placeholder='Confirm your password' />
+				<input type='password' className={styles['authentication-signup-input']} name='confirmPassword' onChange={handleChange} maxLength={100} autoComplete="off" placeholder='Confirm your password' />
 				{errors.confirmPassword && <span className={styles['span-messages']}>{errors.confirmPassword}</span>}
 				<button className={styles['authentication-signup-button']} type='submit' >Next</button>
 			</form>

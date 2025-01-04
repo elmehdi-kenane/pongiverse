@@ -204,7 +204,7 @@ function JoinTournament() {
 				<div className={styles['search']}>
 					<div className={styles['input-and-icon']}>
 						<SearchIcon className={styles['search-icon']} />
-						<input className={styles['search-input']} type="text" name='data' value={data} onChange={handleInputChange} placeholder='Search' />
+						<input className={styles['search-input']} type="text" name='data' value={data} onChange={handleInputChange} maxLength={12} placeholder='Search' />
 					</div>
 					<div>
 						{

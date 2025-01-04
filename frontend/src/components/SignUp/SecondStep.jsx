@@ -279,6 +279,7 @@ function SecondStep() {
 								className={styles["second-step-form-inputs-input"]}
 								onChange={handleInputChange}
 								placeholder="Enter a username"
+								maxLength={10}
 							/>
 						</div>
 						<div className={styles["second-step-select-image-button-div"]}>
