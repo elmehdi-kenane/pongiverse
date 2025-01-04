@@ -438,7 +438,7 @@ def suggested_chat_rooms(request, username):
         # Exclude rooms that the user has already joined
         suggested_memberships = Membership.objects.exclude(room_id__in=user_memberships)
         rooms = []
-        protocol = get_protocol(request)
+        protocol = os.getenv("PROTOCOL")
         ip_address = os.getenv("IP_ADDRESS")
         for membership in suggested_memberships:
             if membership.room.visiblity == "public":

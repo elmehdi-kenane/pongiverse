@@ -60,32 +60,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	async def broadcast_message(self, event):
 		await self.send(text_data=json.dumps(event['data']))
 	
-	def serialize_datetime(dt):
-		"""Convert datetime objects to ISO format strings"""
-		if dt is not None:
-			return dt.isoformat()
-		return None
-
 	async def send_message(self, event):
-		data = event['message']
+		data = event['data']
 		# timestamp = data.timestamp.isoformat()
 		# dt = datetime.fromisoformat(timestamp)
 		# formatted_time = dt.strftime('%Y/%m/%d AT %I:%M %p')
 		message  = {
 			'type':'newMessage',
-			'data': {
-				'id':data.id,
-				'roomId' : data.room.id,
-				'content':data.content,
-				'sender' : data.sender.username,
-				'date' : serialize_datetime(data.timestamp),
-			}
+			'data': data
 		}
 		await self.send(text_data=json.dumps(message))
 	
 	async def newRoomJoin(self, event):
 		data = event['data']
-		#printdata)
 		message  = {
 			'type':'newRoomJoin',
 			'room' : data

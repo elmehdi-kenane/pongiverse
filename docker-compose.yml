@@ -4,6 +4,8 @@ services:
   postgres:
     image: postgres:latest
     container_name: postgres
+    ports:
+      - "5432:5432"
     volumes:
       - postgres-volume:/var/lib/postgresql/data
     env_file:
@@ -57,8 +59,6 @@ services:
     build: backend
     hostname: backend
     container_name: backend
-    ports:
-      - "8000:8000"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/admin"]
       interval: 10s
@@ -77,19 +77,19 @@ services:
     restart: on-failure
   
   # monitoring_system
-  monitoring_system:
-    build: monitoring_system
-    container_name: monitoring_system
-    ports:
-      - "3030:3030"
-    depends_on:
-      backend:
-        condition: service_healthy
-    networks:
-      - ft_transcendence
-    restart: on-failure
-    env_file:
-      - .env
+  # monitoring_system:
+  #   build: monitoring_system
+  #   container_name: monitoring_system
+  #   ports:
+  #     - "3030:3030"
+  #   depends_on:
+  #     backend:
+  #       condition: service_healthy
+  #   networks:
+  #     - ft_transcendence
+  #   restart: on-failure
+  #   env_file:
+  #     - .env
   
   # nginx
   nginx:
