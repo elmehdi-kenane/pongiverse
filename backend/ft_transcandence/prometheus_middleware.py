@@ -72,7 +72,6 @@ def room_counter_middleware(get_response):
             room = Room.objects.get(id=request.data.get("roomId"))
         else:
             room = None
-        print("room.members_count", room.members_count)
         response = get_response(request)
         view_name = request.resolver_match.view_name if request.resolver_match else 'unknown'
         if (view_name == "create-chat-room" and response.status_code == 200):
