@@ -15,7 +15,6 @@ const ChangeChatRoomName = (props) => {
       }
       return room;
     });
-   console.log("update rooms: ", updatedRooms);
     props.setMyChatRooms(updatedRooms);
   };
 
@@ -51,6 +50,7 @@ const ChangeChatRoomName = (props) => {
     <div className="room-change-name-title">Enter Room Name</div>
     <input
       type="text"
+      maxLength={18}
       className="change-room-name-input"
       placeholder={props.name}
       onChange={(e) => setNewRoomName(e.target.value)}

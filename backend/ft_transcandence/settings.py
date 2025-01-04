@@ -25,13 +25,16 @@ load_dotenv()
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('DJANGO_SECTET_KEY')
-
+HOSTS_ALLOWED = os.getenv('HOSTS_ALLOWED')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 MEDIA_URL = '/media/'
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', '10.11.7.11', '10.13.5.8', '10.13.2.3', 'backend']
+HOST = os.getenv('HOST')
+GOOGLE_CONTENT = os.getenv('GOOGLE_CONTENT')
+
+ALLOWED_HOSTS = [HOSTS_ALLOWED, 'backend']
 
 # Application definition
 
@@ -173,38 +176,33 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://10.13.5.8:3000",
-    "http://10.13.2.3:3000",
-    "http://10.12.2.12:3000",
-    "http://10.12.3.11:3000",
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:3001",
-    "http://localhost:3001",
-    "https://lh3.googleusercontent.com",
-    'http://localhost:8000'
-]
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8000']
-
-
-CORS_ORIGIN_WHITELIST = [
-'http://localhost:3000',
-'http://10.11.7.11:3000',
-'http://10.13.5.8:3000',
-'http://10.13.2.3:3000',
-'http://localhost:8000'
-
+    HOST,
+    GOOGLE_CONTENT,
 ]
 
-# CORS_ALLOW_ALL_ORIGINS: True
+# CSRF_TRUSTED_ORIGINS = ['http://localhost:8000']
+
+
+# CORS_ORIGIN_WHITELIST = [
+# 'http://localhost:3000',
+# 'http://10.11.7.11:3000',
+# 'http://10.13.5.8:3000',
+# 'http://10.13.2.3:3000',
+# 'http://localhost:8000'
+
+# ]
+
+CORS_ALLOW_ALL_ORIGINS: True
 CORS_ALLOW_CREDENTIALS = True
 
 AUTH_USER_MODEL = 'myapp.customuser'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT =os.getenv('EMAIL_PORT')
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')

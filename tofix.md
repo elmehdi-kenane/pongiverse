@@ -15,6 +15,7 @@ fix json in local tournament [DONE]
 connected and disconnected in friends
 send message from friends, duplicate user
 search for a private chat room
+create or join 2 vs 2 makhdamach`
 
 
 
@@ -35,3 +36,61 @@ Minor module: Monitoring system.
 Major module: Implement Two-Factor Authentication (2FA) and JWT.
 Minor module: Support on all devices.
 Minor module: Expanding Browser Compatibility.
+
+
+
+
+
+
+
+
+
+
+*********************************************
+chunk-67DEV5DB.js?v=8ea91927:5760 Unable to preventDefault inside passive event listener invocation.
+preventDefault @ chunk-67DEV5DB.js?v=8ea91927:5760
+(anonymous) @ react-avatar-editor.js?v=32d817d3:156
+callCallback2 @ chunk-67DEV5DB.js?v=8ea91927:3674
+invokeGuardedCallbackDev @ chunk-67DEV5DB.js?v=8ea91927:3699
+invokeGuardedCallback @ chunk-67DEV5DB.js?v=8ea91927:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-67DEV5DB.js?v=8ea91927:3736
+executeDispatch @ chunk-67DEV5DB.js?v=8ea91927:7014
+processDispatchQueueItemsInOrder @ chunk-67DEV5DB.js?v=8ea91927:7034
+processDispatchQueue @ chunk-67DEV5DB.js?v=8ea91927:7043
+dispatchEventsForPlugins @ chunk-67DEV5DB.js?v=8ea91927:7051
+(anonymous) @ chunk-67DEV5DB.js?v=8ea91927:7174
+batchedUpdates$1 @ chunk-67DEV5DB.js?v=8ea91927:18913
+batchedUpdates @ chunk-67DEV5DB.js?v=8ea91927:3579
+dispatchEventForPluginEventSystem @ chunk-67DEV5DB.js?v=8ea91927:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-67DEV5DB.js?v=8ea91927:5478
+dispatchEvent @ chunk-67DEV5DB.js?v=8ea91927:5472
+dispatchDiscreteEvent @ chunk-67DEV5DB.js?v=8ea91927:5449
+Show 17 more frames
+Show less
+chunk-67DEV5DB.js?v=8ea91927:5760 Unable to preventDefault inside passive event listener invocation.
+preventDefault @ chunk-67DEV5DB.js?v=8ea91927:5760
+(anonymous) @ react-avatar-editor.js?v=32d817d3:156
+callCallback2 @ chunk-67DEV5DB.js?v=8ea91927:3674
+invokeGuardedCallbackDev @ chunk-67DEV5DB.js?v=8ea91927:3699
+invokeGuardedCallback @ chunk-67DEV5DB.js?v=8ea91927:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-67DEV5DB.js?v=8ea91927:3736
+executeDispatch @ chunk-67DEV5DB.js?v=8ea91927:7014
+processDispatchQueueItemsInOrder @ chunk-67DEV5DB.js?v=8ea91927:7034
+processDispatchQueue @ chunk-67DEV5DB.js?v=8ea91927:7043
+dispatchEventsForPlugins @ chunk-67DEV5DB.js?v=8ea91927:7051
+(anonymous) @ chunk-67DEV5DB.js?v=8ea91927:7174
+batchedUpdates$1 @ chunk-67DEV5DB.js?v=8ea91927:18913
+batchedUpdates @ chunk-67DEV5DB.js?v=8ea91927:3579
+dispatchEventForPluginEventSystem @ chunk-67DEV5DB.js?v=8ea91927:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-67DEV5DB.js?v=8ea91927:5478
+dispatchEvent @ chunk-67DEV5DB.js?v=8ea91927:5472
+dispatchDiscreteEvent @ chunk-67DEV5DB.js?v=8ea91927:5449
+Show 17 more frames
+Show less
+chunk-67DEV5DB.js?v=8ea91927:5760 Unable to preventDefault inside passive event listener invocation.
+
+
+
+
+REDA 3A9L 3LIH KIDAYR
+*********************************************

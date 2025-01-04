@@ -7,7 +7,7 @@ function NavbarIconSearch({ Icons, handleSearchBar, isSearchBarMobileOpen }) {
   return (
     <div className="searchBarsWrapperWithLogo">
       <div className="logo">
-        <Link to='/'>
+        <Link to='/mainpage'>
           <img src={Icons.pingpong} alt="ping pong" />
         </Link>
       </div>

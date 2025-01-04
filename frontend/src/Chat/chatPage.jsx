@@ -21,6 +21,7 @@ const Chat = () => {
     setSelectedChatRoom,
     chatRooms,
     setChatRooms,
+    setMyChatRooms,
   } = useContext(ChatContext);
 
   const { chatSocket, user } = useContext(AuthContext);
@@ -166,6 +167,11 @@ const Chat = () => {
           data.type === "chatRoomDeleted"
         ) {
           chatRoomDeleted(data.roomId);
+          // remove the chat room from my chat rooms
+          setMyChatRooms((prev) =>
+            prev.filter((room) => room.id !== data.roomId)
+          );
+          
         } else if (data.type === "youAreBlocked") {
           setDirects((prevConversations) => {
             const updatedDirects = prevConversations.filter(

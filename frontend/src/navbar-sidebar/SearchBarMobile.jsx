@@ -98,6 +98,7 @@ export const SearchBarMobile = ({ handleSearchBar }) => {
   return (
     <div className="search-bar-mobile" ref={searchBarRef}>
       <input
+      maxLength={18}
         type="text"
         placeholder="Search for people or rooms..."
         value={inputValue}

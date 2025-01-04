@@ -53,7 +53,7 @@ def search_view(request):
             'result_type': result_type
         })
 
-    rooms_objs = Room.objects.filter(name__icontains=search_term)
+    rooms_objs = Room.objects.filter(name__icontains=search_term, visiblity='public')
     for room_obj in rooms_objs:
         result_type = "room"
         room_ser = room_serializer(room_obj)

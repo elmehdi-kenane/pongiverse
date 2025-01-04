@@ -465,7 +465,7 @@ def chat_room_members_list(request):
             return Response({"error": "chat room not found"}, status=400)
         memberships = Membership.objects.filter(room=room)
         data = []
-        protocol = get_protocol(request)
+        protocol = os.getenv("PROTOCOL")
         ip_address = os.getenv("IP_ADDRESS")
         for member in memberships:
             member_data = {

@@ -547,7 +547,7 @@ const ScoreBarDesktop = ({ score, username, avatar }) => {
       <div className="aiOpponent-separator">-</div>
       <div className="player">
         <p className="score">{score.bot}</p>
-        <p className="name">aiOpponent</p>
+        <p className="name">AI Kasslan</p>
         <img src={aiOpponentAvatar} alt={aiOpponentAvatar} />
       </div>
     </div>

@@ -156,6 +156,8 @@ export const ChatProvider = ({ child }) => {
     myChatRoomsRef: myChatRoomsRef,
     hasMoreRooms: hasMoreRooms,
     setHasMoreRooms: setHasMoreRooms,
+    setAllChatRoomMembers,
+    allChatRoomMembers,
   };
   return (
     <ChatContext.Provider value={contextData}>{child}</ChatContext.Provider>

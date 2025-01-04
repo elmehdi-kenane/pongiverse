@@ -209,6 +209,7 @@ def confirm_friend_request(request):
         {
             'type': 'confirm_friend_request',
             'message': {
+                'friend_id': to_user_id,
                 'second_username': to_username,
                 'send_at': request_accepted_ser.data['send_at'],
                 'avatar': request_accepted_ser.data['avatar'],
@@ -221,6 +222,7 @@ def confirm_friend_request(request):
         {
             'type': 'friend_request_accepted',
             'message': {
+                'friend_id': from_user_id,
                 'second_username': from_username,
                 'send_at': confirm_request_ser.data['send_at'],
                 'avatar': confirm_request_ser.data['avatar'],

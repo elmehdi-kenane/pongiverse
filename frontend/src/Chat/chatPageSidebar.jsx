@@ -102,6 +102,7 @@ const ChatSideBar = ({
     >
       <div className="chat-sidebar-header">
         <input
+        maxLength={18}
           type="text"
           placeholder="search"
           className="chat-search-input"
