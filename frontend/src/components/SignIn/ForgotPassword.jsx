@@ -103,7 +103,7 @@ function ForgotPassword() {
 
 		const handleFormSubmit = (inputCode, code) => {
 			if (code == inputCode) {
-				navigate('/changePassword', { state: data });
+				navigate('/ChangePassword', { state: data });
 			}
 			else {
 				if (attempts < 2) {

@@ -606,7 +606,7 @@ def join_chat_room(request):
         Membership.objects.create(user=user, room=room, role="member")
         room.members_count += 1
         room.save()
-        protocol = get_protocol(request)
+        protocol = os.getenv("PROTOCOL")
         ip_address = os.getenv("IP_ADDRESS")
         channel_layer = get_channel_layer()
         user_channels_name = user_channels.get(user.id)

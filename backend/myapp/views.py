@@ -328,7 +328,7 @@ class TestView(APIView):
 def SignInGoogleGetUrl(request):
 	response = Response()
 	client_id = os.getenv('GOOGLE_SIGNIN_CLIENT_ID')
-	redirect_uri = f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:3000/signin"
+	redirect_uri = os.getenv('SIGNIN_REDIRECT_URI')
 	scope = 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'
 	response_type = 'code'
 	auth_url = 'https://accounts.google.com/o/oauth2/auth'
@@ -346,7 +346,7 @@ def SignInGoogleGetUrl(request):
 def SignInIntraGetUrl(request):
 	response = Response()
 	client_id = os.getenv('INTRA_SIGNIN_CLIENT_ID')
-	redirect_uri = f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:3000/signin"
+	redirect_uri = os.getenv('SIGNIN_REDIRECT_URI')
 	auth_url = 'https://api.intra.42.fr/oauth/authorize'
 	response_type = 'code'
 	auth_url_with_params = f'{auth_url}?client_id={client_id}&redirect_uri={redirect_uri}&response_type={response_type}'
@@ -359,7 +359,7 @@ def SignInGoogleGetUserData(request):
 		code = request.data.get('code')
 		response = Response()
 		client_id = os.getenv('GOOGLE_SIGNIN_CLIENT_ID')
-		redirect_uri = f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:3000/signin"
+		redirect_uri = os.getenv('SIGNIN_REDIRECT_URI')
 		client_secret = os.getenv('GOOGLE_SIGNIN_SECRET_ID')
 		token_url = 'https://oauth2.googleapis.com/token'
 		payload = {
@@ -388,7 +388,7 @@ def SignInGoogleGetUserData(request):
 def SignUpGoogleGetUrl(request):
 	response = Response()
 	client_id = os.getenv('GOOGLE_SIGNUP_CLIENT_ID')
-	redirect_uri = f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:3000/signup"
+	redirect_uri = os.getenv('SIGNUP_REDIRECT_URI')
 	scope = 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'
 	response_type = 'code'
 	auth_url = 'https://accounts.google.com/o/oauth2/auth'
@@ -407,7 +407,7 @@ def SignUpGoogleGetUrl(request):
 def SignUpIntraGetUrl(request):
 	response = Response()
 	client_id = os.getenv('INTRA_SIGNUP_CLIENT_ID')
-	redirect_uri = f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:3000/signup"
+	redirect_uri = os.getenv('SIGNUP_REDIRECT_URI')
 	auth_url = 'https://api.intra.42.fr/oauth/authorize'
 	response_type = 'code'
 	auth_url_with_params = f'{auth_url}?client_id={client_id}&redirect_uri={redirect_uri}&response_type={response_type}'
@@ -421,7 +421,7 @@ def SignInIntraGetUserData(request):
 		response = Response()
 		client_id = os.getenv('INTRA_SIGNIN_CLIENT_ID')
 		client_secret = os.getenv('INTRA_SIGNIN_SECRET_ID')
-		redirect_uri = f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:3000/signin"
+		redirect_uri = os.getenv('SIGNIN_REDIRECT_URI')
 		token_url = 'https://api.intra.42.fr/oauth/token'
 		payload = {
 			'grant_type': 'authorization_code',
@@ -453,7 +453,7 @@ def SignUpGoogleGetUserData(request):
 		code = request.data.get('code')
 		response = Response()
 		client_id = os.getenv('GOOGLE_SIGNUP_CLIENT_ID')
-		redirect_uri = f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:3000/signup"
+		redirect_uri = os.getenv('SIGNUP_REDIRECT_URI')
 		client_secret = os.getenv('GOOGLE_SIGNUP_SECRET_ID')
 		token_url = 'https://oauth2.googleapis.com/token'
 		payload = {
@@ -485,7 +485,7 @@ def SignUpIntraGetUserData(request):
 		response = Response()
 		client_id = os.getenv('INTRA_SIGNUP_CLIENT_ID')
 		client_secret = os.getenv('INTRA_SIGNUP_SECRET_ID')
-		redirect_uri = f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:3000/signup"
+		redirect_uri = os.getenv('SIGNUP_REDIRECT_URI')
 		token_url = 'https://api.intra.42.fr/oauth/token'
 		payload = {
 			'grant_type': 'authorization_code',

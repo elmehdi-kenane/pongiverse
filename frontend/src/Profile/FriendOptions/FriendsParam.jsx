@@ -18,7 +18,7 @@ function FriendsParam(props) {
 	const { user, isBlock, setIsBlock, notifSocket } = useContext(AuthContext);
 	const { chatUserId, setIsFriend, userId, userPic, setIsLoading, userIsOnline } = useContext(ProfileContext);
 	const navigate = useNavigate();
-	const { setSelectedDirect } = useContext(ChatContext);
+	const { setSelectedDirect, setSelectedItem, setIsHome } = useContext(ChatContext);
 
 
 	const handelChallengeRequest = () => {
@@ -64,7 +64,9 @@ function FriendsParam(props) {
 			status: userIsOnline,
 			avatar: userImage,
 		})
+		setIsHome(true)
 		navigate('/mainpage/chat');
+		setSelectedItem(userId)
 	  }
 	
 	// Params JSX -----------------------

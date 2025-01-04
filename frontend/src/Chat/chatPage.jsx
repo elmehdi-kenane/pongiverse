@@ -195,10 +195,12 @@ const Chat = () => {
         }
         );
         const { next, results } = await response.json();
+        console.log("selectedDirect", selectedDirect)
         if (response.ok) {
           setDirects((prevConversations) => {
             let allDirects = [...prevConversations, ...results];
             if (Object.values(selectedDirect).every((value) => value !== "")) {
+              console.log("Directs", results)
               const conversationExists = allDirects.some(
                 (conv) => conv.id === selectedDirect.id
               );

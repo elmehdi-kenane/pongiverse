@@ -45,7 +45,7 @@ services:
       - ./frontend:/frontend
       - frontend-volume:/frontend/node_modules
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      test: ["CMD", "curl", "-f", "${FRONTEND}"]
       interval: 10s
       timeout: 5s
       retries: 120
@@ -60,7 +60,7 @@ services:
     hostname: backend
     container_name: backend
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/admin"]
+      test: ["CMD", "curl", "-f", "${BACKEND}/admin"]
       interval: 10s
       timeout: 5s
       retries: 120
