@@ -80,7 +80,7 @@ function LocalTournamentFillMembers() {
 		return (
 			<div className={styles['change-player-username']}>
 				<p className={styles['change-player-username-title']}>Change the username</p>
-				<input type="text" value={username} autoFocus onChange={(e) => { setUsername(e.target.value) }} className={styles['change-player-username-input']} />
+				<input type="text" value={username} autoFocus onChange={(e) => { setUsername(e.target.value) }} maxLength={10} className={styles['change-player-username-input']} />
 				<div className={styles['change-player-buttons']}>
 					<button className={styles['change-player-button']} onClick={handleCancel}>Cancel</button>
 					<button className={styles['change-player-button']} onClick={handleConfirm}>Confirm</button>

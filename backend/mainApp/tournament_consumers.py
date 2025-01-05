@@ -77,7 +77,7 @@ async def create_tournament(self, data, user_channels):
 				)
 		channel_name = user_channels.get(user.id)
 		while True:
-			random_number = random.randint(1000000000, 10000000000)
+			random_number = random.randint(100000000, 1000000000)
 			if random_number not in tournaments:
 				break
 		user.is_playing = True

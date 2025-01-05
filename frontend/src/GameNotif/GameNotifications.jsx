@@ -256,8 +256,8 @@ const GameNotifications = (props) => {
           }
         );
         if (response.ok) {
+          console.log("****response", response);
           const data = await response.json();
-          // console.log("******Case", data.Case);
           if (data.Case === "Tournament_does_not_exist") {
             notifyError("Tournament does not exist");
           } else if (data.Case === "User_is_in_tournament")

@@ -1,7 +1,3 @@
-check response in all fetches
-forgot password public checkauth with imad
-fix json in local tournament
-
 
 BLOCK a friends (profile and chat) -- [DONE]
 invite a member to a channel, it should not be blocked [DONE]
@@ -13,9 +9,9 @@ username warning in signupways second step [DONE]
 rooms duplication [DONE]
 fix json in local tournament [DONE]
 connected and disconnected in friends
-send message from friends, duplicate user
-search for a private chat room
-create or join 2 vs 2 makhdamach`
+send message from friends, duplicate user [DONE]
+search for a private chat room [DONE]
+create or join 1 vs 1 makhdamac [DONE]
 
 
 
@@ -37,6 +33,12 @@ Major module: Implement Two-Factor Authentication (2FA) and JWT.
 Minor module: Support on all devices.
 Minor module: Expanding Browser Compatibility.
 
+
+
+
+
+
+<!-- https://localhost/mainpage/game/jointournament -->
 
 
 

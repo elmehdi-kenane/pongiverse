@@ -39,6 +39,7 @@ const CreateRoomForm = (props) => {
               name="name"
               value={props.formData.name}
               onChange={props.onChangeHandler}
+              maxLength={20}
             />
             <div className="create-room-name-character-count">
               ({props.formData.name.length}/18)

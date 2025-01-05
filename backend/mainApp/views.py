@@ -331,12 +331,14 @@ def is_started_and_not_finshed(request):
 def get_tournament_size(request):
 	response = Response()
 	tournament_id = request.data.get('tournament_id')
+	print("**********************TOURNAMENT ID: ", tournament_id)
+	print("**********************Tournament: ", tournaments)
 	user = request.data.get('user')
 	target = customuser.objects.filter(username=user).first()
 	tournament_invitation = GameNotifications.objects.filter(tournament_id=tournament_id, target=target).first()
 	if tournament_invitation:
 		tournament_invitation.delete()
-	if tournament_id  not in tournaments:
+	if tournament_id not in tournaments:
 		response.data = {'Case' : 'Tournament_does_not_exist'}
 		return response
 	else :

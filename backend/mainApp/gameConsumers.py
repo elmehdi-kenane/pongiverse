@@ -2048,6 +2048,7 @@ async def join_new_room(self, data, rooms, user_channels):
 	ip_address = os.getenv("IP_ADDRESS")
 	active_match = await sync_to_async(ActiveMatch.objects.filter(room_id=room_code).first)()
 	if active_match:
+		print("ACTIVE MATCH FOUND*********************YES")
 		user = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
 		user.is_playing = True
 		await sync_to_async(user.save)()
@@ -2074,12 +2075,12 @@ async def join_new_room(self, data, rooms, user_channels):
 				'paddleY': player_state.paddleY,
 				'score': player_state.score,
 				'status': '',
-				'hit': 0, ####### added
+				'hit': 0, #######
 				'self_scored': 0, ####### added
 				'tmp_scored': 0 ####### added
 			})
 			users.append({
-				'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{player_state.avatar.url}",
+				'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{player.avatar.url}",
 				'level': player_match_statistics.level
 			})
 		room = {
