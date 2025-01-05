@@ -22,7 +22,21 @@ from .common import tournament_rooms, user_channels, tournaments
 import os
 
 async def disconnected(self, user_channels):
-	pass
+		cookiess = self.scope.get('cookies', {})
+		token = cookiess.get('refresh_token')
+		try:
+			decoded_token = await sync_to_async(RefreshToken)(token)
+			payload_data = await sync_to_async(lambda: decoded_token.payload)()
+			user_id = payload_data.get('user_id')
+			if user_id:
+				user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
+				if user:
+					if user_id in user_channels:
+						print(f"\nUSER {user_id} , DISCONNECT BEFORE: {user_channels}\n")
+						del user_channels[user_id]
+						print(f"\nUSER {user_id} , DISCONNECT AFTER: {user_channels}\n")
+		except TokenError:
+			pass
 
 
 async def send_playing_status_to_friends(self, user, status, user_channels):

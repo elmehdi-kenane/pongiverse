@@ -586,8 +586,10 @@ const OneVsOnePlayMatch = () => {
                 }
                 else if (type === "playersInfos")
                     setPlayersPics(message.users)
-                else if (type === 'hmed')
+                else if (type === 'hmed') {
+                    console.log("***************:  INSIDE HMED")
                     socket.close()
+                }
             }
         }
     }, [socket, user])

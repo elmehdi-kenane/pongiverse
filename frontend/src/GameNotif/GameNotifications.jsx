@@ -327,6 +327,7 @@ const GameNotifications = (props) => {
             const newSocket = new WebSocket(
               `${import.meta.env.VITE_SOCKET}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/ws/socket-server`
             );
+            console.log("socket jdida game notif");
             newSocket.onopen = () => {
               // console.log("+++++++++++=======+++++++++");
               console.log(
@@ -356,6 +357,7 @@ const GameNotifications = (props) => {
             const newSocket = new WebSocket(
               `${import.meta.env.VITE_SOCKET}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/ws/socket-server`
             );
+            console.log("socket jdida game notif 2");
             newSocket.onopen = () => {
               setSocket(newSocket);
               navigate("/mainpage/game/createtournament");
