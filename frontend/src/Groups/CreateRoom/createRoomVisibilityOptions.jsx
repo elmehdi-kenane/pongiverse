@@ -1,4 +1,4 @@
-import * as ChatIcons from "../../assets/chat/media";
+import * as ChatIcons from "../../assets/chat/media"
 
 const CreateRoomVisibilityOptions = (props) => {
   return (
@@ -47,7 +47,7 @@ const CreateRoomVisibilityOptions = (props) => {
         </button>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default CreateRoomVisibilityOptions;
+export default CreateRoomVisibilityOptions

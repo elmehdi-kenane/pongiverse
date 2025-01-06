@@ -31,8 +31,8 @@ export default defineConfig({
     // open: true,
     port : 3000,
     hmr: {
-      protocol: 'wss', // Use WebSocket Secure
-      host: process.env.VITE_IPADDRESS, // Replace with your domain
+      protocol: 'ws',
+      host: process.env.VITE_IPADDRESS,
     },
   }
 });

@@ -1,10 +1,10 @@
-import { useContext, useState } from "react";
-import * as ChatIcons from "../assets/chat/media/index";
-import ChatConversation from "./chatConversation";
-import ChatRoomConversation from "./chatRoomConversation";
-import ChatContext from "../Context/ChatContext";
-import BlockPopUp from "./chatRoomOptions/blockPopUp";
-import AuthContext from "../navbar-sidebar/Authcontext";
+import { useContext, useState } from "react"
+import * as ChatIcons from "../assets/chat/media/index"
+import ChatConversation from "./chatConversation"
+import ChatRoomConversation from "./chatRoomConversation"
+import ChatContext from "../Context/ChatContext"
+import BlockPopUp from "./chatRoomOptions/blockPopUp"
+import AuthContext from "../navbar-sidebar/Authcontext"
 
 const ChatWindow = ({
   messages,
@@ -21,9 +21,9 @@ const ChatWindow = ({
   setDirectsSearch,
   setChatRoomsSearch,
 }) => {
-  const { selectedChatRoom, selectedDirect, isHome ,setSelectedDirect, setSelectedItem} = useContext(ChatContext);
-  const { user } = useContext(AuthContext);
-  const [showBlockPopup, setShowBlockPopup] = useState(false);
+  const { selectedChatRoom, selectedDirect, isHome ,setSelectedDirect, setSelectedItem} = useContext(ChatContext)
+  const { user } = useContext(AuthContext)
+  const [showBlockPopup, setShowBlockPopup] = useState(false)
   return (
     <div
       className={
@@ -81,7 +81,7 @@ const ChatWindow = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default ChatWindow;
+export default ChatWindow

@@ -1,12 +1,12 @@
 
-import React from "react";
-import CloseIcon from "@mui/icons-material/Close";
-import { useNavigate } from "react-router-dom";
+import React from "react"
+import CloseIcon from "@mui/icons-material/Close"
+import { useNavigate } from "react-router-dom"
 
 const BlockPopUp = ({ setShowBlockPopup, setDirects, selectedDirect, user, setSelectedDirect, setSelectedItem}) => {
     const navigate = useNavigate()
     const blockUser = async () => {
-        setShowBlockPopup(false);
+        setShowBlockPopup(false)
         try{
             const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/friends/block_friend/`, {
                 method: "POST",
@@ -18,24 +18,24 @@ const BlockPopUp = ({ setShowBlockPopup, setDirects, selectedDirect, user, setSe
                     from_username: user,
                     to_username: selectedDirect.name,
                 }),
-            });
-            const data = await response.json();
+            })
+            const data = await response.json()
             if(response.ok){
                 setDirects((prev) => {
-                    return prev.filter((direct) => direct.name !== selectedDirect.name);
-                });
+                    return prev.filter((direct) => direct.name !== selectedDirect.name)
+                })
                 setSelectedDirect({
                     id: "",
                     name: "",
                     avatar: "",
                     status: "",
-                });
-                setSelectedItem("");
+                })
+                setSelectedItem("")
             } else
                 navigate('/signin')
         }
         catch(err){
-            console.log(err);
+            console.log(err)
         }
     }
     return (
@@ -56,6 +56,6 @@ const BlockPopUp = ({ setShowBlockPopup, setDirects, selectedDirect, user, setSe
             </div>
         </div>
         </div>
-    );
+    )
     }
-export default BlockPopUp;
+export default BlockPopUp

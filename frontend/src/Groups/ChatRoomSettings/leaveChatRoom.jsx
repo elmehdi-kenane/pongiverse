@@ -1,10 +1,9 @@
-import toast from "react-hot-toast";
-import AuthContext from "../../navbar-sidebar/Authcontext";
-import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast"
+import AuthContext from "../../navbar-sidebar/Authcontext"
+import { useContext } from "react"
 
 export const LeaveChatRoomSubmitter = async (user, rooms, setRooms, roomId) => {
-  const toastId = toast.loading("Leaving room is being processed...");
+  const toastId = toast.loading("Leaving room is being processed...")
   setTimeout(async () => {
     try {
       const response = await fetch(
@@ -18,34 +17,34 @@ export const LeaveChatRoomSubmitter = async (user, rooms, setRooms, roomId) => {
             roomId: roomId,
           }),
         }
-      );
-      const data = await response.json();
+      )
+      const data = await response.json()
       if (response.ok) {
-        toast.success(data.success);
-        toast.dismiss(toastId);
-        // const allMyChatRooms = rooms;
+        toast.success(data.success)
+        toast.dismiss(toastId)
+        // const allMyChatRooms = rooms
         // if (data && data.data.user === user) {
         //   const updatedRooms = allMyChatRooms.filter(
         //     (myroom) => myroom.id !== data.data.id
-        //   );
-        //   setRooms(updatedRooms);
+        //   )
+        //   setRooms(updatedRooms)
         // }
       } else if (response.status === 401)
         navigate('/signin')
       else {
-        toast.error(data.error);
+        toast.error(data.error)
       }
     } catch (error) {
-      console.log(error);
-      toast.error("An error occurred while leaving the chat room.");
+      console.log(error)
+      toast.error("An error occurred while leaving the chat room.")
     } finally {
-      toast.dismiss(toastId);
+      toast.dismiss(toastId)
     }
-  }, 2000); // Delay the execution by 2000ms
-};
+  }, 2000)
+}
 
 const LeaveChatRoom = (props) => {
-  const { user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext)
 
   return (
     <div className="room-leave-wrapper">
@@ -67,15 +66,15 @@ const LeaveChatRoom = (props) => {
               props.myChatRooms,
               props.setMyChatRooms,
               props.roomId
-            );
-            props.setLeaveRoom(false);
+            )
+            props.setLeaveRoom(false)
           }}
         >
           CONFIRM
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default LeaveChatRoom;
+export default LeaveChatRoom

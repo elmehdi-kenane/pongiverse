@@ -1,23 +1,20 @@
-import toast from "react-hot-toast";
-import ChatContext from "../../Context/ChatContext";
-import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast"
 
 const DeleteChatRoom = (props) => {
 
   const chatRoomDeletedUpdater = (data) => {
-   console.log("data: ", data);
-    const allMyChatRooms = props.myChatRooms;
+   console.log("data: ", data)
+    const allMyChatRooms = props.myChatRooms
     const updatedRooms = allMyChatRooms.filter(
       (room) => room.id !== data.roomId
-    );
-   console.log("update rooms: ", updatedRooms);
-    props.setMyChatRooms(updatedRooms);
-    props.setDeletRoom(false);
-    props.setShowSettings(false);
-  };
+    )
+   console.log("update rooms: ", updatedRooms)
+    props.setMyChatRooms(updatedRooms)
+    props.setDeletRoom(false)
+    props.setShowSettings(false)
+  }
   const deleteChatRoomHandler = async () => {
-    const toastId = toast.loading("Deleting chat room...");
+    const toastId = toast.loading("Deleting chat room...")
     try {
       const response = await fetch(
         `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/chatAPI/deleteChatRoom/${props.roomId}`,
@@ -25,30 +22,30 @@ const DeleteChatRoom = (props) => {
           method: "DELETE",
           credentials: "include",
         }
-      );
+      )
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (response.ok) {
         setTimeout(() => {
-          toast.success(data.success);
-          toast.dismiss(toastId);
-          chatRoomDeletedUpdater(data.data);
-        }, 2000);
-        console.log(data.success);
+          toast.success(data.success)
+          toast.dismiss(toastId)
+          chatRoomDeletedUpdater(data.data)
+        }, 2000)
+        console.log(data.success)
       } else if (response.status === 401)
         navigate('/signin')
       else {
         setTimeout(() => {
-          toast.dismiss(toastId);
-          toast.error("Failed to delete chat room");
-        }, 500);
+          toast.dismiss(toastId)
+          toast.error("Failed to delete chat room")
+        }, 500)
       }
     } catch (error) {
-      toast.dismiss(toastId);
-      toast.error("An error occurred. Please try again later.");
+      toast.dismiss(toastId)
+      toast.error("An error occurred. Please try again later.")
     }
-  };
+  }
 
 
   return (
@@ -61,7 +58,7 @@ const DeleteChatRoom = (props) => {
         <button onClick={deleteChatRoomHandler}>Delete</button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default DeleteChatRoom;
+export default DeleteChatRoom

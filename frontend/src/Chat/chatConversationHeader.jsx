@@ -1,16 +1,15 @@
-import { useNavigate } from "react-router-dom";
-import * as ChatIcons from "../assets/chat/media/index";
-import AuthContext from "../navbar-sidebar/Authcontext";
-import { useContext } from "react";
+import { useNavigate } from "react-router-dom"
+import * as ChatIcons from "../assets/chat/media/index"
+import AuthContext from "../navbar-sidebar/Authcontext"
+import { useContext } from "react"
 
 const ChatConversationHeader = (props) => {
 
-  const navigate = useNavigate();
-  const { notifSocket, user } = useContext(AuthContext);
+  const navigate = useNavigate()
+  const { notifSocket, user } = useContext(AuthContext)
 
   const handelChallengeRequest = () => {
     if (notifSocket && notifSocket.readyState === WebSocket.OPEN && user) {
-      ////console.log("inside join")
       notifSocket.send(JSON.stringify({
         type: 'inviteFriendGame',
         message: {
@@ -18,7 +17,6 @@ const ChatConversationHeader = (props) => {
           target: props.selectedDirect.name
         }
       }))
-      // navigate('/mainpage/game/solo/1vs1/friends');
     }
     else
       console.log("Socket ga3ma me7lola")
@@ -64,7 +62,7 @@ const ChatConversationHeader = (props) => {
             onClick={() => {
               props.showDirectOptions
                 ? props.setShowDirectOptions(false)
-                : props.setShowDirectOptions(true);
+                : props.setShowDirectOptions(true)
             }}
             src={ChatIcons.ThreePoints}
             alt="Options"
@@ -79,7 +77,6 @@ const ChatConversationHeader = (props) => {
                 View Profile
               </div>
               <div className="block-friend-option" onClick={() => props.setShowBlockPopup(true)}>Block</div>
-              {/* <div className="change-wallpaper-option">Wallpaper</div> */}
             </div>
           ) : (
             ""
@@ -87,7 +84,7 @@ const ChatConversationHeader = (props) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 export default ChatConversationHeader

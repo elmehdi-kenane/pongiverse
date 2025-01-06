@@ -1,21 +1,21 @@
-import { useContext, useEffect } from "react";
-import AuthContext from "../../navbar-sidebar/Authcontext";
-import ChatContext from "../../Context/ChatContext";
-import CancelIcon from "@mui/icons-material/Cancel";
-import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useContext, useEffect } from "react"
+import AuthContext from "../../navbar-sidebar/Authcontext"
+import ChatContext from "../../Context/ChatContext"
+import CancelIcon from "@mui/icons-material/Cancel"
+import toast from "react-hot-toast"
+import { useNavigate } from "react-router-dom"
 
 const InvitationRoom = (props) => {
-  const { user } = useContext(AuthContext);
-  const { chatRoomInvitationsRef, setChatRoomInvitations, } = useContext(ChatContext);
-  const { privateCheckAuth } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const { user } = useContext(AuthContext)
+  const { chatRoomInvitationsRef, setChatRoomInvitations, } = useContext(ChatContext)
+  const { privateCheckAuth } = useContext(AuthContext)
+  const navigate = useNavigate()
   // useEffect(() => {
   //   privateCheckAuth()
   // }, [])
 
   const onClickAcceptInvitaion = async () => {
-    // const toastId = toast.loading("Processing invitation...");
+    // const toastId = toast.loading("Processing invitation...")
     try {
       const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/chatAPI/accpetChatRoomInvite`, {
         method: 'POST',
@@ -32,26 +32,26 @@ const InvitationRoom = (props) => {
       // if (response.ok) {
       //   setTimeout(()=>{
       //     toast.success(data.success)
-      //     toast.dismiss(toastId);
+      //     toast.dismiss(toastId)
       //     let roomInvitations = chatRoomInvitationsRef.current
       //     let updatedRooms = roomInvitations.filter(
       //       (room) => room.id !== props.id
-      //     );
+      //     )
       //     setChatRoomInvitations(updatedRooms)
-      //     const currentChatRooms = props.myChatRooms;
-      //     props.setMyChatRooms([...currentChatRooms, data.room]);
+      //     const currentChatRooms = props.myChatRooms
+      //     props.setMyChatRooms([...currentChatRooms, data.room])
       //   }, 500)
       // } else {
-      //   toast.dismiss(toastId); 
+      //   toast.dismiss(toastId) 
       //   toast.error(data.error)
       // }
 
     } catch (error) {
       console.log(error)
-      toast.error("An error occurred while processing the invitation.");
-      // toast.dismiss(toastId);
+      toast.error("An error occurred while processing the invitation.")
+      // toast.dismiss(toastId)
     }
-  };
+  }
 
   const onClickCanelRoomInvitation = async () => {
     try {
@@ -70,7 +70,7 @@ const InvitationRoom = (props) => {
         let roomInvitations = chatRoomInvitationsRef.current
         let updatedRooms = roomInvitations.filter(
           (room) => room.id !== data.roomId
-        );
+        )
         setChatRoomInvitations(updatedRooms)
       } else if (response.status === 401)
         navigate('/signin')
@@ -79,7 +79,7 @@ const InvitationRoom = (props) => {
     } catch (error) {
       console.log(error)
     }
-  };
+  }
 
   return (
     <div className="room-ivnitation-wrapper">
@@ -99,7 +99,7 @@ const InvitationRoom = (props) => {
         <button className="room-invitation-accept-button" onClick={onClickAcceptInvitaion}>Accept</button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default InvitationRoom;
+export default InvitationRoom

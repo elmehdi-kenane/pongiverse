@@ -1,6 +1,5 @@
-import { useEffect } from "react";
-import MyMessage from "./myMessage";
-import OtherMessage from "./otherMessage";
+import MyMessage from "./myMessage"
+import OtherMessage from "./otherMessage"
 
 const ChatConversationBody = (props) => {
   return (
@@ -38,8 +37,8 @@ const ChatConversationBody = (props) => {
           )
         )}
     </div>
-  );
-};
+  )
+}
 
-export default ChatConversationBody;
+export default ChatConversationBody
 

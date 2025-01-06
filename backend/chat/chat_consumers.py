@@ -23,11 +23,20 @@ async def add_user_channel_group(self, data):
 
 
 async def add_chat_room_admin(self, data, user_channels):
-    room = await sync_to_async(Room.objects.get)(name=data["message"]["room"])
-    user = await sync_to_async(customuser.objects.get)(
-        username=data["message"]["memberName"]
-    )
-    member = await sync_to_async(Membership.objects.get)(room=room, user=user)
+    try:
+        room = await sync_to_async(Room.objects.get)(name=data["message"]["room"])
+    except Room.DoesNotExist:
+        return
+    try:
+        user = await sync_to_async(customuser.objects.get)(
+            username=data["message"]["memberName"]
+        )
+    except customuser.DoesNotExist:
+        return
+    try:
+        member = await sync_to_async(Membership.objects.get)(room=room, user=user)
+    except Membership.DoesNotExist:
+        return
     member.role = "admin"
     await sync_to_async(member.save)()
     await self.channel_layer.send(
@@ -40,10 +49,16 @@ async def add_chat_room_admin(self, data, user_channels):
 
 
 async def invite_member_chat_room(self, data, user_channels):
-    user = await sync_to_async(customuser.objects.get)(
-        username=data["message"]["member"]
-    )
-    room = await sync_to_async(Room.objects.get)(name=data["message"]["room"])
+    try:
+        user = await sync_to_async(customuser.objects.get)(
+            username=data["message"]["member"]
+        )
+    except customuser.DoesNotExist:
+        return
+    try:
+        room = await sync_to_async(Room.objects.get)(name=data["message"]["room"])
+    except Room.DoesNotExist:
+        return
     if (
         room
         and not await sync_to_async(
@@ -85,9 +100,18 @@ async def invite_member_chat_room(self, data, user_channels):
 
 
 async def chat_room_invitation_declined(self, data):
-    user = await sync_to_async(customuser.objects.get)(username=data["message"]["user"])
-    room = await sync_to_async(Room.objects.get)(name=data["message"]["room"])
-    invitation = await sync_to_async(RoomInvitation.objects.get)(user=user, room=room)
+    try:
+        user = await sync_to_async(customuser.objects.get)(username=data["message"]["user"])
+    except customuser.DoesNotExist:
+        return
+    try:
+        room = await sync_to_async(Room.objects.get)(name=data["message"]["room"])
+    except Room.DoesNotExist:
+        return
+    try:
+        invitation = await sync_to_async(RoomInvitation.objects.get)(user=user, room=room)
+    except RoomInvitation.DoesNotExist:
+        return
     await sync_to_async(invitation.delete)()
     await self.channel_layer.send(
         json.dumps(
@@ -102,10 +126,16 @@ async def chat_room_invitation_declined(self, data):
 
 
 async def message(self, data):
-    room = await sync_to_async(Room.objects.filter(name=data["data"]["name"]).get)()
-    sender = await sync_to_async(customuser.objects.get)(
-        username=data["data"]["sender"]
-    )
+    try:
+        room = await sync_to_async(Room.objects.filter(name=data["data"]["name"]).get)()
+    except Room.DoesNotExist:
+        return
+    try:
+        sender = await sync_to_async(customuser.objects.get)(
+            username=data["data"]["sender"]
+        )
+    except customuser.DoesNotExist:
+        return
     newMessage = await sync_to_async(Message.objects.create)(
         sender=sender, room=room, content=data["data"]["message"]
     )
@@ -147,12 +177,18 @@ async def message(self, data):
                 )
 
 async def direct_message(self, data, user_channels):
-    sender = await sync_to_async(customuser.objects.get)(
-        username=data["data"]["sender"]
-    )
-    receiver = await sync_to_async(customuser.objects.get)(
-        username=data["data"]["receiver"]
-    )
+    try:
+        sender = await sync_to_async(customuser.objects.get)(
+            username=data["data"]["sender"]
+        )
+    except customuser.DoesNotExist:
+        return
+    try:
+        receiver = await sync_to_async(customuser.objects.get)(
+            username=data["data"]["receiver"]
+        )
+    except customuser.DoesNotExist:
+        return
     message = await sync_to_async(Directs.objects.create)(
         sender=sender, receiver=receiver, message=data["data"]["message"]
     )

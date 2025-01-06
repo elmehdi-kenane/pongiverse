@@ -1,62 +1,62 @@
-import EmojiPicker from "emoji-picker-react";
-import { useClickOutSide } from "../Chat/chatConversation";
-import * as ChatIcons from "../assets/chat/media/index";
-import { useState, useRef, useEffect} from "react";
+import EmojiPicker from "emoji-picker-react"
+import { useClickOutSide } from "../Chat/chatConversation"
+import * as ChatIcons from "../assets/chat/media/index"
+import { useState, useRef, useEffect} from "react"
 
 const SendMessage = (props) => {
-  let [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  let [showEmojiPicker, setShowEmojiPicker] = useState(false)
 
   let emojiPickerRef = useClickOutSide(() => {
-    setShowEmojiPicker(false);
-  });
+    setShowEmojiPicker(false)
+  })
 
-  let textAreaRef = useRef(null);
+  let textAreaRef = useRef(null)
 
   useEffect(() => {
-    const tx = textAreaRef.current;
+    const tx = textAreaRef.current
 
     if (tx) {
-      tx.style.height = "18px";
+      tx.style.height = "18px"
       const handleInput = () => {
-        tx.style.height = "18px";
-        tx.style.height = tx.scrollHeight + "px";
-      };
+        tx.style.height = "18px"
+        tx.style.height = tx.scrollHeight + "px"
+      }
       const handleEnterKey = (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
-          e.preventDefault();
-          props.sendMessage();
+          e.preventDefault()
+          props.sendMessage()
         }
-      };
-      tx.addEventListener("keydown", handleEnterKey);
-      tx.addEventListener("input", handleInput);
+      }
+      tx.addEventListener("keydown", handleEnterKey)
+      tx.addEventListener("input", handleInput)
       return () => {
-        tx.removeEventListener("keydown", handleEnterKey);
-        tx.removeEventListener("input", handleInput);
-      };
+        tx.removeEventListener("keydown", handleEnterKey)
+        tx.removeEventListener("input", handleInput)
+      }
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
-    const tx = textAreaRef.current;
+    const tx = textAreaRef.current
 
     if (tx) {
       const handleEnterKey = (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
-          e.preventDefault();
-          props.sendMessage();
-          tx.style.height = "20px";
+          e.preventDefault()
+          props.sendMessage()
+          tx.style.height = "20px"
         }
-      };
-      tx.addEventListener("keydown", handleEnterKey);
+      }
+      tx.addEventListener("keydown", handleEnterKey)
       return () => {
-        tx.removeEventListener("keydown", handleEnterKey);
-      };
+        tx.removeEventListener("keydown", handleEnterKey)
+      }
     }
-  });
+  })
 
   const handelMessageToSend = (e) => {
     if (props.messageToSend.length < 1024) {
-      props.setMessageToSend(e.target.value);
+      props.setMessageToSend(e.target.value)
     }
   }
 
@@ -101,7 +101,7 @@ const SendMessage = (props) => {
         onClick={props.sendMessage}
       />
     </div>
-  );
-};
+  )
+}
 
-export default SendMessage;
+export default SendMessage

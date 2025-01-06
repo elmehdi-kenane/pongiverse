@@ -1,20 +1,20 @@
-import { useContext } from "react";
-import { useClickOutSide } from "../../Chat/chatConversation";
-import CloseIcon from "@mui/icons-material/Close";
-import InvitationRoom from "./InvitationRoom";
-import ChatContext from "../../Context/ChatContext";
+import { useContext } from "react"
+import { useClickOutSide } from "../../Chat/chatConversation"
+import CloseIcon from "@mui/icons-material/Close"
+import InvitationRoom from "./InvitationRoom"
+import ChatContext from "../../Context/ChatContext"
 
 const RoomsNotifications = (props) => {
   const {chatRoomInvitations } =
-    useContext(ChatContext);
+    useContext(ChatContext)
 
   const handleClickOutside = () => {
-    props.setShowRoomNotifications(false);
-    props.setIsBlur(false);
-  };
+    props.setShowRoomNotifications(false)
+    props.setIsBlur(false)
+  }
   let notifRef = useClickOutSide(() => {
-    handleClickOutside();
-  });
+    handleClickOutside()
+  })
 
   return (
     <div ref={notifRef} className="rooms-notifications-container-active">
@@ -23,8 +23,8 @@ const RoomsNotifications = (props) => {
         <CloseIcon
           className="create-room-close-icon"
           onClick={() => {
-            props.setShowRoomNotifications(false);
-            props.setIsBlur(false);
+            props.setShowRoomNotifications(false)
+            props.setIsBlur(false)
           }}
         />
       </div>
@@ -48,7 +48,7 @@ const RoomsNotifications = (props) => {
       )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default RoomsNotifications;
+export default RoomsNotifications

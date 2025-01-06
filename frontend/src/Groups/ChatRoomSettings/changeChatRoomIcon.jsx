@@ -1,18 +1,18 @@
-import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRef, useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 const ChangeChatRoomIcon = (props) => {
-  const [newRoomIcon, setnewRoomIcon] = useState(null);
+  const [newRoomIcon, setnewRoomIcon] = useState(null)
 
-  const fileInputRef = useRef(null);
-  const navigate = useNavigate();
+  const fileInputRef = useRef(null)
+  const navigate = useNavigate()
   const handleImageClick = () => {
-    fileInputRef.current.click();
-  };
+    fileInputRef.current.click()
+  }
   const changeRoomIconSubmitHandler = async () => {
-    const formData = new FormData();
-    formData.append("icon", newRoomIcon);
-    formData.append("room", props.roomId);
+    const formData = new FormData()
+    formData.append("icon", newRoomIcon)
+    formData.append("room", props.roomId)
     try {
       const response = await fetch(
         `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/chatAPI/changeChatRoomIcon`,
@@ -21,34 +21,34 @@ const ChangeChatRoomIcon = (props) => {
           credentials: "include",
           body: formData,
         }
-      );
-      const data = await response.json();
-      if (response.ok) console.log(data);
+      )
+      const data = await response.json()
+      if (response.ok) console.log(data)
       else if (response.status === 401)
         navigate('/signin')
-      else toast.error(data.error);
+      else toast.error(data.error)
     } catch (error) {
-      toast.error(data.error);
+      toast.error(data.error)
     }
-    props.setUpdateRoomAvatar(false);
-    props.setShowSettings(false);
-  };
+    props.setUpdateRoomAvatar(false)
+    props.setShowSettings(false)
+  }
 
   const onChangeChangeRoomAvatar = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files[0]
     if (file) {
-      setnewRoomIcon(file);
-      const reader = new FileReader();
+      setnewRoomIcon(file)
+      const reader = new FileReader()
       reader.onload = (e) => {
-        const imageUrl = e.target.result;
+        const imageUrl = e.target.result
         const placeHolder = document.getElementsByClassName(
           "room-update-avatar-preview"
-        )[0];
-        placeHolder.src = imageUrl;
-      };
-      reader.readAsDataURL(file);
+        )[0]
+        placeHolder.src = imageUrl
+      }
+      reader.readAsDataURL(file)
     }
-  };
+  }
 
   return (
     <div className="room-update-avatar-wrapper">
@@ -74,6 +74,6 @@ const ChangeChatRoomIcon = (props) => {
         <button onClick={changeRoomIconSubmitHandler}>Save</button>
       </div>
     </div>
-  );
-};
-export default ChangeChatRoomIcon;
+  )
+}
+export default ChangeChatRoomIcon

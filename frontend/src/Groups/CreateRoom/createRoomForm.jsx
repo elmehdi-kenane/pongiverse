@@ -1,14 +1,14 @@
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
-import * as ChatIcons from "../../assets/chat/media";
-import { useRef } from "react";
+import CameraAltIcon from "@mui/icons-material/CameraAlt"
+import * as ChatIcons from "../../assets/chat/media"
+import { useRef } from "react"
 
 const CreateRoomForm = (props) => {
 
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef(null)
 
   const handleContainerClick = () => {
-    fileInputRef.current.click();
-  };
+    fileInputRef.current.click()
+  }
 
   return (
     <>
@@ -100,7 +100,7 @@ const CreateRoomForm = (props) => {
         )}
       </div>
     </>
-  );
-};
+  )
+}
 
-export default CreateRoomForm;
+export default CreateRoomForm

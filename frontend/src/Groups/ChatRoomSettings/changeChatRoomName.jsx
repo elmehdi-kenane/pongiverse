@@ -1,24 +1,21 @@
-import ChatContext from "../../Context/ChatContext";
-import { useContext, useState } from "react";
-import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react"
+import { toast } from "react-hot-toast"
+import { useNavigate } from "react-router-dom"
 const ChangeChatRoomName = (props) => {
-  const [newRoomName, setNewRoomName] = useState("");
-  const navigate = useNavigate();
-  //update the chat room name in the chatRoomConversatios array
+  const [newRoomName, setNewRoomName] = useState("")
+  const navigate = useNavigate()
   const chatRoomNameChangedUpdater = (data) => {
-    const allMyChatRooms = props.myChatRooms;
+    const allMyChatRooms = props.myChatRooms
 
     const updatedRooms = allMyChatRooms.map((room) => {
       if (room.id === data.id) {
-        return { ...room, name: data.newName };
+        return { ...room, name: data.newName }
       }
-      return room;
-    });
-    props.setMyChatRooms(updatedRooms);
-  };
+      return room
+    })
+    props.setMyChatRooms(updatedRooms)
+  }
 
-  //post the new chat room name to backend
   const changeRoomNameSubmitHandler = () => {
     const updateChatRoomName = async () => {
       try {
@@ -32,19 +29,19 @@ const ChangeChatRoomName = (props) => {
             },
             body: JSON.stringify({ name: newRoomName }),
           }
-        );
+        )
         if (response.status === 401)
           navigate('/signin')
-        const data = await response.json();
-        chatRoomNameChangedUpdater(data.data);
+        const data = await response.json()
+        chatRoomNameChangedUpdater(data.data)
       } catch (error) {
-        toast(error);
+        toast(error)
       }
-    };
-    updateChatRoomName();
-    props.setChangeRoomName(false);
-    props.setShowSettings(false);
-  };
+    }
+    updateChatRoomName()
+    props.setChangeRoomName(false)
+    props.setShowSettings(false)
+  }
   return (
     <div className="room-change-name-wrapper">
     <div className="room-change-name-title">Enter Room Name</div>
@@ -60,7 +57,7 @@ const ChangeChatRoomName = (props) => {
       <button onClick={changeRoomNameSubmitHandler}>Update</button>
     </div>
   </div>
-  );
-};
+  )
+}
 
-export default ChangeChatRoomName;
+export default ChangeChatRoomName
