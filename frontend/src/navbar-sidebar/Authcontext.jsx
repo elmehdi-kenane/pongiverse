@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
 	let [allGameNotifs, setAllGameNotifs] = useState([]);
 	let [notifsImgs, setNotifsImgs] = useState([]);
 	// let allGameFriendsRef = useRef(allGameFriends);
-	let [isBlur, setIsBlur] = useState(false);
+	const [isBlur, setIsBlur] = useState(false);
 	//chat socket ------------------------------------
 	let [chatSocket, setChatSocket] = useState(null);
 
@@ -75,7 +75,7 @@ export const AuthProvider = ({ children }) => {
 	useEffect(() => {
 		if (!isReport && !isBlock && !isGameStats && !isBlur) setIsGlass(false);
 		else setIsGlass(true);
-	}, [isReport, isBlock, isGameStats]);
+	}, [isReport, isBlock, isGameStats, isBlur]);
 
 	useEffect(() => {
 		socketRef.current = socket

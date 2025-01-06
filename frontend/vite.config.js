@@ -31,7 +31,7 @@ export default defineConfig({
     // open: true,
     port : 3000,
     hmr: {
-      protocol: 'ws',
+      protocol: 'wss',
       host: process.env.VITE_IPADDRESS,
     },
   }
