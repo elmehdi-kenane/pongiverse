@@ -25,6 +25,7 @@ async def disconnected(self, user_channels):
 		cookiess = self.scope.get('cookies', {})
 		token = cookiess.get('refresh_token')
 		try:
+			print("------------------> INSIDE THE DISCONNECT")
 			decoded_token = await sync_to_async(RefreshToken)(token)
 			payload_data = await sync_to_async(lambda: decoded_token.payload)()
 			user_id = payload_data.get('user_id')

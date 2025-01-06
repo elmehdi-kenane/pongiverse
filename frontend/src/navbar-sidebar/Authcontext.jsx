@@ -1,12 +1,6 @@
 import { createContext, useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Navigate } from "react-router-dom";
-import { friends } from "../assets/navbar-sidebar";
-import * as Icons from "../assets/navbar-sidebar";
-import { useReducer } from "react";
 import { trimStringWithEllipsis } from "../GameNotif/GameNotifications";
-
-import userPc from "../assets/Profile/Group.svg";
 
 const AuthContext = createContext();
 
@@ -40,7 +34,6 @@ export const AuthProvider = ({ children }) => {
 	const [isReport, setIsReport] = useState(false);
 	const [isBlock, setIsBlock] = useState(false);
 	const [isGameStats, setIsGameStats] = useState(false);
-	const [isChatBlur, setIsChartBlur] = useState(false);
 
 	const reportContentRef = useRef(null);
 	const blockRef = useRef(null);
@@ -58,6 +51,7 @@ export const AuthProvider = ({ children }) => {
 	const oneVsOneIdRegex = /^\/mainpage\/play\/1vs1\/\d+$/;
 	const twoVsTwoIdRegex = /^\/mainpage\/play\/2vs2\/\d+$/;
 	const gamePlayRegex = /^\/mainpage\/(game|play)(\/[\w\d-]*)*$/;
+	const gameRegex = /^\/mainpage\/game(\/[\w\d-]*)*$/;
 	const checkPrivateAuthRegex = /^\/mainpage(?:\/.*|$)/;
 
 	// Chat Notification and Chat Room Invitation States --------------------------------------------
@@ -83,16 +77,11 @@ export const AuthProvider = ({ children }) => {
 		else setIsGlass(true);
 	}, [isReport, isBlock, isGameStats]);
 
-	// useEffect(() => {
-	// 	allGameFriendsRef.current = allGameFriends;
-	// }, [allGameFriends]);
-
 	useEffect(() => {
 		socketRef.current = socket
 	}, [socket])
 
 	useEffect(() => {
-		////console.log("pathname: ", location.pathname);
 		if (checkPrivateAuthRegex.test(location.pathname))
 			privateCheckAuth();
 		else if (
@@ -280,7 +269,12 @@ export const AuthProvider = ({ children }) => {
 					navigate('/signin')
 				let data = await response.json();
 				if (!data.error) {
-					(data.mode === 'tournament') ? navigate('mainpage/game/createtournament') : (data.mode === '1vs1') ? navigate('/mainpage/game/solo/1vs1/random') : navigate('/mainpage/game/solo/2vs2/random')
+					(data.mode === 'tournament') ?
+						navigate('mainpage/game/createtournament') :
+						(data.mode === '1vs1') ?
+						navigate(`/mainpage/play/1vs1/${data.id}`) :
+						(data.mode === '2vs2') ?
+						navigate(`/mainpage/play/2vs2/${data.id}`) : ''
 				}
 			} catch (error) {
 				console.error(
@@ -289,9 +283,19 @@ export const AuthProvider = ({ children }) => {
 				);
 			}
 		}
-		if (user && (location.pathname === '/mainpage/game/solo' || location.pathname === '/mainpage/game/solo/1vs1' || location.pathname === '/mainpage/game/solo/2vs2' || location.pathname === '/mainpage/game/jointournament' || location.pathname === '/mainpage/game'))
+		if (socket && user && (location.pathname === '/mainpage/game/solo' ||
+			location.pathname === '/mainpage/game/solo/1vs1' ||
+			location.pathname === '/mainpage/game/solo/1vs1/random' ||
+			location.pathname === '/mainpage/game/solo/1vs1/friends' ||
+			location.pathname === '/mainpage/game/solo/1vs1/create-or-join' ||
+			location.pathname === '/mainpage/game/solo/2vs2' ||
+			location.pathname === '/mainpage/game/solo/2vs2/random' ||
+			location.pathname === '/mainpage/game/solo/2vs2/friends' ||
+			location.pathname === '/mainpage/game/solo/2vs2/create-or-join' ||
+			location.pathname === '/mainpage/game/jointournament' ||
+			location.pathname === '/mainpage/game'))
 			check_is_in_game()
-	}, [location.pathname, user])
+	}, [location.pathname, user, socket])
 
 	const addNotificationToList = ({
 		avatar,

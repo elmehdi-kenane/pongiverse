@@ -358,32 +358,35 @@ def get_tournament_size(request):
 @authentication_required
 @api_view(['POST'])
 def customize_game(request):
-	paddle_color = request.data['paddle']
-	ball_color = request.data['ball']
-	board_color = request.data['board']
-	ball_effect = request.data['effect']
-	username = request.data['username']
-	user = customuser.objects.filter(username=username).first()
-	if user:
-		##printrequest.data)
-		game_customize = GameCustomisation.objects.filter(user=user).first()
-		if game_customize:
-			game_customize.paddle_color = paddle_color
-			game_customize.ball_color = ball_color
-			game_customize.board_color = board_color
-			game_customize.ball_effect = ball_effect
-			game_customize.save()
+	try:
+		paddle_color = request.data['paddle']
+		ball_color = request.data['ball']
+		board_color = request.data['board']
+		ball_effect = request.data['effect']
+		username = request.data['username']
+		user = customuser.objects.filter(username=username).first()
+		if user:
+			##printrequest.data)
+			game_customize = GameCustomisation.objects.filter(user=user).first()
+			if game_customize:
+				game_customize.paddle_color = paddle_color
+				game_customize.ball_color = ball_color
+				game_customize.board_color = board_color
+				game_customize.ball_effect = ball_effect
+				game_customize.save()
+				return Response({'message': 'updated successfully'})
+			GameCustomisation.objects.create(
+				user=user,
+				paddle_color=paddle_color,
+				ball_color=ball_color,
+				board_color=board_color,
+				ball_effect=ball_effect
+			)
 			return Response({'message': 'updated successfully'})
-		GameCustomisation.objects.create(
-			user=user,
-			paddle_color=paddle_color,
-			ball_color=ball_color,
-			board_color=board_color,
-			ball_effect=ball_effect
-		)
-		return Response({'message': 'updated successfully'})
-		# return Response({'message': 'row not created yet'})
-	else:
+			# return Response({'message': 'row not created yet'})
+		else:
+			return Response({'message': 'user not exit in the database'})
+	except:
 		return Response({'message': 'user not exit in the database'})
 
 @authentication_required
@@ -695,7 +698,7 @@ def is_user_joining_tournament(username):
 	for tournament_id, tournament_data in tournaments.items():
 		for member in tournament_data['members']:
 			if member['username'] == username and member['is_eliminated'] == False and (tournament_data['is_started'] == False or  (tournament_data['is_started'] == True and tournament_data['is_finished'] == False)):
-				return 'tournament'
+				return 'tournament', 0
 	userRoom = { key: value for key, value in rooms.items()
 		if (
 			((len(value.get('players')) == 2 and
@@ -710,8 +713,8 @@ def is_user_joining_tournament(username):
 	}
 	if userRoom:
 		value = list(userRoom.values())[0]
-		return value['mode']
-	return None
+		return value['mode'], value['id']
+	return None, None
 
 @authentication_required
 @api_view(['POST'])
@@ -719,11 +722,13 @@ def check_is_in_game(request):
 	response = Response()
 	username = request.data.get('user')
 	if username:
-		is_joining = is_user_joining_tournament(username)
-		if is_joining:
-			response.data = {'mode': is_joining}
+		mode, id = is_user_joining_tournament(username)
+		if mode is not None:
+			response.data = {'mode' : mode, 'id' : id} 
+			return response
 		else:
 			response.data = {'error': 'Not valid'}
+			return response
 	else:
 		response.data = {'error': 'Not valid'}
 	return response
