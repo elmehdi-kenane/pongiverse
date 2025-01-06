@@ -34,15 +34,6 @@ h1, h3, p{
     user-select: none;
 }
 
-/* .purple--glass {
-    background: linear-gradient(to bottom, rgb(68, 45, 106, 0.5), rgba(74, 37, 139, 0.3));
-    box-shadow: 0 0.5px 5px 0 #ccc;
-    backdrop-filter: blur( 4px );
-    -webkit-backdrop-filter: blur( 4px );
-    border-radius: 5px;
-    border: 1px solid rgba( 255, 255, 255, 0.18 );
-} */
-
 /* ------------------- User Info ------------------- */
 
 .profile-userinfo {

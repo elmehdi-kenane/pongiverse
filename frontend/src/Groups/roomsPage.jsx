@@ -214,7 +214,7 @@ const Rooms = () => {
         }
       )
       if (response.ok) {
-        //console.log("updateStatusOfInvitations", response)
+        console.log("updateStatusOfInvitations", response)
       }
       else if (response.status === 401)
         navigate('/signin')

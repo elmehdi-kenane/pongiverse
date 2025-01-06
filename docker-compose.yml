@@ -4,21 +4,20 @@ services:
   postgres:
     image: postgres:latest
     container_name: postgres
-    ports:
-      - "5432:5432"
     volumes:
       - postgres-volume:/var/lib/postgresql/data
     env_file:
       - .env
     networks:
       - ft_transcendence
-    # healthcheck:
-    #   test: ["CMD", "pg_isready", "-U", "postgres"]
-    #   interval: 5s
-    #   timeout: 5s
-    #   retries: 30
-    #   start_period: 15s
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 5s
     restart: on-failure
+
 
   # redis
   redis:
@@ -26,6 +25,7 @@ services:
     container_name: redis
     networks:
       - ft_transcendence
+    #i will check this later
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
@@ -70,6 +70,8 @@ services:
     depends_on:
       redis:
         condition: service_healthy
+      postgres:
+        condition: service_healthy
     volumes:
       - ./backend:/backend
     networks:
@@ -110,8 +112,7 @@ services:
     restart: on-failure
 
 volumes:
-  postgres-volume:
-    name : postgres-volume
+  postgres-volume: {}
   # will be removed
   frontend-volume:
     name : frontend-volume
