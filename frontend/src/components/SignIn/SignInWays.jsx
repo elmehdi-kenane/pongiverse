@@ -27,8 +27,6 @@ function SignInWays() {
     }, 1500);
   };
 
-
-
   const checkOtp = (otpStr) => {
     const regex = /^\d{6}$/; // Matches exactly 6 digits
     if (regex.test(otpStr)) return true;
@@ -57,7 +55,7 @@ function SignInWays() {
           if (response.ok) {
             navigate("/mainpage/dashboard");
           } else {
-            alert("wrong one time password");
+            notifyError("Wrong One-Time-Password");
             setOpenTfq(false);
           }
         }

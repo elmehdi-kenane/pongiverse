@@ -108,31 +108,32 @@ async def create_tournament(self, data, user_channels):
 		new_member = {"username": username, "is_owner": True, "is_eliminated": False, "is_inside": True}
 		tournaments[random_number]['members'].append(new_member)
 		group_name = f'tournament_{random_number}'
-		await channel_layer.group_add(group_name, channel_name)
 		if channel_name:
-				await self.channel_layer.send(
-					channel_name,
-					{
-						'type': 'tournament_created',
-						'message': {
-							'user': username
-						}
-					}
-				)
-		for username, channel_name in user_channels.items():
+			await channel_layer.group_add(group_name, channel_name)
 			await self.channel_layer.send(
 				channel_name,
 				{
-					'type': 'tournament_created_by_user',
+					'type': 'tournament_created',
 					'message': {
-						'tournament_info' : {
-							'tournament_id' : random_number,
-							'owner' : userrr,
-							'size' : 1
-						}
+						'user': username
 					}
 				}
 			)
+		for username, channel_name in user_channels.items():
+			if channel_name:
+				await self.channel_layer.send(
+					channel_name,
+					{
+						'type': 'tournament_created_by_user',
+						'message': {
+							'tournament_info' : {
+								'tournament_id' : random_number,
+								'owner' : userrr,
+								'size' : 1
+							}
+						}
+					}
+				)
 		await send_playing_status_to_friends(self, user, True, user_channels)
 
 
@@ -307,15 +308,16 @@ async def destroy_tournament(self, data, user_channels):
 			)
 	await send_playing_status_to_friends(self, user, False, user_channels)
 	for username, channel_name in user_channels.items():
-		await self.channel_layer.send(
-			channel_name,
-			{
-				'type': 'tournament_destroyed_by_user',
-				'message': {
-					'tournament_id' : tournament_id,
+		if channel_name:
+			await self.channel_layer.send(
+				channel_name,
+				{
+					'type': 'tournament_destroyed_by_user',
+					'message': {
+						'tournament_id' : tournament_id,
+					}
 				}
-			}
-		)
+			)
 
 
 
@@ -352,16 +354,17 @@ async def start_tournament(self, data, user_channels):
 					}
 				}
 			)
-	for username, channel_name in user_channels.items():
-		await self.channel_layer.send(
-			channel_name,
-			{
-				'type': 'tournament_started_by_user',
-				'message': {
-					'tournament_id' : tournament_id,
+	for username, channel_name in list(user_channels.items()):
+		if channel_name:
+			await self.channel_layer.send(
+				channel_name,
+				{
+					'type': 'tournament_started_by_user',
+					'message': {
+						'tournament_id' : tournament_id,
+					}
 				}
-			}
-		)
+			)
 
 
 
