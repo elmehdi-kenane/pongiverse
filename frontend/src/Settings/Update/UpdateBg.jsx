@@ -22,7 +22,6 @@ function UpdateBg(props) {
     const updatedPic = canvas.toDataURL(); // Get the cropped image data URL
 
     setIsClicked(true);
-    console.log(">>>>>> Picrue :", updatedPic);
     try {
       const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/updateUserBg`, {
         method: "POST",
@@ -47,7 +46,7 @@ function UpdateBg(props) {
       }
     } catch (error) {
       notifyErr(error);
-      console.log(error);
+      console.error(error);
     }
     props.setAdjust(false);
   };
@@ -59,8 +58,8 @@ function UpdateBg(props) {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
-      if (file.size > 8 * 1024 * 1024) { // Check file size (5MB = 5 * 1024 * 1024 bytes)
-        notifyErr('File size must be less than 8MB.');
+      if (file.size > 5 * 1024 * 1024) {
+        notifyErr('File size must be less than 5MB.');
         return;
       }
       const reader = new FileReader();

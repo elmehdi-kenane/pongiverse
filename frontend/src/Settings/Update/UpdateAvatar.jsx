@@ -46,7 +46,7 @@ function UpdateAvatar(props) {
       }
     } catch (error) {
       notifyErr(error);
-      console.log(error);
+      console.error(error);
     }
     props.setAdjust(false);
   };
@@ -58,8 +58,8 @@ function UpdateAvatar(props) {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
-      if (file.size > 5 * 1024 * 1024) { // Check file size (5MB = 5 * 1024 * 1024 bytes)
-        notifyErr('File size must be less than 5MB.');
+      if (file.size > 3 * 1024 * 1024) {
+        notifyErr('File size must be less than 3MB.');
         return;
       }
       const reader = new FileReader();
