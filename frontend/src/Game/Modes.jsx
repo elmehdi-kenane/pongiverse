@@ -64,9 +64,9 @@ const Modes = () => {
 				navigate("/signin")
 			}
 		}
-		if (user)
+		if (user && socket)
 			check_is_started_and_not_finished()
-	}, [user])
+	}, [user, socket])
 
 	const goToSoloPage = () => {
 		navigate("../game/solo")
@@ -74,6 +74,7 @@ const Modes = () => {
 
 	const GoToTournamentPage = async () => {
 		if (socket && socket.readyState === WebSocket.OPEN) {
+			console.log("******GO TO TOURNAMENT PAGE")
 			socket.send(JSON.stringify({
 				type: 'createTournament',
 				message: {

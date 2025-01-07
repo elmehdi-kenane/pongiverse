@@ -273,7 +273,7 @@ def remove_friendship(request):
             }
         }
     )
-    to_user_channel_name = user_channels.get(to_user_id)
+    to_user_channel_name = user_channels.get(to_user_id).channel_name  if to_user_id in user_channels else None
     #print"to_user_channel_name", to_user_channel_name)
     if to_user_channel_name:
         async_to_sync(channel_layer.send)(
@@ -328,7 +328,7 @@ def block_friend(request):
             }
         }
     )
-    blocked_channel_name = user_channels.get(to_user.id)
+    blocked_channel_name = user_channels.get(to_user.id).channel_name if to_user.id in user_channels else None
     if blocked_channel_name:
         async_to_sync(channel_layer.send)(
             blocked_channel_name,

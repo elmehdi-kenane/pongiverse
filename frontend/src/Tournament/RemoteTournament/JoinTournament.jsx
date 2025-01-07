@@ -96,9 +96,9 @@ function JoinTournament() {
 				navigate('/signin')
 			}
 		}
-		if (user)
+		if (user && socket)
 			check_is_started_and_not_finished()
-	}, [user])
+	}, [user, socket])
 
 	useEffect(() => {
 		const getTournamentSuggestions = async () => {
@@ -189,13 +189,11 @@ function JoinTournament() {
 						size: 0
 					})
 				}
-			} else {
+			} else
 				navigate('/signin')
-			}
 		}
-		if (user) {
+		if (user)
 			get_members()
-		}
 	}, [data])
 
 	return (

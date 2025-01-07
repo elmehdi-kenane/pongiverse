@@ -78,7 +78,7 @@ async def send_playing_status_to_friends(user, status, user_channels):
 	friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
 	for friend in friends:
 		friend_id = await sync_to_async(lambda: friend.friend.id)()
-		friend_channel = user_channels.get(friend_id)
+		friend_channel = user_channels.get(friend_id).channel_name if friend_id in user_channels else None
 		if friend_channel:
 			await channel_layer.send(friend_channel, {
 				'type': 'playingStatus',
@@ -160,7 +160,7 @@ async def save_tournament_to_db(tournament_id):
 
 async def discard_channels_from_tournament_group(player, tournament_id):
 	group_name = f'tournament_{tournament_id}'
-	channel_name = user_channels.get(player.id)
+	channel_name = user_channels.get(player.id).channel_name if player.id in user_channels else None
 	channel_name_notif_list = notifs_user_channels.get(player.id)
 	if channel_name:
 		await channel_layer.group_discard(group_name, channel_name)
@@ -218,7 +218,7 @@ async def send_user_eliminated_after_delay(tournament_id, actual_round):
 				await sync_to_async(user.save)()
 				my_user = await sync_to_async(customuser.objects.get)(username=member['username'])
 				channel_name_list = notifs_user_channels.get(my_user.id)
-				channel_name_game = user_channels.get(my_user.id)
+				channel_name_game = user_channels.get(my_user.id).channel_name if my_user.id in user_channels else None
 				if channel_name_list:
 					for channel_name in channel_name_list:
 						await channel_layer.group_discard(group_name, channel_name)

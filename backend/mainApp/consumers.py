@@ -29,21 +29,22 @@ class ChatConsumer(AsyncWebsocketConsumer):
 				user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
 				if user is not None:
 					await self.accept()
-					user_id = user.id
 					channel_namee = user_channels.get(user_id)
 					if channel_namee:
-						print(f"\n****ENTER TO HMED , {channel_namee}, USER ID: {user_id}\n")
-						await self.channel_layer.send(channel_namee, {
-							'type': 'hmed'
-						})
-					# print(f"\n****USER {user_id} ,CONNECT BEFORE: {user_channels}\n")
-					print(f"\n****CONNECT***********************************\n")
-					user_channels[user_id] = self.channel_name
+						print("***USER IS NOT NONE")
+						# await self.channel_layer.send(channel_namee, {
+						# 	'type': 'hmed'
+						# })
+						await channel_namee.close()
+						# del user_channels[user_id]
+					print("\n Connect BEFORE: ", user_channels)
+					user_channels[user_id] = self
+					print("\n Connect AFTER: ", user_channels)
 					# print(f"\n****USER {user_id} ,CONNECT AFTER: {user_channels}\n")
 				else:
 					self.socket.close()
 			except Exception as e:
-				pass
+				print("***********THROWWWWW, ", e)
 
 	async def receive(self, text_data):
 		data = json.loads(text_data)

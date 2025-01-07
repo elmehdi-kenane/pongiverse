@@ -601,7 +601,6 @@ function createParticle(x, y) {
 				} else if (type === "playersInfos")
 					setPlayersPics(message.users)
 				else if (type === 'hmed') {
-					////console.log("hmed received")
 					socket.close()
 				} else if (type === 'youWinTheGame'){
 					////console.log("tournament_id : ", message)

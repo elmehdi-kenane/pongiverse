@@ -272,9 +272,13 @@ export const AuthProvider = ({ children }) => {
 				if (!data.error) {
 					(data.mode === 'tournament') ?
 						navigate('mainpage/game/createtournament') :
-						(data.mode === '1vs1') ?
+						((data.mode === '1vs1') && (location.pathname !== '/mainpage/game/solo/1vs1/random' &&
+						location.pathname !== '/mainpage/game/solo/1vs1/friends' &&
+						location.pathname !== '/mainpage/game/solo/1vs1/create-or-join')) ?
 						navigate(`/mainpage/play/1vs1/${data.id}`) :
-						(data.mode === '2vs2') ?
+						((data.mode === '2vs2') && ((location.pathname !== '/mainpage/game/solo/2vs2/random' &&
+						location.pathname !== '/mainpage/game/solo/2vs2/friends' &&
+						location.pathname !== '/mainpage/game/solo/2vs2/create-or-join'))) ?
 						navigate(`/mainpage/play/2vs2/${data.id}`) : ''
 				}
 			} catch (error) {

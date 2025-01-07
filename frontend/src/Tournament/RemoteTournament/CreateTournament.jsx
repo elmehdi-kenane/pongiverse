@@ -166,10 +166,10 @@ function CreateTournament() {
 				navigate("/signin")
 			}
 		}
-		if (user) {
+		if (user && socket) {
 			check_is_started_and_not_finished()
 		}
-	}, [user])
+	}, [user, socket])
 
 	useEffect(() => {
 		const get_member = async (username) => {

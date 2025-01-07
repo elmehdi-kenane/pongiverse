@@ -165,7 +165,7 @@ async def send_playing_status_to_friends(self, user, status, user_channels):
 	friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
 	for friend in friends:
 		friend_id = await sync_to_async(lambda: friend.friend.id)()
-		friend_channel = user_channels.get(friend_id)
+		friend_channel = user_channels.get(friend_id).channel_name if friend_id in user_channels else None
 		if friend_channel:
 			await self.channel_layer.send(friend_channel, {
 				'type': 'playingStatus',
@@ -182,7 +182,7 @@ async def send_playing_status_to_friends(self, user, status, user_channels):
 			})
 async def discard_channels_from_tournament_group(self, player, tournament_id):
 	group_name = f'tournament_{tournament_id}'
-	channel_name = user_channels.get(player.id)
+	channel_name = user_channels.get(player.id).channel_name if player.id in user_channels else None
 	channel_name_notif_list = notifs_user_channels.get(player.id)
 	if channel_name:
 		await self.channel_layer.group_discard(group_name, channel_name)
@@ -282,7 +282,7 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 					tournaments[tournament_id]['rounds'][round_reached['round_reached']].append({'username': room['players'][1]['user'], 'position': round_reached['position']})
 					# tournamentuserinfo = TournamentUserInfo(round=round, user=player2, position=round_reached['position'])
 					# await sync_to_async(tournamentuserinfo.save)()
-					channel_name = user_channels.get(player2.id)
+					channel_name = user_channels.get(player2.id).channel_name if player2.id in user_channels else None
 					if channel_name:
 						await self.channel_layer.send(channel_name, {
 							'type': 'youWinTheGame',
@@ -328,7 +328,7 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 					# tournamentuserinfo = TournamentUserInfo(round=round, user=player1, position=round_reached['position'])
 					# await sync_to_async(tournamentuserinfo.save)()
 					tournaments[tournament_id]['rounds'][round_reached['round_reached']].append({'username': room['players'][0]['user'], 'position': round_reached['position']})
-					channel_name = user_channels.get(player1.id)
+					channel_name = user_channels.get(player1.id).channel_name if player1.id in user_channels else None
 					#print"CHANNEL NAME : ", channel_name)
 					if channel_name:
 						#print"DKHEL HNA : ")
@@ -428,7 +428,7 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 				# 	await sync_to_async(tournamentMember1.save)()
 				await send_playing_status_to_friends(self, player2, False, user_channels)
 				await discard_channels_from_tournament_group(self, player2, tournament_id)
-				channel_name = user_channels.get(player2.id)
+				channel_name = user_channels.get(player2.id).channel_name if player2.id in user_channels else None
 				if channel_name:
 					await self.channel_layer.send(channel_name, {
 						'type': 'youLoseTheGame',
@@ -461,7 +461,7 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 					# tournamentuserinfo = TournamentUserInfo(round=round, user=player1, position=round_reached['position'])
 					# await sync_to_async(tournamentuserinfo.save)()
 					tournaments[tournament_id]['rounds'][round_reached['round_reached']].append({'username': room['players'][0]['user'], 'position': round_reached['position']})
-					channel_name = user_channels.get(player1.id)
+					channel_name = user_channels.get(player1.id).channel_name if player1.id in user_channels else None
 					if channel_name:
 						await self.channel_layer.send(channel_name, {
 							'type': 'youWinTheGame',
@@ -521,7 +521,7 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 				# 	await sync_to_async(tournamentMember2.save)()
 				await send_playing_status_to_friends(self, player1, False, user_channels)
 				await discard_channels_from_tournament_group(self, player1, tournament_id)
-				channel_name = user_channels.get(player1.id)
+				channel_name = user_channels.get(player1.id).channel_name if player1.id in user_channels else None
 				if channel_name:
 					await self.channel_layer.send(channel_name, {
 						'type': 'youLoseTheGame',
@@ -554,7 +554,7 @@ async def runOverGame(self, room, ballProps, tournament_rooms, user_channels, to
 					# tournamentuserinfo = TournamentUserInfo(round=round, user=player2, position=round_reached['position'])
 					# await sync_to_async(tournamentuserinfo.save)()
 					tournaments[tournament_id]['rounds'][round_reached['round_reached']].append({'username': room['players'][1]['user'], 'position': round_reached['position']})
-					channel_name = user_channels.get(player2.id)
+					channel_name = user_channels.get(player2.id).channel_name if player2.id in user_channels else None
 					if channel_name:
 						await self.channel_layer.send(channel_name, {
 							'type': 'youWinTheGame',

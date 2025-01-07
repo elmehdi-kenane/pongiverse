@@ -35,7 +35,7 @@ async def send_playing_status_to_friends(self, user, status, user_channels):
 	friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
 	for friend in friends:
 		friend_id = await sync_to_async(lambda: friend.friend.id)()
-		friend_channel = user_channels.get(friend_id)
+		friend_channel = user_channels.get(friend_id).channel_name if friend_id in user_channels else None
 		if friend_channel:
 			await self.channel_layer.send(friend_channel, {
 				'type': 'playingStatus',
@@ -63,7 +63,7 @@ async def accept_invite(self, data):
 		user.is_playing = True
 		await sync_to_async(user.save)()
 		channel_name_list = notifs_user_channels.get(user.id)
-		user_channel_name = user_channels.get(user.id)
+		user_channel_name = user_channels.get(user.id).channel_name if user.id in user_channels else None
 		new_member = {"username": username, "is_owner": False, "is_eliminated": False, "is_inside": True}
 		tournaments[tournament_id]['members'].append(new_member)
 		if channel_name_list:
@@ -75,7 +75,7 @@ async def accept_invite(self, data):
 		for member in tournaments[tournament_id]['members']:
 			member_user = await sync_to_async(customuser.objects.filter(username=member['username']).first)()
 			if member_user:
-				channel_name = user_channels.get(member_user.id)
+				channel_name = user_channels.get(member_user.id).channel_name if member_user.id in user_channels else None
 				if channel_name:
 					await self.channel_layer.send(
 						channel_name,
