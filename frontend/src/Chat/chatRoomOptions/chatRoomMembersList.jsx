@@ -1,14 +1,14 @@
-import CloseIcon from "@mui/icons-material/Close";
-import { useContext, useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import CloseIcon from "@mui/icons-material/Close"
+import { useContext, useEffect, useState } from "react"
+import toast from "react-hot-toast"
 import '../../Profile/Profile.css'
-import AccountBoxRoundedIcon from '@mui/icons-material/AccountBoxRounded';
-import ChatContext from "../../Context/ChatContext";
-import { useNavigate } from "react-router-dom";
+import AccountBoxRoundedIcon from '@mui/icons-material/AccountBoxRounded'
+import ChatContext from "../../Context/ChatContext"
+import { useNavigate } from "react-router-dom"
 const ChatRoomMembersList = (props) => {
-  const [chatRoomMembers, setChatRoomMembers] = useState([]);
+  const [chatRoomMembers, setChatRoomMembers] = useState([])
   const { selectedChatRoom } = useContext(ChatContext)
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   useEffect(() => {
     const fetchAllChatRoomMembers = async () => {
       console.log(selectedChatRoom)
@@ -25,23 +25,23 @@ const ChatRoomMembersList = (props) => {
               id: selectedChatRoom.id,
             }),
           }
-        );
-        const data = await response.json();
+        )
+        const data = await response.json()
         if (response.ok) {
-          console.log(data);
-          setChatRoomMembers(data);
+          console.log(data)
+          setChatRoomMembers(data)
         } else if (response.status === 401)
-          navigate("/signin");
-        else toast(data.error);
+          navigate("/signin")
+        else toast(data.error)
       } catch (error) {
-        console.log(error);
-        toast(error.error);
+        console.log(error)
+        toast(error.error)
       }
-    };
-    if (props.showChatRoomMembers) {
-      fetchAllChatRoomMembers();
     }
-  }, [props.showChatRoomMembers]);
+    if (props.showChatRoomMembers) {
+      fetchAllChatRoomMembers()
+    }
+  }, [props.showChatRoomMembers])
 
   return (
     <div className="chat-room-members-container">
@@ -61,16 +61,16 @@ const ChatRoomMembersList = (props) => {
                   <img src={member.avatar} alt="playerImg" className="chat-room-member-avatar" />
                   <p> {member.username} </p>
                 </div>
-                <div className="chat-room-member-message-button">
+                <div className="chat-room-member-message-button" onClick={()=>navigate(`/mainpage/profile/${member.username}`)}>
                   <AccountBoxRoundedIcon />
                   <p style={{ cursor: "pointer" }}> Profile </p>
                 </div>
               </div>
-            );
+            )
           })}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ChatRoomMembersList;
+export default ChatRoomMembersList

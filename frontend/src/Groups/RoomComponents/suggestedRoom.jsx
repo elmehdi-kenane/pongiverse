@@ -1,15 +1,15 @@
-import { useContext } from "react";
-import AuthContext from "../../navbar-sidebar/Authcontext";
-import toast from "react-hot-toast";
-import ChatContext from "../../Context/ChatContext";
-import { useNavigate } from "react-router-dom";
+import { useContext } from "react"
+import AuthContext from "../../navbar-sidebar/Authcontext"
+import toast from "react-hot-toast"
+import ChatContext from "../../Context/ChatContext"
+import { useNavigate } from "react-router-dom"
 
 const SuggestedRoom = (props) => {
   const { user } = useContext(AuthContext)
   const { suggestedChatRoomsRef, setSuggestedChatRooms } = useContext(ChatContext)
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const joinChatRoomSubmitter = async () => {
-    const toastId = toast.loading("Joining the chat room...");
+    const toastId = toast.loading("Joining the chat room...")
     try {
       const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/chatAPI/joinChatRoom`, {
         method: 'POST',
@@ -23,23 +23,23 @@ const SuggestedRoom = (props) => {
       const data = await response.json()
       if (response.ok) {
         setTimeout(() => {
-          toast.success("Successfully joined the chat room!");
-          toast.dismiss(toastId); // Dismiss the loading toast
+          toast.success("Successfully joined the chat room!")
+          toast.dismiss(toastId)
           let suggestedChatRooms = suggestedChatRoomsRef.current
           let updatedSuggestedRooms = suggestedChatRooms.filter(
             (room) => room.id !== props.roomId
-          );
+          )
           setSuggestedChatRooms(updatedSuggestedRooms)
-          const currentChatRooms = props.myChatRooms;
-          props.setMyChatRooms([...currentChatRooms, data.room]);
-        }, 2000); // Adjust the delay time (in milliseconds) as needed
+          const currentChatRooms = props.myChatRooms
+          props.setMyChatRooms([...currentChatRooms, data.room])
+        }, 2000)
       } else if (response.status === 401)
-        navigate('/signin');
+        navigate('/signin')
       else {
         setTimeout(() => {
-          toast.dismiss(toastId); // Dismiss the loading toast
+          toast.dismiss(toastId)
           toast.error(data.error)
-        }, 500);
+        }, 500)
       }
     } catch (error) {
       console.log(error)
@@ -71,7 +71,7 @@ const SuggestedRoom = (props) => {
         <button className="join-room-button" onClick={joinChatRoomSubmitter}>Join Room</button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SuggestedRoom;
+export default SuggestedRoom

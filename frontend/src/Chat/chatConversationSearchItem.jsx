@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 
 const ChatConversationSearchItem = (props) => {
   const handleClick = () => {
@@ -8,33 +8,33 @@ const ChatConversationSearchItem = (props) => {
         name: props.name,
         status: props.status,
         avatar: props.avatar,
-      });
-      let allDirects = props.directs;
+      })
+      let allDirects = props.directs
       const updatedDirects = allDirects.map((friend) => {
         if (props.friendId === friend.id) {
-          return { ...friend, unreadCount: 0 };
+          return { ...friend, unreadCount: 0 }
         }
-        return friend;
-      });
-      props.setDirects(updatedDirects);
+        return friend
+      })
+      props.setDirects(updatedDirects)
     } else if (!props.isDirect) {
       props.setSelectedChatRoom({
         id: props.roomId,
         name: props.name,
         membersCount: props.membersCount,
         icon: props.icon,
-      });
-      let allChatRooms = props.chatRooms;
+      })
+      let allChatRooms = props.chatRooms
       const updatedChatRooms = allChatRooms.map((room) => {
         if (props.roomId === room.id) {
-          return { ...room, unreadCount: 0 };
+          return { ...room, unreadCount: 0 }
         }
-        return room;
-      });
-      props.setChatRooms(updatedChatRooms);
+        return room
+      })
+      props.setChatRooms(updatedChatRooms)
     }
-    props.setSelectedItem(props.name);
-  };
+    props.setSelectedItem(props.name)
+  }
   return (
     <div
       className={
@@ -79,7 +79,7 @@ const ChatConversationSearchItem = (props) => {
         ""
       )}
     </div>
-  );
-};
+  )
+}
 
-export default ChatConversationSearchItem;
+export default ChatConversationSearchItem

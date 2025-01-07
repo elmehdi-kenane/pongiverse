@@ -6,131 +6,131 @@ import '../assets/navbar-sidebar/index.css';
 import OneVsOneStats from './OneVsOneStats';
 
 class Player {
-	constructor(x, y, width, height, color, score) {
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-		this.color = color;
-		this.score = score;
-	}
+    constructor(x, y, width, height, color, score) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.color = color;
+        this.score = score;
+    }
 
-	changeProperties(newX, newY, newWidth, newHeight, newColor, newScore) {
-		this.x = newX
-		this.y = newY
-		this.width = newWidth
-		this.height = newHeight
-		this.color = newColor
-		this.score = newScore
-	}
+    changeProperties(newX, newY, newWidth, newHeight, newColor, newScore) {
+        this.x = newX
+        this.y = newY
+        this.width = newWidth
+        this.height = newHeight
+        this.color = newColor
+        this.score = newScore
+    }
 
-	draw(ctx) {
-		ctx.fillStyle = this.color;
-		ctx.fillRect(this.x, this.y, this.width, this.height);
-	}
+    draw(ctx) {
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
 }
 
 class Ball {
-	constructor(x, y, radius, color) {
-		this.x = x;
-		this.y = y;
-		this.radius = radius;
-		this.color = color;
-	}
+    constructor(x, y, radius, color) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = color;
+    }
 
-	changeProperties(newX, newY, newRadius, newColor) {
-		this.x = newX
-		this.y = newY
-		this.radius = newRadius
-		this.color = newColor
-	}
+    changeProperties(newX, newY, newRadius, newColor) {
+        this.x = newX
+        this.y = newY
+        this.radius = newRadius
+        this.color = newColor
+    }
 
-	draw(ctx) {
-		ctx.fillStyle = this.color;
-		ctx.beginPath();
-		ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
-		ctx.fill();
-	}
+    draw(ctx) {
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+        ctx.fill();
+    }
 }
 
 class Net {
-	constructor(x, y, width, height, color) {
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-		this.color = color
-	}
+    constructor(x, y, width, height, color) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.color = color
+    }
 
-	changeProperties(newX, newY, newWidth, newHeight, newColor) {
-		this.x = newX
-		this.y = newY
-		this.width = newWidth
-		this.height = newHeight
-		this.color = newColor
-	}
+    changeProperties(newX, newY, newWidth, newHeight, newColor) {
+        this.x = newX
+        this.y = newY
+        this.width = newWidth
+        this.height = newHeight
+        this.color = newColor
+    }
 
-	draw(ctx) {
-		ctx.fillStyle = this.color;
-		for (let i = 0; i <= ctx.canvas.height; i += 15)
-			ctx.fillRect(this.x, this.y + i, this.width, this.height);
-	}
+    draw(ctx) {
+        ctx.fillStyle = this.color;
+        for (let i = 0; i <= ctx.canvas.height; i += 15)
+            ctx.fillRect(this.x, this.y + i, this.width, this.height);
+    }
 }
 
 class Edges {
-	constructor(newHeight, newColor) {
-		this.height = newHeight
-		this.color = newColor
-	}
+    constructor(newHeight, newColor) {
+        this.height = newHeight
+        this.color = newColor
+    }
 
-	changeProperties(newHeight) {
-		this.height = newHeight
-	}
+    changeProperties(newHeight) {
+        this.height = newHeight
+    }
 
-	draw(ctx) {
-		ctx.fillStyle = this.color
-		ctx.fillRect(0, 0, ctx.canvas.width, this.height)
-		ctx.fillStyle = this.color
-		ctx.fillRect(0, ctx.canvas.height - this.height, ctx.canvas.width, this.height)
-	}
+    draw(ctx) {
+        ctx.fillStyle = this.color
+        ctx.fillRect(0, 0, ctx.canvas.width, this.height)
+        ctx.fillStyle = this.color
+        ctx.fillRect(0, ctx.canvas.height - this.height, ctx.canvas.width, this.height)
+    }
 }
 
 const OneVsOnePlayMatch = () => {
-	let { privateCheckAuth, gameCustomize, socket,
-		socketRecreated, setSocketRecreated, user } = useContext(AuthContext)
-	const [canvasDrawing, setCanvasDrawing] = useState(false)
-	const [gameAborted, setGameAborted] = useState(false)
-	const [gameFinished, setGameFinished] = useState(false)
-	const [userName1, setUserName1] = useState(null)
-	const [userName2, setUserName2] = useState(null)
-	const [playersPics, setPlayersPics] = useState([])
-	const navigate = useNavigate()
-	const { roomID } = useParams()
-	let canvasRef = useRef(null);
-	let isOut = false
+    let { privateCheckAuth, gameCustomize, socket,
+        socketRecreated, setSocketRecreated, user } = useContext(AuthContext)
+    const [canvasDrawing, setCanvasDrawing] = useState(false)
+    const [gameAborted, setGameAborted] = useState(false)
+    const [gameFinished, setGameFinished] = useState(false)
+    const [userName1, setUserName1] = useState(null)
+    const [userName2, setUserName2] = useState(null)
+    const [playersPics, setPlayersPics] = useState([])
+    const navigate = useNavigate()
+    const { roomID } = useParams()
+    let canvasRef = useRef(null);
+    let isOut = false
 
-	let isGameStarted = false
-	let playerNo = 0
+    let isGameStarted = false
+    let playerNo = 0
 
-	const [playerNoo, setPlayerNo] = useState(0);
-	// let playerNoRef = useRef(null)
-	let player1 = useRef(null)
-	let player2 = useRef(null)
-	let ball = useRef(null)
-	let edges = useRef(null)
-	let [score1, setScore1] = useState(0)
-	let [score2, setScore2] = useState(0)
-	let audio;
-	let keys = {
-		ArrowDown: false,
-		ArrowUp: false,
-		MouseMove: false,
-		Event: null,
-	}
+    const [playerNoo, setPlayerNo] = useState(0);
+    // let playerNoRef = useRef(null)
+    let player1 = useRef(null)
+    let player2 = useRef(null)
+    let ball = useRef(null)
+    let edges = useRef(null)
+    let [score1, setScore1] = useState(0)
+    let [score2, setScore2] = useState(0)
+    let audio;
+    let keys = {
+        ArrowDown: false,
+        ArrowUp: false,
+        MouseMove: false,
+        Event: null,
+    }
 
-	const [canvasContext, setCanvasContext] = useState(null);
-	const canvasContextRef = useRef(canvasContext);
-	const [canvasDimensions, setCanvasDimensions] = useState(null);
+    const [canvasContext, setCanvasContext] = useState(null);
+    const canvasContextRef = useRef(canvasContext);
+    const [canvasDimensions, setCanvasDimensions] = useState(null);
     const canvasDimensionsRef = useRef(canvasDimensions);
     const gameCustomizeRef = useRef(gameCustomize);
     const gameFinishedRef = useRef(gameFinished);
@@ -185,21 +185,21 @@ const OneVsOnePlayMatch = () => {
     // const radius = Math.random() + 0.8
 
 
-        // let particlesConst = {
-        //     radius: radius,
-        //     speedX: speedX,
-        //     speedY: speedY
-        // }
-        // let particle = {
-        //     x,
-        //     y,
-        //     radius: radius * , // Random radius between 1 and 3 ====> Math.random() * 2 + 1
-        //     color: `hsl(${Math.random() * 40 + 20}, 100%, 50%)`, // Random hue for fire-like colors ====> `hsl(${Math.random() * 40 + 20}, 100%, 50%)`
-        //     speedX: Math.random() * 6 - 3, // Random horizontal speed between -3 and 3
-        //     speedY: Math.random() * 6 - 3, // Random vertical speed between -3 and 3
-        //     life: Math.random() * 50 + 50 // Random lifetime between 50 and 100 frames
-        // };
-        // particles.push(particle);
+    // let particlesConst = {
+    //     radius: radius,
+    //     speedX: speedX,
+    //     speedY: speedY
+    // }
+    // let particle = {
+    //     x,
+    //     y,
+    //     radius: radius * , // Random radius between 1 and 3 ====> Math.random() * 2 + 1
+    //     color: `hsl(${Math.random() * 40 + 20}, 100%, 50%)`, // Random hue for fire-like colors ====> `hsl(${Math.random() * 40 + 20}, 100%, 50%)`
+    //     speedX: Math.random() * 6 - 3, // Random horizontal speed between -3 and 3
+    //     speedY: Math.random() * 6 - 3, // Random vertical speed between -3 and 3
+    //     life: Math.random() * 50 + 50 // Random lifetime between 50 and 100 frames
+    // };
+    // particles.push(particle);
 
     function createParticle(x, y) {
         let particle = {
@@ -212,155 +212,155 @@ const OneVsOnePlayMatch = () => {
             life: Math.random() * 50 + 40 // Random lifetime between 50 and 100 frames
         };
         particles.push(particle);
-	}
+    }
 
-	// useEffect(() => {
-	// 	privateCheckAuth()
-	// }, [])
+    // useEffect(() => {
+    // 	privateCheckAuth()
+    // }, [])
 
-	const draw = () => {
-		const ctx = canvasContextRef.current
-		const canvas = canvasRef.current;
-		const gameCustom = gameCustomizeRef.current
-		if (ctx && canvas && player1.current && player2.current && ball.current) {
-			ctx.clearRect(0, 0, canvas.width, canvas.height)
-			ctx.fillStyle = gameCustom[2]
-			ctx.fillRect(0, 0, canvas.width, canvas.height)
-			edges.current.draw(ctx)
-			// net.current.draw(ctx)
-			player1.current.draw(ctx)
-			player2.current.draw(ctx)
+    const draw = () => {
+        const ctx = canvasContextRef.current
+        const canvas = canvasRef.current;
+        const gameCustom = gameCustomizeRef.current
+        if (ctx && canvas && player1.current && player2.current && ball.current) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            ctx.fillStyle = gameCustom[2]
+            ctx.fillRect(0, 0, canvas.width, canvas.height)
+            edges.current.draw(ctx)
+            // net.current.draw(ctx)
+            player1.current.draw(ctx)
+            player2.current.draw(ctx)
 
-			if (isGameStarted && gameCustom[3]) {
-				particles.forEach((particle, index) => {
-					// Decrease life`
-					particle.life--;
+            if (isGameStarted && gameCustom[3]) {
+                particles.forEach((particle, index) => {
+                    // Decrease life`
+                    particle.life--;
 
-					// Remove dead particles
-					if (particle.life <= 0) {
-						particles.splice(index, 1);
-						return;
-					}
+                    // Remove dead particles
+                    if (particle.life <= 0) {
+                        particles.splice(index, 1);
+                        return;
+                    }
 
-					// Update position
-					particle.x += particle.speedX;
-					particle.y += particle.speedY;
+                    // Update position
+                    particle.x += particle.speedX;
+                    particle.y += particle.speedY;
 
-					// Draw particle
-					ctx.beginPath();
-					ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-					ctx.fillStyle = particle.color;
-					ctx.fill();
-					ctx.closePath();
-				});
-				createParticle(ball.current.x, ball.current.y);
-				createParticle(ball.current.x + 0.5, ball.current.y + 0.5);
-				createParticle(ball.current.x + 0.5, ball.current.y + 0.5);
-				createParticle(ball.current.x + 0.3, ball.current.y + 0.3);
-				createParticle(ball.current.x + 0.3, ball.current.y + 0.3);
-			}
+                    // Draw particle
+                    ctx.beginPath();
+                    ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = particle.color;
+                    ctx.fill();
+                    ctx.closePath();
+                });
+                createParticle(ball.current.x, ball.current.y);
+                createParticle(ball.current.x + 0.5, ball.current.y + 0.5);
+                createParticle(ball.current.x + 0.5, ball.current.y + 0.5);
+                createParticle(ball.current.x + 0.3, ball.current.y + 0.3);
+                createParticle(ball.current.x + 0.3, ball.current.y + 0.3);
+            }
 
-			ball.current.draw(ctx)
-		}
-	}
+            ball.current.draw(ctx)
+        }
+    }
 
-	useEffect(() => {
-		if (player1.current && player2.current && ball.current) {
-			if (playerNo === 1) {
-				player1.current.changeProperties(player1.current.x, player1.current.y, player1.current.width, player1.current.height, gameCustomize[0], player1.current.score)
-				player2.current.changeProperties(player2.current.x, player2.current.y, player2.current.width, player2.current.height, '#B38EF0', player2.current.score)
-			} else if (playerNo === 2) {
-				player1.current.changeProperties(player1.current.x, player1.current.y, player1.current.width, player1.current.height, '#B38EF0', player1.current.score)
-				player2.current.changeProperties(player2.current.x, player2.current.y, player2.current.width, player2.current.height, gameCustomize[0], player2.current.score)
-			} else {
-				player1.current.changeProperties(player1.current.x, player1.current.y, player1.current.width, player1.current.height, gameCustomize[0], player1.current.score)
-				player2.current.changeProperties(player2.current.x, player2.current.y, player2.current.width, player2.current.height, gameCustomize[0], player2.current.score)
-			}
-			ball.current.changeProperties(ball.current.x, ball.current.y, ball.current.radius, gameCustomize[1])
-		}
-	}, [gameCustomize])
+    useEffect(() => {
+        if (player1.current && player2.current && ball.current) {
+            if (playerNo === 1) {
+                player1.current.changeProperties(player1.current.x, player1.current.y, player1.current.width, player1.current.height, gameCustomize[0], player1.current.score)
+                player2.current.changeProperties(player2.current.x, player2.current.y, player2.current.width, player2.current.height, '#B38EF0', player2.current.score)
+            } else if (playerNo === 2) {
+                player1.current.changeProperties(player1.current.x, player1.current.y, player1.current.width, player1.current.height, '#B38EF0', player1.current.score)
+                player2.current.changeProperties(player2.current.x, player2.current.y, player2.current.width, player2.current.height, gameCustomize[0], player2.current.score)
+            } else {
+                player1.current.changeProperties(player1.current.x, player1.current.y, player1.current.width, player1.current.height, gameCustomize[0], player1.current.score)
+                player2.current.changeProperties(player2.current.x, player2.current.y, player2.current.width, player2.current.height, gameCustomize[0], player2.current.score)
+            }
+            ball.current.changeProperties(ball.current.x, ball.current.y, ball.current.radius, gameCustomize[1])
+        }
+    }, [gameCustomize])
 
-	useEffect(() => {
-		canvasContextRef.current = canvasContext;
-		canvasDimensionsRef.current = canvasDimensions;
-		gameCustomizeRef.current = gameCustomize
-		gameFinishedRef.current = gameFinished
-		gameAbortedRef.current = gameAborted
-		canvasDimsRef.current = canvasDims
-	}, [canvasContext, canvasDimensions, gameCustomize, gameAborted, gameFinished, canvasDims]);
+    useEffect(() => {
+        canvasContextRef.current = canvasContext;
+        canvasDimensionsRef.current = canvasDimensions;
+        gameCustomizeRef.current = gameCustomize
+        gameFinishedRef.current = gameFinished
+        gameAbortedRef.current = gameAborted
+        canvasDimsRef.current = canvasDims
+    }, [canvasContext, canvasDimensions, gameCustomize, gameAborted, gameFinished, canvasDims]);
 
-	function resizeCanvas() {
-		const canvas = canvasRef.current;
-		const wrapper = wrapperRef.current;
-		const result = resultRef.current;
-		if (canvas && wrapper && result) {
-			let { width: wrapperWidth, height: wrapperHeight } = wrapper.getBoundingClientRect();
-			let { width: resWrapperWidth, height: resWrapperHeight } = result.getBoundingClientRect();
+    function resizeCanvas() {
+        const canvas = canvasRef.current;
+        const wrapper = wrapperRef.current;
+        const result = resultRef.current;
+        if (canvas && wrapper && result) {
+            let { width: wrapperWidth, height: wrapperHeight } = wrapper.getBoundingClientRect();
+            let { width: resWrapperWidth, height: resWrapperHeight } = result.getBoundingClientRect();
 
-			wrapperHeight -= resWrapperHeight;
-			if (wrapperWidth / aspectRatio < wrapperHeight) {
-				canvas.width = wrapperWidth;
-				canvas.height = (wrapperWidth / aspectRatio);
-				result.style.width = wrapperWidth + 'px';
-			} else {
-				canvas.height = wrapperHeight;
-				canvas.width = (wrapperHeight * aspectRatio);
-				result.style.width = (wrapperHeight * aspectRatio) + 'px';
-			}
-			setCanvasDimensions(canvas.getBoundingClientRect())
-			updateGameObjectProperties(canvas.width, canvas.height)
-			draw()
-		}
-	}
+            wrapperHeight -= resWrapperHeight;
+            if (wrapperWidth / aspectRatio < wrapperHeight) {
+                canvas.width = wrapperWidth;
+                canvas.height = (wrapperWidth / aspectRatio);
+                result.style.width = wrapperWidth + 'px';
+            } else {
+                canvas.height = wrapperHeight;
+                canvas.width = (wrapperHeight * aspectRatio);
+                result.style.width = (wrapperHeight * aspectRatio) + 'px';
+            }
+            setCanvasDimensions(canvas.getBoundingClientRect())
+            updateGameObjectProperties(canvas.width, canvas.height)
+            draw()
+        }
+    }
 
-	const updateGameObjectProperties = (width, height) => {
-		const originalWidth = 710;
-		const originalHeight = 400;
+    const updateGameObjectProperties = (width, height) => {
+        const originalWidth = 710;
+        const originalHeight = 400;
 
-		const widthScalingFactor = width / originalWidth;
-		const heightScalingFactor = height / originalHeight;
-		const scalingFactor = Math.min(widthScalingFactor, heightScalingFactor);
-		const gameCustom = gameCustomizeRef.current
+        const widthScalingFactor = width / originalWidth;
+        const heightScalingFactor = height / originalHeight;
+        const scalingFactor = Math.min(widthScalingFactor, heightScalingFactor);
+        const gameCustom = gameCustomizeRef.current
 
-		if (gameCustom) {
-			if (playerNo === 1) {
-				player1.current.changeProperties((15 * widthScalingFactor), (originalPositions.player1_y * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
-				player2.current.changeProperties((685 * widthScalingFactor), (originalPositions.player2_y * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), '#B38EF0');
-			} else if (playerNo === 2) {
-				player1.current.changeProperties((15 * widthScalingFactor), (originalPositions.player1_y * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), '#B38EF0');
-				player2.current.changeProperties((685 * widthScalingFactor), (originalPositions.player2_y * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
-			} else {
-				player1.current.changeProperties((15 * widthScalingFactor), (originalPositions.player1_y * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
-				player2.current.changeProperties((685 * widthScalingFactor), (originalPositions.player2_y * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
-			}
-			ball.current.changeProperties((originalPositions.ball_x * widthScalingFactor), (originalPositions.ball_y * heightScalingFactor), (7 * scalingFactor), gameCustom[1]);
-			edges.current.changeProperties((10 * scalingFactor), 'white');
-		}
-		// net.current.changeProperties((354 * widthScalingFactor), 0, (2 * scalingFactor), 10, 'white');
-	}
+        if (gameCustom) {
+            if (playerNo === 1) {
+                player1.current.changeProperties((15 * widthScalingFactor), (originalPositions.player1_y * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
+                player2.current.changeProperties((685 * widthScalingFactor), (originalPositions.player2_y * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), '#B38EF0');
+            } else if (playerNo === 2) {
+                player1.current.changeProperties((15 * widthScalingFactor), (originalPositions.player1_y * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), '#B38EF0');
+                player2.current.changeProperties((685 * widthScalingFactor), (originalPositions.player2_y * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
+            } else {
+                player1.current.changeProperties((15 * widthScalingFactor), (originalPositions.player1_y * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
+                player2.current.changeProperties((685 * widthScalingFactor), (originalPositions.player2_y * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
+            }
+            ball.current.changeProperties((originalPositions.ball_x * widthScalingFactor), (originalPositions.ball_y * heightScalingFactor), (7 * scalingFactor), gameCustom[1]);
+            edges.current.changeProperties((10 * scalingFactor), 'white');
+        }
+        // net.current.changeProperties((354 * widthScalingFactor), 0, (2 * scalingFactor), 10, 'white');
+    }
 
-	useEffect(() => {
-		if (canvasRef && !canvasDrawing && gameCustomize.length && socket) {
-			////console.log("testing : ", canvasRef, canvasDrawing)
-			const canvas = canvasRef.current;
-			const context = canvas.getContext('2d')
-			player1.current = new Player(15, 165, 10, 70, gameCustomize[0], 0)
-			player2.current = new Player(685, 165, 10, 70, gameCustomize[0], 0)
-			ball.current = new Ball(355, 200, 7, gameCustomize[1])
-			edges.current = new Edges(10, 'white')
-			// net.current = new Net(354, 0, 2, 10, 'white')
-			resizeCanvas()
-			const rectDim = canvas.getBoundingClientRect()
-			setCanvasContext(context);
-			setCanvasDimensions(rectDim)
-			window.addEventListener("keydown", handleKeyDown)
-			window.addEventListener("keyup", handleKeyUp)
-			canvas.addEventListener("mousemove", handleMouseMove)
-			window.addEventListener('resize', resizeCanvas);
-			////console.log("DRAWING THE SHAPES")
-			setCanvasDrawing(true)
-		}
-	}, [canvasRef, canvasDrawing, socket]);
+    useEffect(() => {
+        if (canvasRef && !canvasDrawing && gameCustomize.length && socket) {
+            ////console.log("testing : ", canvasRef, canvasDrawing)
+            const canvas = canvasRef.current;
+            const context = canvas.getContext('2d')
+            player1.current = new Player(15, 165, 10, 70, gameCustomize[0], 0)
+            player2.current = new Player(685, 165, 10, 70, gameCustomize[0], 0)
+            ball.current = new Ball(355, 200, 7, gameCustomize[1])
+            edges.current = new Edges(10, 'white')
+            // net.current = new Net(354, 0, 2, 10, 'white')
+            resizeCanvas()
+            const rectDim = canvas.getBoundingClientRect()
+            setCanvasContext(context);
+            setCanvasDimensions(rectDim)
+            window.addEventListener("keydown", handleKeyDown)
+            window.addEventListener("keyup", handleKeyUp)
+            canvas.addEventListener("mousemove", handleMouseMove)
+            window.addEventListener('resize', resizeCanvas);
+            ////console.log("DRAWING THE SHAPES")
+            setCanvasDrawing(true)
+        }
+    }, [canvasRef, canvasDrawing, socket]);
 
     const update = () => {
         if (!isGameStarted)
@@ -428,39 +428,40 @@ const OneVsOnePlayMatch = () => {
             return;
         // const rect = canvasDimensionsRef.current
         // if (rect && canvas) {
-            if (playerNo === 1) {
-                if (player1.current) {
-                    // console.log(rect.top, rect.bottom, e.clientY, player1.current.height)
-                    player1.current.y = e.clientY - rect.top - (player1.current.height / 2)
-                    originalPositions.player1_y = e.clientY - rect.top - 35;
-                    if (player1.current.y < edges.current.height) {
-                        player1.current.y = edges.current.height;
-                        originalPositions.player1_y = 10;
-                    } else if (player1.current.y + player1.current.height > (canvas.height - edges.current.height)) {
-                        player1.current.y = ((canvas.height - edges.current.height) - player1.current.height)
-                        originalPositions.player1_y = 320
-                    }
-                    // console.log((e.clientY - rect.top),rect.bottom, player1.current.y + player1.current.height)
+        if (playerNo === 1) {
+            if (player1.current) {
+                // console.log(rect.top, rect.bottom, e.clientY, player1.current.height)
+                player1.current.y = e.clientY - rect.top - (player1.current.height / 2)
+                originalPositions.player1_y = e.clientY - rect.top - 35;
+                if (player1.current.y < edges.current.height) {
+                    player1.current.y = edges.current.height;
+                    originalPositions.player1_y = 10;
+                } else if (player1.current.y + player1.current.height > (canvas.height - edges.current.height)) {
+                    player1.current.y = ((canvas.height - edges.current.height) - player1.current.height)
+                    originalPositions.player1_y = 320
                 }
+                // console.log((e.clientY - rect.top),rect.bottom, player1.current.y + player1.current.height)
             }
-            else if (playerNo === 2) {
-                if (player2.current) {
-                    // console.log(rect.top, rect.bottom, e.clientY, player1.current.height)
-                    player2.current.y = e.clientY - rect.top - (player2.current.height / 2)
-                    originalPositions.player2_y = e.clientY - rect.top - 35;
-                    if (player2.current.y < edges.current.height) {
-                        player2.current.y = edges.current.height
-                        originalPositions.player2_y = 10;
-                    } else if (player2.current.y + player2.current.height > (canvas.height - edges.current.height)) {
-                        player2.current.y = ((canvas.height - edges.current.height) - player2.current.height)
-                        originalPositions.player2_y = 320
-                    }
-                    // console.log((e.clientY - rect.top),rect.bottom, player2.current.y + player2.current.height)
+        }
+        else if (playerNo === 2) {
+            if (player2.current) {
+                // console.log(rect.top, rect.bottom, e.clientY, player1.current.height)
+                player2.current.y = e.clientY - rect.top - (player2.current.height / 2)
+                originalPositions.player2_y = e.clientY - rect.top - 35;
+                if (player2.current.y < edges.current.height) {
+                    player2.current.y = edges.current.height
+                    originalPositions.player2_y = 10;
+                } else if (player2.current.y + player2.current.height > (canvas.height - edges.current.height)) {
+                    player2.current.y = ((canvas.height - edges.current.height) - player2.current.height)
+                    originalPositions.player2_y = 320
                 }
+                // console.log((e.clientY - rect.top),rect.bottom, player2.current.y + player2.current.height)
             }
-            const heightScalingFactor = 400 / canvas.height;
-            const distance = (e.clientY - rect.top) * heightScalingFactor
-            // console.log(distance)
+        }
+        const heightScalingFactor = 400 / canvas.height;
+        const distance = (e.clientY - rect.top) * heightScalingFactor
+        // console.log(distance)
+        if (socket && socket.readyState === WebSocket.OPEN) {
             socket.send(JSON.stringify({
                 type: 'moveMouse',
                 message: {
@@ -469,6 +470,7 @@ const OneVsOnePlayMatch = () => {
                     distance: distance
                 }
             }))
+        }
         // }
     }
 
@@ -502,7 +504,7 @@ const OneVsOnePlayMatch = () => {
                 //console.log("THE TYPE IS : ",type)
                 if (type === "setupGame") {
                     playerNo = message.playerNo
-                   console.log("INSIDE SETUPGAME")
+                    console.log("INSIDE SETUPGAME")
                     isGameStarted = true
                     setUserName1(message.user1)
                     setUserName2(message.user2)
@@ -531,8 +533,8 @@ const OneVsOnePlayMatch = () => {
                         draw()
                     }
                 } else if (type === "notAuthorized") {
-                   console.log("INSIDE LEAVEGAME")
-                   console.log("navigating from the playing page")
+                    console.log("INSIDE LEAVEGAME")
+                    console.log("navigating from the playing page")
                     navigate("../game/solo/1vs1")
                 } else if (type === "roomNotExist") {
                     navigate("../game/solo/1vs1")
@@ -559,7 +561,7 @@ const OneVsOnePlayMatch = () => {
                     allPlayersStats[0].status = message.status[0]
                     allPlayersStats[1].status = message.status[1]
                     setPlayersInfos(allPlayersStats)
-                   console.log("playerNo when it is finished : ", playerNo)
+                    console.log("playerNo when it is finished : ", playerNo)
                 } else if (type === "abortedGame") {
                     let allPlayersStats = [...playersInfos]
                     setUserName1(message.user1)
@@ -584,92 +586,94 @@ const OneVsOnePlayMatch = () => {
                 }
                 else if (type === "playersInfos")
                     setPlayersPics(message.users)
-                else if (type === 'hmed')
-					socket.close()
-			}
-		}
-	}, [socket, user])
+                else if (type === 'hmed') {
+                    console.log("***************:  INSIDE HMED")
+                    socket.close()
+                }
+            }
+        }
+    }, [socket, user])
 
-	// useEffect(() => {
-	// 	return () => {
-	// 		if (isOut) {
-	// 			if (socket && socket.readyState === WebSocket.OPEN) {
-	// 				socket.send(JSON.stringify({
-	// 					type: 'playerChangedPage',
-	// 					message: {
-	// 						user: user,
-	// 						roomID: roomID
-	// 					}
-	// 				}))
-	// 			}
-	// 		} else
-	// 			isOut = true
-	// 	}
-	// }, [])
+    // useEffect(() => {
+    // 	return () => {
+    // 		if (isOut) {
+    // 			if (socket && socket.readyState === WebSocket.OPEN) {
+    // 				socket.send(JSON.stringify({
+    // 					type: 'playerChangedPage',
+    // 					message: {
+    // 						user: user,
+    // 						roomID: roomID
+    // 					}
+    // 				}))
+    // 			}
+    // 		} else
+    // 			isOut = true
+    // 	}
+    // }, [])
 
-	useEffect(() => {
-		if (canvasDrawing && !socketRecreated && user) {
-			if (socket && socket.readyState === WebSocket.OPEN && user) {
-				////console.log("CHECKING IF PLAYER IN ROOM")
-				socket.send(JSON.stringify({
-					type: 'isPlayerInRoom',
-					message: {
-						user: user,
-						roomID: roomID
-					}
-				}))
-			}
-		}
-	}, [canvasDrawing, socket, socketRecreated, user])
+    useEffect(() => {
+        if (canvasDrawing && !socketRecreated && user) {
+            if (socket && socket.readyState === WebSocket.OPEN && user) {
+                ////console.log("CHECKING IF PLAYER IN ROOM")
+                socket.send(JSON.stringify({
+                    type: 'isPlayerInRoom',
+                    message: {
+                        user: user,
+                        roomID: roomID
+                    }
+                }))
+            }
+        }
+    }, [canvasDrawing, socket, socketRecreated, user])
 
-	const exitTheGame = () => {
-		if (user) {
-			if (socket && socket.readyState === WebSocket.OPEN) {
-				socket.send(JSON.stringify({
-					type: 'userExited',
-					message: {
-						user: user,
-						roomID: roomID
-					}
-				}))
-				navigate('../game/solo/1vs1')
-			} else {
-				////console.log("socket is closed, refresh the page")
-			}
-		}
-	}
+    const exitTheGame = () => {
+        if (user) {
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({
+                    type: 'userExited',
+                    message: {
+                        user: user,
+                        roomID: roomID
+                    }
+                }))
+                navigate('../game/solo/1vs1')
+            } else {
+                ////console.log("socket is closed, refresh the page")
+            }
+        }
+    }
 
-	const startTimer = () => {
-		timer = setInterval(() => {
-			if (isGameStarted)
-				setTime(prevTime => prevTime + 1);
-			else
-			clearInterval(timer)
-		}, 1000);
-	}
+    const startTimer = () => {
+        timer = setInterval(() => {
+            if (isGameStarted)
+                setTime(prevTime => prevTime + 1);
+            else
+                clearInterval(timer)
+        }, 1000);
+    }
 
-	const formatTime = (time) => {
-		const hours = Math.floor(time / 3600);
-		const minutes = Math.floor((time % 3600) / 60);
-		const seconds = time % 60;
+    const formatTime = (time) => {
+        const hours = Math.floor(time / 3600);
+        const minutes = Math.floor((time % 3600) / 60);
+        const seconds = time % 60;
 
-		if (minutes >= 60)
-			return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-		return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-	};
+        if (minutes >= 60)
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    };
 
-	useEffect(() => {
-		userRef.current = user;
-		roomIdRef.current = roomID;
-		socketRef.current = socket;
-	}, [user, roomID, socket]);
+    useEffect(() => {
+        userRef.current = user;
+        roomIdRef.current = roomID;
+        socketRef.current = socket;
+    }, [user, roomID, socket]);
 
     useEffect(() => {
         const handleBeforeUnload = (event) => {
             const user = userRef.current
             const socket = socketRef.current
             const roomID = roomIdRef.current
-           console.log("INSIDE THE MATCH : ", user, roomID, socket)
+            console.log("INSIDE THE MATCH : ", user, roomID, socket)
             if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
                 socket.send(JSON.stringify({
                     type: 'playerChangedPage',
@@ -692,7 +696,7 @@ const OneVsOnePlayMatch = () => {
                 const user = userRef.current
                 const socket = socketRef.current
                 const roomID = roomIdRef.current
-               console.log("USER IS GETTING OUT ", user, roomID, socket)
+                console.log("USER IS GETTING OUT ", user, roomID, socket)
                 if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
                     socket.send(JSON.stringify({
                         type: 'playerChangedPage',
@@ -710,7 +714,7 @@ const OneVsOnePlayMatch = () => {
     return (
         <>
             {(gameFinished || gameAborted) &&
-                <OneVsOneStats 
+                <OneVsOneStats
                     gameFinished={gameFinished}
                     user={user}
                     userName1={userName1}
@@ -721,11 +725,11 @@ const OneVsOnePlayMatch = () => {
                 />
             }
             {(!gameFinished && !gameAborted) && (<div className='onevsone-pm' ref={wrapperRef} >
-                {gameFinished ? (<div style={{fontWeight:"bolder", textAlign:"center", color:"white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}><p>GAME FINISHED</p></div>) : gameAborted ? (<div style={{fontWeight:"bolder", textAlign:"center", color:"white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}><p>GAME ABORTED</p></div>) : ''}
+                {gameFinished ? (<div style={{ fontWeight: "bolder", textAlign: "center", color: "white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}><p>GAME FINISHED</p></div>) : gameAborted ? (<div style={{ fontWeight: "bolder", textAlign: "center", color: "white", position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}><p>GAME ABORTED</p></div>) : ''}
                 <div ref={resultRef} className='onevsone-pm-infos' >
                     <div>
-                        {playersPics.length ? (<img src={playersPics[0].avatar} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
-                        <div style={{textAlign:"center"}} ><p>{userName1}</p></div>
+                        {playersPics.length ? (<img src={playersPics[0].avatar} alt="" style={{ height: '100%' }} />) : (<img src={Icons.solidGrey} alt="" style={{ height: '100%' }} />)}
+                        <div style={{ textAlign: "center" }} ><p>{userName1}</p></div>
                     </div>
                     <div>
                         <p>{score1}</p>
@@ -743,8 +747,8 @@ const OneVsOnePlayMatch = () => {
                         <p>{score2}</p>
                     </div>
                     <div>
-                        <div style={{textAlign:"center"}}><p>{userName2}</p></div>
-                        {playersPics.length ? (<img src={playersPics[1].avatar} alt="" style={{height: '100%'}} />) : (<img src={Icons.solidGrey} alt="" style={{height: '100%'}} />)}
+                        <div style={{ textAlign: "center" }}><p>{userName2}</p></div>
+                        {playersPics.length ? (<img src={playersPics[1].avatar} alt="" style={{ height: '100%' }} />) : (<img src={Icons.solidGrey} alt="" style={{ height: '100%' }} />)}
                     </div>
                 </div>
                 <canvas ref={canvasRef} ></canvas>

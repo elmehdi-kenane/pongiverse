@@ -22,7 +22,22 @@ from .common import tournament_rooms, user_channels, tournaments
 import os
 
 async def disconnected(self, user_channels):
-	pass
+		cookiess = self.scope.get('cookies', {})
+		token = cookiess.get('refresh_token')
+		try:
+			print("------------------> INSIDE THE DISCONNECT")
+			decoded_token = await sync_to_async(RefreshToken)(token)
+			payload_data = await sync_to_async(lambda: decoded_token.payload)()
+			user_id = payload_data.get('user_id')
+			if user_id:
+				user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
+				if user:
+					if user_id in user_channels:
+						print(f"\nUSER {user_id} , DISCONNECT BEFORE: {user_channels}\n")
+						del user_channels[user_id]
+						print(f"\nUSER {user_id} , DISCONNECT AFTER: {user_channels}\n")
+		except TokenError:
+			pass
 
 
 async def send_playing_status_to_friends(self, user, status, user_channels):
@@ -77,7 +92,7 @@ async def create_tournament(self, data, user_channels):
 				)
 		channel_name = user_channels.get(user.id)
 		while True:
-			random_number = random.randint(1000000000, 10000000000)
+			random_number = random.randint(100000000, 1000000000)
 			if random_number not in tournaments:
 				break
 		user.is_playing = True
@@ -93,31 +108,32 @@ async def create_tournament(self, data, user_channels):
 		new_member = {"username": username, "is_owner": True, "is_eliminated": False, "is_inside": True}
 		tournaments[random_number]['members'].append(new_member)
 		group_name = f'tournament_{random_number}'
-		await channel_layer.group_add(group_name, channel_name)
 		if channel_name:
-				await self.channel_layer.send(
-					channel_name,
-					{
-						'type': 'tournament_created',
-						'message': {
-							'user': username
-						}
-					}
-				)
-		for username, channel_name in user_channels.items():
+			await channel_layer.group_add(group_name, channel_name)
 			await self.channel_layer.send(
 				channel_name,
 				{
-					'type': 'tournament_created_by_user',
+					'type': 'tournament_created',
 					'message': {
-						'tournament_info' : {
-							'tournament_id' : random_number,
-							'owner' : userrr,
-							'size' : 1
-						}
+						'user': username
 					}
 				}
 			)
+		for username, channel_name in user_channels.items():
+			if channel_name:
+				await self.channel_layer.send(
+					channel_name,
+					{
+						'type': 'tournament_created_by_user',
+						'message': {
+							'tournament_info' : {
+								'tournament_id' : random_number,
+								'owner' : userrr,
+								'size' : 1
+							}
+						}
+					}
+				)
 		await send_playing_status_to_friends(self, user, True, user_channels)
 
 
@@ -292,15 +308,16 @@ async def destroy_tournament(self, data, user_channels):
 			)
 	await send_playing_status_to_friends(self, user, False, user_channels)
 	for username, channel_name in user_channels.items():
-		await self.channel_layer.send(
-			channel_name,
-			{
-				'type': 'tournament_destroyed_by_user',
-				'message': {
-					'tournament_id' : tournament_id,
+		if channel_name:
+			await self.channel_layer.send(
+				channel_name,
+				{
+					'type': 'tournament_destroyed_by_user',
+					'message': {
+						'tournament_id' : tournament_id,
+					}
 				}
-			}
-		)
+			)
 
 
 
@@ -337,16 +354,17 @@ async def start_tournament(self, data, user_channels):
 					}
 				}
 			)
-	for username, channel_name in user_channels.items():
-		await self.channel_layer.send(
-			channel_name,
-			{
-				'type': 'tournament_started_by_user',
-				'message': {
-					'tournament_id' : tournament_id,
+	for username, channel_name in list(user_channels.items()):
+		if channel_name:
+			await self.channel_layer.send(
+				channel_name,
+				{
+					'type': 'tournament_started_by_user',
+					'message': {
+						'tournament_id' : tournament_id,
+					}
 				}
-			}
-		)
+			)
 
 
 

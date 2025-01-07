@@ -1,13 +1,13 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import ChatContext from "../../Context/ChatContext";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
-import toast from "react-hot-toast";
+import { useContext, useEffect, useRef, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import ChatContext from "../../Context/ChatContext"
+import CameraAltIcon from "@mui/icons-material/CameraAlt"
+import toast from "react-hot-toast"
 
 const MyRoomContent = (props) => {
-  const navigate = useNavigate();
-  const [chatRoomCover, setChatRoomConver] = useState(null);
-  const { setIsHome, setSelectedChatRoom, setSelectedItem } = useContext(ChatContext);
+  const navigate = useNavigate()
+  const [chatRoomCover, setChatRoomConver] = useState(null)
+  const { setIsHome, setSelectedChatRoom, setSelectedItem } = useContext(ChatContext)
   let chatRoomCoverRef = useRef(chatRoomCover)
 
   const navigateToChatRoom = () => {
@@ -17,66 +17,66 @@ const MyRoomContent = (props) => {
       name: props.name,
       icon: props.icon,
       membersCount: props.membersCount,
-    });
-    setIsHome(false);
-    setSelectedItem(props.name);
-    navigate(`/mainpage/chat`);
-  };
+    })
+    setIsHome(false)
+    setSelectedItem(props.name)
+    navigate(`/mainpage/chat`)
+  }
 
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef(null)
 
   const handleContainerClick = () => {
-    fileInputRef.current.click();
-  };
+    fileInputRef.current.click()
+  }
 
   const udpateChatRoomCover = async () => {
-    const formData = new FormData();
-    formData.append("room", props.roomId);
-    formData.append("cover", chatRoomCover);
-    const toastId = toast.loading("Updating chat room cover. Please wait...");
+    const formData = new FormData()
+    formData.append("room", props.roomId)
+    formData.append("cover", chatRoomCover)
+    const toastId = toast.loading("Updating chat room cover. Please wait...")
     try {
       const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/chatAPI/changeChatRoomCover`, {
         method: "POST",
         credentials: "include",
         body: formData,
-      });
-      const data = await response.json();
+      })
+      const data = await response.json()
       if (response.ok) {
         setTimeout(() => {
-          toast.success(data.success);
-          toast.dismiss(toastId); // Dismiss the loading toast
+          toast.success(data.success)
+          toast.dismiss(toastId)
           const allMyChatRooms = props.myChatRooms
           const updatedRooms = allMyChatRooms.map((room) => {
             if (room.id === data.data.id) {
-             console.log("Updated Room: ", data.data.cover);
-              return { ...room, cover: data.data.cover };
+             console.log("Updated Room: ", data.data.cover)
+              return { ...room, cover: data.data.cover }
             }
-            return room;
-          });
-          props.setMyChatRooms(updatedRooms);
-        }, 2000); // Adjust the delay time (in milliseconds) as needed
+            return room
+          })
+          props.setMyChatRooms(updatedRooms)
+        }, 2000)
       } else if (response.status === 401)
-        navigate('/signin');
-      else toast.error(data.error);
+        navigate('/signin')
+      else toast.error(data.error)
     } catch (error) {
-      toast.error(error);
-      toast.dismiss(toastId);
+      toast.error(error)
+      toast.dismiss(toastId)
     }
-  };
+  }
 
   useEffect(() => {
     chatRoomCoverRef.current = chatRoomCover
     if (chatRoomCover) {
-      udpateChatRoomCover();
+      udpateChatRoomCover()
     }
   }, [chatRoomCover])
 
   const onChangeIcon = (event) => {
-    const file = event.target.files[0];
+    const file = event.target.files[0]
     if (file) {
-      setChatRoomConver(file);
+      setChatRoomConver(file)
     }
-  };
+  }
   return (
     <>
       <div className="my-room-header">
@@ -133,6 +133,6 @@ const MyRoomContent = (props) => {
         )}
       </div>
     </>
-  );
-};
-export default MyRoomContent;
+  )
+}
+export default MyRoomContent

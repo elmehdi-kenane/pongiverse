@@ -1,16 +1,16 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import * as ChatIcons from "../assets/chat/media/index";
-import ChatContext from "../Context/ChatContext";
-import AuthContext from "../navbar-sidebar/Authcontext";
-import MyMessage from "./myMessage";
-import OtherMessage from "./otherMessage";
-import { useClickOutSide } from "../Chat/chatConversation";
-import SendMessage from "./sendMessage";
-import LeaveChatRoomPopUp from "./chatRoomOptions/leaveChatRoomPopUp";
-import ChatRoomMembersList from "./chatRoomOptions/chatRoomMembersList";
-import ChatRoomInfos from "./chatRoomOptions/chatRoomInfos";
+import { useContext, useEffect, useRef, useState } from "react"
+import * as ChatIcons from "../assets/chat/media/index"
+import ChatContext from "../Context/ChatContext"
+import AuthContext from "../navbar-sidebar/Authcontext"
+import MyMessage from "./myMessage"
+import OtherMessage from "./otherMessage"
+import { useClickOutSide } from "../Chat/chatConversation"
+import SendMessage from "./sendMessage"
+import LeaveChatRoomPopUp from "./chatRoomOptions/leaveChatRoomPopUp"
+import ChatRoomMembersList from "./chatRoomOptions/chatRoomMembersList"
+import ChatRoomInfos from "./chatRoomOptions/chatRoomInfos"
 import { resetChatRoomUnreadMessages } from "./chatConversationItem"
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"
 
 const ChatRoomConversation = ({
   chatRoomMessages,
@@ -21,25 +21,25 @@ const ChatRoomConversation = ({
   setSearchValue,
   setChatRoomsSearch,
 }) => {
-  const [showChatRoomInfos, setShowChatRoomInfos] = useState(false);
-  const [showChatRoomMembers, setShowChatRoomMembers] = useState(false);
-  const [showLeaveRoomPopUp, setShowLeaveRoomPopUp] = useState(false);
-  const [showChatRoomOptions, setShowChatRoomOptions] = useState(false);
-  const navigate = useNavigate();
+  const [showChatRoomInfos, setShowChatRoomInfos] = useState(false)
+  const [showChatRoomMembers, setShowChatRoomMembers] = useState(false)
+  const [showLeaveRoomPopUp, setShowLeaveRoomPopUp] = useState(false)
+  const [showChatRoomOptions, setShowChatRoomOptions] = useState(false)
+  const navigate = useNavigate()
   const [currentChatRoomMessagesPage, setCurrentChatRoomMessagesPage] =
-    useState(1);
-  const [hasMoreChatRoomMessages, setHasMoreChatRoomMessages] = useState(true);
-  const [chatRoomChanged, setChatRoomChanged] = useState(false);
-  const messageEndRef = useRef(null);
-  const messageBodyRef = useRef(null);
-  const [lastMessage, setLastMessage] = useState(messageEndRef);
-  const [firstScroll, setFirstScroll] = useState(true);
-  const [loading, setLoading] = useState(false);
+    useState(1)
+  const [hasMoreChatRoomMessages, setHasMoreChatRoomMessages] = useState(true)
+  const [chatRoomChanged, setChatRoomChanged] = useState(false)
+  const messageEndRef = useRef(null)
+  const messageBodyRef = useRef(null)
+  const [lastMessage, setLastMessage] = useState(messageEndRef)
+  const [firstScroll, setFirstScroll] = useState(true)
+  const [loading, setLoading] = useState(false)
 
-  const { selectedChatRoom, setSelectedChatRoom, setSelectedItem } = useContext(ChatContext);
-  const { user, chatSocket } = useContext(AuthContext);
+  const { selectedChatRoom, setSelectedChatRoom, setSelectedItem } = useContext(ChatContext)
+  const { user, chatSocket } = useContext(AuthContext)
 
-  const [messageToSend, setMessageToSend] = useState("");
+  const [messageToSend, setMessageToSend] = useState("")
   const sendMessage = () => {
     if (
       chatSocket &&
@@ -56,9 +56,9 @@ const ChatRoomConversation = ({
             message: messageToSend,
           },
         })
-      );
+      )
       if (searchValue !== "") {
-        const isExist = chatRooms.some((room) => room.id === selectedChatRoom.id);
+        const isExist = chatRooms.some((room) => room.id === selectedChatRoom.id)
         if (!isExist) {
           const newChatRoomConversation = {
             id: selectedChatRoom.id,
@@ -66,42 +66,41 @@ const ChatRoomConversation = ({
             icon: selectedChatRoom.icon,
             lastMessage: messageToSend,
             unreadCount: 0,
-          };
-          setChatRooms([newChatRoomConversation, ...chatRooms]);
+          }
+          setChatRooms([newChatRoomConversation, ...chatRooms])
 
         } else {
           setChatRooms((prev) => {
             const updatedChatRooms = prev.map((room) => {
               if (room.id === selectedChatRoom.id) {
-                return { ...room, lastMessage: messageToSend };
+                return { ...room, lastMessage: messageToSend }
               }
-              return room;
+              return room
             }
-            );
-            return updatedChatRooms;
-          });
-          // move the selected chat room to the top
+            )
+            return updatedChatRooms
+          })
           const selectedChatRoomIndex = chatRooms.findIndex(
             (room) => room.id === selectedChatRoom.id
-          );
-          const splitedChatRooms = chatRooms.splice(selectedChatRoomIndex, 1);
-          setChatRooms([splitedChatRooms[0], ...chatRooms]);
-          resetChatRoomUnreadMessages(user, selectedChatRoom.id, navigate);
+          )
+          const splitedChatRooms = chatRooms.splice(selectedChatRoomIndex, 1)
+          setChatRooms([splitedChatRooms[0], ...chatRooms])
+          resetChatRoomUnreadMessages(user, selectedChatRoom.id, navigate)
         }
       }
-      setSearchValue("");
-      setChatRoomsSearch("");
-      setMessageToSend("");
+      setSearchValue("")
+      setChatRoomsSearch("")
+      setMessageToSend("")
     }
-  };
+  }
 
   useEffect(() => {
-    setChatRoomMessages([]);
-    setCurrentChatRoomMessagesPage(1);
-    setHasMoreChatRoomMessages(true);
-    setChatRoomChanged(true);
-    setFirstScroll(true);
-  }, [selectedChatRoom.name]);
+    setChatRoomMessages([])
+    setCurrentChatRoomMessagesPage(1)
+    setHasMoreChatRoomMessages(true)
+    setChatRoomChanged(true)
+    setFirstScroll(true)
+  }, [selectedChatRoom.name])
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -112,79 +111,79 @@ const ChatRoomConversation = ({
           }?page=${currentChatRoomMessagesPage}`, {
           credentials: "include",
         }
-        );
+        )
         if (response.ok) {
-          const { next, results } = await response.json();
-          setChatRoomMessages([...results, ...chatRoomMessages]);
-          if (!next) setHasMoreChatRoomMessages(false);
+          const { next, results } = await response.json()
+          setChatRoomMessages([...results, ...chatRoomMessages])
+          if (!next) setHasMoreChatRoomMessages(false)
         } else if (response.status === 401)
-          navigate("/signin");
+          navigate("/signin")
         else {
-         console.log("Error fetching messages");
+         console.log("Error fetching messages")
         }
       } catch (error) {
-        console.log(error);
-      }
-    };
-    if (hasMoreChatRoomMessages) {
-      if (currentChatRoomMessagesPage > 1) {
-        const previousScrollHeight = messageBodyRef.current.scrollHeight;
-        fetchMessages().then(() => {
-          setTimeout(() => {
-            const newScrollHeight = messageBodyRef.current.scrollHeight;
-            const scrollHeightDifference =
-              newScrollHeight - previousScrollHeight;
-            messageBodyRef.current.scrollTop = scrollHeightDifference;
-          }, 0);
-        });
-      } else {
-        fetchMessages();
+        console.log(error)
       }
     }
-    setChatRoomChanged(false);
-  }, [chatRoomChanged, currentChatRoomMessagesPage]);
+    if (hasMoreChatRoomMessages) {
+      if (currentChatRoomMessagesPage > 1) {
+        const previousScrollHeight = messageBodyRef.current.scrollHeight
+        fetchMessages().then(() => {
+          setTimeout(() => {
+            const newScrollHeight = messageBodyRef.current.scrollHeight
+            const scrollHeightDifference =
+              newScrollHeight - previousScrollHeight
+            messageBodyRef.current.scrollTop = scrollHeightDifference
+          }, 0)
+        })
+      } else {
+        fetchMessages()
+      }
+    }
+    setChatRoomChanged(false)
+  }, [chatRoomChanged, currentChatRoomMessagesPage])
 
   const updateLastMessage = () => {
     setChatRooms((prev) => {
       const updatedChatRooms = prev.map((room) => {
         if (room.roomId === selectedChatRoom.id) {
-          return { ...room, lastMessage: chatRoomMessages[0].content };
+          return { ...room, lastMessage: chatRoomMessages[0].content }
         }
-        return room;
-      });
-      return updatedChatRooms;
-    });
-  };
+        return room
+      })
+      return updatedChatRooms
+    })
+  }
 
   
   useEffect(() => {
     if (messageEndRef && messageEndRef.current && messageBodyRef && messageBodyRef.current) {
-      const messageEndOffset = messageEndRef.current.offsetTop;
-      const containerHeight = messageBodyRef.current.clientHeight;
+      const messageEndOffset = messageEndRef.current.offsetTop
+      const containerHeight = messageBodyRef.current.clientHeight
 
       messageBodyRef.current.scrollTo({
         top: messageEndOffset - containerHeight + messageEndRef.current.clientHeight,
         behavior: "smooth"
-      });
+      })
       
-      updateLastMessage();
-      setFirstScroll(false);
+      updateLastMessage()
+      setFirstScroll(false)
     }
-  }, [chatRoomMessages, lastMessage]);
+  }, [chatRoomMessages, lastMessage])
 
   let domNode = useClickOutSide(() => {
-    setShowChatRoomOptions(false);
-  });
+    setShowChatRoomOptions(false)
+  })
 
   const handleScroll = () => {
     if (messageBodyRef.current) {
-      const { scrollTop } = messageBodyRef.current;
+      const { scrollTop } = messageBodyRef.current
       if (scrollTop === 0 && hasMoreChatRoomMessages && !firstScroll) {
-        setLoading(true);
-        setCurrentChatRoomMessagesPage((prev) => prev + 1);
+        setLoading(true)
+        setCurrentChatRoomMessagesPage((prev) => prev + 1)
       }
     }
-  };
+  }
 
   return (
     <>
@@ -222,8 +221,8 @@ const ChatRoomConversation = ({
                 membersCount: "",
                 icon: "",
                 id: "",
-              });
-              setSelectedItem("");
+              })
+              setSelectedItem("")
             }}
           />
           <img
@@ -244,7 +243,7 @@ const ChatRoomConversation = ({
             onClick={() => {
               showChatRoomOptions
                 ? setShowChatRoomOptions(false)
-                : setShowChatRoomOptions(true);
+                : setShowChatRoomOptions(true)
             }}
             src={ChatIcons.ThreePoints}
             alt="Options"
@@ -255,8 +254,8 @@ const ChatRoomConversation = ({
               <div
                 className="leave-chat-room-option"
                 onClick={() => {
-                  setShowLeaveRoomPopUp(true);
-                  setShowChatRoomOptions(false);
+                  setShowLeaveRoomPopUp(true)
+                  setShowChatRoomOptions(false)
                 }}
               >
                 Leave Chat Room
@@ -264,8 +263,8 @@ const ChatRoomConversation = ({
               <div
                 className="members-list-option"
                 onClick={() => {
-                  setShowChatRoomMembers(true);
-                  setShowChatRoomOptions(false);
+                  setShowChatRoomMembers(true)
+                  setShowChatRoomOptions(false)
                 }}
               >
                 Members List
@@ -313,7 +312,7 @@ const ChatRoomConversation = ({
         setMessageToSend={setMessageToSend}
       />
     </>
-  );
-};
+  )
+}
 
-export default ChatRoomConversation;
+export default ChatRoomConversation

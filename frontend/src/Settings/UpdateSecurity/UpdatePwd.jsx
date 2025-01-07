@@ -87,7 +87,7 @@ function UpdatePwd(props) {
           type={showPwd ? 'text' : 'password'}
           className="pwd__input"
           onKeyDown={handleEnterClick}
-          maxLength={50}
+          maxLength={100}
           ref={inputRef}
         />
         {showEye &&

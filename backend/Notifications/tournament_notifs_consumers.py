@@ -112,15 +112,16 @@ async def accept_invite(self, data):
 					)
 		for username, channel_name_list in notifs_user_channels.items():
 			for channel_name in channel_name_list:
-				await self.channel_layer.send(
-					channel_name,
-					{
-						'type': 'user_join_tournament',
-						'message': {
-							'tournament_id' : tournament_id,
+				if channel_name:
+					await self.channel_layer.send(
+						channel_name,
+						{
+							'type': 'user_join_tournament',
+							'message': {
+								'tournament_id' : tournament_id,
+							}
 						}
-					}
-				)
+					)
 		await send_playing_status_to_friends(self, user, True, user_channels)
 
 	async def invite_friend(self, data, notifs_user_channels):

@@ -453,7 +453,7 @@ const TwoVsTwoCreateOrJoin = () => {
                     </div>)}
                     {expandJoin && !matchCreated && (<div className='expand-join-room' style={{ display: 'flex', justifyContent: 'center', gap: '10px', fontSize: '12px', fontWeight: '500' }} >
                         <p style={{ margin: '0 8px' }} >Enter the code below to join the match</p>
-                        <input style={{ margin: '0 8px', outline: 'none', border: '1px solid #EAD3D6', backgroundColor: 'transparent', padding: '6px', borderRadius: '5px', textIndent: '8px', color: 'white' }} ref={inputRoomId} type="text" placeholder='enter the code' required />
+                        <input style={{ margin: '0 8px', outline: 'none', border: '1px solid #EAD3D6', backgroundColor: 'transparent', padding: '6px', borderRadius: '5px', textIndent: '8px', color: 'white' }} ref={inputRoomId} type="text" maxLength={20} placeholder='enter the code' required />
                         {roomIdIncorrect && (<span style={{ margin: '0 8px', fontSize: '11px', display: 'block' }} id='incorrect-id'>Invalid code. Please try again.</span>)}
                         <div style={{ margin: '0 8px', textAlign: 'center', backgroundColor: '#913DCE', padding: '6px', borderRadius: '5px' }} onClick={joinToNewMatch}>Confirm</div>
                     </div>)}

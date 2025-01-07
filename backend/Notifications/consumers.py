@@ -52,7 +52,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 					# channel_layer = get_channel_layer()
 					user_statistics = await sync_to_async(UserMatchStatics.objects.filter(player=user).first)()
 					if user_statistics:
-						for user_id, channel_name_list in notifs_user_channels.items():
+						for user_id, channel_name_list in list(notifs_user_channels.items()):
 							other_user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
 							if other_user is not None:
 								is_a_friend = await check_user_is_a_friend(user, other_user)
@@ -151,15 +151,16 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 						#### in case of logout
 						for username, channel_name_list in notifs_user_channels.items():
 							for channel_name in channel_name_list:
-								await self.channel_layer.send(
-									channel_name,
-									{
-										'type': 'user_disconnected',
-										'message': {
-											'user': tmp_username
+								if channel_name:
+									await self.channel_layer.send(
+										channel_name,
+										{
+											'type': 'user_disconnected',
+											'message': {
+												'user': tmp_username
+											}
 										}
-									}
-								)
+									)
 		except TokenError:
 			pass
 

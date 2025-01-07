@@ -233,8 +233,8 @@ const GameNotifications = (props) => {
           }
         );
         if (response.ok) {
+          console.log("****response", response);
           const data = await response.json();
-          // console.log("******Case", data.Case);
           if (data.Case === "Tournament_does_not_exist") {
             notifyError("Tournament does not exist");
           } else if (data.Case === "User_is_in_tournament")
@@ -305,6 +305,7 @@ const GameNotifications = (props) => {
                 import.meta.env.VITE_IPADDRESS
               }:${import.meta.env.VITE_PORT}/ws/socket-server`
             );
+            console.log("socket jdida game notif");
             newSocket.onopen = () => {
               // console.log("+++++++++++=======+++++++++");
               console.log(
@@ -336,6 +337,7 @@ const GameNotifications = (props) => {
                 import.meta.env.VITE_IPADDRESS
               }:${import.meta.env.VITE_PORT}/ws/socket-server`
             );
+            console.log("socket jdida game notif 2");
             newSocket.onopen = () => {
               setSocket(newSocket);
               navigate("/mainpage/game/createtournament");

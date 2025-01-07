@@ -22,6 +22,7 @@ function UpdateBg(props) {
     const updatedPic = canvas.toDataURL(); // Get the cropped image data URL
 
     setIsClicked(true);
+    console.log(">>>>>> Picrue :", updatedPic);
     try {
       const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/updateUserBg`, {
         method: "POST",

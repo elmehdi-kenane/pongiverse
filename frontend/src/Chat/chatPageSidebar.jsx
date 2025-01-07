@@ -1,9 +1,9 @@
-import { useContext, useEffect, useState } from "react";
-import ChatContext from "../Context/ChatContext";
-import ChatConversationItem from "./chatConversationItem";
-import AuthContext from "../navbar-sidebar/Authcontext";
-import ChatConversationSearchItem from "./chatConversationSearchItem";
-import { useNavigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react"
+import ChatContext from "../Context/ChatContext"
+import ChatConversationItem from "./chatConversationItem"
+import AuthContext from "../navbar-sidebar/Authcontext"
+import ChatConversationSearchItem from "./chatConversationSearchItem"
+import { useNavigate } from "react-router-dom"
 
 const ChatSideBar = ({
   directs,
@@ -32,13 +32,13 @@ const ChatSideBar = ({
     isHome,
     setIsHome,
     selectedItem,
-  } = useContext(ChatContext);
+  } = useContext(ChatContext)
 
-  const { user } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const { user } = useContext(AuthContext)
+  const navigate = useNavigate()
   const handleSelectItem = (itemName) => {
-    setSelectedItem(itemName);
-  };
+    setSelectedItem(itemName)
+  }
   const searchHandler = async () => {
     if (isHome) {
       try {
@@ -47,18 +47,18 @@ const ChatSideBar = ({
           }:${import.meta.env.VITE_PORT}/chatAPI/directsSreach?searchUsername=${searchValue}&user=${user}`, {
           credentials: 'include'
         }
-        );
-        const data = await response.json();
+        )
+        const data = await response.json()
         if (response.ok) {
-          console.log(data);
-          setDirectsSearch(data);
+          console.log(data)
+          setDirectsSearch(data)
         } else if (response.status === 401)
-          navigate("/signin");
+          navigate("/signin")
         else {
-         console.log("opps! something went wrong");
+         console.log("opps! something went wrong")
         }
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
     } else {
       try {
@@ -67,29 +67,29 @@ const ChatSideBar = ({
           }:${import.meta.env.VITE_PORT}/chatAPI/chatRoomsSreach?searchRoomName=${searchValue}&user=${user}`, {
           credentials: "include"
         }
-        );
-        const data = await response.json();
+        )
+        const data = await response.json()
         if (response.ok) {
-          console.log(data);
-          setChatRoomsSearch(data);
+          console.log(data)
+          setChatRoomsSearch(data)
         } else if (response.status === 401)
-          navigate("/signin");
+          navigate("/signin")
         else {
-         console.log("opps! something went wrong");
+         console.log("opps! something went wrong")
         }
       } catch (error) {
-        console.log;
+        console.log
       }
     }
-  };
+  }
 
   useEffect(() => {
-    if (searchValue) searchHandler();
+    if (searchValue) searchHandler()
     else {
-      setDirectsSearch([]);
-      setChatRoomsSearch([]);
+      setDirectsSearch([])
+      setChatRoomsSearch([])
     }
-  }, [searchValue]);
+  }, [searchValue])
 
   return (
     <div
@@ -115,16 +115,16 @@ const ChatSideBar = ({
               isHome ? "direct-switch-button-active" : "direct-switch-button"
             }
             onClick={() => {
-              setIsHome(true);
+              setIsHome(true)
               setSelectedChatRoom({
                 name: "",
                 membersCount: "",
                 icon: "",
                 id: "",
-              });
-              setSelectedItem("");
-              setChatRoomMessages([]);
-              setSearchValue("");
+              })
+              setSelectedItem("")
+              setChatRoomMessages([])
+              setSearchValue("")
             }}
           >
             Directs
@@ -134,16 +134,16 @@ const ChatSideBar = ({
               isHome ? "rooms-switch-button" : "rooms-switch-button-active"
             }
             onClick={() => {
-              setIsHome(false);
+              setIsHome(false)
               setSelectedDirect({
                 id: "",
                 name: "",
                 status: "",
                 avatar: "",
-              });
-              setSelectedItem("");
-              setMessages([]);
-              setSearchValue("");
+              })
+              setSelectedItem("")
+              setMessages([])
+              setSearchValue("")
             }}
           >
             Rooms
@@ -289,7 +289,7 @@ const ChatSideBar = ({
         </>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default ChatSideBar;
+export default ChatSideBar

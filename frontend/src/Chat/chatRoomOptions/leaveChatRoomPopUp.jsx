@@ -1,13 +1,13 @@
-import CloseIcon from "@mui/icons-material/Close";
-import { LeaveChatRoomSubmitter } from "../../Groups/ChatRoomSettings/leaveChatRoom";
-import { useContext } from "react";
-import ChatContext from "../../Context/ChatContext";
-import AuthContext from "../../navbar-sidebar/Authcontext";
+import CloseIcon from "@mui/icons-material/Close"
+import { LeaveChatRoomSubmitter } from "../../Groups/ChatRoomSettings/leaveChatRoom"
+import { useContext } from "react"
+import ChatContext from "../../Context/ChatContext"
+import AuthContext from "../../navbar-sidebar/Authcontext"
 
 const LeaveChatRoomPopUp = (props) => {
-  const { user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext)
   const { chatRoomConversationsRef, setChatRoomConversations } =
-    useContext(ChatContext);
+    useContext(ChatContext)
   return (
     <div className="Leave-chat-room-pop">
       <div className="create-room-header">
@@ -35,20 +35,20 @@ const LeaveChatRoomPopUp = (props) => {
               chatRoomConversationsRef,
               setChatRoomConversations,
               props.roomId
-            );
+            )
             props.setSelectedChatRoom({
               name: "",
               membersCount: "",
               icon: "",
               id: "",
-            });
+            })
           }}
         >
           Confirm
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default LeaveChatRoomPopUp;
+export default LeaveChatRoomPopUp

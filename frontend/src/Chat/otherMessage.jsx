@@ -1,11 +1,11 @@
-import { useContext } from "react";
-import "../assets/chat/Chat.css";
-import ChatContext from "../Context/ChatContext";
-import {useNavigate} from "react-router-dom";
+import { useContext } from "react"
+import "../assets/chat/Chat.css"
+import ChatContext from "../Context/ChatContext"
+import {useNavigate} from "react-router-dom"
 
 const OtherMessage = (props) => {
-  const navigate = useNavigate();
-  const { isHome } = useContext(ChatContext);
+  const navigate = useNavigate()
+  const { isHome } = useContext(ChatContext)
   return (
     <div className="other-message-row message-row" ref={(props.length - 1) === props.index ? props.endRef : null}>
       {isHome ? (
@@ -25,7 +25,7 @@ const OtherMessage = (props) => {
         <div className="my-message-row-sender-date">{props.date}</div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default OtherMessage;
+export default OtherMessage

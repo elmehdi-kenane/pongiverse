@@ -1,25 +1,25 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import ChatContext from "../Context/ChatContext";
-import AuthContext from "../navbar-sidebar/Authcontext";
-import SendMessage from "./sendMessage";
-import ChatConversationHeader from "./chatConversationHeader";
-import ChatConversationBody from "./chatConversationBody";
-import { resetUnreadMessages } from "./chatConversationItem";
-import { useNavigate } from "react-router-dom";
+import { useContext, useEffect, useRef, useState } from "react"
+import ChatContext from "../Context/ChatContext"
+import AuthContext from "../navbar-sidebar/Authcontext"
+import SendMessage from "./sendMessage"
+import ChatConversationHeader from "./chatConversationHeader"
+import ChatConversationBody from "./chatConversationBody"
+import { resetUnreadMessages } from "./chatConversationItem"
+import { useNavigate } from "react-router-dom"
 
 export let useClickOutSide = (handler) => {
-  let domNode = useRef();
+  let domNode = useRef()
   useEffect(() => {
     let eventHandler = (event) => {
-      if (domNode.current && !domNode.current.contains(event.target)) handler();
-    };
-    document.addEventListener("mousedown", eventHandler);
+      if (domNode.current && !domNode.current.contains(event.target)) handler()
+    }
+    document.addEventListener("mousedown", eventHandler)
     return () => {
-      document.removeEventListener("mousedown", eventHandler);
-    };
-  });
-  return domNode;
-};
+      document.removeEventListener("mousedown", eventHandler)
+    }
+  })
+  return domNode
+}
 
 const ChatConversation = ({
   messages,
@@ -31,20 +31,20 @@ const ChatConversation = ({
   setSearchValue,
   setDirectsSearch,
 }) => {
-  const [showDirectOptions, setShowDirectOptions] = useState(false);
-  const { selectedDirect, setSelectedDirect } = useContext(ChatContext);
-  const { user, chatSocket, userImg } = useContext(AuthContext);
-  const navigate = useNavigate();
-  const [currentMessagePage, setCurrentMessagePage] = useState(1);
-  const [hasMoreMessages, setHasMoreMessages] = useState(true);
-  const [userChanged, setUserChanged] = useState(false);
-  const messageEndRef = useRef(null);
-  const messageBodyRef = useRef(null);
-  const [lastMessage, setLastMessage] = useState(messageEndRef);
-  const [firstScroll, setFirstScroll] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const [showDirectOptions, setShowDirectOptions] = useState(false)
+  const { selectedDirect, setSelectedDirect } = useContext(ChatContext)
+  const { user, chatSocket, userImg } = useContext(AuthContext)
+  const navigate = useNavigate()
+  const [currentMessagePage, setCurrentMessagePage] = useState(1)
+  const [hasMoreMessages, setHasMoreMessages] = useState(true)
+  const [userChanged, setUserChanged] = useState(false)
+  const messageEndRef = useRef(null)
+  const messageBodyRef = useRef(null)
+  const [lastMessage, setLastMessage] = useState(messageEndRef)
+  const [firstScroll, setFirstScroll] = useState(true)
+  const [loading, setLoading] = useState(false)
 
-  const [messageToSend, setMessageToSend] = useState("");
+  const [messageToSend, setMessageToSend] = useState("")
   const sendMessage = () => {
     if (
       chatSocket &&
@@ -60,12 +60,12 @@ const ChatConversation = ({
             message: messageToSend,
           },
         })
-      );
+      )
       if (searchValue !== "") {
-        const allDirects = directs;
+        const allDirects = directs
         const isExist = allDirects.some(
           (friend) => friend.name === selectedDirect.name
-        );
+        )
         if (!isExist) {
           const newConversation = {
             id: selectedDirect.id,
@@ -74,8 +74,8 @@ const ChatConversation = ({
             is_online: selectedDirect.status,
             lastMessage: messageToSend,
             unreadCount: 0,
-          };
-          setDirects([newConversation, ...directs]);
+          }
+          setDirects([newConversation, ...directs])
         } else {
           // Update the last message of the selected direct and unread count and move to the top
           const updatedDirects = allDirects.map((friend) => {
@@ -84,27 +84,27 @@ const ChatConversation = ({
                 ...friend,
                 lastMessage: messageToSend,
                 unreadCount: 0,
-              };
+              }
             }
-            return friend;
-          });
+            return friend
+          })
           // move the selected direct to the top
           const selectedDirectIndex = updatedDirects.findIndex(
             (friend) => friend.name === selectedDirect.name
-          );
-          const splitedDirects = updatedDirects.splice(selectedDirectIndex, 1);
-          setDirects([splitedDirects[0], ...updatedDirects]);
-          resetUnreadMessages(user, selectedDirect.id, navigate);
+          )
+          const splitedDirects = updatedDirects.splice(selectedDirectIndex, 1)
+          setDirects([splitedDirects[0], ...updatedDirects])
+          resetUnreadMessages(user, selectedDirect.id, navigate)
         }
       }
-      setSearchValue("");
-      setDirectsSearch([]);
-      setMessageToSend("");
+      setSearchValue("")
+      setDirectsSearch([])
+      setMessageToSend("")
     }
-  };
+  }
   let domNode = useClickOutSide(() => {
-    setShowDirectOptions(false);
-  });
+    setShowDirectOptions(false)
+  })
 
   const fetchMessages = async () => {
     try {
@@ -122,46 +122,46 @@ const ChatConversation = ({
             friend: selectedDirect.name,
           }),
         }
-      );
-      const { results, next } = await response.json();
+      )
+      const { results, next } = await response.json()
       if (response.ok) {
-        setMessages([...results, ...messages]);
-        if (!next) setHasMoreMessages(false);
+        setMessages([...results, ...messages])
+        if (!next) setHasMoreMessages(false)
       } else if (response.status === 401)
-        navigate("/signin");
-      else console.log("opps! something went wrong");
+        navigate("/signin")
+      else console.log("opps! something went wrong")
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   useEffect(() => {
-    setMessages([]);
-    setCurrentMessagePage(1);
-    setHasMoreMessages(true);
-    setUserChanged(true);
-    setFirstScroll(true);
-  }, [selectedDirect.name]);
+    setMessages([])
+    setCurrentMessagePage(1)
+    setHasMoreMessages(true)
+    setUserChanged(true)
+    setFirstScroll(true)
+  }, [selectedDirect.name])
 
   useEffect(() => {
     if (hasMoreMessages && selectedDirect) {
       if (currentMessagePage > 1) {
-        const previousScrollHeight = messageBodyRef.current.scrollHeight;
+        const previousScrollHeight = messageBodyRef.current.scrollHeight
 
         fetchMessages().then(() => {
-          setLoading(false);
+          setLoading(false)
           setTimeout(() => {
-            const newScrollHeight = messageBodyRef.current.scrollHeight;
-            const scrollDifference = newScrollHeight - previousScrollHeight;
-            messageBodyRef.current.scrollTop += scrollDifference;
-          }, 0); // Ensure the DOM is updated before adjusting the scroll
-        });
+            const newScrollHeight = messageBodyRef.current.scrollHeight
+            const scrollDifference = newScrollHeight - previousScrollHeight
+            messageBodyRef.current.scrollTop += scrollDifference
+          }, 0)
+        })
       } else {
-        fetchMessages();
+        fetchMessages()
       }
     }
-    setUserChanged(false);
-  }, [userChanged, currentMessagePage]);
+    setUserChanged(false)
+  }, [userChanged, currentMessagePage])
 
   const updateLastMessage = () => {
     setDirects((prevDirects) => {
@@ -170,40 +170,40 @@ const ChatConversation = ({
           return {
             ...friend,
             lastMessage: messages[messages.length - 1].content,
-          };
+          }
         }
-        return friend;
-      });
-      return updatedDirects;
-    });
-  };
+        return friend
+      })
+      return updatedDirects
+    })
+  }
 
   const handelScroll = (e) => {
     if (messageBodyRef.current) {
-      const { scrollTop } = messageBodyRef.current;
+      const { scrollTop } = messageBodyRef.current
       if (scrollTop === 0 && hasMoreMessages && !firstScroll) {
-        setLoading(true);
-        setCurrentMessagePage(currentMessagePage + 1);
+        setLoading(true)
+        setCurrentMessagePage(currentMessagePage + 1)
       }
     }
-  };
+  }
 
   useEffect(() => {
     if (messageEndRef && messageEndRef.current && messageBodyRef && messageBodyRef.current) {
-      // Calculate the scroll offset relative to the container
-      const messageEndOffset = messageEndRef.current.offsetTop;
-      const containerHeight = messageBodyRef.current.clientHeight;
-  
-      // Smooth scroll to the calculated position
+
+
+      const messageEndOffset = messageEndRef.current.offsetTop
+      const containerHeight = messageBodyRef.current.clientHeight
+      console.log("the distance of last message: ",messageEndOffset, "the visible disatance of chat container: ",containerHeight, messageEndRef.current.clientHeight)
       messageBodyRef.current.scrollTo({
         top: messageEndOffset - containerHeight + messageEndRef.current.clientHeight,
-        behavior: "smooth", // Enable smooth scrolling
-      });
+        behavior: "smooth",
+      })
   
-      updateLastMessage();
-      setFirstScroll(false);
+      updateLastMessage()
+      setFirstScroll(false)
     }
-  }, [messages, lastMessage]);
+  }, [messages, lastMessage])
   
   
 
@@ -237,7 +237,7 @@ const ChatConversation = ({
         sendMessage={sendMessage}
       />
     </>
-  );
-};
+  )
+}
 
-export default ChatConversation;
+export default ChatConversation

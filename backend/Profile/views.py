@@ -54,7 +54,7 @@ def getUserData(request, username):
 
 def save_base64_image(base64_image): # Save the Base64 Image as a file
 	# Extract the content type and the base64 data from the image string
-	format, imgstr = base64_image.split(';base64,')     
+	imgstr = base64_image.split(';base64,')     
 	# Decode the base64 data
 	img_data = base64.b64decode(imgstr)
 	# Create a ContentFile object from the decoded image data

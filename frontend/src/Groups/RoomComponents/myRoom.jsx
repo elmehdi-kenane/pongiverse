@@ -1,25 +1,22 @@
-import { useContext, useState } from "react";
-import * as ChatIcons from "../../assets/chat/media";
-import ChangeChatRoomName from "../ChatRoomSettings/changeChatRoomName";
-import ChangeChatRoomIcon from "../ChatRoomSettings/changeChatRoomIcon";
-import AddChatRoomAdmin from "../ChatRoomSettings/addChatRoomAdmin";
-import InviteChatRoomMember from "../ChatRoomSettings/inviteChatRoomMember";
-import DeleteChatRoom from "../ChatRoomSettings/deleteChatRoom";
-import LeaveChatRoom from "../ChatRoomSettings/leaveChatRoom";
-import ChatRoomSettings from "../ChatRoomSettings/chatRoomSettings";
-import MyRoomContent from "./myRoomContent";
-import Chat from "../../Chat/chatPage";
-import ChatContext from "../../Context/ChatContext";
-
+import {useState } from "react"
+import * as ChatIcons from "../../assets/chat/media"
+import ChangeChatRoomName from "../ChatRoomSettings/changeChatRoomName"
+import ChangeChatRoomIcon from "../ChatRoomSettings/changeChatRoomIcon"
+import AddChatRoomAdmin from "../ChatRoomSettings/addChatRoomAdmin"
+import InviteChatRoomMember from "../ChatRoomSettings/inviteChatRoomMember"
+import DeleteChatRoom from "../ChatRoomSettings/deleteChatRoom"
+import LeaveChatRoom from "../ChatRoomSettings/leaveChatRoom"
+import ChatRoomSettings from "../ChatRoomSettings/chatRoomSettings"
+import MyRoomContent from "./myRoomContent"
 
 const MyRoom = (props) => {
-  const [showSettings, setShowSettings] = useState(false);
-  const [leaveRoom, setLeaveRoom] = useState(false);
-  const [changeRoomName, setChangeRoomName] = useState(false);
-  const [updateRoomAvatar, setUpdateRoomAvatar] = useState(false);
-  const [deleteRoom, setDeletRoom] = useState(false);
-  const [addRoomAdmin, setAddRoomAdmin] = useState(false);
-  const [inviteMember, setInviteMember] = useState(false);
+  const [showSettings, setShowSettings] = useState(false)
+  const [leaveRoom, setLeaveRoom] = useState(false)
+  const [changeRoomName, setChangeRoomName] = useState(false)
+  const [updateRoomAvatar, setUpdateRoomAvatar] = useState(false)
+  const [deleteRoom, setDeletRoom] = useState(false)
+  const [addRoomAdmin, setAddRoomAdmin] = useState(false)
+  const [inviteMember, setInviteMember] = useState(false)
   
 
   return (
@@ -108,7 +105,7 @@ const MyRoom = (props) => {
         />
       )}
     </div>
-  );
-};
+  )
+}
 
-export default MyRoom;
+export default MyRoom

@@ -1,7 +1,6 @@
-import { useContext, useEffect, useState } from "react";
-import AuthContext from "../navbar-sidebar/Authcontext";
-import ChatContext from "../Context/ChatContext";
-import { useNavigate } from "react-router-dom";
+import { useContext} from "react"
+import AuthContext from "../navbar-sidebar/Authcontext"
+import { useNavigate } from "react-router-dom"
 export const resetUnreadMessages = async (user, friendId, navigate) => {
   try {
     const response = await fetch(
@@ -19,14 +18,13 @@ export const resetUnreadMessages = async (user, friendId, navigate) => {
           receiver: friendId,
         }),
       }
-    );
-    // console.log(response);
+    )
     if (response.status === 401)
       navigate("/signin")
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
 
 export const resetChatRoomUnreadMessages = async (user, roomId, navigate) => {
   try {
@@ -45,18 +43,18 @@ export const resetChatRoomUnreadMessages = async (user, roomId, navigate) => {
           roomId: roomId,
         }),
       }
-    );
+    )
     if (response.status === 401)
       navigate("/signin")
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
 
 
 const ChatConversationItem = (props) => {
-  const { user } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const { user } = useContext(AuthContext)
+  const navigate = useNavigate()
   const handleClick = () => {
     if (props.isDirect && props.name) {
       props.setSelectedDirect({
@@ -64,37 +62,37 @@ const ChatConversationItem = (props) => {
         name: props.name,
         avatar: props.avatar,
         status: props.status,
-      });
-      let allDirects = props.directs;
+      })
+      let allDirects = props.directs
       const updatedDirects = allDirects.map((friend) => {
         if (props.friendId === friend.id) {
-          return { ...friend, unreadCount: 0 };
+          return { ...friend, unreadCount: 0 }
         }
-        return friend;
-      });
-      props.setDirects(updatedDirects);
+        return friend
+      })
+      props.setDirects(updatedDirects)
       if (parseInt(props.unreadCount) > 0)
-        resetUnreadMessages(user, props.friendId, navigate);
+        resetUnreadMessages(user, props.friendId, navigate)
     } else if (!props.isDirect && props.name) {
       props.setSelectedChatRoom({
         id: props.roomId,
         name: props.name,
         membersCount: props.membersCount,
         icon: props.icon,
-      });
-      let allChatRooms = props.chatRooms;
+      })
+      let allChatRooms = props.chatRooms
       const updatedRooms = allChatRooms.map((room) => {
         if (props.roomId === room.id) {
-          return { ...room, unreadCount: 0 };
+          return { ...room, unreadCount: 0 }
         }
-        return room;
-      });
-      props.setChatRooms(updatedRooms);
+        return room
+      })
+      props.setChatRooms(updatedRooms)
       if (parseInt(props.unreadCount) > 0)
-        resetChatRoomUnreadMessages(user, props.roomId, navigate);
+        resetChatRoomUnreadMessages(user, props.roomId, navigate)
     }
-    props.setSelectedItem(props.name);
-  };
+    props.setSelectedItem(props.name)
+  }
   return (
     <div
       className={
@@ -139,7 +137,7 @@ const ChatConversationItem = (props) => {
         ""
       )}
     </div>
-  );
-};
+  )
+}
 
-export default ChatConversationItem;
+export default ChatConversationItem
