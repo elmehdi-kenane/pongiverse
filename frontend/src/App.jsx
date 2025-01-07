@@ -71,7 +71,6 @@ const App = () => {
               <Route path="profile/:userId" element={<ProfileWrapper child={<Profile />} />} />
               <Route path="settings" element={<SettingsWrapper child={<PersonalInfo />} />} />
               <Route path="settings/security" element={<SettingsWrapper child={<Security />} />} />
-              <Route path="settings/security/forgotpassword" element={<ForgotPassword />} />
               <Route path="chat" element={<Chat />} />
               <Route path="Friendship" element={<FriendshipPage />} />
               <Route path="groups" element={<Rooms />} />

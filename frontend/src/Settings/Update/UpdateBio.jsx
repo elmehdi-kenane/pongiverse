@@ -95,7 +95,7 @@ function UpdateBio() {
         <textarea type="text"
           className="update__input input-bio"
           placeholder='Enter new Bio... '
-          maxLength={100}
+          maxLength={30}
           onKeyDown={handleInputKeyDown}
           ref={inputRef} />}
       <div className="update__btn" onClick={onUpdate} ref={iconRef}>  <p> {submit} </p>

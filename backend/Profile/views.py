@@ -52,47 +52,56 @@ def getUserData(request, username):
 
 #**------------------ UserPic - UserBg ------------------** 
 
-def save_base64_image(base64_image): # Save the Base64 Image as a file
-	# Extract the content type and the base64 data from the image string
-	imgstr = base64_image.split(';base64,')     
-	# Decode the base64 data
-	img_data = base64.b64decode(imgstr)
-	# Create a ContentFile object from the decoded image data
-	img_file = ContentFile(img_data, name='Picture.png')
-	return img_file
+def save_base64_image(base64_image):
+    # Split the string into the header and the base64 data
+    imgstr = base64_image.split(';base64,')
+    
+    if len(imgstr) != 2:
+        raise ValueError("Invalid base64 image string")
+    # Extract only the base64 part (the second part of the split)
+    img_data = base64.b64decode(imgstr[1])  # Use imgstr[1] instead of imgstr
+    # Create a ContentFile object from the decoded image data
+    img_file = ContentFile(img_data, name='Picture.png')
+    return img_file
 
 @authentication_required
 @api_view(['POST'])
 def update_user_pic(request):
 	username= request.data.get('user')
 	image_url = request.data.get('image')
-	image_file = save_base64_image(image_url)
-	# #print'image url --------------:' , image_file, '-----------------------')
+	
+	try:
+		image_file = save_base64_image(image_url)	
+	except ValueError as e:
+		return Response(data={"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+	
 	user = customuser.objects.filter(username=username).first()
 	if user is not None:    
 		user.avatar = image_file
 		user.save()
-		success_res = Response(data={"case": "Picture updated successfully"}, status=status.HTTP_200_OK)
-		return success_res
+		return Response(data={"case": "Picture updated successfully"}, status=status.HTTP_200_OK)
 	else:
-		error_response = Response(data={"error": "Failed to update picture"}, status=status.HTTP_400_BAD_REQUEST)
-		return error_response
+		return Response(data={"error": "Failed to update picture"}, status=status.HTTP_400_BAD_REQUEST)
 
 @authentication_required
 @api_view(['POST'])
 def update_user_bg(request):
-	username= request.data.get('user')
-	image_url = request.data.get('image')
-	image_file = save_base64_image(image_url)
-	user = customuser.objects.filter(username=username).first()
-	if user is not None:    
-		user.background_pic = image_file
-		user.save()
-		success_res = Response(data={"case": "Walppaper updated successfully"}, status=status.HTTP_200_OK)
-		return success_res
-	else:
-		error_response = Response(data={"error": "Failed to update walppaper"}, status=status.HTTP_400_BAD_REQUEST)
-		return error_response
+    username = request.data.get('user')
+    image_url = request.data.get('image')
+
+    try:
+        image_file = save_base64_image(image_url)
+    except ValueError as e:
+        return Response(data={"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    # If the code reaches this point, the image was processed successfully
+    user = customuser.objects.filter(username=username).first()
+    if user is not None:
+        user.background_pic = image_file
+        user.save()
+        return Response(data={"case": "Wallpaper updated successfully"}, status=status.HTTP_200_OK)
+    else:
+        return Response(data={"error": "Failed to update Wallpaper"}, status=status.HTTP_404_NOT_FOUND)
 		
 #**--------------------- UserBio ---------------------** 
 @authentication_required

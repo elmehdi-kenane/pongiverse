@@ -871,7 +871,10 @@
         width: 100%;
     }
     .footer__tournament-match2{
-        padding-bottom: 35px;
+        padding-bottom: 30px;
+    }
+    .footer__tournament-match2 .no-result{
+        padding: 50px 0;
     }
     .footer__single-match,
     .footer__multiplayer-match,
@@ -886,19 +889,10 @@
         height: 700px;
         margin-top: 0;
     }
-    .footer__single-match .no-result{
-        width: 100%;
-        padding: 10px 0;
-    }
-    .footer__single-match .no-result h3{
-        width: 85%;
-        font-size: 15px;
-    }
     .dashpage .dashpage__body .dashpage__body__statistics .chart-icon {
         height: 22px;
         width: 22px;
         margin: 10px 4px 0 0;
-
     }
     
     /* Match Result Dtls */

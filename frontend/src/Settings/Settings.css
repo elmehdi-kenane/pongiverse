@@ -9,6 +9,10 @@
     overflow-y: scroll;
 }
 
+.avatarEditor {
+    touch-action: none
+}
+
 :root {
     --dark-gray: color-mix( in oklab, hsl( 215 calc( 1 * 8.8%) 73.3% / 1) 100%, black 0% );
 }
@@ -134,16 +138,6 @@
     width: 100%;
     text-align: start;
     margin-bottom: 10px;
-}
-.update__pwd .pwd__title__input .pwd__forgot {
-    display: flex;
-    justify-content: flex-end;
-    margin: -10px 0 10px;
-}
-.update__pwd .pwd__title__input .pwd__forgot a{
-    color: var(--dark-gray);
-    font-weight: 450;
-    font-size: 14px;
 }
 .settings-page .settings__security .update__pwd .input__ctr{
     position: relative;
@@ -486,7 +480,7 @@
     width: 160px;
 }
 .update .update__info {
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 450;
     cursor: inherit;
 }
@@ -499,6 +493,7 @@
 }
 .update .update__bio .update__info-hover {
     position: absolute;
+    /* width: 85%; */
     top: -10px;
     opacity: 0;
     padding: 5px;
@@ -725,8 +720,10 @@
         padding: 9px 17px;
     }
     .update .update__info {
-        font-size: 14px;
-        font-weight: 450;
+        font-size: 8px;
+    }
+    .update .update__bio .update__info-hover{
+        font-size: 8px;
     }
     .update .title {
         width: 85px;
@@ -780,11 +777,11 @@
         display: none;
     }
     .update .update__btn svg{
-        height: 22.5px;
-        width: 22.5px;
+        height: 18.5px;
+        width: 18.5px;
     }
     .update .update__btn {
-        padding: 4px 4px;
+        padding: 3px 3px;
     }
     .update .update__btn:hover {
         padding: 5.5px 5.5px;
@@ -843,4 +840,30 @@
         padding: 10px 15px;
         font-size: 10px;
     }
+
+    /* Update Settings */
+    .personal-info__update .update .title-pic {
+        font-size: 10px;
+    }
+    .update .title {
+        width: 10px;
+        font-size: 10px;
+        margin-right: 10px;
+    }
+    .country-space {
+        flex-direction: column;
+        justify-content:baseline;
+        padding: 10px 0;
+    }
+    .personal-info__update .update img {
+        height: 40px;
+        width: 40px;
+        margin-right: 5px;
+    }
+    .personal-info__update .update + .update img {
+        margin-right: 5px;
+        height: 35px;
+        width: 50px;
+    }
+
 }

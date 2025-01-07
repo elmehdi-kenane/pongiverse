@@ -150,10 +150,12 @@ h1, h3, p{
 }
 
 .userinfo__bio {
-    max-width: 500px;
+    /* max-width: 500px; */
+    /* width: 100%; */
+    width: fit-content;
     font-size: 18px;
     font-weight: 500;
-    padding: 0 5px;
+    padding: 0 10px;
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 8px;
 }
@@ -888,7 +890,6 @@ h1, h3, p{
     }
     .userinfo__name-bio .userinfo__bio{
         font-size: 13px;
-        max-width: 350px;
     }
     .userinfo__name-avatar .userinfo__name {
         font-size: 28px;
@@ -1110,13 +1111,6 @@ h1, h3, p{
 }
 
 @media (max-width: 400px) {
-    .profile-userinfo {
-        /* height: 218px; */
-    }
-    .userinfo__pic {
-        height: 140px;
-        width: 140px;
-    }
     .userinfo__pic img {
         height: 110px;
         width: 110px;
@@ -1124,12 +1118,9 @@ h1, h3, p{
     .userinfo__pic .is-online {
         height: 15px;
         width: 15px;
-        right: 20px;
-        bottom: 30px;
+        right: 38px;
+        bottom: 38px;
         font-size: 14px;
-    }
-    .userinfo__name-bio{
-        margin-top: -5px;
     }
     .userinfo__name-bio .userinfo__name-avatar {
         gap: 10px;
@@ -1140,9 +1131,6 @@ h1, h3, p{
     .userinfo__country img {
         height: 15px;
         width:  30px;
-    }
-    .userinfo__name-bio .userinfo__bio {
-        display: none;
     }
     .chat__button p {
         display: none;

@@ -108,9 +108,6 @@ function UpdatePwd(props) {
         <div className="pwd__title__input">
           <h3 className='pwd__title'> CURRENT PASSWORD </h3>
           <PwdInput refr={oldPRef} />
-          <div className='pwd__forgot'>
-            <Link to='/mainpage/settings/security/forgotpassword'> Forget your password? </Link>
-          </div>
         </div>
         <div className="pwd__title__input">
           <h3 className='pwd__title'> NEW PASSWORD </h3>
