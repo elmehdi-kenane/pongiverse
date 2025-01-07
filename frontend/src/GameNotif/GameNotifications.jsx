@@ -17,6 +17,7 @@ const GameNotifications = (props) => {
   let {
     socket,
     user,
+    userImg,
     setAllGameNotifs,
     allGameNotifs,
     notifsImgs,
@@ -47,32 +48,7 @@ const GameNotifications = (props) => {
     setNotifications,
     user,
   }) => {
-    const addNewNotification = async () => {
-      const response = await fetch(
-        `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
-        }:${import.meta.env.VITE_PORT}/navBar/add_notification/`,
-        {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            notification_text: notificationText,
-            url_redirection: urlRedirection,
-            username: user,
-            avatar: avatar,
-          }),
-        }
-      );
-      if (response.status === 401) {
-        navigate("/signin");
-      }
-      const res = await response.json();
-      //   if (res) setFriendSuggestions(res);
-    };
     if (user) {
-      addNewNotification();
       const newNotification = {
         notification_text: trimStringWithEllipsis(notificationText),
         url_redirection: urlRedirection,
@@ -160,8 +136,9 @@ const GameNotifications = (props) => {
   useEffect(() => {
     const getTournamentWarning = async () => {
       const response = await fetch(
-        `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
-        }:${import.meta.env.VITE_PORT}/api/get-tournament-warning`,
+        `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${
+          import.meta.env.VITE_PORT
+        }/api/get-tournament-warning`,
         {
           method: "POST",
           credentials: "include",
@@ -176,8 +153,7 @@ const GameNotifications = (props) => {
       if (response.ok) {
         const data = await response.json();
         if (data.Case === "yes") setCreatedAt(new Date(data.time));
-      } else if (response.status === 401)
-        navigate('/signin')
+      } else if (response.status === 401) navigate("/signin");
     };
     if (user) getTournamentWarning();
   }, [user]);
@@ -241,7 +217,8 @@ const GameNotifications = (props) => {
         );
       } else if (sender.mode === "TournamentInvitation") {
         const response = await fetch(
-          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
+          `${import.meta.env.VITE_PROTOCOL}://${
+            import.meta.env.VITE_IPADDRESS
           }:${import.meta.env.VITE_PORT}/api/get-tournament-size`,
           {
             method: "POST",
@@ -290,8 +267,7 @@ const GameNotifications = (props) => {
               })
             );
           }
-        } else if (response.status === 401)
-          navigate('/signin')
+        } else if (response.status === 401) navigate("/signin");
       }
     }
   };
@@ -325,7 +301,9 @@ const GameNotifications = (props) => {
           if (socketRefer?.readyState !== WebSocket.OPEN) {
             // console.log("SOCKET IS CLOSED, SHOULD OPENED");
             const newSocket = new WebSocket(
-              `${import.meta.env.VITE_SOCKET}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/ws/socket-server`
+              `${import.meta.env.VITE_SOCKET}://${
+                import.meta.env.VITE_IPADDRESS
+              }:${import.meta.env.VITE_PORT}/ws/socket-server`
             );
             newSocket.onopen = () => {
               // console.log("+++++++++++=======+++++++++");
@@ -354,7 +332,9 @@ const GameNotifications = (props) => {
           if (socketRefer?.readyState !== WebSocket.OPEN) {
             // console.log("SOCKET IS CLOSED, SHOULD OPENED");
             const newSocket = new WebSocket(
-              `${import.meta.env.VITE_SOCKET}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/ws/socket-server`
+              `${import.meta.env.VITE_SOCKET}://${
+                import.meta.env.VITE_IPADDRESS
+              }:${import.meta.env.VITE_PORT}/ws/socket-server`
             );
             newSocket.onopen = () => {
               setSocket(newSocket);
@@ -378,34 +358,40 @@ const GameNotifications = (props) => {
           });
         } else if (type === "remove_tournament_notif") {
           removeNotification(message.tournament_id, message.user);
-        } else if (type === "connected_again" && location.pathname === '/mainpage/chat') {
-          props.setSelectedDirect(prev => ({ ...prev, status: true }));
-          props.setDirects(prev => {
+        } else if (
+          type === "connected_again" &&
+          location.pathname === "/mainpage/chat"
+        ) {
+          props.setSelectedDirect((prev) => ({ ...prev, status: true }));
+          props.setDirects((prev) => {
             const updatedDirects = prev.map((friend) => {
               if (friend.name === data.message.user) {
                 return {
                   ...friend,
-                  is_online: true
+                  is_online: true,
                 };
               }
               return friend;
             });
             return updatedDirects;
-          })
-        } else if (type === "user_disconnected" && location.pathname === '/mainpage/chat') {
-          props.setSelectedDirect(prev => ({ ...prev, status: false }));
-          props.setDirects(prev => {
+          });
+        } else if (
+          type === "user_disconnected" &&
+          location.pathname === "/mainpage/chat"
+        ) {
+          props.setSelectedDirect((prev) => ({ ...prev, status: false }));
+          props.setDirects((prev) => {
             const updatedDirects = prev.map((friend) => {
               if (friend.name === data.message.user) {
                 return {
                   ...friend,
-                  is_online: false
+                  is_online: false,
                 };
               }
               return friend;
             });
             return updatedDirects;
-          })
+          });
         } else if (type === "connected_again") {
           const userConnected = data.message.user;
           if (userConnected === props.userId) {
@@ -416,6 +402,34 @@ const GameNotifications = (props) => {
           if (userDisConnected === props.userId) {
             props.setUserIsOnline(false);
           }
+        } else if (type === "send-friend-request") {
+          const addNewNotification = async () => {
+            const response = await fetch(
+              `${import.meta.env.VITE_PROTOCOL}://${
+                import.meta.env.VITE_IPADDRESS
+              }:${import.meta.env.VITE_PORT}/navBar/add_notification/`,
+              {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  notification_text: `${user} sent you a friend request`,
+                  url_redirection: "friendship",
+                  username: message.second_username,
+                  avatar: userImg,
+                }),
+              }
+            );
+            if (response.status === 401) {
+              navigate("/signin");
+            }
+            const res = await response.json();
+            //   if (res) setFriendSuggestions(res);
+          };
+          addNewNotification()
+          console.log("message xxd", message);
         } else if (type === "receive-friend-request") {
           if (message.second_username === props.userId)
             props.setIsFriend("accept");
@@ -451,10 +465,9 @@ const GameNotifications = (props) => {
           type === "confirm-friend-request" &&
           message.second_username === props.userId
         ) {
-          props.getUserFriends()
+          props.getUserFriends();
           props.setIsFriend("true");
-        }
-        else if (
+        } else if (
           type === "cancel-friend-request" &&
           message.second_username === props.userId
         ) {
@@ -503,10 +516,13 @@ const GameNotifications = (props) => {
             status: "",
             avatar: "",
           });
-        } else if (type === 'user_join_tournament' && location.pathname === '/mainpage/game/jointournament') {
-          let tournament_id = message.tournament_id
-          props.setTournamentSuggestions(prevSuggestions =>
-            prevSuggestions.map(tournament =>
+        } else if (
+          type === "user_join_tournament" &&
+          location.pathname === "/mainpage/game/jointournament"
+        ) {
+          let tournament_id = message.tournament_id;
+          props.setTournamentSuggestions((prevSuggestions) =>
+            prevSuggestions.map((tournament) =>
               tournament.tournament_id == tournament_id
                 ? { ...tournament, size: tournament.size + 1 }
                 : tournament

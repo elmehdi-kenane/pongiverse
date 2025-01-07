@@ -182,7 +182,8 @@ export const AuthProvider = ({ children }) => {
 				);
 				if (response.status === 401)
 					navigate('/signin')
-				let data = await response.json()
+                let data = await response.json()
+                console.log("data in context", data);
 				setUserImg(data.image);
 			} catch (e) {
 				////console.log("something wrong with fetch");
