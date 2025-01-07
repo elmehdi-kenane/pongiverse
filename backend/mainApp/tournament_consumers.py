@@ -361,9 +361,9 @@ async def start_tournament(self, data, user_channels):
 				}
 			)
 	for username, channel_name in list(user_channels.items()):
-		if channel_name:
+		if channel_name.channel_name:
 			await self.channel_layer.send(
-				channel_name,
+				channel_name.channel_name,
 				{
 					'type': 'tournament_started_by_user',
 					'message': {

@@ -688,7 +688,8 @@ def get_tournament_members_rounds(request):
 	winnermember = TournamentUserInfo.objects.filter(round=winner).first()
 	if winnermember is not None:
 		if winnermember.user is not None:
-			winnerdict.update({'id': winnermember.user.id, 'name' : winnermember.user.username, 'level' : 2, 'image' : f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{winnermember.user.avatar.url}", 'position' : winnermember.position})
+			user_states = UserMatchStatics.objects.filter(player=winnermember.user).first()
+			winnerdict.update({'id': winnermember.user.id, 'name' : winnermember.user.username, 'level' : user_states.level, 'image' : f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{winnermember.user.avatar.url}", 'position' : winnermember.position})
 		else:
 			winnerdict.update({'id': -1, 'name' : '', 'level' : -1, 'image' : '', 'position' : winnermember.position})
 	response.data = {'roundquarter' : quartermembers, 'roundsemi' : semimembers, 'roundfinal' : finalmembers , 'winner' : winnerdict}
