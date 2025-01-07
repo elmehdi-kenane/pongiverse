@@ -537,7 +537,7 @@ function CreateTournament() {
 
 						{
 							tournamentMembers.length >= 3 ? (<div className={styles["player"]} style={{
-								backgroundImage: `url(${tournamentMembers[0].background_image})`,
+								backgroundImage: `url(${tournamentMembers[2].background_image})`,
 								backgroundSize: "cover",
 								backgroundPosition: "center",
 							}}>
@@ -568,7 +568,7 @@ function CreateTournament() {
 
 						{
 							tournamentMembers.length >= 4 ? (<div className={styles["player"]} style={{
-								backgroundImage: `url(${tournamentMembers[0].background_image})`,
+								backgroundImage: `url(${tournamentMembers[3].background_image})`,
 								backgroundSize: "cover",
 								backgroundPosition: "center",
 							}}>
@@ -599,7 +599,7 @@ function CreateTournament() {
 
 						{
 							tournamentMembers.length >= 5 ? (<div className={styles["player"]} style={{
-								backgroundImage: `url(${tournamentMembers[0].background_image})`,
+								backgroundImage: `url(${tournamentMembers[4].background_image})`,
 								backgroundSize: "cover",
 								backgroundPosition: "center",
 							}}>
@@ -630,7 +630,7 @@ function CreateTournament() {
 
 						{
 							tournamentMembers.length >= 6 ? (<div className={styles["player"]} style={{
-								backgroundImage: `url(${tournamentMembers[0].background_image})`,
+								backgroundImage: `url(${tournamentMembers[5].background_image})`,
 								backgroundSize: "cover",
 								backgroundPosition: "center",
 							}}>
@@ -661,7 +661,7 @@ function CreateTournament() {
 
 						{
 							tournamentMembers.length >= 7 ? (<div className={styles["player"]} style={{
-								backgroundImage: `url(${tournamentMembers[0].background_image})`,
+								backgroundImage: `url(${tournamentMembers[6].background_image})`,
 								backgroundSize: "cover",
 								backgroundPosition: "center",
 							}}>
@@ -692,7 +692,7 @@ function CreateTournament() {
 
 						{
 							tournamentMembers.length >= 8 ? (<div className={styles["player"]} style={{
-								backgroundImage: `url(${tournamentMembers[0].background_image})`,
+								backgroundImage: `url(${tournamentMembers[7].background_image})`,
 								backgroundSize: "cover",
 								backgroundPosition: "center",
 							}}>
