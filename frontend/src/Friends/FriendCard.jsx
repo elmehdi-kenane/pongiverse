@@ -67,7 +67,6 @@ const FriendCard = ({
 
     const handelChallengeRequest = () => {
       if (notifSocket && notifSocket.readyState === WebSocket.OPEN && user) {
-       console.log("inside join");
         notifSocket.send(
           JSON.stringify({
             type: "inviteFriendGame",
@@ -100,7 +99,6 @@ const FriendCard = ({
   };
 
   const navigateToChat = () => {
-   console.log("friendId", friendId);
     setSelectedDirect({
       id: friendId,
       name: secondUsername,

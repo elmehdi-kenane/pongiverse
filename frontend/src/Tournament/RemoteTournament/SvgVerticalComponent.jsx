@@ -20,7 +20,6 @@ const SvgVerticalComponent = ({ roundquartermembers, roundsemifinalmembers, roun
 
 
 	const navigate_to_profile = (username) => {
-		console.log("*****username", username)	
 		if (username !== 'anounymous' && username !== '') {
 			setIsGameStats(false)
 			navigate(`/mainpage/profile/${username}`)

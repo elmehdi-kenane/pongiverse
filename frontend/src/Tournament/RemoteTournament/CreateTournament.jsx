@@ -115,7 +115,6 @@ function CreateTournament() {
 				const allMembers = data.allMembers
 				if (data.is_owner === 'yes')
 					setIsTournamentOwner(true)
-				console.log(data)
 				setTournamentId(data.tournament_id)
 				setTournamentMembers(allMembers)
 			} else {

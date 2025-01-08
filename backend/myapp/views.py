@@ -243,7 +243,8 @@ class VerifyTokenView(APIView):
 			user = customuser.objects.filter(id=data['user_id']).first()
 			if user is not None:
 				serializer = MyModelSerializer(user)
-				response.data = {"Case" : "valid token", "data" : serializer.data}
+				usermatchstats = UserMatchStatics.objects.filter(player=user).first()
+				response.data = {"Case" : "valid token", "data" : serializer.data, "level": usermatchstats.level}
 				return response
 			else:
 				response.data = {"Case" : "Invalid token"}
@@ -257,7 +258,8 @@ class VerifyTokenView(APIView):
 					serializer = MyModelSerializer(user)
 					tokens = get_tokens_for_user(user)
 					response.set_cookie('access_token', tokens['access'], httponly=True)
-					response.data = {"Case": "Token refreshed", "data": serializer.data}
+					usermatchstats = UserMatchStatics.objects.filter(player=user).first()
+					response.data = {"Case": "Token refreshed", "data": serializer.data, "level": usermatchstats.level}
 					return response
 				else :
 					response.data = {"Case" : "Invalid token"}

@@ -184,7 +184,6 @@ const FriendshipPage = () => {
         });
       }, 1000);
     } else if (data.type === "receive-friend-request") {
-     console.log("**************GAME NOTIFFF frieded")
       setReceivedRequests((prevReceivedRequests) => {
         const updatedReceivedRequests = [data.message, ...prevReceivedRequests];
         return updatedReceivedRequests;

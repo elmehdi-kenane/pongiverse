@@ -12,16 +12,13 @@ const useWebSocketMessageHandler = (socket, setAllGameNotifs, setRoomID) => {
 
                 switch (type) {
                     case 'goToGamingPage':
-                        console.log('navigating now');
                         navigate(`/mainpage/game/solo/1vs1/friends`);
                         break;
                     case 'receiveFriendGame':
-                        console.log('RECEIVED A GAME REQUEST');
                         setAllGameNotifs((prevGameNotif) => [...prevGameNotif, message]);
                         setRoomID(message.roomID);
                         break;
                     case 'hmed':
-                        console.log('hmed received');
                         socket.close()
                         break;
                     default:
