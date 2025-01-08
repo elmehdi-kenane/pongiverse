@@ -6,6 +6,7 @@ import json
 from . import chat_consumers
 from datetime import datetime
 from .common import user_channels
+from .models import Membership
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -50,6 +51,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
 				decoded_token = await sync_to_async(RefreshToken)(token)
 				payload_data = await sync_to_async(lambda: decoded_token.payload)()
 				user_id = payload_data.get('user_id')
+				user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
+				if user is not None:
+					memberships = await sync_to_async(list)(Membership.objects.filter(user=user))
+					for membership in memberships:
+						room_id = await sync_to_async(lambda: membership.room.id)()
+						await self.channel_layer.group_discard(f"chat_room_{room_id}", self.channel_name)
 				if user_id:
 					user_channels_name = user_channels.get(user_id)
 					filtered_channels_name = [channel_name for channel_name in user_channels_name if channel_name != self.channel_name]

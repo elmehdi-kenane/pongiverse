@@ -170,7 +170,7 @@ const Chat = () => {
           setMyChatRooms((prev) =>
             prev.filter((room) => room.id !== data.roomId)
           )
-          
+          setChatRoomsSearch("")
         } else if (data.type === "youAreBlocked") {
           setDirects((prevConversations) => {
             const updatedDirects = prevConversations.filter(
@@ -326,7 +326,7 @@ const Chat = () => {
   return (
     <div className="chat-page">
       <Toaster />
-      <GameNotifications setDirects={setDirects} directs={directs} setSelectedDirect={setSelectedDirect} />
+      <GameNotifications setDirects={setDirects} directs={directs} setSelectedDirect={setSelectedDirect}  setChatRoomsSearch={setChatRoomsSearch} setDirectsSearch={setDirectsSearch}/>
       <div className="chat-container">
         <ChatSideBar
           directs={directs}
