@@ -40,7 +40,7 @@ export const LeaveChatRoomSubmitter = async (user, rooms, setRooms, roomId) => {
     } finally {
       toast.dismiss(toastId)
     }
-  }, 2000)
+  }, 1000)
 }
 
 const LeaveChatRoom = (props) => {
