@@ -575,9 +575,11 @@ export const AuthProvider = ({ children }) => {
 			response = await response.json();
 			if (response.Case !== "Invalid token") {
 				setUser(response.data.username);
+				setUserLevel(response.level);
 				navigate("/mainpage/dashboard");
 			} else {
 				setUser("");
+				setUserLevel(null);
 			}
 		} catch (e) {
 			////console.log("something wrong with fetch");
@@ -597,12 +599,14 @@ export const AuthProvider = ({ children }) => {
 				}
 			);
 			response = await response.json();
-			//console.log("RESPONSE: ", response);
+			//.log("RESPONSE: ", response);
 			if (response.Case !== "Invalid token") {
 				setUser(response.data.username);
+				setUserLevel(response.level);
 			} else {
 				////console.log("FAILD TO LOGIN SUCCESSFULY");
 				setUser("");
+				setUserLevel(null);
 				navigate("/signin");
 			}
 		} catch (e) {

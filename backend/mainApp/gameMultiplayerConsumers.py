@@ -1114,7 +1114,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 					ballProps["velocityX"] = 5 if (serveX == 1) else -5
 					ballProps["velocityY"] = 5 if (serveY == 1) else -5
 					await asyncio.create_task(updatingGame(self, room))
-					if room['players'][0]['score'] == 10:
+					if room['players'][0]['score'] == 5:
 						room['winner'] = 1
 						room['status'] = 'finished'
 						room['players'][0]['status'] = 'winner'
@@ -1289,7 +1289,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 						self.channel_layer.group_discard(str(room['id']), user3_channel)
 						self.channel_layer.group_discard(str(room['id']), user4_channel)
 						return
-					elif room['players'][2]['score'] == 10:
+					elif room['players'][2]['score'] == 5:
 						room['winner'] = 2
 						room['status'] = 'finished'
 						room['players'][2]['status'] = 'winner'

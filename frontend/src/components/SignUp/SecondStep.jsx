@@ -110,6 +110,29 @@ function SecondStep() {
 		});
 	};
 
+	const notifySuc = (suc) => toast.success(suc);
+    const notifyErr = (err) => toast.error(err);
+
+	const handleFileChange = (event) => {
+		const file = event.target.files[0];
+		if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
+			if (file.size > 3 * 1024 * 1024) {
+				notifyErr('File size must be less than 3MB.');
+				setImage(null);
+				setImagePreview(null);
+				return;
+			}
+			setImage(URL.createObjectURL(file));
+		} else if (!file) {
+			return;
+		} else {
+			notifyErr('Please select a JPEG or PNG file.');
+			setImage(null);
+			setImagePreview(null);
+		}
+	};
+
+
 
 	const handleInputChange = async (e) => {
 		e.preventDefault();
@@ -206,10 +229,11 @@ function SecondStep() {
 
 	useEffect(() => {
 		////console.log("IMAGE:", image)
-	},[image])
+	}, [image])
 
 	return (
 		<div className={styles["second-step-page"]}>
+			<Toaster />
 			<div className={styles["second-step-navbar"]}>
 				<img src={logo} alt="" />
 			</div>
@@ -253,7 +277,7 @@ function SecondStep() {
 								id="image-upload"
 								className={styles["second-step-form-inputs-image"]}
 								accept="image/*"
-								onChange={(e) => setImage(URL.createObjectURL(e.target.files[0]))}
+								onChange={handleFileChange}
 							/>
 							<label
 								className={styles["second-step-form-inputs-image-label"]}
@@ -267,7 +291,7 @@ function SecondStep() {
 				}
 				<div className={styles["second-step-form"]}>
 					<div className={styles['unchangable-username-warning']}>
-						<TiWarning color="#cccccc66" size={17}/>
+						<TiWarning color="#cccccc66" size={17} />
 						<p>Username is Unchangeable</p>
 					</div>
 					<div className={styles["second-step-form-inputs"]}>
