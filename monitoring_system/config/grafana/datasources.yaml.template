@@ -24,7 +24,7 @@ datasources:
     # uid: my_unique_uid
     # <string> Sets the data source's URL, including the
     # port.
-    url: http://localhost:9090
+    url: ${PROMETHEUS_URL}
     # <bool> Toggles whether the data source is pre-selected
     # for new panels. You can set only one default
     # data source per organization.

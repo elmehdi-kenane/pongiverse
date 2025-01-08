@@ -35,6 +35,7 @@ else
     mv prometheus-2.55.1.linux-amd64 tools/prometheus
 fi
 echo -e "\033[1;34m ============ Prometheus started ✅ at => http://localhost:9090 ============\033[0m"
+envsubst < config/prometheus/prometheus.yml.template > config/prometheus/prometheus.yml
 ./tools/prometheus/prometheus --config.file="config/prometheus/prometheus.yml" --storage.tsdb.path="./tools/prometheus/data" > logs/prometheus_logs 2>&1 &
 echo -e "\033[1;34m ============ see ./logs/prometheus_logs ============\033[0m"
 echo -e ""
@@ -56,6 +57,7 @@ else
 fi
 
 echo -e "\033[1;34m ============ Alertmanager started ✅ at => http://localhost:9093 ============\033[0m"
+envsubst < config/alertmanager/alertmanager.yml.template > config/alertmanager/alertmanager.yml
 ./tools/alertmanager/alertmanager --config.file="config/alertmanager/alertmanager.yml" > logs/alertmanager_logs 2>&1 &
 echo -e "\033[1;34m ============ see ./logs/alertmanager_logs ============\033[0m"
 echo -e ""
@@ -111,6 +113,7 @@ sed -i "s|^path = data/log|path = $GRAFANA_DATA_DIRECTORY/log|" $DEFAULTS_GRAFAN
 echo "Grafana-Data-Directory changed to $GRAFANA_DATA_DIRECTORY" > logs/grafana_logs
 
 echo -e "\033[1;34m ============ Grafana started ✅ at => http://localhost:3030 ============\033[0m"
+envsubst < config/grafana/datasources.yaml.template > config/grafana/datasources.yaml
 ./tools/grafana/bin/grafana server --homepath ./tools/grafana/ > logs/grafana_logs 2>&1 &
 echo -e "\033[1;34m ============ see ./logs/grafana_logs ============\033[0m"
 echo -e ""

@@ -5,7 +5,8 @@ WORKDIR /monitoring_system
 
 COPY . /monitoring_system/
 
-# EXPOSE 3030
 RUN chmod +x setup.sh
+
+RUN apt-get update && apt-get upgrade -y && apt-get install -y gettext
 
 CMD ["bash", "setup.sh"]
