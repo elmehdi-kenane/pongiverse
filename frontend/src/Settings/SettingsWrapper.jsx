@@ -69,21 +69,6 @@ export const SettingsWrapper = ({ child }) => {
     }, [user])
 
     useEffect(() => {
-        // const getUserPic = async (picPath, fnc) => {
-        //     try {
-        //         const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://localhost:${import.meta.env.VITE_PORT}/api/getImage`, {
-        //             method: "POST",
-        //             headers: { 'Content-Type': 'application/json', },
-        //             body: JSON.stringify({
-        //                 image: picPath
-        //             })
-        //         });
-        //         const blob = await response.blob();
-        //         fnc(URL.createObjectURL(blob));
-        //     } catch (error) {
-        //        console.log("Error : ", error)
-        //     }
-        // }
         if (userData) {
             setUserPic(userData.pic)
             setUserBg(userData.bg)

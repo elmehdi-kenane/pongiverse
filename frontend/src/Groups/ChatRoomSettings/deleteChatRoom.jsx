@@ -29,7 +29,7 @@ const DeleteChatRoom = (props) => {
           toast.success(data.success)
           toast.dismiss(toastId)
           chatRoomDeletedUpdater(data.data)
-        }, 2000)
+        }, 1000)
       } else if (response.status === 401)
         navigate('/signin')
       else {

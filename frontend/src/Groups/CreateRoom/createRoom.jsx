@@ -78,7 +78,7 @@ const CreateRoom = ({ setCreateRoom, setIsBlur, myChatRooms, setMyChatRooms }) =
               toast.dismiss(toastId)
               const currentChatRooms = myChatRooms
               setMyChatRooms([...currentChatRooms, responseData.room])
-            }, 2000)
+            }, 1000)
           } else if (response.status === 401)
             navigate('/signin')
           else {

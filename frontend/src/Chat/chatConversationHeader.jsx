@@ -2,11 +2,13 @@ import { useNavigate } from "react-router-dom"
 import * as ChatIcons from "../assets/chat/media/index"
 import AuthContext from "../navbar-sidebar/Authcontext"
 import { useContext } from "react"
+import ChatContext from "../Context/ChatContext"
 
 const ChatConversationHeader = (props) => {
 
   const navigate = useNavigate()
   const { notifSocket, user } = useContext(AuthContext)
+  const {setSelectedItem} = useContext(ChatContext)
 
   const handelChallengeRequest = () => {
     if (notifSocket && notifSocket.readyState === WebSocket.OPEN && user) {
@@ -28,13 +30,15 @@ const ChatConversationHeader = (props) => {
           src={ChatIcons.arrowLeft}
           alt=""
           className="conversation-back-arrow"
-          onClick={() =>
+          onClick={() =>{
             props.setSelectedDirect({
               id: "",
               name: "",
               avatar: "",
               status: "",
-            })
+            });
+            setSelectedItem('')
+          }
           }
         />
         <img

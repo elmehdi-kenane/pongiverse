@@ -509,6 +509,7 @@ const GameNotifications = (props) => {
             status: "",
             avatar: "",
           });
+          props.setDirectsSearch("");
         } else if (
           type === "user_join_tournament" &&
           location.pathname === "/mainpage/game/jointournament"
