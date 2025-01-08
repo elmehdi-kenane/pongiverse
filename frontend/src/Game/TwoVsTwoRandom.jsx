@@ -41,7 +41,6 @@ const TwoVsTwoRandom = () => {
     useEffect(() => {
         // console.log(socket, socket.readyState, user)
         if (!checked && socket && socket.readyState === WebSocket.OPEN && user) {
-           console.log("CHECKING IF PLAYER IN ROOM 2vs2")
             checked = true
             socket.send(JSON.stringify({
                 type: 'isPlayerInAnyRoom',
@@ -91,7 +90,6 @@ const TwoVsTwoRandom = () => {
                 let type = data.type
                 let message = data.message
                 if (type === 'roomAlreadyStarted') {
-                   console.log("inside roomAlreadyStarted")
                     setAllSet(true)
                     if (message.mode === '1vs1')
                         navigate(`../play/1vs1/${message.roomID}`)
@@ -165,7 +163,6 @@ const TwoVsTwoRandom = () => {
                         })
                     }
                 } else if (type === "gameReady") {
-                   console.log("inside gameReady")
                     const playerNbr = playerNoRef.current;
                     if (playerNbr === 1 || playerNbr === 2) {
                         if (playerNbr === 1 && message.users.length >= 2)
@@ -235,23 +232,17 @@ const TwoVsTwoRandom = () => {
                     setRoomID(message.room.id)
                     setLoadMatch(false)
                     setAllSet(true)
-                   console.log("ALL SET BROTHER")
                 } else if (type === "playersReady") {
-                   console.log("inside playersReady")
                     setLoadMatch(false)
                     setAllSet(true)
                 } else if (type === "playerNo") {
-                    console.log(message)
-                   console.log("inside playerNo")
                     setPlayerNo(message.playerNo)
                     setRoomID(message.id)
                     // console.log(message.id, message.playerNo)
                     setGameStarted(true)
                     // setChosenOne('quickMatch')
                 } else if (type === "noRoomFound") {
-                   console.log("inside noRoomFound")
                     if (socket && socket.readyState === WebSocket.OPEN) {
-                       console.log("inside join")
                         socket.send(JSON.stringify({
                             type: 'joinMp',
                             message: {
@@ -265,8 +256,6 @@ const TwoVsTwoRandom = () => {
                         }, 500);
                     }
                 } else if (type === 'alreadySearching') {
-                   console.log("inside alreadySearching")
-                    console.log(message)
                     setPlayerNo(message.playerNo)
                     setRoomID(message.id)
                     // console.log(message.id)
@@ -281,7 +270,6 @@ const TwoVsTwoRandom = () => {
         }
 
         if (allSet && roomID) {
-           console.log("inside allSet and roomID")
             clearInterval(randomPics)
             setTimeout(() => {
                 navigate(`../play/2vs2/${roomID}`)
@@ -293,7 +281,6 @@ const TwoVsTwoRandom = () => {
     const cancelTheGame = () => {
         // setSelectedFriends([])
         if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
-           console.log("inside quitMp")
             socket.send(JSON.stringify({
                 type: 'quitMp',
                 message: {
@@ -314,7 +301,6 @@ const TwoVsTwoRandom = () => {
                 const user = userRef.current
                 const socket = socketRef.current
                 const roomID = roomIdRef.current
-               console.log("USER IS GETTING OUT ", user, roomID, socket)
                 if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
                     socket.send(JSON.stringify({
                         type: 'quitMp',
@@ -334,7 +320,6 @@ const TwoVsTwoRandom = () => {
             const user = userRef.current
             const socket = socketRef.current
             const roomID = roomIdRef.current
-           console.log("INSIDE THE MATCH : ", user, roomID, socket)
             if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
                 socket.send(JSON.stringify({
                     type: 'quitMp',

@@ -74,7 +74,6 @@ const Modes = () => {
 
 	const GoToTournamentPage = async () => {
 		if (socket && socket.readyState === WebSocket.OPEN) {
-			console.log("******GO TO TOURNAMENT PAGE")
 			socket.send(JSON.stringify({
 				type: 'createTournament',
 				message: {

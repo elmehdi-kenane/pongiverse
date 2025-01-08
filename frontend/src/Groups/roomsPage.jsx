@@ -123,10 +123,7 @@ const Rooms = () => {
 
   const chatRoomDeleted = (roomId) => {
     const allMyChatRooms = myChatRoomsRef.current
-   console.log("allMyChatRooms", allMyChatRooms)
-   console.log("roomId", roomId)
     const updatedRooms = allMyChatRooms.filter((room) => room.id !== roomId)
-   console.log("updatedRooms", updatedRooms)
     setMyChatRooms(updatedRooms)
     // remmove the chatRooms
     const currentChatRooms = chatRooms
@@ -146,7 +143,6 @@ const Rooms = () => {
     if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
       chatSocket.onmessage = (event) => {
         const data = JSON.parse(event.data)
-       console.log("data recive from chat socket", data)
         if (data.type === "chatRoomAdminAdded")
           chatRoomAdminAdded(data.message)
         else if (data.type === "roomInvitation") {

@@ -30,7 +30,6 @@ const InviteChatRoomMember = (props) => {
         )
         const data = await response.json()
         if (response.ok) {
-         console.log("friends to invite: ", data)
           setAllFriends(data)
         } else if (response.status === 401)
           navigate('/signin')

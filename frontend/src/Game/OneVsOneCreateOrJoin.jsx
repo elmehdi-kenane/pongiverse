@@ -43,7 +43,6 @@ const OneVsOneCreateOrJoin = () => {
 
     useEffect(() => {
         if (socket && socket.readyState === WebSocket.OPEN && user) {
-           console.log("CHECKING IF PLAYER IN ROOM")
             socket.send(JSON.stringify({
                 type: 'isPlayerInAnyRoom',
                 message: {
@@ -93,8 +92,6 @@ const OneVsOneCreateOrJoin = () => {
                     else
                         navigate("../game/createtournament")
                 } else if (type === "gameReady") {
-                   console.log("inside gameReady")
-                    console.log(message.avatars)
                     if (playerNo === 1) {
                         setEnemyInfos({
                             avatar: message.users[1].image,
@@ -117,18 +114,14 @@ const OneVsOneCreateOrJoin = () => {
                     setMatchJoined(true)
                     setAllSet(true)
                     // setAllGameNotifs([]) // SET ALL NOTIFICATIONS TO EMPTY ARRAY
-                   console.log("ALL SET BROTHER")
                 } else if (type === "playersReady") {
-                   console.log("inside playersReady")
                     setLoadMatch(false)
                     setAllSet(true)
                 } else if (type === "playerNo") {
-                   console.log("inside playerNo")
                     setPlayerNo(message.playerNo)
                     setTmpRoomID(message.id)
                     setGameStarted(true)
                 } else if (type === "playerInfos") {
-                   console.log("inside playerInfos")
                     setPlayerNo(message.playerNo)
                     setTmpRoomID(message.id)
                     setExpandJoin(false)
@@ -141,7 +134,6 @@ const OneVsOneCreateOrJoin = () => {
                     } else
                         setCodeToShare(message.id)
                 } else if (type === 'alreadySearching') {
-                   console.log("inside alreadySearching")
                     setPlayerNo(message.playerNo)
                     setTmpRoomID(message.id)
                     setExpandJoin(false)
@@ -163,7 +155,6 @@ const OneVsOneCreateOrJoin = () => {
         }
 
         if (allSet && roomID) {
-           console.log("inside allSet and roomID")
             setTimeout(() => {
                 navigate(`../play/1vs1/${roomID}`)
             }, 2000);
@@ -173,7 +164,6 @@ const OneVsOneCreateOrJoin = () => {
 
     const cancelTheGame = () => {
         if (socket && socket.readyState === WebSocket.OPEN) {
-           console.log("inside quit")
             socket.send(JSON.stringify({
                 type: 'quit',
                 message: {
@@ -261,7 +251,6 @@ const OneVsOneCreateOrJoin = () => {
                 const user = userRef.current
                 const socket = socketRef.current
                 const roomID = roomIdRef.current
-               console.log("USER IS GETTING OUT ", user, roomID, socket)
                 if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
                     socket.send(JSON.stringify({
                         type: 'quit',
@@ -281,7 +270,6 @@ const OneVsOneCreateOrJoin = () => {
             const user = userRef.current
             const socket = socketRef.current
             const roomID = roomIdRef.current
-           console.log("INSIDE THE MATCH : ", user, roomID, socket)
             if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
                 socket.send(JSON.stringify({
                     type: 'quit',

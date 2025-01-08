@@ -19,7 +19,6 @@ const Game = () => {
     useEffect(() => {
         if (socket) {
             if (socketRecreated && user) {
-               console.log("INSIDE RESTABISHMENT")
                 socket.send(JSON.stringify({
                     type: 'dataBackUp',
                     message: {
@@ -30,7 +29,6 @@ const Game = () => {
                 setSocketRecreated(false)
             } else if (!socketRecreated && user) {
                 if (socket && socket.readyState === WebSocket.OPEN && user) {
-                   console.log("CHECKING IF PLAYER IN ROOM")
                     socket.send(JSON.stringify({
                         type: 'isPlayerInAnyRoom',
                         message: {
@@ -52,19 +50,15 @@ const Game = () => {
                 if (type === 'roomAlreadyStarted') {
                     navigate(`../play/${message.roomID}`)
                 } else if (type === "gameReady") {
-                   console.log("inside gameReady")
                     setRoomID(message.id)
                     setAllSet(true)
                     // setStartDisable(false)
                 } else if (type === "playersReady") {
-                   console.log("inside playersReady")
                     setAllSet(true)
                 } else if (type === "playerNo") {
-                   console.log("inside playerNo")
                     setPlayerNo(message.playerNo)
                     setTmpRoomID(message.id)
                 } else if (type === "removeRoom") {
-                   console.log("inside removeRoom")
                     if (socket && socket.readyState === WebSocket.OPEN) {
                         socket.send(JSON.stringify({
                             type: 'OpponentIsOut',
@@ -84,7 +78,6 @@ const Game = () => {
 
         if (allSet && roomID) {
             setTimeout(() => {
-               console.log("navigating to the game page")
                 navigate(`../play/${roomID}`)
             }, 250);
         }

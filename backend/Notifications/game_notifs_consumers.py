@@ -79,14 +79,7 @@ async def invite_friend(self, data, notifs_user_channels):
 		paddleY = 165,
 		score = 0
 	)
-	# ##print"ENTER 3")
-	# await self.send(text_data=json.dumps({
-	#     'type': 'playerNo',
-	#     'message': {
-	#         'playerNo': 1,
-	#         'id': room_id
-	#     }
-	# }))
+
 	user_channel_list = notifs_user_channels.get(user1.id)
 	#print"************ WAS HEEERE BACKK: ", user_channel_list)
 	if user_channel_list:

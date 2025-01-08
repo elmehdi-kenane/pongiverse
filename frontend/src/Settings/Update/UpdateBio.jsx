@@ -58,7 +58,6 @@ function UpdateBio() {
         notifyErr(res.error)
     } catch (error) {
       notifyErr(error);
-      console.log(error);
     }
   }
 

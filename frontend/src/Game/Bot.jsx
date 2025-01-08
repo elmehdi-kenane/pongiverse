@@ -420,7 +420,6 @@ const Bot = () => {
 
       // console.log(keys)
       if (keys['ArrowUp']) {
-       console.log("ARROW UP")
         if (!((player1.current.y - (8 * heightScalingFactor)) <= edges.current.height)) {
           player1.current.y -= (8 * heightScalingFactor);
           originalPositions.player1_y -= 8
@@ -429,7 +428,6 @@ const Bot = () => {
           originalPositions.player1_y = 10
         }
       } else if (keys['ArrowDown']) {
-       console.log("ARROW DOWN")
         if (!(((player1.current.y + player1.current.height) + (8 * heightScalingFactor)) >= (canvas.height - edges.current.height))) {
           player1.current.y += (8 * heightScalingFactor)
           originalPositions.player1_y += 8
@@ -575,12 +573,10 @@ const Bot = () => {
       let botGameStatusJson = localStorage.getItem('botGameStatus')
       let botGameStatus = JSON.parse(botGameStatusJson)
       if (botGameStatus) {
-        console.log(botGameStatus)
         localStorage.removeItem('botGameStatus')
         setDifficultyLevel(botGameStatus[2].difficultyLevel)
         setTime(botGameStatus[2].time)
         setPlayersInfos(botGameStatus)
-        console.log('already a running game')
       }
       else
         console.log('not a single running game')
@@ -637,7 +633,6 @@ const Bot = () => {
       window.addEventListener("keyup", handleKeyUp)
       canvas.addEventListener("mousemove", handleMouseMove)
       window.addEventListener('resize', resizeCanvas)
-     console.log("DRAWING THE SHAPES")
       isGameStarted = true
       difficultyLevelVar = difficultyLevel //
       setStartGame(true)

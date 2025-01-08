@@ -172,7 +172,6 @@ export const AuthProvider = ({ children }) => {
 				if (response.status === 401)
 					navigate('/signin')
                 let data = await response.json()
-                console.log("data in context", data);
 				setUserImg(data.image);
 			} catch (e) {
 				////console.log("something wrong with fetch");
@@ -190,7 +189,6 @@ export const AuthProvider = ({ children }) => {
 				if (response.status === 401)
 					navigate('/signin')
 				const res = await response.json();
-				console.log(res);
 				if (res.data) setGameCustomize(res.data);
 			} catch (e) {
 				////console.log("something wrong with fetch");

@@ -34,7 +34,6 @@ function TournamentWarning() {
             });
             if (response.ok) {
                 const data = await response.json();
-               console.log("AAGOU:", data)
                 if (data.Case === 'yes')
                     setCreatedAt(new Date(data.time))
             } else 

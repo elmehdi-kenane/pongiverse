@@ -50,7 +50,6 @@ const ChatSideBar = ({
         )
         const data = await response.json()
         if (response.ok) {
-          console.log(data)
           setDirectsSearch(data)
         } else if (response.status === 401)
           navigate("/signin")
@@ -70,7 +69,6 @@ const ChatSideBar = ({
         )
         const data = await response.json()
         if (response.ok) {
-          console.log(data)
           setChatRoomsSearch(data)
         } else if (response.status === 401)
           navigate("/signin")
@@ -78,7 +76,6 @@ const ChatSideBar = ({
          console.log("opps! something went wrong")
         }
       } catch (error) {
-        console.log
       }
     }
   }

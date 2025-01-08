@@ -504,13 +504,11 @@ const OneVsOnePlayMatch = () => {
                 //console.log("THE TYPE IS : ",type)
                 if (type === "setupGame") {
                     playerNo = message.playerNo
-                    console.log("INSIDE SETUPGAME")
                     isGameStarted = true
                     setUserName1(message.user1)
                     setUserName2(message.user2)
                     setTime(message.time)
                     startTimer()
-                    console.log(socket)
                 } else if (type === "updateGame") {
                     //console.log("INSIDE UPDATEGAME")
                     const canvas = canvasRef.current;
@@ -533,8 +531,6 @@ const OneVsOnePlayMatch = () => {
                         draw()
                     }
                 } else if (type === "notAuthorized") {
-                    console.log("INSIDE LEAVEGAME")
-                    console.log("navigating from the playing page")
                     navigate("../game/solo/1vs1")
                 } else if (type === "roomNotExist") {
                     navigate("../game/solo/1vs1")
@@ -561,7 +557,6 @@ const OneVsOnePlayMatch = () => {
                     allPlayersStats[0].status = message.status[0]
                     allPlayersStats[1].status = message.status[1]
                     setPlayersInfos(allPlayersStats)
-                    console.log("playerNo when it is finished : ", playerNo)
                 } else if (type === "abortedGame") {
                     let allPlayersStats = [...playersInfos]
                     setUserName1(message.user1)
@@ -587,7 +582,6 @@ const OneVsOnePlayMatch = () => {
                 else if (type === "playersInfos")
                     setPlayersPics(message.users)
                 else if (type === 'hmed') {
-                    console.log("***************:  INSIDE HMED")
                     socket.close()
                 }
             }
@@ -673,7 +667,6 @@ const OneVsOnePlayMatch = () => {
             const user = userRef.current
             const socket = socketRef.current
             const roomID = roomIdRef.current
-            console.log("INSIDE THE MATCH : ", user, roomID, socket)
             if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
                 socket.send(JSON.stringify({
                     type: 'playerChangedPage',
@@ -696,7 +689,6 @@ const OneVsOnePlayMatch = () => {
                 const user = userRef.current
                 const socket = socketRef.current
                 const roomID = roomIdRef.current
-                console.log("USER IS GETTING OUT ", user, roomID, socket)
                 if (socket && socket.readyState === WebSocket.OPEN && user && roomID) {
                     socket.send(JSON.stringify({
                         type: 'playerChangedPage',

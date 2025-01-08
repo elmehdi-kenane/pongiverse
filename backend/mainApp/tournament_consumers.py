@@ -31,12 +31,6 @@ async def disconnected(self, user_channels):
 			user_id = payload_data.get('user_id')
 			if user_id:
 				user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
-				# if user:
-					# if user_id in user_channels:
-						# print(f"\nUSER {user_id} , DISCONNECT BEFORE: {user_channels}\n")
-						# if user_id in user_channels:
-							# del user_channels[user_id]
-						# print(f"\nUSER {user_id} , DISCONNECT AFTER: {user_channels}\n")
 		except TokenError:
 			pass
 
@@ -105,8 +99,6 @@ async def create_tournament(self, data, user_channels):
 			# tournament = Tournament(tournament_id=random_number)
 			# await sync_to_async(tournament.save)()
 			tournaments[random_number] = {}
-			# tournamentMember = TournamentMembers(user=user, tournament=tournament, is_owner=True)
-			# await sync_to_async(tournamentMember.save)()
 			tournaments[random_number]['members'] = []
 			tournaments[random_number]['is_started'] = False
 			tournaments[random_number]['is_finished'] = False

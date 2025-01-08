@@ -26,7 +26,6 @@ export const SearchBar = () => {
   //   useEffect(() => {
   const getSearchResult = async (searchTerm, username) => {
     if (searchTerm !== "") {
-     console.log("fetch search result with term:", searchTerm);
 
       const response = await fetch(
         `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/navBar/search_view/?searchTerm=${searchTerm}&username=${username}`,
@@ -40,7 +39,6 @@ export const SearchBar = () => {
       const res = await response.json();
       if (res) {
         setSearchResult(res);
-       console.log("setSearchResult(res)");
         setSearchUsersResult(
           res.filter((resultItem) => resultItem.result_type === "user")
         );

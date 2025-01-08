@@ -16,8 +16,6 @@ const Friends = () => {
           method: 'GET'
         })
         const res = await response.json()
-        // set
-        console.log(res)
         setUsers(res)
         // document.write(res)
     }
@@ -47,7 +45,6 @@ const Friends = () => {
         }
       );
       const res = await response.json();
-      console.log(res);
       setUsers(res.friends);
     };
     if (user) getUsers();
