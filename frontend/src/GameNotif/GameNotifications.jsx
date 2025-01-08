@@ -424,14 +424,8 @@ const GameNotifications = (props) => {
                 }),
               }
             );
-            if (response.status === 401) {
-              navigate("/signin");
-            }
-            const res = await response.json();
-            //   if (res) setFriendSuggestions(res);
           };
           addNewNotification()
-          console.log("message xxd", message);
         } else if (type === "receive-friend-request") {
           if (message.second_username === props.userId)
             props.setIsFriend("accept");

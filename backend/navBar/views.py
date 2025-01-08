@@ -22,7 +22,8 @@ def search_view(request):
     search_term = request.query_params.get('searchTerm', '')
     username = request.query_params.get('username', '')
     user = customuser.objects.filter(username=username).first()
-
+    if not user:
+        return Response({"error": "User not found"}, status=404)
 
     users_objs = customuser.objects.filter(username__icontains=search_term).annotate(is_friend=Value(False, output_field=BooleanField()), result_type=Value("", output_field=CharField()))
     search_result = []
@@ -83,14 +84,18 @@ def search_view(request):
 @api_view(['POST'])
 def add_notification(request):
     user = customuser.objects.get(username=request.data['username'])
+    if not user:
+        return Response({"error": "User not found"}, status=404)
     print(request.data['avatar'])
-    Notification.objects.create(user=user, notification_text=request.data['notification_text'], url_redirection=request.data['url_redirection'], avatar=request.data['avatar'] or f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:{os.getenv('PORT')}/auth/media/uploads_default/defaultNotificationIcon.png")
+    Notification.objects.create(user=user, notification_text=request.data['notification_text'], is_read=False, url_redirection=request.data['url_redirection'], avatar=request.data['avatar'] or f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:{os.getenv('PORT')}/auth/media/uploads_default/defaultNotificationIcon.png")
     return Response("success :)")
 
 @authentication_required
 @api_view(['POST'])
 def clear_all_notifications(request):
     user = customuser.objects.get(username=request.data['username'])
+    if not user:
+        return Response({"error": "User not found"}, status=404)
     notification_objs = Notification.objects.filter(user=user)
     notification_objs.delete()
     return Response("success :)")
@@ -99,6 +104,18 @@ def clear_all_notifications(request):
 @api_view(['GET'])
 def get_notifications(request, username):
     user = customuser.objects.filter(username=username).first()
-    objs = Notification.objects.filter(user=user).order_by('-send_at') # he dash (-) in front tells Django to order the results in descending order, meaning the most recent notifications (those with the latest send_at timestamp) will appear first.
+    if not user:
+        return Response({"error": "User not found"}, status=404)
+    objs = Notification.objects.filter(user=user).order_by('-send_at') # the dash (-) in front tells Django to order the results in descending order, meaning the most recent notifications (those with the latest send_at timestamp) will appear first.
     notifications_ser = NotificationSerializer(objs, many=True)
     return Response(notifications_ser.data)
+
+@authentication_required
+@api_view(['POST'])
+def mark_notifications_as_read(request, username):
+    user = customuser.objects.filter(username=username).first()
+    if not user:
+        return Response({"error": "User not found"}, status=404)
+    objs = Notification.objects.filter(user=user, is_read=False)
+    objs.update(is_read=True)
+    return Response({"message": "All notifications have been marked as read."})

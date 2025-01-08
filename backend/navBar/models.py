@@ -8,4 +8,5 @@ class Notification(models.Model):
     avatar = models.TextField()
     notification_text = models.TextField()
     url_redirection = models.TextField()
+    is_read = models.BooleanField()
     send_at = models.DateTimeField(auto_now_add=True)

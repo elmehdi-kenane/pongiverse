@@ -33,7 +33,7 @@ class customUserSerializer(serializers.ModelSerializer):
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
-        fields = ['notification_text', 'url_redirection', 'send_at', 'avatar']
+        fields = ['notification_text', 'url_redirection', 'send_at', 'avatar', 'is_read']
         # Optionally, exclude 'user' if you don't want to expose it:
         # exclude = ['user']
 

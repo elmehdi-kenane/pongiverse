@@ -39,6 +39,23 @@ const NotificationsIcon = ({
     };
   }, []);
 
+    const markNotificationsAsRead = async () => {
+        try {
+            const response = await fetch(
+                `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
+                }:${import.meta.env.VITE_PORT}/navBar/mark_notifications_as_read/${user}`,
+                {
+                    method: "POST",
+                    credentials: "include",
+                }
+            );
+            if (response.status === 401)
+                navigate('/signin')
+        } catch (error) {
+            console.error("Error in getNotifications:", error.message || error);
+        }
+    }
+
   useEffect(() => {
     const getNotifications = async () => {
       try {
@@ -66,9 +83,12 @@ const NotificationsIcon = ({
               };
             })
           );
+            const unreadNotifications = res.filter((item) => item.is_read === false)
+            if (unreadNotifications.length > 0)
+                setIsNotificationsRead(false)
         }
       } catch (error) {
-        console.error("Error in getNotifications:", error.message || error);
+        console.error("Error in getNotifications", error);
       }
     };
     if (user) {
@@ -104,6 +124,7 @@ const NotificationsIcon = ({
         onClick={() => {
           setNotificationsDropDownisOpen(!notificationsDropDownisOpen);
           setIsNotificationsRead(true);
+            markNotificationsAsRead()
         }}
       />
       {isNotificationsRead === false && (
