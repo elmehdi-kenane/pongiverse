@@ -479,7 +479,6 @@ function createParticle(x, y) {
 		// if (rect && canvas) {
 			if (playerNo === 1) {
 				if (player1.current) {
-					console.log(rect.top, rect.bottom, e.clientY, player1.current.height)
 					player1.current.y = e.clientY - rect.top - (player1.current.height / 2)
 					originalPositions.player1_y = e.clientY - rect.top - 35;
 					if (player1.current.y < edges.current.height) {
@@ -494,7 +493,6 @@ function createParticle(x, y) {
 			}
 			else if (playerNo === 2) {
 				if (player2.current) {
-					console.log(rect.top, rect.bottom, e.clientY, player1.current.height)
 					player2.current.y = e.clientY - rect.top - (player2.current.height / 2)
 					originalPositions.player2_y = e.clientY - rect.top - 35;
 					if (player2.current.y < edges.current.height) {
@@ -529,7 +527,6 @@ function createParticle(x, y) {
 		particles = []
 		const canvas = canvasRef.current;
 		const gameCustom = gameCustomizeRef.current
-		console.log(playerNo)
 		if (canvas && gameCustom) {
 			const widthScalingFactor = canvas.width / 710;
 			const heightScalingFactor = canvas.height / 400;
@@ -555,7 +552,6 @@ function createParticle(x, y) {
 					setUserName2(message.user2)
 					setTime(message.time)
 					startTimer()
-					console.log(socket)
 				} else if (type === "updateGame") {
 					const canvas = canvasRef.current;
 					if (canvas) {
@@ -601,7 +597,6 @@ function createParticle(x, y) {
 				} else if (type === "playersInfos")
 					setPlayersPics(message.users)
 				else if (type === 'hmed') {
-					////console.log("hmed received")
 					socket.close()
 				} else if (type === 'youWinTheGame'){
 					////console.log("tournament_id : ", message)

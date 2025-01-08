@@ -39,8 +39,9 @@
 .match-result-ctr {
     display: flex;
     justify-content: center;
+    align-items: center;
     position: absolute;
-    /* height: 100%; */
+    height: 90vh;
     width: 100%;
 }
 .match-result {
@@ -48,7 +49,6 @@
     align-items: center;
     flex-direction: column;
     width: 70%;
-    top: 250px;
     border: #826aed solid 2px;
     border-radius: 5px;
     background-color: #1b062a;

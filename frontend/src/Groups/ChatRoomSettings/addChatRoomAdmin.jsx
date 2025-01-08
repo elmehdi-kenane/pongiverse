@@ -15,7 +15,6 @@ const AddChatRoomAdmin = (props) => {
         if (response.status === 401)
           navigate('/signin')
         const data = await response.json()
-       console.log("all chat room: ", data)
         setAllChatRoomMembers(data)
       } catch (error) {
         console.log(error)

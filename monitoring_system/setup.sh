@@ -34,7 +34,8 @@ else
     mv prometheus.tar.gz archive
     mv prometheus-2.55.1.linux-amd64 tools/prometheus
 fi
-echo -e "\033[1;34m ============ Prometheus started ✅ at => http://localhost:9090 ============\033[0m"
+echo -e "\033[1;34m ============ Prometheus started ✅ ============\033[0m"
+envsubst < config/prometheus/prometheus.yml.template > config/prometheus/prometheus.yml
 ./tools/prometheus/prometheus --config.file="config/prometheus/prometheus.yml" --storage.tsdb.path="./tools/prometheus/data" > logs/prometheus_logs 2>&1 &
 echo -e "\033[1;34m ============ see ./logs/prometheus_logs ============\033[0m"
 echo -e ""
@@ -55,7 +56,8 @@ else
     mv alertmanager-0.28.0-rc.0.linux-amd64 tools/alertmanager
 fi
 
-echo -e "\033[1;34m ============ Alertmanager started ✅ at => http://localhost:9093 ============\033[0m"
+echo -e "\033[1;34m ============ Alertmanager  ============\033[0m"
+envsubst < config/alertmanager/alertmanager.yml.template > config/alertmanager/alertmanager.yml
 ./tools/alertmanager/alertmanager --config.file="config/alertmanager/alertmanager.yml" > logs/alertmanager_logs 2>&1 &
 echo -e "\033[1;34m ============ see ./logs/alertmanager_logs ============\033[0m"
 echo -e ""
@@ -78,14 +80,14 @@ else
     mv node_exporter-1.8.2.linux-amd64 tools/node_exporter
 fi
 
-echo -e "\033[1;34m ============ NodeExporter started ✅ at => http://localhost:9100/metrics ============\033[0m"
+
 ./tools/node_exporter/node_exporter > logs/node_exporter_logs 2>&1 &
 echo -e "\033[1;34m ============ see ./logs/node_exporter_logs ============\033[0m"
 echo -e ""
 
 sleep 2
 
-echo -e "\033[1;34m ============ Grafana 🌐 ============\033[0m"
+
 if [ -d "./tools/grafana" ]; then
     echo -e "\033[1;34m ============ Grafana already downloaded 💯 ============\033[0m"
 else
@@ -103,14 +105,19 @@ fi
 GRAFANA_DATA_DIRECTORY="../../grafana_data"
 DEFAULTS_GRAFANA_INI="tools/grafana/conf/defaults.ini"
 
+
 sed -i "s|^http_port *= *3000|http_port = 3030|" $DEFAULTS_GRAFANA_INI
+sed -i "s|^protocol *= *http|protocol = https|" $DEFAULTS_GRAFANA_INI
+sed -i "s|^cert_file *= *3000|cert_file = /etc/grafana/grafana.crt|" $DEFAULTS_GRAFANA_INI
+sed -i "s|^cert_key *= *3000|cert_key = /etc/grafana/grafana.key|" $DEFAULTS_GRAFANA_INI
 echo "Grafana port changed from 3000 to 3030" > logs/grafana_logs
 sed -i "s|^data = data|data = $GRAFANA_DATA_DIRECTORY|" $DEFAULTS_GRAFANA_INI
 sed -i "s|^logs = data/log|logs = $GRAFANA_DATA_DIRECTORY/log|" $DEFAULTS_GRAFANA_INI
 sed -i "s|^path = data/log|path = $GRAFANA_DATA_DIRECTORY/log|" $DEFAULTS_GRAFANA_INI
 echo "Grafana-Data-Directory changed to $GRAFANA_DATA_DIRECTORY" > logs/grafana_logs
 
-echo -e "\033[1;34m ============ Grafana started ✅ at => http://localhost:3030 ============\033[0m"
+echo -e "\033[1;34m ============ Grafana started ✅ ============\033[0m"
+envsubst < config/grafana/datasources.yaml.template > config/grafana/datasources.yaml
 ./tools/grafana/bin/grafana server --homepath ./tools/grafana/ > logs/grafana_logs 2>&1 &
 echo -e "\033[1;34m ============ see ./logs/grafana_logs ============\033[0m"
 echo -e ""

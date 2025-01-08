@@ -194,7 +194,6 @@ const ChatConversation = ({
 
       const messageEndOffset = messageEndRef.current.offsetTop
       const containerHeight = messageBodyRef.current.clientHeight
-      console.log("the distance of last message: ",messageEndOffset, "the visible disatance of chat container: ",containerHeight, messageEndRef.current.clientHeight)
       messageBodyRef.current.scrollTo({
         top: messageEndOffset - containerHeight + messageEndRef.current.clientHeight,
         behavior: "smooth",

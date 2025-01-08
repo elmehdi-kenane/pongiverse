@@ -34,7 +34,7 @@ function FriendsParam(props) {
 			// navigate('/mainpage/game/solo/1vs1/friends');
 		}
 		else
-			console.log("Socket ga3ma me7lola")
+			console.log("Socket is closed for the moment")
 	}
 
 	const handleRmFriend = () => {

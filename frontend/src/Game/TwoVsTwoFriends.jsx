@@ -64,7 +64,6 @@ const TwoVsTwoFriends = () => {
 				let data = JSON.parse(event.data)
 				let type = data.type
 				let message = data.message
-				console.log('========', type, '========')
 				if (type === 'connected_again') {
 					////console.log("****IS A FRIEND:", message.is_a_friend);
 					const currentAllGameFriends = allGameFriendsRef.current;
@@ -115,7 +114,6 @@ const TwoVsTwoFriends = () => {
 				} else if (type === 'gameOnHold') {
 					// console.log(message, playerNo)
 					const playerNbr = playerNoRef.current;
-					console.log(message)
 					if (playerNbr === 1 || playerNbr === 2) {
 						if (playerNbr === 1 && message.users.length >= 2)
 							setTemmateInfos({
@@ -179,9 +177,7 @@ const TwoVsTwoFriends = () => {
 						})
 					}
 				} else if (type === "gameReady") {
-					////console.log("inside gameReady")
 					const playerNbr = playerNoRef.current;
-					console.log(message)
 					if (playerNbr === 1 || playerNbr === 2) {
 						if (playerNbr === 1 && message.users.length >= 2)
 							setTemmateInfos({

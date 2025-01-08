@@ -31,11 +31,6 @@ async def disconnected(self, user_channels):
 			user_id = payload_data.get('user_id')
 			if user_id:
 				user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
-				if user:
-					if user_id in user_channels:
-						print(f"\nUSER {user_id} , DISCONNECT BEFORE: {user_channels}\n")
-						del user_channels[user_id]
-						print(f"\nUSER {user_id} , DISCONNECT AFTER: {user_channels}\n")
 		except TokenError:
 			pass
 
@@ -45,7 +40,7 @@ async def send_playing_status_to_friends(self, user, status, user_channels):
 	friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
 	for friend in friends:
 		friend_id = await sync_to_async(lambda: friend.friend.id)()
-		friend_channel = user_channels.get(friend_id)
+		friend_channel = user_channels.get(friend_id).channel_name if friend_id in user_channels else None
 		if friend_channel:
 			await self.channel_layer.send(friend_channel, {
 				'type': 'playingStatus',
@@ -61,80 +56,83 @@ async def send_playing_status_to_friends(self, user, status, user_channels):
 				}
 			})
 
+
 async def create_tournament(self, data, user_channels):
 	ip_address = os.getenv("IP_ADDRESS")
 	username = data['message']['user']
 	userrr = username
-	user = await sync_to_async(customuser.objects.filter(username=username).first)()
-	if user is not None:
-		invitations = await sync_to_async(lambda: GameNotifications.objects.filter(target=user))()
-		await sync_to_async(invitations.delete)()
-		channel_layer = get_channel_layer()
-		friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
-		for friend in friends:
-			friend_id = await sync_to_async(lambda: friend.friend.id)()
-			channel_name = user_channels.get(friend_id)
-			if channel_name:
-				await self.channel_layer.send(
-					channel_name,
-					{
-						'type': 'friend_created_tournament',
-						'message': {
-							'friend_username': friend.friend.username,
-							'userInfos': {
-										'id': user.id,
-										'name': user.username,
-										'level': 2,
-										'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user.avatar.url}",
-									}
-						}
-					}
-				)
-		channel_name = user_channels.get(user.id)
-		while True:
-			random_number = random.randint(100000000, 1000000000)
-			if random_number not in tournaments:
-				break
-		user.is_playing = True
-		await sync_to_async(user.save)()
-		# tournament = Tournament(tournament_id=random_number)
-		# await sync_to_async(tournament.save)()
-		tournaments[random_number] = {}
-		# tournamentMember = TournamentMembers(user=user, tournament=tournament, is_owner=True)
-		# await sync_to_async(tournamentMember.save)()
-		tournaments[random_number]['members'] = []
-		tournaments[random_number]['is_started'] = False
-		tournaments[random_number]['is_finished'] = False
-		new_member = {"username": username, "is_owner": True, "is_eliminated": False, "is_inside": True}
-		tournaments[random_number]['members'].append(new_member)
-		group_name = f'tournament_{random_number}'
-		if channel_name:
-			await channel_layer.group_add(group_name, channel_name)
-			await self.channel_layer.send(
-				channel_name,
-				{
-					'type': 'tournament_created',
-					'message': {
-						'user': username
-					}
-				}
-			)
-		for username, channel_name in user_channels.items():
-			if channel_name:
-				await self.channel_layer.send(
-					channel_name,
-					{
-						'type': 'tournament_created_by_user',
-						'message': {
-							'tournament_info' : {
-								'tournament_id' : random_number,
-								'owner' : userrr,
-								'size' : 1
+	is_joining_tour = is_user_joining_tournament(username)
+	if is_joining_tour == 0:
+		print("*****WSEL LHNA22")
+		user = await sync_to_async(customuser.objects.filter(username=username).first)()
+		if user is not None:
+			invitations = await sync_to_async(lambda: GameNotifications.objects.filter(target=user))()
+			await sync_to_async(invitations.delete)()
+			channel_layer = get_channel_layer()
+			friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
+			for friend in friends:
+				friend_id = await sync_to_async(lambda: friend.friend.id)()
+				channel_name = user_channels.get(friend_id).channel_name if friend_id in user_channels else None
+				if channel_name:
+					await self.channel_layer.send(
+						channel_name,
+						{
+							'type': 'friend_created_tournament',
+							'message': {
+								'friend_username': friend.friend.username,
+								'userInfos': {
+											'id': user.id,
+											'name': user.username,
+											'level': 2,
+											'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user.avatar.url}",
+										}
 							}
 						}
+					)
+			# channel_name = user_channels.get(user.id)
+			while True:
+				random_number = random.randint(100000000, 1000000000)
+				if random_number not in tournaments:
+					break
+			user.is_playing = True
+			await sync_to_async(user.save)()
+			# tournament = Tournament(tournament_id=random_number)
+			# await sync_to_async(tournament.save)()
+			tournaments[random_number] = {}
+			tournaments[random_number]['members'] = []
+			tournaments[random_number]['is_started'] = False
+			tournaments[random_number]['is_finished'] = False
+			new_member = {"username": username, "is_owner": True, "is_eliminated": False, "is_inside": True}
+			tournaments[random_number]['members'].append(new_member)
+			group_name = f'tournament_{random_number}'
+			channel_name = user_channels.get(user.id).channel_name if user.id in user_channels else None
+			if channel_name:
+				await channel_layer.group_add(group_name, channel_name)
+				await self.channel_layer.send(
+					channel_name,
+					{
+						'type': 'tournament_created',
+						'message': {
+							'user': username
+						}
 					}
 				)
-		await send_playing_status_to_friends(self, user, True, user_channels)
+			for username, channel_name in user_channels.items():
+				if channel_name.channel_name:
+					await self.channel_layer.send(
+						channel_name.channel_name,
+						{
+							'type': 'tournament_created_by_user',
+							'message': {
+								'tournament_info' : {
+									'tournament_id' : random_number,
+									'owner' : userrr,
+									'size' : 1
+								}
+							}
+						}
+					)
+			await send_playing_status_to_friends(self, user, True, user_channels)
 
 
 def is_user_joining_tournament(username):
@@ -181,7 +179,7 @@ async def kick_player(self, data, user_channels):
 	)
 	for username, channel_name in user_channels.items():
 		await self.channel_layer.send(
-			channel_name,
+			channel_name.channel_name,
 			{
 				'type': 'user_kicked_from_tournament',
 				'message': {
@@ -210,7 +208,7 @@ async def leave_tournament(self, data, user_channels):
 	for member in tournaments[tournament_id]['members']:
 		user = await sync_to_async(customuser.objects.filter(username=member['username']).first)()
 		is_a_friend = await check_user_is_a_friend(kicked_user, user)
-		channel_name = user_channels.get(user.id)
+		channel_name = user_channels.get(user.id).channel_name if user.id in user_channels else None
 		if channel_name:
 			await self.channel_layer.send(
 			channel_name,
@@ -230,7 +228,7 @@ async def leave_tournament(self, data, user_channels):
 			}
 	)
 	delete_member(tournament_id, data['message']['kicked'])
-	channel_name = user_channels.get(kicked_user.id)
+	channel_name = user_channels.get(kicked_user.id).channel_name if kicked_user.id in user_channels else None
 	await self.channel_layer.group_discard(group_name, channel_name)
 	channel_name_notif_list = notifs_user_channels.get(kicked_user.id)
 	if channel_name_notif_list:
@@ -240,7 +238,7 @@ async def leave_tournament(self, data, user_channels):
 		user = await sync_to_async(customuser.objects.filter(id=user_id).first)()
 		is_a_friend = await check_user_is_a_friend(kicked_user, user)
 		await self.channel_layer.send(
-			channel_name,
+			channel_name.channel_name,
 			{
 				'type': 'user_leave_tournament',
 				'message': {
@@ -280,7 +278,7 @@ async def destroy_tournament(self, data, user_channels):
 		user = await sync_to_async(customuser.objects.filter(username=username).first)()
 		user.is_playing = False
 		await sync_to_async(user.save)()
-		channel_name = user_channels.get(user.id)
+		channel_name = user_channels.get(user.id).channel_name if user.id in user_channels else None
 		channel_name_notif_list = notifs_user_channels.get(user.id)
 		if channel_name:
 			await self.channel_layer.group_discard(group_name, channel_name)
@@ -290,7 +288,7 @@ async def destroy_tournament(self, data, user_channels):
 	friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
 	for friend in friends:
 		friend_id = await sync_to_async(lambda: friend.friend.id)()
-		channel_name = user_channels.get(friend_id)
+		channel_name = user_channels.get(friend_id).channel_name if friend_id in user_channels else None
 		if channel_name:
 			await self.channel_layer.send(
 				channel_name,
@@ -308,9 +306,9 @@ async def destroy_tournament(self, data, user_channels):
 			)
 	await send_playing_status_to_friends(self, user, False, user_channels)
 	for username, channel_name in user_channels.items():
-		if channel_name:
+		if channel_name.channel_name:
 			await self.channel_layer.send(
-				channel_name,
+				channel_name.channel_name,
 				{
 					'type': 'tournament_destroyed_by_user',
 					'message': {
@@ -343,7 +341,7 @@ async def start_tournament(self, data, user_channels):
 		# await sync_to_async(tournamentuserinfo.save)()
 		count += 1
 		user = await sync_to_async(customuser.objects.filter(username=member['username']).first)()
-		channel_name = user_channels.get(user.id)
+		channel_name = user_channels.get(user.id).channel_name if user.id in user_channels else None
 		if channel_name:
 			await self.channel_layer.send(
 				channel_name,
@@ -355,9 +353,9 @@ async def start_tournament(self, data, user_channels):
 				}
 			)
 	for username, channel_name in list(user_channels.items()):
-		if channel_name:
+		if channel_name.channel_name:
 			await self.channel_layer.send(
-				channel_name,
+				channel_name.channel_name,
 				{
 					'type': 'tournament_started_by_user',
 					'message': {
@@ -415,7 +413,7 @@ async def accept_invite(self, data, user_channels):
 		user.is_playing = True
 		await sync_to_async(user.save)()
 		channel_name_list = notifs_user_channels.get(user.id)
-		user_channel_name = user_channels.get(user.id)
+		user_channel_name = user_channels.get(user.id).channel_name if user.id in user_channels else None
 		new_member = {"username": username, "is_owner": False, "is_eliminated": False, "is_inside": True}
 		tournaments[tournament_id]['members'].append(new_member)
 		if channel_name_list:
@@ -427,7 +425,7 @@ async def accept_invite(self, data, user_channels):
 		for member in tournaments[tournament_id]['members']:
 			member_user = await sync_to_async(customuser.objects.filter(username=member['username']).first)()
 			if member_user:
-				channel_name = user_channels.get(member_user.id)
+				channel_name = user_channels.get(member_user.id).channel_name if member_user.id in user_channels else None
 				if channel_name:
 					await self.channel_layer.send(
 						channel_name,

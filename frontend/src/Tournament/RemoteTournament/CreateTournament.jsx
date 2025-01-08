@@ -115,7 +115,6 @@ function CreateTournament() {
 				const allMembers = data.allMembers
 				if (data.is_owner === 'yes')
 					setIsTournamentOwner(true)
-				console.log(data)
 				setTournamentId(data.tournament_id)
 				setTournamentMembers(allMembers)
 			} else {
@@ -166,10 +165,10 @@ function CreateTournament() {
 				navigate("/signin")
 			}
 		}
-		if (user) {
+		if (user && socket) {
 			check_is_started_and_not_finished()
 		}
-	}, [user])
+	}, [user, socket])
 
 	useEffect(() => {
 		const get_member = async (username) => {

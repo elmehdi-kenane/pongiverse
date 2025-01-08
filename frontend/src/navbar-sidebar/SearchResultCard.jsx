@@ -48,7 +48,6 @@ const SearchResultCard = ({
         }
       );
       const data = await response.json();
-     console.log("data", data);
       if (response.ok) {
         let suggestedChatRooms = suggestedChatRoomsRef.current;
         let updatedSuggestedRooms = suggestedChatRooms.filter(
@@ -115,7 +114,6 @@ const SearchResultCard = ({
       setIsHome(false);
       navigate(`/mainpage/chat`);
     } else {
-     console.log("show toast ===============================");
       toast.error("Please join the room to access its content.");
     }
   };

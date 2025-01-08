@@ -47,7 +47,6 @@ const InvitationRoom = (props) => {
       // }
 
     } catch (error) {
-      console.log(error)
       toast.error("An error occurred while processing the invitation.")
       // toast.dismiss(toastId)
     }
@@ -65,7 +64,6 @@ const InvitationRoom = (props) => {
         })
       })
       const data = await response.json()
-     console.log("Data:", data)
       if (response.ok) {
         let roomInvitations = chatRoomInvitationsRef.current
         let updatedRooms = roomInvitations.filter(

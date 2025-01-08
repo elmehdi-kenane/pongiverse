@@ -79,14 +79,7 @@ async def invite_friend(self, data, notifs_user_channels):
 		paddleY = 165,
 		score = 0
 	)
-	# ##print"ENTER 3")
-	# await self.send(text_data=json.dumps({
-	#     'type': 'playerNo',
-	#     'message': {
-	#         'playerNo': 1,
-	#         'id': room_id
-	#     }
-	# }))
+
 	user_channel_list = notifs_user_channels.get(user1.id)
 	#print"************ WAS HEEERE BACKK: ", user_channel_list)
 	if user_channel_list:
@@ -108,7 +101,7 @@ async def invite_friend(self, data, notifs_user_channels):
 	for friend in friends:
 		friend_id = await sync_to_async(lambda: friend.friend.id)()
 		#print"************ WAS HEEERE BACKK")
-		friend_channel = user_channels.get(friend_id)
+		friend_channel = user_channels.get(friend_id).channel_name if friend_id in user_channels else None
 		if friend_channel:
 			await self.channel_layer.send(friend_channel, {
 				'type': 'playingStatus',
@@ -203,7 +196,7 @@ async def accept_game_invite(self, data, notifs_user_channels):
 			rooms[str(room['id'])] = room
 			await sync_to_async(active_match.delete)()
 			# await self.channel_layer.group_add(str(room['id']), self.channel_name)
-			channel_name = user_channels.get(creator.id)
+			channel_name = user_channels.get(creator.id).channel_name if creator.id in user_channels else None
 			if channel_name:
 				await self.channel_layer.group_add(str(room['id']), channel_name)
 			target_channel_list = notifs_user_channels.get(friend.id)
@@ -222,7 +215,7 @@ async def accept_game_invite(self, data, notifs_user_channels):
 			friends = await sync_to_async(list)(Friendship.objects.filter(user=friend))
 			for user in friends:
 				friend_id = await sync_to_async(lambda: user.friend.id)()
-				friend_channel = user_channels.get(friend_id)
+				friend_channel = user_channels.get(friend_id).channel_name if friend_id in user_channels else None
 				if friend_channel:
 					await self.channel_layer.send(friend_channel, {
 						'type': 'playingStatus',
@@ -293,7 +286,7 @@ async def accept_game_invite_mp(self, data, notifs_user_channels):
 				}
 				rooms[str(room['id'])] = room
 				await sync_to_async(active_match.delete)()
-				channel_name = user_channels.get(creator.id)
+				channel_name = user_channels.get(creator.id).channel_name if creator.id in user_channels else None
 				if channel_name:
 					await self.channel_layer.group_add(str(room['id']), channel_name)
 				target_channel_list = notifs_user_channels.get(friend.id)
@@ -312,7 +305,7 @@ async def accept_game_invite_mp(self, data, notifs_user_channels):
 				friends = await sync_to_async(list)(Friendship.objects.filter(user=friend))
 				for user in friends:
 					friend_id = await sync_to_async(lambda: user.friend.id)()
-					friend_channel = user_channels.get(friend_id)
+					friend_channel = user_channels.get(friend_id).channel_name if friend_id in user_channels else None
 					if friend_channel:
 						await self.channel_layer.send(friend_channel, {
 							'type': 'playingStatus',
@@ -366,7 +359,7 @@ async def accept_game_invite_mp(self, data, notifs_user_channels):
 				friends = await sync_to_async(list)(Friendship.objects.filter(user=friend))
 				for user in friends:
 					friend_id = await sync_to_async(lambda: user.friend.id)()
-					friend_channel = user_channels.get(friend_id)
+					friend_channel = user_channels.get(friend_id).channel_name if friend_id in user_channels else None
 					if friend_channel:
 						await self.channel_layer.send(friend_channel, {
 							'type': 'playingStatus',

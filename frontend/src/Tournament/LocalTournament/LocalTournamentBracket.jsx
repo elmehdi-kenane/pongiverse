@@ -730,7 +730,6 @@ function LocalTournamentBracket() {
 				setTime(fiendGameStatus[2].time)
 				setPlayersInfos(fiendGameStatus)
 				setalreadyStarted(1)
-				console.log('already a running game', fiendGameStatus)
 			}
 		} else
 			gameAlreadyCheck = true

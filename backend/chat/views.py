@@ -638,7 +638,7 @@ def directs_search(request):
             user = customuser.objects.get(username=request.GET.get('user'))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
-        frienships = Friendship.objects.filter(user=user, friend__username__icontains=request.GET.get('searchUsername'))
+        frienships = Friendship.objects.filter(user=user, friend__username__icontains=request.GET.get('searchUsername'), block_status = Friendship.BLOCK_NONE)
         serializer = friends_with_directs_serializer(frienships, many=True, context={
             'username': user.username,
             'user': user

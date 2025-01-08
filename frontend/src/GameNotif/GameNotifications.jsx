@@ -233,7 +233,6 @@ const GameNotifications = (props) => {
           }
         );
         if (response.ok) {
-          console.log("****response", response);
           const data = await response.json();
           if (data.Case === "Tournament_does_not_exist") {
             notifyError("Tournament does not exist");
@@ -305,13 +304,7 @@ const GameNotifications = (props) => {
                 import.meta.env.VITE_IPADDRESS
               }:${import.meta.env.VITE_PORT}/ws/socket-server`
             );
-            console.log("socket jdida game notif");
             newSocket.onopen = () => {
-              // console.log("+++++++++++=======+++++++++");
-              console.log(
-                "GAME SOCKET OPENED AND NOW WE WILL MOVE TO FRIEND PAGE"
-              );
-              // console.log("+++++++++++=======+++++++++");
               setSocket(newSocket);
               if (message.mode === "1vs1")
                 navigate(`/mainpage/game/solo/1vs1/friends`);
@@ -337,7 +330,6 @@ const GameNotifications = (props) => {
                 import.meta.env.VITE_IPADDRESS
               }:${import.meta.env.VITE_PORT}/ws/socket-server`
             );
-            console.log("socket jdida game notif 2");
             newSocket.onopen = () => {
               setSocket(newSocket);
               navigate("/mainpage/game/createtournament");
@@ -512,6 +504,7 @@ const GameNotifications = (props) => {
             status: "",
             avatar: "",
           });
+          props.setDirectsSearch("");
         } else if (
           type === "user_join_tournament" &&
           location.pathname === "/mainpage/game/jointournament"

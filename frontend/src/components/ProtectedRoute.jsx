@@ -23,7 +23,6 @@ const ProtectedRoute = ({ children }) => {
 					}
 				);
 				response = await response.json();
-				console.log(response.Case);
 				if (response.Case !== "Invalid token") {
 					setIsAuthenticated(true)
 				} else {

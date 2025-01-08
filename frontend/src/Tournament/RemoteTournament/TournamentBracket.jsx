@@ -109,11 +109,11 @@ function TournamentBracket() {
 			}
 		}
 
-		if (user) {
+		if (user && socket) {
 			check_is_join()
 			get_oponent()
 		}
-	}, [user])
+	}, [user, socket])
 
 	useEffect(() => {
 		if (notifSocket && notifSocket.readyState === WebSocket.OPEN) {
@@ -142,12 +142,14 @@ function TournamentBracket() {
 				let data = JSON.parse(event.data)
 				let type = data.type
 				let message = data.message
-				if (type == 'new_user_win') {
+				if (type === 'new_user_win') {
 					const newMember = { 'id': message.id, 'name': message.name, 'level': message.level, 'image': message.image, 'position': message.position }
 					if (message.round_reached === 'SEMIFINAL')
 						setroundSemiFinalMembers((prevRoundSemiFinalMembers) => [...prevRoundSemiFinalMembers, newMember])
 					if (message.round_reached === 'FINAL')
 						setFinalMembers((prevFinalMembers) => [...prevFinalMembers, newMember])
+				} else if (type === 'hmed') {
+					socket.close()
 				}
 			}
 		}

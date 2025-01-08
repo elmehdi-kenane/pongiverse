@@ -59,7 +59,6 @@ function WaysSecondStep() {
 	}, [nextdata]);
 
 	useEffect(() => {
-		console.log(data.avatar);
 		setNextdata((prevNextdata) => ({
 			...prevNextdata,
 			email: data.email,

@@ -96,9 +96,9 @@ function JoinTournament() {
 				navigate('/signin')
 			}
 		}
-		if (user)
+		if (user && socket)
 			check_is_started_and_not_finished()
-	}, [user])
+	}, [user, socket])
 
 	useEffect(() => {
 		const getTournamentSuggestions = async () => {
@@ -148,7 +148,6 @@ function JoinTournament() {
 					const socketRefer = socketRef.current
 					if (socketRefer?.readyState !== WebSocket.OPEN) {
 						const newSocket = new WebSocket(`${import.meta.env.VITE_SOCKET}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/ws/socket-server`)
-						console.log("socket jdida join tournoi");
 						newSocket.onopen = () => {
 							setSocket(newSocket)
 							navigate("/mainpage/game/createtournament");
@@ -189,13 +188,11 @@ function JoinTournament() {
 						size: 0
 					})
 				}
-			} else {
+			} else
 				navigate('/signin')
-			}
 		}
-		if (user) {
+		if (user)
 			get_members()
-		}
 	}, [data])
 
 	return (

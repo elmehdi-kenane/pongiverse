@@ -48,7 +48,6 @@ function ReportFooter() {
       handleBlockFriend(user, userId)
       navigate('/mainpage/dashboard');
     }
-   console.log("Report Value :", reportValue);
     setIsReport(false);
   }
 

@@ -12,7 +12,6 @@ const Dashboard = () => {
 
   return (
     <>
-
       { isGameStats && <DashResult/> }
       <div className={`${!isGameStats ? `dashpage` : `dashpage dash-blur`}`}>
         <GameNotifications />

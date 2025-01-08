@@ -178,7 +178,7 @@ const AiOpponent = () => {
             }
             context.putImageData(botPaddle, bot.x, nextY);
             bot.topOfPaddle = nextY;
-          } else console.log("9waaaaaaada");
+          } else console.log("Error");
         }
       }
     };
@@ -397,7 +397,6 @@ const AiOpponent = () => {
       const currentTime = Date.now();
       const elapsedTime = currentTime - startTime;
       if (elapsedTime >= 1000) {
-        console.log(`updateBotView executed. Elapsed time: ${elapsedTime}ms`);
         bot.ballPosition = {
           x: ballPositionRef.current.x,
           y: ballPositionRef.current.y,
@@ -547,7 +546,7 @@ const ScoreBarDesktop = ({ score, username, avatar }) => {
       <div className="aiOpponent-separator">-</div>
       <div className="player">
         <p className="score">{score.bot}</p>
-        <p className="name">AI Kasslan</p>
+        <p className="name">AiOpponent</p>
         <img src={aiOpponentAvatar} alt={aiOpponentAvatar} />
       </div>
     </div>

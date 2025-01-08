@@ -5,7 +5,7 @@ global:
 alerting:
   alertmanagers:
     - static_configs:
-        - targets: ["localhost:9093"]
+        - targets: ["${ALERTMANAGER_TARGET}"]
 
 rule_files:
   - "alert_rules.yml"
@@ -14,8 +14,8 @@ remote_write:
 - url: "https://prometheus-prod-13-prod-us-east-0.grafana.net/api/prom/push"
 
   basic_auth:
-    username: "1901076"
-    password: "glc_eyJvIjoiMTI3MzE5NCIsIm4iOiJzdGFjay0xMDkyMDQyLWhtLXdyaXRlLWVsbWVoZGkta2VuYW5lLXRva2VueCIsImsiOiI2NUM0RTdVMWkzZWY3eEkzM1JQazNud24iLCJtIjp7InIiOiJwcm9kLXVzLWVhc3QtMCJ9fQ=="
+    username: "${REMOTE_WRITE_USERNAME}"
+    password: "${REMOTE_WRITE_PASSWORD}"
 
 scrape_configs:
   - job_name: "backend_application_availability"
@@ -25,4 +25,4 @@ scrape_configs:
   
   - job_name: 'node_exporter'
     static_configs:
-      - targets: ['localhost:9100']
+      - targets: ['${NODE_EXPORTER_TARGET}']

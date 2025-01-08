@@ -11,7 +11,6 @@ const MyRoomContent = (props) => {
   let chatRoomCoverRef = useRef(chatRoomCover)
 
   const navigateToChatRoom = () => {
-   console.log("Room ID: ", props.roomId)
     setSelectedChatRoom({
       id: props.roomId,
       name: props.name,
@@ -48,13 +47,12 @@ const MyRoomContent = (props) => {
           const allMyChatRooms = props.myChatRooms
           const updatedRooms = allMyChatRooms.map((room) => {
             if (room.id === data.data.id) {
-             console.log("Updated Room: ", data.data.cover)
               return { ...room, cover: data.data.cover }
             }
             return room
           })
           props.setMyChatRooms(updatedRooms)
-        }, 2000)
+        }, 1000)
       } else if (response.status === 401)
         navigate('/signin')
       else toast.error(data.error)
@@ -63,6 +61,8 @@ const MyRoomContent = (props) => {
       toast.dismiss(toastId)
     }
   }
+
+  const notifyErr = (err) => toast.error(err);
 
   useEffect(() => {
     chatRoomCoverRef.current = chatRoomCover
@@ -73,9 +73,14 @@ const MyRoomContent = (props) => {
 
   const onChangeIcon = (event) => {
     const file = event.target.files[0]
-    if (file) {
+    if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
+      if (file.size > 3 * 1024 * 1024) {
+        notifyErr('File size must be less than 3MB.');
+        return;
+      }
       setChatRoomConver(file)
-    }
+    } else
+    notifyErr('Please select a JPEG or PNG file.');
   }
   return (
     <>
@@ -89,6 +94,7 @@ const MyRoomContent = (props) => {
             type="file"
             ref={fileInputRef}
             style={{ display: "none" }}
+            accept="image/png, image/jpeg"
             onChange={onChangeIcon}
           />
         </div>

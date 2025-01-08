@@ -69,14 +69,6 @@ async def join_room_mp(self, data, rooms, user_channels):
 		if active_match.mode == '2vs2' and active_match.room_type == 'random':
 			##print"FOUND AN ACTIVE MATCH")
 			player_state_count = await sync_to_async(PlayerState.objects.filter(active_match=active_match).count)()
-			# player_state = await sync_to_async(PlayerState.objects.filter(active_match=active_match).first)()
-			# player_username = await sync_to_async(lambda: player_state.player.username)()
-			# if player_username == data['message']['user']:
-				# await self.send(text_data=json.dumps({
-				#     'type': 'alreadySearching',
-				#     'message': 'alreadySearchinggg'
-				# }))
-				# return
 			isEmpty = False
 			user = await sync_to_async(customuser.objects.filter(username=data['message']['user']).first)()
 			user.is_playing = True
@@ -84,7 +76,7 @@ async def join_room_mp(self, data, rooms, user_channels):
 			friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
 			for friend in friends:
 				friend_id = await sync_to_async(lambda: friend.friend.id)()
-				friend_channel = user_channels.get(friend_id)
+				friend_channel = user_channels.get(friend_id).channel_name  if friend_id in user_channels else None
 				##printfriend_channel)
 				if friend_channel:
 					await self.channel_layer.send(friend_channel, {
@@ -237,7 +229,7 @@ async def join_room_mp(self, data, rooms, user_channels):
 		friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
 		for friend in friends:
 			friend_id = await sync_to_async(lambda: friend.friend.id)()
-			friend_channel = user_channels.get(friend_id)
+			friend_channel = user_channels.get(friend_id).channel_name  if friend_id in user_channels else None
 			##printfriend_channel)
 			if friend_channel:
 				await self.channel_layer.send(friend_channel, {
@@ -297,14 +289,8 @@ async def quit_room_mp(self, data, rooms, user_channels):
 							})
 							for player_state in player_states:
 								player_state_name = await sync_to_async(lambda: player_state.player.username)()
-								# player_state_channel = user_channels[player_state_name]
-								# ##printplayer_state_name)
-								# await self.channel_layer.send(player_state_channel, {
-								#     'type': 'creatorOut',
-								#     'message': 'creatorOut'
-								# })
 								users.append(player_state_name)
-							user_channel = user_channels.get(user.id)
+							user_channel = user_channels.get(user.id).channel_name  if user.id in user_channels else None 
 							self.channel_layer.group_discard(str(room.room_id), user_channel)
 							await sync_to_async(room.delete)()
 							for user in users:
@@ -314,7 +300,7 @@ async def quit_room_mp(self, data, rooms, user_channels):
 								friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
 								for friend in friends:
 									friend_id = await sync_to_async(lambda: friend.friend.id)()
-									friend_channel = user_channels.get(friend_id)
+									friend_channel = user_channels.get(friend_id).channel_name  if friend_id in user_channels else None
 									if friend_channel:
 										await self.channel_layer.send(friend_channel, {
 											'type': 'playingStatus',
@@ -335,7 +321,7 @@ async def quit_room_mp(self, data, rooms, user_channels):
 							for player_state in player_states:
 								if player_state.playerNo > player_no:
 									player_state_name = await sync_to_async(lambda: player_state.player.id)()
-									player_state_channel = user_channels[player_state_name]
+									player_state_channel = user_channels.get(player_state_name).channel_name  if player_state_name in user_channels else None
 									##printf"INFOS : {player_state_name} --- {player_state.playerNo - 1} --- {room.room_id}")
 									await self.channel_layer.send(player_state_channel, {
 										'type': 'sendPlayerNo',
@@ -374,20 +360,18 @@ async def quit_room_mp(self, data, rooms, user_channels):
 									'level': player_match_statistics.level
 								})
 							asyncio.create_task(waited_game(self, room.room_id, users))
-							user_channel = user_channels.get(user.id)
+							user_channel = user_channels.get(user.id).channel_name  if user.id in user_channels else None 
 							self.channel_layer.group_discard(str(room.room_id), user_channel)
 					else:
-						user_channel = user_channels.get(user.id)
+						user_channel = user_channels.get(user.id).channel_name  if user.id in user_channels else None 
 						self.channel_layer.group_discard(str(room.room_id), user_channel)
 						await sync_to_async(room.delete)()
-					##printf"INSIDE QUIT ROOM : {data['message']['id']}")
-					##print"SETTING THE PLAYER TO IS NOT PLAYING")
 					user.is_playing = False
 					await sync_to_async(user.save)()
 					friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
 					for friend in friends:
 						friend_id = await sync_to_async(lambda: friend.friend.id)()
-						friend_channel = user_channels.get(friend_id)
+						friend_channel = user_channels.get(friend_id).channel_name  if friend_id in user_channels else None
 						if friend_channel:
 							await self.channel_layer.send(friend_channel, {
 								'type': 'playingStatus',
@@ -431,17 +415,6 @@ async def validate_player_mp(self, data, rooms, user_channels):
 				await self.channel_layer.group_add(str(room['id']), self.channel_name)
 				if room['status'] == 'notStarted':
 					rooms[str(room['id'])]['status'] = 'started'
-					# users = []
-					# for player in room['players']:
-					#     ##printf"PLAYER NAME : {player['user']}")
-					#     player = await sync_to_async(customuser.objects.filter(username=player['user']).first)()
-					#     if (player):
-					#         with player.avatar.open('rb') as f:
-					#             users.append({
-					#                 'name': player.username,
-					#                 'avatar': base64.b64encode(f.read()).decode('utf-8'),
-					#                 'level': 2.4
-					#             })
 					await self.send(text_data=json.dumps({
 						'type': 'setupGame',
 						'message': {
@@ -870,7 +843,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 					friends = await sync_to_async(list)(Friendship.objects.filter(user=player1))
 					for friend in friends:
 							friend_id = await sync_to_async(lambda: friend.friend.id)()
-							friend_channel = user_channels.get(friend_id)
+							friend_channel = user_channels.get(friend_id).channel_name  if friend_id in user_channels else None
 							if friend_channel:
 									await self.channel_layer.send(friend_channel, {
 											'type': 'playingStatus',
@@ -891,7 +864,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 					friends = await sync_to_async(list)(Friendship.objects.filter(user=player2))
 					for friend in friends:
 							friend_id = await sync_to_async(lambda: friend.friend.id)()
-							friend_channel = user_channels.get(friend_id)
+							friend_channel = user_channels.get(friend_id).channel_name  if friend_id in user_channels else None
 							if friend_channel:
 									await self.channel_layer.send(friend_channel, {
 											'type': 'playingStatus',
@@ -912,7 +885,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 					friends = await sync_to_async(list)(Friendship.objects.filter(user=player3))
 					for friend in friends:
 							friend_id = await sync_to_async(lambda: friend.friend.id)()
-							friend_channel = user_channels.get(friend_id)
+							friend_channel = user_channels.get(friend_id).channel_name  if friend_id in user_channels else None
 							if friend_channel:
 									await self.channel_layer.send(friend_channel, {
 											'type': 'playingStatus',
@@ -933,7 +906,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 					friends = await sync_to_async(list)(Friendship.objects.filter(user=player4))
 					for friend in friends:
 							friend_id = await sync_to_async(lambda: friend.friend.id)()
-							friend_channel = user_channels.get(friend_id)
+							friend_channel = user_channels.get(friend_id).channel_name  if friend_id in user_channels else None
 							if friend_channel:
 									await self.channel_layer.send(friend_channel, {
 											'type': 'playingStatus',
@@ -1061,10 +1034,10 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 							player4_match_statistics.total_xp = (player4_totalXP % 1000)
 							player4_match_statistics.goals += room['players'][3]['score']
 							await sync_to_async(player4_match_statistics.save)()
-					user1_channel = user_channels.get(player1.id)
-					user2_channel = user_channels.get(player2.id)
-					user3_channel = user_channels.get(player3.id)
-					user4_channel = user_channels.get(player4.id)
+					user1_channel = user_channels.get(player1.id).channel_name  if player1.id in user_channels else None
+					user2_channel = user_channels.get(player2.id).channel_name  if player2.id in user_channels else None
+					user3_channel = user_channels.get(player3.id).channel_name if player3.id in user_channels else None
+					user4_channel = user_channels.get(player4.id).channel_name if player4.id in user_channels else None
 					self.channel_layer.group_discard(str(room['id']), user1_channel)
 					self.channel_layer.group_discard(str(room['id']), user2_channel)
 					self.channel_layer.group_discard(str(room['id']), user3_channel)
@@ -1114,7 +1087,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 					ballProps["velocityX"] = 5 if (serveX == 1) else -5
 					ballProps["velocityY"] = 5 if (serveY == 1) else -5
 					await asyncio.create_task(updatingGame(self, room))
-					if room['players'][0]['score'] == 10:
+					if room['players'][0]['score'] == 5:
 						room['winner'] = 1
 						room['status'] = 'finished'
 						room['players'][0]['status'] = 'winner'
@@ -1132,7 +1105,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 						friends = await sync_to_async(list)(Friendship.objects.filter(user=player1))
 						for friend in friends:
 								friend_id = await sync_to_async(lambda: friend.friend.id)()
-								friend_channel = user_channels.get(friend_id)
+								friend_channel = user_channels.get(friend_id).channel_name  if friend_id in user_channels else None
 								if friend_channel:
 										await self.channel_layer.send(friend_channel, {
 												'type': 'playingStatus',
@@ -1152,7 +1125,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 						friends = await sync_to_async(list)(Friendship.objects.filter(user=player2))
 						for friend in friends:
 								friend_id = await sync_to_async(lambda: friend.friend.id)()
-								friend_channel = user_channels.get(friend_id)
+								friend_channel = user_channels.get(friend_id).channel_name  if friend_id in user_channels else None
 								if friend_channel:
 										await self.channel_layer.send(friend_channel, {
 												'type': 'playingStatus',
@@ -1172,7 +1145,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 						friends = await sync_to_async(list)(Friendship.objects.filter(user=player3))
 						for friend in friends:
 								friend_id = await sync_to_async(lambda: friend.friend.id)()
-								friend_channel = user_channels.get(friend_id)
+								friend_channel = user_channels.get(friend_id).channel_name  if friend_id in user_channels else None
 								if friend_channel:
 										await self.channel_layer.send(friend_channel, {
 												'type': 'playingStatus',
@@ -1192,7 +1165,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 						friends = await sync_to_async(list)(Friendship.objects.filter(user=player4))
 						for friend in friends:
 								friend_id = await sync_to_async(lambda: friend.friend.id)()
-								friend_channel = user_channels.get(friend_id)
+								friend_channel = user_channels.get(friend_id).channel_name  if friend_id in user_channels else None
 								if friend_channel:
 										await self.channel_layer.send(friend_channel, {
 												'type': 'playingStatus',
@@ -1280,16 +1253,16 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 						player4_match_statistics.total_xp = (player4_totalXP % 1000)
 						player4_match_statistics.goals += room['players'][3]['score']
 						await sync_to_async(player4_match_statistics.save)()
-						user1_channel = user_channels.get(player1.id)
-						user2_channel = user_channels.get(player2.id)
-						user3_channel = user_channels.get(player3.id)
-						user4_channel = user_channels.get(player4.id)
+						user1_channel = user_channels.get(player1.id).channel_name  if player1.id in user_channels else None
+						user2_channel = user_channels.get(player2.id).channel_name  if player2.id in user_channels else None
+						user3_channel = user_channels.get(player3.id).channel_name if player3.id in user_channels else None 
+						user4_channel = user_channels.get(player4.id).channel_name if player4.id in user_channels else None
 						self.channel_layer.group_discard(str(room['id']), user1_channel)
 						self.channel_layer.group_discard(str(room['id']), user2_channel)
 						self.channel_layer.group_discard(str(room['id']), user3_channel)
 						self.channel_layer.group_discard(str(room['id']), user4_channel)
 						return
-					elif room['players'][2]['score'] == 10:
+					elif room['players'][2]['score'] == 5:
 						room['winner'] = 2
 						room['status'] = 'finished'
 						room['players'][2]['status'] = 'winner'
@@ -1307,7 +1280,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 						friends = await sync_to_async(list)(Friendship.objects.filter(user=player1))
 						for friend in friends:
 								friend_id = await sync_to_async(lambda: friend.friend.id)()
-								friend_channel = user_channels.get(friend_id)
+								friend_channel = user_channels.get(friend_id).channel_name  if friend_id in user_channels else None
 								if friend_channel:
 										await self.channel_layer.send(friend_channel, {
 												'type': 'playingStatus',
@@ -1327,7 +1300,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 						friends = await sync_to_async(list)(Friendship.objects.filter(user=player2))
 						for friend in friends:
 								friend_id = await sync_to_async(lambda: friend.friend.id)()
-								friend_channel = user_channels.get(friend_id)
+								friend_channel = user_channels.get(friend_id).channel_name  if friend_id in user_channels else None
 								if friend_channel:
 										await self.channel_layer.send(friend_channel, {
 												'type': 'playingStatus',
@@ -1347,7 +1320,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 						friends = await sync_to_async(list)(Friendship.objects.filter(user=player3))
 						for friend in friends:
 								friend_id = await sync_to_async(lambda: friend.friend.id)()
-								friend_channel = user_channels.get(friend_id)
+								friend_channel = user_channels.get(friend_id).channel_name  if friend_id in user_channels else None
 								if friend_channel:
 										await self.channel_layer.send(friend_channel, {
 												'type': 'playingStatus',
@@ -1367,7 +1340,7 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 						friends = await sync_to_async(list)(Friendship.objects.filter(user=player4))
 						for friend in friends:
 								friend_id = await sync_to_async(lambda: friend.friend.id)()
-								friend_channel = user_channels.get(friend_id)
+								friend_channel = user_channels.get(friend_id).channel_name  if friend_id in user_channels else None
 								if friend_channel:
 										await self.channel_layer.send(friend_channel, {
 												'type': 'playingStatus',
@@ -1455,10 +1428,10 @@ async def runOverGame(self, room, ballProps, rooms, user_channels):
 						player4_match_statistics.total_xp = (player4_totalXP % 1000)
 						player4_match_statistics.goals += room['players'][3]['score']
 						await sync_to_async(player4_match_statistics.save)()
-						user1_channel = user_channels.get(player1.id)
-						user2_channel = user_channels.get(player2.id)
-						user3_channel = user_channels.get(player3.id)
-						user4_channel = user_channels.get(player4.id)
+						user1_channel = user_channels.get(player1.id).channel_name  if player1.id in user_channels else None
+						user2_channel = user_channels.get(player2.id).channel_name  if player2.id in user_channels else None
+						user3_channel = user_channels.get(player3.id).channel_name if player3.id in user_channels else None 
+						user4_channel = user_channels.get(player4.id).channel_name if player4.id in user_channels else None
 						self.channel_layer.group_discard(str(room['id']), user1_channel)
 						self.channel_layer.group_discard(str(room['id']), user2_channel)
 						self.channel_layer.group_discard(str(room['id']), user3_channel)
@@ -1746,7 +1719,7 @@ async def invite_friend_mp(self, data, rooms, user_channels):
 	friends = await sync_to_async(list)(Friendship.objects.filter(user=user1))
 	for friend in friends:
 		friend_id = await sync_to_async(lambda: friend.friend.id)()
-		friend_channel = user_channels.get(friend_id)
+		friend_channel = user_channels.get(friend_id).channel_name  if friend_id in user_channels else None
 		##printfriend_channel)
 		if friend_channel:
 			await self.channel_layer.send(friend_channel, {
@@ -1772,7 +1745,7 @@ async def invite_friend_mp(self, data, rooms, user_channels):
 		##print"ENTER 5")
 		# if receiver and receiver.is_online and not receiver.is_playing:
 		##print"ENTER 6")
-		friend_channel = user_channels.get(user2.id)
+		friend_channel = user_channels.get(user2.id).channel_name if user2.id in user_channels else None
 		friend_channel_list = notifs_user_channels.get(user2.id)
 		if friend_channel_list:
 			usermatchstats = await sync_to_async(UserMatchStatics.objects.filter(player=user1).first)()
@@ -1796,24 +1769,6 @@ async def invite_friend_mp(self, data, rooms, user_channels):
 		await sync_to_async(player_notif.delete)()
 
 async def accept_game_invite_mp(self, data, rooms, user_channels):
-	# active_matches = await sync_to_async(list)(ActiveMatch.objects.all())
-	##printf"ACCEPTING A MATCH FRIEND")
-	# for active_match in active_matches:
-	#     player_state = await sync_to_async(PlayerState.objects.filter(active_match=active_match).first)()
-	#     player_username = await sync_to_async(lambda: player_state.player.username)()
-	#     ##printf"ROOM RUNNING NOW")
-	#     if player_username == data['message']['user']:
-	#         await self.send(text_data=json.dumps({
-	#             'type': 'alreadyPlaying',
-	#             'message': 'alreadyPlaying'
-	#         }))
-	#         return
-	#     if player_username == data['message']['target']:
-	#         await self.send(text_data=json.dumps({
-	#             'type': 'alreadyPlaying',
-	#             'message': 'alreadyPlaying'
-	#         }))
-	#         return
 	ip_address = os.getenv("IP_ADDRESS")
 	for key, value in rooms.items():
 		if value['players'][0]['user'] == data['message']['user'] or value['players'][1]['user'] == data['message']['user']:
@@ -1908,7 +1863,7 @@ async def accept_game_invite_mp(self, data, rooms, user_channels):
 				friends = await sync_to_async(list)(Friendship.objects.filter(user=friend))
 				for user in friends:
 					friend_id = await sync_to_async(lambda: user.friend.id)()
-					friend_channel = user_channels.get(friend_id)
+					friend_channel = user_channels.get(friend_id).channel_name  if friend_id in user_channels else None
 					if friend_channel:
 						await self.channel_layer.send(friend_channel, {
 							'type': 'playingStatus',
@@ -1964,22 +1919,14 @@ async def accept_game_invite_mp(self, data, rooms, user_channels):
 						'mode': '2vs2'
 					}
 				}))
-				##printf"USERS ARE : {users}")
 				asyncio.create_task(waited_game(self, active_match.room_id, users))
-				# await self.channel_layer.group_add(str(room['id']), self.channel_name)
-				# await self.channel_layer.group_add(str(room['id']), user_channels[data['message']['user']])
-				# await self.channel_layer.group_send(str(room['id']), {
-				#     'type': 'goToGamingPage',
-				#     'message': 'goToGamingPage'
-				# })
-				##printf"TARGET NAME IS : {data['message']['target']}")
 				target = await sync_to_async(customuser.objects.filter(username=data['message']['target']).first)()
 				target.is_playing = True
 				await sync_to_async(target.save)()
 				friends = await sync_to_async(list)(Friendship.objects.filter(user=friend))
 				for user in friends:
 					friend_id = await sync_to_async(lambda: user.friend.id)()
-					friend_channel = user_channels.get(friend_id)
+					friend_channel = user_channels.get(friend_id).channel_name  if friend_id in user_channels else None
 					if friend_channel:
 						await self.channel_layer.send(friend_channel, {
 							'type': 'playingStatus',
@@ -2032,7 +1979,7 @@ async def create_new_room_mp(self, data, rooms, user_channels):
 	friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
 	for friend in friends:
 		friend_id = await sync_to_async(lambda: friend.friend.id)()
-		friend_channel = user_channels.get(friend_id)
+		friend_channel = user_channels.get(friend_id).channel_name  if friend_id in user_channels else None
 		# ##printfriend_channel)
 		if friend_channel:
 			await self.channel_layer.send(friend_channel, {
@@ -2125,7 +2072,7 @@ async def join_new_room_mp(self, data, rooms, user_channels):
 			friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
 			for friend in friends:
 				friend_id = await sync_to_async(lambda: friend.friend.id)()
-				friend_channel = user_channels.get(friend_id)
+				friend_channel = user_channels.get(friend_id).channel_name  if friend_id in user_channels else None
 				if friend_channel:
 					await self.channel_layer.send(friend_channel, {
 						'type': 'playingStatus',
@@ -2187,19 +2134,12 @@ async def join_new_room_mp(self, data, rooms, user_channels):
 				}
 			}))
 			asyncio.create_task(waited_game(self, active_match.room_id, users))
-			# await self.channel_layer.group_add(str(room['id']), self.channel_name)
-			# await self.channel_layer.group_add(str(room['id']), user_channels[data['message']['user']])
-			# await self.channel_layer.group_send(str(room['id']), {
-			#     'type': 'goToGamingPage',
-			#     'message': 'goToGamingPage'
-			# })
-			# target = await sync_to_async(customuser.objects.filter(username=data['message']['target']).first)()
 			user.is_playing = True
 			await sync_to_async(user.save)()
 			friends = await sync_to_async(list)(Friendship.objects.filter(user=user))
 			for friend in friends:
 				friend_id = await sync_to_async(lambda: friend.friend.id)()
-				friend_channel = user_channels.get(friend_id)
+				friend_channel = user_channels.get(friend_id).channel_name  if friend_id in user_channels else None
 				if friend_channel:
 					await self.channel_layer.send(friend_channel, {
 						'type': 'playingStatus',

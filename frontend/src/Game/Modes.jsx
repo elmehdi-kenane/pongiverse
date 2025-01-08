@@ -64,9 +64,9 @@ const Modes = () => {
 				navigate("/signin")
 			}
 		}
-		if (user)
+		if (user && socket)
 			check_is_started_and_not_finished()
-	}, [user])
+	}, [user, socket])
 
 	const goToSoloPage = () => {
 		navigate("../game/solo")

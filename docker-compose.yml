@@ -83,6 +83,7 @@ services:
   # monitoring_system
   monitoring_system:
     build: monitoring_system
+    hostname: monitoring
     container_name: monitoring_system
     ports:
       - "3030:3030"

@@ -106,15 +106,6 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'BLACKLIST_AFTER_ROTATION': True,
-
-    # 'ALGORITHM': 'HS256',
-    # 'SIGNING_KEY': SECRET_KEY,
-
-    # 'AUTH_HEADER_TYPES': ('Bearer',),
-    # 'USER_ID_FIELD': 'id',
-    # 'USER_ID_CLAIM': 'user_id',
-
-    # 'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
 }
 
 REST_FRAMEWORK = {
@@ -122,10 +113,6 @@ REST_FRAMEWORK = {
 		'rest_framework_simplejwt.authentication.JWTAuthentication',
 	  ],
 }
-
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -146,19 +133,6 @@ CHANNEL_LAYERS = {
         },
     },
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels.layers.InMemoryChannelLayer"
-#     }
-# }
 
 
 
@@ -196,18 +170,6 @@ CORS_ALLOWED_ORIGINS = [
     GOOGLE_CONTENT,
     'http://localhost:3000',
 ]
-
-# CSRF_TRUSTED_ORIGINS = ['http://localhost:8000']
-
-
-# CORS_ORIGIN_WHITELIST = [
-# 'http://localhost:3000',
-# 'http://10.11.7.11:3000',
-# 'http://10.13.5.8:3000',
-# 'http://10.13.2.3:3000',
-# 'http://localhost:8000'
-
-# ]
 
 CORS_ALLOW_ALL_ORIGINS: True
 CORS_ALLOW_CREDENTIALS = True

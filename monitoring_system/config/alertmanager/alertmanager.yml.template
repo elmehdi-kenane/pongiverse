@@ -7,9 +7,9 @@ route:
 receivers:
   - name: "default_receiver_email"
     email_configs:
-    - to: "elmehdi.kenane@gmail.com"
-      from: "my-email@example.com"
+    - to: "${EMAIL_USERNAME}"
+      from: "${EMAIL_IDENTITY}"
       smarthost: "smtp.gmail.com:587"
-      auth_username: "elmehdi.kenane@gmail.com"
-      auth_identity: "elmehdi.kenane@gmail.com"
-      auth_password: "okojxmjmpqjdmytw"
+      auth_username: "${EMAIL_USERNAME}"
+      auth_identity: "${EMAIL_IDENTITY}"
+      auth_password: "${EMAIL_PASSWORD}"

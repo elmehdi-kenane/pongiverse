@@ -11,7 +11,6 @@ const ChatRoomMembersList = (props) => {
   const navigate = useNavigate()
   useEffect(() => {
     const fetchAllChatRoomMembers = async () => {
-      console.log(selectedChatRoom)
       try {
         const response = await fetch(
           `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/chatAPI/chatRoomMembersList`,
@@ -28,13 +27,11 @@ const ChatRoomMembersList = (props) => {
         )
         const data = await response.json()
         if (response.ok) {
-          console.log(data)
           setChatRoomMembers(data)
         } else if (response.status === 401)
           navigate("/signin")
         else toast(data.error)
       } catch (error) {
-        console.log(error)
         toast(error.error)
       }
     }

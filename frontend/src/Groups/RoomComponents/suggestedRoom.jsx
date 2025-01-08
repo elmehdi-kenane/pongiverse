@@ -32,7 +32,7 @@ const SuggestedRoom = (props) => {
           setSuggestedChatRooms(updatedSuggestedRooms)
           const currentChatRooms = props.myChatRooms
           props.setMyChatRooms([...currentChatRooms, data.room])
-        }, 2000)
+        }, 1000)
       } else if (response.status === 401)
         navigate('/signin')
       else {

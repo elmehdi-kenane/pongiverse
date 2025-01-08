@@ -11,6 +11,7 @@ import "swiper/css/navigation";
 import GameSettingsOptions from "./GameSettingsOptions";
 // import { ToastContainer, toast } from 'react-toastify';
 import toast, { Toaster } from "react-hot-toast";
+import GameNotifications from "../GameNotif/GameNotifications";
 // import 'react-toastify/dist/ReactToastify.css';
 
 const GameSettings = () => {
@@ -58,7 +59,6 @@ const GameSettings = () => {
     if (preventSlideChange.current) return;
     const currentIndex = swiper.realIndex;
     setActiveSlideIndex(currentIndex);
-   console.log("REAL INDEX : ", swiper.realIndex);
     if (typeChosen === 1) {
       setSelectedItems([swiper.realIndex, selectedItems[1], selectedItems[2]]);
       setPaddleClr(paddleBallColor[swiper.realIndex]);
@@ -72,7 +72,6 @@ const GameSettings = () => {
   };
 
   useEffect(() => {
-    console.log(typeChosen);
     if (typeChosen === 1) {
       setInitialValue(selectedItems[0]);
       setBallSelection(false);
@@ -99,7 +98,6 @@ const GameSettings = () => {
 
   const savingSettings = async () => {
     // const ballSlt = ballSelectionRef.current
-   console.log("ball selcted : ", isChecked);
     if (user) {
       try {
         let response = await fetch(
@@ -118,7 +116,7 @@ const GameSettings = () => {
               effect: isChecked,
             }),
           }
-        );  
+        );
         if (!response.ok) {
           setonSavingParams(false);
           navigate('/signin')
@@ -129,11 +127,11 @@ const GameSettings = () => {
           duration: 2000,
         });
       } catch (e) {
-       console.log("something wrong with fetch");
+        console.log("something wrong with fetch");
         setonSavingParams(false);
       }
     } else {
-     console.log("user variable is empty");
+      console.log("user variable is empty");
       setonSavingParams(false);
     }
   };
@@ -153,7 +151,6 @@ const GameSettings = () => {
     setBallClr("#00C1B6");
     setTableClr("#8a7dac00");
     setSelectedItems([7, 5, 3]);
-    console.log(typeChosen);
     if (typeChosen === 1) {
       if (swiperRef.current && swiperRef.current.swiper)
         swiperRef.current.swiper.slideToLoop(7, 0, false);
@@ -168,6 +165,7 @@ const GameSettings = () => {
 
   return (
     <>
+      <GameNotifications />
       <div
         className="onevsone"
         style={{ flexDirection: "column", position: "relative" }}

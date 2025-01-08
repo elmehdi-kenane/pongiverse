@@ -172,7 +172,6 @@ export const AuthProvider = ({ children }) => {
 				if (response.status === 401)
 					navigate('/signin')
                 let data = await response.json()
-                console.log("data in context", data);
 				setUserImg(data.image);
 			} catch (e) {
 				////console.log("something wrong with fetch");
@@ -190,7 +189,6 @@ export const AuthProvider = ({ children }) => {
 				if (response.status === 401)
 					navigate('/signin')
 				const res = await response.json();
-				console.log(res);
 				if (res.data) setGameCustomize(res.data);
 			} catch (e) {
 				////console.log("something wrong with fetch");
@@ -272,9 +270,13 @@ export const AuthProvider = ({ children }) => {
 				if (!data.error) {
 					(data.mode === 'tournament') ?
 						navigate('mainpage/game/createtournament') :
-						(data.mode === '1vs1') ?
+						((data.mode === '1vs1') && (location.pathname !== '/mainpage/game/solo/1vs1/random' &&
+						location.pathname !== '/mainpage/game/solo/1vs1/friends' &&
+						location.pathname !== '/mainpage/game/solo/1vs1/create-or-join')) ?
 						navigate(`/mainpage/play/1vs1/${data.id}`) :
-						(data.mode === '2vs2') ?
+						((data.mode === '2vs2') && ((location.pathname !== '/mainpage/game/solo/2vs2/random' &&
+						location.pathname !== '/mainpage/game/solo/2vs2/friends' &&
+						location.pathname !== '/mainpage/game/solo/2vs2/create-or-join'))) ?
 						navigate(`/mainpage/play/2vs2/${data.id}`) : ''
 				}
 			} catch (error) {
@@ -571,9 +573,11 @@ export const AuthProvider = ({ children }) => {
 			response = await response.json();
 			if (response.Case !== "Invalid token") {
 				setUser(response.data.username);
+				setUserLevel(response.level);
 				navigate("/mainpage/dashboard");
 			} else {
 				setUser("");
+				setUserLevel(null);
 			}
 		} catch (e) {
 			////console.log("something wrong with fetch");
@@ -593,12 +597,14 @@ export const AuthProvider = ({ children }) => {
 				}
 			);
 			response = await response.json();
-			//console.log("RESPONSE: ", response);
+			//.log("RESPONSE: ", response);
 			if (response.Case !== "Invalid token") {
 				setUser(response.data.username);
+				setUserLevel(response.level);
 			} else {
 				////console.log("FAILD TO LOGIN SUCCESSFULY");
 				setUser("");
+				setUserLevel(null);
 				navigate("/signin");
 			}
 		} catch (e) {

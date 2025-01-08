@@ -3,12 +3,10 @@ import toast from "react-hot-toast"
 const DeleteChatRoom = (props) => {
 
   const chatRoomDeletedUpdater = (data) => {
-   console.log("data: ", data)
     const allMyChatRooms = props.myChatRooms
     const updatedRooms = allMyChatRooms.filter(
       (room) => room.id !== data.roomId
     )
-   console.log("update rooms: ", updatedRooms)
     props.setMyChatRooms(updatedRooms)
     props.setDeletRoom(false)
     props.setShowSettings(false)
@@ -31,8 +29,7 @@ const DeleteChatRoom = (props) => {
           toast.success(data.success)
           toast.dismiss(toastId)
           chatRoomDeletedUpdater(data.data)
-        }, 2000)
-        console.log(data.success)
+        }, 1000)
       } else if (response.status === 401)
         navigate('/signin')
       else {

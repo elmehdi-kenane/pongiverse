@@ -1,5 +1,6 @@
 import { useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import toast from 'react-hot-toast';
 
 const ChangeChatRoomIcon = (props) => {
   const [newRoomIcon, setnewRoomIcon] = useState(null)
@@ -34,9 +35,15 @@ const ChangeChatRoomIcon = (props) => {
     props.setShowSettings(false)
   }
 
+  const notifyErr = (err) => toast.error(err);
+  
   const onChangeChangeRoomAvatar = (e) => {
     const file = e.target.files[0]
-    if (file) {
+    if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
+      if (file.size > 3 * 1024 * 1024) {
+        notifyErr('File size must be less than 3MB.');
+        return;
+      }
       setnewRoomIcon(file)
       const reader = new FileReader()
       reader.onload = (e) => {
@@ -47,7 +54,8 @@ const ChangeChatRoomIcon = (props) => {
         placeHolder.src = imageUrl
       }
       reader.readAsDataURL(file)
-    }
+    } else
+    notifyErr('Please select a JPEG or PNG file.');
   }
 
   return (
