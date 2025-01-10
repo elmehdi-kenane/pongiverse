@@ -11,6 +11,7 @@ import { Toaster } from "react-hot-toast"
 import RoomsNotifications from "./RoomComponents/roomsNotifications"
 import AddIcon from "@mui/icons-material/Add"
 import GameNotifications from "../GameNotif/GameNotifications"
+import {toast} from 'react-hot-toast'
 
 const Rooms = () => {
   const [createRoom, setCreateRoom] = useState(false)
@@ -143,8 +144,10 @@ const Rooms = () => {
     if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
       chatSocket.onmessage = (event) => {
         const data = JSON.parse(event.data)
-        if (data.type === "chatRoomAdminAdded")
+        if (data.type === "chatRoomAdminAdded") {
           chatRoomAdminAdded(data.message)
+          toast.success(`you have been promoted to admin in ${data.message.name}`)
+        }
         else if (data.type === "roomInvitation") {
           const allInvitaions = chatRoomInvitationsRef.current
           setChatRoomInvitations([...allInvitaions, data.room])

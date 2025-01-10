@@ -1,10 +1,12 @@
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import * as ChatIcons from "../../assets/chat/media"
+import * as Icons from "../../assets/navbar-sidebar"
 import AuthContext from "../../navbar-sidebar/Authcontext"
 const ChatRoomMember = (props) => {
     const {chatSocket} = useContext(AuthContext)
+    const [isInviteSent, setIsInviteSent] = useState(false)
     const onClickAddMemberAdmin = () => {
-        if(chatSocket) {
+        if(chatSocket.readyState === WebSocket.OPEN && !isInviteSent) {
             chatSocket.send(JSON.stringify({
                 type: 'addRoomMemberAdmin',
                 message: {
@@ -12,6 +14,7 @@ const ChatRoomMember = (props) => {
                     memberName: props.name
                 }
             }))
+            setIsInviteSent(true)
         }
     }
     return (
@@ -23,7 +26,10 @@ const ChatRoomMember = (props) => {
                     <div className="add-admin-member-level">level2</div>
                 </div>
             </div>
-            <button className="add-room-admin-btn room-admin-btn-added" onClick={onClickAddMemberAdmin}>Add Admin</button>
+            {/* <button className="add-room-admin-btn room-admin-btn-added" onClick={onClickAddMemberAdmin}>Add Admin</button> */}
+            {isInviteSent ? <img src={Icons.waitClock} className="room-invite-sent-icon"/> : <button className="invite-room-member-btn" onClick={onClickAddMemberAdmin}>Add Admin</button>}
+
+
         </div>
     )
 }

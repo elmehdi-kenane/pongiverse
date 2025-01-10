@@ -222,6 +222,7 @@ const ChatRoomConversation = ({
                 icon: "",
                 id: "",
               })
+              setChatRoomMessages([])
               setSelectedItem("")
             }}
           />

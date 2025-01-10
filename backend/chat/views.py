@@ -15,9 +15,6 @@ from rest_framework.pagination import PageNumberPagination
 from myapp.decorators import authentication_required
 # from Notifications.consumers import notifs_user_channels
 
-def get_protocol(request):
-    return "https" if request.is_secure() else "http"
-
 class CustomLimitOffsetPagination(PageNumberPagination):
     page_size = 20  # Default page size
     page_size_query_param = 'page_size'
@@ -125,6 +122,17 @@ def chat_room_messages(request, room_id):
 
 
 
+def set_new_admin(room):
+    members = Membership.objects.filter(room=room).order_by("joined_at")
+    if not members.filter(role="admin").exists() and members.exists():
+        new_admin = members.first()
+        new_admin.role = "admin"
+        new_admin.save()
+        return new_admin.user_id
+    return None
+  
+
+
 @authentication_required
 @api_view(["POST"])
 def leave_chat_room(request):
@@ -146,21 +154,8 @@ def leave_chat_room(request):
             member_to_kick = Membership.objects.get(user=user, room=room)
         except Membership.DoesNotExist:
             return Response({"error": {"Opps!, Something went Wrong"}}, status=404)
-
-        member_role = member_to_kick.role
-        # cick the member from the room membership
         member_to_kick.delete()
-        if member_role == "admin":
-            #print"the user is an admin")
-            all_members = Membership.objects.filter(room=room).order_by("joined_at")
-            admin_found = 0
-            for member in all_members:
-                if member.role == "admin" and member_to_kick != member:
-                    admin_found += 1
-            if all_members and not admin_found:
-                all_members[0].role = "admin"
-                new_admin = customuser.objects.get(id=all_members[0].user_id)
-                all_members[0].save()
+        new_admin_id = set_new_admin(room)
         room.members_count -= 1
         if room.members_count == 0:
             if (
@@ -183,6 +178,9 @@ def leave_chat_room(request):
         for channel in user_channels_name:
             async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type' : 'chatRoomLeft',"roomId": roomId}})
             async_to_sync(channel_layer.group_discard(f"chat_room_{room.id}", channel))
+        new_admin_id_channels = user_channels.get(new_admin_id)
+        for channel in new_admin_id_channels:
+            async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type' : 'chatRoomAdminAdded',"message": {"name": room.name}}})
         return Response(
             {
                 "success": "You left chat room successfully",
@@ -320,6 +318,10 @@ def create_chat_room(request):
         )
     return Response({"error": "Invalid request method"}, status=400)
 
+def delete_file(file, default_file):
+    if file.path and file.url != default_file and default_storage.exists(file.path):
+        default_storage.delete(file.path)
+
 @authentication_required
 @api_view(["DELETE"])
 def delete_chat_room(request, id):
@@ -328,21 +330,9 @@ def delete_chat_room(request, id):
             room = Room.objects.get(id=id)
         except Room.DoesNotExist:
             return Response({"error": "chat room name not found!"}, status=400)
-        all_members = Membership.objects.filter(room=room)
-        for member in all_members:
-            member.delete()
-        if (
-            room.icon.path
-            and room.icon.url != "/media/uploads_default/roomIcon.png"
-            and default_storage.exists(room.icon.path)
-        ):
-            default_storage.delete(room.icon.path)
-        if (
-            room.cover.path            
-            and room.cover.url != "/media/uploads_default/roomCover.png"
-            and default_storage.exists(room.cover.path)
-        ):
-            default_storage.delete(room.cover.path)
+        Membership.objects.filter(room=room).delete()
+        delete_file(room.icon, "/media/uploads_default/roomIcon.png")
+        delete_file(room.cover, "/media/uploads_default/roomCover.png")
         room.delete()
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(f"chat_room_{id}", {"type": "broadcast_message", 'data': {'type': 'chatRoomDeleted', "roomId": id}})
@@ -410,7 +400,7 @@ def rooms_invitations(request, username):
         user = customuser.objects.get(username=username)
         invitations = RoomInvitation.objects.filter(user=user)
         all_invitations = []
-        protocol = get_protocol(request)
+        protocol = os.getenv("PROTOCOL")
         ip_address = os.getenv("IP_ADDRESS")
         for invitaion in invitations:
             room = Room.objects.get(id=invitaion.room_id)
@@ -500,7 +490,7 @@ def accept_chat_room_invite(request):
         room.members_count += 1
         invitation.delete()
         room.save()
-        protocol = get_protocol(request)
+        protocol = os.getenv("PROTOCOL")
         ip_address = os.getenv("IP_ADDRESS")
         channel_layer = get_channel_layer()
         user_channels_name = user_channels.get(user.id)
@@ -668,7 +658,7 @@ def update_status_of_invitations(request):
             user = customuser.objects.get(username=request.data.get("user"))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
-        invitations = RoomInvitation.objects.filter(user=user).update(status="ACC")
+        RoomInvitation.objects.filter(user=user).update(status="ACC")
         return Response({"success": "status updated successfully"}, status=200)
     return Response({"error": "Invalid request method"}, status=400)
 

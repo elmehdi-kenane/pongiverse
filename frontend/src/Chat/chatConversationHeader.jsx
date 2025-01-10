@@ -38,6 +38,7 @@ const ChatConversationHeader = (props) => {
               status: "",
             });
             setSelectedItem('')
+            props.setMessages([])
           }
           }
         />

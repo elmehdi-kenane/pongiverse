@@ -7,7 +7,7 @@ const ChatRoomInvitee = (props) => {
   const {chatSocket} = useContext(AuthContext)
   const [isInviteSent, setIsInviteSent] = useState(false)
   const onClickInviteMember = () => {
-    if(chatSocket) {
+    if(chatSocket.readyState === WebSocket.OPEN && !isInviteSent) {
       chatSocket.send (JSON.stringify({
         type: 'inviteChatRoomMember',
         message : {

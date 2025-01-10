@@ -30,6 +30,9 @@ const GameNotifications = (props) => {
     setNotifications,
     setIsNotificationsRead,
   } = useContext(AuthContext);
+  let { setSelectedDirect, setDirects, setDirectsSearch , selectedItem, setSelectedItem} = useContext(
+    ChatContext
+  );
   const gamePlayRegex = /^\/mainpage\/(game|play)(\/[\w\d-]*)*$/;
   const navigate = useNavigate();
   const location = useLocation();
@@ -289,8 +292,8 @@ const GameNotifications = (props) => {
           message: message,
           type: type,
         };
-        // console.log("type", type);
-        // console.log("message", message);
+        console.log("type", type);
+        console.log("message", message);
         if (props.setData) props.setData(friendsData);
         if (type === "goToGamingPage") {
           // // console.log("navigating now")
@@ -466,35 +469,45 @@ const GameNotifications = (props) => {
         ) {
           props.setIsFriend("false");
           props.getUserFriends();
-        } else if (
-          type === "blocked-friend" &&
-          message.second_username === props.userId
-        ) {
+          setDirects((prev) => prev.filter((direct) => direct.name !== message.second_username));
+          setSelectedDirect({
+            id: "",
+            name: "",
+            status: "",
+            avatar: "",
+          });
+          setSelectedItem("");
+          // props.setDirectsSearch("");
+        } else if (type === "blocked-friend" && message.second_username === props.userId) {
           navigate("/mainpage/dashboard");
-        } else if (
-          data.type === "chatNotificationCounter" &&
-          location.pathname !== "/mainpage/chat"
-        ) {
+          setDirects(prev => prev.filter(direct => direct.name !== message.second_username))
+          setSelectedDirect({
+            id: "",
+            name: "",
+            status: "",
+            avatar: "",
+          });
+          // props.setDirectsSearch("");
+        } else if (data.type === "chatNotificationCounter" && location.pathname !== "/mainpage/chat") {
           setChatNotificationCounter(data.count);
-        } else if (
-          data.type === "roomInvitation" &&
-          location.pathname !== "/mainpage/groups"
-        ) {
+        } else if ( data.type === "roomInvitation" && location.pathname !== "/mainpage/groups") {
           setChatRoomInvitationsCounter((prev) => prev + 1);
-        } else if (
-          location.pathname === "/mainpage/groups" &&
-          (type === "remove-friendship" || type === "blocked-friend")
-        ) {
+        } else if ( location.pathname === "/mainpage/groups" && (type === "remove-friendship" || type === "blocked-friend")) {
           props.setAllFriends((prev) =>
             prev.filter((friend) => friend.name !== message.second_username)
           );
           props.setAllChatRoomMembers((prev) =>
             prev.filter((member) => member.name !== message.second_username)
           );
-        } else if (
-          location.pathname === "/mainpage/chat" &&
-          (type === "remove-friendship" || type === "blocked-friend")
-        ) {
+          setDirects(prev => prev.filter(direct => direct.name !== message.second_username))
+          setSelectedDirect({
+            id: "",
+            name: "",
+            status: "",
+            avatar: "",
+          });
+          // setDirectsSearch("");
+        } else if ( location.pathname === "/mainpage/chat" && (type === "remove-friendship" || type === "blocked-friend")) {
           props.setDirects((prev) =>
             prev.filter((direct) => direct.name !== message.second_username)
           );
@@ -504,8 +517,20 @@ const GameNotifications = (props) => {
             status: "",
             avatar: "",
           });
-          props.setDirectsSearch("");
-        } else if (
+        }else if  (type ==='remove-friendship' || type === 'blocked-friend')
+          {
+            setDirects(prev => prev.filter(direct => direct.name !== message.second_username))
+            if (selectedItem === message.second_username) {
+              setSelectedItem("")
+            setSelectedDirect({
+              id: "",
+              name: "",
+              status: "",
+              avatar: "",
+            })};
+            
+            // setDirectsSearch("");
+          } else if (
           type === "user_join_tournament" &&
           location.pathname === "/mainpage/game/jointournament"
         ) {

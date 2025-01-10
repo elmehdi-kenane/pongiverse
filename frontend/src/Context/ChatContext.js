@@ -18,14 +18,35 @@ export const ChatProvider = ({ child }) => {
   const [allFriends, setAllFriends] = useState([]);
   const allFriendsRef = useRef(allFriends);
   const [allChatRoomMembers, setAllChatRoomMembers] = useState([]);
-  // const [directs, setDirects] = useState([]);
+  const [directs, setDirects] = useState([]);
   const [myChatRooms, setMyChatRooms] = useState([]);
   const myChatRoomsRef = useRef(myChatRooms);
   const [hasMoreRooms, setHasMoreRooms] = useState(true);
+  const [searchValue, setSearchValue] = useState("")
+
   useEffect(() => {
     myChatRoomsRef.current = myChatRooms;
   }, [myChatRooms]);
   const [chatRooms, setChatRooms] = useState([]);
+
+  useEffect(() => {
+    if (location.pathname !== "/mainpage/chat") {
+      setSelectedDirect({
+        id: "",
+        name: "",
+        status: "",
+        avatar: "",
+      });
+      setSelectedChatRoom({
+        id: "",
+        name: "",
+        membersCount: "",
+        icon: "",
+      });
+      setSelectedItem("");
+    }
+
+  }, [location.pathname]);
 
   useEffect(() => {
     allFriendsRef.current = allFriends;
@@ -158,6 +179,10 @@ export const ChatProvider = ({ child }) => {
     setHasMoreRooms: setHasMoreRooms,
     setAllChatRoomMembers,
     allChatRoomMembers,
+    setDirects,
+    directs,
+    searchValue,
+    setSearchValue,
   };
   return (
     <ChatContext.Provider value={contextData}>{child}</ChatContext.Provider>

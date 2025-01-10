@@ -11,6 +11,7 @@ import ChatSideBar from "./chatPageSidebar"
 import ChatWindow from "./chatPageWindow"
 import GameNotifications from '../GameNotif/GameNotifications'
 import { useNavigate } from "react-router-dom"
+
 const Chat = () => {
   const {
     selectedDirectRef,
@@ -22,6 +23,10 @@ const Chat = () => {
     chatRooms,
     setChatRooms,
     setMyChatRooms,
+    setDirects,
+    directs,
+    searchValue,
+    setSearchValue,
   } = useContext(ChatContext)
 
   const { chatSocket, user } = useContext(AuthContext)
@@ -29,12 +34,12 @@ const Chat = () => {
   const [chatRoomMessages, setChatRoomMessages] = useState([])
   const [hasMoreDirects, setHasMoreDirects] = useState(true)
   const [currentDirectPage, setCurrentDirectPage] = useState(1)
-  const [directs, setDirects] = useState([])
+  // const [directs, setDirects] = useState([])
   const [currentChatRoomPage, setCurrentChatRoomPage] = useState(1)
   const [hasMoreChatRooms, setHasMoreChatRooms] = useState(true)
   const chatRoomsListInnerRef = useRef(null)
   const directsListInnerRef = useRef(null)
-  const [searchValue, setSearchValue] = useState("")
+  // const [searchValue, setSearchValue] = useState("")
   const [directsSearch, setDirectsSearch] = useState([])
   const [chatRoomsSearch, setChatRoomsSearch] = useState([])
   const navigate = useNavigate()

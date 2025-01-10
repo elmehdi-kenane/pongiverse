@@ -1083,6 +1083,11 @@ svg.my-room-cover-edit-icon:hover {
   cursor: pointer;
 }
 
+.room-update-avatar-content:hover {
+  transform: scale(1.05);
+  opacity: 0.5;
+}
+
 .room-update-avatar-preview {
   width: 80px;
   height: 80px;

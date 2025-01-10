@@ -217,6 +217,7 @@ const ChatConversation = ({
         domNode={domNode}
         user={user}
         setShowBlockPopup={setShowBlockPopup}
+        setMessages={setMessages}
       />
       <ChatConversationBody
         loading={loading}

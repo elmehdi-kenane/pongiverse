@@ -69,9 +69,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	
 	async def send_message(self, event):
 		data = event['data']
-		# timestamp = data.timestamp.isoformat()
-		# dt = datetime.fromisoformat(timestamp)
-		# formatted_time = dt.strftime('%Y/%m/%d AT %I:%M %p')
 		message  = {
 			'type':'newMessage',
 			'data': data
@@ -88,9 +85,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	
 	async def send_direct(self, event):
 		data = event['data']
-		# timestamp = data['date'].isoformat()
-		# dt = datetime.fromisoformat(timestamp)
-		# formatted_time = dt.strftime('%Y/%m/%d AT %I:%M %p')
 		message = {
 			'type' : 'newDirect',
 			'data' : {
