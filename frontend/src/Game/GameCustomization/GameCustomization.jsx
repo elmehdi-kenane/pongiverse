@@ -112,12 +112,18 @@ const GameCustomization = () => {
       <div className="customization-container">
         <div className="customization-tabs">
           {TABS.map((tab) => (
-            <img
-            key={tab}
-            className={`tab ${activeTab === tab ? "active" : ""}`}
-            onClick={() => setActiveTab(tab)}
-            src={tab.icon}
-            />
+            <div
+              key={tab.name}
+              className={`customization-tab ${
+                activeTab === tab.name ? "customization-tab-active" : ""
+              }`}
+              onClick={() => {
+                setActiveTab(tab.name);
+                handleTypeChange(tab.type);
+              }}
+            >
+              {tab.name}
+              </div>
           ))}
         </div>
         <div className="customization-options">
@@ -258,6 +264,57 @@ const GameCustomization = () => {
             <div className="swiper-pagination"></div>
             <div className="swiper-button-next"></div>
             <div className="swiper-button-prev"></div>
+          </div>
+        </div>
+        <div className="customization-actions">
+          <div className="customization-colors">
+            <div className="customization-colors-title">
+              <p>Choose a color</p>
+            </div>
+            <div className="customization-colors-options">
+              {paddleBallColor.map((color, index) => (
+                <div
+                  key={index}
+                  className="customization-colors-option"
+                  style={{ backgroundColor: color }}
+                  onClick={() => {
+                    if (typeChosen === 1) {
+                      setPaddleClr(color);
+                      setSelectedItems([index, selectedItems[1], selectedItems[2]]);
+                    } else if (typeChosen === 2) {
+                      setBallClr(color);
+                      setSelectedItems([selectedItems[0], index, selectedItems[2]]);
+                    } else if (typeChosen === 3) {
+                      setTableClr(color);
+                      setSelectedItems([selectedItems[0], selectedItems[1], index]);
+                    }
+                  }}
+                ></div>
+              ))}
+            </div>
+          </div>
+          <div className="customization-actions-buttons">
+            <button
+              className="customization-actions-button"
+              onClick={() => {
+                handleReset();
+              }}
+            >
+              Reset
+            </button>
+            <button
+              className="customization-actions-button"
+              onClick={() => {
+                setonSavingParams(true);
+                gameCustomize(selectedItems[0], selectedItems[1], selectedItems[2]);
+                setTimeout(() => {
+                  setonSavingParams(false);
+                  navigate("/mainpage");
+                }, 2000);
+              }}
+            >
+              {onSavingParams ? "Saving..." : "Save"}
+            </button>
           </div>
         </div>
       </div>
