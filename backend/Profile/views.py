@@ -28,7 +28,7 @@ from mainApp.common import tournaments, rooms
 #**--------------------- UserData ---------------------** 
 @authentication_required
 @api_view(['GET'])
-def getUserData(request, username):
+def getUserData(request, username, **kwargs):
 	user = customuser.objects.filter(username=username).first()
 	if user is not None:
 		user_states = UserMatchStatics.objects.filter(player=user).first()
@@ -66,7 +66,7 @@ def save_base64_image(base64_image):
 
 @authentication_required
 @api_view(['POST'])
-def update_user_pic(request):
+def update_user_pic(request, **kwargs):
 	username= request.data.get('user')
 	image_url = request.data.get('image')
 	
@@ -85,7 +85,7 @@ def update_user_pic(request):
 
 @authentication_required
 @api_view(['POST'])
-def update_user_bg(request):
+def update_user_bg(request, **kwargs):
     username = request.data.get('user')
     image_url = request.data.get('image')
 
@@ -106,7 +106,7 @@ def update_user_bg(request):
 #**--------------------- UserBio ---------------------** 
 @authentication_required
 @api_view(['POST'])
-def update_user_bio(request):
+def update_user_bio(request, **kwargs):
 	username = request.data.get('user')
 	user_bio = request.data.get('bio')
 	user = customuser.objects.filter(username=username).first()
@@ -122,7 +122,7 @@ def update_user_bio(request):
 #**--------------------- UserCountry ---------------------** 
 @authentication_required
 @api_view(['POST'])
-def update_user_country(request):
+def update_user_country(request, **kwargs):
 	username = request.data.get('user')
 	user_country = request.data.get('country')
 	user = customuser.objects.filter(username=username).first()
@@ -138,7 +138,7 @@ def update_user_country(request):
 #**--------------------- UserPassword ---------------------** 
 @authentication_required
 @api_view(["POST"])
-def update_user_password(request):
+def update_user_password(request, **kwargs):
 	username = request.data.get('user')
 	user_old_pwd = request.data.get('old_pwd')
 	user_new_pwd = request.data.get('new_pwd')
@@ -156,7 +156,7 @@ def update_user_password(request):
 #**--------------------- GetFriends User ---------------------** 
 @authentication_required
 @api_view(["GET"])
-def get_user_friends(request, mainusername, username):
+def get_user_friends(request, mainusername, username, **kwargs):
 	user = customuser.objects.filter(username=username).first()
 	main_user = customuser.objects.filter(username=mainusername).first()
 	if user and main_user:
@@ -178,7 +178,7 @@ def get_user_friends(request, mainusername, username):
 #**--------------------- Check User Friendship ---------------------** 
 @authentication_required
 @api_view(["GET"])
-def check_friendship(request, username, username2):
+def check_friendship(request, username, username2, **kwargs):
 	user = customuser.objects.filter(username=username).first()
 	user2 = customuser.objects.filter(username=username2).first()
 
@@ -203,7 +203,7 @@ def check_friendship(request, username, username2):
 
 @authentication_required
 @api_view(["GET"])
-def get_users_rank(request, username):
+def get_users_rank(request, username, **kwargs):
 	users_data = UserMatchStatics.objects.all()
 	res_data = []
 	if users_data is not None:
@@ -225,7 +225,7 @@ def get_users_rank(request, username):
 #**--------------------- GetUsers Games Lost - Wins {Dashboard}---------------------**#
 @authentication_required
 @api_view(["GET"])
-def get_user_games_wl(request, username):
+def get_user_games_wl(request, username, **kwargs):
 	user = customuser.objects.filter(username=username).first()
 	if user is not None:
 		user_games = UserMatchStatics.objects.filter(player=user).first()
@@ -241,7 +241,7 @@ def get_user_games_wl(request, username):
 #**--------------------- GetUsers Games Lost - Wins {Profile/Diagram}---------------------**#
 @authentication_required
 @api_view(["GET"])
-def get_user_diagram(request, username):
+def get_user_diagram(request, username, **kwargs):
 	user = customuser.objects.filter(username=username).first()
 	if user is not None:
 		user_games = UserMatchStatics.objects.filter(player=user).first()
@@ -270,7 +270,7 @@ def get_user_diagram(request, username):
 #**--------------------- GetUsers Games Lost - Wins {Profile/Match History}---------------------**#
 @authentication_required
 @api_view(["GET"])
-def get_user_games(request, username, page):
+def get_user_games(request, username, page, **kwargs):
 	user = customuser.objects.filter(username=username).first()
 	res_data = []
 	if user:
@@ -317,7 +317,7 @@ def get_user_games(request, username, page):
 
 @authentication_required
 @api_view(["POST"])
-def report_user(request):
+def report_user(request, **kwargs):
 	reporterUsername = request.data.get("reporterUsername")
 	reportedUsername = request.data.get("reportedUsername")
 	report_message = request.data.get("reportMessage")
@@ -336,7 +336,7 @@ def report_user(request):
 #**--------------------- GetUser Statistics {Profile-Dashboard} ---------------------**#
 @authentication_required
 @api_view(["GET"])
-def get_user_statistics(request, username, date_range):
+def get_user_statistics(request, username, date_range, **kwargs):
 	user = customuser.objects.filter(username=username).first()
 	if user is not None:
 		res_data = []
@@ -373,7 +373,7 @@ def get_user_statistics(request, username, date_range):
 #**--------------------- GetUser SingleMatches {Dashboard} ---------------------**#
 @authentication_required
 @api_view(["GET"])
-def get_single_matches(request, username, page):
+def get_single_matches(request, username, page, **kwargs):
 	user = customuser.objects.filter(username=username).first()
 	res_data = []
 	if user:
@@ -404,7 +404,7 @@ def get_single_matches(request, username, page):
 #**------- GetUser SingleMatch Details -------**#
 @authentication_required
 @api_view(["GET"])
-def get_single_match_dtl(request, match_id):
+def get_single_match_dtl(request, match_id, **kwargs):
 	match = Match.objects.filter(room_id=match_id).first()
 	match_stq = MatchStatistics.objects.filter(match=match).first()
 
@@ -432,7 +432,7 @@ def get_single_match_dtl(request, match_id):
 #**--------------------- GetUser MultiplayerMatches {Dashboard} ---------------------**#
 @authentication_required
 @api_view(["GET"])
-def get_multiplayer_matches(request, username, page):
+def get_multiplayer_matches(request, username, page, **kwargs):
 	user = customuser.objects.filter(username=username).first()
 	res_data = []
 	if user:
@@ -465,7 +465,7 @@ def get_multiplayer_matches(request, username, page):
 #**------- GetUser MultiplayerMatch Details -------**#
 @authentication_required
 @api_view(["GET"])
-def get_multy_match_dtl(request, match_id):
+def get_multy_match_dtl(request, match_id, **kwargs):
 	match = Match.objects.filter(room_id=match_id).first()
 	match_stq = MatchStatistics.objects.filter(match=match).first()
 
@@ -505,7 +505,7 @@ def get_multy_match_dtl(request, match_id):
 #**--------------------- GetUser TournamentMatches {Dashboard} ---------------------**#
 @authentication_required
 @api_view(["GET"])
-def get_tourn_matches(request, username, page, items):
+def get_tourn_matches(request, username, page, items, **kwargs):
 	user = customuser.objects.filter(username=username).first()
 	type = "QUARTERFINAL"
 	res_data = []
@@ -554,7 +554,7 @@ def checkPath():
 		os.makedirs(path)
 @authentication_required
 @api_view(["POST"])
-def enable_user_tfq(request):
+def enable_user_tfq(request, **kwargs):
 	username = request.data.get('user')
 	user = customuser.objects.filter(username=username).first()
 	if user:
@@ -584,7 +584,7 @@ def enable_user_tfq(request):
 #**------- Validate User TFQ -------**#
 @authentication_required
 @api_view(["POST"])
-def validate_user_tfq(request):
+def validate_user_tfq(request, **kwargs):
 	username = request.data.get('user')
 	otp = request.data.get('otp')
 	user = customuser.objects.filter(username=username).first()
@@ -606,7 +606,7 @@ def validate_user_tfq(request):
 #**------- Disable User TFQ -------**#
 @authentication_required
 @api_view(["POST"])
-def disable_user_tfq(request):
+def disable_user_tfq(request, **kwargs):
 	username = request.data.get('user')
 	otp = request.data.get('otp')
 	user = customuser.objects.filter(username=username).first()

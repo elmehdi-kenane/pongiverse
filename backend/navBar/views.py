@@ -16,7 +16,7 @@ import os
 
 @authentication_required
 @api_view(['GET'])
-def search_view(request):
+def search_view(request, **kwargs):
     # This is the default value that will be returned if the key searchTerm is not found in the dictionary-like object.
     # The empty string ('') is commonly used as a default to ensure that the code doesn't break if the key is missing.
     search_term = request.query_params.get('searchTerm', '')
@@ -82,7 +82,7 @@ def search_view(request):
 
 @authentication_required
 @api_view(['POST'])
-def add_notification(request):
+def add_notification(request, **kwargs):
     user = customuser.objects.get(username=request.data['username'])
     if not user:
         return Response({"error": "User not found"}, status=404)
@@ -92,7 +92,7 @@ def add_notification(request):
 
 @authentication_required
 @api_view(['POST'])
-def clear_all_notifications(request):
+def clear_all_notifications(request, **kwargs):
     user = customuser.objects.get(username=request.data['username'])
     if not user:
         return Response({"error": "User not found"}, status=404)
@@ -102,7 +102,7 @@ def clear_all_notifications(request):
 
 @authentication_required
 @api_view(['GET'])
-def get_notifications(request, username):
+def get_notifications(request, username, **kwargs):
     user = customuser.objects.filter(username=username).first()
     if not user:
         return Response({"error": "User not found"}, status=404)
@@ -112,7 +112,7 @@ def get_notifications(request, username):
 
 @authentication_required
 @api_view(['POST'])
-def mark_notifications_as_read(request, username):
+def mark_notifications_as_read(request, username, **kwargs):
     user = customuser.objects.filter(username=username).first()
     if not user:
         return Response({"error": "User not found"}, status=404)

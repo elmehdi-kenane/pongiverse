@@ -28,10 +28,11 @@ class CustomMyChatRoomLimitOffsetPagination(PageNumberPagination):
 
 @authentication_required
 @api_view(["GET"])
-def friends_with_directs(request, username):
+def friends_with_directs(request, username, **kwargs):
     #print)
     try:
-        user = customuser.objects.get(username=username)
+        user_id = kwargs.get("user_id")
+        user = customuser.objects.get(id=user_id)
     except customuser.DoesNotExist:
         return Response({"error": "user not found"}, status=400)
     friends = Friendship.objects.filter(user=user, block_status = Friendship.BLOCK_NONE)
@@ -60,65 +61,71 @@ def friends_with_directs(request, username):
 
 @authentication_required
 @api_view(["POST"])
-def direct_messages(request):
-    if request.method == "POST":
-        username = customuser.objects.get(username=(request.data).get("user"))
+def direct_messages(request, **kwargs):
+    try:
+        username = customuser.objects.get(id=kwargs.get("user_id"))
+    except customuser.DoesNotExist:
+        return Response({"error": "user not found"}, status=400)
+    try:
         friend = customuser.objects.get(username=(request.data).get("friend"))
-        messages = Directs.objects.filter(
-            Q(sender=username, receiver=friend) | Q(sender=friend, receiver=username)
-        ).order_by('-timestamp')
-        paginator = CustomLimitOffsetPagination()
-        result_page = paginator.paginate_queryset(messages, request)
-        reversed_page = list(reversed(result_page))
-        serializer = direct_message_serializer(reversed_page,  many=True)
-        return paginator.get_paginated_response(serializer.data)
-    return Response({"error": "Invalid request method"}, status=400)
+    except customuser.DoesNotExist:
+        return Response({"error": "friend not found"}, status=400)
+    messages = Directs.objects.filter(
+        Q(sender=username, receiver=friend) | Q(sender=friend, receiver=username)
+    ).order_by('-timestamp')
+    paginator = CustomLimitOffsetPagination()
+    result_page = paginator.paginate_queryset(messages, request)
+    reversed_page = list(reversed(result_page))
+    serializer = direct_message_serializer(reversed_page,  many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 @authentication_required
 @api_view(["GET"])
-def chat_rooms_list(request, username):
-    if request.method == "GET":
-        user = customuser.objects.get(username=username)
-        # get memberships for the user that have at least one message
-        memberships = Membership.objects.filter (user=user, room__message__isnull=False).distinct()
-        # sort the rooms by the message date
-        ordered_memberships = sorted(
-            memberships,
-            key=lambda membership: membership.room.message_set.last().timestamp
-            if membership.room.message_set.last()
-            else membership.room.membership_set.last().joined_at,
-            reverse=True,
-        )
-        paginator = CustomLimitOffsetPagination()
-        result_page = paginator.paginate_queryset(ordered_memberships, request)
-        serializer = room_serializer(result_page, many=True, context={"user": user})
-        return paginator.get_paginated_response(serializer.data)
-    return Response({"error": "Invalid request method"}, status=400)
+def chat_rooms_list(request, username, **kwargs):
+    try:
+        user = customuser.objects.get(id=kwargs.get("user_id"))
+    except customuser.DoesNotExist:
+        return Response({"error": "user not found"}, status=400)
+    memberships = Membership.objects.filter (user=user, room__message__isnull=False).distinct()
+    ordered_memberships = sorted(
+        memberships,
+        key=lambda membership: membership.room.message_set.last().timestamp
+        if membership.room.message_set.last()
+        else membership.room.membership_set.last().joined_at,
+        reverse=True,
+    )
+    paginator = CustomLimitOffsetPagination()
+    result_page = paginator.paginate_queryset(ordered_memberships, request)
+    serializer = room_serializer(result_page, many=True, context={"user": user})
+    return paginator.get_paginated_response(serializer.data)
 
 @authentication_required
 @api_view(["GET"])
-def my_chat_rooms(request, username):
-    if request.method == "GET":
-        user = customuser.objects.get(username=username)
-        memberships = Membership.objects.filter(user=user)
-        paginator = CustomMyChatRoomLimitOffsetPagination()
-        result_page = paginator.paginate_queryset(memberships, request)
-        serializer = room_serializer(result_page, many=True, context={"user": user})
-        return paginator.get_paginated_response(serializer.data)
-    return Response({"error": "Invalid request method"}, status=400)
+def my_chat_rooms(request, username, **kwargs):
+    try:
+        user = customuser.objects.get(id=kwargs.get("user_id"))
+    except customuser.DoesNotExist:
+        return Response({"error": "user not found"}, status=400)
+    memberships = Membership.objects.filter(user=user)
+    paginator = CustomMyChatRoomLimitOffsetPagination()
+    result_page = paginator.paginate_queryset(memberships, request)
+    serializer = room_serializer(result_page, many=True, context={"user": user})
+    return paginator.get_paginated_response(serializer.data)
 
 
 @authentication_required
 @api_view(["GET"])
-def chat_room_messages(request, room_id):
-    if request.method == "GET":
+def chat_room_messages(request, room_id, **kwargs):
+    try:
         messages = Message.objects.filter(room_id=room_id).order_by("-timestamp")
         paginator = CustomLimitOffsetPagination()
         result_page = paginator.paginate_queryset(messages, request)
         reversed_page = list(reversed(result_page))
         serializer = room_message_serializer(reversed_page, many=True)
         return paginator.get_paginated_response(serializer.data)
-    return Response({"error": "Invalid request method"}, status=400)
+    except Room.DoesNotExist:
+        return Response({"error": "chat room not found"}, status=400)
+
 
 
 
@@ -135,65 +142,64 @@ def set_new_admin(room):
 
 @authentication_required
 @api_view(["POST"])
-def leave_chat_room(request):
-    if request.method == "POST":
-        # get the user by username
-        try:
-            user = customuser.objects.get(username=request.data.get("member"))
-        except customuser.DoesNotExist:
-            return Response({"error": {"Opps!, User not found"}}, status=404)
-        # get the room by name
-        try:
-            room = Room.objects.get(id=request.data.get("roomId"))
-        except Room.DoesNotExist:
-            return Response({"error": {"Opps!, Chat room not found"}}, status=404)
+def leave_chat_room(request, **kwargs):
+    # get the user by username
+    try:
+        user = customuser.objects.get(id=kwargs.get("user_id"))
+    except customuser.DoesNotExist:
+        return Response({"error": {"Opps!, User not found"}}, status=404)
+    # get the room by name
+    try:
+        room = Room.objects.get(id=request.data.get("roomId"))
+    except Room.DoesNotExist:
+        return Response({"error": {"Opps!, Chat room not found"}}, status=404)
 
-        roomId = room.id
-        # get the room memeber query by username
-        try:
-            member_to_kick = Membership.objects.get(user=user, room=room)
-        except Membership.DoesNotExist:
-            return Response({"error": {"Opps!, Something went Wrong"}}, status=404)
-        member_to_kick.delete()
-        new_admin_id = set_new_admin(room)
-        room.members_count -= 1
-        if room.members_count == 0:
-            if (
-                room.icon.path
-                and room.icon.url != "/media/uploads_default/roomIcon.png"
-                and default_storage.exists(room.icon.path)
-            ):
-                default_storage.delete(room.icon.path)
-            if (
-                room.cover.path
-                and room.cover.url != "/media/uploads_default/roomCover.png"
-                and default_storage.exists(room.cover.path)
-            ):
-                default_storage.delete(room.cover.path)
-            room.delete()
-        else:
-            room.save()
-        channel_layer = get_channel_layer()
-        user_channels_name = user_channels.get(user.id)
-        for channel in user_channels_name:
-            async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type' : 'chatRoomLeft',"roomId": roomId}})
-            async_to_sync(channel_layer.group_discard(f"chat_room_{room.id}", channel))
-        new_admin_id_channels = user_channels.get(new_admin_id)
-        for channel in new_admin_id_channels:
-            async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type' : 'chatRoomAdminAdded',"message": {"name": room.name}}})
-        return Response(
-            {
-                "success": "You left chat room successfully",
-            },
-            status=200,
-        )
-    return Response({"error": "Invalid request method"}, status=400)
+    roomId = room.id
+    # get the room memeber query by username
+    try:
+        member_to_kick = Membership.objects.get(user=user, room=room)
+    except Membership.DoesNotExist:
+        return Response({"error": {"Opps!, Something went Wrong"}}, status=404)
+    member_to_kick.delete()
+    new_admin_id = set_new_admin(room)
+    room.members_count -= 1
+    if room.members_count == 0:
+        if (
+            room.icon.path
+            and room.icon.url != "/media/uploads_default/roomIcon.png"
+            and default_storage.exists(room.icon.path)
+        ):
+            default_storage.delete(room.icon.path)
+        if (
+            room.cover.path
+            and room.cover.url != "/media/uploads_default/roomCover.png"
+            and default_storage.exists(room.cover.path)
+        ):
+            default_storage.delete(room.cover.path)
+        room.delete()
+    else:
+        room.save()
+    channel_layer = get_channel_layer()
+    user_channels_name = user_channels.get(user.id)
+    for channel in user_channels_name:
+        async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type' : 'chatRoomLeft',"roomId": roomId}})
+        async_to_sync(channel_layer.group_discard(f"chat_room_{room.id}", channel))
+    new_admin_id_channels = user_channels.get(new_admin_id)
+    for channel in new_admin_id_channels:
+        async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type' : 'chatRoomAdminAdded',"message": {"name": room.name}}})
+    return Response(
+        {
+            "success": "You left chat room successfully",
+        },
+        status=200,
+    )
 
 
 
 @authentication_required
 @api_view(["POST"])
-def chat_room_update_icon(request):
+def chat_room_update_icon(request, **kwargs):
+    # TODO: i need to send the room updater
     if request.method == "POST":
         try:
             room = Room.objects.get(id=request.data.get("room"))
@@ -212,7 +218,8 @@ def chat_room_update_icon(request):
 
 @authentication_required
 @api_view(["POST"])
-def chat_room_update_cover(request):
+def chat_room_update_cover(request, **kwargs):
+    # TODO: i need to send the room updater
     if request.method == "POST":
         try:
             room = Room.objects.get(id=request.data.get("room"))
@@ -242,7 +249,8 @@ def chat_room_update_cover(request):
 
 @authentication_required
 @api_view(["PATCH"])
-def chat_room_update_name(request, id):
+def chat_room_update_name(request, id, **kwargs):
+    # TODO: i need to send the room updater
     if request.method == "PATCH":
         if (Room.objects.filter(name=request.data.get("name"))).exists():
             return Response({"return": "Name Already in Use"})
@@ -263,10 +271,11 @@ def chat_room_update_name(request, id):
 
 @authentication_required
 @api_view(["POST"])
-def create_chat_room(request):
+def create_chat_room(request, **kwargs):
     if request.method == "POST":
+
         try:
-            user = customuser.objects.get(username=request.data.get("user"))
+            user = customuser.objects.get(id=kwargs.get("user_id"))
         except customuser.DoesNotExist:
             return Response({"error": "User not found"}, status=400)
         room = Room.objects.filter(name=request.data.get("name")).first()
@@ -324,8 +333,9 @@ def delete_file(file, default_file):
 
 @authentication_required
 @api_view(["DELETE"])
-def delete_chat_room(request, id):
+def delete_chat_room(request, id, **kwargs):
     if request.method == "DELETE":
+        # TODO: i need to send the room updater
         try:
             room = Room.objects.get(id=id)
         except Room.DoesNotExist:
@@ -349,7 +359,8 @@ def delete_chat_room(request, id):
 
 @authentication_required
 @api_view(["GET"])
-def all_chat_room_memebers(request, chat_room_name):
+def all_chat_room_memebers(request, chat_room_name, **kwargs):
+    # TODO: i need to send the room updater
     room = Room.objects.get(name=chat_room_name)
     members = Membership.objects.filter(room=room)
     data = []
@@ -362,11 +373,10 @@ def all_chat_room_memebers(request, chat_room_name):
 
 @authentication_required
 @api_view(["POST"])
-def list_all_friends(request):
+def list_all_friends(request, **kwargs):
     if request.method == "POST":
-        #printrequest.data)
         try:
-            user = customuser.objects.get(username=(request.data).get("user"))
+            user = customuser.objects.get(id=kwargs.get("user_id"))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
         try:
@@ -395,9 +405,12 @@ def list_all_friends(request):
 
 @authentication_required
 @api_view(["GET"])
-def rooms_invitations(request, username):
+def rooms_invitations(request, username, **kwargs):
     if request.method == "GET":
-        user = customuser.objects.get(username=username)
+        try:
+            user = customuser.objects.get(id=kwargs.get("user_id"))
+        except customuser.DoesNotExist:
+            return Response({"error": "user not found"}, status=400)
         invitations = RoomInvitation.objects.filter(user=user)
         all_invitations = []
         protocol = os.getenv("PROTOCOL")
@@ -418,9 +431,12 @@ def rooms_invitations(request, username):
 
 @authentication_required
 @api_view(["GET"])
-def suggested_chat_rooms(request, username):
+def suggested_chat_rooms(request, username, **kwargs):
     if request.method == "GET":
-        user = customuser.objects.get(username=username)
+        try:
+            user = customuser.objects.get(id=kwargs.get("user_id"))
+        except customuser.DoesNotExist:
+            return Response({"error": "user not found"}, status=400)
         # Get memberships for the user
         user_memberships = Membership.objects.filter(user=user).values_list(
             "room_id", flat=True
@@ -447,7 +463,8 @@ def suggested_chat_rooms(request, username):
 
 @authentication_required
 @api_view(["POST"])
-def chat_room_members_list(request):
+def chat_room_members_list(request, **kwargs):
+    # TODO: i need to send the room updater
     if request.method == "POST":
         try:
             room = Room.objects.get(id=request.data.get("id"))
@@ -469,11 +486,11 @@ def chat_room_members_list(request):
 
 @authentication_required
 @api_view(["POST"])
-def accept_chat_room_invite(request):
+def accept_chat_room_invite(request, **kwargs):
     #print"inside accept_chat_room_invite")
     if request.method == "POST":
         try:
-            user = customuser.objects.get(username=request.data.get("user"))
+            user = customuser.objects.get(id=kwargs.get("user_id"))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
         try:   
@@ -525,10 +542,10 @@ def accept_chat_room_invite(request):
 
 @authentication_required
 @api_view(["POST"])
-def cancel_chat_room_invite(request):
+def cancel_chat_room_invite(request, **kwargs):
     if request.method == "POST":
         try:
-            user = customuser.objects.get(username=request.data.get("user"))
+            user = customuser.objects.get(id=kwargs.get("user_id"))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
         try:
@@ -545,10 +562,10 @@ def cancel_chat_room_invite(request):
 
 @authentication_required
 @api_view(["POST"])
-def reset_chat_room_unread_messages(request):
+def reset_chat_room_unread_messages(request, **kwargs):
     if request.method == "POST":
         try:
-            user = customuser.objects.get(username=request.data.get("user"))
+            user = customuser.objects.get(id=kwargs.get("user_id"))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
         try:
@@ -561,10 +578,10 @@ def reset_chat_room_unread_messages(request):
 
 @authentication_required
 @api_view(["POST"])
-def reset_unread_messages(request):
+def reset_unread_messages(request, **kwargs):
     if request.method == "POST":
         try:
-            user = customuser.objects.get(username=request.data.get("user"))
+            user = customuser.objects.get(id=kwargs.get("user_id"))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
         try:
@@ -581,10 +598,10 @@ def reset_unread_messages(request):
 
 @authentication_required
 @api_view(["POST"])
-def join_chat_room(request):
+def join_chat_room(request, **kwargs):
     if request.method == "POST":
         try:
-            user = customuser.objects.get(username=request.data.get("user"))
+            user = customuser.objects.get(id=kwargs.get("user_id"))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
         try:
@@ -622,10 +639,10 @@ def join_chat_room(request):
 
 @authentication_required
 @api_view(["GET"])
-def directs_search(request):
+def directs_search(request, **kwargs):
     if (request.method == 'GET'):
         try:
-            user = customuser.objects.get(username=request.GET.get('user'))
+            user = customuser.objects.get(id=kwargs.get("user_id"))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
         frienships = Friendship.objects.filter(user=user, friend__username__icontains=request.GET.get('searchUsername'), block_status = Friendship.BLOCK_NONE)
@@ -639,10 +656,10 @@ def directs_search(request):
 
 @authentication_required
 @api_view(["GET"])
-def chat_rooms_search(request):
+def chat_rooms_search(request, **kwargs):
     if request.method == "GET":
         try:
-            user = customuser.objects.get(username=request.GET.get("user"))
+            user = customuser.objects.get(id=kwargs.get("user_id"))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
         rooms = Membership.objects.filter(user=user, room__name__icontains=request.GET.get("searchRoomName"))
@@ -652,10 +669,10 @@ def chat_rooms_search(request):
 
 @authentication_required
 @api_view(["POST"])
-def update_status_of_invitations(request):
+def update_status_of_invitations(request, **kwargs):
     if request.method == 'POST':
         try:
-            user = customuser.objects.get(username=request.data.get("user"))
+            user = customuser.objects.get(id=kwargs.get("user_id"))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
         RoomInvitation.objects.filter(user=user).update(status="ACC")
@@ -664,10 +681,10 @@ def update_status_of_invitations(request):
 
 @authentication_required
 @api_view(["GET"])
-def unrecieved_room_invitee(request, username):
+def unrecieved_room_invitee(request, username, **kwargs):
     if request.method == 'GET':
         try:
-            user = customuser.objects.get(username=username)
+            user = customuser.objects.get(id=kwargs.get("user_id"))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
         count = RoomInvitation.objects.filter(user=user, status="pending").count()
@@ -677,10 +694,10 @@ def unrecieved_room_invitee(request, username):
 
 @authentication_required
 @api_view(["GET"])
-def unread_conversations_count(request, username):
+def unread_conversations_count(request, username, **kwargs):
     if request.method == 'GET':
         try:
-            user = customuser.objects.get(username=username)
+            user = customuser.objects.get(id=kwargs.get("user_id"))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
         count = Directs.objects.filter(receiver=user, is_read=False).values('sender').distinct().count()
