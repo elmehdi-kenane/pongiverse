@@ -513,8 +513,7 @@ def SignUpIntraGetUserData(request):
 
 @authentication_required
 @api_view(['POST'])
-def LogoutView(request):
-	
+def LogoutView(request, **kwargs):
 	response = Response()
 	response.delete_cookie('access_token')
 	response.delete_cookie('refresh_token')
