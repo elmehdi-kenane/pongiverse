@@ -47,6 +47,8 @@ import PersonalInfo from './Settings/PersonalInfo';
 import Security from './Settings/Security';
 import TournamentCelebration from "./Tournament/RemoteTournament/TournamentCelebration";
 
+import GameCustomization from './Game/GameCustomization/GameCustomization';
+
 const App = () => {
   return (
     <div className="page" style={{ backgroundColor: '#250939' }}>
@@ -93,6 +95,7 @@ const App = () => {
               <Route path="game/tournamentbracket" element={<TournamentBracket />} /> 
               <Route path="game/tournamentcel" element={<TournamentCelebration />} />
               <Route path="game/1vs1tournament" element={<OneVsOnePlayTournamentMatch />} />
+              <Route path="game/customization" element={<GameCustomization />} />
             </Route>
             <Route path="*" element={<Navigate to="/Error404" />} />
           </Routes>
