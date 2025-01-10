@@ -63,11 +63,15 @@ function ChangePassword() {
 		}
 	};
 
+	const navigating = () => {
+		navigate('/')
+	}
+
 	return (
 		<div className={styles["body_page"]}>
 			<div className={styles["mainPage"]}>
 				<div className={styles['change-password-navbar']}>
-					<img src={logo} alt="" />
+					<img src={logo} alt="" onClick={navigating}/>
 				</div>
 				<div className={styles["bodyPage"]}>
 					<div className={styles["FPasswordContainer"]}>
