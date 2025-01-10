@@ -19,7 +19,7 @@ from mainApp.common import user_channels
 
 @authentication_required
 @api_view(['GET'])
-def get_friend_list(request, username):
+def get_friend_list(request, username, **kwargs):
     user = customuser.objects.filter(username=username).first()
     friend_objs = Friendship.objects.filter(user=user, block_status=Friendship.BLOCK_NONE)
     friends_ser = friendSerializer(friend_objs, many=True)
@@ -28,7 +28,7 @@ def get_friend_list(request, username):
 
 @authentication_required
 @api_view(['GET'])
-def get_blocked_list(request, username):
+def get_blocked_list(request, username, **kwargs):
     user = customuser.objects.filter(username=username).first()
     blocked_objs = Friendship.objects.filter(user=user, block_status=Friendship.BLOCKER)
     blocked_list_ser = friendSerializer(blocked_objs, many=True)
@@ -36,7 +36,7 @@ def get_blocked_list(request, username):
 
 @authentication_required
 @api_view(['GET'])
-def get_friend_suggestions(request, username):
+def get_friend_suggestions(request, username, **kwargs):
     user = customuser.objects.filter(username=username).first()
     
     user_objs = customuser.objects.exclude(username=user.username)
@@ -71,7 +71,7 @@ def get_friend_suggestions(request, username):
 
 @authentication_required
 @api_view(['GET'])
-def get_sent_requests(request, username):
+def get_sent_requests(request, username, **kwargs):
     user = customuser.objects.get(username=username)
     sent_requests_objs = FriendRequest.objects.filter(from_user=user, status="sent")
     request_list_ser = friendRequestSerializer(sent_requests_objs, many=True)
@@ -80,7 +80,7 @@ def get_sent_requests(request, username):
 
 @authentication_required
 @api_view(['GET'])
-def get_received_requests(request, username):
+def get_received_requests(request, username, **kwargs):
     user = customuser.objects.get(username=username)
     received_requests_objs = FriendRequest.objects.filter(from_user=user, status="received")
     request_list_ser = friendRequestSerializer(received_requests_objs, many=True)
@@ -88,7 +88,7 @@ def get_received_requests(request, username):
 
 @authentication_required
 @api_view(['POST'])
-def add_friend_request(request):
+def add_friend_request(request, **kwargs):
     from_username = request.data['from_username']
     to_username = request.data['to_username']
     from_user = customuser.objects.get(username=from_username)
@@ -134,7 +134,7 @@ def add_friend_request(request):
 
 @authentication_required
 @api_view(['POST'])
-def cancel_friend_request(request):
+def cancel_friend_request(request, **kwargs):
     from_username = request.data['from_username']
     to_username = request.data['to_username']
     from_user = customuser.objects.get(username=from_username)
@@ -179,7 +179,7 @@ def cancel_friend_request(request):
 
 @authentication_required
 @api_view(['POST'])
-def confirm_friend_request(request):
+def confirm_friend_request(request, **kwargs):
     #print"request.data", request.data)
     from_username = request.data['from_username']
     to_username = request.data['to_username']
@@ -234,7 +234,7 @@ def confirm_friend_request(request):
 
 @authentication_required
 @api_view(['POST'])
-def remove_friendship(request):
+def remove_friendship(request, **kwargs):
     from_username = request.data['from_username']
     to_username = request.data['to_username']
     from_user = customuser.objects.get(username=from_username)
@@ -289,7 +289,7 @@ def remove_friendship(request):
 
 @authentication_required
 @api_view(['POST'])
-def block_friend(request):
+def block_friend(request, **kwargs):
     from_username = request.data['from_username']
     to_username = request.data['to_username']
     from_user = customuser.objects.get(username=from_username)
@@ -343,7 +343,7 @@ def block_friend(request):
 
 @authentication_required
 @api_view(['POST'])
-def unblock_friend(request):
+def unblock_friend(request, **kwargs):
     from_username = request.data['from_username']
     to_username = request.data['to_username']
     from_user = customuser.objects.get(username=from_username)

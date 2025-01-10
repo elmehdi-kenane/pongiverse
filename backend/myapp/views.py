@@ -215,7 +215,6 @@ class CheckUsernameView(APIView):
 
 class VerifyTokenView(APIView):
 	def get(self, request, format=None):
-		#print"************VerifyTokenView")
 		response = Response()
 		user_id = -1
 		try:
@@ -514,7 +513,7 @@ def SignUpIntraGetUserData(request):
 
 @authentication_required
 @api_view(['POST'])
-def LogoutView(request):
+def LogoutView(request, **kwargs):
 	response = Response()
 	response.delete_cookie('access_token')
 	response.delete_cookie('refresh_token')

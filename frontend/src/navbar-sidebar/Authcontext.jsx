@@ -597,7 +597,6 @@ export const AuthProvider = ({ children }) => {
 				}
 			);
 			response = await response.json();
-			//.log("RESPONSE: ", response);
 			if (response.Case !== "Invalid token") {
 				setUser(response.data.username);
 				setUserLevel(response.level);
