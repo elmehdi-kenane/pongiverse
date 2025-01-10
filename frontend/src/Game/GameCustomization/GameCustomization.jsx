@@ -1,25 +1,24 @@
-import { useState, useRef , useContext, useEffect} from 'react';
-import { useNavigate } from 'react-router-dom';
-import AuthContext from '../../navbar-sidebar/Authcontext';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
-import 'swiper/css/effect-coverflow';
-import 'swiper/css/pagination';
-import { EffectCoverflow, Pagination, Navigation } from 'swiper/modules';
-import * as Icons from '../../assets/navbar-sidebar';
-import './GameCustomization.css';
+import { useState, useRef, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import AuthContext from "../../navbar-sidebar/Authcontext";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/effect-coverflow";
+import "swiper/css/pagination";
+import { EffectCoverflow, Pagination, Navigation } from "swiper/modules";
+import * as Icons from "../../assets/navbar-sidebar";
+import "./GameCustomization.css";
 
 const GameCustomization = () => {
-  const [activeTab, setActiveTab] = useState('Table');
-  const [tableColor, setTableColor] = useState('#00ff00');
-  const [paddleColor, setPaddleColor] = useState('#0000ff');
-  const [ballColor, setBallColor] = useState('#ff0000');
-  
+  const [activeTab, setActiveTab] = useState("Table");
+  const [tableColor, setTableColor] = useState("#00ff00");
+  const [paddleColor, setPaddleColor] = useState("#0000ff");
+  const [ballColor, setBallColor] = useState("#ff0000");
 
   const handleReset = () => {
-    setTableColor('#00ff00');
-    setPaddleColor('#0000ff');
-    setBallColor('#ff0000');
+    setTableColor("#00ff00");
+    setPaddleColor("#0000ff");
+    setBallColor("#ff0000");
   };
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
   const [typeChosen, setTypeChosen] = useState(1);
@@ -103,10 +102,10 @@ const GameCustomization = () => {
   };
 
   const TABS = [
-    { name: 'Table', type: 3, icon: Icons.boardEmpty },
-    { name: 'Paddle', type: 1, icon: Icons.paddleEmpty },
-    { name: 'Ball', type: 2, icon: Icons.ballEmpty },
-  ]
+    { name: "Table", type: 3, icon: Icons.boardEmpty },
+    { name: "Ball", type: 2, icon: Icons.ballEmpty },
+    { name: "Paddle", type: 1, icon: Icons.paddleEmpty },
+  ];
 
   return (
     <div className="customization-page">
@@ -114,99 +113,153 @@ const GameCustomization = () => {
         <div className="customization-tabs">
           {TABS.map((tab) => (
             <img
-              key={tab}
-              className={`tab ${activeTab === tab ? 'active' : ''}`}
-              onClick={() => setActiveTab(tab)}
-              src={tab.icon}
+            key={tab}
+            className={`tab ${activeTab === tab ? "active" : ""}`}
+            onClick={() => setActiveTab(tab)}
+            src={tab.icon}
             />
           ))}
         </div>
         <div className="customization-options">
-          <div className='customization-preview'>
-            <p className='customization-preview-text'>
-              Preview
-              </p>
-            </div>
+          <div className="customization-preview">
+            <p className="customization-preview-text">Preview</p>
+          </div>
 
-        <div className='slider-container'>
-      <Swiper
-        ref={swiperRef}
-        effect={'coverflow'}
-        grabCursor={true}
-        centeredSlides={true}
-        slidesPerView={2}
-        loop={true}
-        initialSlide={initialValue}
-        coverflowEffect={{
-          rotate: 50,
-          stretch: 0,
-          depth: 100,
-          modifier: 4,
-        }}
-        pagination={{
-          el: '.swiper-pagination',
-          clickable: true,
-        }}
-        navigation={{
-          clickable: false,
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        }}
-        onSlideChange={handleSlideChange}
-        modules={[EffectCoverflow, Pagination, Navigation]}
-        className="mySwiper"
-      >
-        {[0, 1, 2, 3, 4].map((index) => (
-          <SwiperSlide key={index} className={activeSlideIndex === index ? 'slider-container-active' : ''}>
-            <div className='slider-container-bg'>
-              <img src={Icons.bgPaddleCm} alt="Background" />
-              {typeChosen === 1 ? (
-                <div className='slider-container-pbb'>
-                  <img className={activeSlideIndex === index ? 'slider-container-rotatePaddle' : ''} src={Icons[`paddle${index}`]} alt="Paddle" />
-                </div>
-              ) : typeChosen === 2 ? (
-                <div className='slider-container-pbb'>
-                  <img className={activeSlideIndex === index ? 'slider-container-ball slider-container-moveBall' : 'slider-container-ball'} src={Icons[`ball${index}`]} alt="Ball" />
-                </div>
-              ) : (
-                <div className='slider-container-pbb'>
-                  <img className={activeSlideIndex === index ? 'slider-container-rotatePaddle' : ''} src={Icons[`board${index}`]} alt="Board" />
-                </div>
-              )}
-            </div>
-          </SwiperSlide>
-        ))}
-        {typeChosen !== 3 && [5, 6, 7].map((index) => (
-          <SwiperSlide key={index} className={activeSlideIndex === index ? 'slider-container-active' : ''}>
-            <div className='slider-container-bg'>
-              <img src={Icons.bgPaddleCm} alt="Background" />
-              {typeChosen === 1 ? (
-                <div className='slider-container-pbb'>
-                  <img className={activeSlideIndex === index ? 'slider-container-rotatePaddle' : ''} src={Icons[`paddle${index}`]} alt="Paddle" />
-                </div>
-              ) : typeChosen === 2 ? (
-                <div className='slider-container-pbb'>
-                  <img className={activeSlideIndex === index ? 'slider-container-ball slider-container-moveBall' : 'slider-container-ball'} src={Icons[`ball${index}`]} alt="Ball" />
-                </div>
-              ) : (
-                <div className='slider-container-pbb'>
-                  <img className={activeSlideIndex === index ? 'slider-container-rotatePaddle' : ''} src={Icons[`board${index}`]} alt="Board" />
-                </div>
-              )}
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-      <div className="swiper-pagination"></div>
-      <div className="swiper-button-next"></div>
-      <div className="swiper-button-prev"></div>
-    </div>
+          <div className="slider-container">
+            <Swiper
+              ref={swiperRef}
+              effect={"coverflow"}
+              grabCursor={true}
+              centeredSlides={true}
+              slidesPerView={2}
+              loop={true}
+              initialSlide={initialValue}
+              coverflowEffect={{
+                rotate: 50,
+                stretch: 0,
+                depth: 100,
+                modifier: 4,
+              }}
+              pagination={{
+                el: ".swiper-pagination",
+                clickable: true,
+              }}
+              navigation={{
+                clickable: false,
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+              }}
+              onSlideChange={handleSlideChange}
+              modules={[EffectCoverflow, Pagination, Navigation]}
+              className="mySwiper"
+            >
+              {[0, 1, 2, 3, 4].map((index) => (
+                <SwiperSlide
+                  key={index}
+                  className={
+                    activeSlideIndex === index ? "slider-container-active" : ""
+                  }
+                >
+                  <div className="slider-container-bg">
+                    <img src={Icons.bgPaddleCm} alt="Background" />
+                    {typeChosen === 1 ? (
+                      <div className="slider-container-pbb">
+                        <img
+                          className={
+                            activeSlideIndex === index
+                              ? "slider-container-rotatePaddle"
+                              : ""
+                          }
+                          src={Icons[`paddle${index}`]}
+                          alt="Paddle"
+                        />
+                      </div>
+                    ) : typeChosen === 2 ? (
+                      <div className="slider-container-pbb">
+                        <img
+                          className={
+                            activeSlideIndex === index
+                              ? "slider-container-ball slider-container-moveBall"
+                              : "slider-container-ball"
+                          }
+                          src={Icons[`ball${index}`]}
+                          alt="Ball"
+                        />
+                      </div>
+                    ) : (
+                      <div className="slider-container-pbb">
+                        <img
+                          className={
+                            activeSlideIndex === index
+                              ? "slider-container-rotatePaddle"
+                              : ""
+                          }
+                          src={Icons[`board${index}`]}
+                          alt="Board"
+                        />
+                      </div>
+                    )}
+                  </div>
+                </SwiperSlide>
+              ))}
+              {typeChosen !== 3 &&
+                [5, 6, 7].map((index) => (
+                  <SwiperSlide
+                    key={index}
+                    className={
+                      activeSlideIndex === index
+                        ? "slider-container-active"
+                        : ""
+                    }
+                  >
+                    <div className="slider-container-bg">
+                      <img src={Icons.bgPaddleCm} alt="Background" />
+                      {typeChosen === 1 ? (
+                        <div className="slider-container-pbb">
+                          <img
+                            className={
+                              activeSlideIndex === index
+                                ? "slider-container-rotatePaddle"
+                                : ""
+                            }
+                            src={Icons[`paddle${index}`]}
+                            alt="Paddle"
+                          />
+                        </div>
+                      ) : typeChosen === 2 ? (
+                        <div className="slider-container-pbb">
+                          <img
+                            className={
+                              activeSlideIndex === index
+                                ? "slider-container-ball slider-container-moveBall"
+                                : "slider-container-ball"
+                            }
+                            src={Icons[`ball${index}`]}
+                            alt="Ball"
+                          />
+                        </div>
+                      ) : (
+                        <div className="slider-container-pbb">
+                          <img
+                            className={
+                              activeSlideIndex === index
+                                ? "slider-container-rotatePaddle"
+                                : ""
+                            }
+                            src={Icons[`board${index}`]}
+                            alt="Board"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </SwiperSlide>
+                ))}
+            </Swiper>
+            <div className="swiper-pagination"></div>
+            <div className="swiper-button-next"></div>
+            <div className="swiper-button-prev"></div>
+          </div>
         </div>
-      </div>
-      <div className="customization-buttons">
-        <button className="reset" onClick={handleReset}>Reset</button>
-        <button className="save">Save</button>
-        <button className="preview">Preview</button>
       </div>
     </div>
   );
