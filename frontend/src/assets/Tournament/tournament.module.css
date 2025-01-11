@@ -35,6 +35,7 @@
 	color: white;
 	font-size: 20px;
 	width: 130px;
+	cursor: pointer;
 }
 
 .line {
@@ -111,6 +112,7 @@
 	width: 130px;
 	padding: 0 5px;
 	font-size: 20px;
+	cursor: pointer;
 }
 
 .up-button-disabled {
@@ -135,6 +137,7 @@
 	width: 150px;
 	padding: 0 5px;
 	font-size: 20px;
+	cursor: pointer;
 	/* background-size: cover;
 	background-position: center; */
 }
@@ -183,6 +186,7 @@
 	width: 100px;
 	padding: 0 5px;
 	font-size: 12px;
+	cursor: pointer;
 }
 
 .down-popup-button {
@@ -420,6 +424,7 @@
 	width: 150px;
 	padding: 0 5px;
 	font-size: 20px;
+	cursor: pointer;
 }
 
 .button-disabled {

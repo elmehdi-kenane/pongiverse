@@ -255,6 +255,7 @@ function CreateTournament() {
 				} else if (type === 'accepted_invitation') {
 					const currentAllGameFriends = allGameFriendsRef.current;
 					let username = data.message.user
+					console.log("****ACCEPTEDDDD:", username);
 					if (username !== user) {
 						get_member(data.message.user)
 						setAllGameFriends(currentAllGameFriends.filter(user => user.name !== data.message.user))

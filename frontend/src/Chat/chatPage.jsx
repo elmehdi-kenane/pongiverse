@@ -27,6 +27,8 @@ const Chat = () => {
     directs,
     searchValue,
     setSearchValue,
+    directsSearch,
+    setDirectsSearch,
   } = useContext(ChatContext)
 
   const { chatSocket, user } = useContext(AuthContext)
@@ -40,7 +42,7 @@ const Chat = () => {
   const chatRoomsListInnerRef = useRef(null)
   const directsListInnerRef = useRef(null)
   // const [searchValue, setSearchValue] = useState("")
-  const [directsSearch, setDirectsSearch] = useState([])
+  // const [directsSearch, setDirectsSearch] = useState([])
   const [chatRoomsSearch, setChatRoomsSearch] = useState([])
   const navigate = useNavigate()
 
