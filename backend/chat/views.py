@@ -64,6 +64,9 @@ def direct_messages(request, **kwargs):
         username = customuser.objects.get(id=kwargs.get("user_id"))
     except customuser.DoesNotExist:
         return Response({"error": "user not found"}, status=400)
+    id = (request.data).get("friend")
+    if id is None or type(id) is not int:
+        return Response({"error": "Invalid friend id"}, status=400)
     try:
         friend = customuser.objects.get(id=(request.data).get("friend")) # TODO: change to id => DONE
     except customuser.DoesNotExist:
