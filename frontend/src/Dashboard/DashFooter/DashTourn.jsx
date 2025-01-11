@@ -34,7 +34,7 @@ function DashTourn(props) {
     const getTournMatches = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getTournMatches/${user}/${page}/${itemsPerPage}`,
+          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getTournMatches/${page}/${itemsPerPage}`,
           {
             method: "GET",
             credentials: "include",

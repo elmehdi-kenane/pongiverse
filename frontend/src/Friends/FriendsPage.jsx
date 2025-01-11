@@ -41,7 +41,7 @@ const FriendshipPage = () => {
     const getFriendSuggestions = async () => {
       const response = await fetch(
         `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
-        }:${import.meta.env.VITE_PORT}/friends/get_friend_suggestions/${user}`,
+        }:${import.meta.env.VITE_PORT}/friends/get_friend_suggestions`,
         {
           method: "GET",
           credentials: "include",
@@ -60,7 +60,7 @@ const FriendshipPage = () => {
     const getFriends = async () => {
       const response = await fetch(
         `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
-        }:${import.meta.env.VITE_PORT}/friends/get_friend_list/${user}`,
+        }:${import.meta.env.VITE_PORT}/friends/get_friend_list`,
         {
           method: "GET",
           credentials: "include",
@@ -201,7 +201,7 @@ const FriendshipPage = () => {
     const getSentRequests = async () => {
       const response = await fetch(
         `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
-        }:${import.meta.env.VITE_PORT}/friends/get_sent_requests/${user}`,
+        }:${import.meta.env.VITE_PORT}/friends/get_sent_requests`,
         {
           method: "GET",
           credentials: "include",
@@ -220,7 +220,7 @@ const FriendshipPage = () => {
     const getReceivedRequests = async () => {
       const response = await fetch(
         `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
-        }:${import.meta.env.VITE_PORT}/friends/get_received_requests/${user}`,
+        }:${import.meta.env.VITE_PORT}/friends/get_received_requests`,
         {
           method: "GET",
           credentials: "include",
@@ -239,7 +239,7 @@ const FriendshipPage = () => {
     const getBlockedList = async () => {
       const response = await fetch(
         `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
-        }:${import.meta.env.VITE_PORT}/friends/get_blocked_list/${user}`,
+        }:${import.meta.env.VITE_PORT}/friends/get_blocked_list`,
         {
           method: "GET",
           credentials: "include",

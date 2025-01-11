@@ -43,7 +43,6 @@ function UpdateBio() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user: user,
           bio: bio,
         })
       });

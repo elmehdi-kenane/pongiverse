@@ -18,7 +18,6 @@ function UpdateCountry() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user: user,
           country: country
         })
       });

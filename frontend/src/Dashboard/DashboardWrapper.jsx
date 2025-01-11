@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState, useContext } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
-import mavPic from "../assets/Profile/Group.svg"
+import mavPic from "../assets/Profile/avatar.png"
 import bg from "../assets/Profile/bg1.jpg"
 import { useNavigate } from "react-router-dom";
 
@@ -43,7 +43,7 @@ export const DashboardWrapper = ({ child }) => {
     const fetchUserGames = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getUserGames/${user}`,
+          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getUserGames`,
           {
             method: "GET",
             credentials: "include",

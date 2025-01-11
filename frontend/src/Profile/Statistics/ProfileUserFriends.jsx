@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react'
 import chatSvg from "../../assets/navbar-sidebar/chat.svg"
 import { Link, useNavigate } from "react-router-dom"
-import AvatarSvg from "../../assets/Profile/Group.svg"
+import AvatarSvg from "../../assets/Profile/avatar.png"
 
 import AuthContext from '../../navbar-sidebar/Authcontext'
 import ProfileContext from '../ProfileWrapper'
@@ -10,7 +10,7 @@ import ChatContext from '../../Context/ChatContext'
 const ProfileUserFriends = () => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
-  const { userId, getUserFriends, friendsData, chatUserId } = useContext(ProfileContext);
+  const { userId, getUserFriends, friendsData } = useContext(ProfileContext);
   const { setSelectedDirect, setIsHome, setSelectedItem } = useContext(ChatContext);
 
   useEffect(() => {

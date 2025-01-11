@@ -35,7 +35,7 @@ function DashSingle() {
       setLoading(true)
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getSingleMatches/${user}/${page}`,
+          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getSingleMatches/${page}`,
           {
             method: "GET",
             credentials: "include",

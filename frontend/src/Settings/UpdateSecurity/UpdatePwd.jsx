@@ -46,7 +46,6 @@ function UpdatePwd(props) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            user: user,
             old_pwd: oldPwd,
             new_pwd: newPwd,
           })

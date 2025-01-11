@@ -15,7 +15,7 @@ function ProfileUserStatistics() {
   useEffect(() => {
     const getUserStcs = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getUserStcs/${userId}/${15}`, {
+        const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getUserStcsProfile/${userId}`, {
           method: "GET",
           credentials: "include",
           headers: {
@@ -27,8 +27,7 @@ function ProfileUserStatistics() {
           setUserStcs(res.userStcs)
         else if (response.status === 401) {
           navigate("/signin");
-        } else
-         console.log("Error : ", res.error);
+        }
       } catch (error) {
        console.log("Error: ", error);
       }
