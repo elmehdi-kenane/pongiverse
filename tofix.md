@@ -8,12 +8,16 @@ username warning in signupways second step [DONE]
 
 rooms duplication [DONE]
 fix json in local tournament [DONE]
-connected and disconnected in friends
 send message from friends, duplicate user [DONE]
 search for a private chat room [DONE]
 create or join 1 vs 1 makhdamac [DONE]
 
-
+<!-- CHAT -->
+update room image with socket
+update number of members in a room , it stil wahed even if they are jouj
+add room admin , mmaqbour face
+change room name while the others type on it
+change room name while the others type on it, the users who is typing he gonna go back to channels and try to leave the room 500
 
 
 

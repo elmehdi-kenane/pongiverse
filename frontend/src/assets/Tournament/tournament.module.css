@@ -296,6 +296,7 @@
 	width: 80px;
 	gap: 5px;
 	border-radius: 5px;
+	cursor: pointer;
 }
 
 .friend-invite-button-div:hover {
@@ -309,6 +310,7 @@
 .friend-invite-button-p {
 	color: white;
 	font-size: 10px;
+	cursor: pointer;
 }
 
 .friend-invite-button {
