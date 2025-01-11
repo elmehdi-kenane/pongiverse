@@ -38,7 +38,6 @@ import hashlib
 import base64
 from django.http import JsonResponse
 
-
 class SignUpView(APIView):
 	parser_classes = (MultiPartParser, FormParser)
 	def post(self, request, *args, **kwargs):
@@ -80,8 +79,6 @@ class SignUpView(APIView):
 		else:
 			#printf"Serializer errors: {serializer.errors}")
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 
 class WaysSignUpView(APIView):
 	parser_classes = (MultiPartParser, FormParser)
@@ -156,7 +153,6 @@ def encode_email(email):
 def verify_email(email, signature):
 	expected_signature = encode_email(email)
 	return hmac.compare_digest(expected_signature, signature)
-
 
 class GoogleLoginView(APIView):
 	def post(self, request, format=None):

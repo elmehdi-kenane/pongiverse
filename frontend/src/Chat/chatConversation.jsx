@@ -119,7 +119,7 @@ const ChatConversation = ({
           },
           body: JSON.stringify({
             user: user,
-            friend: selectedDirect.name,
+            friend: selectedDirect.id,
           }),
         }
       )

@@ -85,6 +85,8 @@ class room_serializer(serializers.ModelSerializer):
     def get_icon(self, obj):
         protocol = os.getenv("PROTOCOL")
         ip_address = os.getenv("IP_ADDRESS")
+        if obj.room.icon is None:
+            return f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI/media/default.png"
         return f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{obj.room.icon.url}"
 
     def get_cover(self, obj):

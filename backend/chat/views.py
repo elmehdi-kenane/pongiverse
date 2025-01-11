@@ -29,7 +29,6 @@ class CustomMyChatRoomLimitOffsetPagination(PageNumberPagination):
 @authentication_required
 @api_view(["GET"])
 def friends_with_directs(request, username, **kwargs):
-    #print)
     try:
         user = customuser.objects.get(id=kwargs.get("user_id"))
     except customuser.DoesNotExist:
@@ -40,7 +39,7 @@ def friends_with_directs(request, username, **kwargs):
         Q(receiver=user, sender=OuterRef('friend'))
     ).order_by('-timestamp').values('timestamp')[:1]  # Get the latest timestamp
 
-    # Step 3: Filter friends who have messages and annotate with last message timestamp
+    # Step 3: Filter friends who have messages and annotate (katizd filde akhour f resault mkainch f tabel) with last message timestamp
     friends_with_messages = friends.annotate(
         last_message_timestamp=Subquery(last_message_subquery)
     ).filter(
@@ -66,7 +65,7 @@ def direct_messages(request, **kwargs):
     except customuser.DoesNotExist:
         return Response({"error": "user not found"}, status=400)
     try:
-        friend = customuser.objects.get(username=(request.data).get("friend"))
+        friend = customuser.objects.get(id=(request.data).get("friend")) # TODO: change to id => DONE
     except customuser.DoesNotExist:
         return Response({"error": "friend not found"}, status=400)
     messages = Directs.objects.filter(
@@ -116,14 +115,19 @@ def my_chat_rooms(request, username, **kwargs):
 @api_view(["GET"])
 def chat_room_messages(request, room_id, **kwargs):
     try:
-        messages = Message.objects.filter(room_id=room_id).order_by("-timestamp")
-        paginator = CustomLimitOffsetPagination()
-        result_page = paginator.paginate_queryset(messages, request)
-        reversed_page = list(reversed(result_page))
-        serializer = room_message_serializer(reversed_page, many=True)
-        return paginator.get_paginated_response(serializer.data)
+        room = Room.objects.get(id=room_id)
     except Room.DoesNotExist:
         return Response({"error": "chat room not found"}, status=400)
+    try:
+        Membership.objects.get(user__id=kwargs.get("user_id"), room=room)
+    except Membership.DoesNotExist:
+        return Response({"error": "you are not a member of this chat room"}, status=400)
+    messages = Message.objects.filter(room_id=room_id).order_by("-timestamp")
+    paginator = CustomLimitOffsetPagination()
+    result_page = paginator.paginate_queryset(messages, request)
+    reversed_page = list(reversed(result_page))
+    serializer = room_message_serializer(reversed_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 
 
@@ -158,7 +162,7 @@ def leave_chat_room(request, **kwargs):
     try:
         member_to_kick = Membership.objects.get(user=user, room=room)
     except Membership.DoesNotExist:
-        return Response({"error": {"Opps!, Something went Wrong"}}, status=404)
+        return Response({"error": {"Opps!, you're Not a member of this chat room"}}, status=404)
     member_to_kick.delete()
     new_admin_id = set_new_admin(room)
     room.members_count -= 1
@@ -180,12 +184,14 @@ def leave_chat_room(request, **kwargs):
         room.save()
     channel_layer = get_channel_layer()
     user_channels_name = user_channels.get(user.id)
-    for channel in user_channels_name:
-        async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type' : 'chatRoomLeft',"roomId": roomId}})
-        async_to_sync(channel_layer.group_discard(f"chat_room_{room.id}", channel))
+    if user_channels_name is not None:
+        for channel in user_channels_name:
+            async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type' : 'chatRoomLeft',"roomId": roomId}})
+            async_to_sync(channel_layer.group_discard(f"chat_room_{room.id}", channel))
     new_admin_id_channels = user_channels.get(new_admin_id)
-    for channel in new_admin_id_channels:
-        async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type' : 'chatRoomAdminAdded',"message": {"name": room.name}}})
+    if new_admin_id_channels is not None:
+        for channel in new_admin_id_channels:
+                async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type' : 'chatRoomAdminAdded',"message": {"name": room.name}}})
     return Response(
         {
             "success": "You left chat room successfully",
@@ -201,17 +207,33 @@ def chat_room_update_icon(request, **kwargs):
     # TODO: i need to send the room updater
     if request.method == "POST":
         try:
+            user = customuser.objects.get(id=kwargs.get("user_id"))
+        except customuser.DoesNotExist:
+            return Response({"error": "User not found"}, status=400)
+        try:
             room = Room.objects.get(id=request.data.get("room"))
         except Room.DoesNotExist:
             return Response({"error": "chat room name not found!"}, status=400)
+        is_admin = Membership.objects.filter(user=user, room=room, role="admin").exists()
+        if not is_admin:
+            return Response({"error": "You are not an admin of this chat room"}, status=400)
         if (
             room.icon.path
             and room.icon.url != "/media/uploads_default/roomIcon.png"
             and default_storage.exists(room.icon.path)
         ):
             default_storage.delete(room.icon.path)
-        room.icon = request.data.get("icon")
-        room.save()
+        try:
+            icon = request.data.get("icon")
+        except:
+            return Response({"error": "Invalid chat room icon!"}, status=400)
+        # room.icon = request.data.get("icon")
+        try:
+            room.icon = icon
+            room.save()
+        except:
+            return Response({"error": "Invalid chat room icon!"}, status=400)
+        # TODO: I WILL SEND THE NEW COVER TO ALL MEMBERS USING SOCKET
         return Response({"success": "chat room icon changed successfully"}, status=200)
     return Response({"error": "Invalid request method"}, status=400)
 
@@ -221,10 +243,20 @@ def chat_room_update_cover(request, **kwargs):
     # TODO: i need to send the room updater
     if request.method == "POST":
         try:
+            user = customuser.objects.get(id=kwargs.get("user_id"))
+        except customuser.DoesNotExist:
+            return Response({"error": "User not found"}, status=400)
+        try:
             room = Room.objects.get(id=request.data.get("room"))
         except Room.DoesNotExist:
             return Response({"error": "chat room name not found!"}, status=400)
-        cover = request.data.get("cover")
+        is_admin = Membership.objects.filter(user=user, room=room, role="admin").exists()
+        if not is_admin:
+            return Response({"error": "You are not an admin of this chat room"}, status=400)
+        try:
+            cover = request.data.get("cover")
+        except:
+            return Response({"error": "Invalid chat room cover!"}, status=400)
         if cover is None or cover == "null":
             return Response({"error": "invalid chat room cover!"}, status=400)
         if (
@@ -233,10 +265,14 @@ def chat_room_update_cover(request, **kwargs):
             and default_storage.exists(room.cover.path)
         ):
             default_storage.delete(room.cover.path)
-        room.cover = request.data.get("cover")
-        room.save()
+        try:
+            room.cover = cover
+            room.save()
+        except:
+            return Response({"error": "Invalid chat room cover!"}, status=400)
         protocol = os.getenv("PROTOCOL")
         ip_address = os.getenv("IP_ADDRESS")
+        # TODO: I WILL SEND THE NEW COVER TO ALL MEMBERS USING SOCKET
         return Response(
             {
                 "success": "chat room cover changed successfully",
@@ -251,14 +287,28 @@ def chat_room_update_cover(request, **kwargs):
 def chat_room_update_name(request, id, **kwargs):
     # TODO: i need to send the room updater
     if request.method == "PATCH":
+        try:
+            user = customuser.objects.get(id=kwargs.get("user_id"))
+        except customuser.DoesNotExist:
+            return Response({"error": "User not found"}, status=400)
+        try:
+            Membership.objects.get(user=user, room__id=id, role="admin")
+        except Membership.DoesNotExist:
+            return Response({"error": "You are not an admin of this chat room"}, status=400)
         if (Room.objects.filter(name=request.data.get("name"))).exists():
             return Response({"return": "Name Already in Use"})
         try:
             room = Room.objects.get(id=id)
         except Room.DoesNotExist:
             return Response({"error": "chat room name not found!"})
-        room.name = request.data.get("name")
-        room.save()
+        new_name = request.data.get("name")
+        if new_name == room.name or new_name is None or len(new_name) == 0 or len(new_name) > 18:
+            return Response({"error": "Opps! invalid name"}, status=400)
+        try:
+            room.name = request.data.get("name")
+            room.save()
+        except:
+            return Response({"error": "Opps! something went wrong"}, status=400)
         return Response(
             {
                 "success": "chat room name changed successfully",
@@ -272,43 +322,69 @@ def chat_room_update_name(request, id, **kwargs):
 @api_view(["POST"])
 def create_chat_room(request, **kwargs):
     if request.method == "POST":
-
         try:
             user = customuser.objects.get(id=kwargs.get("user_id"))
         except customuser.DoesNotExist:
             return Response({"error": "User not found"}, status=400)
         room = Room.objects.filter(name=request.data.get("name")).first()
         if not room:
-            icon = icon = request.FILES.get("icon")
-            if icon is None or icon == "null":
+            try:
+                icon = request.data.get("icon")
+            except:
+                return Response({"error": "Invalid chat room icon!"}, status=400)
+            if (
+                request.data.get("name") is None
+                or len(request.data.get("name")) == 0
+                or len(request.data.get("name")) > 18
+            ):
+                return Response({"error": "Opps! invalid name"}, status=400)
+            # topic len > 0 and len < 80
+            if (
+                request.data.get("topic") is None
+                or len(request.data.get("topic")) == 0
+                or len(request.data.get("topic")) > 80
+            ):
+                return Response({"error": "Opps! invalid topic"}, status=400)
+            if request.data.get("visibility") is None or request.data.get("visibility") not in ["public", "private"]:
+                return Response({"error": "Opps! invalid visibility"}, status=400)
+            if icon is None or icon == "null" or len(icon) == 0:
                 new_room = Room.objects.create(
                     name=request.data.get("name"),
                     topic=request.data.get("topic"),
                     visiblity=request.data.get("visibility"),
                 )
             else:
-                new_room = Room.objects.create(
-                    name=request.data.get("name"),
-                    topic=request.data.get("topic"),
-                    icon=request.FILES.get("icon"),
-                    visiblity=request.data.get("visibility"),
-                )
-            new_room.members_count = 1
-            new_room.save()
+                try:
+                    new_room = Room.objects.create(
+                        name=request.data.get("name"),
+                        topic=request.data.get("topic"),
+                        icon=request.data.get("icon"),
+                        visiblity=request.data.get("visibility"),
+                    )
+                except:
+                    return Response({"error": "Opps! invalid data"}, status=400)
+            try:
+                new_room.members_count = 1
+                new_room.save()
+            except:
+                return Response({"error": "Opps! something went wrong"}, status=400)
         elif room:
             return Response(
                 {"error": "Chat room name is taken. Try a different one."}, status=400
             )
-        Membership.objects.create(user=user, room=new_room, role="admin")
+        try:
+            Membership.objects.create(user=user, room=new_room, role="admin")
+        except:
+            return Response({"error": "Opps! something went wrong"}, status=400)
         protocol = os.getenv("PROTOCOL")
         ip_address = os.getenv("IP_ADDRESS")
 
         channel_layer = get_channel_layer()
         user_channels_name = user_channels.get(user.id)
-        for channel in user_channels_name:
-            async_to_sync(channel_layer.group_add(f"chat_room_{new_room.id}", channel))
-
-        
+        if user_channels_name is not None:
+            for channel in user_channels_name:
+                async_to_sync(channel_layer.group_add(f"chat_room_{new_room.id}", channel))
+        # TODO: I WILL SEND THE NEW ROOM TO ALL th CHANNEL NAMES OF CREATEOR USING SOCKET
         return Response(
             {
                 "type": "chatRoomCreated",
@@ -336,13 +412,27 @@ def delete_chat_room(request, id, **kwargs):
     if request.method == "DELETE":
         # TODO: i need to send the room updater
         try:
+            user = customuser.objects.get(id=kwargs.get("user_id"))
+        except customuser.DoesNotExist:
+            return Response({"error": "User not found"}, status=400)
+        try:
+            Membership.objects.get(user=user, room__id=id, role="admin")
+        except Membership.DoesNotExist:
+            return Response({"error": "You are not an admin of this chat room"}, status=400)
+        try:
             room = Room.objects.get(id=id)
         except Room.DoesNotExist:
             return Response({"error": "chat room name not found!"}, status=400)
-        Membership.objects.filter(room=room).delete()
+        try:
+            Membership.objects.filter(room=room).delete()
+        except Membership.DoesNotExist:
+            return Response({"error": "Opps! something went wrong"}, status=400)
         delete_file(room.icon, "/media/uploads_default/roomIcon.png")
         delete_file(room.cover, "/media/uploads_default/roomCover.png")
-        room.delete()
+        try:
+            room.delete()
+        except:
+            return Response({"error": "Opps! something went wrong"}, status=400)
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(f"chat_room_{id}", {"type": "broadcast_message", 'data': {'type': 'chatRoomDeleted', "roomId": id}})
         return Response(
@@ -354,18 +444,31 @@ def delete_chat_room(request, id, **kwargs):
         )
     return Response({"error": "Invalid request method"}, status=400)
 
-
-
 @authentication_required
 @api_view(["GET"])
 def all_chat_room_memebers(request, chat_room_name, **kwargs):
     # TODO: i need to send the room updater
-    room = Room.objects.get(name=chat_room_name)
+    try:
+        user = customuser.objects.get(id=kwargs.get("user_id"))
+    except customuser.DoesNotExist:
+        return Response({"error": "User not found"}, status=400)
+    try:
+        Membership.objects.get(user=user, room__name=chat_room_name)
+    except Membership.DoesNotExist:
+        return Response({"error": "You are not a member of this chat room"}, status=400)
+    try:
+        room = Room.objects.get(name=chat_room_name)
+    except Room.DoesNotExist:
+        return Response({"error": "chat room name not found!"}, status=400)
+
     members = Membership.objects.filter(room=room)
     data = []
     for member in members:
         if member.role == "member":
-            user = customuser.objects.get(id=member.user_id)
+            try:
+                user = customuser.objects.get(id=member.user_id)
+            except customuser.DoesNotExist:
+                return Response({"error": "Opps! something went wrong"}, status=400)
             member_data = {"name": user.username, "avatar": user.avatar.path}
             data.append(member_data)
     return Response(data)
@@ -378,6 +481,10 @@ def list_all_friends(request, **kwargs):
             user = customuser.objects.get(id=kwargs.get("user_id"))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
+        try:
+            Membership.objects.get(user=user, room__id=request.data.get("id"), role="admin")
+        except Membership.DoesNotExist:
+            return Response({"error": "You are not an admin of this chat room"}, status=400)
         try:
             friends = Friendship.objects.filter(user=user, block_status = Friendship.BLOCK_NONE)
         except Friendship.DoesNotExist:
@@ -392,8 +499,8 @@ def list_all_friends(request, **kwargs):
                 friend_object = customuser.objects.get(id=friend.friend_id)
             except customuser.DoesNotExist:
                 return Response({"error": "Opps! Something went wrong"}, status=400)
-            my_friend = Membership.objects.filter(room=room, user=friend_object)
-            if not my_friend:
+            is_member = Membership.objects.filter(room=room, user=friend_object)
+            if not is_member:
                 friend_data = {
                     "name": friend_object.username,
                     "avatar": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:{os.getenv('PORT')}/auth{friend_object.avatar.url}",
@@ -466,6 +573,14 @@ def chat_room_members_list(request, **kwargs):
     # TODO: i need to send the room updater
     if request.method == "POST":
         try:
+            user = customuser.objects.get(id=kwargs.get("user_id"))
+        except customuser.DoesNotExist:
+            return Response({"error": "User not found"}, status=400)
+        try:
+            Membership.objects.get(user=user, room__id=request.data.get("id"))
+        except Membership.DoesNotExist:
+            return Response({"error": "you are not a member of this chat room"}, status=400)
+        try:
             room = Room.objects.get(id=request.data.get("id"))
         except Room.DoesNotExist:
             return Response({"error": "chat room not found"}, status=400)
@@ -483,61 +598,61 @@ def chat_room_members_list(request, **kwargs):
 
     return Response({"error": "Invalid request method"}, status=400)
 
+# IM HERE
+
 @authentication_required
 @api_view(["POST"])
 def accept_chat_room_invite(request, **kwargs):
-    #print"inside accept_chat_room_invite")
     if request.method == "POST":
         try:
             user = customuser.objects.get(id=kwargs.get("user_id"))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
-        try:   
+        room = request.data.get("room")
+        if room is None or type(room) is not int:
+            return Response({"error": "Invalid chat room id"}, status=400)
+        try:
+            invitation = RoomInvitation.objects.get(user=user, room__id=request.data.get("room"))
+        except RoomInvitation.DoesNotExist:
+            return Response({"error": "opps, something went wrong"}, status=400)
+        try:
             room = Room.objects.get(id=request.data.get("room"))
         except Room.DoesNotExist:
             return Response({"error": "chat room not found"}, status=400)
         if Membership.objects.filter(user=user, room=room).exists():
             return Response({"error": "you already joined chat room"}, status=400)
         try:
-            invitation = RoomInvitation.objects.get(user=user, room=room)
-        except RoomInvitation.DoesNotExist:
+            Membership.objects.create(user=user, room=room, role="member")
+            room.members_count += 1
+            invitation.delete()
+            room.save()
+        except:
             return Response({"error": "opps, something went wrong"}, status=400)
-        Membership.objects.create(user=user, room=room, role="member")
-        room.members_count += 1
-        invitation.delete()
-        room.save()
         protocol = os.getenv("PROTOCOL")
         ip_address = os.getenv("IP_ADDRESS")
         channel_layer = get_channel_layer()
         user_channels_name = user_channels.get(user.id)
-        for channel in user_channels_name:
-            async_to_sync(channel_layer.group_add(f"chat_room_{room.id}", channel))
-            async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type': 'roomInvitationAccepted', "room": {
-                        "id": room.id,
-                        "role": "member",
-                        "name": room.name,
-                        "topic": room.topic,
-                        "icon": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{room.icon.url}",
-                        "cover": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{room.cover.url}",
-                        "membersCount": room.members_count,
-                    },}})
-            # async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type' : 'chatRoomLeft',"roomId": roomId}})
+        if user_channels_name is not None:
+            for channel in user_channels_name:
+                async_to_sync(channel_layer.group_add(f"chat_room_{room.id}", channel))
+                async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type': 'roomInvitationAccepted', "room": {
+                            "id": room.id,
+                            "role": "member",
+                            "name": room.name,
+                            "topic": room.topic,
+                            "icon": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{room.icon.url}",
+                            "cover": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{room.cover.url}",
+                            "membersCount": room.members_count,
+                        },}})
         return Response(
             {
                 "success": f"You have joined {room.name} chat room",
-                # "room": {
-                #     "id": room.id,
-                #     "role": "member",
-                #     "name": room.name,
-                #     "topic": room.topic,
-                #     "icon": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{room.icon.url}",
-                #     "cover": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{room.cover.url}",
-                #     "membersCount": room.members_count,
-                # },
             }
         )
 
     return Response({"error": "Invalid request method"}, status=400)
+
+# IM HERE BEFORE DEINER
 
 @authentication_required
 @api_view(["POST"])
@@ -547,6 +662,9 @@ def cancel_chat_room_invite(request, **kwargs):
             user = customuser.objects.get(id=kwargs.get("user_id"))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
+        room = request.data.get("room")
+        if room is None or type(room) is not int:
+            return Response({"error": "Invalid chat room id"}, status=400)
         try:
             room = Room.objects.get(id=request.data.get("room"))
         except Room.DoesNotExist:
@@ -567,6 +685,9 @@ def reset_chat_room_unread_messages(request, **kwargs):
             user = customuser.objects.get(id=kwargs.get("user_id"))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
+        room = request.data.get("room")
+        if room is None or type(room) is not int:
+            return Response({"error": "Invalid chat room id"}, status=400)
         try:
             room = Room.objects.get(id=request.data.get("roomId"))
         except customuser.DoesNotExist:
@@ -583,12 +704,13 @@ def reset_unread_messages(request, **kwargs):
             user = customuser.objects.get(id=kwargs.get("user_id"))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
+        receiver = request.data.get("receiver")
+        if receiver is None or type(receiver) is not int:
+            return Response({"error": "Invalid receiver id"}, status=400)
         try:
-            #print"***********:", request.data.get("receiver"))
             receiver = customuser.objects.get(id=request.data.get("receiver"))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
-        #print"inside reset_unread_messages")
         unread = Directs.objects.filter(sender=receiver, receiver=user, is_read=False)
         if unread:
             unread.update(is_read=True)
@@ -603,20 +725,26 @@ def join_chat_room(request, **kwargs):
             user = customuser.objects.get(id=kwargs.get("user_id"))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
+        room = request.data.get("roomId")
+        if room is None or type(room) is not int:
+            return Response({"error": "Invalid chat room id"}, status=400)
         try:
             room = Room.objects.get(id=request.data.get("roomId"))
         except Room.DoesNotExist:
             return Response({"error": "chat room not found"}, status=400)
         if Membership.objects.filter(user=user, room=room).exists():
             return Response({"error": "you already joined chat room"}, status=400)
-        Membership.objects.create(user=user, room=room, role="member")
-        room.members_count += 1
-        room.save()
+        try:
+            Membership.objects.create(user=user, room=room, role="member")
+            room.members_count += 1
+            room.save()
+        except:
+            return Response({"error": "opps, something went wrong"}, status=400)
         protocol = os.getenv("PROTOCOL")
         ip_address = os.getenv("IP_ADDRESS")
         channel_layer = get_channel_layer()
         user_channels_name = user_channels.get(user.id)
-        if user_channels_name:
+        if user_channels_name is not None:
             for channel in user_channels_name:
                 async_to_sync(channel_layer.group_add(f"chat_room_{room.id}", channel))
         return Response(
@@ -636,6 +764,9 @@ def join_chat_room(request, **kwargs):
 
     return Response({"error": "Invalid request method"}, status=400)
 
+
+
+# DONE:
 @authentication_required
 @api_view(["GET"])
 def directs_search(request, **kwargs):
@@ -652,7 +783,7 @@ def directs_search(request, **kwargs):
         return Response(serializer.data)
         
     return Response({"error": "Invalid request method"}, status=400)
-
+#DONE
 @authentication_required
 @api_view(["GET"])
 def chat_rooms_search(request, **kwargs):
@@ -677,7 +808,7 @@ def update_status_of_invitations(request, **kwargs):
         RoomInvitation.objects.filter(user=user).update(status="ACC")
         return Response({"success": "status updated successfully"}, status=200)
     return Response({"error": "Invalid request method"}, status=400)
-
+#DONE
 @authentication_required
 @api_view(["GET"])
 def unrecieved_room_invitee(request, username, **kwargs):
@@ -690,7 +821,7 @@ def unrecieved_room_invitee(request, username, **kwargs):
         return Response({"count": count}, status=200)
 
     return Response({"error": "Invalid request method"}, status=400)
-
+#DONE
 @authentication_required
 @api_view(["GET"])
 def unread_conversations_count(request, username, **kwargs):

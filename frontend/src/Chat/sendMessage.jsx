@@ -88,6 +88,7 @@ const SendMessage = (props) => {
 
       <div className="conversation-input-wrapper">
         <textarea
+          maxLength={1024}
           ref={textAreaRef}
           className="conversation-input"
           placeholder="Enter your message"

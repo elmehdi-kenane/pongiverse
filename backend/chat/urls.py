@@ -3,6 +3,7 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 
+
 urlpatterns = [
     path('createChatRoom', views.create_chat_room, name='create-chat-room'),
     path('chatRoomUpdateName/<int:id>', views.chat_room_update_name, name='chat-room-update-name'),
@@ -23,11 +24,11 @@ urlpatterns = [
     path('cancelChatRoomInvite', views.cancel_chat_room_invite, name='cancel-chat-room-invite'),
     path('resetUndreadMessages', views.reset_unread_messages, name='reset-unread-messages'),
     path('resetChatRoomUndreadMessages', views.reset_chat_room_unread_messages),
-    path('firendwithdirects/<str:username>', views.friends_with_directs),
+    path('firendwithdirects/<str:username>', views.friends_with_directs), # TODO: remove username from url
     path('myChatRooms/<str:username>', views.my_chat_rooms, name='my-chat-rooms'),
     path('directsSreach', views.directs_search),
     path('chatRoomsSreach', views.chat_rooms_search),
-    path('updateStatusOfInvitations', views.update_status_of_invitations),
+    # path('updateStatusOfInvitations', views.update_status_of_invitations),
     path('unrecievedRoomInvitee/<str:username>', views.unrecieved_room_invitee),
     path('unreadConversations/<str:username>', views.unread_conversations_count),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
