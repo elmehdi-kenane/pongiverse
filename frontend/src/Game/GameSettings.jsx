@@ -117,15 +117,23 @@ const GameSettings = () => {
             }),
           }
         );
-        if (!response.ok) {
+        if (response.status === 401) {
           setonSavingParams(false);
           navigate('/signin')
         }
-        setonSavingParams(false);
-        toast.success("Settings updated successfully", {
-          position: "top-center",
-          duration: 2000,
-        });
+        if (!response.ok) {
+          toast.error(response.message, {
+            position: "top-center",
+            duration: 2000,
+          });
+          setonSavingParams(false);
+        } else {
+          setonSavingParams(false);
+          toast.success("Settings updated successfully", {
+            position: "top-center",
+            duration: 2000,
+          });
+        }
       } catch (e) {
         console.log("something wrong with fetch");
         setonSavingParams(false);

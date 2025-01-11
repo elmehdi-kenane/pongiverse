@@ -12,71 +12,6 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError, AccessToke
 from .common import tournament_rooms, tournaments, rooms
 from myapp.decorators import authentication_required
 from .models import UserMatchStatics
-# from rest_framework.exceptions import AuthenticationFailed
-# from .serializers import UserSerializer
-# from .models import User
-# import jwt, datetime
-
-# @api_view(['POST'])
-# def signup(request):
-#     serializer = UserSerializer(data=request.data)
-#     ##printserializer)
-#     serializer.is_valid(raise_exception=True)
-#     serializer.save()
-#     return Response(serializer.data)
-
-# @api_view(['POST'])
-# def signin(request):
-#     email = request.data['email']
-#     password = request.data['password']
-#     user = User.objects.filter(email=email).first()
-#     if user is None:
-#         raise AuthenticationFailed('User not found!')
-#     if not user.check_password(password):
-#         raise AuthenticationFailed('Incorrect password')
-#     token = request.COOKIES.get('jwt')
-#     ##printtoken)
-#     if token:
-#         response = Response()
-#         response.data = {
-#             'name': user.name
-#         }
-#         return response
-#     else:
-#         payload = {
-#             'id': user.id,
-#             'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=120),
-#             'iat': datetime.datetime.utcnow()
-#         }
-#         token = jwt.encode(payload, 'secret', algorithm='HS256')
-#         response = Response()
-#         response.set_cookie(key='jwt', value=token, httponly=True)
-#         response.data = {
-#             'name': user.name
-#         }
-#         return response
-
-# @api_view(['GET'])
-# def get(request):
-#     token = request.COOKIES.get('jwt')
-#     if not token:
-#         raise AuthenticationFailed('Unauthenticated')
-#     try:
-#         payload = jwt.decode(token, 'secret', algorithms=['HS256'])
-#     except jwt.ExpiredSignatureError:
-#         raise AuthenticationFailed('Unauthenticated')
-#     user = User.objects.filter(id=payload['id']).first()
-#     serializer = UserSerializer(user)
-#     return Response(serializer.data)
-
-# @api_view(['POST'])
-# def logout(request):
-#     response = Response()
-#     response.delete_cookie('jwt')
-#     response.data = {
-#         'message': 'success'
-#     }
-#     return response
 
 from django.http import HttpResponse
 import base64
@@ -87,41 +22,51 @@ from mimetypes import guess_type
 @authentication_required
 @api_view(['POST'])
 def online_friends(request, **kwargs):
-	ip_address = os.getenv("IP_ADDRESS")
-	user_id = kwargs.get('user_id')
-	user = customuser.objects.get(id=user_id)
-	if user is not None:
-		allFriends = []
-		for user_id in Friendship.objects.filter(user=user):
-			if user_id.friend.is_online and not user_id.friend.is_playing: ####################  and user_id.friend.is_playing
-				allFriends.append({'id': user_id.friend.id, 'name': user_id.friend.username, 'level': 2, 'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user_id.friend.avatar.url}"})
-			# print(f'friends are {friends}')
-		return Response({'message': allFriends})
-	return Response({'message': 'user not found'}, status=401)
+	try:
+		ip_address = os.getenv("IP_ADDRESS")
+		user_id = kwargs.get('user_id')
+		user = customuser.objects.get(id=user_id)
+		if user is not None:
+			allFriends = []
+			for friend in Friendship.objects.filter(user=user):
+				friend_statisitics = UserMatchStatics.objects.filter(player=friend.friend).first()
+				if friend.friend.is_online and not friend.friend.is_playing: ####################  and friend.friend.is_playing
+					allFriends.append({'id': friend.friend.id, 'name': friend.friend.username, 'level': friend_statisitics.level, 'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{friend.friend.avatar.url}"})
+				# print(f'friends are {friends}')
+			return Response({'message': allFriends})
+		return Response({'message': 'user not found'}, status=401)
+	except Exception as e:
+		return Response({'error': str(e)}, status=400)
 
 
 @authentication_required
 @api_view(['POST'])
 def get_user(request, **kwargs):
-	ip_address = os.getenv("IP_ADDRESS")
-	user_id = kwargs.get('user_id')
-	user = customuser.objects.filter(id=user_id).first()
-	if user is not None:
-		response = Response()
-		response.data = {'id' : user.id, 'name' : user.username, 'level' : 2, 'image' : f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user.avatar.url}" }
-		return response
-	return Response({'message': 'user not found'}, status=401)
+	try:
+		ip_address = os.getenv("IP_ADDRESS")
+		user_id = kwargs.get('user_id')
+		user = customuser.objects.filter(id=user_id).first()
+		if user is not None:
+			response = Response()
+			response.data = {'id' : user.id, 'name' : user.username, 'level' : 2, 'image' : f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user.avatar.url}" }
+			return response
+		return Response({'message': 'user not found'}, status=401)
+	except Exception as e:
+		return Response({'error': str(e)}, status=400)
 
 @authentication_required
 @api_view(['POST'])
 def user_image(request, **kwargs):
-	ip_address = os.getenv("IP_ADDRESS")
-	user_id = kwargs.get('user_id')
-	user = customuser.objects.filter(id=user_id).first()
-	if user:
-		return Response({'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user.avatar.url}"})
-	else:
-		return Response({'message': 'user not found'}, status=401)
+	try:
+		ip_address = os.getenv("IP_ADDRESS")
+		user_id = kwargs.get('user_id')
+		user = customuser.objects.filter(id=user_id).first()
+		if user:
+			return Response({'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user.avatar.url}"})
+		else:
+			return Response({'message': 'user not found'}, status=401)
+	except Exception as e:
+		return Response({'error': str(e)}, status=400)
 
 def is_user_in_any_tournament(username):
 	for tournament_id, tournament_data in tournaments.items():
@@ -161,66 +106,75 @@ def is_user_owner_in_tournament(user_to_check, tournament_id):
 @authentication_required
 @api_view(['POST'])
 def tournament_members(request, **kwargs):
-	user_id = kwargs.get('user_id')
-	user = customuser.objects.filter(id=user_id).first()
-	if user:
-		username = user.username
-		user_exists, tournament_id, members_usernames = is_user_in_any_tournament(username)
-		response = Response()
-		is_owner = is_user_owner_in_tournament(username, tournament_id)
-		if is_owner == False:
-			response.data = {'tournament_id': tournament_id, 'allMembers': get_users_data(members_usernames), 'is_owner' : 'no'}
-		else:
-			response.data = {'tournament_id': tournament_id, 'allMembers': get_users_data(members_usernames), 'is_owner' : 'yes'}
-		return response
-	return Response({'message': 'user not found'}, status=401)
+	try:
+		user_id = kwargs.get('user_id')
+		user = customuser.objects.filter(id=user_id).first()
+		if user:
+			username = user.username
+			user_exists, tournament_id, members_usernames = is_user_in_any_tournament(username)
+			response = Response()
+			is_owner = is_user_owner_in_tournament(username, tournament_id)
+			if is_owner == False:
+				response.data = {'tournament_id': tournament_id, 'allMembers': get_users_data(members_usernames), 'is_owner' : 'no'}
+			else:
+				response.data = {'tournament_id': tournament_id, 'allMembers': get_users_data(members_usernames), 'is_owner' : 'yes'}
+			return response
+		return Response({'message': 'user not found'}, status=401)
+	except Exception as e:
+		return Response({'error': str(e)}, status=400)
 
 @authentication_required
 @api_view(['POST'])
 def started_tournament_members(request, **kwargs):
-	user_id = kwargs.get('user_id')
-	user = customuser.objects.filter(id=user_id).first()
-	ip_address = os.getenv("IP_ADDRESS")
-	if not user:
-		return Response({'error': 'User not found'}, status=401)
-	tournament_members = TournamentMembers.objects.select_related('tournament').filter(user=user, tournament__is_started=True, tournament__is_finished=False)
-	if not tournament_members.exists():
-		return Response({'error': 'No active tournaments found for the user'}, status=404)
-	tournament_member = tournament_members.first()
-	tournament_id = tournament_member.tournament.tournament_id
-	my_tournament = Tournament.objects.filter(tournament_id=tournament_id).first()
-	if not my_tournament:
-		return Response({'error': 'Tournament not found'}, status=404)
-	allMembers = []
-	for member in TournamentMembers.objects.filter(tournament=my_tournament):
-		allMembers.append({
-			'id': member.user.id,
-			'name': member.user.username,
-			'level': 2,  # Assuming level is static for now
-			'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{member.user.avatar.url}",
-			'is_online' : member.user.is_online
-		})
-	response = Response()
-	tournamentMember = TournamentMembers.objects.filter(user=user, tournament=my_tournament).first()
-	if not tournamentMember.is_owner:
-		response.data = {'tournament_id': tournament_id, 'allMembers': allMembers, 'is_owner' : 'no'}
-	else:
-		response.data = {'tournament_id': tournament_id, 'allMembers': allMembers, 'is_owner' : 'yes'}
-	return response
+	try:
+		user_id = kwargs.get('user_id')
+		user = customuser.objects.filter(id=user_id).first()
+		ip_address = os.getenv("IP_ADDRESS")
+		if not user:
+			return Response({'error': 'User not found'}, status=401)
+		tournament_members = TournamentMembers.objects.select_related('tournament').filter(user=user, tournament__is_started=True, tournament__is_finished=False)
+		if not tournament_members.exists():
+			return Response({'error': 'No active tournaments found for the user'}, status=404)
+		tournament_member = tournament_members.first()
+		tournament_id = tournament_member.tournament.tournament_id
+		my_tournament = Tournament.objects.filter(tournament_id=tournament_id).first()
+		if not my_tournament:
+			return Response({'error': 'Tournament not found'}, status=404)
+		allMembers = []
+		for member in TournamentMembers.objects.filter(tournament=my_tournament):
+			allMembers.append({
+				'id': member.user.id,
+				'name': member.user.username,
+				'level': 2,  # Assuming level is static for now
+				'image': f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{member.user.avatar.url}",
+				'is_online' : member.user.is_online
+			})
+		response = Response()
+		tournamentMember = TournamentMembers.objects.filter(user=user, tournament=my_tournament).first()
+		if not tournamentMember.is_owner:
+			response.data = {'tournament_id': tournament_id, 'allMembers': allMembers, 'is_owner' : 'no'}
+		else:
+			response.data = {'tournament_id': tournament_id, 'allMembers': allMembers, 'is_owner' : 'yes'}
+		return response
+	except Exception as e:
+		return Response({'error': str(e)}, status=400)
 
 
 @authentication_required
 @api_view(['POST'])
 def get_tournament_member(request, **kwargs):
-	username = request.data.get('user')
-	user = customuser.objects.filter(username=username).first()
-	ip_address = os.getenv("IP_ADDRESS")
-	if user is not None:
-		user_states = UserMatchStatics.objects.filter(player=user).first()
-		response = Response()
-		response.data = {'id' : user.id, 'name' : user.username, 'level' : user_states.level, 'image' : f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user.avatar.url}", 'background_image' : f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user.background_pic.url}", 'is_online' : user.is_online}
-		return response
-	return Response({'message': 'user not found'}, status=401)
+	try:
+		username = request.data.get('user')
+		user = customuser.objects.filter(username=username).first()
+		ip_address = os.getenv("IP_ADDRESS")
+		if user is not None:
+			user_states = UserMatchStatics.objects.filter(player=user).first()
+			response = Response()
+			response.data = {'id' : user.id, 'name' : user.username, 'level' : user_states.level, 'image' : f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user.avatar.url}", 'background_image' : f"{os.getenv('PROTOCOL')}://{ip_address}:{os.getenv('PORT')}/auth{user.background_pic.url}", 'is_online' : user.is_online}
+			return response
+		return Response({'message': 'user not found'}, status=401)
+	except Exception as e:
+		return Response({'error': str(e)}, status=400)
 
 @authentication_required
 @api_view(['POST'])
@@ -365,52 +319,55 @@ def get_tournament_size(request, **kwargs):
 @authentication_required
 @api_view(['POST'])
 def customize_game(request, **kwargs):
+	paddle_ball_colors = ["#C10000", "#1C00C3", "#00A006", "#C16800", "#C100BA", "#00C1B6", "#FFE500", "#FFFFFF"]
+	board_colors = ["#000000", "#5241AB", "#834931", "#8a7dac00", "#004E86"]
 	try:
-		paddle_color = request.data['paddle']
-		ball_color = request.data['ball']
-		board_color = request.data['board']
-		ball_effect = request.data['effect']
+		paddle_color = request.data.get('paddle')
+		ball_color = request.data.get('ball')
+		board_color = request.data.get('board')
+		ball_effect = request.data.get('effect')
 		user_id = kwargs.get('user_id')
 		user = customuser.objects.filter(id=user_id).first()
 		if not user:
 			return Response({'error': 'User not found'}, status=401)
 		game_customize = GameCustomisation.objects.filter(user=user).first()
-		if game_customize:
-			game_customize.paddle_color = paddle_color
-			game_customize.ball_color = ball_color
-			game_customize.board_color = board_color
-			game_customize.ball_effect = ball_effect
-			game_customize.save()
+		if not paddle_color or not ball_color or not board_color or (ball_effect != True and ball_effect != False):
+			return Response({'message': 'missing fields'}, status=400) 
+		if paddle_color in paddle_ball_colors and ball_color in paddle_ball_colors and board_color in board_colors:
+			if game_customize:
+				game_customize.paddle_color = paddle_color
+				game_customize.ball_color = ball_color
+				game_customize.board_color = board_color
+				game_customize.ball_effect = ball_effect
+				game_customize.save()
+				return Response({'message': 'updated successfully'})
+			GameCustomisation.objects.create(
+				user=user,
+				paddle_color=paddle_color,
+				ball_color=ball_color,
+				board_color=board_color,
+				ball_effect=ball_effect
+			)
 			return Response({'message': 'updated successfully'})
-		GameCustomisation.objects.create(
-			user=user,
-			paddle_color=paddle_color,
-			ball_color=ball_color,
-			board_color=board_color,
-			ball_effect=ball_effect
-		)
-		return Response({'message': 'updated successfully'})
-	except:
-		return Response({'message': 'user not exit in the database'})
+		else:
+			return Response({'message': 'invalid colors'}, status=400)
+	except Exception as e:
+		return Response({'message': 'user not exit in the database'}, status=401)
 
 @authentication_required
 @api_view(['GET'])
 def get_customize_game(request, **kwargs):
 	try:
-		token = request.COOKIES.get('access_token')
-		decoded_token = AccessToken(token)
-		data = decoded_token.payload
-		if data.get('user_id'):
-			user = customuser.objects.filter(id=data['user_id']).first()
-			if user is not None:
-				game_customize = GameCustomisation.objects.filter(user=user).first()
-				if game_customize:
-					return Response({'data' : [game_customize.paddle_color, game_customize.ball_color, game_customize.board_color, game_customize.ball_effect]})
-				return Response({'data' : ['blue', 'red', '#8a7dac00']})
-			else:
-				return Response({'error': 'User not found'}, status=401)
-		return Response({'data' : None})
-	except TokenError as e:
+		user_id = kwargs.get('user_id')
+		user = customuser.objects.filter(id=user_id).first()
+		if user is not None:
+			game_customize = GameCustomisation.objects.filter(user=user).first()
+			if game_customize:
+				return Response({'data' : [game_customize.paddle_color, game_customize.ball_color, game_customize.board_color, game_customize.ball_effect]})
+			return Response({'data' : ['blue', 'red', '#8a7dac00']})
+		else:
+			return Response({'error': 'User not found'}, status=401)
+	except:
 		return Response({'data' : None})
 
 @authentication_required
