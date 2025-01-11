@@ -50,7 +50,6 @@ function DisableTFQ(props) {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                user: user,
                 otp: otp
               })
             }

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from './Authcontext';
-import AvatarSvg from "../assets/Profile/Group.svg"
+import AvatarSvg from "../assets/Profile/avatar.png"
 
 const ProfileIcon = ({ Icons, profileHandleDropDown, profileDropDownisOpen }) => {
 

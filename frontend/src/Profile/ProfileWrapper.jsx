@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState, useContext } from "react";
 import AuthContext from "../navbar-sidebar/Authcontext";
-import mavPic from "../assets/Profile/Group.svg"
+import mavPic from "../assets/Profile/avatar.png"
 import bg from "../assets/Profile/bg1.jpg"
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
@@ -26,13 +26,14 @@ export const ProfileWrapper = ({ child }) => {
     const [userCountry, setUserCountry] = useState(null);
 
     const [isFriend, setIsFriend] = useState('false');
+    const [isFriendLoading, setIsFriendLoading] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [reportValue, setReportValue] = useState(null);
     const [friendsData, setFriendsData] = useState([])
 
     const getUserFriends = async () => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getUserFriends/${user}/${userId}`, {
+            const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getUserFriends/${userId}`, {
                 method: "GET",
                 credentials: "include",
                 headers: {
@@ -41,7 +42,7 @@ export const ProfileWrapper = ({ child }) => {
             });
             const res = await response.json()
             if (response.ok) {
-                //console.log("Response data : ", res.data);
+                // console.log("Response data : ", res.data);
                 setFriendsData(res.data)
             }
             else if (response.status === 401)
@@ -54,7 +55,7 @@ export const ProfileWrapper = ({ child }) => {
     useEffect(() => {
         const checkFriendship = async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/CheckFriendship/${user}/${userId}`, {
+                const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/CheckFriendship/${userId}`, {
                     method: "GET",
                     credentials: "include",
                     headers: {
@@ -66,6 +67,7 @@ export const ProfileWrapper = ({ child }) => {
                     if (res.data === "blocked")
                         navigate("/Error404")
                     setIsFriend(res.data);
+                    setIsFriendLoading(true);
                 }
                 else if (response.status === 401)
                     navigate("/signin")
@@ -75,7 +77,7 @@ export const ProfileWrapper = ({ child }) => {
         }
         const getUserData = async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getUserData/${userId}`, {
+                const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getUserDataProfile/${userId}`, {
                     method: "GET",
                     credentials: "include",
                     headers: {
@@ -98,6 +100,8 @@ export const ProfileWrapper = ({ child }) => {
             getUserData();
             if (user && (user != userId))
                 checkFriendship();
+            else
+                setIsFriendLoading(true);
         }
     }, [user, userId, notifSocket])
 
@@ -153,6 +157,12 @@ export const ProfileWrapper = ({ child }) => {
         getUserFriends: getUserFriends,
     };
     return (
-        <ProfileContext.Provider value={userInfoData}> {child} </ProfileContext.Provider>
+        <ProfileContext.Provider value={userInfoData}> 
+            {isFriendLoading &&
+                <>
+                {child} 
+                </>
+            }
+        </ProfileContext.Provider>
     )
 }

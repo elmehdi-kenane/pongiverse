@@ -29,7 +29,6 @@ function UpdateAvatar(props) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          user: user,
           image: updatedPic,
         }),
       });

@@ -15,7 +15,7 @@ function DashStatistics() {
     useEffect(() => {
         const getUserStcs = async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getUserStcs/${user}/${31}`, {
+                const response = await fetch(`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getUserStcsDash`, {
                     method: "GET",
                     credentials: "include",
                     headers: {

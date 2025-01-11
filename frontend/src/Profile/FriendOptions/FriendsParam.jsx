@@ -6,7 +6,7 @@ import ChatContext from '../../Context/ChatContext';
 import { cancelFriendRequest, handleRemoveFriendship } from "../../Friends/utils";
 
 import ChatIcon from '@mui/icons-material/Chat';
-import AvatarSvg from "../../assets/Profile/Group.svg"
+import AvatarSvg from "../../assets/Profile/avatar.png"
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import CancelScheduleSendIcon from '@mui/icons-material/CancelScheduleSend';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
