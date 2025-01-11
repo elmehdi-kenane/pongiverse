@@ -477,7 +477,7 @@ const GameNotifications = (props) => {
             avatar: "",
           });
           setSelectedItem("");
-          // props.setDirectsSearch("");
+          setDirectsSearch([]);
         } else if (type === "blocked-friend" && message.second_username === props.userId) {
           navigate("/mainpage/dashboard");
           setDirects(prev => prev.filter(direct => direct.name !== message.second_username))
@@ -487,7 +487,7 @@ const GameNotifications = (props) => {
             status: "",
             avatar: "",
           });
-          // props.setDirectsSearch("");
+          setDirectsSearch([]);
         } else if (data.type === "chatNotificationCounter" && location.pathname !== "/mainpage/chat") {
           setChatNotificationCounter(data.count);
         } else if ( data.type === "roomInvitation" && location.pathname !== "/mainpage/groups") {
@@ -506,7 +506,7 @@ const GameNotifications = (props) => {
             status: "",
             avatar: "",
           });
-          // setDirectsSearch("");
+          setDirectsSearch([]);
         } else if ( location.pathname === "/mainpage/chat" && (type === "remove-friendship" || type === "blocked-friend")) {
           props.setDirects((prev) =>
             prev.filter((direct) => direct.name !== message.second_username)
@@ -517,6 +517,7 @@ const GameNotifications = (props) => {
             status: "",
             avatar: "",
           });
+          setDirectsSearch([]);
         }else if  (type ==='remove-friendship' || type === 'blocked-friend')
           {
             setDirects(prev => prev.filter(direct => direct.name !== message.second_username))
@@ -529,7 +530,7 @@ const GameNotifications = (props) => {
               avatar: "",
             })};
             
-            // setDirectsSearch("");
+            setDirectsSearch([]);
           } else if (
           type === "user_join_tournament" &&
           location.pathname === "/mainpage/game/jointournament"

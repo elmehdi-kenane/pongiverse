@@ -137,6 +137,7 @@
 	font-weight: bold;
 	border-radius: 7px;
 	background-color: #913dce;
+	cursor: pointer;
 }
 
 .join-button-search{
@@ -148,6 +149,7 @@
 	font-weight: bold;
 	border-radius: 7px;
 	background-color: #913dce;
+	cursor: pointer;
 }
 
 .table-line{

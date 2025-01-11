@@ -22,6 +22,7 @@ export const ChatProvider = ({ child }) => {
   const myChatRoomsRef = useRef(myChatRooms);
   const [hasMoreRooms, setHasMoreRooms] = useState(true);
   const [searchValue, setSearchValue] = useState("")
+  const [directsSearch, setDirectsSearch] = useState([])
 
   useEffect(() => {
     myChatRoomsRef.current = myChatRooms;
@@ -188,6 +189,8 @@ export const ChatProvider = ({ child }) => {
     directs,
     searchValue,
     setSearchValue,
+    directsSearch,
+    setDirectsSearch
   };
   return (
     <ChatContext.Provider value={contextData}>{child}</ChatContext.Provider>

@@ -212,8 +212,8 @@ def started_tournament_members(request, **kwargs):
 @authentication_required
 @api_view(['POST'])
 def get_tournament_member(request, **kwargs):
-	user_id = kwargs.get('user_id')
-	user = customuser.objects.filter(id=user_id).first()
+	username = request.data.get('user')
+	user = customuser.objects.filter(username=username).first()
 	ip_address = os.getenv("IP_ADDRESS")
 	if user is not None:
 		user_states = UserMatchStatics.objects.filter(player=user).first()
