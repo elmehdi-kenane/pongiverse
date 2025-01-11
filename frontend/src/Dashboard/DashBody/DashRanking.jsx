@@ -1,5 +1,5 @@
 import { React, useContext, useEffect, useState } from "react";
-import AvatarSvg from "../../assets/Profile/Group.svg"
+import AvatarSvg from "../../assets/Profile/avatar.png"
 
 import AuthContext from "../../navbar-sidebar/Authcontext";
 import { Link, useNavigate } from "react-router-dom";
@@ -15,7 +15,7 @@ function DashRanking() {
     const getUsersRank = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getUsersRank/${user}`,
+          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getUsersRank`,
           {
             method: "GET",
             credentials: "include",

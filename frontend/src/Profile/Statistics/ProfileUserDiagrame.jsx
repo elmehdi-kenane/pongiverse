@@ -37,8 +37,6 @@ const ProfileUserDiagrame = () => {
           setUserGames(res.userGames);
         else if (response.status === 401)
           navigate('/signin')
-        else
-         console.log("Error : ", res.error);
       } catch (error) {
        console.log("Error: ", error);
       }

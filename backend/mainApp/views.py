@@ -745,7 +745,6 @@ def is_user_joining_tournament(username):
 		return value['mode'], value['id']
 	return None, None
 
-
 @authentication_required
 @api_view(['POST'])
 def check_is_in_game(request, **kwargs):

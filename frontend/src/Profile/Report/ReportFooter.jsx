@@ -27,7 +27,6 @@ function ReportFooter() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          reporterUsername: user,
           reportedUsername: userId,
           reportMessage: reportValue,
         }),

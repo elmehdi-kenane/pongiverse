@@ -31,11 +31,11 @@ function DashMulty() {
   const itemsPerPage = 3;
 
   useEffect(() => {
-    const getSingleMatches = async () => {
+    const getMultyMatches = async () => {
       setLoading(true)
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getMultiplayerMatches/${user}/${page}`,
+          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/profile/getMultiplayerMatches/${page}`,
           {
             method: "GET",
             credentials: "include",
@@ -58,7 +58,7 @@ function DashMulty() {
       setLoading(false)
     };
     if (user)
-      getSingleMatches();
+      getMultyMatches();
   }, [user, page]);
 
 

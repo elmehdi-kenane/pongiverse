@@ -108,7 +108,7 @@ def add_friend_request(request, **kwargs):
 
     if to_user:
         if from_user == to_user:
-            return Response({"Error": "You can't send friend request to yourself."})
+            return Response(data={"error": "You can't send friend request to yourself!"}, status=status.HTTP_400_BAD_REQUEST)
         if Friendship.objects.filter(Q(block_status='blocked') | Q(block_status='blocker'), user=from_user, friend=to_user).exists():
             return Response(data={"error": "The user is blocked!"}, status=status.HTTP_400_BAD_REQUEST)
 

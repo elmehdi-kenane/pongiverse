@@ -4,7 +4,8 @@ from . import views
 urlpatterns = [
 
     #------ Settings ------
-    path('getUserData/<str:username>', views.getUserData), #SettingsContext
+    path('getUserData', views.getUserData), #SettingsContext
+    path('getUserDataProfile/<str:user_profile>', views.getUserDataProfile), #SettingsContext
     
     path('updateUserPic', views.update_user_pic),
     path('updateUserBg', views.update_user_bg),
@@ -18,21 +19,22 @@ urlpatterns = [
     path('CheckUserTFQ', views.check_user_tfq),
 
     #------ Profile ------
-    path('getUserFriends/<str:mainusername>/<str:username>', views.get_user_friends),
-    path('CheckFriendship/<str:username>/<str:username2>', views.check_friendship),
-    path('getUserDiagram/<str:username>', views.get_user_diagram),
-    path('getUserMatches1vs1/<str:username>/<int:page>', views.get_user_games),
+    path('getUserFriends/<str:user_profile>', views.get_user_friends),
+    path('CheckFriendship/<str:user_profile>', views.check_friendship),
+    path('getUserDiagram/<str:user_profile>', views.get_user_diagram),
+    path('getUserMatches1vs1/<str:user_profile>/<int:page>', views.get_user_games),
     path('reportUser', views.report_user),
+    path('getUserStcsProfile/<str:user_profile>', views.get_user_statistics_profile),
     
     #------ Dashboard ------
-    path('getUsersRank/<str:username>', views.get_users_rank),
-    path('getUserGames/<str:username>', views.get_user_games_wl),
-    path('getUserStcs/<str:username>/<int:date_range>', views.get_user_statistics),
+    path('getUsersRank', views.get_users_rank),
+    path('getUserGames', views.get_user_games_wl),
+    path('getUserStcsDash', views.get_user_statistics_dashboard),
 
-    path('getSingleMatches/<str:username>/<int:page>', views.get_single_matches),
+    path('getSingleMatches/<int:page>', views.get_single_matches),
     path('getSingleMatchDtl/<int:match_id>', views.get_single_match_dtl),
-    path('getMultiplayerMatches/<str:username>/<int:page>', views.get_multiplayer_matches),
+    path('getMultiplayerMatches/<int:page>', views.get_multiplayer_matches),
     path('getMultyMatchDtl/<int:match_id>', views.get_multy_match_dtl),
 
-    path('getTournMatches/<str:username>/<int:page>/<int:items>', views.get_tourn_matches),
+    path('getTournMatches/<int:page>/<int:items>', views.get_tourn_matches),
 ]

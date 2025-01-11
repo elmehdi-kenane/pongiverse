@@ -41,9 +41,6 @@ function UpdateTFQ(props) {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-              user: user,
-            })
           },
         );
         const res = await response.json();
@@ -110,7 +107,6 @@ function UpdateTFQ(props) {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                user: user,
                 otp: otp
               })
             }

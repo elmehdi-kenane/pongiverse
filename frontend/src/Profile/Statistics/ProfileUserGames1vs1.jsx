@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import AvatarSvg from "../../assets/Profile/Group.svg"
+import AvatarSvg from "../../assets/Profile/avatar.png"
 import ProfileContext from "../ProfileWrapper"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
@@ -36,8 +36,6 @@ function ProfileUserGames1vs1() {
       else if (response.status === 401) {
         navigate("/signin");
       }
-      else
-       console.log("Error : ", res.error);
     } catch (error) {
      console.log("Error: ", error);
     }
