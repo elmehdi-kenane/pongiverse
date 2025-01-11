@@ -7,6 +7,7 @@ import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
 import { EffectCoverflow, Pagination, Navigation } from "swiper/modules";
 import * as Icons from "../../assets/navbar-sidebar";
+import GameCustomizationPreview from "./GameCustomizationPreview";
 import "./GameCustomization.css";
 
 const GameCustomization = () => {
@@ -14,6 +15,7 @@ const GameCustomization = () => {
   const [tableColor, setTableColor] = useState("#00ff00");
   const [paddleColor, setPaddleColor] = useState("#0000ff");
   const [ballColor, setBallColor] = useState("#ff0000");
+  const [showPreview, setShowPreview] = useState(false);
 
   const handleReset = () => {
     setTableColor("#00ff00");
@@ -28,7 +30,7 @@ const GameCustomization = () => {
   const [initialValue, setInitialValue] = useState(0);
   const [onSavingParams, setonSavingParams] = useState(false);
 
-  let { privateCheckAuth, user, gameCustomize } = useContext(AuthContext);
+  let { privateCheckAuth, user, gameCustomize, setIsBlur, isBlur } = useContext(AuthContext);
 
   const swiperRef = useRef(null);
   const paddleBallColor = [
@@ -108,7 +110,19 @@ const GameCustomization = () => {
   ];
 
   return (
-    <div className="customization-page">
+    // {isBlur ? "rooms-wrapper blur" : "rooms-wrapper"}
+
+    <div className={ isBlur ? "customization-page blur" : 'customization-page'}>
+      {showPreview && (
+        <GameCustomizationPreview
+          setShowPreview={setShowPreview}
+          paddleClr={paddleClr}
+          ballClr={ballClr}
+          tableClr={tableClr}
+          setIsBlur={setIsBlur}
+        />
+      )}
+
       <div className="customization-container">
         <div className="customization-tabs">
           {TABS.map((tab) => (
@@ -127,7 +141,7 @@ const GameCustomization = () => {
           ))}
         </div>
         <div className="customization-options">
-          <div className="customization-preview">
+          <div className="customization-preview" onClick={()=>{setShowPreview(true); setIsBlur(true)}}>
             <p className="customization-preview-text">Preview</p>
           </div>
 
@@ -267,54 +281,38 @@ const GameCustomization = () => {
           </div>
         </div>
         <div className="customization-actions">
-          <div className="customization-colors">
-            <div className="customization-colors-title">
-              <p>Choose a color</p>
-            </div>
-            <div className="customization-colors-options">
-              {paddleBallColor.map((color, index) => (
-                <div
-                  key={index}
-                  className="customization-colors-option"
-                  style={{ backgroundColor: color }}
-                  onClick={() => {
-                    if (typeChosen === 1) {
-                      setPaddleClr(color);
-                      setSelectedItems([index, selectedItems[1], selectedItems[2]]);
-                    } else if (typeChosen === 2) {
-                      setBallClr(color);
-                      setSelectedItems([selectedItems[0], index, selectedItems[2]]);
-                    } else if (typeChosen === 3) {
-                      setTableClr(color);
-                      setSelectedItems([selectedItems[0], selectedItems[1], index]);
-                    }
-                  }}
-                ></div>
-              ))}
-            </div>
-          </div>
           <div className="customization-actions-buttons">
-            <button
-              className="customization-actions-button"
-              onClick={() => {
-                handleReset();
-              }}
-            >
-              Reset
-            </button>
-            <button
-              className="customization-actions-button"
-              onClick={() => {
-                setonSavingParams(true);
-                gameCustomize(selectedItems[0], selectedItems[1], selectedItems[2]);
-                setTimeout(() => {
-                  setonSavingParams(false);
+      
+            <div className="customization-save-actions">
+              {/* Back and play buttons */}
+              <button
+                className="customization-back"
+                onClick={() => {
                   navigate("/mainpage");
-                }, 2000);
-              }}
-            >
-              {onSavingParams ? "Saving..." : "Save"}
-            </button>
+                }}
+              >
+                Back
+              </button>
+          </div>
+          <div className="customization-save-actions">
+              {/* Applay and reset buttons */}
+              <button
+                className="customization-save"
+                onClick={() => {
+                  setonSavingParams(true);
+                  gameCustomize({
+                    tableColor: tableClr,
+                    paddleColor: paddleClr,
+                    ballColor: ballClr,
+                  });
+                }}
+              >
+                Save
+              </button>
+              <button className="customization-reset" onClick={handleReset}>
+                Reset
+              </button>
+            </div>
           </div>
         </div>
       </div>

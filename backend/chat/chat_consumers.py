@@ -193,7 +193,7 @@ async def direct_message(self, data, user_channels):
         return
     try:
         receiver = await sync_to_async(customuser.objects.get)(
-            username=data["data"]["receiver"]
+            id=data["data"]["receiver"]
         )
     except customuser.DoesNotExist:
         return

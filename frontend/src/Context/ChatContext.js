@@ -1,7 +1,6 @@
 import { createContext, useEffect, useState, useContext, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import AuthContext from "../navbar-sidebar/Authcontext";
-import { use } from "react";
 const ChatContext = createContext();
 export default ChatContext;
 
@@ -44,6 +43,12 @@ export const ChatProvider = ({ child }) => {
         icon: "",
       });
       setSelectedItem("");
+    }
+    if(location.pathname !== "/mainpage/groups"){
+      // setSuggestedChatRooms([])
+      // setMyChatRooms([])
+      // setHasMoreRooms(true)
+
     }
 
   }, [location.pathname]);

@@ -31,8 +31,7 @@ class CustomMyChatRoomLimitOffsetPagination(PageNumberPagination):
 def friends_with_directs(request, username, **kwargs):
     #print)
     try:
-        user_id = kwargs.get("user_id")
-        user = customuser.objects.get(id=user_id)
+        user = customuser.objects.get(id=kwargs.get("user_id"))
     except customuser.DoesNotExist:
         return Response({"error": "user not found"}, status=400)
     friends = Friendship.objects.filter(user=user, block_status = Friendship.BLOCK_NONE)

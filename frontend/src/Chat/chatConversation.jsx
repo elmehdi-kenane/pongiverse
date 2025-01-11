@@ -56,7 +56,7 @@ const ChatConversation = ({
           type: "directMessage",
           data: {
             sender: user,
-            receiver: selectedDirect.name,
+            receiver: selectedDirect.id,
             message: messageToSend,
           },
         })
