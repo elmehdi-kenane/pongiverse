@@ -41,7 +41,6 @@ const ChatRoomConversation = ({
 
   const [messageToSend, setMessageToSend] = useState("")
   const sendMessage = (message) => {
-    console.log("THE MESSAGE:", message)
     if (
       chatSocket &&
       chatSocket.readyState === WebSocket.OPEN &&

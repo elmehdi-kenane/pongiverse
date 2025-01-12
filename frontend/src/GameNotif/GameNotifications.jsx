@@ -292,16 +292,10 @@ const GameNotifications = (props) => {
           message: message,
           type: type,
         };
-        console.log("type", type);
-        console.log("message", message);
         if (props.setData) props.setData(friendsData);
         if (type === "goToGamingPage") {
-          // // console.log("navigating now")
-          // navigate(`/mainpage/game/solo/1vs1/friends`)
           const socketRefer = socketRef.current;
-          // console.log("SOCKET........", socketRefer);
           if (socketRefer?.readyState !== WebSocket.OPEN) {
-            // console.log("SOCKET IS CLOSED, SHOULD OPENED");
             const newSocket = new WebSocket(
               `${import.meta.env.VITE_SOCKET}://${
                 import.meta.env.VITE_IPADDRESS

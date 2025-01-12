@@ -23,10 +23,6 @@ pip3 install -r requirements.txt || { echo "Failed to install requirements."; ex
 python3 ./manage.py makemigrations mainApp myapp Profile Notifications chat friends navBar || { echo "Makemigrations failed."; exit 1; }
 python3 ./manage.py migrate || { echo "Migrations failed."; exit 1; }
 
-cd /backend || { echo "Directory /backend does not exist."; exit 1; }
-echo "Creating users"
-python3 manage.py create_users
-
 
 # Run the development server
 python3 ./manage.py runserver 0.0.0.0:8000 || { echo "Failed to start the server."; exit 1; }
