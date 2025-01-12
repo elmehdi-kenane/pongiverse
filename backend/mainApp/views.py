@@ -330,7 +330,7 @@ def customize_game(request, **kwargs):
 		if not user:
 			return Response({'error': 'User not found'}, status=401)
 		game_customize = GameCustomisation.objects.filter(user=user).first()
-		if not paddle_color or not ball_color or not board_color or (ball_effect != True and ball_effect != False):
+		if not paddle_color or not ball_color or not board_color  or (ball_effect != True and ball_effect != False):
 			return Response({'message': 'missing fields'}, status=400) 
 		if paddle_color in paddle_ball_colors and ball_color in paddle_ball_colors and board_color in board_colors:
 			if game_customize:
