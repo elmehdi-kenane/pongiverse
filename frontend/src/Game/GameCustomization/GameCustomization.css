@@ -27,7 +27,7 @@
     border-radius: 15px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     padding: 20px;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
     gap: 20px;
 }
 
@@ -95,6 +95,7 @@
     padding: 20px 0;
     display: flex;
     justify-content: center;
+    margin-bottom: 70px;
 }
 
 .customization-actions-buttons {
@@ -254,9 +255,11 @@
 
 .customization-preview-container {
     position: absolute;
-    top: 250px;
-    left: 50%;
-    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 80%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -268,15 +271,15 @@
 
 .customization-preview-bg {
     position: relative ;
-    width: 800px;
-    height: 400px;
-    background: black;
+    width: 840px;
+    height: 440px;
+    /* background: black; */
     border-radius: 20px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.1);
     overflow: hidden;
     animation: scaleIn 0.3s ease;
-    padding: 20px;
+    padding: 32px;
 }
 
 .game-table {
@@ -306,7 +309,6 @@
     height: 100%;
     object-fit: cover;
 }
-
 .game-ball {
     position: absolute;
     width: 20px;
@@ -316,15 +318,20 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
+.game-ball-effect {
+    position: absolute;
+    top: 50%;
+    left: 100%;
+}
 
 
 .preview-close-button {
     color: #fff;
     position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 40px;
-    height: 40px;
+    top: 5px;
+    right: 5px;
+    width: 30px;
+    height: 30px;
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 50%;
     cursor: pointer;
@@ -345,14 +352,21 @@
 @media (max-width: 1024px) {
     .customization-preview-bg {
         width: 600px;
-        height: 450px;
+        height: 350px;
+        padding: 25px;
+    }
+    .preview-close-button {
+        top:8px;
+        right: 8px;
+        width: 14px;
+        height: 14px;
     }
 }
 
 @media (max-width: 768px) {
     .customization-preview-bg {
         width: 400px;
-        height: 300px;
+        height: 220px;
     }
     
     .game-paddle {
@@ -367,13 +381,20 @@
 }
 
 @media (max-width: 480px) {
+    .customization-preview-container {
+        width: 100%;
+    }
     .customization-preview-bg {
-        width: 320px;
-        height: 240px;
+        width: 99%;
+        height: 200px;
+        padding: 25px;
     }
     
     .preview-close-button {
-        width: 32px;
-        height: 32px;
+        width: 14px;
+        height: 14px;
     }
+}
+
+.customization-options-ball-effect {
 }

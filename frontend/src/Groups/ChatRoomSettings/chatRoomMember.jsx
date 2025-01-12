@@ -20,13 +20,11 @@ const ChatRoomMember = (props) => {
     return (
         <div className="add-room-member-list">
             <div className="add-admin-member-infos">
-                <img src={ChatIcons.mmaqbourImage} alt="" className="add-room-admin-image" />
+                <img src={props.avatar} alt="" className="add-room-admin-image" />
                 <div className="add-room-admin-infos">
                     <div className="add-admin-member-name">{props.name}</div>
-                    <div className="add-admin-member-level">level2</div>
                 </div>
             </div>
-            {/* <button className="add-room-admin-btn room-admin-btn-added" onClick={onClickAddMemberAdmin}>Add Admin</button> */}
             {isInviteSent ? <img src={Icons.waitClock} className="room-invite-sent-icon"/> : <button className="invite-room-member-btn" onClick={onClickAddMemberAdmin}>Add Admin</button>}
 
 

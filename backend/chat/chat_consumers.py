@@ -7,6 +7,7 @@ import json
 import os
 from django.db.models import F
 from Notifications.common import notifs_user_channels
+from django.utils import timezone
 
 
 async def add_user_channel_group(self, data):
@@ -150,7 +151,7 @@ async def message(self, data):
 
     await sync_to_async(Membership.objects.filter(room=room).exclude(user=sender).update)(unreadCount=F('unreadCount') + 1)
 
-    formatted_date = newMessage.timestamp.strftime('%Y/%m/%d AT %I:%M %p')
+    formatted_date = timezone.localtime(newMessage.timestamp).strftime('%Y/%m/%d AT %I:%M %p')
 
     event = {
         "type": "send_message",
@@ -208,7 +209,7 @@ async def direct_message(self, data, user_channels):
         channel_names = user_channels.get(receiver.id)
         mychannel_names = user_channels.get(sender.id)
 
-        formatted_date = message.timestamp.strftime('%Y/%m/%d AT %I:%M %p')
+        formatted_date = timezone.localtime(message.timestamp).strftime('%Y/%m/%d AT %I:%M %p')
 
         message_data = {
             "type": "send_direct",
@@ -250,3 +251,55 @@ async def direct_message(self, data, user_channels):
             }
             for user_channel in user_notification_channels:
                 await self.channel_layer.send(user_channel, notification_data)
+
+
+async def add_member_to_chat_room(self, data, user_channels):
+    try:
+        room = await sync_to_async(Room.objects.get)(id=data["room"])
+    except Room.DoesNotExist:
+        return
+    try:
+        user = await sync_to_async(customuser.objects.get)(username=data["user"])
+    except customuser.DoesNotExist:
+        return
+    if not await sync_to_async(Membership.objects.filter(user=user, room=room).exists)():
+        await sync_to_async(Membership.objects.create)(user=user, room=room)
+        room.members_count += 1
+        await sync_to_async(room.save)()
+        
+        user_channels = user_channels.get(user.id)
+        if user_channels is not None:
+            for user_channel in user_channels:
+                await self.channel_layer.group_add(f"chat_room_{room.id}", user_channel)
+            for user_channel in user_channels:
+                await self.channel_layer.send(
+                    user_channel,
+                    {
+                        "type": "broadcast_message",
+                        "data": {
+                            "type": "chatRoomJoined",
+                            "room": {
+                                'id': room.id,
+                                "name": room.name,
+                                'topic': room.topic,
+                                'cover' : f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:{os.getenv('PORT')}/chatAPI{room.cover.url}",
+                                "icon": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:{os.getenv('PORT')}/chatAPI{room.icon.url}",
+                                "membersCount": room.members_count,
+                            },
+                        },
+                    },
+                )
+        await self.channel_layer.group_send(
+            f"chat_room_{room.id}",
+            {
+                "type": "broadcast_message",
+                "data": {
+                    "type": "updateChatRoomMembers",
+                    "room": {
+                        'id': room.id,
+                        "membersCount": room.members_count,
+                    },
+                },
+            },
+        )
+

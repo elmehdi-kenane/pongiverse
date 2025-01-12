@@ -50,11 +50,12 @@ export const ChatProvider = ({ child }) => {
         icon: "",
       });
       setSelectedItem("");
+      setChatRooms([])
     }
     if(location.pathname !== "/mainpage/groups"){
-      // setSuggestedChatRooms([])
-      // setMyChatRooms([])
-      // setHasMoreRooms(true)
+      setSuggestedChatRooms([])
+      setMyChatRooms([])
+      setHasMoreRooms(true)
 
     }
 
@@ -83,6 +84,7 @@ export const ChatProvider = ({ child }) => {
 
   useEffect(() => {
     selectedChatRoomRef.current = selectedChatRoom;
+    setSelectedItem(selectedChatRoom.name);
   }, [selectedChatRoom]);
 
   useEffect(() => {
@@ -113,7 +115,7 @@ export const ChatProvider = ({ child }) => {
       try {
         const response = await fetch(
           `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
-          }:${import.meta.env.VITE_PORT}/chatAPI/chatRoomInvitations/${user}`,
+          }:${import.meta.env.VITE_PORT}/chatAPI/chatRoomInvitations`,
           {
             credentials: "include",
           }
@@ -132,7 +134,7 @@ export const ChatProvider = ({ child }) => {
       try {
         const response = await fetch(
           `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
-          }:${import.meta.env.VITE_PORT}/chatAPI/suggestedChatRooms/${user}`,
+          }:${import.meta.env.VITE_PORT}/chatAPI/suggestedChatRooms`,
           {
             credentials: "include",
           }

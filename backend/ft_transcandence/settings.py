@@ -34,7 +34,7 @@ MEDIA_URL = '/media/'
 HOST = os.getenv('HOST')
 GOOGLE_CONTENT = os.getenv('GOOGLE_CONTENT')
 
-ALLOWED_HOSTS = [HOSTS_ALLOWED, 'backend']
+ALLOWED_HOSTS = [HOSTS_ALLOWED, 'backend', 'localhost']
 
 # Application definition
 
@@ -114,6 +114,22 @@ REST_FRAMEWORK = {
 		'rest_framework_simplejwt.authentication.JWTAuthentication',
 	  ],
 }
+# DATABASES = {
+#     'default': {
+# 		'ENGINE': 'django.db.backends.sqlite3',
+# 		'NAME': BASE_DIR / 'db.sqlite3',
+# 	}
+# }
+
+# CHANNEL_LAYERS = {
+# 	"default": {
+# 		"BACKEND": "channels.layers.InMemoryChannelLayer",
+#     "CONFIG": {
+#           "capacity": 5000,
+#       },
+# 	}
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -135,8 +151,6 @@ CHANNEL_LAYERS = {
     },
 }
 
-
-
 AUTH_PASSWORD_VALIDATORS = [
 	{
 		'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -154,11 +168,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Berlin'
+USE_TZ = True
+
 
 USE_I18N = True
 
-USE_TZ = True
 
 STATIC_URL = 'static/'
 

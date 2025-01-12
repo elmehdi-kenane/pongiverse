@@ -6,13 +6,18 @@ from friends.models import Friendship
 from myapp.models import customuser
 from django.core.files.storage import default_storage
 import os
-from .consumers import user_channels
+from .common import user_channels
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from datetime import datetime
 from .serializers import friends_with_directs_serializer, direct_message_serializer, room_serializer, room_message_serializer
 from rest_framework.pagination import PageNumberPagination
 from myapp.decorators import authentication_required
+import sys
+import logging
+
+
+logger = logging.getLogger(__name__)
 # from Notifications.consumers import notifs_user_channels
 
 class CustomLimitOffsetPagination(PageNumberPagination):
@@ -28,7 +33,7 @@ class CustomMyChatRoomLimitOffsetPagination(PageNumberPagination):
 
 @authentication_required
 @api_view(["GET"])
-def friends_with_directs(request, username, **kwargs):
+def friends_with_directs(request, **kwargs):
     try:
         user = customuser.objects.get(id=kwargs.get("user_id"))
     except customuser.DoesNotExist:
@@ -51,7 +56,7 @@ def friends_with_directs(request, username, **kwargs):
     paginator = CustomLimitOffsetPagination()
     result_page = paginator.paginate_queryset(friends_with_messages, request)
     serializer = friends_with_directs_serializer(result_page, many=True, context={
-        'username': username,  # Passing the username to get the last message
+        'username': user.username,  # Passing the username to get the last message
         'user': user
     })
 
@@ -82,7 +87,7 @@ def direct_messages(request, **kwargs):
 
 @authentication_required
 @api_view(["GET"])
-def chat_rooms_list(request, username, **kwargs):
+def chat_rooms_list(request, **kwargs):
     try:
         user = customuser.objects.get(id=kwargs.get("user_id"))
     except customuser.DoesNotExist:
@@ -102,7 +107,7 @@ def chat_rooms_list(request, username, **kwargs):
 
 @authentication_required
 @api_view(["GET"])
-def my_chat_rooms(request, username, **kwargs):
+def my_chat_rooms(request, **kwargs):
     try:
         user = customuser.objects.get(id=kwargs.get("user_id"))
     except customuser.DoesNotExist:
@@ -187,6 +192,8 @@ def leave_chat_room(request, **kwargs):
         room.save()
     channel_layer = get_channel_layer()
     user_channels_name = user_channels.get(user.id)
+    protocol = os.getenv("PROTOCOL")
+    ip_address = os.getenv("IP_ADDRESS")
     if user_channels_name is not None:
         for channel in user_channels_name:
             async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type' : 'chatRoomLeft',"roomId": roomId}})
@@ -195,6 +202,7 @@ def leave_chat_room(request, **kwargs):
     if new_admin_id_channels is not None:
         for channel in new_admin_id_channels:
                 async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type' : 'chatRoomAdminAdded',"message": {"name": room.name}}})
+    async_to_sync(channel_layer.group_send)(f"chat_room_{room.id}", {"type": "broadcast_message", 'data': {'type': 'chatRoomMemberLeft', "roomId": room.id, "newCount": room.members_count}})
     return Response(
         {
             "success": "You left chat room successfully",
@@ -207,7 +215,6 @@ def leave_chat_room(request, **kwargs):
 @authentication_required
 @api_view(["POST"])
 def chat_room_update_icon(request, **kwargs):
-    # TODO: i need to send the room updater
     if request.method == "POST":
         try:
             user = customuser.objects.get(id=kwargs.get("user_id"))
@@ -237,6 +244,13 @@ def chat_room_update_icon(request, **kwargs):
         except:
             return Response({"error": "Invalid chat room icon!"}, status=400)
         # TODO: I WILL SEND THE NEW COVER TO ALL MEMBERS USING SOCKET
+        protocol = os.getenv("PROTOCOL")
+        ip_address = os.getenv("IP_ADDRESS")
+        channel_layer = get_channel_layer()
+        #print the channel names of the group
+        # print("group: channels: ",channel_layer.group_channels(f"chat_room_{room.id}"))
+        print(f"chat_room_{room.id}")
+        async_to_sync(channel_layer.group_send)(f"chat_room_{room.id}", {"type": "broadcast_message", 'data': {'type': 'chatRoomIconChanged', "roomId": room.id, "newIcon": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{room.icon.url}"}})
         return Response({"success": "chat room icon changed successfully"}, status=200)
     return Response({"error": "Invalid request method"}, status=400)
 
@@ -276,6 +290,8 @@ def chat_room_update_cover(request, **kwargs):
         protocol = os.getenv("PROTOCOL")
         ip_address = os.getenv("IP_ADDRESS")
         # TODO: I WILL SEND THE NEW COVER TO ALL MEMBERS USING SOCKET
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(f"chat_room_{room.id}", {"type": "broadcast_message", 'data': {'type': 'chatRoomCoverChanged', "roomId": room.id, "newCover": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{room.cover.url}"}})
         return Response(
             {
                 "success": "chat room cover changed successfully",
@@ -287,8 +303,7 @@ def chat_room_update_cover(request, **kwargs):
 
 @authentication_required
 @api_view(["PATCH"])
-def chat_room_update_name(request, id, **kwargs):
-    # TODO: i need to send the room updater
+def chat_room_update_name(request, **kwargs):
     if request.method == "PATCH":
         try:
             user = customuser.objects.get(id=kwargs.get("user_id"))
@@ -312,6 +327,12 @@ def chat_room_update_name(request, id, **kwargs):
             room.save()
         except:
             return Response({"error": "Opps! something went wrong"}, status=400)
+        logger.error('***********************************************Something went wrong!')
+        channel_layer = get_channel_layer()
+        members = redis_client.smembers(f"chat_room_{room.id}")
+        for member in members:
+            logger.error(f"channel edit {member}")
+        async_to_sync(channel_layer.group_send)(f"chat_room_{room.id}", {"type": "broadcast_message", 'data': {'type': 'chatRoomNameChanged', "roomId": room.id, "newName": room.name}})
         return Response(
             {
                 "success": "chat room name changed successfully",
@@ -381,25 +402,23 @@ def create_chat_room(request, **kwargs):
             return Response({"error": "Opps! something went wrong"}, status=400)
         protocol = os.getenv("PROTOCOL")
         ip_address = os.getenv("IP_ADDRESS")
-
         channel_layer = get_channel_layer()
         user_channels_name = user_channels.get(user.id)
         if user_channels_name is not None:
             for channel in user_channels_name:
-                async_to_sync(channel_layer.group_add(f"chat_room_{new_room.id}", channel))
-        # TODO: I WILL SEND THE NEW ROOM TO ALL th CHANNEL NAMES OF CREATEOR USING SOCKET
+                async_to_sync(channel_layer.group_add)(f"chat_room_{new_room.id}", channel)
+                async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type': 'chatRoomJoined', "room": {
+                            "id": new_room.id,
+                            "role": "admin",
+                            "name": new_room.name,
+                            "topic": new_room.topic,
+                            "icon": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{new_room.icon.url}",
+                            "cover": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{new_room.cover.url}",
+                            "membersCount": new_room.members_count,
+                        },}})
         return Response(
             {
                 "type": "chatRoomCreated",
-                "room": {
-                    "id": new_room.id,
-                    "name": new_room.name,
-                    "topic": new_room.topic,
-                    "role": "admin",
-                    "icon": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{new_room.icon.url}",
-                    "cover": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{new_room.cover.url}",
-                    "membersCount": new_room.members_count,
-                },
             },
             status=200,
         )
@@ -411,7 +430,7 @@ def delete_file(file, default_file):
 
 @authentication_required
 @api_view(["DELETE"])
-def delete_chat_room(request, id, **kwargs):
+def delete_chat_room(request, **kwargs):
     if request.method == "DELETE":
         # TODO: i need to send the room updater
         try:
@@ -472,7 +491,7 @@ def all_chat_room_memebers(request, chat_room_name, **kwargs):
                 user = customuser.objects.get(id=member.user_id)
             except customuser.DoesNotExist:
                 return Response({"error": "Opps! something went wrong"}, status=400)
-            member_data = {"name": user.username, "avatar": user.avatar.path}
+            member_data = {"name": user.username, "avatar": f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:{os.getenv('PORT')}/auth{user.avatar.url}"}
             data.append(member_data)
     return Response(data)
 
@@ -514,7 +533,7 @@ def list_all_friends(request, **kwargs):
 
 @authentication_required
 @api_view(["GET"])
-def rooms_invitations(request, username, **kwargs):
+def rooms_invitations(request, **kwargs):
     if request.method == "GET":
         try:
             user = customuser.objects.get(id=kwargs.get("user_id"))
@@ -540,7 +559,7 @@ def rooms_invitations(request, username, **kwargs):
 
 @authentication_required
 @api_view(["GET"])
-def suggested_chat_rooms(request, username, **kwargs):
+def suggested_chat_rooms(request, **kwargs):
     if request.method == "GET":
         try:
             user = customuser.objects.get(id=kwargs.get("user_id"))
@@ -637,7 +656,7 @@ def accept_chat_room_invite(request, **kwargs):
         user_channels_name = user_channels.get(user.id)
         if user_channels_name is not None:
             for channel in user_channels_name:
-                async_to_sync(channel_layer.group_add(f"chat_room_{room.id}", channel))
+                async_to_sync(channel_layer.group_add)(f"chat_room_{room.id}", channel)
                 async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type': 'roomInvitationAccepted', "room": {
                             "id": room.id,
                             "role": "member",
@@ -688,7 +707,7 @@ def reset_chat_room_unread_messages(request, **kwargs):
             user = customuser.objects.get(id=kwargs.get("user_id"))
         except customuser.DoesNotExist:
             return Response({"error": "user not found"}, status=400)
-        room = request.data.get("room")
+        room = request.data.get("roomId")
         if room is None or type(room) is not int:
             return Response({"error": "Invalid chat room id"}, status=400)
         try:
@@ -746,22 +765,26 @@ def join_chat_room(request, **kwargs):
         protocol = os.getenv("PROTOCOL")
         ip_address = os.getenv("IP_ADDRESS")
         channel_layer = get_channel_layer()
-        user_channels_name = user_channels.get(user.id)
+        user_channels_name = user_channels.get(kwargs.get("user_id"))
         if user_channels_name is not None:
             for channel in user_channels_name:
-                async_to_sync(channel_layer.group_add(f"chat_room_{room.id}", channel))
+                async_to_sync(channel_layer.group_add)(f"chat_room_{room.id}", channel)
+                print(f"chat_room_{room.id}")
+            for channel in user_channels_name:
+                async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type': 'chatRoomJoined', "room": {
+                            "id": room.id,
+                            "role": "member",
+                            "name": room.name,
+                            "topic": room.topic,
+                            "icon": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{room.icon.url}",
+                            "cover": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{room.cover.url}",
+                            "membersCount": room.members_count,
+                        },}})
+        async_to_sync(channel_layer.group_send)(f"chat_room_{room.id}", {"type": "broadcast_message", 'data': {'type': 'chatRoomMemberJoined', "roomId": room.id, "newCount": room.members_count}})
         return Response(
             {
                 "success": f"You have joined {room.name} chat room",
-                "room": {
-                    "id": room.id,
-                    "role": "member",
-                    "name": room.name,
-                    "topic": room.topic,
-                    "icon": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{room.icon.url}",
-                    "cover": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{room.cover.url}",
-                    "membersCount": room.members_count,
-                },
+                "room" : room.id
             }
         )
 
@@ -814,7 +837,7 @@ def update_status_of_invitations(request, **kwargs):
 #DONE
 @authentication_required
 @api_view(["GET"])
-def unrecieved_room_invitee(request, username, **kwargs):
+def unrecieved_room_invitee(request, **kwargs):
     if request.method == 'GET':
         try:
             user = customuser.objects.get(id=kwargs.get("user_id"))
@@ -827,7 +850,7 @@ def unrecieved_room_invitee(request, username, **kwargs):
 #DONE
 @authentication_required
 @api_view(["GET"])
-def unread_conversations_count(request, username, **kwargs):
+def unread_conversations_count(request, **kwargs):
     if request.method == 'GET':
         try:
             user = customuser.objects.get(id=kwargs.get("user_id"))

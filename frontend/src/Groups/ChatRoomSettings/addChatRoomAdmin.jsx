@@ -38,6 +38,8 @@ const AddChatRoomAdmin = (props) => {
             key={index}
             name={memeber.name}
             roomName={props.name}
+            avatar={memeber.avatar}
+            
           />
         ))}
       </div>

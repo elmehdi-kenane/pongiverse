@@ -31,7 +31,7 @@ const Chat = () => {
     setDirectsSearch,
   } = useContext(ChatContext)
 
-  const { chatSocket, user } = useContext(AuthContext)
+  const { chatSocket, user, setChatNotificationCounter } = useContext(AuthContext)
   const [messages, setMessages] = useState([])
   const [chatRoomMessages, setChatRoomMessages] = useState([])
   const [hasMoreDirects, setHasMoreDirects] = useState(true)
@@ -46,6 +46,10 @@ const Chat = () => {
   const [chatRoomsSearch, setChatRoomsSearch] = useState([])
   const navigate = useNavigate()
 
+
+    useEffect(() => {
+      setChatNotificationCounter(0)
+    }, [])
 
   useEffect(() => {
     const handleNewDirectMessage = (data) => {
@@ -161,6 +165,7 @@ const Chat = () => {
     if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
       chatSocket.onmessage = (event) => {
         const data = JSON.parse(event.data)
+        console.log("data :",data) 
         if (data.type === "newDirect") {
           handleNewDirectMessage(data.data)
           moveDirectToTop(data.data.senderId, data.data.receiverId)
@@ -191,6 +196,94 @@ const Chat = () => {
             avatar: "",
             status: "",
           })
+        } else if (data.type === "chatRoomNameChanged") {
+          setChatRooms((prevConversations) =>
+            prevConversations.map((room) =>
+              room.id === data.roomId
+                ? { ...room, name: data.newName }
+                : room
+            )
+          )
+          let selectedRoom = selectedChatRoomRef.current
+          if (selectedRoom.id === data.roomId) {
+            setSelectedChatRoom((prev) => ({
+              ...prev,
+              name: data.newName,
+            }))
+          }
+          setMyChatRooms((prevConversations) =>
+            prevConversations.map((room) =>
+              room.id === data.roomId
+                ? { ...room, name: data.newName }
+                : room
+            )
+          )
+        } else if  (data.type === 'chatRoomIconChanged') {
+          setChatRooms((prevConversations) =>
+            prevConversations.map((room) =>
+              room.id === data.roomId
+                ? { ...room, icon: data.newIcon }
+                : room
+            )
+          )
+          let selectedRoom = selectedChatRoomRef.current
+          if (selectedRoom.id === data.roomId) {
+            setSelectedChatRoom((prev) => ({
+              ...prev,
+              icon: data.newIcon,
+            }))
+          }
+          setMyChatRooms((prevConversations) =>
+            prevConversations.map((room) =>
+              room.id === data.roomId
+                ? { ...room, icon: data.newIcon }
+                : room
+            )
+          )
+        } else if (data.type === "chatRoomMemberLeft") {
+          setChatRooms((prevConversations) =>
+            prevConversations.map((room) =>
+              room.id === data.roomId
+                ? { ...room, membersCount: data.newCount }
+                : room
+            )
+          )
+          let selectedRoom = selectedChatRoomRef.current
+          if (selectedRoom.id === data.roomId) {
+            setSelectedChatRoom((prev) => ({
+              ...prev,
+              membersCount: data.newCount,
+            }))
+          }
+          setMyChatRooms((prevConversations) =>
+            prevConversations.map((room) =>
+              room.id === data.roomId
+                ? { ...room, membersCount: data.newCount }
+                : room
+            )
+          )
+        } else if (data.type === "chatRoomMemberJoined") {
+          setChatRooms((prevConversations) =>
+            prevConversations.map((room) =>
+              room.id === data.roomId
+                ? { ...room, membersCount: data.newCount }
+                : room
+            )
+          )
+          let selectedRoom = selectedChatRoomRef.current
+          if (selectedRoom.id === data.roomId) {
+            setSelectedChatRoom((prev) => ({
+              ...prev,
+              membersCount: data.newCount,
+            }))
+          }
+          setMyChatRooms((prevConversations) =>
+            prevConversations.map((room) =>
+              room.id === data.roomId
+                ? { ...room, membersCount: data.newCount }
+                : room
+            )
+          )
         }
       }
     }
@@ -202,7 +295,7 @@ const Chat = () => {
       try {
         const response = await fetch(
           `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
-          }:${import.meta.env.VITE_PORT}/chatAPI/firendwithdirects/${user}?page=${currentDirectPage}`, {
+          }:${import.meta.env.VITE_PORT}/chatAPI/firendwithdirects?page=${currentDirectPage}`, {
           credentials: 'include'
         }
         )
@@ -226,6 +319,13 @@ const Chat = () => {
                 allDirects = [newConversation, ...allDirects]
               } else {
                 resetUnreadMessages(user, selectedDirect.id, navigate)
+                setDirects((prevConversations) =>
+                  prevConversations.map((friend) =>
+                    friend.id === selectedDirect.id
+                      ? { ...friend, unreadCount: "0" }
+                      : friend
+                  )
+                )
               }
             }
             const seen = new Set()
@@ -249,12 +349,14 @@ const Chat = () => {
     if (user) fetchDirectsWithMessage()
   }, [currentDirectPage, user, selectedDirect])
 
+
+
   useEffect(() => {
     const fetchChatRooms = async () => {
       try {
         const response = await fetch(
           `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
-          }:${import.meta.env.VITE_PORT}/chatAPI/chatRooms/${user}?page=${currentChatRoomPage}`, {
+          }:${import.meta.env.VITE_PORT}/chatAPI/chatRooms?page=${currentChatRoomPage}`, {
           credentials: 'include'
         }
         )
@@ -282,6 +384,13 @@ const Chat = () => {
                 allChatRooms = [newConversation, ...allChatRooms]
               } else {
                 resetChatRoomUnreadMessages(user, selectedChatRoom.id, navigate)
+                setChatRooms((prevConversations) =>
+                  prevConversations.map((room) =>
+                    room.id === selectedChatRoom.id
+                      ? { ...room, unreadCount: "0" }
+                      : room
+                  )
+                )
               }
             }
             const seen = new Set()

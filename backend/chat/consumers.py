@@ -7,7 +7,9 @@ from . import chat_consumers
 from datetime import datetime
 from .common import user_channels
 from .models import Membership
+import logging
 
+logger = logging.getLogger(__name__)
 
 class ChatConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
@@ -44,6 +46,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		elif data['type'] == 'addRoomMemberAdmin' : await chat_consumers.add_chat_room_admin(self, data, user_channels)
 		elif data['type'] == 'inviteChatRoomMember' : await chat_consumers.invite_member_chat_room (self, data, user_channels)
 		elif data['type'] == 'roomInvitationCancelled' : await chat_consumers.chat_room_invitation_declined(self, data)
+		elif data['type'] == 'addChatRoom' : await chat_consumers.add_member_to_chat_room(self, data, user_channels)
 	
 	async def disconnect(self, close_code):
 		cookiess = self.scope.get('cookies', {})
@@ -67,8 +70,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
 				pass
 
 	async def broadcast_message(self, event):
+		logger.error(f"event data {event}")
 		await self.send(text_data=json.dumps(event['data']))
 	
+
 	async def send_message(self, event):
 		data = event['data']
 		message  = {

@@ -27,10 +27,10 @@ const SendMessage = (props) => {
           props.sendMessage()
         }
       }
-      tx.addEventListener("keydown", handleEnterKey)
+      // tx.addEventListener("keydown", handleEnterKey)
       tx.addEventListener("input", handleInput)
       return () => {
-        tx.removeEventListener("keydown", handleEnterKey)
+        // tx.removeEventListener("keydown", handleEnterKey)
         tx.removeEventListener("input", handleInput)
       }
     }
@@ -43,8 +43,8 @@ const SendMessage = (props) => {
       const handleEnterKey = (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
           e.preventDefault()
-          props.sendMessage()
-          tx.style.height = "20px"
+          tx.style.height = "20px";
+          // props.sendMessage()
         }
       }
       tx.addEventListener("keydown", handleEnterKey)
@@ -55,9 +55,12 @@ const SendMessage = (props) => {
   })
 
   const handelMessageToSend = (e) => {
-    if (props.messageToSend.length < 1024) {
-      props.setMessageToSend(e.target.value)
-    }
+    const message = textAreaRef.current.value;
+    if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault()
+          props.sendMessage(message);
+          textAreaRef.current.value = ''
+        }
   }
 
   return (
@@ -92,8 +95,9 @@ const SendMessage = (props) => {
           ref={textAreaRef}
           className="conversation-input"
           placeholder="Enter your message"
-          value={props.messageToSend}
-          onChange={handelMessageToSend}
+          // value={props.messageToSend}
+          onKeyDown={handelMessageToSend}
+          // onChange={handelMessageToSend}
         />
       </div>
       <img

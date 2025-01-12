@@ -45,11 +45,11 @@ const ChatConversation = ({
   const [loading, setLoading] = useState(false)
 
   const [messageToSend, setMessageToSend] = useState("")
-  const sendMessage = () => {
+  const sendMessage = (message) => {
     if (
       chatSocket &&
       chatSocket.readyState === WebSocket.OPEN &&
-      messageToSend.trim() !== ""
+      message.trim() !== ""
     ) {
       chatSocket.send(
         JSON.stringify({
@@ -57,7 +57,7 @@ const ChatConversation = ({
           data: {
             sender: user,
             receiver: selectedDirect.id,
-            message: messageToSend,
+            message: message,
           },
         })
       )
@@ -72,7 +72,7 @@ const ChatConversation = ({
             name: selectedDirect.name,
             avatar: selectedDirect.avatar,
             is_online: selectedDirect.status,
-            lastMessage: messageToSend,
+            lastMessage: message,
             unreadCount: 0,
           }
           setDirects([newConversation, ...directs])
@@ -82,7 +82,7 @@ const ChatConversation = ({
             if (selectedDirect.name === friend.name) {
               return {
                 ...friend,
-                lastMessage: messageToSend,
+                lastMessage: message,
                 unreadCount: 0,
               }
             }

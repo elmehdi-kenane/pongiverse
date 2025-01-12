@@ -49,13 +49,13 @@ const SearchResultCard = ({
       );
       const data = await response.json();
       if (response.ok) {
-        let suggestedChatRooms = suggestedChatRoomsRef.current;
-        let updatedSuggestedRooms = suggestedChatRooms.filter(
-          (room) => room.id !== id
-        );
-        setSuggestedChatRooms(updatedSuggestedRooms);
-        const currentChatRooms = myChatRoomsRef.current;
-        setMyChatRooms([...currentChatRooms, data.room])
+        // let suggestedChatRooms = suggestedChatRoomsRef.current;
+        // let updatedSuggestedRooms = suggestedChatRooms.filter(
+        //   (room) => room.id !== id
+        // );
+        // setSuggestedChatRooms(updatedSuggestedRooms);
+        // const currentChatRooms = myChatRoomsRef.current;
+        // setMyChatRooms([...currentChatRooms, data.room])
       } else if (response.status === 401)
         navigate('/signin')
       else {

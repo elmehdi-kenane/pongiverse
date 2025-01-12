@@ -20,7 +20,7 @@ const ChangeChatRoomName = (props) => {
     const updateChatRoomName = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/chatAPI/chatRoomUpdateName/${props.roomId}`,
+          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/chatAPI/chatRoomUpdateName`,
           {
             method: "PATCH",
             credentials: "include",
@@ -33,7 +33,7 @@ const ChangeChatRoomName = (props) => {
         if (response.status === 401)
           navigate('/signin')
         const data = await response.json()
-        chatRoomNameChangedUpdater(data.data)
+        // chatRoomNameChangedUpdater(data.data)
       } catch (error) {
         toast(error)
       }

@@ -87,6 +87,7 @@ const Rooms = () => {
       getComputedStyle(slider).getPropertyValue("--items-per-screen")
     )
     if (handle === "left" && sliderIndex) {
+      console.log("sliderIndex", sliderIndex)
       slider.style.setProperty("--suggested-slider-index", sliderIndex - 1)
     } else if (handle === "right") {
       if (sliderIndex + 1 >= numberOfRooms / itemsPerScreen) {
@@ -123,27 +124,31 @@ const Rooms = () => {
   }
 
   const chatRoomDeleted = (roomId) => {
-    const allMyChatRooms = myChatRoomsRef.current
-    const updatedRooms = allMyChatRooms.filter((room) => room.id !== roomId)
-    setMyChatRooms(updatedRooms)
+    const allMyChatRooms = myChatRoomsRef.current;
+    console.log("allMyChatRooms", allMyChatRooms);
+    console.log("roomId", roomId);
+    const updatedRooms = allMyChatRooms.filter((room) => room.id !== roomId);
+    setMyChatRooms(updatedRooms);
     // remmove the chatRooms
-    const currentChatRooms = chatRooms
+    const currentChatRooms = chatRooms;
     const updatedChatRooms = currentChatRooms.filter(
       (room) => room.id !== roomId
-    )
-    setChatRooms(updatedChatRooms)
+    );
+    onClickScroller("left", updatedChatRooms.length);
+    setChatRooms(updatedChatRooms);
     setSelectedChatRoom({
       id: "",
       name: "",
       membersCount: "",
       icon: "",
-    })
-  }
+    });
+  };
 
   useEffect(() => {
     if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
       chatSocket.onmessage = (event) => {
         const data = JSON.parse(event.data)
+        console.log("RECIVED: ",data)
         if (data.type === "chatRoomAdminAdded") {
           chatRoomAdminAdded(data.message)
           toast.success(`you have been promoted to admin in ${data.message.name}`)
@@ -159,6 +164,51 @@ const Rooms = () => {
         ) {
 
           chatRoomDeleted(data.roomId)
+        } else if (data.type === "chatRoomNameChanged") {
+          const allMyChatRooms = myChatRoomsRef.current
+          const updatedRooms = allMyChatRooms.map((room) => {
+            if (room.id === data.roomId) {
+              return { ...room, name: data.newName }
+            }
+            return room
+          })
+          setMyChatRooms(updatedRooms)
+        } else if  (data.type === "chatRoomCoverChanged") {
+          const allMyChatRooms = myChatRoomsRef.current
+          const updatedRooms = allMyChatRooms.map((room) => {
+            if (room.id === data.roomId) {
+              return { ...room, cover: data.newCover }
+            }
+            return room
+          })
+          setMyChatRooms(updatedRooms)
+        } else if (data.type === "chatRoomIconChanged" ) {
+          const allMyChatRooms = myChatRoomsRef.current
+          const updatedRooms = allMyChatRooms.map((room) => {
+            if (room.id === data.roomId) {
+              return { ...room, icon: data.newIcon }
+            }
+            return room
+          })
+          setMyChatRooms(updatedRooms)
+        } else if  (data.type === "chatRoomJoined") {
+          setMyChatRooms((prev) => [...prev, data.room])
+          const allSuggestions = suggestedChatRoomsRef.current
+          const updatedSuggestedRooms = allSuggestions.filter(
+            (room) => room.id !== data.room.id
+          )
+          onClickScrollerSuggested("left", suggestedChatRooms.length)
+          setSuggestedChatRooms(updatedSuggestedRooms)
+        } else if (data.type === "updateChatRoomMembers") {
+          setMyChatRooms((prev) => {
+            return prev.map((room) => {
+              if (room.id === data.id) {
+                return { ...room, membersCount: data.membersCount }
+              }
+              return room
+            })
+          }
+          )
         }
       }
     }
@@ -169,7 +219,7 @@ const Rooms = () => {
     const fetchChatRooms = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/chatAPI/myChatRooms/${user}?page=${currentMyRoomsPage}`,
+          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/chatAPI/myChatRooms?page=${currentMyRoomsPage}`,
           {
             credentials: "include",
           }

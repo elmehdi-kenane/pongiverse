@@ -13,11 +13,11 @@ search for a private chat room [DONE]
 create or join 1 vs 1 makhdamac [DONE]
 
 <!-- CHAT -->
-update room image with socket
-update number of members in a room , it stil wahed even if they are jouj
-add room admin , mmaqbour face
-change room name while the others type on it
-change room name while the others type on it, the users who is typing he gonna go back to channels and try to leave the room 500
+
+
+update number of members in a room , it stil wahed even if they are jouj 
+change room name while the others type on it, the users who is typing he gonna go back to channels and try to leave the room 500 [DONE]
+increment the time of messages 
 
 
 
@@ -100,3 +100,52 @@ chunk-67DEV5DB.js?v=8ea91927:5760 Unable to preventDefault inside passive event 
 
 REDA 3A9L 3LIH KIDAYR
 *********************************************
+
+
+
+################### TO FIX CHAT ###################
+
+if i left a chat room it needs to be added to suggestions
+update member count if left
+fix issue of big message
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
