@@ -63,7 +63,6 @@ async def create_tournament(self, data, user_channels):
 	userrr = username
 	is_joining_tour = is_user_joining_tournament(username)
 	if is_joining_tour == 0:
-		print("*****WSEL LHNA22")
 		user = await sync_to_async(customuser.objects.filter(username=username).first)()
 		if user is not None:
 			invitations = await sync_to_async(lambda: GameNotifications.objects.filter(target=user))()
@@ -96,8 +95,6 @@ async def create_tournament(self, data, user_channels):
 					break
 			user.is_playing = True
 			await sync_to_async(user.save)()
-			# tournament = Tournament(tournament_id=random_number)
-			# await sync_to_async(tournament.save)()
 			tournaments[random_number] = {}
 			tournaments[random_number]['members'] = []
 			tournaments[random_number]['is_started'] = False
@@ -337,9 +334,8 @@ async def start_tournament(self, data, user_channels):
 	count = 1
 	for member in members:
 		tournaments[tournament_id]['rounds']['QUARTERFINAL'].append({'username': member['username'], 'position': count})
-		# tournamentuserinfo = TournamentUserInfo(round=round, user=member.user, position=count)
-		# await sync_to_async(tournamentuserinfo.save)()
 		count += 1
+	for member in members:
 		user = await sync_to_async(customuser.objects.filter(username=member['username']).first)()
 		channel_name = user_channels.get(user.id).channel_name if user.id in user_channels else None
 		if channel_name:

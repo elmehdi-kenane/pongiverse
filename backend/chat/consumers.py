@@ -31,8 +31,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
 							'message': 'chat connection established'
 						}
 					await self.send(json.dumps(message))
+				else:
+					self.socket.close()
 			except Exception as e:
-				pass
+				self.socket.close()
 
 	async def receive(self, text_data):
 		data = json.loads(text_data)

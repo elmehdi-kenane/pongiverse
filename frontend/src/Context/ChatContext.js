@@ -23,6 +23,12 @@ export const ChatProvider = ({ child }) => {
   const [hasMoreRooms, setHasMoreRooms] = useState(true);
   const [searchValue, setSearchValue] = useState("")
   const [directsSearch, setDirectsSearch] = useState([])
+  const [selectedDirect, setSelectedDirect] = useState({
+    id: "",
+    name: "",
+    status: "",
+    avatar: "",
+  });
 
   useEffect(() => {
     myChatRoomsRef.current = myChatRooms;
@@ -63,12 +69,6 @@ export const ChatProvider = ({ child }) => {
     name: "",
     membersCount: "",
     icon: "",
-  });
-  const [selectedDirect, setSelectedDirect] = useState({
-    id: "",
-    name: "",
-    status: "",
-    avatar: "",
   });
   const selectedDirectRef = useRef(selectedDirect);
   const selectedChatRoomRef = useRef(selectedChatRoom);

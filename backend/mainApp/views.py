@@ -451,7 +451,6 @@ def get_game_members_round(request, **kwargs):
 									'image': '',
 									'position': semimember['position']
 								})
-					# Handle Final members
 					if 'FINAL' in tournament_data['rounds']:
 						for finalmember in tournament_data['rounds']['FINAL']:
 							if finalmember['username'] != 'anounymous':

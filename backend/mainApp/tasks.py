@@ -424,10 +424,6 @@ async def manage_tournament(tournament_id):
 		#printf"\nQUARTERFINAL COUNT: {quarterfinalcount}, SEMIFINAL COUNT: {semifinalcount}, FINAL COUNT: {finalcount}, WINNER COUNT: {winnercount}\n")
 		if quarterfinalcount == 8 and semifinalcount == 0 and counter == 0:
 			counter += 1
-			# number_of_null_players = await sync_to_async(TournamentUserInfo.objects.filter(round=roundquarterfinal, user=None).count)()
-			# if number_of_null_players == 8:
-			# 	pass
-			# else:
 			tournamentwarnnotification = TournamentWarnNotifications(tournament_id=tournament_id)
 			await sync_to_async(tournamentwarnnotification.save)()
 			group_name = f'tournament_{tournament_id}'

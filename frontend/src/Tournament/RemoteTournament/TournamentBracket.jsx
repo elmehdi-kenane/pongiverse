@@ -74,7 +74,6 @@ function TournamentBracket() {
 			});
 			if (response.ok) {
 				const data = await response.json();
-				////console.log("----mohamed data : ", data)
 				setroundQuarterFinalMembers(data.roundquarter)
 				setroundSemiFinalMembers(data.roundsemi)
 				setFinalMembers(data.roundfinal)

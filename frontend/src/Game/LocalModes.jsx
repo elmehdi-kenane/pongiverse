@@ -7,7 +7,6 @@ import playSoloImage from '../assets/Game/playSoloMode.svg'
 import createTournamentImage from '../assets/Game/createTournamentMode.svg'
 import joinTournamentImage from '../assets/Game/joinTournamentMode.svg'
 import toast, { Toaster } from 'react-hot-toast';
-import GameNotifications from '../GameNotif/GameNotifications'
 
 const LocalModes = () => {
     const navigate = useNavigate()
@@ -50,7 +49,6 @@ const LocalModes = () => {
     return (
         <div className={styles['game-modes-page-local']}>
             <Toaster />
-            <GameNotifications />
             <div className={styles['game-modes-div']}>
                 <div className={`${styles['play-solo-mode']} ${soloModeSelected ? styles['mode-selected'] : ''}`} onClick={() => handleSelect('play_solo')}>
                     <div className={styles['play-solo-mode-image']}>
