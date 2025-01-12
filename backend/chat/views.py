@@ -16,10 +16,6 @@ from myapp.decorators import authentication_required
 import sys
 import logging
 
-import redis
-
-redis_client = redis.StrictRedis(host="redis", port=6379, db=0)
-
 
 logger = logging.getLogger(__name__)
 # from Notifications.consumers import notifs_user_channels
@@ -206,6 +202,7 @@ def leave_chat_room(request, **kwargs):
     if new_admin_id_channels is not None:
         for channel in new_admin_id_channels:
                 async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type' : 'chatRoomAdminAdded',"message": {"name": room.name}}})
+    async_to_sync(channel_layer.group_send)(f"chat_room_{room.id}", {"type": "broadcast_message", 'data': {'type': 'chatRoomMemberLeft', "roomId": room.id, "newCount": room.members_count}})
     return Response(
         {
             "success": "You left chat room successfully",
@@ -405,17 +402,12 @@ def create_chat_room(request, **kwargs):
             return Response({"error": "Opps! something went wrong"}, status=400)
         protocol = os.getenv("PROTOCOL")
         ip_address = os.getenv("IP_ADDRESS")
-
         channel_layer = get_channel_layer()
         user_channels_name = user_channels.get(user.id)
-        new_room_id = new_room.id
         if user_channels_name is not None:
             for channel in user_channels_name:
-                logger.error(f"channel: {channel}")
-                redis_client.sadd(f"chat_room_{new_room.id}", channel)
                 async_to_sync(channel_layer.group_add)(f"chat_room_{new_room.id}", channel)
-        # TODO: I WILL SEND THE NEW ROOM TO ALL th CHANNEL NAMES OF CREATEOR USING SOCKET
-        async_to_sync(channel_layer.group_send)(f"chat_room_{new_room.id}", {"type": "broadcast_message", 'data': {'type': 'chatRoomJoined', "room": {
+                async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type': 'chatRoomJoined', "room": {
                             "id": new_room.id,
                             "role": "admin",
                             "name": new_room.name,
@@ -427,15 +419,6 @@ def create_chat_room(request, **kwargs):
         return Response(
             {
                 "type": "chatRoomCreated",
-                "room": {
-                    "id": new_room.id,
-                    "name": new_room.name,
-                    "topic": new_room.topic,
-                    "role": "admin",
-                    "icon": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{new_room.icon.url}",
-                    "cover": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{new_room.cover.url}",
-                    "membersCount": new_room.members_count,
-                },
             },
             status=200,
         )
@@ -797,7 +780,7 @@ def join_chat_room(request, **kwargs):
                             "cover": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{room.cover.url}",
                             "membersCount": room.members_count,
                         },}})
-        async_to_sync(channel_layer.group_send)(f"chat_room_{room.id}", {"type": "broadcast_message", 'data': {'type': 'chatRoomMemberJoined', "roomId": room.id}})
+        async_to_sync(channel_layer.group_send)(f"chat_room_{room.id}", {"type": "broadcast_message", 'data': {'type': 'chatRoomMemberJoined', "roomId": room.id, "newCount": room.members_count}})
         return Response(
             {
                 "success": f"You have joined {room.name} chat room",

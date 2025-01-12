@@ -31,7 +31,7 @@ const Chat = () => {
     setDirectsSearch,
   } = useContext(ChatContext)
 
-  const { chatSocket, user } = useContext(AuthContext)
+  const { chatSocket, user, setChatNotificationCounter } = useContext(AuthContext)
   const [messages, setMessages] = useState([])
   const [chatRoomMessages, setChatRoomMessages] = useState([])
   const [hasMoreDirects, setHasMoreDirects] = useState(true)
@@ -46,6 +46,10 @@ const Chat = () => {
   const [chatRoomsSearch, setChatRoomsSearch] = useState([])
   const navigate = useNavigate()
 
+
+    useEffect(() => {
+      setChatNotificationCounter(0)
+    }, [])
 
   useEffect(() => {
     const handleNewDirectMessage = (data) => {
@@ -214,6 +218,72 @@ const Chat = () => {
                 : room
             )
           )
+        } else if  (data.type === 'chatRoomIconChanged') {
+          setChatRooms((prevConversations) =>
+            prevConversations.map((room) =>
+              room.id === data.roomId
+                ? { ...room, icon: data.newIcon }
+                : room
+            )
+          )
+          let selectedRoom = selectedChatRoomRef.current
+          if (selectedRoom.id === data.roomId) {
+            setSelectedChatRoom((prev) => ({
+              ...prev,
+              icon: data.newIcon,
+            }))
+          }
+          setMyChatRooms((prevConversations) =>
+            prevConversations.map((room) =>
+              room.id === data.roomId
+                ? { ...room, icon: data.newIcon }
+                : room
+            )
+          )
+        } else if (data.type === "chatRoomMemberLeft") {
+          setChatRooms((prevConversations) =>
+            prevConversations.map((room) =>
+              room.id === data.roomId
+                ? { ...room, membersCount: data.newCount }
+                : room
+            )
+          )
+          let selectedRoom = selectedChatRoomRef.current
+          if (selectedRoom.id === data.roomId) {
+            setSelectedChatRoom((prev) => ({
+              ...prev,
+              membersCount: data.newCount,
+            }))
+          }
+          setMyChatRooms((prevConversations) =>
+            prevConversations.map((room) =>
+              room.id === data.roomId
+                ? { ...room, membersCount: data.newCount }
+                : room
+            )
+          )
+        } else if (data.type === "chatRoomMemberJoined") {
+          setChatRooms((prevConversations) =>
+            prevConversations.map((room) =>
+              room.id === data.roomId
+                ? { ...room, membersCount: data.newCount }
+                : room
+            )
+          )
+          let selectedRoom = selectedChatRoomRef.current
+          if (selectedRoom.id === data.roomId) {
+            setSelectedChatRoom((prev) => ({
+              ...prev,
+              membersCount: data.newCount,
+            }))
+          }
+          setMyChatRooms((prevConversations) =>
+            prevConversations.map((room) =>
+              room.id === data.roomId
+                ? { ...room, membersCount: data.newCount }
+                : room
+            )
+          )
         }
       }
     }
@@ -249,6 +319,13 @@ const Chat = () => {
                 allDirects = [newConversation, ...allDirects]
               } else {
                 resetUnreadMessages(user, selectedDirect.id, navigate)
+                setDirects((prevConversations) =>
+                  prevConversations.map((friend) =>
+                    friend.id === selectedDirect.id
+                      ? { ...friend, unreadCount: "0" }
+                      : friend
+                  )
+                )
               }
             }
             const seen = new Set()
@@ -271,6 +348,8 @@ const Chat = () => {
     }
     if (user) fetchDirectsWithMessage()
   }, [currentDirectPage, user, selectedDirect])
+
+
 
   useEffect(() => {
     const fetchChatRooms = async () => {
@@ -305,6 +384,13 @@ const Chat = () => {
                 allChatRooms = [newConversation, ...allChatRooms]
               } else {
                 resetChatRoomUnreadMessages(user, selectedChatRoom.id, navigate)
+                setChatRooms((prevConversations) =>
+                  prevConversations.map((room) =>
+                    room.id === selectedChatRoom.id
+                      ? { ...room, unreadCount: "0" }
+                      : room
+                  )
+                )
               }
             }
             const seen = new Set()

@@ -44,11 +44,12 @@ export const ChatProvider = ({ child }) => {
         icon: "",
       });
       setSelectedItem("");
+      setChatRooms([])
     }
     if(location.pathname !== "/mainpage/groups"){
-      // setSuggestedChatRooms([])
-      // setMyChatRooms([])
-      // setHasMoreRooms(true)
+      setSuggestedChatRooms([])
+      setMyChatRooms([])
+      setHasMoreRooms(true)
 
     }
 

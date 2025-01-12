@@ -56,7 +56,6 @@ const SendMessage = (props) => {
 
   const handelMessageToSend = (e) => {
     const message = textAreaRef.current.value;
-    console.log("Event:", message)
     if (e.key === "Enter" && !e.shiftKey) {
           e.preventDefault()
           props.sendMessage(message);
