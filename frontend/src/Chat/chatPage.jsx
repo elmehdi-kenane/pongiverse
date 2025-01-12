@@ -295,7 +295,7 @@ const Chat = () => {
       try {
         const response = await fetch(
           `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
-          }:${import.meta.env.VITE_PORT}/chatAPI/firendwithdirects/${user}?page=${currentDirectPage}`, {
+          }:${import.meta.env.VITE_PORT}/chatAPI/firendwithdirects?page=${currentDirectPage}`, {
           credentials: 'include'
         }
         )
@@ -356,7 +356,7 @@ const Chat = () => {
       try {
         const response = await fetch(
           `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
-          }:${import.meta.env.VITE_PORT}/chatAPI/chatRooms/${user}?page=${currentChatRoomPage}`, {
+          }:${import.meta.env.VITE_PORT}/chatAPI/chatRooms?page=${currentChatRoomPage}`, {
           credentials: 'include'
         }
         )

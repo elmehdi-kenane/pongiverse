@@ -121,7 +121,7 @@ const Modes = () => {
 	}
 
 	const navigateToBoard = () => {
-		navigate('/mainpage/game/board')
+		navigate('/mainpage/game/customization')
 	}
 
 	const handleButtonClick = () => {

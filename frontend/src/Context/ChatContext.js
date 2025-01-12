@@ -115,7 +115,7 @@ export const ChatProvider = ({ child }) => {
       try {
         const response = await fetch(
           `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
-          }:${import.meta.env.VITE_PORT}/chatAPI/chatRoomInvitations/${user}`,
+          }:${import.meta.env.VITE_PORT}/chatAPI/chatRoomInvitations`,
           {
             credentials: "include",
           }
@@ -134,7 +134,7 @@ export const ChatProvider = ({ child }) => {
       try {
         const response = await fetch(
           `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
-          }:${import.meta.env.VITE_PORT}/chatAPI/suggestedChatRooms/${user}`,
+          }:${import.meta.env.VITE_PORT}/chatAPI/suggestedChatRooms`,
           {
             credentials: "include",
           }

@@ -33,7 +33,7 @@ class CustomMyChatRoomLimitOffsetPagination(PageNumberPagination):
 
 @authentication_required
 @api_view(["GET"])
-def friends_with_directs(request, username, **kwargs):
+def friends_with_directs(request, **kwargs):
     try:
         user = customuser.objects.get(id=kwargs.get("user_id"))
     except customuser.DoesNotExist:
@@ -56,7 +56,7 @@ def friends_with_directs(request, username, **kwargs):
     paginator = CustomLimitOffsetPagination()
     result_page = paginator.paginate_queryset(friends_with_messages, request)
     serializer = friends_with_directs_serializer(result_page, many=True, context={
-        'username': username,  # Passing the username to get the last message
+        'username': user.username,  # Passing the username to get the last message
         'user': user
     })
 
@@ -87,7 +87,7 @@ def direct_messages(request, **kwargs):
 
 @authentication_required
 @api_view(["GET"])
-def chat_rooms_list(request, username, **kwargs):
+def chat_rooms_list(request, **kwargs):
     try:
         user = customuser.objects.get(id=kwargs.get("user_id"))
     except customuser.DoesNotExist:
@@ -107,7 +107,7 @@ def chat_rooms_list(request, username, **kwargs):
 
 @authentication_required
 @api_view(["GET"])
-def my_chat_rooms(request, username, **kwargs):
+def my_chat_rooms(request, **kwargs):
     try:
         user = customuser.objects.get(id=kwargs.get("user_id"))
     except customuser.DoesNotExist:
@@ -303,7 +303,7 @@ def chat_room_update_cover(request, **kwargs):
 
 @authentication_required
 @api_view(["PATCH"])
-def chat_room_update_name(request, id, **kwargs):
+def chat_room_update_name(request, **kwargs):
     if request.method == "PATCH":
         try:
             user = customuser.objects.get(id=kwargs.get("user_id"))
@@ -430,7 +430,7 @@ def delete_file(file, default_file):
 
 @authentication_required
 @api_view(["DELETE"])
-def delete_chat_room(request, id, **kwargs):
+def delete_chat_room(request, **kwargs):
     if request.method == "DELETE":
         # TODO: i need to send the room updater
         try:
@@ -533,7 +533,7 @@ def list_all_friends(request, **kwargs):
 
 @authentication_required
 @api_view(["GET"])
-def rooms_invitations(request, username, **kwargs):
+def rooms_invitations(request, **kwargs):
     if request.method == "GET":
         try:
             user = customuser.objects.get(id=kwargs.get("user_id"))
@@ -559,7 +559,7 @@ def rooms_invitations(request, username, **kwargs):
 
 @authentication_required
 @api_view(["GET"])
-def suggested_chat_rooms(request, username, **kwargs):
+def suggested_chat_rooms(request, **kwargs):
     if request.method == "GET":
         try:
             user = customuser.objects.get(id=kwargs.get("user_id"))
@@ -837,7 +837,7 @@ def update_status_of_invitations(request, **kwargs):
 #DONE
 @authentication_required
 @api_view(["GET"])
-def unrecieved_room_invitee(request, username, **kwargs):
+def unrecieved_room_invitee(request, **kwargs):
     if request.method == 'GET':
         try:
             user = customuser.objects.get(id=kwargs.get("user_id"))
@@ -850,7 +850,7 @@ def unrecieved_room_invitee(request, username, **kwargs):
 #DONE
 @authentication_required
 @api_view(["GET"])
-def unread_conversations_count(request, username, **kwargs):
+def unread_conversations_count(request, **kwargs):
     if request.method == 'GET':
         try:
             user = customuser.objects.get(id=kwargs.get("user_id"))

@@ -499,7 +499,7 @@ export const AuthProvider = ({ children }) => {
 			try {
 				const response = await fetch(
 					`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
-					}:${import.meta.env.VITE_PORT}/chatAPI/unrecievedRoomInvitee/${user}`,
+					}:${import.meta.env.VITE_PORT}/chatAPI/unrecievedRoomInvitee`,
 					{
 						credentials: "include",
 					}
@@ -523,7 +523,7 @@ export const AuthProvider = ({ children }) => {
 			try {
 				const response = await fetch(
 					`${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS
-					}:${import.meta.env.VITE_PORT}/chatAPI/unreadConversations/${user}`, {
+					}:${import.meta.env.VITE_PORT}/chatAPI/unreadConversations`, {
 					credentials: "include",
 				}
 				);

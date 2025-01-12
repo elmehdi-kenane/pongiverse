@@ -1,4 +1,4 @@
-import { useState, useRef, useContext, useEffect } from "react";
+import { useState, useRef, useContext, useEffect, use } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../navbar-sidebar/Authcontext";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -9,28 +9,23 @@ import { EffectCoverflow, Pagination, Navigation } from "swiper/modules";
 import * as Icons from "../../assets/navbar-sidebar";
 import GameCustomizationPreview from "./GameCustomizationPreview";
 import "./GameCustomization.css";
+import { toast, Toaster } from "react-hot-toast";
 
 const GameCustomization = () => {
-  const [activeTab, setActiveTab] = useState("Table");
+  const [activeTab, setActiveTab] = useState("Paddle");
   const [tableColor, setTableColor] = useState("#00ff00");
   const [paddleColor, setPaddleColor] = useState("#0000ff");
   const [ballColor, setBallColor] = useState("#ff0000");
   const [showPreview, setShowPreview] = useState(false);
 
-  const handleReset = () => {
-    setTableColor("#00ff00");
-    setPaddleColor("#0000ff");
-    setBallColor("#ff0000");
-  };
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
   const [typeChosen, setTypeChosen] = useState(1);
   const preventSlideChange = useRef(false);
   const [selectedItems, setSelectedItems] = useState([0, 0, 0]);
-  // const selectedItemsRef = useRef(selectedItems);
   const [initialValue, setInitialValue] = useState(0);
   const [onSavingParams, setonSavingParams] = useState(false);
 
-  let { privateCheckAuth, user, gameCustomize, setIsBlur, isBlur } = useContext(AuthContext);
+  let { privateCheckAuth, user, setIsBlur, isBlur } = useContext(AuthContext);
 
   const swiperRef = useRef(null);
   const paddleBallColor = [
@@ -61,6 +56,54 @@ const GameCustomization = () => {
   // useEffect(() => {
   //   ballSelectionRef.current = ballSelection
   // }, [ballSelection])
+
+  const savingSettings = async () => {
+    if (user) {
+      try {
+        let response = await fetch(
+          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/api/customizeGame`,
+          {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              username: user,
+              paddle: paddleBallColor[selectedItems[0]],
+              ball: paddleBallColor[selectedItems[1]],
+              board: boardColor[selectedItems[2]],
+              effect: isChecked,
+            }),
+          }
+        );
+        if (response.status === 401) {
+          setonSavingParams(false);
+          navigate('/signin')
+        }
+        if (!response.ok) {
+          toast.error(response.message, {
+            position: "top-center",
+            duration: 2000,
+          });
+          setonSavingParams(false);
+        } else {
+          setonSavingParams(false);
+          toast.success("Settings updated successfully", {
+            position: "top-center",
+            duration: 2000,
+          });
+        }
+      } catch (e) {
+        console.log("something wrong with fetch");
+        setonSavingParams(false);
+      }
+    } else {
+      console.log("user variable is empty");
+      setonSavingParams(false);
+    }
+  };
+
 
   const handleSlideChange = (swiper) => {
     if (preventSlideChange.current) return;
@@ -97,22 +140,49 @@ const GameCustomization = () => {
     }
   }, [typeChosen]);
 
-  const handleTypeChange = (type) => {
+  const TABS = [
+    { name: "Paddle", type: 1 },
+    { name: "Ball", type: 2, },
+    { name: "Table", type: 3,},
+  ];
+
+  const handleTypeChange = (tab) => {
     preventSlideChange.current = true;
-    setTypeChosen(type);
+    setTypeChosen(tab.type);
+    setActiveTab(tab.name);
     preventSlideChange.current = false;
   };
 
-  const TABS = [
-    { name: "Table", type: 3, icon: Icons.boardEmpty },
-    { name: "Ball", type: 2, icon: Icons.ballEmpty },
-    { name: "Paddle", type: 1, icon: Icons.paddleEmpty },
-  ];
+
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+  }
+
+
+  const resetSettings = () => {
+    setPaddleClr("#FFFFFF");
+    setBallClr("#00C1B6");
+    setTableClr("#8a7dac00");
+    setSelectedItems([7, 5, 3]);
+    if (typeChosen === 1) {
+      if (swiperRef.current && swiperRef.current.swiper)
+        swiperRef.current.swiper.slideToLoop(7, 0, false);
+    } else if (typeChosen === 2) {
+      if (swiperRef.current && swiperRef.current.swiper)
+        swiperRef.current.swiper.slideToLoop(5, 0, false);
+    } else if (typeChosen === 3) {
+      if (swiperRef.current && swiperRef.current.swiper)
+        swiperRef.current.swiper.slideToLoop(3, 0, false);
+    }
+  };
+
+  const saveSettings = () => {
+    setonSavingParams(true);
+    savingSettings();
+  };
 
   return (
-    // {isBlur ? "rooms-wrapper blur" : "rooms-wrapper"}
-
-    <div className={ isBlur ? "customization-page blur" : 'customization-page'}>
+    <>
       {showPreview && (
         <GameCustomizationPreview
           setShowPreview={setShowPreview}
@@ -120,9 +190,19 @@ const GameCustomization = () => {
           ballClr={ballClr}
           tableClr={tableClr}
           setIsBlur={setIsBlur}
+          isChecked={isChecked}
         />
       )}
-
+    <div className={ isBlur ? "customization-page blur" : 'customization-page'}>
+    <Toaster
+          toastOptions={{
+            className: "",
+            style: {
+              border: "1px solid #713200",
+              color: "#713200",
+            },
+          }}
+        />
       <div className="customization-container">
         <div className="customization-tabs">
           {TABS.map((tab) => (
@@ -132,8 +212,7 @@ const GameCustomization = () => {
                 activeTab === tab.name ? "customization-tab-active" : ""
               }`}
               onClick={() => {
-                setActiveTab(tab.name);
-                handleTypeChange(tab.type);
+                handleTypeChange(tab);
               }}
             >
               {tab.name}
@@ -141,9 +220,54 @@ const GameCustomization = () => {
           ))}
         </div>
         <div className="customization-options">
-          <div className="customization-preview" onClick={()=>{setShowPreview(true); setIsBlur(true)}}>
-            <p className="customization-preview-text">Preview</p>
-          </div>
+        <div className="customization-preview" >
+            <p className="customization-preview-text" onClick={()=>{setShowPreview(true); setIsBlur(true)}}>Preview</p>
+        </div>
+          {typeChosen === 2 ? (
+            <div className="customization-options-ball-effect">
+              <div
+          className={!ballSelection ? "ballSelected" : ""}
+          style={{
+            color: "white",
+            display: "flex",
+            width: "80%",
+            margin: "0 auto",
+            justifyContent: "center",
+            height: "40px",
+            minHeight: "40px",
+          }}
+        >
+          <label
+            style={{
+              height: "100%",
+              width: "130px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "0",
+              marginTop: "0",
+              border: "none",
+              background:
+                "linear-gradient(90deg, rgba(68, 45, 106, 1), rgba(68, 45, 106, 0.5))",
+              textIndent: "0",
+              borderRadius: "20px",
+              fontSize: "15px",
+              gap: "5px",
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={isChecked}
+              onChange={handleCheckboxChange}
+              className="checkbox-input"
+            />
+            <span className="checkbox-custom"></span>
+            Ball Effect
+          </label>
+        </div>
+            </div>
+          ): ""}
+          
 
           <div className="slider-container">
             <Swiper
@@ -288,7 +412,7 @@ const GameCustomization = () => {
               <button
                 className="customization-back"
                 onClick={() => {
-                  navigate("/mainpage");
+                  navigate("/mainpage/game");
                 }}
               >
                 Back
@@ -299,17 +423,13 @@ const GameCustomization = () => {
               <button
                 className="customization-save"
                 onClick={() => {
-                  setonSavingParams(true);
-                  gameCustomize({
-                    tableColor: tableClr,
-                    paddleColor: paddleClr,
-                    ballColor: ballClr,
-                  });
+                  saveSettings();
                 }}
+                disabled={onSavingParams}
               >
                 Save
               </button>
-              <button className="customization-reset" onClick={handleReset}>
+              <button className="customization-reset" onClick={resetSettings}>
                 Reset
               </button>
             </div>
@@ -317,6 +437,7 @@ const GameCustomization = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
