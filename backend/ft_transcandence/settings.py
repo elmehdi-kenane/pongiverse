@@ -34,7 +34,7 @@ MEDIA_URL = '/media/'
 HOST = os.getenv('HOST')
 GOOGLE_CONTENT = os.getenv('GOOGLE_CONTENT')
 
-ALLOWED_HOSTS = [HOSTS_ALLOWED, 'backend']
+ALLOWED_HOSTS = [HOSTS_ALLOWED, 'backend', 'localhost']
 
 # Application definition
 
@@ -116,24 +116,40 @@ REST_FRAMEWORK = {
 }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv('POSTGRES_DB'),
-        'USER': os.getenv('POSTGRES_USER'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-        'HOST': os.getenv('POSTGRES_HOST'),
-        'PORT': os.getenv('POSTGRES_PORT'),
-    }
+		'ENGINE': 'django.db.backends.sqlite3',
+		'NAME': BASE_DIR / 'db.sqlite3',
+	}
 }
 
 CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [(os.getenv('REDIS_HOST'), os.getenv('REDIS_PORT'))],
-            "capacity": 1000
-        },
-    },
+	"default": {
+		"BACKEND": "channels.layers.InMemoryChannelLayer",
+    "CONFIG": {
+          "capacity": 5000,
+      },
+	}
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': os.getenv('POSTGRES_DB'),
+#         'USER': os.getenv('POSTGRES_USER'),
+#         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+#         'HOST': os.getenv('POSTGRES_HOST'),
+#         'PORT': os.getenv('POSTGRES_PORT'),
+#     }
+# }
+
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [(os.getenv('REDIS_HOST'), os.getenv('REDIS_PORT'))],
+#             "capacity": 1000
+#         },
+#     },
+# }
 
 
 
@@ -154,7 +170,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Berlin'
 
 USE_I18N = True
 

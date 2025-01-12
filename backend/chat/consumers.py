@@ -42,6 +42,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		elif data['type'] == 'addRoomMemberAdmin' : await chat_consumers.add_chat_room_admin(self, data, user_channels)
 		elif data['type'] == 'inviteChatRoomMember' : await chat_consumers.invite_member_chat_room (self, data, user_channels)
 		elif data['type'] == 'roomInvitationCancelled' : await chat_consumers.chat_room_invitation_declined(self, data)
+		elif data['type'] == 'addChatRoom' : await chat_consumers.add_member_to_chat_room(self, data, user_channels)
 	
 	async def disconnect(self, close_code):
 		cookiess = self.scope.get('cookies', {})
@@ -67,6 +68,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	async def broadcast_message(self, event):
 		await self.send(text_data=json.dumps(event['data']))
 	
+
 	async def send_message(self, event):
 		data = event['data']
 		message  = {

@@ -28,7 +28,7 @@ urlpatterns = [
     path('myChatRooms/<str:username>', views.my_chat_rooms, name='my-chat-rooms'),
     path('directsSreach', views.directs_search),
     path('chatRoomsSreach', views.chat_rooms_search),
-    # path('updateStatusOfInvitations', views.update_status_of_invitations),
+    path('updateStatusOfInvitations', views.update_status_of_invitations),
     path('unrecievedRoomInvitee/<str:username>', views.unrecieved_room_invitee),
     path('unreadConversations/<str:username>', views.unread_conversations_count),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
