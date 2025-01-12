@@ -9,18 +9,6 @@ const SuggestedRoom = (props) => {
   const { suggestedChatRoomsRef, setSuggestedChatRooms } = useContext(ChatContext)
   const navigate = useNavigate()
 
-  const sendToAddChatRoom = () => {
-    console.log("Sending addChatRoom message")
-    if (chatSocket.readyState === WebSocket.OPEN) {
-      chatSocket.send(
-        JSON.stringify({
-          type: "addChatRoom",
-          room: props.name,
-          user: user,
-        })
-      )
-    }
-  }
 
   const joinChatRoomSubmitter = async () => {
     const toastId = toast.loading("Joining the chat room...")
@@ -39,7 +27,6 @@ const SuggestedRoom = (props) => {
         setTimeout(() => {
           toast.success("Successfully joined the chat room!")
           toast.dismiss(toastId)
-          sendToAddChatRoom(data.room)
           // let suggestedChatRooms = suggestedChatRoomsRef.current
           // let updatedSuggestedRooms = suggestedChatRooms.filter(
           //   (room) => room.id !== props.roomId
@@ -83,7 +70,7 @@ const SuggestedRoom = (props) => {
         <div className="my-room-topic">{props.topic}</div>
       </div>
       <div className="room-actions">
-        <button className="join-room-button" onClick={sendToAddChatRoom}>Join Room</button>
+        <button className="join-room-button" onClick={joinChatRoomSubmitter}>Join Room</button>
       </div>
     </div>
   )

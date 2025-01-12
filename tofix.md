@@ -108,3 +108,44 @@ REDA 3A9L 3LIH KIDAYR
 if i left a chat room it needs to be added to suggestions
 update member count if left
 fix issue of big message
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -6,7 +6,7 @@ from friends.models import Friendship
 from myapp.models import customuser
 from django.core.files.storage import default_storage
 import os
-from .consumers import user_channels
+from .common import user_channels
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from datetime import datetime
@@ -14,6 +14,14 @@ from .serializers import friends_with_directs_serializer, direct_message_seriali
 from rest_framework.pagination import PageNumberPagination
 from myapp.decorators import authentication_required
 import sys
+import logging
+
+import redis
+
+redis_client = redis.StrictRedis(host="redis", port=6379, db=0)
+
+
+logger = logging.getLogger(__name__)
 # from Notifications.consumers import notifs_user_channels
 
 class CustomLimitOffsetPagination(PageNumberPagination):
@@ -192,16 +200,7 @@ def leave_chat_room(request, **kwargs):
     ip_address = os.getenv("IP_ADDRESS")
     if user_channels_name is not None:
         for channel in user_channels_name:
-            async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type' : 'chatRoomLeft', 'data': {
-                            "id": room.id,
-                            "role": "member",
-                            "name": room.name,
-                            "topic": room.topic,
-                            "icon": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{room.icon.url}",
-                            "cover": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{room.cover.url}",
-                            "membersCount": room.members_count,
-                                                                                              
-            }}})
+            async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type' : 'chatRoomLeft',"roomId": roomId}})
             async_to_sync(channel_layer.group_discard(f"chat_room_{room.id}", channel))
     new_admin_id_channels = user_channels.get(new_admin_id)
     if new_admin_id_channels is not None:
@@ -308,7 +307,6 @@ def chat_room_update_cover(request, **kwargs):
 @authentication_required
 @api_view(["PATCH"])
 def chat_room_update_name(request, id, **kwargs):
-    # TODO: i need to send the room updater
     if request.method == "PATCH":
         try:
             user = customuser.objects.get(id=kwargs.get("user_id"))
@@ -332,12 +330,12 @@ def chat_room_update_name(request, id, **kwargs):
             room.save()
         except:
             return Response({"error": "Opps! something went wrong"}, status=400)
-        user_channels_name = user_channels.get(user.id)
+        logger.error('***********************************************Something went wrong!')
         channel_layer = get_channel_layer()
-        async_to_sync(channel_layer.group_send)(f"chat_room_{id}", {"type": "broadcast_message", 'data': {'type': 'chatRoomNameChanged', "roomId": id, "newName": room.name}})
-        # if user_channels_name is not None:
-        #     for channel in user_channels_name:
-        #         async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type': 'chatRoomNameChanged', "roomId": id, "newName": room.name}})
+        members = redis_client.smembers(f"chat_room_{room.id}")
+        for member in members:
+            logger.error(f"channel edit {member}")
+        async_to_sync(channel_layer.group_send)(f"chat_room_{room.id}", {"type": "broadcast_message", 'data': {'type': 'chatRoomNameChanged', "roomId": room.id, "newName": room.name}})
         return Response(
             {
                 "success": "chat room name changed successfully",
@@ -410,10 +408,22 @@ def create_chat_room(request, **kwargs):
 
         channel_layer = get_channel_layer()
         user_channels_name = user_channels.get(user.id)
+        new_room_id = new_room.id
         if user_channels_name is not None:
             for channel in user_channels_name:
-                async_to_sync(channel_layer.group_add(f"chat_room_{new_room.id}", channel))
+                logger.error(f"channel: {channel}")
+                redis_client.sadd(f"chat_room_{new_room.id}", channel)
+                async_to_sync(channel_layer.group_add)(f"chat_room_{new_room.id}", channel)
         # TODO: I WILL SEND THE NEW ROOM TO ALL th CHANNEL NAMES OF CREATEOR USING SOCKET
+        async_to_sync(channel_layer.group_send)(f"chat_room_{new_room.id}", {"type": "broadcast_message", 'data': {'type': 'chatRoomJoined', "room": {
+                            "id": new_room.id,
+                            "role": "admin",
+                            "name": new_room.name,
+                            "topic": new_room.topic,
+                            "icon": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{new_room.icon.url}",
+                            "cover": f"{protocol}://{ip_address}:{os.getenv('PORT')}/chatAPI{new_room.cover.url}",
+                            "membersCount": new_room.members_count,
+                        },}})
         return Response(
             {
                 "type": "chatRoomCreated",
@@ -663,7 +673,7 @@ def accept_chat_room_invite(request, **kwargs):
         user_channels_name = user_channels.get(user.id)
         if user_channels_name is not None:
             for channel in user_channels_name:
-                async_to_sync(channel_layer.group_add(f"chat_room_{room.id}", channel))
+                async_to_sync(channel_layer.group_add)(f"chat_room_{room.id}", channel)
                 async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type': 'roomInvitationAccepted', "room": {
                             "id": room.id,
                             "role": "member",
@@ -775,7 +785,7 @@ def join_chat_room(request, **kwargs):
         user_channels_name = user_channels.get(kwargs.get("user_id"))
         if user_channels_name is not None:
             for channel in user_channels_name:
-                async_to_sync(channel_layer.group_add(f"chat_room_{room.id}", channel))
+                async_to_sync(channel_layer.group_add)(f"chat_room_{room.id}", channel)
                 print(f"chat_room_{room.id}")
             for channel in user_channels_name:
                 async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type': 'chatRoomJoined', "room": {

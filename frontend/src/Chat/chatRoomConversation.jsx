@@ -40,11 +40,12 @@ const ChatRoomConversation = ({
   const { user, chatSocket } = useContext(AuthContext)
 
   const [messageToSend, setMessageToSend] = useState("")
-  const sendMessage = () => {
+  const sendMessage = (message) => {
+    console.log("THE MESSAGE:", message)
     if (
       chatSocket &&
       chatSocket.readyState === WebSocket.OPEN &&
-      messageToSend.trim() !== ""
+      message.trim() !== ""
     ) {
       chatSocket.send(
         JSON.stringify({
@@ -53,7 +54,7 @@ const ChatRoomConversation = ({
             id: selectedChatRoom.id,
             name: selectedChatRoom.name,
             sender: user,
-            message: messageToSend,
+            message: message,
           },
         })
       )
@@ -64,7 +65,7 @@ const ChatRoomConversation = ({
             id: selectedChatRoom.id,
             name: selectedChatRoom.name,
             icon: selectedChatRoom.icon,
-            lastMessage: messageToSend,
+            lastMessage: message,
             unreadCount: 0,
           }
           setChatRooms([newChatRoomConversation, ...chatRooms])
@@ -73,7 +74,7 @@ const ChatRoomConversation = ({
           setChatRooms((prev) => {
             const updatedChatRooms = prev.map((room) => {
               if (room.id === selectedChatRoom.id) {
-                return { ...room, lastMessage: messageToSend }
+                return { ...room, lastMessage: message }
               }
               return room
             }

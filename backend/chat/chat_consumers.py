@@ -254,7 +254,7 @@ async def direct_message(self, data, user_channels):
 
 async def add_member_to_chat_room(self, data, user_channels):
     try:
-        room = await sync_to_async(Room.objects.get)(name=data["room"])
+        room = await sync_to_async(Room.objects.get)(id=data["room"])
     except Room.DoesNotExist:
         return
     try:

@@ -122,26 +122,26 @@ const Rooms = () => {
     // setMyChatRooms(updatedRooms)
   }
 
-  const chatRoomDeleted = (removedRoom) => {
-    const allMyChatRooms = myChatRoomsRef.current
-    const updatedRooms = allMyChatRooms.filter((room) => room.id !== removedRoom.id)
-    setMyChatRooms(updatedRooms)
+  const chatRoomDeleted = (roomId) => {
+    const allMyChatRooms = myChatRoomsRef.current;
+    console.log("allMyChatRooms", allMyChatRooms);
+    console.log("roomId", roomId);
+    const updatedRooms = allMyChatRooms.filter((room) => room.id !== roomId);
+    console.log("updatedRooms", updatedRooms);
+    setMyChatRooms(updatedRooms);
     // remmove the chatRooms
-    const currentChatRooms = chatRooms
+    const currentChatRooms = chatRooms;
     const updatedChatRooms = currentChatRooms.filter(
-      (room) => room.id !== removedRoom.id
-    )
-    setChatRooms(updatedChatRooms)
+      (room) => room.id !== roomId
+    );
+    setChatRooms(updatedChatRooms);
     setSelectedChatRoom({
       id: "",
       name: "",
       membersCount: "",
       icon: "",
-    })
-    // add to suggested chat rooms
-    setSuggestedChatRooms((prev) => [...prev, removedRoom])
-    
-  }
+    });
+  };
 
   useEffect(() => {
     if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
@@ -162,7 +162,7 @@ const Rooms = () => {
           data.type === "chatRoomDeleted"
         ) {
 
-          chatRoomDeleted(data.data)
+          chatRoomDeleted(data.roomId)
         } else if (data.type === "chatRoomNameChanged") {
           const allMyChatRooms = myChatRoomsRef.current
           const updatedRooms = allMyChatRooms.map((room) => {

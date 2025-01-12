@@ -76,8 +76,8 @@ const CreateRoom = ({ setCreateRoom, setIsBlur, myChatRooms, setMyChatRooms }) =
             setTimeout(() => {
               toast.success("Room created successfully!")
               toast.dismiss(toastId)
-              const currentChatRooms = myChatRooms
-              setMyChatRooms([...currentChatRooms, responseData.room])
+              // const currentChatRooms = myChatRooms
+              // setMyChatRooms([...currentChatRooms, responseData.room])
             }, 1000)
           } else if (response.status === 401)
             navigate('/signin')
