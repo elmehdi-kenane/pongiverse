@@ -4,7 +4,7 @@ from .models import Room, Membership, Message, Directs, RoomInvitation
 from myapp.models import customuser
 from django.db.models import Q
 import os
-
+from django.utils import timezone
 
 def get_direct_last_message(username, friend):
     try:
@@ -62,7 +62,8 @@ class direct_message_serializer(serializers.ModelSerializer):
         fields = ['id', 'sender', 'receiver' , 'content', 'date']
         
     def get_date(self, obj):
-        return obj.timestamp.strftime("%Y/%m/%d AT %I:%M %p")
+        return timezone.localtime(obj.timestamp).strftime("%Y/%m/%d AT %I:%M %p")
+        # return obj.timestamp.strftime("%Y/%m/%d AT %I:%M %p")
     def get_content(self, obj):
         return obj.message
 
@@ -115,6 +116,6 @@ class room_message_serializer(serializers.ModelSerializer):
         fields = ['id', 'sender', 'content', 'date']
         
     def get_date(self, obj):
-        return obj.timestamp.strftime("%Y/%m/%d AT %I:%M %p")
+        return timezone.localtime(obj.timestamp).strftime("%Y/%m/%d AT %I:%M %p")
     def get_content(self, obj):
         return obj.content

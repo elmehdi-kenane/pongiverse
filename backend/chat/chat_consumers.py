@@ -7,6 +7,7 @@ import json
 import os
 from django.db.models import F
 from Notifications.common import notifs_user_channels
+from django.utils import timezone
 
 
 async def add_user_channel_group(self, data):
@@ -150,7 +151,7 @@ async def message(self, data):
 
     await sync_to_async(Membership.objects.filter(room=room).exclude(user=sender).update)(unreadCount=F('unreadCount') + 1)
 
-    formatted_date = newMessage.timestamp.strftime('%Y/%m/%d AT %I:%M %p')
+    formatted_date = timezone.localtime(newMessage.timestamp).strftime('%Y/%m/%d AT %I:%M %p')
 
     event = {
         "type": "send_message",
@@ -208,7 +209,7 @@ async def direct_message(self, data, user_channels):
         channel_names = user_channels.get(receiver.id)
         mychannel_names = user_channels.get(sender.id)
 
-        formatted_date = message.timestamp.strftime('%Y/%m/%d AT %I:%M %p')
+        formatted_date = timezone.localtime(message.timestamp).strftime('%Y/%m/%d AT %I:%M %p')
 
         message_data = {
             "type": "send_direct",
