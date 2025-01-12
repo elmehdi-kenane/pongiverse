@@ -44,14 +44,14 @@ const MyRoomContent = (props) => {
         setTimeout(() => {
           toast.success(data.success)
           toast.dismiss(toastId)
-          const allMyChatRooms = props.myChatRooms
-          const updatedRooms = allMyChatRooms.map((room) => {
-            if (room.id === data.data.id) {
-              return { ...room, cover: data.data.cover }
-            }
-            return room
-          })
-          props.setMyChatRooms(updatedRooms)
+          // const allMyChatRooms = props.myChatRooms
+          // const updatedRooms = allMyChatRooms.map((room) => {
+          //   if (room.id === data.data.id) {
+          //     return { ...room, cover: data.data.cover }
+          //   }
+          //   return room
+          // })
+          // props.setMyChatRooms(updatedRooms)
         }, 1000)
       } else if (response.status === 401)
         navigate('/signin')

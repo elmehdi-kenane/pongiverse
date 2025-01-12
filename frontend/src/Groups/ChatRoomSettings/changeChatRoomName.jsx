@@ -33,7 +33,7 @@ const ChangeChatRoomName = (props) => {
         if (response.status === 401)
           navigate('/signin')
         const data = await response.json()
-        chatRoomNameChangedUpdater(data.data)
+        // chatRoomNameChangedUpdater(data.data)
       } catch (error) {
         toast(error)
       }

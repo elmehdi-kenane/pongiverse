@@ -5,9 +5,23 @@ import ChatContext from "../../Context/ChatContext"
 import { useNavigate } from "react-router-dom"
 
 const SuggestedRoom = (props) => {
-  const { user } = useContext(AuthContext)
+  const { user, chatSocket } = useContext(AuthContext)
   const { suggestedChatRoomsRef, setSuggestedChatRooms } = useContext(ChatContext)
   const navigate = useNavigate()
+
+  const sendToAddChatRoom = () => {
+    console.log("Sending addChatRoom message")
+    if (chatSocket.readyState === WebSocket.OPEN) {
+      chatSocket.send(
+        JSON.stringify({
+          type: "addChatRoom",
+          room: props.name,
+          user: user,
+        })
+      )
+    }
+  }
+
   const joinChatRoomSubmitter = async () => {
     const toastId = toast.loading("Joining the chat room...")
     try {
@@ -25,13 +39,14 @@ const SuggestedRoom = (props) => {
         setTimeout(() => {
           toast.success("Successfully joined the chat room!")
           toast.dismiss(toastId)
-          let suggestedChatRooms = suggestedChatRoomsRef.current
-          let updatedSuggestedRooms = suggestedChatRooms.filter(
-            (room) => room.id !== props.roomId
-          )
-          setSuggestedChatRooms(updatedSuggestedRooms)
-          const currentChatRooms = props.myChatRooms
-          props.setMyChatRooms([...currentChatRooms, data.room])
+          sendToAddChatRoom(data.room)
+          // let suggestedChatRooms = suggestedChatRoomsRef.current
+          // let updatedSuggestedRooms = suggestedChatRooms.filter(
+          //   (room) => room.id !== props.roomId
+          // )
+          // setSuggestedChatRooms(updatedSuggestedRooms)
+          // const currentChatRooms = props.myChatRooms
+          // props.setMyChatRooms([...currentChatRooms, data.room])
         }, 1000)
       } else if (response.status === 401)
         navigate('/signin')
@@ -68,7 +83,7 @@ const SuggestedRoom = (props) => {
         <div className="my-room-topic">{props.topic}</div>
       </div>
       <div className="room-actions">
-        <button className="join-room-button" onClick={joinChatRoomSubmitter}>Join Room</button>
+        <button className="join-room-button" onClick={sendToAddChatRoom}>Join Room</button>
       </div>
     </div>
   )

@@ -83,6 +83,7 @@ export const ChatProvider = ({ child }) => {
 
   useEffect(() => {
     selectedChatRoomRef.current = selectedChatRoom;
+    setSelectedItem(selectedChatRoom.name);
   }, [selectedChatRoom]);
 
   useEffect(() => {

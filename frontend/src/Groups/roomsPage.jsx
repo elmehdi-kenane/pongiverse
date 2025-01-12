@@ -122,14 +122,14 @@ const Rooms = () => {
     // setMyChatRooms(updatedRooms)
   }
 
-  const chatRoomDeleted = (roomId) => {
+  const chatRoomDeleted = (removedRoom) => {
     const allMyChatRooms = myChatRoomsRef.current
-    const updatedRooms = allMyChatRooms.filter((room) => room.id !== roomId)
+    const updatedRooms = allMyChatRooms.filter((room) => room.id !== removedRoom.id)
     setMyChatRooms(updatedRooms)
     // remmove the chatRooms
     const currentChatRooms = chatRooms
     const updatedChatRooms = currentChatRooms.filter(
-      (room) => room.id !== roomId
+      (room) => room.id !== removedRoom.id
     )
     setChatRooms(updatedChatRooms)
     setSelectedChatRoom({
@@ -138,12 +138,16 @@ const Rooms = () => {
       membersCount: "",
       icon: "",
     })
+    // add to suggested chat rooms
+    setSuggestedChatRooms((prev) => [...prev, removedRoom])
+    
   }
 
   useEffect(() => {
     if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
       chatSocket.onmessage = (event) => {
         const data = JSON.parse(event.data)
+        console.log("RECIVED: ",data)
         if (data.type === "chatRoomAdminAdded") {
           chatRoomAdminAdded(data.message)
           toast.success(`you have been promoted to admin in ${data.message.name}`)
@@ -158,7 +162,47 @@ const Rooms = () => {
           data.type === "chatRoomDeleted"
         ) {
 
-          chatRoomDeleted(data.roomId)
+          chatRoomDeleted(data.data)
+        } else if (data.type === "chatRoomNameChanged") {
+          const allMyChatRooms = myChatRoomsRef.current
+          const updatedRooms = allMyChatRooms.map((room) => {
+            if (room.id === data.roomId) {
+              return { ...room, name: data.newName }
+            }
+            return room
+          })
+          setMyChatRooms(updatedRooms)
+        } else if  (data.type === "chatRoomCoverChanged") {
+          const allMyChatRooms = myChatRoomsRef.current
+          const updatedRooms = allMyChatRooms.map((room) => {
+            if (room.id === data.roomId) {
+              return { ...room, cover: data.newCover }
+            }
+            return room
+          })
+          setMyChatRooms(updatedRooms)
+        } else if (data.type === "chatRoomIconChanged" ) {
+          const allMyChatRooms = myChatRoomsRef.current
+          const updatedRooms = allMyChatRooms.map((room) => {
+            if (room.id === data.roomId) {
+              return { ...room, icon: data.newIcon }
+            }
+            return room
+          })
+          setMyChatRooms(updatedRooms)
+        } else if  (data.type === "chatRoomJoined") {
+          setMyChatRooms((prev) => [...prev, data.room])
+          setSuggestedChatRooms(suggestedChatRooms.filter((room) => room.id !== data.room.id))
+        } else if (data.type === "updateChatRoomMembers") {
+          setMyChatRooms((prev) => {
+            return prev.map((room) => {
+              if (room.id === data.id) {
+                return { ...room, membersCount: data.membersCount }
+              }
+              return room
+            })
+          }
+          )
         }
       }
     }

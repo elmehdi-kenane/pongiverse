@@ -452,11 +452,7 @@ export const AuthProvider = ({ children }) => {
 				`${import.meta.env.VITE_SOCKET}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/ws/chat_socket`
 			);
 			newChatSocket.onopen = () => {
-				////console.log("CHAT SOCKET OPENED SUCCESSFULLY");
 				setChatSocket(newChatSocket);
-			};
-			newChatSocket.onmessage = (event) => {
-				let data = JSON.parse(event.data);
 			};
 		} else if (
 			location.pathname !== "/mainpage/chat" &&

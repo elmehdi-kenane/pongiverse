@@ -161,6 +161,7 @@ const Chat = () => {
     if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
       chatSocket.onmessage = (event) => {
         const data = JSON.parse(event.data)
+        console.log("data :",data) 
         if (data.type === "newDirect") {
           handleNewDirectMessage(data.data)
           moveDirectToTop(data.data.senderId, data.data.receiverId)
@@ -191,6 +192,28 @@ const Chat = () => {
             avatar: "",
             status: "",
           })
+        } else if (data.type === "chatRoomNameChanged") {
+          setChatRooms((prevConversations) =>
+            prevConversations.map((room) =>
+              room.id === data.roomId
+                ? { ...room, name: data.newName }
+                : room
+            )
+          )
+          let selectedRoom = selectedChatRoomRef.current
+          if (selectedRoom.id === data.roomId) {
+            setSelectedChatRoom((prev) => ({
+              ...prev,
+              name: data.newName,
+            }))
+          }
+          setMyChatRooms((prevConversations) =>
+            prevConversations.map((room) =>
+              room.id === data.roomId
+                ? { ...room, name: data.newName }
+                : room
+            )
+          )
         }
       }
     }
