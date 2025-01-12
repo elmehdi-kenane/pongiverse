@@ -199,6 +199,12 @@ const Rooms = () => {
           )
           onClickScrollerSuggested("left", suggestedChatRooms.length)
           setSuggestedChatRooms(updatedSuggestedRooms)
+          const allchatRoomInvitations = chatRoomInvitationsRef.current
+          const updatedInvitations = allchatRoomInvitations.filter(
+            (room) => room.id !== data.room.id
+          )
+          setChatRoomInvitations(updatedInvitations)
+
         } else if (data.type === "updateChatRoomMembers") {
           setMyChatRooms((prev) => {
             return prev.map((room) => {
@@ -209,6 +215,12 @@ const Rooms = () => {
             })
           }
           )
+        } else if (data.type === 'chatRoomInviteCanceled'){
+          const allInvitaions = chatRoomInvitationsRef.current
+          const updatedInvitations = allInvitaions.filter(
+            (room) => room.id !== data.roomId
+          )
+          setChatRoomInvitations(updatedInvitations)
         }
       }
     }

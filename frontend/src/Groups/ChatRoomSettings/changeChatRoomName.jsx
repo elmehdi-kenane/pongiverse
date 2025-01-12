@@ -20,7 +20,7 @@ const ChangeChatRoomName = (props) => {
     const updateChatRoomName = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/chatAPI/chatRoomUpdateName`,
+          `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_IPADDRESS}:${import.meta.env.VITE_PORT}/chatAPI/chatRoomUpdateName/${props.roomId}`,
           {
             method: "PATCH",
             credentials: "include",

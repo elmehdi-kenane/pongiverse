@@ -120,7 +120,6 @@ export const AuthProvider = ({ children }) => {
 				if (response.status === 401)
 					navigate('/signin')
 				let friends = await response.json();
-				console.log("hellooo   ", friends.message)
 				if (friends.message.length) setAllGameFriends(friends.message);
 				setLoading(false);
 			} catch (e) {

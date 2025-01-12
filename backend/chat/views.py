@@ -16,8 +16,6 @@ from myapp.decorators import authentication_required
 import sys
 import logging
 
-
-logger = logging.getLogger(__name__)
 # from Notifications.consumers import notifs_user_channels
 
 class CustomLimitOffsetPagination(PageNumberPagination):
@@ -303,7 +301,7 @@ def chat_room_update_cover(request, **kwargs):
 
 @authentication_required
 @api_view(["PATCH"])
-def chat_room_update_name(request, **kwargs):
+def chat_room_update_name(request,id ,**kwargs):
     if request.method == "PATCH":
         try:
             user = customuser.objects.get(id=kwargs.get("user_id"))
@@ -327,11 +325,7 @@ def chat_room_update_name(request, **kwargs):
             room.save()
         except:
             return Response({"error": "Opps! something went wrong"}, status=400)
-        logger.error('***********************************************Something went wrong!')
         channel_layer = get_channel_layer()
-        members = redis_client.smembers(f"chat_room_{room.id}")
-        for member in members:
-            logger.error(f"channel edit {member}")
         async_to_sync(channel_layer.group_send)(f"chat_room_{room.id}", {"type": "broadcast_message", 'data': {'type': 'chatRoomNameChanged', "roomId": room.id, "newName": room.name}})
         return Response(
             {
@@ -430,7 +424,7 @@ def delete_file(file, default_file):
 
 @authentication_required
 @api_view(["DELETE"])
-def delete_chat_room(request, **kwargs):
+def delete_chat_room(request, id,**kwargs):
     if request.method == "DELETE":
         # TODO: i need to send the room updater
         try:
@@ -657,7 +651,7 @@ def accept_chat_room_invite(request, **kwargs):
         if user_channels_name is not None:
             for channel in user_channels_name:
                 async_to_sync(channel_layer.group_add)(f"chat_room_{room.id}", channel)
-                async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type': 'roomInvitationAccepted', "room": {
+                async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type': 'chatRoomJoined', "room": {
                             "id": room.id,
                             "role": "member",
                             "name": room.name,
@@ -695,7 +689,15 @@ def cancel_chat_room_invite(request, **kwargs):
             invitation = RoomInvitation.objects.get(user=user, room=room)
         except RoomInvitation.DoesNotExist:
             return Response({"error": "opps, something went wrong"}, status=400)
-        invitation.delete()
+        try:
+            invitation.delete()
+        except:
+            return Response({"error": "opps, something went wrong"}, status=400)
+        user_channels_name = user_channels.get(user.id)
+        channel_layer = get_channel_layer()
+        if user_channels_name is not None:
+            for channel in user_channels_name:
+                async_to_sync(channel_layer.send)(channel, {"type": "broadcast_message", 'data': {'type': 'chatRoomInviteCanceled', "roomId": room.id}})
         return Response({"success": "invitation has been canceled successfully", 'roomId': room.id}, status=200)
     return Response({"error": "Invalid request method"}, status=400)
 

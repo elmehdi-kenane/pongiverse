@@ -7,9 +7,6 @@ from . import chat_consumers
 from datetime import datetime
 from .common import user_channels
 from .models import Membership
-import logging
-
-logger = logging.getLogger(__name__)
 
 class ChatConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
@@ -70,7 +67,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 				pass
 
 	async def broadcast_message(self, event):
-		logger.error(f"event data {event}")
 		await self.send(text_data=json.dumps(event['data']))
 	
 

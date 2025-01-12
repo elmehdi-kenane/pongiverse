@@ -39,6 +39,7 @@ const RoomsNotifications = (props) => {
             id={room.id}
             myChatRooms={props.myChatRooms}
             setMyChatRooms={props.setMyChatRooms}
+            handleClickOutside={handleClickOutside}
           />
         ))
       ) : (

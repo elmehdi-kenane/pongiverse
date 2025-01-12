@@ -38,7 +38,6 @@ export const confirmFriendRequest = (currentUsername, secondUsername) => {
   })
     .then((response) => response.json())
     .then((data) => {
-     console.log("Success:", data);
     })
     .catch((error) => {
       console.error("Error:", error);
@@ -60,7 +59,6 @@ export const handleAddFriendReq = (currentUsername, secondUsername) => {
     })
         .then(response => response.json())
         .then(data => {
-            console.log('Success:', data);
         })
         .catch((error) => {
             console.error('Error:', error);

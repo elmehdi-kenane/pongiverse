@@ -5,11 +5,11 @@ from django.conf.urls.static import static
 
 
 urlpatterns = [
-    path('createChatRoom', views.create_chat_room, name='create-chat-room'),
-    path('chatRoomUpdateName', views.chat_room_update_name, name='chat-room-update-name'),
+    path('createChatRoom', views.create_chat_room, name='create-chat-room'), 
+    path('chatRoomUpdateName/<int:id>', views.chat_room_update_name, name='chat-room-update-name'),
     path('changeChatRoomIcon', views.chat_room_update_icon, name='chat-room-update-icon'),
     path('leaveChatRoom', views.leave_chat_room, name='leave-chat-room'),
-    path('deleteChatRoom', views.delete_chat_room, name='delete-chat-room'),
+    path('deleteChatRoom/<int:id>', views.delete_chat_room, name='delete-chat-room'),
     path('chatRooms', views.chat_rooms_list, name='chat-rooms-list'),
     path('chatRoom/messages/<str:room_id>', views.chat_room_messages, name='chat-room-messages'),
     path('allRoomMembers/<str:chat_room_name>', views.all_chat_room_memebers, name='all-chat-room-memebers'),

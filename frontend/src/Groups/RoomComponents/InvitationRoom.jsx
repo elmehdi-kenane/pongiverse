@@ -26,6 +26,7 @@ const InvitationRoom = (props) => {
           user: user,
         })
       })
+        props.handleClickOutside()
       if (response.status === 401)
         navigate('/signin')
       // const data = await response.json()
@@ -64,12 +65,14 @@ const InvitationRoom = (props) => {
         })
       })
       const data = await response.json()
+      console.log(data)
+      props.handleClickOutside()
       if (response.ok) {
-        let roomInvitations = chatRoomInvitationsRef.current
-        let updatedRooms = roomInvitations.filter(
-          (room) => room.id !== data.roomId
-        )
-        setChatRoomInvitations(updatedRooms)
+        // let roomInvitations = chatRoomInvitationsRef.current
+        // let updatedRooms = roomInvitations.filter(
+        //   (room) => room.id !== data.roomId
+        // )
+        // setChatRoomInvitations(updatedRooms)
       } else if (response.status === 401)
         navigate('/signin')
       else
