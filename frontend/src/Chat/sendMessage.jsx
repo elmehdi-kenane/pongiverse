@@ -84,7 +84,8 @@ const SendMessage = (props) => {
         <EmojiPicker
           width="100%"
           onEmojiClick={(e) =>
-            props.setMessageToSend((prevMessage) => prevMessage + e.emoji)
+            // props.setMessageToSend((prevMessage) => prevMessage + e.emoji)
+            textAreaRef.current.value += e.emoji
           }
         />
       </div>
@@ -103,7 +104,7 @@ const SendMessage = (props) => {
       <img
         src={ChatIcons.sendIcon}
         className="conversation-send-icon"
-        onClick={props.sendMessage}
+        onClick={() => {props.sendMessage(textAreaRef.current.value); textAreaRef.current.value = ''}}
       />
     </div>
   )

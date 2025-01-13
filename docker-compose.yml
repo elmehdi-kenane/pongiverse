@@ -27,7 +27,6 @@ services:
     container_name: redis
     networks:
       - ft_transcendence
-    #i will check this later
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
@@ -43,9 +42,6 @@ services:
     container_name: frontend
     env_file:
       - .env
-    volumes:
-      - ./frontend:/frontend
-      - frontend-volume:/frontend/node_modules
     healthcheck:
       test: ["CMD", "curl", "-f", "${FRONTEND}"]
       interval: 10s
@@ -74,8 +70,6 @@ services:
         condition: service_healthy
       postgres:
         condition: service_healthy
-    volumes:
-      - ./backend:/backend
     networks:
       - ft_transcendence
     restart: on-failure
@@ -116,11 +110,6 @@ services:
 
 volumes:
   postgres-volume: {}
-  # will be removed
-  frontend-volume:
-    name : frontend-volume
-  redis-volume:
-    name : redis-volume
 
 networks:
   ft_transcendence:

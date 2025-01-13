@@ -53,31 +53,6 @@ def getUserData(request, **kwargs):
 	except:
 		return Response(data={"error": "Error getting data from backend"}, status=status.HTTP_400_BAD_REQUEST)
 
-@authentication_required
-@api_view(['GET'])
-def getUserDataProfile(request, user_profile, **kwargs):
-	try:
-		user = customuser.objects.filter(username=user_profile).first()
-		if user is not None:
-			user_states = UserMatchStatics.objects.filter(player=user).first()
-			if user_states is not None:
-				user_data = {'pic': f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:{os.getenv('PORT')}/auth{user.avatar.url}",
-							'bg': f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:{os.getenv('PORT')}/auth{user.background_pic.url}",
-							'id': user.id,
-							'bio': user.bio,
-							'email' : user.email,
-							'online' : user.is_online,
-							'level': user_states.level,
-							'xp': user_states.total_xp,
-							'country': user.country,
-							'tfq': user.is_tfq,
-							}
-			return Response(data={"userData": user_data}, status=status.HTTP_200_OK)
-		else:
-			return Response(data={"error": "Error Getting UserData"}, status=status.HTTP_400_BAD_REQUEST)
-	except:
-		return Response(data={"error": "Error getting data from backend"}, status=status.HTTP_400_BAD_REQUEST)
-
 #**------------------ UserPic - UserBg ------------------** 
 
 def save_base64_image(base64_image):
@@ -295,6 +270,36 @@ def check_user_tfq(request):
 
 
 #**-------------------------------------------------- Profile --------------------------------------------------** 
+#**--------------------- Get user data for profile ---------------------**
+@authentication_required
+@api_view(['GET'])
+def getUserDataProfile(request, user_profile, **kwargs):
+    try:
+        user = customuser.objects.filter(username=user_profile).first()
+        user_id = kwargs.get("user_id")
+        main_user = customuser.objects.filter(id=user_id).first()
+        if user and main_user:
+            if Friendship.objects.filter(Q(block_status='blocked') | Q(block_status='blocker'), user=user, friend=main_user).exists():
+                return Response(data={"error": "There is a blocked behaviour!"}, status=status.HTTP_400_BAD_REQUEST)
+            user_states = UserMatchStatics.objects.filter(player=user).first()
+            if user_states is not None:
+                user_data = {'pic': f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:{os.getenv('PORT')}/auth{user.avatar.url}",
+                            'bg': f"{os.getenv('PROTOCOL')}://{os.getenv('IP_ADDRESS')}:{os.getenv('PORT')}/auth{user.background_pic.url}",
+                            'id': user.id,
+                            'bio': user.bio,
+                            'email' : user.email,
+                            'online' : user.is_online,
+                            'level': user_states.level,
+                            'xp': user_states.total_xp,
+                            'country': user.country,
+                            'tfq': user.is_tfq,
+                            }
+            return Response(data={"userData": user_data}, status=status.HTTP_200_OK)
+        else:
+            return Response(data={"error": "Error Getting UserData"}, status=status.HTTP_400_BAD_REQUEST)
+    except:
+        return Response(data={"error": "Error getting data from backend"}, status=status.HTTP_400_BAD_REQUEST)
+	
 #**--------------------- GetFriends User ---------------------** 
 @authentication_required
 @api_view(["GET"])

@@ -58,7 +58,7 @@ const GameNotifications = (props) => {
         send_at: new Date().toISOString(),
         avatar: avatar,
       };
-      setNotifications([newNotification, ...notifications]);
+      setNotifications((prev) => [newNotification, ...prev]);
       setIsNotificationsRead(false);
     }
   };
@@ -421,7 +421,6 @@ const GameNotifications = (props) => {
           setNewReceivedFriendReqNotif(true);
           setRemoveFriendReqNotif(false);
           setFriendReq(message);
-          // console.log("avatar", message.avatar);
           addNotificationToList({
             notificationText: `${message.second_username} sent you a friend request`,
             urlRedirection: "friendship",

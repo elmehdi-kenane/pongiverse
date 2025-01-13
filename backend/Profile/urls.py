@@ -4,8 +4,8 @@ from . import views
 urlpatterns = [
 
     #------ Settings ------
-    path('getUserData', views.getUserData), #SettingsContext
-    path('getUserDataProfile/<str:user_profile>', views.getUserDataProfile), #SettingsContext
+    path('getUserData', views.getUserData),
+    
     
     path('updateUserPic', views.update_user_pic),
     path('updateUserBg', views.update_user_bg),
@@ -19,6 +19,7 @@ urlpatterns = [
     path('CheckUserTFQ', views.check_user_tfq),
 
     #------ Profile ------
+    path('getUserDataProfile/<str:user_profile>', views.getUserDataProfile),
     path('getUserFriends/<str:user_profile>', views.get_user_friends),
     path('CheckFriendship/<str:user_profile>', views.check_friendship),
     path('getUserDiagram/<str:user_profile>', views.get_user_diagram),

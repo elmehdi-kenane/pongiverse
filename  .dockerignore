@@ -2,3 +2,5 @@ node_modules/
 Dockerfile
 package-lock.json
 venv/
+migrations/
+__pycache__/

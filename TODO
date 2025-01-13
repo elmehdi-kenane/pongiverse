@@ -1,3 +1,0 @@
-
-remove username from the request url (chat/rooms) []
-add privateCheckAuth to new gameCustomization [DONE]

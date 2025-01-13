@@ -140,7 +140,7 @@ const CreateRoom = ({ setCreateRoom, setIsBlur, myChatRooms, setMyChatRooms }) =
           setStep={setStep}
           roomVisibility={roomVisibility}
           setRoomVisibility={setRoomVisibility}
-          onClose={setIsBlur}
+          onClose={closeCreatePopUp}
         />
       )}
       {step === 2 && (

@@ -33,8 +33,9 @@ MEDIA_URL = '/media/'
 
 HOST = os.getenv('HOST')
 GOOGLE_CONTENT = os.getenv('GOOGLE_CONTENT')
+BACKEND_SETTIGNS = os.getenv('BACKEND_SETTIGNS')
 
-ALLOWED_HOSTS = [HOSTS_ALLOWED, 'backend', 'localhost']
+ALLOWED_HOSTS = [HOSTS_ALLOWED, BACKEND_SETTIGNS]
 
 # Application definition
 
@@ -183,8 +184,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
     HOST,
-    GOOGLE_CONTENT,
-    'http://localhost:3000',
+    GOOGLE_CONTENT
 ]
 
 CORS_ALLOW_ALL_ORIGINS: True

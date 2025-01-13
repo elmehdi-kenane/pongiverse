@@ -148,7 +148,6 @@ const Rooms = () => {
     if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
       chatSocket.onmessage = (event) => {
         const data = JSON.parse(event.data)
-        console.log("RECIVED: ",data)
         if (data.type === "chatRoomAdminAdded") {
           chatRoomAdminAdded(data.message)
           toast.success(`you have been promoted to admin in ${data.message.name}`)
@@ -275,7 +274,7 @@ const Rooms = () => {
         }
       )
       if (response.ok) {
-        console.log("updateStatusOfInvitations", response)
+        // console.log("updateStatusOfInvitations", response)
       }
       else if (response.status === 401)
         navigate('/signin')

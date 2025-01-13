@@ -748,26 +748,7 @@ const Bot = () => {
     setDifficultyMode(0.7)
   }
 
-  // const gamefinishedAborted = (message) => {
-  //   setUserName1(message.user1)
-  //   setUserName2(message.user2)
-  //   setScore1(message.playerScore1)
-  //   setScore2(message.playerScore2)http://localhost:3000/static/media/normal_difficulty.1c8a3f30c0a803672139.png
-  //   isGameStarted = false
-  //   particles = []
-  //   const canvas = canvasRef.current;
-  //   const gameCustom = gameCustomizeRef.current
-  //   // console.log(playerNo)
-  //   if (canvas && gameCustom) {
-  //     const widthScalingFactor = canvas.width / 710;
-  //     const heightScalingFactor = canvas.height / 400;
-  //     const scalingFactor = Math.min(widthScalingFactor, heightScalingFactor);
-  //     player1.current.changeProperties((15 * widthScalingFactor), (165 * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
-  //     player2.current.changeProperties((685 * widthScalingFactor), (165 * heightScalingFactor), (10 * widthScalingFactor), (70 * heightScalingFactor), gameCustom[0]);
-  //     ball.current.changeProperties((355 * widthScalingFactor), (200 * heightScalingFactor), (7 * scalingFactor), gameCustom[1]);
-  //   }
-  //   draw()
-  // }
+
 
   const exitTheGame = () => {
     setStartGame(false)
