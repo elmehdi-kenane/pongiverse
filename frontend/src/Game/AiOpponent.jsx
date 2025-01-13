@@ -28,7 +28,7 @@ const AiOpponent = () => {
   const paddleWidth = canvasWidth >= 600 ? 10 : 7;
   const paddleHeight = canvasWidth >= 600 ? 50 : 35;
   const botPaddleOffset = canvasWidth >= 600 ? 15 : 10;
-  const paddleSpeedMovement = 5;
+  const paddleSpeedMovement = canvasWidth === 800 ? 5 : (canvasWidth === 600 ? 3.5 : 2);
   const ballRadius = canvasWidth >= 600 ? 7 : 4;
   const maxScore = 5;
 
@@ -42,10 +42,11 @@ const AiOpponent = () => {
   const canvasRef = useRef(null);
   const ballPositionRef = useRef({ x: canvasWidth / 2, y: canvasHeight / 2 });
   const ballVelocityRef = useRef({
-    x: 5,
-    y: 5,
+    x: canvasWidth === 800 ? 5 : (canvasWidth === 600 ? 3.5 : 2),
+    y: canvasWidth === 800 ? 5 : (canvasWidth === 600 ? 3.5 : 2),
   });
-
+  console.log("ballVelocityRef", ballVelocityRef);
+  console.log("paddleSpeedMovement", paddleSpeedMovement);
   const userObj = {
     topOfPaddle: canvasHeight / 2 - paddleHeight / 2 - canvasHeight / 4,
     x: botPaddleOffset,
