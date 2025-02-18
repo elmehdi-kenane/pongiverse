@@ -8,7 +8,6 @@ db.sqlite3
 uploads
 /.vscode
 .DS_Store
-README.md
 log
 Backups/
 Cache/
