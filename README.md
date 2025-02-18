@@ -73,11 +73,3 @@ This will start the frontend, backend, database, and Redis containers.
 
 ## Contributing 🤝
 Feel free to submit pull requests or report issues on [GitHub](https://github.com/elmehdi-kenane/pongiverse/issues).
-
-## Contributors 🙌
-
-This project is a team effort. Thanks to all the contributors for their hard work! ✨
-
-- **[Contributor 1 Name](https://github.com/contributor1)**
-- **[Contributor 2 Name](https://github.com/contributor2)**
-- **[Contributor 3 Name](https://github.com/contributor3)**
