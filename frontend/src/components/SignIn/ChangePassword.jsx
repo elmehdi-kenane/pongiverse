@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useNavigate, useLocation } from 'react-router-dom';
-import logo from '../../assets/SignUp/logo.svg'
+import logo from "../../../public/logo-ping-pong.svg";
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 const client = axios.create({

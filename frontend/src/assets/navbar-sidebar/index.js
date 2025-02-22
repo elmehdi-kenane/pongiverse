@@ -3,7 +3,7 @@ export { default as chat } from './chat.svg';
 export { default as console } from './console.svg';
 export { default as menu } from './menu.svg';
 export { default as notification } from './notification.svg';
-export { default as pingpong } from './pingpong.svg';
+export { default as pingpong } from "../../../public/logo-ping-pong.svg";
 export { default as profilepic } from './profile-pic.svg';
 export { default as profilepic1 } from './profile-pic-1.svg';
 export { default as profilepic2 } from './profile-pic-2.svg';

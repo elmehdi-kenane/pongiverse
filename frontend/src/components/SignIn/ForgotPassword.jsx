@@ -3,7 +3,7 @@ import Header from '../SignUp/Header';
 import React, { useState, useEffect } from 'react';
 import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2';
-import logo from '../../assets/SignUp/logo.svg'
+import logo from "../../../public/logo-ping-pong.svg";
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 axios.defaults.xsrfCookieName = "csrftoken";

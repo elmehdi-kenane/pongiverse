@@ -1,4 +1,4 @@
-import PingLogo from '../assets/PingLogo.svg';
+import PingLogo from "../../public/logo-ping-pong.svg";
 
 function NavBar() {
     return (

@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar.jsx";
 import ThreejsObj from "./ThreejsObj.jsx";
 
-import PingLogo from "../assets/LandingPage/PingLogo.svg";
+import PingLogo from "../../public/logo-ping-pong.svg";
 import arrow1 from "../assets/LandingPage/arrow1.svg";
 import arrow2 from "../assets/LandingPage/arrow2.svg";
 import { useEffect, useState } from "react";
