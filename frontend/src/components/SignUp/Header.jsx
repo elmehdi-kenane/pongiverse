@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import logo from import logo from "../../../public/logo-ping-pong.svg";
+import logo from "../../../public/logo-ping-pong.svg";
 import home from '../../assets/SignUp/homee.svg'
 import signup from '../../assets/SignUp/Header.module.css'
 function Header() {

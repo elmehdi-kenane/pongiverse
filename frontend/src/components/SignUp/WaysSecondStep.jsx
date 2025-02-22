@@ -4,7 +4,7 @@ import Header from "./Header";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
-import logo from import logo from "../../../public/logo-ping-pong.svg";
+import logo from "../../../public/logo-ping-pong.svg";
 import { useNavigate } from "react-router-dom";
 
 import { TiWarning } from "react-icons/ti";

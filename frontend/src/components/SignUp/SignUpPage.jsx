@@ -4,7 +4,7 @@ import Header from './Header';
 import SignUpWays from './SignUpWays'
 import SignUpForm from './SignUpForm'
 import { Link, useNavigate } from 'react-router-dom';
-import logo from import logo from "../../../public/logo-ping-pong.svg";
+import logo from "../../../public/logo-ping-pong.svg";
 import toast, { Toaster } from 'react-hot-toast';
 import pingPongBg from './signUpImage.svg'
 import { useContext, useEffect, useState } from 'react';

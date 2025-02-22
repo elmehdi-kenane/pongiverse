@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import styles from '../../assets/SignIn/authentication.module.css'
 import logo42 from '../../assets/SignUp/42_logo.svg'
-import logo from import logo from "../../../public/logo-ping-pong.svg";
+import logo from "../../../public/logo-ping-pong.svg";
 import logoGoogle from '../../assets/SignIn/GoogleIcon.svg'
 import pingPongBg from './signInImage.svg'
 import { Link } from 'react-router-dom';
