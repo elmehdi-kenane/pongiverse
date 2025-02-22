@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import os
+import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +26,8 @@ load_dotenv()
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
-HOSTS_ALLOWED = os.getenv('HOSTS_ALLOWED')
+HOSTS_ALLOWED = os.getenv("HOSTS_ALLOWED").split(",")
+print("======================>>>>>>>>>============", HOSTS_ALLOWED)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -35,7 +37,7 @@ HOST = os.getenv('HOST')
 GOOGLE_CONTENT = os.getenv('GOOGLE_CONTENT')
 BACKEND_SETTINGS = os.getenv('BACKEND_SETTINGS')
 
-ALLOWED_HOSTS = [HOSTS_ALLOWED, BACKEND_SETTINGS]
+ALLOWED_HOSTS = HOSTS_ALLOWED + [BACKEND_SETTINGS]
 
 # Application definition
 

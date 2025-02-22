@@ -52,7 +52,7 @@ import GameCustomization from './Game/GameCustomization/GameCustomization';
 const App = () => {
   return (
     <div className="page" style={{ backgroundColor: '#250939' }}>
-      <Router>
+	  <Router>
         <AuthProvider>
           <Routes >
             <Route path="/" element={<LandingPage />} exact />

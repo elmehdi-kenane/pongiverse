@@ -2,9 +2,9 @@ FROM node:lts-bullseye
 
 # Set working directory
 WORKDIR /frontend
-
+COPY .env.production .env.production
 COPY . .
-
 RUN npm install
+RUN npm run build
 
-CMD ["npm", "run", "dev"]
+CMD ["npx", "serve", "dist", "-l", "3000"]

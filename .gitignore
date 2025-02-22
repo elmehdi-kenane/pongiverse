@@ -9,6 +9,9 @@ uploads
 /.vscode
 .DS_Store
 log
+frontend/.env.production
+pongiverse.me*
+nginx/pongiverse_me*
 Backups/
 Cache/
 CachedData/

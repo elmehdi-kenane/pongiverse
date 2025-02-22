@@ -107,7 +107,8 @@ services:
     networks:
       - ft_transcendence
     restart: on-failure
-
+    volumes:
+    - ./frontend/dist:/usr/share/nginx/html  # Share dist folder with Nginx
 volumes:
   postgres-volume: {}
 
