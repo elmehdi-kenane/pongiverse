@@ -20,7 +20,7 @@
 - **Authentication**: OAuth (Google, Intra42)
 - **Deployment**: Docker + Nginx
 - **Caching & WebSocket Pub/Sub**: Redis
-- **Monitoring**: Prometheus & AlertManager
+- **Monitoring**: Prometheus & AlertManager (Prometheus Monitoring Flow: [Prometheus Cycle Diagram](./readme_content/prometheus_diagram.tldr))
 
 ## Features 🚀
 - 🎮 Real-time multiplayer Ping Pong game using WebSockets
